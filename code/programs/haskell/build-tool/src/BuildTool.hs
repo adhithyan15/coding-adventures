@@ -46,8 +46,10 @@ import System.FilePath
     , addTrailingPathSeparator
     , isAbsolute
     , isPathSeparator
+    , joinPath
     , makeRelative
     , normalise
+    , pathSeparator
     , splitDirectories
     , takeDirectory
     , takeExtension
@@ -577,6 +579,10 @@ packageAliases pkg = do
     let kebab = map (\char -> if char == '_' then '-' else char) dirName
     let snake = map (\char -> if char == '-' then '_' else char) dirName
     let perlDistributionAliases = if packageLanguage pkg == "perl" then ["coding-adventures-" ++ dirName] else []
+    let gradlePathAliases =
+            if packageLanguage pkg `elem` ["java", "kotlin"]
+                then [normalizeGradlePackagePath (packagePath pkg)]
+                else []
     manifestNames <- exactManifestNames pkg
     pure
         (nub
@@ -590,6 +596,7 @@ packageAliases pkg = do
                       , "coding_adventures_" ++ snake
                       ]
                         ++ perlDistributionAliases
+                        ++ gradlePathAliases
                         ++ manifestNames
                     )
                 )
@@ -842,6 +849,7 @@ readManifestTokens pkg
     | packageLanguage pkg == "ruby" = readRubyDependencyTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
+    | packageLanguage pkg `elem` ["java", "kotlin"] = readGradleDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
 
 readDartDependencyTokens :: Package -> IO [String]
@@ -1541,6 +1549,81 @@ isPortableAbsoluteSwiftPath path@(first : rest) =
             ':' : _ -> isAlpha first
             _ -> False
 
+readGradleDependencyTokens :: Package -> IO [String]
+readGradleDependencyTokens pkg = do
+    let settingsPath = packagePath pkg </> "settings.gradle.kts"
+    exists <- doesFileExist settingsPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict settingsPath
+            pure
+                ( nub
+                    ( mapMaybe
+                        (gradlePathToken pkg)
+                        (gradleIncludeBuildValues (stripSwiftComments contents))
+                    )
+                )
+
+gradleIncludeBuildValues :: String -> [String]
+gradleIncludeBuildValues = collect Nothing
+  where
+    collect _ [] = []
+    collect _ ('"' : rest) = collect (Just '"') (dropSwiftString rest)
+    collect previous source@(character : rest)
+        | gradleIdentifierBoundary previous source "includeBuild" =
+            case parseGradleIncludeBuild (drop (length ("includeBuild" :: String)) source) of
+                Just (path, remaining) -> path : collect Nothing remaining
+                Nothing -> collect (Just character) rest
+        | otherwise = collect (Just character) rest
+
+gradleIdentifierBoundary :: Maybe Char -> String -> String -> Bool
+gradleIdentifierBoundary previous source identifier =
+    identifier `isPrefixOf` source
+        && maybe True (not . isGradleIdentifierCharacter) previous
+        && case drop (length identifier) source of
+            next : _ -> not (isGradleIdentifierCharacter next)
+            [] -> True
+
+isGradleIdentifierCharacter :: Char -> Bool
+isGradleIdentifierCharacter character = isAlphaNum character || character == '_'
+
+parseGradleIncludeBuild :: String -> Maybe (String, String)
+parseGradleIncludeBuild source = do
+    afterOpening <- consumeSwiftCharacter '(' (dropWhile isSpace source)
+    (path, afterString) <- parseSwiftQuotedString (dropWhile isSpace afterOpening)
+    afterClosing <- consumeSwiftCharacter ')' (dropWhile isSpace afterString)
+    pure (path, afterClosing)
+
+gradlePathToken :: Package -> String -> Maybe String
+gradlePathToken pkg path
+    | null path = Nothing
+    | '\\' `elem` path = Nothing
+    | isPortableAbsoluteSwiftPath path = Nothing
+    | otherwise =
+        Just
+            ( normalizeGradlePackagePath
+                (packagePath pkg </> map portableSeparator path)
+            )
+  where
+    portableSeparator character
+        | character == '/' = pathSeparator
+        | otherwise = character
+
+normalizeGradlePackagePath :: FilePath -> String
+normalizeGradlePackagePath =
+    map toLower
+        . joinPath
+        . reverse
+        . foldl collapse []
+        . splitDirectories
+        . normalise
+  where
+    collapse stack "." = stack
+    collapse (top : rest) ".."
+        | top /= ".." && not (isAbsolute top) = rest
+    collapse stack component = component : stack
+
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do
     let manifestCandidates =
@@ -1552,6 +1635,7 @@ readGenericManifestTokens pkg = do
             , "mix.lock"
             , "Package.swift"
             , "pom.xml"
+            , "settings.gradle.kts"
             , "build.gradle"
             , "build.gradle.kts"
             , "Makefile.PL"
@@ -1764,6 +1848,9 @@ shouldHashFile pkg path =
             , "gemfile"
             , "project.clj"
             , "deps.edn"
+            , "settings.gradle.kts"
+            , "build.gradle"
+            , "build.gradle.kts"
             ]
         sourceExtensions =
             case packageLanguage pkg of

@@ -37,6 +37,9 @@ All notable changes to this package will be documented in this file.
 - First-class Dart discovery plus shared `pubspec.yaml` field-boundary coverage
   for root dependency maps, declared package aliases, nested source options,
   overrides, comments, and unrelated metadata.
+- Shared Java and Kotlin Gradle field-boundary coverage for direct and nested
+  relative composite-build paths, comments, strings, absolute paths,
+  build-script coordinates, cross-lane targets, and unknown targets.
 
 ### Changed
 
@@ -54,6 +57,10 @@ All notable changes to this package will be documented in this file.
 - Discover Dart packages and programs, hash `pubspec.yaml` and `.dart` inputs,
   register exact root `name:` aliases, and resolve only direct keys under root
   `dependencies:` and `dev_dependencies:` maps.
+- Resolve Java and Kotlin edges only from comment-aware `includeBuild("...")`
+  calls in root `settings.gradle.kts`, matching normalized relative targets to
+  exact same-lane package roots without following or reading those paths, and
+  hash Java/Kotlin source plus Gradle settings/build inputs.
 - Resolve Lua edges only from quoted values in the rockspec `dependencies`
   table, merge qualified `# build-tool: deps=` entries from the selected BUILD
   file, preserve program identity segments, and prefer package aliases over

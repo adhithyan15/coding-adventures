@@ -1245,24 +1245,6 @@ func swiftPathIsAbsolute(path string) bool {
 		((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))
 }
 
-// parseGradleDeps extracts internal dependencies from a Gradle build.gradle.kts
-// file. This parser works for both Java and Kotlin packages since both use
-// Gradle as their build system.
-//
-// Gradle composite builds declare sibling project dependencies using
-// includeBuild() in settings.gradle.kts and then reference them as regular
-// dependencies in build.gradle.kts:
-//
-//	implementation("com.codingadventures:logic-gates")
-//
-// Alternatively, path-based composite builds are declared in
-// settings.gradle.kts:
-//
-//	includeBuild("../logic-gates")
-//
-// We scan settings.gradle.kts for includeBuild("../...") entries, which is
-// the primary mechanism for monorepo-local dependencies. The directory name
-// inside the "../" reference maps directly to our internal package names.
 // parseHaskellDeps extracts internal dependencies from every build-depends
 // field in a Haskell .cabal file.
 //
@@ -1413,40 +1395,109 @@ func parseBuildToolDeps(pkg discovery.Package, knownPackageNames map[string]bool
 	return deps
 }
 
-func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
+// parseGradleDeps extracts internal dependencies from a Gradle
+// settings.gradle.kts file. This parser works for both Java and Kotlin
+// packages since both use Gradle composite builds. It scans actual
+// includeBuild("...") calls outside comments and unrelated strings. Relative
+// paths are normalized lexically and matched to discovered package roots in
+// the same language scope. The reader never follows or reads a referenced
+// path.
+func parseGradleDeps(pkg discovery.Package, knownPaths map[string]string) []string {
 	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
 	data, err := os.ReadFile(settingsFile)
 	if err != nil {
 		return nil
 	}
 
-	text := string(data)
-	var internalDeps []string
-
-	// Match: includeBuild("../logic-gates") or includeBuild("../some-dep")
-	// The "../" prefix indicates a sibling monorepo package.
-	re := regexp.MustCompile(`includeBuild\s*\(\s*"\.\.\/([^"]+)"\s*\)`)
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-		if trimmed == "" || strings.HasPrefix(trimmed, "//") {
+	seen := make(map[string]bool)
+	for _, relativePath := range gradleIncludeBuildPaths(string(data)) {
+		if relativePath == "" || strings.Contains(relativePath, "\\") ||
+			swiftPathIsAbsolute(relativePath) {
 			continue
 		}
-		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
-			if len(match) < 2 {
-				continue
-			}
-			depDir := strings.ToLower(match[1])
-			// Guard against path traversal.
-			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
-				continue
-			}
-			if pkgName, ok := knownNames[depDir]; ok {
-				internalDeps = append(internalDeps, pkgName)
-			}
+		targetPath := normalizedGradlePackagePath(
+			filepath.Join(pkg.Path, filepath.FromSlash(relativePath)),
+		)
+		if pkgName, ok := knownPaths[targetPath]; ok {
+			seen[pkgName] = true
 		}
 	}
 
-	return internalDeps
+	deps := make([]string, 0, len(seen))
+	for dep := range seen {
+		deps = append(deps, dep)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
+func gradleIncludeBuildPaths(source string) []string {
+	visible := stripSwiftComments(source)
+	var paths []string
+	for index := 0; index < len(visible); {
+		if visible[index] == '"' {
+			index = skipSwiftString(visible, index)
+			continue
+		}
+		if hasGradleIdentifierAt(visible, index, "includeBuild") {
+			if path, next, ok := parseGradleIncludeBuild(visible, index+len("includeBuild")); ok {
+				paths = append(paths, path)
+				index = next
+				continue
+			}
+		}
+		index++
+	}
+	return paths
+}
+
+func hasGradleIdentifierAt(source string, index int, identifier string) bool {
+	if !strings.HasPrefix(source[index:], identifier) {
+		return false
+	}
+	if index > 0 && isGradleIdentifierByte(source[index-1]) {
+		return false
+	}
+	end := index + len(identifier)
+	return end == len(source) || !isGradleIdentifierByte(source[end])
+}
+
+func isGradleIdentifierByte(value byte) bool {
+	return value == '_' || (value >= '0' && value <= '9') ||
+		(value >= 'A' && value <= 'Z') || (value >= 'a' && value <= 'z')
+}
+
+func parseGradleIncludeBuild(source string, index int) (string, int, bool) {
+	index = skipSwiftWhitespace(source, index)
+	if index >= len(source) || source[index] != '(' {
+		return "", index, false
+	}
+	index = skipSwiftWhitespace(source, index+1)
+	if index >= len(source) || source[index] != '"' {
+		return "", index, false
+	}
+
+	start := index + 1
+	for index = start; index < len(source); index++ {
+		if source[index] == '\\' {
+			index++
+			continue
+		}
+		if source[index] != '"' {
+			continue
+		}
+		path := source[start:index]
+		next := skipSwiftWhitespace(source, index+1)
+		if next >= len(source) || source[next] != ')' {
+			return "", next, false
+		}
+		return path, next + 1, true
+	}
+	return "", index, false
+}
+
+func normalizedGradlePackagePath(path string) string {
+	return strings.ToLower(filepath.Clean(path))
 }
 
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
@@ -1470,6 +1521,18 @@ func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []stri
 // to itself and creating a self-loop.
 func buildKnownNames(packages []discovery.Package) map[string]string {
 	return buildKnownNamesForLanguage(packages, "")
+}
+
+func buildKnownGradlePathsForLanguage(packages []discovery.Package, language string) map[string]string {
+	known := make(map[string]string)
+	scope := dependencyScope(language)
+	for _, pkg := range packages {
+		if !inDependencyScope(pkg.Language, scope) {
+			continue
+		}
+		known[normalizedGradlePackagePath(pkg.Path)] = pkg.Name
+	}
+	return known
 }
 
 func buildKnownNamesForLanguage(packages []discovery.Package, language string) map[string]string {
@@ -1770,11 +1833,15 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
+	knownGradlePathsByLanguage := make(map[string]map[string]string)
 	knownPackageNames := make(map[string]bool, len(packages))
 	for _, pkg := range packages {
 		knownPackageNames[pkg.Name] = true
 		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
 			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
+		}
+		if (pkg.Language == "java" || pkg.Language == "kotlin") && knownGradlePathsByLanguage[pkg.Language] == nil {
+			knownGradlePathsByLanguage[pkg.Language] = buildKnownGradlePathsForLanguage(packages, pkg.Language)
 		}
 	}
 
@@ -1812,7 +1879,7 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 		case "haskell":
 			deps = parseHaskellDeps(pkg, knownNames)
 		case "java", "kotlin":
-			deps = parseGradleDeps(pkg, knownNames)
+			deps = parseGradleDeps(pkg, knownGradlePathsByLanguage[pkg.Language])
 		case "dotnet", "csharp", "fsharp":
 			deps = parseDotnetDeps(pkg, knownNames)
 		}

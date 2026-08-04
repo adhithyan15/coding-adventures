@@ -1,6 +1,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionDartSpec, resolutionElixirSpec, resolutionGoSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec
+    ( resolutionCabalSpec
+    , resolutionDartSpec
+    , resolutionElixirSpec
+    , resolutionGoSpec
+    , resolutionGradleSpec
+    , resolutionPerlSpec
+    , resolutionPythonSpec
+    , resolutionRubySpec
+    , resolutionRustSpec
+    , resolutionSwiftSpec
+    , resolutionUtf8Spec
+    )
+where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -231,6 +244,28 @@ resolutionDartSpec = describe "Dart resolution conformance" $ do
                         [ ["dart/beta-helper", "dart/delta_name", "dart/gamma"]
                         , ["dart/alpha"]
                         ]
+
+resolutionGradleSpec :: Spec
+resolutionGradleSpec = describe "Gradle resolution conformance" $ do
+    forM_ ["java", "kotlin"] $ \language ->
+        it ("reads only same-lane relative includeBuild calls for " ++ language) $
+            withFixture ("resolution-gradle-" ++ language ++ "-field-aware.json") $ \root fixture -> do
+                graph <- resolveFixtureFor language root
+                graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+                DG.nodes graph
+                    `shouldBe`
+                        [ language ++ "/alpha"
+                        , language ++ "/beta-helper"
+                        , language ++ "/gamma"
+                        , language ++ "/programs/delta-app"
+                        ]
+                DG.independentGroups graph
+                    `shouldBe`
+                        Right
+                            [ [language ++ "/beta-helper", language ++ "/gamma"]
+                            , [language ++ "/alpha"]
+                            , [language ++ "/programs/delta-app"]
+                            ]
 
 resolutionPythonSpec :: Spec
 resolutionPythonSpec = describe "Python resolution conformance" $ do

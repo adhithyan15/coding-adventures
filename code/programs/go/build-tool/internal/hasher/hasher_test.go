@@ -145,6 +145,40 @@ func TestCollectSourceFilesDart(t *testing.T) {
 	}
 }
 
+func TestCollectSourceFilesGradleLanguages(t *testing.T) {
+	for _, tc := range []struct {
+		language   string
+		sourceName string
+	}{
+		{language: "java", sourceName: "Main.java"},
+		{language: "kotlin", sourceName: "Main.kt"},
+	} {
+		t.Run(tc.language, func(t *testing.T) {
+			root := makeFixture(t, map[string]string{
+				"pkg/BUILD":                     "gradle test",
+				"pkg/settings.gradle.kts":       "includeBuild(\"../dependency\")\n",
+				"pkg/build.gradle.kts":          "plugins {}\n",
+				"pkg/src/main/" + tc.sourceName: "class Main\n",
+				"pkg/README.md":                 "docs",
+			})
+			pkg := discovery.Package{
+				Name:     tc.language + "/pkg",
+				Path:     filepath.Join(root, "pkg"),
+				Language: tc.language,
+			}
+
+			files := collectSourceFiles(pkg)
+			if len(files) != 4 {
+				names := make([]string, len(files))
+				for index, file := range files {
+					names[index] = filepath.Base(file)
+				}
+				t.Fatalf("expected 4 Gradle inputs, got %d: %v", len(files), names)
+			}
+		})
+	}
+}
+
 func TestCollectSourceFilesEmpty(t *testing.T) {
 	root := t.TempDir()
 	pkg := discovery.Package{

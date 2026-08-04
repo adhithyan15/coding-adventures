@@ -567,6 +567,50 @@ warning-clean compilation, Cabal checks, Haddock, and HPC coverage; the 50-case
 security checks all pass. The parser reads only `pubspec.yaml` text and never
 follows source paths or adds execution, network, credential, or host authority.
 
+Guarded squash auto-completion merged the Dart resolver PR #9892 at exact head
+`2b8f898d5b` as `5831540244` after all 17 exact-head checks were terminal and
+two consecutive mergeability readings were `MERGEABLE/CLEAN`. The refreshed
+schema-3 inventory is unchanged and collision-free at 1,264 implementation
+identities and 4,419 established-lane slots, with 173 high-consensus packages
+and 270 missing slots, 814 singleton packages and 11,396 missing slots, 618
+Rust singletons, and zero unknown buckets.
+
+The exact post-Dart resolver audit selects the shared JVM Gradle grammar as the
+smallest coherent remaining two-sided repair. Go and Haskell both discover 129
+Java packages, but emit 185 and 165 edges respectively, leaving 24 Go-only and
+four Haskell-only edges. They both discover 133 Kotlin packages, but emit 165
+and 161 edges, leaving 13 Go-only and nine Haskell-only edges. Java and Kotlin
+use the same `settings.gradle.kts` composite-build declarations, so one bounded
+field-aware contract and adversarial fixture can close both lanes without
+mixing ecosystems. The larger independent deltas remain separately owned:
+C# has 178 Go-only and 47 Haskell-only edges, F# has 178 and 39, and TypeScript
+has 948 and 148. Those .NET and TypeScript grammars remain pending after the
+Gradle tranche rather than widening the active PR.
+
+The implemented Gradle contract accepts only actual quoted relative
+`includeBuild` calls in root `settings.gradle.kts`, normalizes them lexically
+against the declaring package, and matches exact discovered package roots in
+the same language scope without following the target. Paired Java and Kotlin
+fixtures reject comments, example strings, unrelated calls, absolute and
+unknown targets, and build-script coordinates. They first exposed false and
+missing edges in both engines. The repaired real graphs now match exactly at
+129 Java packages and 186 edges and 133 Kotlin packages and 166 edges, with
+zero one-sided drift. Both real front doors validate every BUILD file and dry
+run both lanes with zero failures. The newly recovered
+`java/conduit -> java/programs/conduit-hello` and
+`kotlin/mosaic-flux-compose -> kotlin/programs/visicalc-compose` closures pass
+their exact Cargo/Gradle package and downstream commands. Gradle metadata and
+Java/Kotlin sources now also participate in hashes, closing a cache-invalidation
+gap found during the resolver audit. Full Go and Haskell test, coverage,
+warning, build, package, documentation, conformance, parity, state, diff, and
+security gates pass. The bounded scanners read only the selected settings text,
+do not follow referenced paths or execute content, and add no process, network,
+credential, native-runtime, or host-policy authority.
+
+A conflict-free rebase onto `d9f3ed173d` incorporates the package-neutral
+human-languages unified-books CI gate. The collision-checked inventory remains
+unchanged, so the resolver result and next-item priority do not move.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
