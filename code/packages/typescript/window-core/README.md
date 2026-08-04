@@ -15,6 +15,14 @@ This package is intentionally backend-neutral. It does not create DOM nodes or
 native windows by itself. It gives browser and native adapters one consistent
 type system.
 
+## Build Output
+
+`npm run build` type-checks the package and writes JavaScript plus declarations
+under `dist`. The package-root layout is preserved (`dist/src`, `dist/tests`,
+and `dist/vitest.config.*`) so generated files never appear beside tracked
+TypeScript sources. Vitest excludes `dist`, preventing compiled test copies
+from running or affecting source coverage.
+
 ## Usage
 
 ```typescript

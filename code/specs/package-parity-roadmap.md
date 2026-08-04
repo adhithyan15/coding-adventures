@@ -699,6 +699,19 @@ configs, so it has broader immediate package-build leverage than a
 single-engine follow-up without mixing resolver semantics or the separately
 owned 58-package BUILD_windows debt.
 
+PR #9905 made that shared boundary executable with a strict repository audit,
+TypeScript 5.5 `${configDir}` paths, and real effective-config validation for
+all 129 `rootDir` and 132 `outDir` inheritors. Guarded squash auto-completion
+merged exact final head `23302beda2` as `1198eda2eb` after all 19 checks were
+terminal acceptable and two independent mergeability readings were
+`MERGEABLE/CLEAN`. The refreshed collision-checked inventory remains unchanged
+at 1,264 identities and 4,419 slots with zero collisions or unknown buckets.
+The next quick dependency/leverage pass selects the separately logged
+two-package standalone output-isolation closure: it finishes the TypeScript
+compiler-output integrity boundary and stops `window-core` and `window-canvas`
+builds from emitting into tracked source trees without widening the 58-package
+`BUILD_windows` wave.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -757,12 +770,14 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   shared contract. The repair affects 132 configs in total. This is a
   dependency-shaped portability wave, separate from the 58-package
   `BUILD_windows` debt;
-- isolate outputs for the two standalone TypeScript configs that have neither
-  `noEmit` nor `outDir`. The other 34 standalone rootDir-less configs are
-  already explicit: 26 are `noEmit` and eight declare an output directory.
-  `window-core` and `window-canvas` currently let `tsc` emit JavaScript and
-  declaration artifacts beside tracked sources, so they are a separate
-  two-package output-isolation item rather than part of the shared-base repair;
+- isolate outputs for the two standalone TypeScript configs that had neither
+  `noEmit` nor `outDir`. The executable audit now classifies all 171 standalone
+  configs: 28 are type-check-only, and all 143 emit-capable projects declare
+  isolated output. `window-core` and `window-canvas` emit only below `dist` and
+  exclude compiled test copies while retaining Vitest's defaults. Their fresh
+  builds, coverage suites, effective-config checks, and clean-tree assertions
+  pass as a separate two-package item rather than part of the shared-base
+  repair;
 - keep the Python build tool's Lua rockspec decoding deterministic. Merged PR
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan

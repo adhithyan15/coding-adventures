@@ -12,14 +12,14 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9905,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9905",
-    "branch": "codex/typescript-shared-tsconfig-rootdir-portability",
-    "implementation_head": "cb12f5675a5319cfa8967befed87ad1f367d5525",
+    "number": 9907,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9907",
+    "branch": "codex/typescript-standalone-tsconfig-output-isolation",
+    "implementation_head": "8de312ed24879f11109a74af51d26b14d90179b6",
     "last_ci_repair": null
   },
   "last_inventory": {
-    "revision": "df0692fa76250371f44b607ae42823425b30125a",
+    "revision": "1198eda2eb787abbb28df06f77aa8f01aebbcb8b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -520,20 +520,20 @@
     {
       "id": "typescript-shared-tsconfig-rootdir-portability",
       "title": "Make shared TypeScript compiler paths package-relative",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/typescript-shared-tsconfig-rootdir-portability",
       "pr_number": 9905,
-      "notes": "Discovered during representative downstream validation for the TypeScript field-aware resolver tranche. On unchanged origin/main metadata, code/packages/typescript/tsconfig.base.json declares rootDir and outDir relative to the shared config rather than each extending package. A clean npm run build in typescript/transistors fails with TS6059 because its src/index.ts is outside code/packages/typescript/src. The refined corpus audit finds 458 TypeScript package/program configs with build scripts: 129 directly inherit both faulty shared paths, three override rootDir but still inherit the faulty outDir, 155 directly override both, and 36 rootDir-less configs do not consume the shared base. The real BUILD_windows recipes remain test-oriented and pass for the transistors, logic-gates, and arithmetic dependency chain. Selected after guarded PR #9902 merged and the collision-checked df0692fa76 inventory remained unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. This one shared compiler boundary directly affects 132 configs, giving it greater immediate package-build leverage than a single-engine follow-up while remaining independent of resolver semantics and the separately owned 58-package BUILD_windows debt. The implemented contract uses TypeScript 5.5's ${configDir} template, audits all 458 buildable configs and 444 compiler locks, and resolves all 129 rootDir and 132 outDir inheritors package-locally under real tsc --showConfig. Representative package and program builds, coverage, build-tool, inventory, diff, and production dependency security checks pass after a clean rebase onto origin/main 0378e91750. Ready-for-review PR #9905 opened at exact implementation head cb12f5675a5319cfa8967befed87ad1f367d5525."
+      "notes": "Discovered during representative downstream validation for the TypeScript field-aware resolver tranche. On unchanged origin/main metadata, code/packages/typescript/tsconfig.base.json declares rootDir and outDir relative to the shared config rather than each extending package. A clean npm run build in typescript/transistors fails with TS6059 because its src/index.ts is outside code/packages/typescript/src. The refined corpus audit finds 458 TypeScript package/program configs with build scripts: 129 directly inherit both faulty shared paths, three override rootDir but still inherit the faulty outDir, 155 directly override both, and 36 rootDir-less configs do not consume the shared base. The real BUILD_windows recipes remain test-oriented and pass for the transistors, logic-gates, and arithmetic dependency chain. Selected after guarded PR #9902 merged and the collision-checked df0692fa76 inventory remained unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. This one shared compiler boundary directly affects 132 configs, giving it greater immediate package-build leverage than a single-engine follow-up while remaining independent of resolver semantics and the separately owned 58-package BUILD_windows debt. The implemented contract uses TypeScript 5.5's ${configDir} template, audits all 458 buildable configs and 444 compiler locks, and resolves all 129 rootDir and 132 outDir inheritors package-locally under real tsc --showConfig. Representative package and program builds, coverage, build-tool, inventory, diff, and production dependency security checks pass after a clean rebase onto origin/main 0378e91750. Ready-for-review PR #9905 opened at exact implementation head cb12f5675a5319cfa8967befed87ad1f367d5525. All 19 exact-head checks reached terminal acceptable conclusions; two independent readings returned MERGEABLE/CLEAN; guarded squash auto-completion merged final head 23302beda25c15c85470b9e41137e75a384ce586 as 1198eda2eb787abbb28df06f77aa8f01aebbcb8b on 2026-08-04."
     },
     {
       "id": "typescript-standalone-tsconfig-output-isolation",
       "title": "Isolate standalone TypeScript compiler outputs from source trees",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered while refining the shared-rootDir audit from 165 rootDir-less configs to 129 actual shared-base consumers. Of the 36 standalone configs outside the shared contract, 26 are explicitly noEmit and eight already declare outDir. typescript/window-core and typescript/window-canvas alone declare neither noEmit nor outDir while their build script runs tsc with declarations enabled, so clean builds emit JavaScript and declaration artifacts beside tracked source and test files. Audit and repair those two standalone package configs as a separate output-isolation tranche; do not widen the shared configDir repair."
+      "branch": "codex/typescript-standalone-tsconfig-output-isolation",
+      "pr_number": 9907,
+      "notes": "Discovered while refining the shared-rootDir audit from 165 rootDir-less configs to 129 actual shared-base consumers. Of the 36 standalone configs outside the shared contract, 26 are explicitly noEmit and eight already declare outDir. typescript/window-core and typescript/window-canvas alone declare neither noEmit nor outDir while their build script runs tsc with declarations enabled, so clean builds emit JavaScript and declaration artifacts beside tracked source and test files. Audit and repair those two standalone package configs as a separate output-isolation tranche; do not widen the shared configDir repair. Selected after guarded PR #9905 merged and the collision-checked 1198eda2eb inventory remained unchanged at 1,264 identities, 4,419 established-lane slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The quick leverage pass prefers this unblocked two-package closure because it completes the TypeScript compiler-output integrity boundary just established by #9905, prevents clean package builds from mutating tracked source trees, and remains narrower than the separately owned 58-package BUILD_windows wave. The implemented audit classifies all 171 standalone configs, accepts 28 noEmit projects, and requires all 143 emit-capable projects to declare isolated output. Both owned packages now emit only beneath dist and exclude compiled test copies while preserving Vitest's defaults. Fresh dependency installs, real builds, 9-test and 5-test coverage suites, zero-vulnerability production audits, effective-config checks, the Go build-tool suite, an exact two-package affected plan, collision-checked inventory, diff, generated-output, and secret checks pass. Repository-wide BUILD validation reproduces only the 58 already-owned prerequisite declarations and reports no diagnostic for either selected package. Ready-for-review PR #9907 opened at exact implementation head 8de312ed24879f11109a74af51d26b14d90179b6."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",

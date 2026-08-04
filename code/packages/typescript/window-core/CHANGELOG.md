@@ -3,6 +3,13 @@
 All notable changes to `@coding-adventures/window-core` will be documented in
 this file.
 
+## Unreleased
+
+- Isolated TypeScript compiler output under `dist` so clean builds no longer
+  create JavaScript and declaration siblings in tracked source, test, or config
+  trees. Vitest now excludes compiled copies under `dist` while retaining its
+  default exclusions.
+
 ## 0.1.0
 
 - Added the TypeScript mirror of the shared window-core contract.
