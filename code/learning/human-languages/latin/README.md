@@ -34,8 +34,8 @@ book.
 
 ## Book
 
-The 36-chapter book compiles with XeLaTeX (Latin script, Latin Modern font — no
-vendored font needed): `latexmk -xelatex book.tex`.
+The 36-chapter book compiles warning-free with XeLaTeX (Latin script, Latin
+Modern font — no vendored font needed): `latexmk -xelatex book.tex`.
 
 ## Files
 

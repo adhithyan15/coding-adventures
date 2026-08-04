@@ -87,11 +87,11 @@ simplification for beginners.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04, LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03] -->
 
-[PAUSE 3s] What English word is a direct cousin of **canis**? (**Canine**.)
-Which Latin word for "cat" is older — *fēlēs* or *cattus*? (**Fēlēs** —
-Classical Latin's own word, later displaced.) Where does *cattus* most
-likely come from? (An **Afro-Asiatic** word, probably from **Egypt**, that
-traveled with the cat itself.) Is Spanish's *perro*-for-*can* displacement
-just as well understood as Latin's *cattus*-for-*fēlēs* displacement?
-(**No** — *cattus* has a real, sourced history; *perro* remains a genuine,
-unsolved mystery.)
+[PAUSE 3s]
+- What English word is a direct cousin of **canis**? (**Canine**.)
+- Which Latin word for "cat" is older? (**Fēlēs** — Classical Latin's own
+  word, later displaced by *cattus*.)
+- Where does *cattus* most likely come from? (An **Afro-Asiatic** word,
+  probably from **Egypt**, that traveled with the cat itself.)
+- Are the two displacements equally well understood? (**No** — *cattus* has a
+  sourced history; Spanish *perro* remains a genuine mystery.)
