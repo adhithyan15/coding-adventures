@@ -74,9 +74,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01 | Complete (#9624) | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The deterministic report now reaches zero effective-duration violations across all twenty tracks. |
 | HL-S02 | Complete (#9634) | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | All 27 lessons have typed blocks, unique sequence, transitive knowledge closure, and sub-five-minute duration guarantees. |
 | HL-G03 | Complete (#9646) | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
-| HL-G04 | Complete in this PR | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose uses true opening and closing marks under every book's language rules without changing the canonical app text, code spans, escaped literals, or link destinations. |
-| HL-G05 | Queued | Preserve canonical Markdown hyperlinks in generated LaTeX chapters. | Source notes and learner-facing links render as live `\href` targets in PDFs instead of retaining only their labels. |
-| HL-G06 | Complete in this PR | Preserve indented continuation lines inside generated Markdown blockquotes. | Multiline learner examples remain inside one LaTeX quote/callout, so typography and layout do not split halfway through a canonical example. |
+| HL-G04 | Complete (#9915) | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose uses true opening and closing marks under every book's language rules without changing the canonical app text, code spans, escaped literals, or link destinations. |
+| HL-G05 | Complete in this PR | Preserve canonical Markdown hyperlinks in generated LaTeX chapters. | Source notes and learner-facing links render as live `\href` targets in PDFs instead of retaining only their labels. |
+| HL-G06 | Complete (#9915) | Preserve indented continuation lines inside generated Markdown blockquotes. | Multiline learner examples remain inside one LaTeX quote/callout, so typography and layout do not split halfway through a canonical example. |
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
 | HL-A01 | In progress (#9901 + Russian and Persian/Urdu slices) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; later slices cover Russian's naming chain and Persian/Urdu Chapters 3–5 practice. Coverage is 25 of 119 across 18 tracks; 94 lessons remain, including 16 that first need schema-v2 migration. |
@@ -1780,6 +1780,24 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   nested Arabic/RTL glosses, and a continued Telugu example without clipping.
 - HL-G05 remains the next queued one-source book gap: generated link labels are
   readable, but their canonical destinations are not yet live PDF links.
+
+## Findings from HL-G05
+
+- The generator now preserves all 55 canonical links in the nine configured
+  chapters that contain them: Spanish Chapters 1–3 and Persian/Urdu Chapters
+  3–5. Absolute research citations stay on their authored HTTP(S) targets.
+- Relative prerequisite and pronunciation-reference links resolve against the
+  lesson's stable GitHub source URL. This keeps links useful after a book is
+  downloaded, instead of emitting paths relative to an arbitrary PDF folder.
+- Link labels still pass through the same emphasis, script-font, and quotation
+  renderer as surrounding prose, while destinations use their own LaTeX-safe
+  escaping and remain outside typography transformations.
+- Generation fails closed when a relative link has no canonical source base or
+  when a destination uses a non-HTTP(S) protocol. All lesson filenames match
+  their canonical ids, so no additional source-path metadata is needed.
+- The audit found 117 authored links across the wider lesson corpus. The 62 not
+  yet represented in generated targets remain canonical app content and will
+  become live automatically when those chapters migrate to book generation.
 
 ## Completed foundations
 

@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "sourceBaseUrl": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/",
   "scriptSets": {
     "telugu-comparisons": [
       { "unicodeScript": "Telugu", "scriptCommand": "te" },
