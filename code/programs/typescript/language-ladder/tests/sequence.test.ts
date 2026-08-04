@@ -31,6 +31,7 @@ function L(language: string, concept: string, chapter: number, id?: string): Les
     script: language,
     etymologyHook: "",
     body: "",
+    activities: [],
     estMinutes: 5,
   };
 }

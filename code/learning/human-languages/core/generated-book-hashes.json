@@ -1856,7 +1856,7 @@
     {
       "language": "spanish",
       "chapter": 1,
-      "sourceHash": "fnv1a64:ad881fd61b3c4d60",
+      "sourceHash": "fnv1a64:3d70ae827d573f36",
       "lessonIds": [
         "ES-C01-hola",
         "ES-C01-bien",
@@ -1904,7 +1904,7 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:d12c066ed597921d",
+      "sourceHash": "fnv1a64:c113ab52f6dfbba9",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",

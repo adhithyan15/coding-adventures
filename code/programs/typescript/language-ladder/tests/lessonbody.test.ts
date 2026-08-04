@@ -18,4 +18,16 @@ Say *hola*.`)).toEqual([
       { title: "Guided Practice", blocks: ["Say hola."] },
     ]);
   });
+
+  it("keeps compiled activity metadata out of learner copy", () => {
+    expect(lessonSections(`# Title
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOUN-GENDER] -->
+<!-- hl-activity: {"id":"ES-G01-count","kind":"text"} -->
+
+Recall the two classes.`)).toEqual([
+      { title: "Wrap-up Recall", blocks: ["Recall the two classes."] },
+    ]);
+  });
 });

@@ -5,11 +5,13 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-03. Current baseline after independent Learn frontiers:
+Last prioritized: 2026-08-03. Current baseline after typed activity compilation:
 20 registered tracks, 1,066 Markdown lessons, 20 downloadable LaTeX books, zero
 duration violations, and 20 validated realization maps containing 346 ordered
 path segments, 247 typed extension nodes, and 896 prerequisite-closed mapped
-lessons. HL-V01 keeps the remaining migration debt reproducible in both JSON and
+lessons. Two mapped non-lexical Spanish lessons now carry compiled objective
+activities; 111 mapped non-lexical lessons remain explicit activity-coverage
+debt. HL-V01 keeps the remaining migration debt reproducible in both JSON and
 human-readable reports; the canonical schema-v2 tranches prove one typed source
 across Language Ladder and generated book chapters without discarding deep
 content.
@@ -72,7 +74,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-G03 | Complete (#9646) | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
 | HL-G04 | Queued | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose should use true opening and closing marks under every book's language rules without changing the canonical app text or code spans. |
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
-| HL-V03 | Next | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Every compiled activity names a non-empty subset of its block's assessed atoms and resolves all answer variants without scraping prose; Language Ladder can replace non-lexical self-check confirmation with objective script/grammar retrieval. |
+| HL-V03 | Complete in this PR | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
+| HL-A01 | Next | Author objective activity coverage for every mapped non-lexical frontier. | Replace temporary learner confirmation across the 111 remaining non-lexical lessons; migrate the 18 legacy lessons to schema v2 and give each contract at least one prerequisite-closed objective retrieval. |
+| HL-Q01 | Queued | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npx tsc --noEmit` should pass after fixing the pre-existing DOM element type, review-log cast, missing Node test types, and unused/implicit test symbols; HL-V03 introduces no additional type errors. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
 | HL-B06 | Complete (#9669) | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
@@ -112,7 +116,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B37 | Complete (#9891) | Remove Spanish's remaining legacy LaTeX layout, bookmark, font, and header-only-verso warnings. | The forced 214-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; all 19 intentionally blank physical pages are truly empty. |
 | HL-P01 | Complete (#9893) | Make the unified Human Languages Books result a protected merge gate, or add an equivalent gate that auto-merge must await. | Every pull request now receives a stable books gate; relevant changes run the one all-books build, unrelated changes receive a checked fast-path, and pull-request and push contexts remain distinct. |
 | HL-M01 | Complete (#9894) | Add per-track spine realization maps and language-specific extension nodes. | All 20 tracks have validated repeated-segment local paths, explicit omissions/relocations, typed extensions, and a pure prerequisite-safe frontier planner. |
-| HL-M10 | Complete in this PR | Replace Learn's global concept cursor with per-language frontier progression and focused-before-mixed eligibility. | Stable per-language completed prefixes drive each next lesson; wrong focused answers cannot advance; only independently passed, visually distinguishable lessons enter mixed review. |
+| HL-M10 | Complete (#9896) | Replace Learn's global concept cursor with per-language frontier progression and focused-before-mixed eligibility. | Stable per-language completed prefixes drive each next lesson; wrong focused answers cannot advance; only independently passed, visually distinguishable lessons enter mixed review. |
 | HL-M02 | Queued | Extend Telugu's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson needs a scheduled place, and the map must explicitly split or justify Chapter 20's numbers-and-weather topic collision. |
 | HL-M03 | Queued | Extend Kannada's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5; every canonical lesson needs a scheduled place, and Chapter 20's unrelated numbers/weather pairing must be split or explicitly justified. |
 | HL-M04 | Queued | Extend Malayalam's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the four new support steps, needs a scheduled place. |
@@ -1186,6 +1190,29 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - HL-V03 is next because objective prompt/answer contracts are the remaining
   prerequisite for replacing non-lexical self-confirmation without scraping
   lesson prose or inventing accepted answers.
+
+## Findings from HL-V03
+
+- A typed block can now carry one or more compact JSON `hl-activity` directives
+  immediately after `hl-knowledge`. The canonical AST retains their stable id,
+  text-response kind, assessed atoms, prompt, answer, variants, feedback, and
+  response budget while book and app learner copy omits the metadata.
+- Validation rejects malformed or misplaced JSON, non-lesson-prefixed or
+  duplicate ids, empty/out-of-block assessment sets, ambiguous normalized
+  variants, missing feedback, and response budgets outside 1–299 seconds.
+  Runtime compilation therefore resolves every accepted response once without
+  recovering answers from Markdown prose.
+- Duration model v2 adds each activity's authored response budget. The first
+  grammar and script pilots remain at 180 and 240 effective seconds, the full
+  curriculum keeps zero errors and zero duration violations, and regenerated
+  Spanish Chapters 1 and 4 retain identical learner prose with refreshed hashes.
+- Language Ladder prefers a final-recall activity when present, hides the
+  answer-bearing lesson summary during retrieval, shows authored corrective or
+  success feedback, and advances only after a correct response plus explicit
+  continue. Existing lexical meaning checks remain available.
+- The measured follow-up is HL-A01: 113 mapped non-lexical lessons exist, these
+  two pilots leave 111 without objective activities, and 18 of those still need
+  schema-v2 body contracts before an activity can be attached honestly.
 
 ## Findings from HL-D01C
 

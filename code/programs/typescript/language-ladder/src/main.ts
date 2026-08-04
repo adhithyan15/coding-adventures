@@ -81,7 +81,12 @@ import {
   saveLearnProgress,
   type LearnCompletion,
 } from "./learnprogress.ts";
-import { focusedCheckKind, meaningAnswerIsCorrect } from "./focused.ts";
+import {
+  activityAnswerIsCorrect,
+  focusedActivity,
+  focusedCheckKind,
+  meaningAnswerIsCorrect,
+} from "./focused.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
 import { bookHashStatus } from "./bookhashes.ts";
@@ -173,7 +178,7 @@ let reviewCell: GridCell | null = null; // the question currently on screen
 let reviewOptions: GridCell[] = []; // its answer options (one is `reviewCell`)
 let reviewChosen: string | null = null; // cellKey of the picked option; null = unanswered
 let learnCompletion: LearnCompletion = loadLearnProgress(REVIEW_STORAGE, LANGUAGE_CURRICULA);
-type FocusedAttempt = { lessonId: string; state: "check" | "wrong" };
+type FocusedAttempt = { lessonId: string; state: "check" | "wrong" | "correct" };
 let focusedAttempt: FocusedAttempt | null = null;
 let learnNotice: string | null = null;
 
@@ -1052,9 +1057,23 @@ function renderFocusedCheck(
   card.appendChild(head);
 
   const attempt = focusedAttempt?.lessonId === lesson.id ? focusedAttempt : null;
+  const kind = focusedCheckKind(lesson);
+  const activity = focusedActivity(lesson);
+  if (attempt?.state === "correct") {
+    const verdict = el("p", "focused-check__feedback yes");
+    verdict.textContent = activity?.feedback.correct
+      ?? "Correct. This lesson is ready to join independently unlocked review.";
+    const advance = el("button", "next") as HTMLButtonElement;
+    advance.textContent = `Continue ${languageName(step.language)}`;
+    advance.onclick = () => finishFocusedCheck(step);
+    card.append(verdict, advance);
+    return card;
+  }
   if (attempt?.state === "wrong") {
     const verdict = el("p", "focused-check__feedback no");
-    verdict.textContent = `Not yet. One accepted meaning is “${lesson.gloss}”. Review the lesson, then try again.`;
+    verdict.textContent = activity
+      ? `${activity.feedback.incorrect} Accepted answer: “${activity.answer}”.`
+      : `Not yet. One accepted meaning is “${lesson.gloss}”. Review the lesson, then try again.`;
     card.appendChild(verdict);
     const again = el("button", "next") as HTMLButtonElement;
     again.textContent = "Review lesson again";
@@ -1066,17 +1085,46 @@ function renderFocusedCheck(
     return card;
   }
 
-  const glyph = el("div", "focused-check__glyph");
-  glyph.textContent = lesson.headword;
-  glyph.dir = SCRIPTS_BY_ID.get(lesson.script)?.direction ?? "auto";
-  card.appendChild(glyph);
-  if (lesson.romanization && lesson.romanization !== lesson.headword) {
-    const romanization = el("p", "step__rom");
-    romanization.textContent = lesson.romanization;
-    card.appendChild(romanization);
+  // An authored activity may ask the learner to produce the headword itself,
+  // so its prompt is shown without the lesson's answer-bearing summary card.
+  if (kind !== "activity") {
+    const glyph = el("div", "focused-check__glyph");
+    glyph.textContent = lesson.headword;
+    glyph.dir = SCRIPTS_BY_ID.get(lesson.script)?.direction ?? "auto";
+    card.appendChild(glyph);
+    if (lesson.romanization && lesson.romanization !== lesson.headword) {
+      const romanization = el("p", "step__rom");
+      romanization.textContent = lesson.romanization;
+      card.appendChild(romanization);
+    }
   }
 
-  if (focusedCheckKind(lesson) === "meaning") {
+  if (kind === "activity" && activity) {
+    const form = el("form", "focused-check__form") as HTMLFormElement;
+    const label = el("label", "focused-check__prompt");
+    label.textContent = activity.prompt;
+    const budget = el("span", "focused-check__budget");
+    budget.textContent = `Authored response budget: ${activity.responseSeconds}s`;
+    const input = document.createElement("input");
+    input.className = "focused-check__input";
+    input.type = "text";
+    input.autocomplete = "off";
+    input.setAttribute("aria-label", activity.prompt);
+    const submit = el("button", "next") as HTMLButtonElement;
+    submit.type = "submit";
+    submit.textContent = "Check answer";
+    form.append(label, budget, input, submit);
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      focusedAttempt = {
+        lessonId: lesson.id,
+        state: activityAnswerIsCorrect(input.value, activity) ? "correct" : "wrong",
+      };
+      learnNotice = null;
+      render();
+    };
+    card.appendChild(form);
+  } else if (kind === "meaning") {
     const form = el("form", "focused-check__form") as HTMLFormElement;
     const label = el("label", "focused-check__prompt");
     label.textContent = `Without reopening the lesson, type one English meaning for “${lesson.headword}”.`;
@@ -1091,12 +1139,12 @@ function renderFocusedCheck(
     form.append(label, input, submit);
     form.onsubmit = (event) => {
       event.preventDefault();
-      if (meaningAnswerIsCorrect(input.value, lesson.gloss)) finishFocusedCheck(step);
-      else {
-        focusedAttempt = { lessonId: lesson.id, state: "wrong" };
-        learnNotice = null;
-        render();
-      }
+      focusedAttempt = {
+        lessonId: lesson.id,
+        state: meaningAnswerIsCorrect(input.value, lesson.gloss) ? "correct" : "wrong",
+      };
+      learnNotice = null;
+      render();
     };
     card.appendChild(form);
   } else {

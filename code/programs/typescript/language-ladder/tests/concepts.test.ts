@@ -39,6 +39,7 @@ function lesson(over: Partial<Lesson> & { id: string }): Lesson {
     body: "",
     estMinutes: 5,
     ...over,
+    activities: over.activities ?? [],
   };
 }
 

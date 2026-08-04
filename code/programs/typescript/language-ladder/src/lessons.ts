@@ -22,6 +22,10 @@
 // loaded fine and then died at startup with "process is not defined". Reaching
 // straight for the pure parsing module keeps Node out of the browser bundle.
 import { parseLesson, type ParsedLesson } from "@coding-adventures/human-language-data/src/parse.ts";
+import {
+  compileLessonActivities,
+} from "@coding-adventures/human-language-data/src/activity.ts";
+import type { CompiledLessonActivity } from "@coding-adventures/human-language-data/src/types.ts";
 
 /**
  * Every lesson markdown file, as raw text, keyed by path. Vite inlines these at
@@ -65,6 +69,8 @@ export interface Lesson {
   etymologyHook: string;
   /** Lossless authored lesson Markdown, shared with the book corpus. */
   body: string;
+  /** Typed, block-bound retrieval contracts; never inferred from lesson prose. */
+  activities: CompiledLessonActivity[];
   /** Canonical AST fingerprint; generated books combine these in authored order. */
   sourceHash?: string;
   /** Explicit schema-v2 local order. Legacy lessons omit it. */
@@ -127,6 +133,7 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     script: r.script,
     etymologyHook: r.etymologyHook,
     body: parsed.body,
+    activities: compileLessonActivities(parsed.blocks),
     sourceHash: parsed.sourceHash,
     sequence:
       typeof fm.sequence === "string" && Number.isFinite(Number(fm.sequence))

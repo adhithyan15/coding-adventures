@@ -8,6 +8,7 @@ import { validate, hasErrors } from "../src/validate.js";
 import { validateCurriculum } from "../src/curriculum.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { languagesForConcept } from "../src/queries.js";
+import { compileLessonActivities } from "../src/activity.js";
 
 const { taxonomy, registry, spine, curricula, books, lessons, scripts, dataset } = loadEverything();
 
@@ -83,6 +84,7 @@ describe("real curriculum", () => {
   it("produces a machine-readable migration gap baseline", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     expect(report.schemaVersion).toBe(1);
+    expect(report.durationModel.version).toBe(2);
     expect(report.summary.registeredTracks).toBe(20);
     expect(report.summary.totalLessons).toBe(lessons.length);
     expect(report.summary.authoredBooks).toBe(20);
@@ -90,6 +92,16 @@ describe("real curriculum", () => {
     expect(report.summary.unknownPrerequisites).toBe(0);
     expect(report.schemas.tracks).toHaveLength(20);
     expect(report.books.tracks).toHaveLength(20);
+  });
+
+  it("compiles the first objective grammar and script activities from canonical blocks", () => {
+    const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
+    expect(activities.map((activity) => activity.id).sort()).toEqual([
+      "ES-C01-genero-gramatical-class-count",
+      "ES-W03-question-span-roberto-outside",
+    ]);
+    expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
+    expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
   });
 
   it("keeps the Spanish Chapters 1-3 schema-v2 pilot closed and under five minutes", () => {
