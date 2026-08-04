@@ -359,8 +359,9 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 Value::Str(Rc::from(out.as_str()))
             }
-            _ => {
-                let mut acc = args.first().map(as_i64).unwrap_or(0);
+            None => Value::Int(0),
+            Some(first) => {
+                let mut acc = as_i64(first);
                 for a in &args[1..] {
                     acc = shift_left_i64(acc, shift_amount_arg(a));
                 }

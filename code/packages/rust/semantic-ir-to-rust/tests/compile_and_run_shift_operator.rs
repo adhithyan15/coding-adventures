@@ -145,6 +145,18 @@ fn compile_and_run(module: &Module) -> Option<String> {
 }
 
 #[test]
+fn empty_args_does_not_panic() {
+    // A hand-built `BuiltinCall("<<", [])` (no receiver at all) must not
+    // panic on an empty-slice index -- caught by security review: the
+    // integer fallback arm indexed `args[1..]` before checking `args` was
+    // non-empty.
+    let m = demo_module("shift_empty", vec![print_stmt(shift(vec![]))]);
+    if let Some(out) = compile_and_run(&m) {
+        assert_eq!(out, "0\n");
+    }
+}
+
+#[test]
 fn integer_shift_left() {
     let m = demo_module("shift_int", vec![print_stmt(shift(vec![ilit(5), ilit(2)]))]);
     if let Some(out) = compile_and_run(&m) {
