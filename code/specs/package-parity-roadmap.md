@@ -758,6 +758,19 @@ TypeScript `BUILD_windows` validator debt. The repository-wide TS6059 input
 boundary audit remains explicit and pending until its affected corpus is
 classified.
 
+The implemented SIR closure materializes those exact prerequisite orders and
+adds a focused repository regression. Clean front-door execution then exposed
+same-family strict compiler gaps hidden behind the missing prerequisites: core
+and oop now declare the Node typings needed while compiling local core sources,
+core's builtin callbacks explicitly accept SIR values, and oop narrows nullable
+extremal block keys without changing runtime behavior. The canonical validator
+passes all 470 TypeScript packages. Real Windows front doors pass 60 core tests
+at 93.2% statement coverage, 120 oop tests at 96.31%, and 23 symbolic tests at
+100%; package builds, production audits, and the full Go build-tool gates pass.
+The committed diff plan selects exactly the three runtimes and their four
+prerequisites, with 463 TypeScript packages skipped. The collision inventory is
+unchanged with zero collisions or unknown buckets.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
