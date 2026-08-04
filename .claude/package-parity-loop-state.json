@@ -11,7 +11,13 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9892,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9892",
+    "branch": "codex/build-tool-haskell-dart-field-aware-resolution",
+    "implementation_head": "0fd84b71574fd22babb1255521803b855d9bff5a",
+    "last_ci_repair": null
+  },
   "last_inventory": {
     "revision": "6800d09448fcd5ae7e0ad6e5d7755e4a1f7ce0ab",
     "schema_version": 3,
@@ -478,11 +484,11 @@
     {
       "id": "build-tool-post-elixir-field-aware-manifest-resolution",
       "title": "Make Haskell Dart discovery and pubspec resolution field-aware",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-post-go-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-dart-field-aware-resolution",
-      "pr_number": null,
-      "notes": "Materialized when the post-Go audit selected Elixir's coherent eight-edge field-boundary repair. Guarded PR #9888 merged as 9106e9ce784044ee2b3ff1211f88b381e1211eaa after 17 terminal acceptable checks and two MERGEABLE/CLEAN reads. The refreshed collision-checked inventory on package-neutral main 6800d09448fcd5ae7e0ad6e5d7755e4a1f7ce0ab remains at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 missing slots, 814 singletons with 11,396 missing slots, 618 Rust singletons, and zero collisions or unknown buckets. The complete 15-lane resolver audit confirms nine exact lanes and leaves C#, F#, TypeScript, Java, and Kotlin as larger two-sided grammar repairs. Dart is the smallest high-leverage root cause: Go discovers 82 packages and 67 edges while Haskell discovers none. Select first-class Dart discovery, exact pubspec name aliases, hashing inputs, and a direct-child dependencies/dev_dependencies reader as one coherent slice. The shared fixture first fails Go with one nested Git-option false edge and Haskell with zero discovered nodes; paired bounded readers converge the complete lane at 82 packages and 67 edges with zero drift. Both real front doors validate all 82 packages with zero failures. Full Go tests, vet, trimpath build, module verification, 75.6% total coverage, and 87.0% resolver coverage pass. Haskell build-tool, directed-graph, and graph suites pass with 27 build-tool examples and GHC -Wall -Werror; cabal check, Haddock, and HPC coverage pass at 55% declarations, 64% alternatives, and 70% expressions. The schema-1 corpus validates 50 cases and 153 files; all 17 schema and 40 runner tests pass. Cabal outdated reports only the existing containers/time upper bounds; govulncheck, OSV Scanner, HLint, and Fourmolu are unavailable locally. The readers inspect only selected pubspec.yaml text, do not follow path values or execute content, and add no process, network, credential, native-runtime, or host-policy authority."
+      "pr_number": 9892,
+      "notes": "Materialized when the post-Go audit selected Elixir's coherent eight-edge field-boundary repair. Guarded PR #9888 merged as 9106e9ce784044ee2b3ff1211f88b381e1211eaa after 17 terminal acceptable checks and two MERGEABLE/CLEAN reads. The refreshed collision-checked inventory on package-neutral main 6800d09448fcd5ae7e0ad6e5d7755e4a1f7ce0ab remains at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 missing slots, 814 singletons with 11,396 missing slots, 618 Rust singletons, and zero collisions or unknown buckets. The complete 15-lane resolver audit confirms nine exact lanes and leaves C#, F#, TypeScript, Java, and Kotlin as larger two-sided grammar repairs. Dart is the smallest high-leverage root cause: Go discovers 82 packages and 67 edges while Haskell discovers none. Select first-class Dart discovery, exact pubspec name aliases, hashing inputs, and a direct-child dependencies/dev_dependencies reader as one coherent slice. The shared fixture first fails Go with one nested Git-option false edge and Haskell with zero discovered nodes; paired bounded readers converge the complete lane at 82 packages and 67 edges with zero drift. Both real front doors validate all 82 packages with zero failures. Full Go tests, vet, trimpath build, module verification, 75.6% total coverage, and 87.0% resolver coverage pass. Haskell build-tool, directed-graph, and graph suites pass with 27 build-tool examples and GHC -Wall -Werror; cabal check, Haddock, and HPC coverage pass at 55% declarations, 64% alternatives, and 70% expressions. The schema-1 corpus validates 50 cases and 153 files; all 17 schema and 40 runner tests pass. Cabal outdated reports only the existing containers/time upper bounds; govulncheck, OSV Scanner, HLint, and Fourmolu are unavailable locally. The readers inspect only selected pubspec.yaml text, do not follow path values or execute content, and add no process, network, credential, native-runtime, or host-policy authority. Ready-for-review PR #9892 opened at exact implementation head 0fd84b71574fd22babb1255521803b855d9bff5a."
     },
     {
       "id": "build-tool-post-dart-field-aware-manifest-resolution",
