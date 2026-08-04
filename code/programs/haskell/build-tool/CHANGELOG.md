@@ -43,6 +43,9 @@ All notable changes to this package will be documented in this file.
 - Shared C#, F#, and cross-language .NET field-boundary coverage for exact root
   project paths, portable separators, XML decoys, MSBuild dynamic paths,
   nested projects, and unknown targets.
+- Shared TypeScript field-boundary coverage for root runtime and development
+  dependency objects, exact top-level package-name aliases, single-line
+  tables, and representative peer, optional, script, nested, and name decoys.
 
 ### Changed
 
@@ -68,6 +71,9 @@ All notable changes to this package will be documented in this file.
   on unqualified `ProjectReference` elements in root project files, matching
   lexically normalized paths to exact project aliases across the shared .NET
   scope without opening referenced files.
+- Parse TypeScript `package.json` with Aeson, register only its exact root
+  top-level `name`, and resolve only direct keys of root `dependencies` and
+  `devDependencies` objects instead of tokenizing the complete manifest.
 - Resolve Lua edges only from quoted values in the rockspec `dependencies`
   table, merge qualified `# build-tool: deps=` entries from the selected BUILD
   file, preserve program identity segments, and prefer package aliases over

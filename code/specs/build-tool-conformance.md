@@ -331,6 +331,19 @@ dependencies. Resolvers ignore package descriptions, environment constraints,
 lockfiles, and every other root field. A local `path:` value identifies source
 metadata only; resolvers do not follow or read the referenced path.
 
+For TypeScript `package.json` manifests, dependency candidates come only from
+the direct property names of the root `dependencies` and `devDependencies`
+objects. Each property name is matched case-insensitively against known
+directory aliases and the exact string value of another package's root
+top-level `name` property. Dependency values, including registry constraints,
+`workspace:` ranges, and `file:` paths, do not form part of the identity and
+are not followed. Resolvers ignore `peerDependencies`,
+`optionalDependencies`, scripts, tool configuration, nested objects whose
+property names resemble dependency tables, nested `name` properties, lock
+files, descriptions, and every other root field. A dependency field whose
+value is not an object contributes no candidates, and malformed JSON must not
+produce a partial graph.
+
 For Java and Kotlin Gradle composite builds, dependency candidates come only
 from `includeBuild("...")` call expressions in the package root's
 `settings.gradle.kts`. The call may span lines, and its sole argument is a

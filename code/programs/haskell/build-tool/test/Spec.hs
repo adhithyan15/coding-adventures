@@ -14,6 +14,7 @@ import ResolutionUtf8Spec
     , resolutionRubySpec
     , resolutionRustSpec
     , resolutionSwiftSpec
+    , resolutionTypescriptSpec
     , resolutionUtf8Spec
     )
 
@@ -36,3 +37,4 @@ spec = do
     resolutionRubySpec
     resolutionPerlSpec
     resolutionSwiftSpec
+    resolutionTypescriptSpec

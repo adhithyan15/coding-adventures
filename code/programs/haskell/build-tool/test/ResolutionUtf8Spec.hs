@@ -12,6 +12,7 @@ module ResolutionUtf8Spec
     , resolutionRubySpec
     , resolutionRustSpec
     , resolutionSwiftSpec
+    , resolutionTypescriptSpec
     , resolutionUtf8Spec
     )
 where
@@ -410,6 +411,33 @@ resolutionSwiftSpec = describe "Swift resolution conformance" $ do
                     Right
                         [ ["swift/beta-helper", "swift/delta_name", "swift/gamma"]
                         , ["swift/alpha"]
+                        ]
+
+resolutionTypescriptSpec :: Spec
+resolutionTypescriptSpec = describe "TypeScript resolution conformance" $ do
+    it "reads only direct root dependency tables through exact manifest aliases" $
+        withFixture "resolution-typescript-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "typescript" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "typescript/alpha"
+                    , "typescript/beta-helper"
+                    , "typescript/delta_name"
+                    , "typescript/gamma"
+                    , "typescript/malformed"
+                    , "typescript/wrong-shape"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ [ "typescript/beta-helper"
+                          , "typescript/delta_name"
+                          , "typescript/gamma"
+                          , "typescript/malformed"
+                          , "typescript/wrong-shape"
+                          ]
+                        , ["typescript/alpha"]
                         ]
 
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation

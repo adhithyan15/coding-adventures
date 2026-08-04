@@ -17,6 +17,9 @@ module BuildTool
 
 import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
 import Control.Monad (filterM, foldM, forM, when)
+import Data.Aeson (Value(..), eitherDecodeStrict')
+import qualified Data.Aeson.Key as Key
+import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
 import Data.Char (isAlpha, isAlphaNum, isSpace, ord, toLower)
@@ -579,6 +582,16 @@ packageAliases pkg = do
     let kebab = map (\char -> if char == '_' then '-' else char) dirName
     let snake = map (\char -> if char == '-' then '_' else char) dirName
     let perlDistributionAliases = if packageLanguage pkg == "perl" then ["coding-adventures-" ++ dirName] else []
+    let conventionalAliases =
+            if packageLanguage pkg == "typescript"
+                then [dirName, "@coding-adventures/" ++ dirName]
+                else
+                    [ dirName
+                    , kebab
+                    , snake
+                    , "coding-adventures-" ++ kebab
+                    , "coding_adventures_" ++ snake
+                    ]
     let gradlePathAliases =
             if packageLanguage pkg `elem` ["java", "kotlin"]
                 then [normalizeGradlePackagePath (packagePath pkg)]
@@ -593,12 +606,7 @@ packageAliases pkg = do
             ( filter
                 (not . null)
                 ( map (map toLower)
-                    ( [ dirName
-                      , kebab
-                      , snake
-                      , "coding-adventures-" ++ kebab
-                      , "coding_adventures_" ++ snake
-                      ]
+                    ( conventionalAliases
                         ++ perlDistributionAliases
                         ++ gradlePathAliases
                         ++ dotnetProjectAliases
@@ -694,12 +702,12 @@ dartRootName rawLine
 readPackageJsonNames :: FilePath -> IO [String]
 readPackageJsonNames root = do
     let packageJson = root </> "package.json"
-    exists <- doesFileExist packageJson
-    if not exists
-        then pure []
-        else do
-            contents <- readFileStrict packageJson
-            pure (parseJsonLikeField "name" contents)
+    manifest <- readPackageJsonObject packageJson
+    pure
+        ( case manifest >>= KeyMap.lookup (Key.fromString "name") of
+            Just (String name) -> [map toLower (Text.unpack (Text.strip name))]
+            _ -> []
+        )
 
 readGemspecNames :: FilePath -> IO [String]
 readGemspecNames root = do
@@ -783,23 +791,6 @@ parseQuotedField fieldName contents =
 parseAssignmentField :: String -> String -> [String]
 parseAssignmentField = parseQuotedField
 
-parseJsonLikeField :: String -> String -> [String]
-parseJsonLikeField fieldName contents =
-    nub
-        [ map toLower value
-        | line <- lines contents
-        , let stripped = trim line
-        , let prefix = "\"" ++ fieldName ++ "\""
-        , prefix `isPrefixOf` stripped
-        , let afterColon = dropWhile (/= ':') stripped
-        , not (null afterColon)
-        , let rhs = trim (drop 1 afterColon)
-        , not (null rhs)
-        , take 1 rhs == "\""
-        , let value = takeWhile (/= '"') (drop 1 rhs)
-        , not (null value)
-        ]
-
 resolvePackageDeps :: Map String (Map String String) -> Package -> IO [String]
 resolvePackageDeps aliasScopes pkg = do
     tokens <- readManifestTokens pkg
@@ -858,9 +849,45 @@ readManifestTokens pkg
     | packageLanguage pkg == "ruby" = readRubyDependencyTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
+    | packageLanguage pkg == "typescript" = readTypescriptDependencyTokens pkg
     | packageLanguage pkg `elem` ["java", "kotlin"] = readGradleDependencyTokens pkg
     | packageLanguage pkg `elem` ["csharp", "fsharp", "dotnet"] = readDotnetDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
+
+readPackageJsonObject :: FilePath -> IO (Maybe (KeyMap.KeyMap Value))
+readPackageJsonObject path = do
+    exists <- doesFileExist path
+    if not exists
+        then pure Nothing
+        else do
+            bytes <- BS.readFile path
+            pure
+                ( case eitherDecodeStrict' bytes of
+                    Right (Object manifest) -> Just manifest
+                    _ -> Nothing
+                )
+
+readTypescriptDependencyTokens :: Package -> IO [String]
+readTypescriptDependencyTokens pkg = do
+    manifest <- readPackageJsonObject (packagePath pkg </> "package.json")
+    pure
+        ( nub
+            ( concatMap
+                (typescriptDependencyNames manifest)
+                ["dependencies", "devDependencies"]
+            )
+        )
+
+typescriptDependencyNames :: Maybe (KeyMap.KeyMap Value) -> String -> [String]
+typescriptDependencyNames manifest fieldName =
+    case manifest >>= KeyMap.lookup (Key.fromString fieldName) of
+        Just (Object dependencies) ->
+            sort
+                ( map
+                    (map toLower . Text.unpack . Text.strip . Key.toText)
+                    (KeyMap.keys dependencies)
+                )
+        _ -> []
 
 readDartDependencyTokens :: Package -> IO [String]
 readDartDependencyTokens pkg = do
