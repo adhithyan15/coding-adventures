@@ -1300,65 +1300,197 @@ func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []str
 	return internalDeps
 }
 
-// parseDotnetDeps extracts internal monorepo dependencies from a .NET project
-// file (.csproj or .fsproj). It looks for <ProjectReference Include="...">
-// elements, which are the MSBuild mechanism for referencing sibling projects.
-//
-// Example in a .csproj:
-//
-//	<ItemGroup>
-//	  <ProjectReference Include="../logic-gates/logic-gates.csproj" />
-//	</ItemGroup>
-//
-// The path component between "../" and the next "/" is the dependency's
-// directory name. We look that up in knownNames to find the build-tool
-// package name (e.g., "dotnet/logic-gates").
-//
-// For the initial hello-world programs there are no inter-package dependencies,
-// so this function returns nil. It is registered now so that future dotnet
-// packages with dependencies work without additional build-tool changes.
-func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []string {
-	// Find all .csproj and .fsproj files in the package directory.
-	var projectFiles []string
-	entries, err := os.ReadDir(pkg.Path)
+// parseDotnetDeps reads only literal ProjectReference Include attributes from
+// .csproj and .fsproj files directly inside the package root. Referenced paths
+// are normalized lexically and matched against already discovered root project
+// files in the shared .NET scope; the targets are never opened or followed.
+func parseDotnetDeps(pkg discovery.Package, knownProjectPaths map[string]string) []string {
+	projectFiles := rootDotnetProjectFiles(pkg.Path)
+	seen := make(map[string]bool)
+	for _, projectFile := range projectFiles {
+		data, err := os.ReadFile(projectFile)
+		if err != nil {
+			continue
+		}
+		for _, include := range dotnetProjectReferenceIncludes(string(data)) {
+			targetPath, ok := dotnetProjectReferencePath(projectFile, include)
+			if !ok {
+				continue
+			}
+			if packageName, found := knownProjectPaths[targetPath]; found && packageName != pkg.Name {
+				seen[packageName] = true
+			}
+		}
+	}
+
+	deps := make([]string, 0, len(seen))
+	for dep := range seen {
+		deps = append(deps, dep)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
+func rootDotnetProjectFiles(root string) []string {
+	entries, err := os.ReadDir(root)
 	if err != nil {
 		return nil
 	}
+	var projectFiles []string
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
 		}
 		name := entry.Name()
-		if strings.HasSuffix(name, ".csproj") || strings.HasSuffix(name, ".fsproj") {
-			projectFiles = append(projectFiles, filepath.Join(pkg.Path, name))
+		lowerName := strings.ToLower(name)
+		if strings.HasSuffix(lowerName, ".csproj") || strings.HasSuffix(lowerName, ".fsproj") {
+			projectFiles = append(projectFiles, filepath.Join(root, name))
 		}
 	}
+	sort.Strings(projectFiles)
+	return projectFiles
+}
 
-	// Match <ProjectReference Include="../some-dep/some-dep.csproj" />
-	// The dep directory name is the path component after "../".
-	re := regexp.MustCompile(`<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]*"`)
+func dotnetProjectReferenceIncludes(source string) []string {
+	var includes []string
+	for index := 0; index < len(source); {
+		relative := strings.IndexByte(source[index:], '<')
+		if relative < 0 {
+			break
+		}
+		index += relative
+		switch {
+		case strings.HasPrefix(source[index:], "<!--"):
+			index = skipXMLMarkup(source, index+4, "-->")
+		case strings.HasPrefix(source[index:], "<![CDATA["):
+			index = skipXMLMarkup(source, index+9, "]]>")
+		case strings.HasPrefix(source[index:], "<?"):
+			index = skipXMLMarkup(source, index+2, "?>")
+		case strings.HasPrefix(source[index:], "<!"):
+			index = skipXMLMarkup(source, index+2, ">")
+		default:
+			name, attributes, next, ok := parseXMLStartTag(source, index)
+			if !ok {
+				index++
+				continue
+			}
+			index = next
+			if name != "ProjectReference" {
+				continue
+			}
+			if include, found := xmlLiteralAttribute(attributes, "Include"); found {
+				includes = append(includes, include)
+			}
+		}
+	}
+	return includes
+}
 
-	var internalDeps []string
-	for _, projFile := range projectFiles {
-		data, err := os.ReadFile(projFile)
-		if err != nil {
+func skipXMLMarkup(source string, index int, terminator string) int {
+	relative := strings.Index(source[index:], terminator)
+	if relative < 0 {
+		return len(source)
+	}
+	return index + relative + len(terminator)
+}
+
+func parseXMLStartTag(source string, index int) (string, string, int, bool) {
+	if index >= len(source) || source[index] != '<' || index+1 >= len(source) || source[index+1] == '/' {
+		return "", "", index, false
+	}
+	nameStart := index + 1
+	nameEnd := nameStart
+	for nameEnd < len(source) && isXMLNameByte(source[nameEnd]) {
+		nameEnd++
+	}
+	if nameEnd == nameStart {
+		return "", "", index, false
+	}
+
+	quote := byte(0)
+	for end := nameEnd; end < len(source); end++ {
+		character := source[end]
+		if quote != 0 {
+			if character == quote {
+				quote = 0
+			}
 			continue
 		}
-		for _, match := range re.FindAllSubmatch(data, -1) {
-			if len(match) < 2 {
-				continue
-			}
-			depDir := strings.ToLower(string(match[1]))
-			// Guard against path traversal.
-			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
-				continue
-			}
-			if pkgName, ok := knownNames[depDir]; ok {
-				internalDeps = append(internalDeps, pkgName)
-			}
+		if character == '\'' || character == '"' {
+			quote = character
+			continue
+		}
+		if character == '>' {
+			return source[nameStart:nameEnd], source[nameEnd:end], end + 1, true
 		}
 	}
-	return internalDeps
+	return "", "", len(source), false
+}
+
+func isXMLNameByte(character byte) bool {
+	return character == ':' || character == '_' || character == '-' || character == '.' ||
+		(character >= '0' && character <= '9') ||
+		(character >= 'A' && character <= 'Z') ||
+		(character >= 'a' && character <= 'z')
+}
+
+func xmlLiteralAttribute(attributes string, wanted string) (string, bool) {
+	for index := 0; index < len(attributes); {
+		index = skipSwiftWhitespace(attributes, index)
+		if index >= len(attributes) || attributes[index] == '/' {
+			return "", false
+		}
+		nameStart := index
+		for index < len(attributes) && isXMLNameByte(attributes[index]) {
+			index++
+		}
+		if index == nameStart {
+			index++
+			continue
+		}
+		name := attributes[nameStart:index]
+		index = skipSwiftWhitespace(attributes, index)
+		if index >= len(attributes) || attributes[index] != '=' {
+			continue
+		}
+		index = skipSwiftWhitespace(attributes, index+1)
+		if index >= len(attributes) || (attributes[index] != '\'' && attributes[index] != '"') {
+			continue
+		}
+		quote := attributes[index]
+		valueStart := index + 1
+		index = valueStart
+		for index < len(attributes) && attributes[index] != quote {
+			index++
+		}
+		if index >= len(attributes) {
+			return "", false
+		}
+		value := attributes[valueStart:index]
+		index++
+		if name == wanted {
+			return value, true
+		}
+	}
+	return "", false
+}
+
+func dotnetProjectReferencePath(projectFile, include string) (string, bool) {
+	if include == "" || strings.ContainsAny(include, "*?#&") ||
+		strings.Contains(include, "$(") || swiftPathIsAbsolute(include) {
+		return "", false
+	}
+	portable := strings.Map(func(character rune) rune {
+		if character == '/' || character == '\\' {
+			return filepath.Separator
+		}
+		return character
+	}, include)
+	return normalizedDotnetProjectPath(filepath.Join(filepath.Dir(projectFile), portable)), true
+}
+
+func normalizedDotnetProjectPath(path string) string {
+	return strings.ToLower(filepath.Clean(path))
 }
 
 var buildToolDepsRe = regexp.MustCompile(`(?m)#\s*build-tool:\s*deps\s*=\s*(.+)$`)
@@ -1531,6 +1663,19 @@ func buildKnownGradlePathsForLanguage(packages []discovery.Package, language str
 			continue
 		}
 		known[normalizedGradlePackagePath(pkg.Path)] = pkg.Name
+	}
+	return known
+}
+
+func buildKnownDotnetProjectPaths(packages []discovery.Package) map[string]string {
+	known := make(map[string]string)
+	for _, pkg := range packages {
+		if !inDependencyScope(pkg.Language, "dotnet") {
+			continue
+		}
+		for _, projectFile := range rootDotnetProjectFiles(pkg.Path) {
+			known[normalizedDotnetProjectPath(projectFile)] = pkg.Name
+		}
 	}
 	return known
 }
@@ -1834,6 +1979,7 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
 	knownGradlePathsByLanguage := make(map[string]map[string]string)
+	knownDotnetProjectPaths := buildKnownDotnetProjectPaths(packages)
 	knownPackageNames := make(map[string]bool, len(packages))
 	for _, pkg := range packages {
 		knownPackageNames[pkg.Name] = true
@@ -1881,7 +2027,7 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 		case "java", "kotlin":
 			deps = parseGradleDeps(pkg, knownGradlePathsByLanguage[pkg.Language])
 		case "dotnet", "csharp", "fsharp":
-			deps = parseDotnetDeps(pkg, knownNames)
+			deps = parseDotnetDeps(pkg, knownDotnetProjectPaths)
 		}
 		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 

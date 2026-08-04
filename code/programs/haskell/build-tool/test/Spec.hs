@@ -5,6 +5,7 @@ import HashingSpec (hashingSpec)
 import ResolutionUtf8Spec
     ( resolutionCabalSpec
     , resolutionDartSpec
+    , resolutionDotnetSpec
     , resolutionElixirSpec
     , resolutionGoSpec
     , resolutionGradleSpec
@@ -29,6 +30,7 @@ spec = do
     resolutionElixirSpec
     resolutionDartSpec
     resolutionGradleSpec
+    resolutionDotnetSpec
     resolutionPythonSpec
     resolutionRustSpec
     resolutionRubySpec

@@ -20,7 +20,7 @@ import Control.Monad (filterM, foldM, forM, when)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
 import Data.Char (isAlpha, isAlphaNum, isSpace, ord, toLower)
-import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
+import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
 import Data.Maybe (fromMaybe, listToMaybe, mapMaybe, maybeToList)
@@ -583,6 +583,10 @@ packageAliases pkg = do
             if packageLanguage pkg `elem` ["java", "kotlin"]
                 then [normalizeGradlePackagePath (packagePath pkg)]
                 else []
+    dotnetProjectAliases <-
+        if packageLanguage pkg `elem` ["csharp", "fsharp", "dotnet"]
+            then readDotnetProjectAliases pkg
+            else pure []
     manifestNames <- exactManifestNames pkg
     pure
         (nub
@@ -597,6 +601,7 @@ packageAliases pkg = do
                       ]
                         ++ perlDistributionAliases
                         ++ gradlePathAliases
+                        ++ dotnetProjectAliases
                         ++ manifestNames
                     )
                 )
@@ -618,6 +623,10 @@ exactManifestNames pkg = do
 
 sequenceToList :: [IO [String]] -> IO [String]
 sequenceToList actions = fmap concat (sequence actions)
+
+readDotnetProjectAliases :: Package -> IO [String]
+readDotnetProjectAliases pkg =
+    map normalizeDotnetProjectPath <$> rootDotnetProjectFiles pkg
 
 readCabalPackageNames :: FilePath -> IO [String]
 readCabalPackageNames root = do
@@ -850,6 +859,7 @@ readManifestTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
     | packageLanguage pkg `elem` ["java", "kotlin"] = readGradleDependencyTokens pkg
+    | packageLanguage pkg `elem` ["csharp", "fsharp", "dotnet"] = readDotnetDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
 
 readDartDependencyTokens :: Package -> IO [String]
@@ -1623,6 +1633,133 @@ normalizeGradlePackagePath =
     collapse (top : rest) ".."
         | top /= ".." && not (isAbsolute top) = rest
     collapse stack component = component : stack
+
+readDotnetDependencyTokens :: Package -> IO [String]
+readDotnetDependencyTokens pkg = do
+    projectFiles <- rootDotnetProjectFiles pkg
+    fmap (sort . nub . concat) $
+        forM projectFiles $ \projectFile -> do
+            contents <- readFileStrict projectFile
+            pure
+                ( mapMaybe
+                    (dotnetProjectPathToken projectFile)
+                    (dotnetProjectReferenceIncludes contents)
+                )
+
+rootDotnetProjectFiles :: Package -> IO [FilePath]
+rootDotnetProjectFiles pkg = do
+    entries <- listDirectory (packagePath pkg)
+    pure
+        ( sort
+            [ packagePath pkg </> entry
+            | entry <- entries
+            , map toLower (takeExtension entry) `elem` [".csproj", ".fsproj"]
+            ]
+        )
+
+dotnetProjectReferenceIncludes :: String -> [String]
+dotnetProjectReferenceIncludes = collect
+  where
+    collect source =
+        case dropWhile (/= '<') source of
+            [] -> []
+            markup
+                | "<!--" `isPrefixOf` markup -> collect (dropThroughXML "-->" (drop 4 markup))
+                | "<![CDATA[" `isPrefixOf` markup -> collect (dropThroughXML "]]>" (drop 9 markup))
+                | "<?" `isPrefixOf` markup -> collect (dropThroughXML "?>" (drop 2 markup))
+                | "<!" `isPrefixOf` markup -> collect (dropThroughXML ">" (drop 2 markup))
+                | otherwise ->
+                    case parseXMLStartTag markup of
+                        Just ("ProjectReference", attributes, remaining) ->
+                            case xmlLiteralAttribute "Include" attributes of
+                                Just include -> include : collect remaining
+                                Nothing -> collect remaining
+                        Just (_, _, remaining) -> collect remaining
+                        Nothing -> collect (drop 1 markup)
+
+dropThroughXML :: String -> String -> String
+dropThroughXML marker = go
+  where
+    go [] = []
+    go source@(_ : rest)
+        | marker `isPrefixOf` source = drop (length marker) source
+        | otherwise = go rest
+
+parseXMLStartTag :: String -> Maybe (String, String, String)
+parseXMLStartTag ('<' : first : rest)
+    | first `notElem` ['/', '!', '?'] = do
+        let (name, afterName) = span isXMLNameCharacter (first : rest)
+        if null name
+            then Nothing
+            else do
+                (attributes, remaining) <- takeXMLTagAttributes Nothing [] afterName
+                pure (name, attributes, remaining)
+parseXMLStartTag _ = Nothing
+
+takeXMLTagAttributes :: Maybe Char -> String -> String -> Maybe (String, String)
+takeXMLTagAttributes _ _ [] = Nothing
+takeXMLTagAttributes quote collected (character : rest) =
+    case quote of
+        Just delimiter
+            | character == delimiter ->
+                takeXMLTagAttributes Nothing (character : collected) rest
+            | otherwise ->
+                takeXMLTagAttributes quote (character : collected) rest
+        Nothing
+            | character `elem` ['\'', '"'] ->
+                takeXMLTagAttributes (Just character) (character : collected) rest
+            | character == '>' -> Just (reverse collected, rest)
+            | otherwise -> takeXMLTagAttributes Nothing (character : collected) rest
+
+isXMLNameCharacter :: Char -> Bool
+isXMLNameCharacter character =
+    isAlphaNum character || character `elem` ['_', ':', '-', '.']
+
+xmlLiteralAttribute :: String -> String -> Maybe String
+xmlLiteralAttribute wanted = collect . dropWhile isSpace
+  where
+    collect [] = Nothing
+    collect ('/' : _) = Nothing
+    collect source =
+        let (name, afterName) = span isXMLNameCharacter source
+            assignment = dropWhile isSpace afterName
+         in if null name
+                then collect (dropWhile isSpace (drop 1 source))
+                else case assignment of
+                    '=' : rawValue ->
+                        case parseXMLQuotedValue (dropWhile isSpace rawValue) of
+                            Just (value, remaining)
+                                | name == wanted -> Just value
+                                | otherwise -> collect (dropWhile isSpace remaining)
+                            Nothing -> Nothing
+                    _ -> collect assignment
+
+parseXMLQuotedValue :: String -> Maybe (String, String)
+parseXMLQuotedValue (quote : rest)
+    | quote `elem` ['\'', '"'] =
+        case break (== quote) rest of
+            (value, _ : remaining) -> Just (value, remaining)
+            _ -> Nothing
+parseXMLQuotedValue _ = Nothing
+
+dotnetProjectPathToken :: FilePath -> String -> Maybe String
+dotnetProjectPathToken projectFile path
+    | null path = Nothing
+    | any (`elem` ("*?#&" :: String)) path = Nothing
+    | "$(" `isInfixOf` path = Nothing
+    | isPortableAbsoluteSwiftPath path = Nothing
+    | otherwise =
+        Just
+            ( normalizeDotnetProjectPath
+                (takeDirectory projectFile </> map portableSeparator path)
+            )
+  where
+    portableSeparator character
+        | character `elem` ['/', '\\'] = pathSeparator
+        | otherwise = character
+
+normalizeDotnetProjectPath :: FilePath -> String
+normalizeDotnetProjectPath = normalizeGradlePackagePath
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do

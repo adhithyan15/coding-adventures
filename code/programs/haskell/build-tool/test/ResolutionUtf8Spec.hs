@@ -3,6 +3,7 @@
 module ResolutionUtf8Spec
     ( resolutionCabalSpec
     , resolutionDartSpec
+    , resolutionDotnetSpec
     , resolutionElixirSpec
     , resolutionGoSpec
     , resolutionGradleSpec
@@ -267,6 +268,45 @@ resolutionGradleSpec = describe "Gradle resolution conformance" $ do
                             , [language ++ "/programs/delta-app"]
                             ]
 
+resolutionDotnetSpec :: Spec
+resolutionDotnetSpec = describe ".NET resolution conformance" $ do
+    forM_ ["csharp", "fsharp"] $ \language ->
+        it ("reads only root ProjectReference Include paths for " ++ language) $
+            withFixture ("resolution-dotnet-" ++ language ++ "-field-aware.json") $ \root fixture -> do
+                graph <- resolveFixtureFor language root
+                graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+                DG.nodes graph
+                    `shouldBe`
+                        [ language ++ "/alpha"
+                        , language ++ "/beta-helper"
+                        , language ++ "/gamma"
+                        , language ++ "/programs/delta-app"
+                        ]
+                DG.independentGroups graph
+                    `shouldBe`
+                        Right
+                            [ [language ++ "/beta-helper", language ++ "/gamma"]
+                            , [language ++ "/alpha"]
+                            , [language ++ "/programs/delta-app"]
+                            ]
+    it "resolves exact root project paths across the shared .NET scope" $
+        withFixture "resolution-dotnet-cross-language-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "all" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "csharp/graph"
+                    , "dotnet/programs/bridge-app"
+                    , "fsharp/helpers"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["fsharp/helpers"]
+                        , ["csharp/graph"]
+                        , ["dotnet/programs/bridge-app"]
+                        ]
+
 resolutionPythonSpec :: Spec
 resolutionPythonSpec = describe "Python resolution conformance" $ do
     it "preserves the shared canonical dependency diamond" $
@@ -389,7 +429,11 @@ resolveFixture = resolveFixtureFor "lua"
 resolveFixtureFor :: String -> FilePath -> IO DG.DirectedGraph
 resolveFixtureFor language root = do
     packages <- discoverPackages (root </> "code")
-    resolveDependencies (filter ((== language) . packageLanguage) packages)
+    resolveDependencies
+        ( if language == "all"
+            then packages
+            else filter ((== language) . packageLanguage) packages
+        )
 
 graphEdges :: DG.DirectedGraph -> [[String]]
 graphEdges graph =

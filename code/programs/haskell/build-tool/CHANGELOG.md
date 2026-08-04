@@ -40,6 +40,9 @@ All notable changes to this package will be documented in this file.
 - Shared Java and Kotlin Gradle field-boundary coverage for direct and nested
   relative composite-build paths, comments, strings, absolute paths,
   build-script coordinates, cross-lane targets, and unknown targets.
+- Shared C#, F#, and cross-language .NET field-boundary coverage for exact root
+  project paths, portable separators, XML decoys, MSBuild dynamic paths,
+  nested projects, and unknown targets.
 
 ### Changed
 
@@ -61,6 +64,10 @@ All notable changes to this package will be documented in this file.
   calls in root `settings.gradle.kts`, matching normalized relative targets to
   exact same-lane package roots without following or reading those paths, and
   hash Java/Kotlin source plus Gradle settings/build inputs.
+- Resolve C#, F#, and shared .NET edges only from literal `Include` attributes
+  on unqualified `ProjectReference` elements in root project files, matching
+  lexically normalized paths to exact project aliases across the shared .NET
+  scope without opening referenced files.
 - Resolve Lua edges only from quoted values in the rockspec `dependencies`
   table, merge qualified `# build-tool: deps=` entries from the selected BUILD
   file, preserve program identity segments, and prefer package aliases over

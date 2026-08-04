@@ -611,6 +611,40 @@ A conflict-free rebase onto `d9f3ed173d` incorporates the package-neutral
 human-languages unified-books CI gate. The collision-checked inventory remains
 unchanged, so the resolver result and next-item priority do not move.
 
+Guarded squash auto-completion merged the Gradle resolver PR #9895 at exact
+head `68ccd82413` as `4b8e56938b` after all 20 exact-head checks were terminal
+and two consecutive mergeability readings were `MERGEABLE/CLEAN`. The refreshed
+schema-3 inventory is unchanged at 1,264 identities and 4,419 established-lane
+slots, with zero collisions and zero unknown buckets; intervening
+human-languages work is package-neutral.
+
+The quick dependency/leverage pass therefore selects the already materialized
+C#/F# project-reference grammar next. It is one shared XML boundary across 198
+C# and 197 F# packages, with 178 Go-only edges in each lane and 47 C# or 39 F#
+Haskell-only edges. That coherent two-lane repair remains narrower and better
+specified than TypeScript's separate 948-missing/148-false-edge metadata
+grammar, so TypeScript stays pending behind it.
+
+The implemented .NET contract accepts only literal quoted `Include`
+attributes on unqualified `ProjectReference` start elements in `.csproj` and
+`.fsproj` files directly inside the declaring package root. Portable relative
+paths normalize lexically and must match an exact discovered root project file
+in the shared C#/F#/.NET scope; referenced targets are never opened. Three
+shared fixtures cover both language lanes and cross-language references while
+rejecting comments, CDATA, processing instructions, escaped examples,
+namespaced elements, package references, property expansion, globs, absolute
+paths, nested test projects, and unknown targets. The repaired repository
+graphs now match edge-for-edge between Go and Haskell at 198 C# packages and
+238 edges and 197 F# packages and 239 edges, with zero one-sided drift.
+
+A conflict-free rebase onto `28df5db2b8` incorporates the package-neutral
+language-ladder frontier update. The refreshed collision-checked schema-3
+inventory is unchanged at 1,264 implementation identities, 4,419 established-
+lane slots, 173 high-consensus packages with 270 missing slots, 814 singleton
+packages with 11,396 missing slots, 618 Rust singletons, and zero collisions or
+unknown buckets, so no new package work is added and the active priority does
+not move.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
