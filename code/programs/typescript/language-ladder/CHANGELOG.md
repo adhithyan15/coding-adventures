@@ -2,6 +2,20 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Fixed — standalone TypeScript validation
+
+- Restore a clean strict typecheck across the application and all tests by
+  typing the shared DOM factory, making the untrusted review-log conversion
+  explicit, and removing stale test symbols.
+- Use the repository-owned Node test types and ESM-safe fixture paths for
+  vendored-font tests.
+- Run `npm run typecheck` in the standalone BUILD before the production bundle
+  and test suite, and keep the deterministic dependency install in its intended
+  subshell so those gates run in Language Ladder rather than its data package or
+  rewrite that package's lockfile.
+- Refresh the transitive Nano ID lock entry to 3.3.18, clearing the high-severity
+  development audit finding reported by the standalone install.
+
 ### Added — the stroke-order filmstrip (HL-C08)
 
 - Add `src/ductusview.ts`: a pure SVG renderer that composes the authored pen

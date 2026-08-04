@@ -285,7 +285,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
 | HL-A01 | In progress (#9901 + Russian and Persian/Urdu slices) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; later slices cover Russian's naming chain and Persian/Urdu Chapters 3–5 practice. Coverage is 25 of 119 across 18 tracks; 94 lessons remain, including 16 that first need schema-v2 migration. |
-| HL-Q01 | Queued | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npx tsc --noEmit` should pass after fixing the pre-existing DOM element type, review-log cast, missing Node test types, and unused/implicit test symbols; HL-V03 introduces no additional type errors. |
+| HL-Q01 | Complete in this PR after #9916 | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npm run typecheck` passes after fixing the pre-existing DOM element type, review-log cast, ESM fixture paths, and unused test symbols; BUILD now keeps the gate enforced. |
+| HL-Q02 | Queued | Split Language Ladder's monolithic production JavaScript bundle. | Vite should no longer emit its 500 kB chunk warning; initial Learn-mode loading should not require the current 7.12 MB script while all modes and offline-relative deployment keep working. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
 | HL-B06 | Complete (#9669) | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
@@ -2342,6 +2343,29 @@ problem.
   stroke order this repository cannot cite. HL-C42 carries that forward: the first
   interspersed lesson should land in a track whose ductus is already sourced —
   Tamil's ம traces to the UT Austin primer — rather than waiting on Telugu.
+
+## Findings from HL-Q01
+
+- Strict `tsc --noEmit` now passes across both `src/` and `tests/`. The shared
+  DOM factory preserves the concrete element type for literal tag names, so
+  button-only properties no longer require scattered casts.
+- Defensive review-state loading keeps its runtime validation while making the
+  intentional untrusted-object boundary explicit to TypeScript.
+- Vendored-font tests use the Node declarations owned in #9916 plus ESM-safe
+  `import.meta.url` paths rather than relying on a CommonJS global.
+- The standalone BUILD runs typecheck before Vite and Vitest. A clean pass
+  typechecks, produces the app, and passes all 523 tests in 31 files from the app
+  package.
+- Directly executing `BUILD` exposed that its dependency-install `cd` persisted
+  despite a comment promising a subshell. The command is now actually grouped
+  and uses deterministic `npm ci`, so the app gates run from the correct package
+  without rewriting the dependency lockfile.
+- The clean install also exposed a high-severity Nano ID development advisory.
+  Refreshing the transitive lock entry from 3.3.16 to 3.3.18 leaves the app's
+  standalone `npm audit` at zero known vulnerabilities.
+- The production build emits one 7,115.81 kB JavaScript chunk (1,800.06 kB
+  gzip), above Vite's 500 kB warning threshold. HL-Q02 records that separate
+  learner-loading concern without coupling a bundle redesign to this repair.
 
 ## Completed foundations
 

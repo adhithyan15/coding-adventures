@@ -281,6 +281,7 @@ read-only — `letters` / `isSyllabary` / the matrix untouched).
 ```sh
 npm install
 npm run dev        # local dev server
+npm run typecheck  # strict source + test typecheck
 npm test           # unit tests (vitest)
 npm run build      # production build to dist/
 npm run preview    # serve the production build

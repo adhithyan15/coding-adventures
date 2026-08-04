@@ -119,7 +119,7 @@ export function fromSavedReview(saved: SavedReview): { progress: Progress; sessi
   const savedLog = Array.isArray(saved.log) ? saved.log : [];
   for (const row of savedLog) {
     if (typeof row !== "object" || row === null || Array.isArray(row)) continue;
-    const r = row as Record<string, unknown>;
+    const r = row as unknown as Record<string, unknown>;
     if (typeof r.cellKey !== "string" || typeof r.correct !== "boolean") continue;
     const record: AnswerRecord = { cellKey: r.cellKey, correct: r.correct };
     // chosenKey is only meaningful on a miss; keep it only when it's a string.

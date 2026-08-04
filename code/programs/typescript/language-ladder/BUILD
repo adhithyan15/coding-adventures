@@ -20,7 +20,8 @@ set -e
 # Tools (npm, npx, node) are expected on PATH (mise shims locally; CI installs
 # Node directly via actions/setup-node).
 
-cd ../../../packages/typescript/human-language-data && npm install --silent
+(cd ../../../packages/typescript/human-language-data && npm ci --silent)
 npm install
+npm run typecheck
 npm run build
 npx vitest run
