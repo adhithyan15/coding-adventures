@@ -54,4 +54,3 @@ Real validation MUST execute representative Windows front doors for the base
 package coverage suites, and audit production dependencies. The full Go build
 tool test, vet, build, module-verification, collision-checked parity inventory,
 diff, and secret gates remain required.
-

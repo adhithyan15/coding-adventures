@@ -740,7 +740,7 @@ minimality audit reconstructs every original file after removing the owned
 bootstrap insertion, and the canonical validator falls from the exact
 58-package baseline to only the three separately owned SIR diagnostics.
 Representative Windows front doors pass 169 grammar-tools tests at 85.85%
-statement coverage and 158 algol-lexer tests at 87.5%, with zero production
+statement coverage and 79 algol-lexer tests at 87.5%, with zero production
 vulnerabilities. The Go build tool passes test, vet, build, and module
 verification; its committed diff plan reports 55 changed and 185 affected
 TypeScript packages. The collision-checked parity inventory is unchanged and
