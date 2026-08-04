@@ -5,7 +5,7 @@
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:1b9813b5b7b86550",
+      "sourceHash": "fnv1a64:7520b462f31cab77",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -324,7 +324,7 @@
     {
       "language": "german",
       "chapter": 17,
-      "sourceHash": "fnv1a64:a529d960c10eae9c",
+      "sourceHash": "fnv1a64:ce4e6be384d018cf",
       "lessonIds": [
         "GE-C17-kopf",
         "GE-C17-kopf-haupt",
@@ -390,7 +390,7 @@
     {
       "language": "gujarati",
       "chapter": 6,
-      "sourceHash": "fnv1a64:388a6950ab136cc1",
+      "sourceHash": "fnv1a64:952853fc84148cac",
       "lessonIds": [
         "GU-C06-numbers-1-5",
         "GU-C06-number-histories"
@@ -680,7 +680,7 @@
     {
       "language": "italian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:aa27c60a3d656001",
+      "sourceHash": "fnv1a64:3703362b79bcde7b",
       "lessonIds": [
         "IT-C03-io",
         "IT-C03-mi-chiamo",
@@ -841,7 +841,7 @@
     {
       "language": "kannada",
       "chapter": 6,
-      "sourceHash": "fnv1a64:cc167694fde562f4",
+      "sourceHash": "fnv1a64:ef1c91cef85816a7",
       "lessonIds": [
         "KA-C06-dative-ge",
         "KA-C06-dative-stacking",
@@ -1563,7 +1563,7 @@
     {
       "language": "malayalam",
       "chapter": 23,
-      "sourceHash": "fnv1a64:56e12d6bddb8a7f7",
+      "sourceHash": "fnv1a64:e9c420c4e46128da",
       "lessonIds": [
         "ML-C23-divasam",
         "ML-C23-naal"
@@ -1647,7 +1647,7 @@
     {
       "language": "marathi",
       "chapter": 6,
-      "sourceHash": "fnv1a64:d0addd66aaedf900",
+      "sourceHash": "fnv1a64:4b1e1c620ea3aa6a",
       "lessonIds": [
         "MR-C06-numbers-1-5",
         "MR-C06-number-differences"
@@ -1657,7 +1657,7 @@
     {
       "language": "portuguese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d1d8358ae18c96af",
+      "sourceHash": "fnv1a64:b696688c2654a2d3",
       "lessonIds": [
         "PT-C02-de-nada",
         "PT-C02-como",
@@ -1835,7 +1835,7 @@
     {
       "language": "punjabi",
       "chapter": 6,
-      "sourceHash": "fnv1a64:f165e75f6db9bbe5",
+      "sourceHash": "fnv1a64:b77ab588fd68bcd5",
       "lessonIds": [
         "PA-C06-numbers-1-5",
         "PA-C06-panj-convergence"
@@ -1845,7 +1845,7 @@
     {
       "language": "sanskrit",
       "chapter": 6,
-      "sourceHash": "fnv1a64:578064b0aec01cee",
+      "sourceHash": "fnv1a64:5f46cbe023b464e1",
       "lessonIds": [
         "SA-C06-numbers-1-5",
         "SA-C06-number-cognates",
@@ -1856,7 +1856,7 @@
     {
       "language": "spanish",
       "chapter": 1,
-      "sourceHash": "fnv1a64:3d70ae827d573f36",
+      "sourceHash": "fnv1a64:e2e55a440c95c8cb",
       "lessonIds": [
         "ES-C01-hola",
         "ES-C01-bien",
@@ -2575,7 +2575,7 @@
     {
       "language": "telugu",
       "chapter": 31,
-      "sourceHash": "fnv1a64:a513a10b0723cd15",
+      "sourceHash": "fnv1a64:20379a3b55c97b76",
       "lessonIds": [
         "TE-C31-subha-madhyahnam",
         "TE-C31-subha-madhyahnam-register"

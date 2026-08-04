@@ -80,6 +80,7 @@ separately: heads look like bowls in many languages.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HAUPT-02, GE-ETYMON-HAUPT-03, GE-SOUND-GRIMMS-LAW-04, GE-CULTURE-HEAD-CONTAINERS-05] -->
+<!-- hl-activity: {"id":"GE-C17-kopf-haupt-compound-word","kind":"text","assesses":["GE-LEX-HAUPT-02"],"prompt":"Which inherited German head-word survives in compounds such as Hauptstadt?","answer":"Haupt","accepted":[],"feedback":{"correct":"Correct: Haupt is the inherited head-word retained in compounds.","incorrect":"The inherited word is Haupt, as in Hauptstadt and Hauptbahnhof."},"response_seconds":8} -->
 
 [PAUSE 3s] Which word is everyday “head”? (**Kopf**.) Which inherited word
 survives in compounds? (**Haupt**.) Name two compounds. (**Hauptstadt,

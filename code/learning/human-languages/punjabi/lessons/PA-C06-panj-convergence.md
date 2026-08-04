@@ -86,6 +86,7 @@ Punjabi's look-alike **numeral** is inherited from Sanskrit.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-HISTORY-PANJABI-FIVE-RIVERS, PA-COMPARISON-PANJ-MATCH, PA-ETYMON-PANJ-PANCA-INHERITANCE, PA-SOUND-NASAL-STOP-VOICING, PA-EVIDENCE-PANJAH-PACAS, PA-ETYMON-PERSIAN-PANJ-INDEPENDENT, PA-HISTORY-PANJ-CONVERGENCE] -->
+<!-- hl-activity: {"id":"PA-C06-panj-convergence-borrowing","kind":"text","assesses":["PA-ETYMON-PANJ-PANCA-INHERITANCE"],"prompt":"Was Punjabi panj borrowed from Persian?","answer":"no","accepted":["no it was not","it inherits Sanskrit pañca","it comes from Sanskrit pañca"],"feedback":{"correct":"Right: Punjabi panj inherits Sanskrit pañca; Persian reached a similar shape separately.","incorrect":"No. Punjabi panj is inherited from Sanskrit pañca, not borrowed from Persian."},"response_seconds":8} -->
 
 [PAUSE 3s] Borrowed from Persian? (No: Punjabi *panj* inherits Sanskrit
 *pañca*.) What made *-nj-*? (A post-nasal stop voiced.) Evidence? (*Panjāh /

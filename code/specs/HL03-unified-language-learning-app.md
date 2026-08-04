@@ -242,9 +242,10 @@ All of the above shipped as the app **`language-ladder`** (renamed from
   in the gloss text), so showing it would be inconsistent rather than helpful.
 - **HL04 local-frontier migration** — all 20 realization maps now drive Learn.
   `learnprogress.ts` stores only prerequisite-safe per-language prefixes;
-  compiled activities now gate the first objective grammar/script pilots,
+  compiled activities now gate 17 objective non-lexical lessons across 15
+  tracks, spanning script, grammar, etymology, culture, and cumulative practice;
   lexical meaning retrieval covers uncontracted vocabulary, and temporary
-  authored non-lexical recall confirmation covers the measured migration debt;
+  authored non-lexical recall confirmation covers the remaining 96-lesson debt;
   explicit local extension nodes place script and grammar support; and mixed SRS
   review draws only from independently focused-successful lessons. The old
   `cursorstore.ts` key remains resettable only as legacy state.

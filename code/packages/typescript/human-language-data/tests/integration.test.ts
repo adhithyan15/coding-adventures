@@ -94,11 +94,26 @@ describe("real curriculum", () => {
     expect(report.books.tracks).toHaveLength(20);
   });
 
-  it("compiles the first objective grammar and script activities from canonical blocks", () => {
+  it("compiles the cross-language objective activities from canonical blocks", () => {
     const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
     expect(activities.map((activity) => activity.id).sort()).toEqual([
+      "AR-W07-hook-family-ha-kha-dot-position",
       "ES-C01-genero-gramatical-class-count",
+      "ES-C01-practice-buenos-agreement",
       "ES-W03-question-span-roberto-outside",
+      "GE-C17-kopf-haupt-compound-word",
+      "GU-C06-number-histories-be-source",
+      "HI-W01-shirorekha-na-ma-drawing-order",
+      "IT-C03-practice-drop-io",
+      "KA-C06-dative-stacking-agglutinative",
+      "LA-C01-practice-vale-root",
+      "ML-C23-naal-survival",
+      "MR-C06-number-differences-don-ending",
+      "PA-C06-panj-convergence-borrowing",
+      "PT-C02-practice-neutral-question",
+      "SA-C06-number-cognates-inheritance",
+      "TA-W01-curves-va-ka-writing-surface",
+      "TE-C31-subha-madhyahnam-register-source-scope",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);

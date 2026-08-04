@@ -36,9 +36,11 @@ variants, corrective feedback, and response budget without scraping prose or
 showing an answer-bearing summary. Other lexical lessons ask for one English
 meaning. A wrong answer leaves the local frontier unchanged; a correct answer
 shows feedback before the learner continues. The first objective non-lexical
-pilots cover Spanish grammatical gender and punctuation spans. Remaining support
-lessons retain their temporary final-recall confirmation while HL-A01 fills the
-measured contract backlog.
+pilots covered Spanish grammatical gender and punctuation spans; the first
+HL-A01 tranche now reaches 17 of 113 mapped non-lexical lessons across 15 tracks,
+including script, grammar, etymology, culture, and cumulative practice. The
+remaining 96 support lessons retain temporary final-recall confirmation while
+HL-A01 fills the measured contract backlog.
 One successful check completes exactly the current frontier lesson.
 `learnprogress.ts` persists stable lesson IDs independently per language and,
 on load, keeps only the longest valid local prefix. A newly inserted prerequisite

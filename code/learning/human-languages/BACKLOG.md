@@ -5,16 +5,18 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-03. Current baseline after typed activity compilation:
+Last prioritized: 2026-08-03. Current baseline after the first cross-language
+activity-coverage tranche:
 20 registered tracks, 1,066 Markdown lessons, 20 downloadable LaTeX books, zero
 duration violations, and 20 validated realization maps containing 346 ordered
 path segments, 247 typed extension nodes, and 896 prerequisite-closed mapped
-lessons. Two mapped non-lexical Spanish lessons now carry compiled objective
-activities; 111 mapped non-lexical lessons remain explicit activity-coverage
-debt. HL-V01 keeps the remaining migration debt reproducible in both JSON and
-human-readable reports; the canonical schema-v2 tranches prove one typed source
-across Language Ladder and generated book chapters without discarding deep
-content.
+lessons. Seventeen mapped non-lexical lessons across 15 tracks now carry
+compiled objective activities; 96 mapped non-lexical lessons remain explicit
+activity-coverage debt, including 18 legacy lessons that first need schema-v2
+body contracts. HL-V01 keeps the remaining migration debt reproducible in both
+JSON and human-readable reports; the canonical schema-v2 tranches prove one
+typed source across Language Ladder and generated book chapters without
+discarding deep content.
 
 ## Priority rules
 
@@ -74,8 +76,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-G03 | Complete (#9646) | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
 | HL-G04 | Queued | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose should use true opening and closing marks under every book's language rules without changing the canonical app text or code spans. |
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
-| HL-V03 | Complete in this PR | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
-| HL-A01 | Next | Author objective activity coverage for every mapped non-lexical frontier. | Replace temporary learner confirmation across the 111 remaining non-lexical lessons; migrate the 18 legacy lessons to schema v2 and give each contract at least one prerequisite-closed objective retrieval. |
+| HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
+| HL-A01 | In progress (15-track tranche) | Author objective activity coverage for every mapped non-lexical frontier. | This tranche replaces temporary confirmation in one prerequisite-closed schema-v2 lesson for every ready track with debt; 96 lessons remain, including 18 that first need schema-v2 migration. |
 | HL-Q01 | Queued | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npx tsc --noEmit` should pass after fixing the pre-existing DOM element type, review-log cast, missing Node test types, and unused/implicit test symbols; HL-V03 introduces no additional type errors. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
@@ -1190,6 +1192,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - HL-V03 is next because objective prompt/answer contracts are the remaining
   prerequisite for replacing non-lexical self-confirmation without scraping
   lesson prose or inventing accepted answers.
+
+## Findings from the first HL-A01 tranche
+
+- Fifteen schema-v2 tracks with outstanding non-lexical debt now contribute one
+  objective final-recall activity apiece. The slice spans Arabic, German,
+  Gujarati, Hindi, Italian, Kannada, Latin, Malayalam, Marathi, Portuguese,
+  Punjabi, Sanskrit, Spanish, Tamil, and Telugu instead of deepening only the
+  original Spanish pilot.
+- Every activity asks one exact question already answered by its lesson, assesses
+  a containing-block knowledge atom, provides explicit accepted variants and
+  feedback, and adds only eight seconds of learner response time. Italian's
+  297-second Chapter 2 practice frontier was deliberately left untouched in
+  favor of its 237-second Chapter 3 practice lesson, preserving the strict
+  sub-five-minute gate.
+- Bengali, French, Persian, and Urdu currently have no mapped non-lexical
+  self-check debt. Russian's two remaining candidates are both legacy lessons,
+  so their activity coverage stays coupled to an honest schema-v2 migration.
+  The measured backlog falls from 111 to 96 lessons; all 18 legacy candidates
+  remain explicit.
+- A clean package install still reports the already-recorded HL-I02 advisory:
+  Vitest 4.1.10 reaches PostCSS 8.5.19 through Vite 8.1.5, and the dry-run fix
+  resolves it by moving the transitive package to 8.5.25.
 
 ## Findings from HL-V03
 

@@ -82,6 +82,7 @@ saying since Lesson… one.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02] -->
+<!-- hl-activity: {"id":"AR-W07-hook-family-ha-kha-dot-position","kind":"text","assesses":["AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01"],"prompt":"Where is the dot on خ?","answer":"above","accepted":["one above","above the body"],"feedback":{"correct":"Right: خ is the hook-and-tail body with one dot above.","incorrect":"The dot on خ sits above the shared hook-and-tail body."},"response_seconds":8} -->
 
 [PAUSE 3s] What do **ح, خ, ج** share, and what tells them apart? (One
 **hook-and-tail body**; the **dots** — none / above / below.) Which sound is *خ*,

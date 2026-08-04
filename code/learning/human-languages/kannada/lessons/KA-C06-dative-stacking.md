@@ -66,6 +66,7 @@ dative or ablative. Kannada **-ಗೆ** carries one unambiguous job: “to/for.�
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02, KA-GRAMMAR-C06-DATIVE-STACKING-01] -->
+<!-- hl-activity: {"id":"KA-C06-dative-stacking-agglutinative","kind":"text","assesses":["KA-GRAMMAR-C06-DATIVE-STACKING-01"],"prompt":"Why is Kannada called agglutinative?","answer":"it stacks visible pieces with one job each","accepted":["it stacks visible pieces each with one job","it stacks one-job pieces"],"feedback":{"correct":"Correct: Kannada stacks visible pieces whose jobs stay distinct.","incorrect":"Agglutinative means that Kannada stacks visible pieces, each with one job."},"response_seconds":8} -->
 
 [PAUSE 3s] Why is Kannada called agglutinative? (**It stacks visible pieces,
 each with one job.**) How many jobs can Latin *-īs* fuse? (**Case, number, and
