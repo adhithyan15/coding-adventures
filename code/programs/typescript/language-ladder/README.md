@@ -2,66 +2,51 @@
 
 **The HL03 unified curriculum learning app** (it began life as the HL02
 `script-writing-visualizer` and has subsumed that app's modes). Five modes.
-**Learn** (the default) walks the structured shared spine — one concept
-at a time, across the learner's selected language mix, each new language showing its
-threads back to the ones already learned, then reviewing it all with a
-randomised SRS quiz. **Browse** and **Practice** work on *script letters*;
+**Learn** (the default) walks each selected language's validated local path —
+one prerequisite-safe micro-lesson at a time — and admits a lesson to mixed
+review only after focused retrieval in that language. Shared-spine abilities
+and grounded roots still show where independently ready paths connect.
+**Browse** and **Practice** work on *script letters*;
 **Lessons** drills the *written curriculum* — every lesson in every track — on a
 spaced-repetition schedule that persists between visits; and **Concepts** shows
 one idea in every language that has it, side by side.
 
 ## Learn mode (the curriculum session)
 
-The spine of the app: [HL03](../../../specs/HL03-unified-language-learning-app.md)
-and [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md) in one screen.
-For each concept in the explicit `core/spine.json` order, the
-engine's *teaching pass* (`sessionplan.ts` → `planSession`) is rendered as a
-numbered sweep — one card per selected language that teaches it, in registry
-order. The picker includes every current track, including Russian, Persian, and
-Urdu. Learn and inline script admission are now constrained by each track's
-validated `curriculum.json`; unmapped legacy material remains available in
-Lessons mode instead of silently entering the shared walk. The picker reports
-the exact mapped micro-lesson and extension totals for the selected mix. Each
-card carries the word in its own script, its etymology hook, its full
-authored Markdown micro-lesson, and the **connections back** to earlier
-languages that share a root, so the cross-language memory the interleaving is
-meant to build is made visible rather than left implicit. Prev / Next walk the
-spine, and a **jump picker** (a `<select>` of the whole book-ordered spine) leaps
-straight to any concept; a slim **progress bar** shows progress through the
-selected portion of the shared spine. Consolidation lessons (`practice`/`review`) are left to the
-review quiz, not the teaching sweep.
+The spine of the app is [HL03](../../../specs/HL03-unified-language-learning-app.md)
+plus the stricter [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md)
+progression contract. `curriculum.ts` loads all 20 `curriculum.json` maps and
+the pure frontier planner returns exactly one safe next lesson per selected
+language. A language advances independently; paths are grouped only when their
+current lessons share a spine ability. The picker includes every track,
+including Russian, Persian, and Urdu, and reports the exact mapped lesson and
+extension totals for the mix.
 
-`curriculum.ts` also exposes the browser-safe form of the pure independent
-frontier planner: one prerequisite-safe next lesson per selected language,
-grouped only when those local frontiers currently share a spine node. The
-current Learn screen still uses its global concept cursor; moving the visible
-progression, persistence, and focused-before-mixed eligibility onto the local
-frontiers is the next UI migration rather than a claim made by this tranche.
+Each frontier card shows the target form, romanization, etymology hook, complete
+authored Markdown micro-lesson, shared can-do, local `N of M` position, and any
+typed script/grammar/register/etymology extension attached at that point.
+Grounded root connections are shown only among languages simultaneously ready
+at the same shared ability. Script notes come from explicit local script
+extensions and the canonical script data, so Persian and Urdu keep distinct
+identities and no global concept cursor guesses where a script belongs.
 
-The session **introduces writing systems as-needed** (`scriptintro.ts`): the
-first time the walk reaches a non-Latin script — including Persian and Urdu's
-distinct script identities — that step gets a compact *"New script"* note (name, system, and how to
-recognise it, from the script data's `signature`), shown once at the earliest
-concept that teaches it. It's grounded: a script with no data (Kannada / Telugu
-/ Malayalam today) gets no note rather than an invented one.
+Before advancing, the learner starts a **focused check**. Lexical lessons ask
+for one English meaning without showing another language's card; a wrong answer
+reveals feedback and leaves the local frontier unchanged. Grammar, script, and
+other support lessons require the learner to complete the authored final recall
+from memory. One successful check completes exactly the current frontier lesson.
+`learnprogress.ts` persists stable lesson IDs independently per language and,
+on load, keeps only the longest valid local prefix. A newly inserted prerequisite
+therefore becomes the frontier instead of being skipped by stale saved state.
 
-Below the sweep sits the **review pass** — the second mechanism. A randomised,
-SRS-weighted quiz draws over everything covered so far (`plan.reviewGrid`, the
-concept×language grid up to the cursor), leaning on what you keep missing
-(`pickNext`). Each question is *"‹meaning› — in ‹language›?"* with options drawn
-from the **same concept in other languages** — the cross-language look-alikes
-the interleaving targets (Telugu ధన్యవాద vs Hindi धन्यवाद). Answers thread
-through `applyAnswer` (promote a hit, demote + log a miss), and a *"what you keep
-confusing"* panel rolls the mistakes up from `confusions(log)`. The review
-**persists** (`reviewstore.ts`): its SRS state and answer log are saved to
-`localStorage` after every answer and restored at startup — the same pattern
-`progress.ts` uses for the lesson schedule, with the same defensive parse (a
-corrupt or wrong-version blob restores as empty, never throws).
-
-The **teaching cursor persists too** (`cursorstore.ts`): the concept you walked
-to is saved on each Prev/Next and restored at startup, so the app resumes where
-you left off rather than back at the first concept. The restored index is
-clamped to the current spine, and a bad blob falls back to the start.
+Below the frontiers, the randomised SRS review draws only from independently
+focused-successful shared lessons. It waits until at least two visually distinct
+answers are eligible, then asks *"‹meaning› — in ‹language›?"* with options from
+that safe grid. A cross-language comparison can appear only after both local
+realizations have passed their own check. Answers still flow through
+`applyAnswer`; misses are demoted and recorded for *"what you keep confusing"*.
+`reviewstore.ts` persists that SRS state and answer log separately from local
+path completion.
 
 A quiet **"Reset progress"** control at the foot of the Learn view clears it all,
 including the saved language mix,
@@ -78,7 +63,7 @@ This mode is that join, and it is the data package's own
 `languagesForConcept` — a function shipped from the start, documented as "what
 the companion app calls," which until now had **no caller**.
 
-- **42 concepts are shared by two or more tracks**, from 973 lessons. A concept
+- **42 concepts are shared by two or more tracks**, from 1,066 lessons. A concept
   only one language tags is filtered out: there is nothing to compare it with,
   which also removes almost every namespaced (`ES-…`) tag without a special case.
 - Each row shows the **headword**, a **romanization** where it differs, and the
@@ -90,7 +75,7 @@ the companion app calls," which until now had **no caller**.
 
 ## Lessons mode
 
-Reads all **973 lessons across 20 languages** straight from the curriculum via
+Reads all **1,066 lessons across 20 languages** straight from the curriculum via
 `@coding-adventures/human-language-data`, and schedules them with the same
 Leitner machinery the letter drills use (`scheduler.ts` is generic over an
 index; it never needed to know what an item is).

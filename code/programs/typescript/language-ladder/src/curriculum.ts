@@ -47,6 +47,7 @@ const CURRICULUM_BY_LANGUAGE = new Map(
 const NODE_BY_CONCEPT = new Map(
   SPINE_NODES.flatMap((node) => node.concepts.map((concept) => [concept, node] as const)),
 );
+const NODE_BY_ID = new Map(SPINE_NODES.map((node) => [node.id, node]));
 
 export function languageDefinition(id: string): LanguageDefinition | undefined {
   return LANGUAGE_BY_ID.get(id);
@@ -58,6 +59,10 @@ export function languageName(id: string): string {
 
 export function spineNodeForConcept(concept: string): SpineNode | undefined {
   return NODE_BY_CONCEPT.get(concept);
+}
+
+export function spineNodeById(id: string): SpineNode | undefined {
+  return NODE_BY_ID.get(id);
 }
 
 export function curriculumForLanguage(language: string): LanguageCurriculum | undefined {
