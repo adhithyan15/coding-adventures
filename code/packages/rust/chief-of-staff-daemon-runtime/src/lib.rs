@@ -300,6 +300,14 @@ mod tests {
             Err(ControlPlaneError::Internal)
         }
 
+        fn reload_host(
+            &mut self,
+            _registration: HostRegistration,
+            _desired_state: DesiredState,
+        ) -> Result<LoadedHost, ControlPlaneError> {
+            Err(ControlPlaneError::Internal)
+        }
+
         fn list_hosts(&mut self) -> Result<Vec<LoadedHost>, ControlPlaneError> {
             Ok(Vec::new())
         }

@@ -178,6 +178,12 @@ two fully verified snapshots and reports added, removed, and replaced identities
 in stable order without mutating durable registration or live process state.
 Package activation remains an explicit lifecycle operation: discovery never
 silently replaces a running agent.
+The authenticated reload operation requires stopped durable intent and fresh
+absent or exited supervisor authority. It retains the stable agent identity,
+revision-CAS replaces package identity, resets cached observation, and records
+post-reload desired state atomically. If that state is running, the next normal
+reconciliation tick launches the replacement; the orchestrator itself remains
+online throughout.
 
 The Level 1 runtime injects a provider-neutral LLM client plus authorized input
 and output channel endpoints. For each verified UTF-8 message it sends the full

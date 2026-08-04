@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add an independently authorized `reload_host` operation and typed client call.
+- Preserve stopped/inactive reload conflicts as stable public conflict responses.
+
 ## 0.1.0
 
 - Add a bounded, versioned JSON request/response protocol for Chief host lifecycle operations.

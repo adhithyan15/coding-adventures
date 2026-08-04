@@ -509,6 +509,48 @@ impl<'a> ServiceRegistry<'a> {
         }
     }
 
+    /// CAS-replace package identity for a host whose durable intent is stopped.
+    ///
+    /// The replacement resets cached process observation because evidence for
+    /// the previous package cannot describe the new one. Callers remain
+    /// responsible for proving through fresh supervisor authority that the old
+    /// process is absent or exited before invoking this storage transaction.
+    pub fn replace_stopped_registration(
+        &self,
+        loaded: &LoadedHost,
+        registration: HostRegistration,
+        desired_state: DesiredState,
+    ) -> Result<LoadedHost, RegistryError> {
+        let old_name = &loaded.entry.registration.host_name;
+        if registration.host_name != *old_name {
+            return Err(RegistryError::invalid(
+                "host_name",
+                "cannot change during package replacement",
+            ));
+        }
+        if loaded.entry.registration == registration && loaded.entry.desired_state == desired_state
+        {
+            return Ok(loaded.clone());
+        }
+        if loaded.entry.desired_state != DesiredState::Stopped {
+            return Err(RegistryError::invalid(
+                "desired_state",
+                "must be stopped before package replacement",
+            ));
+        }
+        let replacement = HostEntry::registered(registration, desired_state);
+        let key = host_record_key(old_name);
+        let input = host_put(&key, encode_host_entry(&replacement))?
+            .with_if_revision(Some(loaded.revision.clone()));
+        match self.backend.put(input) {
+            Ok(record) => decode_storage_record(record, old_name),
+            Err(StorageError::Conflict { .. }) => {
+                Err(RegistryError::ConcurrentUpdate(old_name.clone()))
+            }
+            Err(error) => Err(error.into()),
+        }
+    }
+
     /// Deregister exactly the revision the caller inspected.
     pub fn deregister(&self, loaded: &LoadedHost) -> Result<(), RegistryError> {
         let name = &loaded.entry.registration.host_name;
@@ -1144,6 +1186,69 @@ mod tests {
         assert!(matches!(
             registry.update(&loaded, &replacement),
             Err(RegistryError::InvalidField { .. })
+        ));
+    }
+
+    #[test]
+    fn stopped_registration_replacement_is_cas_guarded_and_resets_observation() {
+        let backend = InMemoryStorageBackend::new();
+        let registry = ServiceRegistry::new(&backend);
+        let old = running_entry("mail-host").with_desired_state(DesiredState::Stopped);
+        let loaded = registry.register(&old).unwrap();
+        let replacement = registration("mail-host", 99);
+        let replaced = registry
+            .replace_stopped_registration(&loaded, replacement.clone(), DesiredState::Running)
+            .unwrap();
+        assert_eq!(replaced.entry().registration(), &replacement);
+        assert_eq!(replaced.entry().desired_state(), DesiredState::Running);
+        assert_eq!(replaced.entry().observation(), &HostObservation::stopped());
+        assert_eq!(
+            registry
+                .replace_stopped_registration(&replaced, replacement, DesiredState::Running,)
+                .unwrap(),
+            replaced
+        );
+        assert!(matches!(
+            registry.replace_stopped_registration(
+                &loaded,
+                registration("mail-host", 100),
+                DesiredState::Stopped,
+            ),
+            Err(RegistryError::ConcurrentUpdate(_))
+        ));
+    }
+
+    #[test]
+    fn package_replacement_requires_stopped_intent_and_stable_name() {
+        let backend = InMemoryStorageBackend::new();
+        let registry = ServiceRegistry::new(&backend);
+        let running = registry.register(&running_entry("mail-host")).unwrap();
+        assert!(matches!(
+            registry.replace_stopped_registration(
+                &running,
+                registration("mail-host", 99),
+                DesiredState::Running,
+            ),
+            Err(RegistryError::InvalidField {
+                field: "desired_state",
+                ..
+            })
+        ));
+        let stopped = running
+            .entry()
+            .clone()
+            .with_desired_state(DesiredState::Stopped);
+        let stopped = registry.update(&running, &stopped).unwrap();
+        assert!(matches!(
+            registry.replace_stopped_registration(
+                &stopped,
+                registration("other-host", 99),
+                DesiredState::Running,
+            ),
+            Err(RegistryError::InvalidField {
+                field: "host_name",
+                ..
+            })
         ));
     }
 

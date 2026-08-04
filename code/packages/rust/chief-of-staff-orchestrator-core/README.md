@@ -14,6 +14,11 @@ The core is keyless and payload-blind. Verified child processes own host-runtime
 execution and channel endpoint keys; the parent stores topology and coordinates
 lifecycle without reading agent messages or vault secrets.
 
+Package reload retains the stable host name but requires stopped durable intent
+and fresh absent or exited supervisor authority. One revision-CAS transaction
+then replaces package identity, clears stale observation, and stores whether the
+next reconciliation tick should start the replacement or leave it stopped.
+
 ## Validation
 
 ```sh

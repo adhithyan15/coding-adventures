@@ -14,7 +14,9 @@ that reconciliation must verify after restart.
 Records use a bounded, versioned binary codec and live behind the repository's
 `StorageBackend`. Registration uses atomic create-if-absent. Every update and
 deregistration is revision-CAS guarded, preventing a stale reconciler from
-overwriting or deleting a newer observation.
+overwriting or deleting a newer observation. Package replacement is a separate
+CAS operation limited to stopped durable intent; it resets cached observation,
+and its caller must first prove the old process is absent or exited.
 
 ## Validation
 

@@ -38,6 +38,8 @@ const MAX_CREDENTIAL_BYTES: usize = 4096;
 pub enum Operation {
     /// Register immutable host package identity and initial intent.
     RegisterHost,
+    /// Replace package identity for a stopped, supervisor-inactive host.
+    ReloadHost,
     /// List durable host records.
     ListHosts,
     /// Change durable desired lifecycle state.
@@ -89,6 +91,13 @@ pub trait ChiefControlPlane {
         desired_state: DesiredState,
     ) -> Result<LoadedHost, ControlPlaneError>;
 
+    /// Replace package identity for a stopped, supervisor-inactive host.
+    fn reload_host(
+        &mut self,
+        registration: HostRegistration,
+        desired_state: DesiredState,
+    ) -> Result<LoadedHost, ControlPlaneError>;
+
     /// Return durable hosts in stable host-name order.
     fn list_hosts(&mut self) -> Result<Vec<LoadedHost>, ControlPlaneError>;
 
@@ -120,6 +129,14 @@ where
         desired_state: DesiredState,
     ) -> Result<LoadedHost, ControlPlaneError> {
         OrchestratorCore::register_host(self, registration, desired_state).map_err(map_core_error)
+    }
+
+    fn reload_host(
+        &mut self,
+        registration: HostRegistration,
+        desired_state: DesiredState,
+    ) -> Result<LoadedHost, ControlPlaneError> {
+        OrchestratorCore::reload_host(self, registration, desired_state).map_err(map_core_error)
     }
 
     fn list_hosts(&mut self) -> Result<Vec<LoadedHost>, ControlPlaneError> {
@@ -400,30 +417,19 @@ impl DaemonClient {
     ) -> Result<JsonValue, DaemonClientError> {
         self.call(
             "register_host",
-            object(vec![
-                (
-                    "host_name",
-                    JsonValue::String(registration.host_name().as_str().to_string()),
-                ),
-                (
-                    "package_path",
-                    JsonValue::String(registration.package_path().as_str().to_string()),
-                ),
-                (
-                    "package_hash",
-                    JsonValue::String(hex_bytes(registration.package_hash())),
-                ),
-                (
-                    "restart_policy",
-                    JsonValue::String(
-                        restart_policy_name(registration.restart_policy()).to_string(),
-                    ),
-                ),
-                (
-                    "desired_state",
-                    JsonValue::String(desired_state_name(desired_state).to_string()),
-                ),
-            ]),
+            registration_params(registration, desired_state),
+        )
+    }
+
+    /// Safely replace one stopped host's package identity and post-reload intent.
+    pub fn reload_host(
+        &mut self,
+        registration: &HostRegistration,
+        desired_state: DesiredState,
+    ) -> Result<JsonValue, DaemonClientError> {
+        self.call(
+            "reload_host",
+            registration_params(registration, desired_state),
         )
     }
 
@@ -586,6 +592,31 @@ impl std::error::Error for DaemonClientError {
     }
 }
 
+fn registration_params(registration: &HostRegistration, desired_state: DesiredState) -> JsonValue {
+    object(vec![
+        (
+            "host_name",
+            JsonValue::String(registration.host_name().as_str().to_string()),
+        ),
+        (
+            "package_path",
+            JsonValue::String(registration.package_path().as_str().to_string()),
+        ),
+        (
+            "package_hash",
+            JsonValue::String(hex_bytes(registration.package_hash())),
+        ),
+        (
+            "restart_policy",
+            JsonValue::String(restart_policy_name(registration.restart_policy()).to_string()),
+        ),
+        (
+            "desired_state",
+            JsonValue::String(desired_state_name(desired_state).to_string()),
+        ),
+    ])
+}
+
 fn decode_client_response(
     text: &str,
     expected_request_id: &str,
@@ -658,6 +689,7 @@ fn decode_remote_error(value: Option<&JsonValue>) -> Result<JsonValue, DaemonCli
 enum Method {
     Authenticate,
     RegisterHost,
+    ReloadHost,
     ListHosts,
     SetDesiredState,
     ReconcileOnce,
@@ -670,6 +702,7 @@ impl Method {
         match value {
             "authenticate" => Some(Self::Authenticate),
             "register_host" => Some(Self::RegisterHost),
+            "reload_host" => Some(Self::ReloadHost),
             "list_hosts" => Some(Self::ListHosts),
             "set_desired_state" => Some(Self::SetDesiredState),
             "reconcile_once" => Some(Self::ReconcileOnce),
@@ -683,6 +716,7 @@ impl Method {
         match self {
             Self::Authenticate => None,
             Self::RegisterHost => Some(Operation::RegisterHost),
+            Self::ReloadHost => Some(Operation::ReloadHost),
             Self::ListHosts => Some(Operation::ListHosts),
             Self::SetDesiredState => Some(Operation::SetDesiredState),
             Self::ReconcileOnce => Some(Operation::ReconcileOnce),
@@ -841,6 +875,13 @@ fn dispatch<C: ChiefControlPlane>(
             let (registration, desired_state) = parse_registration(params)?;
             control_plane
                 .register_host(registration, desired_state)
+                .map(|host| loaded_host_json(&host))
+                .map_err(PublicError::from)
+        }
+        Method::ReloadHost => {
+            let (registration, desired_state) = parse_registration(params)?;
+            control_plane
+                .reload_host(registration, desired_state)
                 .map(|host| loaded_host_json(&host))
                 .map_err(PublicError::from)
         }
@@ -1470,6 +1511,20 @@ mod tests {
         assert!(registered.contains(r#""revision":"r1""#));
         assert!(registered.contains(r#""started_at_ns":null"#));
 
+        let replacement_hash = "22".repeat(32);
+        let reloaded = api.handle_text(
+            &mut session,
+            &request(
+                "reload",
+                "reload_host",
+                &format!(
+                    r#"{{"host_name":"agent-one","package_path":"/agents/two","package_hash":"{replacement_hash}","restart_policy":"on_failure","desired_state":"stopped"}}"#
+                ),
+            ),
+        );
+        assert!(reloaded.contains(&replacement_hash));
+        assert!(reloaded.contains("/agents/two"));
+
         let listed = api.handle_text(&mut session, &request("list", "list_hosts", "{}"));
         assert!(listed.contains(r#""host_name":"agent-one""#));
 
@@ -1511,6 +1566,7 @@ mod tests {
             *operations.lock().unwrap(),
             [
                 Operation::RegisterHost,
+                Operation::ReloadHost,
                 Operation::ListHosts,
                 Operation::SetDesiredState,
                 Operation::ReconcileOnce,
@@ -1689,6 +1745,14 @@ mod tests {
             Err(ControlPlaneError::Internal)
         }
 
+        fn reload_host(
+            &mut self,
+            _registration: HostRegistration,
+            _desired_state: DesiredState,
+        ) -> Result<LoadedHost, ControlPlaneError> {
+            Err(ControlPlaneError::Internal)
+        }
+
         fn list_hosts(&mut self) -> Result<Vec<LoadedHost>, ControlPlaneError> {
             Ok(Vec::new())
         }
@@ -1809,6 +1873,20 @@ mod tests {
                 Err(ControlPlaneError::Internal)
             }
 
+            fn reload_host(
+                &mut self,
+                registration: HostRegistration,
+                desired_state: DesiredState,
+            ) -> Result<LoadedHost, ControlPlaneError> {
+                assert_eq!(registration.host_name().as_str(), "typed-host");
+                assert_eq!(registration.package_path().as_str(), "/agents/typed");
+                assert_eq!(registration.package_hash(), &[0xab; 32]);
+                assert_eq!(registration.restart_policy(), RestartPolicy::OnFailure);
+                assert_eq!(desired_state, DesiredState::Stopped);
+                self.record("reload");
+                Err(ControlPlaneError::Conflict)
+            }
+
             fn list_hosts(&mut self) -> Result<Vec<LoadedHost>, ControlPlaneError> {
                 self.record("list");
                 Ok(Vec::new())
@@ -1888,6 +1966,13 @@ mod tests {
         assert_eq!(register.remote_code(), Some("internal"));
         assert_eq!(register.remote_message(), Some("operation failed"));
         assert_eq!(register.to_string(), "chief daemon rejected the request");
+        assert_eq!(
+            client
+                .reload_host(&registration, DesiredState::Stopped)
+                .unwrap_err()
+                .remote_code(),
+            Some("conflict")
+        );
 
         assert_eq!(
             client
@@ -1916,6 +2001,7 @@ mod tests {
             [
                 "list",
                 "register",
+                "reload",
                 "set",
                 "reconcile",
                 "health",
@@ -2022,6 +2108,13 @@ mod tests {
         struct PanickingControlPlane;
         impl ChiefControlPlane for PanickingControlPlane {
             fn register_host(
+                &mut self,
+                _: HostRegistration,
+                _: DesiredState,
+            ) -> Result<LoadedHost, ControlPlaneError> {
+                unreachable!()
+            }
+            fn reload_host(
                 &mut self,
                 _: HostRegistration,
                 _: DesiredState,
