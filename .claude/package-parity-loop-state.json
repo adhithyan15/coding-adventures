@@ -11,7 +11,13 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9884,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9884",
+    "branch": "codex/build-tool-haskell-go-field-aware-manifest-resolution",
+    "implementation_head": "b83d6587380ac95cf8da68c016a26f441be6ab4a",
+    "last_ci_repair": null
+  },
   "last_inventory": {
     "revision": "21b96a502887eb6186959c08187a20404235e4b7",
     "schema_version": 3,
@@ -460,10 +466,10 @@
     {
       "id": "build-tool-haskell-post-swift-field-aware-manifest-resolution",
       "title": "Make Haskell Go manifest resolution field-aware",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-post-perl-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-go-field-aware-manifest-resolution",
-      "pr_number": null,
+      "pr_number": 9884,
       "notes": "Materialized when the post-Perl audit selected Swift's coherent 65-false/0-missing-edge repair. Guarded PR #9878 merged as 4ad79aa054355b9086844ca5bad64be642230b56. The refreshed collision-checked inventory is unchanged at 1,263 implementation identities and 4,418 established-lane slots, 173 high-consensus packages with 270 missing slots, 813 singleton packages with 11,382 missing slots, 617 Rust singletons, and zero collisions or unknown buckets. A complete exact cross-engine resolver audit confirms Swift at 164 packages and 179 edges on both engines with zero drift. It selects Go as the largest remaining clean false-only slice: 302 packages, 962 Haskell edges versus 936 canonical Go edges, 26 Haskell-only edges, and zero Go-only edges. Elixir is the other clean false-only slice at 8/0; C# and F# remain 47/178 and 39/178 two-sided, TypeScript 148/948, Java/Kotlin 4/24 and 9/13, and Dart 0/67. Go therefore removes the highest coherent false-cycle risk without combining alias discovery, missing-edge repair, JVM/.NET semantics, or standalone BUILD debt. The intervening catalog-reload, JavaScript shift, and Tamil commits add no package identity, collision, or resolver-priority change. Corpus inspection traced every false edge to comments or replace-only local aliases in go.mod rather than an authoritative require directive. The shared contract and four-package fixture now cover single and block requirements, indirect annotations, comments, and replace/exclude metadata; the fixture first failed Haskell with the exact replace-only gamma edge while the Go oracle passed. Haskell now reads only require directives. Both engines match exactly across all 302 Go packages and 936 edges with zero one-sided differences, and both real front doors complete BUILD validation with zero failures. Full Go test/vet/build and 75.1% statement coverage pass; full Haskell build-tool/directed-graph/graph tests, GHC -Wall -Werror, cabal check, Haddock, and HPC coverage pass at 51% top-level, 61% alternatives, and 67% expressions. The schema-1 shared corpus validates 48 cases and 136 files, all 40 runner tests pass, go mod verify succeeds, and the collision report remains clean. Cabal outdated reports only the existing intentional upper bounds on containers and time; OSV Scanner, govulncheck, HLint, and Fourmolu are unavailable locally. JSON/state invariants, diff checks, changed-scope credential scan, and direct security review pass. The field reader performs no execution or referenced-path I/O and adds no process, network, credential, or host-authority surface. After a conflict-free rebase onto 02626bd6, the collision-checked counts remain unchanged. The latest Chief changes add no identity; they extend the existing manifest and skill-parser portable owners with schema-v2 channel-version maps and fail-closed compatibility, so no new item or priority change is required. The subsequent canonical Latin book commit advances main to 21b96a50 but is package-identity and resolver neutral."
     },
     {
