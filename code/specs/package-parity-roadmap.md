@@ -726,6 +726,26 @@ The quick dependency/leverage pass selects the 55-package child first because
 one common prerequisite layer closes almost the entire TypeScript validator
 wave without mixing the SIR dependency family.
 
+Representative validation of that child also exposed a separate compiler-input
+gap: algol-lexer inherits the shared src root while TypeScript's default
+include admits tests/tokenizer.test.ts, so its optional npm run build fails
+with TS6059 even though the authoritative coverage-oriented BUILD_windows
+front door passes. The new
+typescript-standalone-tsconfig-input-boundaries backlog item owns a repository
+audit and dependency-shaped repair; the BUILD prerequisite tranche does not
+absorb compiler configuration.
+
+The implemented BUILD closure changes only those 55 Windows overrides. A
+minimality audit reconstructs every original file after removing the owned
+bootstrap insertion, and the canonical validator falls from the exact
+58-package baseline to only the three separately owned SIR diagnostics.
+Representative Windows front doors pass 169 grammar-tools tests at 85.85%
+statement coverage and 158 algol-lexer tests at 87.5%, with zero production
+vulnerabilities. The Go build tool passes test, vet, build, and module
+verification; its committed diff plan reports 55 changed and 185 affected
+TypeScript packages. The collision-checked parity inventory is unchanged and
+still has zero collisions or unknown buckets.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are

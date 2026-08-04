@@ -320,7 +320,7 @@
       "depends_on": [],
       "branch": "codex/typescript-build-windows-cli-builder-closure",
       "pr_number": null,
-      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. Fifty-four packages are missing only typescript/cli-builder, while grammar-tools is missing cli-builder plus directed-graph and state-machine. Reconcile these 55 Windows front doors with their authoritative generic BUILD prerequisite order as one common dependency-shaped closure; keep the three SIR runtime packages separate. Selected by the post-merge dependency/leverage pass because one shared prerequisite repair closes 55 of 58 TypeScript validator failures in a single coherent layer, leaving the unrelated three-package SIR closure explicit and pending. The collision-checked da895587f3 inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets."
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. Fifty-four packages are missing only typescript/cli-builder, while grammar-tools is missing cli-builder plus directed-graph and state-machine. Reconcile these 55 Windows front doors with their authoritative generic BUILD prerequisite order as one common dependency-shaped closure; keep the three SIR runtime packages separate. Selected by the post-merge dependency/leverage pass because one shared prerequisite repair closes 55 of 58 TypeScript validator failures in a single coherent layer, leaving the unrelated three-package SIR closure explicit and pending. The collision-checked da895587f3 inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The implementation changes only the 55 owned BUILD_windows files, preserves every prior command byte-for-byte after removing the inserted bootstrap, and verifies complete dependency-safe ordering. The canonical validator falls from the exact 58-package red baseline to only the three separately owned SIR diagnostics. Real Windows front doors pass 169 grammar-tools tests at 85.85% statement coverage and 158 algol-lexer tests at 87.5%, with zero production vulnerabilities. The Go build tool passes test, vet, build, and module verification; its committed diff plan reports exactly 55 changed and 185 affected TypeScript packages. The collision-checked inventory remains unchanged with zero collisions and unknown buckets. An optional algol-lexer npm run build exposed a separate TS6059 compiler-input boundary and is logged pending as typescript-standalone-tsconfig-input-boundaries; its generated test artifacts were removed and this tranche remains scoped to BUILD prerequisites."
     },
     {
       "id": "typescript-build-windows-sir-runtime-closure",
@@ -330,6 +330,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. sir-runtime-core lacks exceptions and pairs, sir-runtime-oop lacks core plus exceptions and pairs, and sir-runtime-symbolic lacks cas-pattern-matching plus symbolic-ir. Repair these three related Windows front doors as a separate SIR runtime dependency closure."
+    },
+    {
+      "id": "typescript-standalone-tsconfig-input-boundaries",
+      "title": "Audit standalone TypeScript build input boundaries",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during representative downstream validation of the TypeScript BUILD_windows cli-builder closure. algol-lexer inherits the shared src rootDir but has no include boundary, so its optional npm run build admits tests/tokenizer.test.ts through TypeScript's default include and fails with TS6059. The package's authoritative BUILD_windows coverage front door remains green. Audit build-script packages for the same rootDir/include mismatch and repair the resulting compiler-input boundary as a separate dependency-shaped tranche; do not widen BUILD prerequisite work."
     },
     {
       "id": "build-file-standalone-integrity-lua",
