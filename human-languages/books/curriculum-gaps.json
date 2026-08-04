@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "durationModel": {
-    "version": 1,
+    "version": 2,
     "thresholdSeconds": 300,
     "spokenWordsPerMinute": 120,
     "learnerResponseSecondsPerPrompt": 8,
