@@ -865,6 +865,11 @@ clean. Go test, vet, build, and module verification pass, and the full Go
 validator has zero TypeScript diagnostics while matching the clean baseline's
 17 unrelated Perl/Python/Swift diagnostics exactly.
 
+After one unrelated curriculum merge, the branch rebases cleanly onto
+`00e47db9a4`; the refreshed collision inventory and all contract/Go gates remain
+unchanged. The committed TypeScript plan reports exactly 63 changed packages,
+236 affected packages, 470 total packages, and 1,076 dependency edges.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
