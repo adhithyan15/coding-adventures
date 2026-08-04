@@ -1,4 +1,4 @@
-"""Audit the shared TypeScript compiler-path portability contract.
+"""Audit the repository TypeScript compiler-path portability contracts.
 
 The repository intentionally keeps one extendable TypeScript base config. A
 plain relative path in that file is anchored to the base file, not to a child
@@ -6,6 +6,10 @@ project. TypeScript 5.5's ``${configDir}`` template is the portable way to say
 "the directory of the project being compiled". This module keeps that small
 but high-leverage build invariant executable without requiring Node or an npm
 install in the CI detection job.
+
+Standalone configs have a second boundary: an emit-capable build must direct
+generated files away from tracked source and test trees. Those projects either
+opt out with ``noEmit: true`` or declare a non-empty ``outDir``.
 """
 
 from __future__ import annotations
@@ -48,6 +52,8 @@ class AuditSummary:
     shared_projects: int
     inherited_root_dir: int
     inherited_out_dir: int
+    standalone_emit_projects: int
+    isolated_standalone_projects: int
     locked_compilers: int
     issues: tuple[Issue, ...]
 
@@ -166,6 +172,8 @@ def audit_repository(root: Path) -> AuditSummary:
     shared_projects = 0
     inherited_root_dir = 0
     inherited_out_dir = 0
+    standalone_emit_projects = 0
+    isolated_standalone_projects = 0
     for manifest_path in _area_files(root, "package.json"):
         manifest = _read_json(root, manifest_path, issues)
         if not isinstance(manifest, dict):
@@ -180,10 +188,25 @@ def audit_repository(root: Path) -> AuditSummary:
         if config is None:
             continue
         total_projects += 1
+        options = _compiler_options(config)
         if not _extends_shared_base(root, config_path, config):
+            if options.get("noEmit") is True:
+                continue
+            standalone_emit_projects += 1
+            out_dir = options.get("outDir")
+            if isinstance(out_dir, str) and out_dir.strip():
+                isolated_standalone_projects += 1
+            else:
+                issues.append(
+                    Issue(
+                        "STANDALONE_OUTPUT_NOT_ISOLATED",
+                        _display_path(root, config_path),
+                        "emit-capable standalone config requires noEmit: true "
+                        "or a non-empty compilerOptions.outDir",
+                    )
+                )
             continue
         shared_projects += 1
-        options = _compiler_options(config)
         if "rootDir" not in options:
             inherited_root_dir += 1
         if "outDir" not in options:
@@ -226,6 +249,8 @@ def audit_repository(root: Path) -> AuditSummary:
         shared_projects=shared_projects,
         inherited_root_dir=inherited_root_dir,
         inherited_out_dir=inherited_out_dir,
+        standalone_emit_projects=standalone_emit_projects,
+        isolated_standalone_projects=isolated_standalone_projects,
         locked_compilers=locked_compilers,
         issues=tuple(issues),
     )
@@ -262,6 +287,8 @@ def main() -> int:
         f"shared={summary.shared_projects} "
         f"inherited_rootDir={summary.inherited_root_dir} "
         f"inherited_outDir={summary.inherited_out_dir} "
+        f"standalone_emit={summary.standalone_emit_projects} "
+        f"standalone_isolated={summary.isolated_standalone_projects} "
         f"compiler_locks={summary.locked_compilers}"
     )
     return 0
