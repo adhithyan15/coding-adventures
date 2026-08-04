@@ -11,7 +11,13 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9911,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9911",
+    "branch": "codex/typescript-build-windows-sir-runtime-closure",
+    "implementation_head": "111b711765623d4a8ca2a812e4fd8c386a91d2ae",
+    "last_ci_repair": null
+  },
   "last_inventory": {
     "revision": "4c9d1a6f6b4a35556426bebbe0ed385fd312628d",
     "schema_version": 3,
@@ -325,11 +331,11 @@
     {
       "id": "typescript-build-windows-sir-runtime-closure",
       "title": "Repair the TypeScript BUILD_windows SIR runtime prerequisite closure",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/typescript-build-windows-sir-runtime-closure",
-      "pr_number": null,
-      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. sir-runtime-core lacks exceptions and pairs, sir-runtime-oop lacks core plus exceptions and pairs, and sir-runtime-symbolic lacks cas-pattern-matching plus symbolic-ir. Repair these three related Windows front doors as a separate SIR runtime dependency closure. Selected after guarded PR #9909 merged because the exact three-package red baseline is the complete remaining TypeScript BUILD_windows validator debt; this bounded dependency family has higher immediate closure leverage than the still-unclassified repository-wide TS6059 input-boundary audit. The collision-checked 4c9d1a6f6b inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The implemented contract and focused repository regression lock the exact three prerequisite orders. Clean front-door validation also exposed and repaired same-family strict TypeScript gaps: core and oop now declare the Node typings required while compiling local core sources, core builtin callbacks explicitly accept Val arguments, and oop narrows nullable extremal block keys without runtime changes. The canonical validator passes all 470 TypeScript packages. Real Windows front doors pass 60 core tests at 93.2% statement coverage, 120 oop tests at 96.31%, and 23 symbolic tests at 100%; all three production audits and builds pass, and none declares a lint script. The Go build tool passes test, vet, build, and module verification. Its committed diff plan selects exactly seven packages (the three runtimes plus four materialized prerequisites) and skips 463. The collision inventory remains unchanged with zero collisions or unknown buckets."
+      "pr_number": 9911,
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. sir-runtime-core lacks exceptions and pairs, sir-runtime-oop lacks core plus exceptions and pairs, and sir-runtime-symbolic lacks cas-pattern-matching plus symbolic-ir. Repair these three related Windows front doors as a separate SIR runtime dependency closure. Selected after guarded PR #9909 merged because the exact three-package red baseline is the complete remaining TypeScript BUILD_windows validator debt; this bounded dependency family has higher immediate closure leverage than the still-unclassified repository-wide TS6059 input-boundary audit. The collision-checked 4c9d1a6f6b inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The implemented contract and focused repository regression lock the exact three prerequisite orders. Clean front-door validation also exposed and repaired same-family strict TypeScript gaps: core and oop now declare the Node typings required while compiling local core sources, core builtin callbacks explicitly accept Val arguments, and oop narrows nullable extremal block keys without runtime changes. The canonical validator passes all 470 TypeScript packages. Real Windows front doors pass 60 core tests at 93.2% statement coverage, 120 oop tests at 96.31%, and 23 symbolic tests at 100%; all three production audits and builds pass, and none declares a lint script. The Go build tool passes test, vet, build, and module verification. Its committed diff plan selects exactly seven packages (the three runtimes plus four materialized prerequisites) and skips 463. The collision inventory remains unchanged with zero collisions or unknown buckets. Ready-for-review PR #9911 opened at exact implementation head 111b711765623d4a8ca2a812e4fd8c386a91d2ae."
     },
     {
       "id": "typescript-standalone-tsconfig-input-boundaries",
