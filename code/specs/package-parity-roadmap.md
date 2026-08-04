@@ -746,6 +746,31 @@ verification; its committed diff plan reports 55 changed and 185 affected
 TypeScript packages. The collision-checked parity inventory is unchanged and
 still has zero collisions or unknown buckets.
 
+Guarded squash auto-completion merged PR #9909 at exact final head
+`8d91b61752` as `4c9d1a6f6b` after all 20 checks were terminal acceptable and
+two independent mergeability readings were `MERGEABLE/CLEAN`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419
+slots, 173 high-consensus packages with 270 gaps, 814 singleton packages with
+11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The
+quick dependency/leverage pass selects the remaining three-package SIR runtime
+prerequisite closure because its exact red baseline is the complete outstanding
+TypeScript `BUILD_windows` validator debt. The repository-wide TS6059 input
+boundary audit remains explicit and pending until its affected corpus is
+classified.
+
+The implemented SIR closure materializes those exact prerequisite orders and
+adds a focused repository regression. Clean front-door execution then exposed
+same-family strict compiler gaps hidden behind the missing prerequisites: core
+and oop now declare the Node typings needed while compiling local core sources,
+core's builtin callbacks explicitly accept SIR values, and oop narrows nullable
+extremal block keys without changing runtime behavior. The canonical validator
+passes all 470 TypeScript packages. Real Windows front doors pass 60 core tests
+at 93.2% statement coverage, 120 oop tests at 96.31%, and 23 symbolic tests at
+100%; package builds, production audits, and the full Go build-tool gates pass.
+The committed diff plan selects exactly the three runtimes and their four
+prerequisites, with 463 TypeScript packages skipped. The collision inventory is
+unchanged with zero collisions or unknown buckets.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
