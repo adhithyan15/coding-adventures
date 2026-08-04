@@ -333,6 +333,15 @@ summary and description text, file and require-path lists, metadata, comments,
 quote forms and optional call parentheses are accepted; the gem name is matched
 case-insensitively against known Ruby package aliases.
 
+For Swift `Package.swift` manifests, dependency candidates come only from the
+quoted relative path in local `.package(path: "...")` declarations. The final
+path component is matched case-insensitively against known Swift package
+directory aliases. Resolvers ignore package and product identity, target and
+product dependency names, external `.package(url: ...)` declarations, source
+text, string literals, line and block comments, and every other initializer or
+field. Absolute paths and paths whose final component is empty, `.` or `..` do
+not create internal graph edges.
+
 For Perl manifests, dependency candidates come only from top-level `requires`
 statements in the root `cpanfile`. A statement is top-level only when it begins
 outside every Perl block; `requires` calls inside `on ... => sub { ... }` phase

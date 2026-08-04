@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -254,6 +254,26 @@ resolutionPerlSpec = describe "Perl resolution conformance" $ do
                     Right
                         [ ["perl/beta-helper", "perl/delta_name", "perl/gamma"]
                         , ["perl/alpha"]
+                        ]
+
+resolutionSwiftSpec :: Spec
+resolutionSwiftSpec = describe "Swift resolution conformance" $ do
+    it "reads only local package path declarations" $
+        withFixture "resolution-swift-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "swift" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "swift/alpha"
+                    , "swift/beta-helper"
+                    , "swift/delta_name"
+                    , "swift/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["swift/beta-helper", "swift/delta_name", "swift/gamma"]
+                        , ["swift/alpha"]
                         ]
 
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation

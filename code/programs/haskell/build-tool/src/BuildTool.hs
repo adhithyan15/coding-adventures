@@ -19,7 +19,7 @@ import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
 import Control.Monad (filterM, foldM, forM, when)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
-import Data.Char (isAlpha, isAlphaNum, ord, toLower)
+import Data.Char (isAlpha, isAlphaNum, isSpace, ord, toLower)
 import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
@@ -815,6 +815,7 @@ readManifestTokens pkg
     | packageLanguage pkg == "python" = readPythonDependencyTokens pkg
     | packageLanguage pkg == "ruby" = readRubyDependencyTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
+    | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
 
 readCabalDependencyTokens :: Package -> IO [String]
@@ -1190,6 +1191,115 @@ hidePerlStringContents = go Nothing
 
 countCharacter :: Char -> String -> Int
 countCharacter target = length . filter (== target)
+
+readSwiftDependencyTokens :: Package -> IO [String]
+readSwiftDependencyTokens pkg = do
+    let manifestPath = packagePath pkg </> "Package.swift"
+    exists <- doesFileExist manifestPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict manifestPath
+            pure (swiftDependencyTokens contents)
+
+swiftDependencyTokens :: String -> [String]
+swiftDependencyTokens = nub . mapMaybe swiftPathToken . swiftPackagePathValues . stripSwiftComments
+
+swiftPackagePathValues :: String -> [String]
+swiftPackagePathValues = collect
+  where
+    collect [] = []
+    collect ('"' : rest) = collect (dropSwiftString rest)
+    collect source@(_character : rest)
+        | ".package" `isPrefixOf` source =
+            case parseSwiftPackagePath (drop (length (".package" :: String)) source) of
+                Just (path, remaining) -> path : collect remaining
+                Nothing -> collect rest
+        | otherwise = collect rest
+
+parseSwiftPackagePath :: String -> Maybe (String, String)
+parseSwiftPackagePath source = do
+    afterOpening <- consumeSwiftCharacter '(' (dropWhile isSpace source)
+    let afterPathWhitespace = dropWhile isSpace afterOpening
+    afterPath <- stripSwiftFieldName "path" afterPathWhitespace
+    afterColon <- consumeSwiftCharacter ':' (dropWhile isSpace afterPath)
+    parseSwiftQuotedString (dropWhile isSpace afterColon)
+
+stripSwiftFieldName :: String -> String -> Maybe String
+stripSwiftFieldName fieldName source
+    | fieldName `isPrefixOf` source =
+        let remainder = drop (length fieldName) source
+         in if null remainder || not (isAlphaNum (head remainder) || head remainder `elem` ['_', '-'])
+                then Just remainder
+                else Nothing
+    | otherwise = Nothing
+
+consumeSwiftCharacter :: Char -> String -> Maybe String
+consumeSwiftCharacter expected (character : rest)
+    | character == expected = Just rest
+consumeSwiftCharacter _ _ = Nothing
+
+parseSwiftQuotedString :: String -> Maybe (String, String)
+parseSwiftQuotedString ('"' : rest) = collect [] rest
+  where
+    collect _ [] = Nothing
+    collect value ('\\' : escaped : remaining) = collect (escaped : '\\' : value) remaining
+    collect value ('"' : remaining) = Just (reverse value, remaining)
+    collect value (character : remaining) = collect (character : value) remaining
+parseSwiftQuotedString _ = Nothing
+
+dropSwiftString :: String -> String
+dropSwiftString [] = []
+dropSwiftString ('\\' : _escaped : rest) = dropSwiftString rest
+dropSwiftString ('"' : rest) = rest
+dropSwiftString (_character : rest) = dropSwiftString rest
+
+stripSwiftComments :: String -> String
+stripSwiftComments = collect 0 False
+  where
+    collect :: Int -> Bool -> String -> String
+    collect _ _ [] = []
+    collect blockDepth inString ('/' : '*' : rest)
+        | not inString = ' ' : ' ' : collect (blockDepth + 1) False rest
+    collect blockDepth inString ('*' : '/' : rest)
+        | not inString && blockDepth > 0 = ' ' : ' ' : collect (blockDepth - 1) False rest
+    collect blockDepth inString ('/' : '/' : rest)
+        | not inString && blockDepth == 0 = ' ' : ' ' : stripSwiftLineComment rest
+    collect blockDepth True ('\\' : escaped : rest) = '\\' : escaped : collect blockDepth True rest
+    collect blockDepth inString ('"' : rest)
+        | blockDepth == 0 = '"' : collect blockDepth (not inString) rest
+    collect blockDepth inString (character : rest)
+        | blockDepth > 0 = preserveSwiftLineBreak character : collect blockDepth inString rest
+        | otherwise = character : collect blockDepth inString rest
+
+    stripSwiftLineComment [] = []
+    stripSwiftLineComment ('\n' : rest) = '\n' : collect 0 False rest
+    stripSwiftLineComment ('\r' : rest) = '\r' : collect 0 False rest
+    stripSwiftLineComment (_character : rest) = ' ' : stripSwiftLineComment rest
+
+    preserveSwiftLineBreak character
+        | character `elem` ['\n', '\r'] = character
+        | otherwise = ' '
+
+swiftPathToken :: String -> Maybe String
+swiftPathToken path
+    | isPortableAbsoluteSwiftPath path = Nothing
+    | not (null path) && last path `elem` ['/', '\\'] = Nothing
+    | null components = Nothing
+    | lastComponent `elem` ["", ".", ".."] = Nothing
+    | otherwise = Just (map toLower lastComponent)
+  where
+    components = wordsBy (`elem` ['/', '\\']) path
+    lastComponent = last components
+
+isPortableAbsoluteSwiftPath :: String -> Bool
+isPortableAbsoluteSwiftPath [] = False
+isPortableAbsoluteSwiftPath path@(first : rest) =
+    isAbsolute path
+        || first `elem` ['/', '\\']
+        || case rest of
+            ':' : _ -> isAlpha first
+            _ -> False
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do

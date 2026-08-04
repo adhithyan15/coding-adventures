@@ -26,6 +26,9 @@ All notable changes to this package will be documented in this file.
 - Shared Perl field-boundary coverage for top-level runtime requirements,
   module and distribution aliases, phase-block exclusions, quote forms,
   optional versions, and non-authoritative `Makefile.PL` fields.
+- Shared Swift field-boundary coverage for local package path declarations,
+  directory aliases, comments, external URLs, and unrelated package, product,
+  and target metadata.
 
 ### Changed
 
@@ -55,6 +58,11 @@ All notable changes to this package will be documented in this file.
   declarations, ignoring test and other phase blocks plus `Makefile.PL`
   dependency tables, while registering exact declared module names and
   current and legacy distribution aliases.
+- Resolve Swift edges only from relative `.package(path: "...")`
+  declarations, using the final directory component and ignoring line and
+  nested block comments plus unrelated Swift strings and initializer fields.
+- Make the Go resolver apply the same comment-aware Swift manifest boundary
+  instead of accepting a `.package(path:)` example inside a block comment.
 - Declare aes-modes' now-authoritative local AES prerequisite in its portable
   BUILD recipe so standalone build validation remains correct.
 
