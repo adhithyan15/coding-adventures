@@ -1669,7 +1669,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Exception(_) => name == "message",
             Value::Seq(_) => matches!(
                 name,
-                "length" | "size" | "first" | "last" | "[]" | "reverse" | "sort" | "join"
+                "length" | "size" | "first" | "last" | "[]" | "[]=" | "reverse" | "sort" | "join"
                     | "include?" | "push" | "append" | "pop" | "fetch" | "each" | "map"
                     | "collect" | "select" | "filter" | "reject" | "find" | "detect" | "any?"
                     | "all?" | "none?" | "reduce" | "inject" | "sort_by" | "min_by" | "max_by"
@@ -1800,6 +1800,19 @@ pub const RUNTIME: &str = r##"mod __sir {
                 recv
             }
             "pop" => items_rc.borrow_mut().pop().unwrap_or(Value::Nil),
+            // `Array#[]=` — the OO-surface indexed write (`arr[i] = v`, as
+            // opposed to the SIR-native `SeqSet` statement). Delegates to the
+            // SAME `seq_set` primitive `SeqSet` lowers to, so the two paths
+            // share one strictness rule (`0 <= i < len`, panics outside —
+            // matching the Go/C/Rust `SeqSet` reference, no auto-grow).
+            // Bracket-index write lowers through `__method__` (this dispatch),
+            // matching how `[]`'s lenient read above is the OO-surface
+            // counterpart to `SeqIndex`.
+            "[]=" => {
+                let idx = pos.first().cloned().unwrap_or(Value::Nil);
+                let val = pos.get(1).cloned().unwrap_or(Value::Nil);
+                seq_set(&recv, &idx, val)
+            }
             // `Array#fetch(i)` is the STRICT indexed read: unlike `arr[i]`
             // (which returns `nil` out of bounds), a `fetch` past the end
             // (or a negative index past the front) raises `IndexError` in

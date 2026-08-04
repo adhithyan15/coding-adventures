@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.39.2 — fix: `Array#[]=` (bracket-index write) was unimplemented
+
+Part of "Python/JS/Go/Rust backends: implement `[]`/`[]=` bracket-index
+runtime dispatch" — `arr[i] = v` lowers through the same
+`__method__("[]=", recv, i, v)` envelope every Collections method uses
+(PR #9686), not the SIR-native `SeqSet` statement. `Array#[]` (read) and
+`Hash#[]`/`Hash#[]=` already worked on this backend; only `Array#[]=`'s
+name was missing from `array_method`'s catalog, so a bracket-index write
+on an Array reached the `unknown_method` `NoMethodError` floor at
+runtime.
+
+Fixed by delegating to the pre-existing `seq_set` primitive — the SAME
+one the native `SeqSet` statement already lowers to — so the two paths
+share one strictness rule (`0 <= i < len`, panics outside; no
+auto-grow, matching the Go/C/Rust `SeqSet` reference) rather than
+risking two independently-maintained implementations drifting apart.
+`"[]="` also added to the `Value::Seq` arm of the `respond_to?`
+membership check.
+
+Python, JavaScript, TypeScript, and Go still have NO `[]`/`[]=` runtime
+dispatch entries at all (a larger gap than Rust's single missing name) —
+tracked as separate follow-ups per backend.
+
+`semantic-ir-to-rust` 0.39.1 -> 0.39.2.
+
 ## 0.39.1 — `is_rust_keyword` missing `crate`/`extern`/`self`/`Self`/`super` (task #116 audit)
 
 Follow-up to task #110/#112 (`semantic-ir-to-javascript`/`-typescript`'s
