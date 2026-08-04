@@ -19,9 +19,10 @@ shared directory's `src` and `dist` rather than its own. A clean build of
 
 The repository has 458 TypeScript package/program configs with build scripts.
 Of those, 129 directly extend the shared base without overriding either path;
-155 directly extend it and override both paths; three override only `rootDir`;
-and the remaining configs do not consume this shared path contract. Local
-overrides remain authoritative.
+three more override only `rootDir` and still inherit `outDir`; 155 directly
+extend it and override both paths; and the remaining configs do not consume
+this shared path contract. The shared repair therefore affects 132 configs in
+total. Local overrides remain authoritative.
 
 ## Required behavior
 
@@ -66,8 +67,8 @@ validation MUST cover:
 - a dependency consumer that inherits both paths (`logic-gates`);
 - a package with explicit local overrides, proving they remain authoritative;
 - the one program config that inherits the shared paths; and
-- the full set of 129 current inheritors via `tsc --showConfig`, requiring
-  package-local effective `rootDir` and `outDir` values.
+- all 129 current `rootDir` inheritors and 132 `outDir` inheritors via
+  `tsc --showConfig`, requiring package-local effective values.
 
 Standalone configs that do not extend this base are outside this contract. Any
 in-place emission gap they contain is separately owned and must not be repaired

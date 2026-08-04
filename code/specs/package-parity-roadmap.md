@@ -694,7 +694,7 @@ implementation identities, 4,419 established-lane slots, 173 high-consensus
 packages with 270 missing slots, 814 singleton packages with 11,396 missing
 slots, 618 Rust singletons, and zero collisions or unknown buckets. The quick
 dependency/leverage pass selects the shared TypeScript compiler-path boundary
-next: it is unblocked and one root configuration affects 129 package/program
+next: it is unblocked and one root configuration affects 132 package/program
 configs, so it has broader immediate package-build leverage than a
 single-engine follow-up without mixing resolver semantics or the separately
 owned 58-package BUILD_windows debt.
@@ -752,8 +752,9 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   `tsconfig.base.json` makes `rootDir: "src"` relative to the shared config.
   Of 458 TypeScript package/program configs with build scripts, the refined
   audit finds 129 direct shared-base consumers that inherit both faulty paths,
-  155 that override both paths, three that override `rootDir` only, and 36
-  rootDir-less standalone configs outside the shared contract. This is a
+  three that override `rootDir` but still inherit the faulty `outDir`, 155 that
+  override both paths, and 36 rootDir-less standalone configs outside the
+  shared contract. The repair affects 132 configs in total. This is a
   dependency-shaped portability wave, separate from the 58-package
   `BUILD_windows` debt;
 - isolate outputs for the two standalone TypeScript configs that have neither

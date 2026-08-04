@@ -136,7 +136,7 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
         self.assertEqual(summary.total_projects, 458)
         self.assertEqual(summary.shared_projects, 287)
         self.assertEqual(summary.inherited_root_dir, 129)
-        self.assertEqual(summary.inherited_out_dir, 129)
+        self.assertEqual(summary.inherited_out_dir, 132)
         self.assertEqual(summary.locked_compilers, 444)
 
 
