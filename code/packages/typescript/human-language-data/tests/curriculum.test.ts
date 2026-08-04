@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { validateCurriculum } from "../src/curriculum.js";
 import { parseLesson } from "../src/parse.js";
-import type { CurriculumSpine, LanguageRegistry, Taxonomy } from "../src/types.js";
+import type {
+  CurriculumSpine,
+  LanguageCurriculum,
+  LanguageRegistry,
+  Taxonomy,
+} from "../src/types.js";
 
 const registry: LanguageRegistry = {
   version: 1,
@@ -102,6 +107,93 @@ describe("curriculum prerequisite validation", () => {
     ];
     expect(validateCurriculum({ registry, taxonomy, spine, lessons }).map((issue) => issue.code))
       .toContain("lesson-prerequisite-cycle");
+  });
+});
+
+describe("per-language realization-map validation", () => {
+  const lessons = [
+    parseLesson(source("A", "word", "GREETING-HELLO", []), "test"),
+    parseLesson(source("B", "practice", "TEST-PRACTICE", ["A"]), "test"),
+  ];
+  const curriculum = (): LanguageCurriculum => ({
+    version: 1,
+    language: "test",
+    path: [
+      {
+        id: "TEST-HELLO-1",
+        spine_node: "HELLO",
+        lessons: ["A"],
+        before: [],
+        inline: [],
+        after: [],
+      },
+      {
+        id: "TEST-HELLO-2",
+        spine_node: "HELLO",
+        lessons: ["B"],
+        before: [],
+        inline: ["TEST-EXT-PRACTICE"],
+        after: [],
+      },
+    ],
+    spine: {
+      HELLO: {
+        segments: ["TEST-HELLO-1", "TEST-HELLO-2"],
+        omits: [],
+        relocates: {},
+      },
+    },
+    extensions: [
+      {
+        id: "TEST-EXT-PRACTICE",
+        stage: "pre-A1",
+        kind: "supporting",
+        category: "consolidation",
+        canDo: "I can retrieve the greeting once more.",
+        prerequisites: ["HELLO"],
+        lessons: ["B"],
+      },
+    ],
+  });
+
+  it("accepts repeated spine visits with classified local support", () => {
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons,
+      curricula: [curriculum()],
+    }).filter((issue) => issue.level === "error")).toEqual([]);
+  });
+
+  it("rejects an unsupported map version and a drifted segment ledger", () => {
+    const broken = curriculum();
+    broken.version = 2;
+    broken.spine.HELLO.segments = ["TEST-HELLO-1"];
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons,
+      curricula: [broken],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("unsupported-language-curriculum-version");
+    expect(codes).toContain("curriculum-segment-ledger-drift");
+  });
+
+  it("rejects omitted prerequisites and extension lessons outside their segment", () => {
+    const broken = curriculum();
+    broken.path[0].lessons = ["B"];
+    broken.path[1].lessons = ["A"];
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons,
+      curricula: [broken],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("curriculum-prerequisite-order");
+    expect(codes).toContain("curriculum-extension-outside-segment");
   });
 });
 

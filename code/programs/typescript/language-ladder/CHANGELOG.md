@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+- Load all 20 per-track realization maps at build time and admit Learn/script
+  steps through their explicit mapped lesson sets while keeping legacy material
+  available in Lessons mode.
+- Show mapped micro-lesson and language-specific extension totals for the
+  learner's selected mix, including Persian and Urdu's required inline script
+  entry nodes.
+- Expose a browser-safe independent frontier planner for the forthcoming
+  per-language Learn cursor; the current concept cursor remains unchanged.
 - Hide canonical `hl-knowledge` comments from learner-facing lesson sections;
   the shared parser and source hash still retain their block-boundary meaning.
 - Keep the browser's lightweight dataset adapter compatible with the canonical

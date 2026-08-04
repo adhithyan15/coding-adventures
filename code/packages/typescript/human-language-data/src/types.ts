@@ -110,6 +110,76 @@ export interface CurriculumSpine {
   nodes: SpineNode[];
 }
 
+/** How strongly a language-specific extension participates in the local path. */
+export type CurriculumExtensionKind =
+  | "required"
+  | "supporting"
+  | "reference"
+  | "not-applicable";
+
+/** Open so a track can name a genuinely language-specific concern. */
+export type CurriculumExtensionCategory =
+  | "script"
+  | "grammar"
+  | "register"
+  | "culture-pragmatics"
+  | "etymology"
+  | "consolidation"
+  | "language-specific"
+  | string;
+
+/** A grammar, script, register, or other local node attached to one path segment. */
+export interface CurriculumExtensionNode {
+  id: string;
+  stage: CurriculumStage;
+  kind: CurriculumExtensionKind;
+  category: CurriculumExtensionCategory;
+  canDo: string;
+  /** Extension ids and/or shared spine-node ids. */
+  prerequisites: string[];
+  /** Existing micro-lessons that realize this extension. */
+  lessons: string[];
+}
+
+/**
+ * One contiguous visit to a shared ability in a language's real local order.
+ *
+ * A node may occur in several segments. That is deliberate: a track can greet,
+ * move on, and later return for a formal greeting without flattening its actual
+ * prerequisite path into one fictional chapter.
+ */
+export interface CurriculumPathSegment {
+  id: string;
+  spine_node: string;
+  /** Exact prerequisite-safe lesson order inside this segment. */
+  lessons: string[];
+  /** Extension ids classified by their relationship to the shared material. */
+  before: string[];
+  inline: string[];
+  after: string[];
+}
+
+/** Coverage ledger for one shared node in one language. */
+export interface SpineRealizationMap {
+  /** Segment ids in their authored local order. */
+  segments: string[];
+  /** Canonical concepts deliberately absent from the current track corpus. */
+  omits: string[];
+  /** Canonical concepts this track deliberately teaches under another node. */
+  relocates: Record<string, string>;
+}
+
+/** One track's executable realization of the shared spine. */
+export interface LanguageCurriculum {
+  version: number;
+  language: string;
+  /** The local, prerequisite-safe walk; shared nodes may repeat. */
+  path: CurriculumPathSegment[];
+  /** Every shared node is explicit, including empty/planned coverage. */
+  spine: Record<string, SpineRealizationMap>;
+  extensions: CurriculumExtensionNode[];
+}
+
 /** One authored chapter from an existing LaTeX book. */
 export interface BookChapter {
   language: string;

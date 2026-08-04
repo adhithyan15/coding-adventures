@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "path": [
+    {
+      "id": "BN-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "BN-C01-nomoshkar"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "BN-C01-dhonnobad"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-003",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "BN-C01-hyan-na",
+        "BN-C01-achchha"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-004",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "BN-C01-ashi"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-005",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "BN-C02-naam",
+        "BN-C02-amar",
+        "BN-C02-amar-naam",
+        "BN-C02-alaap",
+        "BN-C02-ki",
+        "BN-C02-tumi-apni",
+        "BN-C02-tomar-naam-ki",
+        "BN-C03-ami"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "BN-C03-kemon"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-007",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "BN-C03-kono-bepar-na"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "BN-C03-tumi-kemon-achho",
+        "BN-C03-bhalo"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-009",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "BN-C04-abar",
+        "BN-C04-dekha-hobe",
+        "BN-C04-abar-dekha-hobe",
+        "BN-C04-kal-dekha-hobe"
+      ],
+      "before": [
+        "BN-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-010",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "BN-C06-numbers-1-5"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-010-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "BN-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "BN-PATH-002",
+        "BN-PATH-007"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "BN-PATH-003"
+      ],
+      "omits": [
+        "RESPONSE-YES",
+        "RESPONSE-NO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "BN-PATH-005"
+      ],
+      "omits": [
+        "PRONOUN-ME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "BN-PATH-006",
+        "BN-PATH-008"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [],
+      "omits": [
+        "COURTESY-PLEASE",
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "BN-PATH-004",
+        "BN-PATH-009"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON",
+        "GREETING-GOODNIGHT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [],
+      "omits": [
+        "TIME-DAY",
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-DAY",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "BN-PATH-010"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "BN-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Bengali material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C04-abar",
+        "BN-C04-dekha-hobe"
+      ]
+    },
+    {
+      "id": "BN-EXT-010-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Bengali material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C06-numbers-1-5"
+      ]
+    },
+    {
+      "id": "BN-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Bengali script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C01-nomoshkar"
+      ]
+    }
+  ]
+}

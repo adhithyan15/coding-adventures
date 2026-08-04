@@ -11,6 +11,7 @@ import type {
   BookCorpus,
   CurriculumSpine,
   Dataset,
+  LanguageCurriculum,
   LanguageRegistry,
   Script,
   ScriptData,
@@ -39,6 +40,18 @@ export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumS
   return JSON.parse(
     readFileSync(join(root, "core", "spine.json"), "utf8"),
   ) as CurriculumSpine;
+}
+
+/** Read each track's authored shared-spine realization map. */
+export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
+  const out: LanguageCurriculum[] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "curriculum.json");
+    if (!existsSync(path)) continue;
+    out.push(JSON.parse(readFileSync(path, "utf8")) as LanguageCurriculum);
+  }
+  return out.sort((left, right) => left.language.localeCompare(right.language));
 }
 
 /**
@@ -131,6 +144,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   taxonomy: Taxonomy;
   registry: LanguageRegistry;
   spine: CurriculumSpine;
+  curricula: LanguageCurriculum[];
   books: BookCorpus;
   lessons: ParsedLesson[];
   scripts: Record<string, ScriptData>;
@@ -139,6 +153,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   const taxonomy = loadTaxonomy(root);
   const registry = loadLanguageRegistry(root);
   const spine = loadCurriculumSpine(root);
+  const curricula = loadLanguageCurricula(root);
   const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
   const scripts = loadScripts(root);
@@ -146,6 +161,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
     taxonomy,
     registry,
     spine,
+    curricula,
     books,
     lessons,
     scripts,

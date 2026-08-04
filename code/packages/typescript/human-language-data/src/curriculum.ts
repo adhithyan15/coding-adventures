@@ -6,6 +6,7 @@ import type {
   BookCorpus,
   CurriculumSpine,
   Issue,
+  LanguageCurriculum,
   LanguageRegistry,
   Taxonomy,
 } from "./types.js";
@@ -30,6 +31,7 @@ export interface CurriculumValidationInput {
   spine: CurriculumSpine;
   taxonomy: Taxonomy;
   lessons: ParsedLesson[];
+  curricula?: LanguageCurriculum[];
   books?: BookCorpus;
 }
 
@@ -180,6 +182,322 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
     visited.add(id);
   };
   for (const id of nodeIds) visit(id);
+
+  if (input.curricula) {
+    const curriculaByLanguage = new Map<string, LanguageCurriculum>();
+    for (const curriculum of input.curricula) {
+      if (curriculum.version !== 1) {
+        error(
+          "unsupported-language-curriculum-version",
+          `${curriculum.language}: curriculum.json version must be 1, got '${curriculum.version}'`,
+        );
+      }
+      if (curriculaByLanguage.has(curriculum.language)) {
+        error(
+          "duplicate-language-curriculum",
+          `${curriculum.language}: more than one curriculum.json was loaded`,
+        );
+      } else {
+        curriculaByLanguage.set(curriculum.language, curriculum);
+      }
+      if (!languageIds.has(curriculum.language)) {
+        error(
+          "unregistered-language-curriculum",
+          `${curriculum.language}: curriculum.json has no language registry entry`,
+        );
+      }
+    }
+    for (const language of registry.languages) {
+      if (!curriculaByLanguage.has(language.id)) {
+        error("missing-language-curriculum", `${language.id}: curriculum.json is missing`);
+      }
+    }
+
+    const allowedExtensionKinds = new Set([
+      "required",
+      "supporting",
+      "reference",
+      "not-applicable",
+    ]);
+    const lessonLanguage = new Map(
+      lessons.map((lesson) => [lesson.realization.lessonId, lesson.language]),
+    );
+
+    for (const curriculum of input.curricula) {
+      if (!languageIds.has(curriculum.language)) continue;
+      const segmentById = new Map<string, LanguageCurriculum["path"][number]>();
+      const lessonPlacement = new Map<string, { node: string; position: number }>();
+      let position = 0;
+
+      for (const segment of curriculum.path ?? []) {
+        if (segmentById.has(segment.id)) {
+          error(
+            "duplicate-curriculum-segment",
+            `${curriculum.language}: path segment '${segment.id}' occurs twice`,
+          );
+        } else {
+          segmentById.set(segment.id, segment);
+        }
+        if (!nodeIds.has(segment.spine_node)) {
+          error(
+            "unknown-curriculum-spine-node",
+            `${curriculum.language}: ${segment.id} uses unknown node '${segment.spine_node}'`,
+          );
+        }
+        if (!Array.isArray(segment.lessons) || segment.lessons.length === 0) {
+          error(
+            "empty-curriculum-segment",
+            `${curriculum.language}: ${segment.id} must contain at least one lesson`,
+          );
+        }
+        for (const lessonId of segment.lessons ?? []) {
+          const owner = lessonPlacement.get(lessonId);
+          if (owner) {
+            error(
+              "duplicate-curriculum-lesson",
+              `${curriculum.language}: ${lessonId} occurs in both ${owner.node} and ${segment.id}`,
+            );
+            continue;
+          }
+          if (!lessonById.has(lessonId)) {
+            error(
+              "unknown-curriculum-lesson",
+              `${curriculum.language}: ${segment.id} names unknown lesson '${lessonId}'`,
+            );
+          } else if (lessonLanguage.get(lessonId) !== curriculum.language) {
+            error(
+              "cross-language-curriculum-lesson",
+              `${curriculum.language}: ${segment.id} includes ${lessonId} from ${lessonLanguage.get(lessonId)}`,
+            );
+          }
+          lessonPlacement.set(lessonId, { node: segment.spine_node, position });
+          position += 1;
+        }
+      }
+
+      for (const node of spine.nodes) {
+        const realization = curriculum.spine?.[node.id];
+        if (!realization) {
+          error(
+            "missing-curriculum-spine-node",
+            `${curriculum.language}: spine map omits '${node.id}'`,
+          );
+          continue;
+        }
+        const actualSegments = (curriculum.path ?? [])
+          .filter((segment) => segment.spine_node === node.id)
+          .map((segment) => segment.id);
+        if (JSON.stringify(realization.segments) !== JSON.stringify(actualSegments)) {
+          error(
+            "curriculum-segment-ledger-drift",
+            `${curriculum.language}: ${node.id} segment ledger does not match the authored path`,
+          );
+        }
+        const realizedConcepts = new Set(
+          lessons
+            .filter(
+              (lesson) =>
+                lesson.language === curriculum.language &&
+                CONTENT_TYPES.has(lesson.realization.type),
+            )
+            .map((lesson) => lesson.realization.concept),
+        );
+        const expectedOmits = node.concepts.filter((concept) => !realizedConcepts.has(concept));
+        if (JSON.stringify(realization.omits) !== JSON.stringify(expectedOmits)) {
+          error(
+            "curriculum-omission-ledger-drift",
+            `${curriculum.language}: ${node.id} omissions must be ${expectedOmits.join(", ") || "empty"}`,
+          );
+        }
+        const expectedRelocations = Object.fromEntries(
+          lessons
+            .filter(
+              (lesson) =>
+                lesson.language === curriculum.language &&
+                CONTENT_TYPES.has(lesson.realization.type) &&
+                node.concepts.includes(lesson.realization.concept) &&
+                stringValue(lesson.frontmatter.spine_node) !== "" &&
+                stringValue(lesson.frontmatter.spine_node) !== node.id &&
+                nodeIds.has(stringValue(lesson.frontmatter.spine_node)),
+            )
+            .map((lesson) => [
+              lesson.realization.concept,
+              stringValue(lesson.frontmatter.spine_node),
+            ]),
+        );
+        if (JSON.stringify(realization.relocates) !== JSON.stringify(expectedRelocations)) {
+          error(
+            "curriculum-relocation-ledger-drift",
+            `${curriculum.language}: ${node.id} relocation ledger does not match lesson metadata`,
+          );
+        }
+      }
+      for (const nodeId of Object.keys(curriculum.spine ?? {})) {
+        if (!nodeIds.has(nodeId)) {
+          error(
+            "unknown-curriculum-spine-ledger",
+            `${curriculum.language}: spine map contains unknown node '${nodeId}'`,
+          );
+        }
+      }
+
+      for (const lesson of lessons.filter((item) => item.language === curriculum.language)) {
+        const lessonId = lesson.realization.lessonId;
+        const canonicalOwner = conceptOwner.get(lesson.realization.concept);
+        const explicitNode = stringValue(lesson.frontmatter.spine_node);
+        const placement = lessonPlacement.get(lessonId);
+        if (canonicalOwner && CONTENT_TYPES.has(lesson.realization.type)) {
+          const expectedNode = explicitNode !== "" && nodeIds.has(explicitNode)
+            ? explicitNode
+            : canonicalOwner;
+          if (!placement) {
+            error(
+              "unmapped-shared-realization",
+              `${curriculum.language}: ${lessonId} realizes ${canonicalOwner} but is absent from the local path`,
+            );
+          } else if (placement.node !== expectedNode) {
+            error(
+              "misplaced-shared-realization",
+              `${curriculum.language}: ${lessonId} belongs to ${expectedNode}, not ${placement.node}`,
+            );
+          }
+        }
+        if (explicitNode !== "" && nodeIds.has(explicitNode)) {
+          if (!placement) {
+            error(
+              "unmapped-schema-v2-lesson",
+              `${curriculum.language}: ${lessonId} declares ${explicitNode} but is absent from the local path`,
+            );
+          } else if (placement.node !== explicitNode) {
+            error(
+              "misplaced-schema-v2-lesson",
+              `${curriculum.language}: ${lessonId} declares ${explicitNode}, not ${placement.node}`,
+            );
+          }
+        }
+      }
+
+      for (const [lessonId, placement] of lessonPlacement) {
+        const lesson = lessonById.get(lessonId);
+        if (!lesson) continue;
+        for (const prerequisite of prerequisites(lesson)) {
+          const required = lessonPlacement.get(prerequisite);
+          if (!required) {
+            error(
+              "curriculum-prerequisite-omitted",
+              `${curriculum.language}: ${lessonId} requires ${prerequisite}, which is absent from the local path`,
+            );
+          } else if (required.position >= placement.position) {
+            error(
+              "curriculum-prerequisite-order",
+              `${curriculum.language}: ${prerequisite} must precede ${lessonId} in curriculum.json`,
+            );
+          }
+        }
+      }
+
+      const extensionById = new Map<string, LanguageCurriculum["extensions"][number]>();
+      for (const extension of curriculum.extensions ?? []) {
+        if (extensionById.has(extension.id)) {
+          error(
+            "duplicate-curriculum-extension",
+            `${curriculum.language}: extension '${extension.id}' occurs twice`,
+          );
+        } else {
+          extensionById.set(extension.id, extension);
+        }
+        if (!allowedExtensionKinds.has(extension.kind)) {
+          error(
+            "unknown-curriculum-extension-kind",
+            `${curriculum.language}: ${extension.id} has unknown kind '${extension.kind}'`,
+          );
+        }
+        if (!spine.stages.includes(extension.stage)) {
+          error(
+            "unknown-curriculum-extension-stage",
+            `${curriculum.language}: ${extension.id} uses undeclared stage '${extension.stage}'`,
+          );
+        }
+        if (extension.canDo.trim() === "") {
+          error(
+            "missing-curriculum-extension-can-do",
+            `${curriculum.language}: ${extension.id} has an empty canDo`,
+          );
+        }
+        for (const prerequisite of extension.prerequisites ?? []) {
+          if (!nodeIds.has(prerequisite) && !(curriculum.extensions ?? []).some((item) => item.id === prerequisite)) {
+            error(
+              "unknown-curriculum-extension-prerequisite",
+              `${curriculum.language}: ${extension.id} requires unknown '${prerequisite}'`,
+            );
+          }
+        }
+      }
+
+      const attachment = new Map<string, { segment: string; relation: string }>();
+      const extensionLessonCount = new Map<string, number>();
+      for (const segment of curriculum.path ?? []) {
+        const segmentLessons = new Set(segment.lessons ?? []);
+        for (const relation of ["before", "inline", "after"] as const) {
+          for (const extensionId of segment[relation] ?? []) {
+            const previous = attachment.get(extensionId);
+            if (previous) {
+              error(
+                "duplicate-curriculum-extension-attachment",
+                `${curriculum.language}: ${extensionId} is attached to both ${previous.segment} and ${segment.id}`,
+              );
+              continue;
+            }
+            attachment.set(extensionId, { segment: segment.id, relation });
+            const extension = extensionById.get(extensionId);
+            if (!extension) {
+              error(
+                "unknown-curriculum-extension",
+                `${curriculum.language}: ${segment.id} attaches unknown extension '${extensionId}'`,
+              );
+              continue;
+            }
+            for (const lessonId of extension.lessons ?? []) {
+              if (!segmentLessons.has(lessonId)) {
+                error(
+                  "curriculum-extension-outside-segment",
+                  `${curriculum.language}: ${extensionId} uses ${lessonId} outside ${segment.id}`,
+                );
+              }
+              extensionLessonCount.set(lessonId, (extensionLessonCount.get(lessonId) ?? 0) + 1);
+            }
+          }
+        }
+      }
+      for (const extensionId of extensionById.keys()) {
+        if (!attachment.has(extensionId)) {
+          error(
+            "unattached-curriculum-extension",
+            `${curriculum.language}: ${extensionId} is not attached to a path segment`,
+          );
+        }
+      }
+      for (const [lessonId, placement] of lessonPlacement) {
+        const lesson = lessonById.get(lessonId);
+        if (!lesson) continue;
+        const isSharedContent =
+          CONTENT_TYPES.has(lesson.realization.type) &&
+          conceptOwner.get(lesson.realization.concept) === placement.node;
+        const count = extensionLessonCount.get(lessonId) ?? 0;
+        if (!isSharedContent && count === 0) {
+          error(
+            "unclassified-curriculum-extension-lesson",
+            `${curriculum.language}: ${lessonId} is local support but belongs to no extension node`,
+          );
+        } else if (!isSharedContent && count > 1) {
+          error(
+            "duplicate-curriculum-extension-lesson",
+            `${curriculum.language}: ${lessonId} belongs to ${count} extension nodes`,
+          );
+        }
+      }
+    }
+  }
 
   // Schema v1 remains readable during migration. Version 2 is the strict HL04
   // contract used by both books and apps, so every declared field is executable.

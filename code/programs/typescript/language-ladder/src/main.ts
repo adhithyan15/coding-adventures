@@ -69,7 +69,14 @@ import {
   unlockedIndices,
   type ConceptCard,
 } from "./concepts.ts";
-import { LANGUAGE_REGISTRY, SPINE_CONCEPTS, languageName, spineNodeForConcept } from "./curriculum.ts";
+import {
+  LANGUAGE_CURRICULA,
+  LANGUAGE_REGISTRY,
+  SPINE_CONCEPTS,
+  languageName,
+  mappedLessonIds,
+  spineNodeForConcept,
+} from "./curriculum.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
 import { bookHashStatus } from "./bookhashes.ts";
@@ -130,13 +137,21 @@ let selectedLanguages = loadLanguages(REVIEW_STORAGE, AVAILABLE_LANGUAGE_IDS);
 // grammar, one concept at a time, not land on "(practice)".
 const CONSOLIDATION_TYPES = new Set(["practice", "practice-mix", "review"]);
 const CONCEPT_LESSONS = LESSONS.filter((l) => !CONSOLIDATION_TYPES.has(l.type));
+const SHARED_CONCEPTS = new Set(SPINE_CONCEPTS);
+const ALL_MAPPED_LESSON_IDS = mappedLessonIds(LANGUAGE_CURRICULA.map((item) => item.language));
+// Learn mode is now admitted by the explicit per-track maps. Namespaced and
+// not-yet-mapped legacy material remains available in Lessons mode.
+const MAPPED_SPINE_LESSONS = CONCEPT_LESSONS.filter(
+  (lesson) => ALL_MAPPED_LESSON_IDS.has(lesson.id) && SHARED_CONCEPTS.has(lesson.concept),
+);
 // The explicit shared spine, filtered to concepts represented in the selected
 // languages. Language-local extensions remain available in Lessons mode.
 function activeConceptSpine(): string[] {
   const selected = new Set(selectedLanguages);
+  const admitted = mappedLessonIds(selectedLanguages);
   const realized = new Set(
-    CONCEPT_LESSONS
-      .filter((lesson) => selected.has(lesson.language))
+    MAPPED_SPINE_LESSONS
+      .filter((lesson) => selected.has(lesson.language) && admitted.has(lesson.id))
       .map((lesson) => lesson.concept),
   );
   return SPINE_CONCEPTS.filter((concept) => realized.has(concept));
@@ -149,7 +164,7 @@ function activeConceptSpine(): string[] {
 const SCRIPTS_BY_ID = scriptsById(SCRIPTS);
 const SCRIPT_INTRO_AT = firstIntroductionByScript(
   SPINE_CONCEPTS,
-  CONCEPT_LESSONS,
+  MAPPED_SPINE_LESSONS,
   new Set(SCRIPTS_BY_ID.keys()),
 );
 
@@ -871,11 +886,19 @@ function renderLanguagePicker(): HTMLElement {
   details.appendChild(summary);
 
   const note = el("p", "muted language-picker__note");
-  note.textContent = "Choose any mix. The shared spine stays in the same order; each language contributes its own realization and extensions.";
+  const selected = new Set(selectedLanguages);
+  const selectedPlans = LANGUAGE_CURRICULA.filter((curriculum) => selected.has(curriculum.language));
+  const mappedLessons = selectedPlans.reduce(
+    (sum, curriculum) => sum + curriculum.path.reduce((count, segment) => count + segment.lessons.length, 0),
+    0,
+  );
+  const extensions = selectedPlans.reduce((sum, curriculum) => sum + curriculum.extensions.length, 0);
+  note.textContent =
+    `Choose any mix. The selected local paths currently map ${mappedLessons} micro-lessons` +
+    ` and ${extensions} script, grammar, register, etymology, or consolidation extensions.`;
   details.appendChild(note);
 
   const grid = el("div", "language-picker__grid");
-  const selected = new Set(selectedLanguages);
   for (const definition of LANGUAGE_REGISTRY.filter((language) =>
     AVAILABLE_LANGUAGE_IDS.includes(language.id),
   )) {
@@ -1071,7 +1094,7 @@ function renderLearn(): HTMLElement {
   // quiz (a later slice) draws from exactly this. Here we render the teaching
   // pass: the current concept alone, swept across the chain.
   const covered = conceptSpine.slice(0, conceptCursor + 1);
-  const plan = planSession(concept, covered, CONCEPT_LESSONS, selectedLanguages);
+  const plan = planSession(concept, covered, MAPPED_SPINE_LESSONS, selectedLanguages);
 
   const progress = el("p", "score");
   progress.textContent =

@@ -1,0 +1,720 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "path": [
+    {
+      "id": "HI-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-C01-namaste",
+        "HI-W01-shirorekha-na-ma",
+        "HI-W01-na-ma",
+        "HI-W02-abugida-ka-ta",
+        "HI-W02-ka-ta-mouth-order",
+        "HI-C01-namaskar"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-001-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "HI-C01-dhanyavad",
+        "HI-C01-shukriya"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-003",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C01-alvida"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-004",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-W03-matras-naam",
+        "HI-W03-preposed-i",
+        "HI-W04-ra-sa-mera-naam",
+        "HI-W04-write-mera-naam",
+        "HI-W05-virama-namaste",
+        "HI-W05-conjuncts",
+        "HI-W05-write-namaste",
+        "HI-C02-naam",
+        "HI-C02-aap-tum",
+        "HI-C02-hai",
+        "HI-C02-kya",
+        "HI-C02-aapka-naam-kya-hai",
+        "HI-C02-meraa",
+        "HI-C02-mera-naam-hai",
+        "HI-C02-khushi"
+      ],
+      "before": [
+        "HI-EXT-004-SCRIPT"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-005",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "HI-C03-aapka-swagat-hai"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C03-kaise",
+        "HI-C03-aap-kaise-hain"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C03-main"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C03-hun",
+        "HI-C03-thik"
+      ],
+      "before": [
+        "HI-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-009",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C04-chalta-hun",
+        "HI-C04-milenge",
+        "HI-C04-kal-milte-hain",
+        "HI-C04-phir",
+        "HI-C04-phir-milenge"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-010",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "HI-C06-numbers-1-5",
+        "HI-C06-tin-char-history",
+        "HI-C06-paanch-nasal"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-010-LANGUAGE-SPECIFIC",
+        "HI-EXT-010-ETYMOLOGY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-011",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "HI-C07-haan",
+        "HI-C07-nahin"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-012",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "HI-C08-kripaya",
+        "HI-C09-maaf-kijiye"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-013",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "HI-C10-somavaar-shukravaar",
+        "HI-C10-shanivaar-ravivaar"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-014",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "HI-C11-kaalaa-safed",
+        "HI-C11-laal-niila"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-015",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C12-pitaa-maataa",
+        "HI-C12-bhaai-bahin"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-016",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C13-sir",
+        "HI-C13-haath"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-017",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "HI-C14-ritu"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-018",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "HI-C15-paani-roti"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-019",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "HI-C16-mahine",
+        "HI-C17-dopahar-aadhi-raat",
+        "HI-C18-ghanta"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-020",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C19-umr",
+        "HI-C19-age-grammar"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-020-LANGUAGE-SPECIFIC",
+        "HI-EXT-020-GRAMMAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-021",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "HI-C20-mausam"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-022",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "HI-C21-numbers-6-10",
+        "HI-C21-six-nine-ten-history",
+        "HI-C22-gyarah-bees"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-022-LANGUAGE-SPECIFIC",
+        "HI-EXT-022-ETYMOLOGY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-023",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "HI-C23-kutta-billi",
+        "HI-C23-billi-history",
+        "HI-C24-hara-pila",
+        "HI-C24-pila-history"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-023-LANGUAGE-SPECIFIC",
+        "HI-EXT-023-ETYMOLOGY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-024",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "HI-C25-din",
+        "HI-C26-raat"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-025",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C27-shubh-raatri"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-026",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "HI-C28-subah",
+        "HI-C29-shaam",
+        "HI-C30-dopahar-widened",
+        "HI-C31-suprabhat",
+        "HI-C32-shubh-sandhya",
+        "HI-C32-evening-register",
+        "HI-C33-shubh-dopahar"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-026-REGISTER"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "HI-PATH-001"
+      ],
+      "omits": [
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "HI-PATH-002",
+        "HI-PATH-005"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "HI-PATH-011"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "HI-PATH-004",
+        "HI-PATH-007",
+        "HI-PATH-015",
+        "HI-PATH-020"
+      ],
+      "omits": [
+        "PRONOUN-ME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "HI-PATH-006",
+        "HI-PATH-008",
+        "HI-PATH-016"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "HI-PATH-012",
+        "HI-PATH-018"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "HI-PATH-003",
+        "HI-PATH-009",
+        "HI-PATH-025"
+      ],
+      "omits": [
+        "FAREWELL-SOON"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "HI-PATH-013",
+        "HI-PATH-017",
+        "HI-PATH-019",
+        "HI-PATH-021",
+        "HI-PATH-024",
+        "HI-PATH-026"
+      ],
+      "omits": [
+        "GREETING-DAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "HI-PATH-014",
+        "HI-PATH-023"
+      ],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "HI-PATH-010",
+        "HI-PATH-022"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "HI-EXT-001-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Hindi script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-W01-shirorekha-na-ma",
+        "HI-W01-na-ma",
+        "HI-W02-abugida-ka-ta",
+        "HI-W02-ka-ta-mouth-order"
+      ]
+    },
+    {
+      "id": "HI-EXT-004-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Hindi script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-W03-matras-naam",
+        "HI-W03-preposed-i",
+        "HI-W04-ra-sa-mera-naam",
+        "HI-W04-write-mera-naam",
+        "HI-W05-virama-namaste",
+        "HI-W05-conjuncts",
+        "HI-W05-write-namaste"
+      ]
+    },
+    {
+      "id": "HI-EXT-008-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C03-hun"
+      ]
+    },
+    {
+      "id": "HI-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C04-milenge",
+        "HI-C04-phir"
+      ]
+    },
+    {
+      "id": "HI-EXT-010-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C06-numbers-1-5"
+      ]
+    },
+    {
+      "id": "HI-EXT-010-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Hindi word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C06-tin-char-history",
+        "HI-C06-paanch-nasal"
+      ]
+    },
+    {
+      "id": "HI-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C10-somavaar-shukravaar",
+        "HI-C10-shanivaar-ravivaar"
+      ]
+    },
+    {
+      "id": "HI-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C11-kaalaa-safed",
+        "HI-C11-laal-niila"
+      ]
+    },
+    {
+      "id": "HI-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C12-pitaa-maataa",
+        "HI-C12-bhaai-bahin"
+      ]
+    },
+    {
+      "id": "HI-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C13-sir",
+        "HI-C13-haath"
+      ]
+    },
+    {
+      "id": "HI-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C14-ritu"
+      ]
+    },
+    {
+      "id": "HI-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C15-paani-roti"
+      ]
+    },
+    {
+      "id": "HI-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C16-mahine",
+        "HI-C17-dopahar-aadhi-raat",
+        "HI-C18-ghanta"
+      ]
+    },
+    {
+      "id": "HI-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C19-umr"
+      ]
+    },
+    {
+      "id": "HI-EXT-020-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Hindi-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C19-age-grammar"
+      ]
+    },
+    {
+      "id": "HI-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C20-mausam"
+      ]
+    },
+    {
+      "id": "HI-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C21-numbers-6-10",
+        "HI-C22-gyarah-bees"
+      ]
+    },
+    {
+      "id": "HI-EXT-022-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Hindi word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C21-six-nine-ten-history"
+      ]
+    },
+    {
+      "id": "HI-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Hindi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C23-kutta-billi",
+        "HI-C24-hara-pila"
+      ]
+    },
+    {
+      "id": "HI-EXT-023-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Hindi word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C23-billi-history",
+        "HI-C24-pila-history"
+      ]
+    },
+    {
+      "id": "HI-EXT-026-REGISTER",
+      "stage": "A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Hindi form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C32-evening-register"
+      ]
+    }
+  ]
+}

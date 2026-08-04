@@ -18,8 +18,9 @@ lesson AST.
 
 ```
 lessons/*.md frontmatter  ─┐
-concepts/taxonomy.json     ─┼─►  Dataset { concepts, byLanguage, languages }
-data/scripts/*.json        ─┘         + validate() → Issue[]
+curriculum.json × 20       ─┼─►  Dataset + local realization paths
+concepts/taxonomy.json     ─┤         + validate() / validateCurriculum()
+data/scripts/*.json        ─┘         + independent frontier planning
 ```
 
 The core is the **concept**: a language-independent idea (`GREETING-HELLO`). Each
@@ -30,16 +31,36 @@ learning."
 ## Usage
 
 ```ts
-import { loadEverything, languagesForConcept, validate } from "@coding-adventures/human-language-data";
+import {
+  languagesForConcept,
+  loadEverything,
+  mixedCurriculumFrontier,
+  validate,
+  validateCurriculum,
+} from "@coding-adventures/human-language-data";
 
-const { dataset, taxonomy, lessons, scripts } = loadEverything();
+const { curricula, dataset, lessons, registry, scripts, spine, taxonomy } = loadEverything();
 
 // The cross-language join:
 languagesForConcept(dataset, "GREETING-HELLO");
 //  → [{ language: "spanish", headword: "hola", … }, { language: "telugu", … }, …]
 
 // The consistency gate:
-const issues = validate({ taxonomy, lessons, scripts });
+const issues = [
+  ...validate({ taxonomy, lessons, scripts }),
+  ...validateCurriculum({ curricula, lessons, registry, spine, taxonomy }),
+];
+
+// Each language advances on its own prerequisite-closed path. Only frontiers
+// that are simultaneously ready at the same shared node are grouped.
+mixedCurriculumFrontier(
+  curricula,
+  ["persian", "urdu"],
+  new Map([
+    ["persian", new Set(["FA-C01-salaam"])],
+    ["urdu", new Set()],
+  ]),
+);
 ```
 
 Build the JSON and readable gap reports locally with:
@@ -80,7 +101,8 @@ until the existing corpus has been split.
 | `parse.ts` | frontmatter + Markdown → typed lesson AST; realizations → `Dataset` | ✅ |
 | `hash.ts` | stable canonical lesson serialization and deterministic fingerprints | ✅ |
 | `book.ts` | typed lesson AST → LaTeX chapter | ✅ |
-| `curriculum.ts` | spine, prerequisite, schema-v2 duration/block/knowledge validation | ✅ |
+| `curriculum.ts` | spine, realization-map, prerequisite, schema-v2 duration/block/knowledge validation | ✅ |
+| `plans.ts` | ordered local paths, extension placement, next lessons, and mixed ready frontiers | ✅ |
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
 | `report.ts` | deterministic duration, prerequisite, book, and schema gap report | ✅ |
@@ -113,6 +135,14 @@ transitive knowledge closure. Each typed block must also author an
 lesson's introduced atoms; production and recall assessments must be declared by
 the lesson and available from transitive prerequisites or an earlier block.
 Schema-v1 tracks remain readable during migration.
+
+When `curricula` are supplied, the same validator also requires exactly one
+`curriculum.json` per registered language. Every shared node must have an
+explicit segment/omission/relocation ledger; every canonical realization and
+schema-v2 lesson must be mapped; mapped prerequisite closure must be complete
+and topologically earlier; and every non-shared support lesson in the path must
+belong to exactly one typed extension. Repeated visits to the same shared node
+remain legal through distinct ordered path segments.
 
 ## Scope note
 

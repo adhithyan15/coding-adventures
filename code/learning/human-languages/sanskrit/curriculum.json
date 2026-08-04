@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "path": [
+    {
+      "id": "SA-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "SA-C01-namaste",
+        "SA-C01-namaskara"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "SA-C01-dhanyavada"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-003",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "SA-C01-svagatam"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "SA-C01-am-na"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-005",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "SA-C02-nama",
+        "SA-C02-asti",
+        "SA-C02-bhavan-tvam",
+        "SA-C02-kim",
+        "SA-C02-mama",
+        "SA-C02-mama-nama-asti",
+        "SA-C02-anandah",
+        "SA-C02-tava-nama-kim",
+        "SA-C03-aham"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "SA-C03-katham",
+        "SA-C03-bhavan-katham-asti",
+        "SA-C03-kushalam"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-007",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "SA-C03-na-cinta"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-008",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "SA-C04-gacchami",
+        "SA-C04-punah",
+        "SA-C04-punar-darshanaya",
+        "SA-C04-shvah"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-009",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "SA-C06-numbers-1-5",
+        "SA-C06-number-cognates",
+        "SA-C06-pancha-travels"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-009-LANGUAGE-SPECIFIC",
+        "SA-EXT-009-ETYMOLOGY"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "SA-PATH-001",
+        "SA-PATH-003"
+      ],
+      "omits": [
+        "GREETING-PEACE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "SA-PATH-002",
+        "SA-PATH-007"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "SA-PATH-004"
+      ],
+      "omits": [
+        "RESPONSE-YES",
+        "RESPONSE-NO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "SA-PATH-005"
+      ],
+      "omits": [
+        "PRONOUN-ME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "SA-PATH-006"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [],
+      "omits": [
+        "COURTESY-PLEASE",
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "SA-PATH-008"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON",
+        "GREETING-GOODNIGHT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [],
+      "omits": [
+        "TIME-DAY",
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-DAY",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "SA-PATH-009"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "SA-EXT-008-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Sanskrit material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C04-punah"
+      ]
+    },
+    {
+      "id": "SA-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Sanskrit material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C06-numbers-1-5"
+      ]
+    },
+    {
+      "id": "SA-EXT-009-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Sanskrit word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C06-number-cognates",
+        "SA-C06-pancha-travels"
+      ]
+    },
+    {
+      "id": "SA-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Sanskrit script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C01-namaste"
+      ]
+    }
+  ]
+}
