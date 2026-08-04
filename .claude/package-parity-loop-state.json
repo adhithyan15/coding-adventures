@@ -11,15 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9909,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9909",
-    "branch": "codex/typescript-build-windows-cli-builder-closure",
-    "implementation_head": "679b0cf743a5f977049981b7dc9f9afc61527fd6",
-    "last_ci_repair": null
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "16f0f5367c9b431134d401842ce5728cde1fb6eb",
+    "revision": "4c9d1a6f6b4a35556426bebbe0ed385fd312628d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -322,7 +316,7 @@
     {
       "id": "typescript-build-windows-cli-builder-closure",
       "title": "Repair the TypeScript BUILD_windows cli-builder prerequisite closure",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/typescript-build-windows-cli-builder-closure",
       "pr_number": 9909,
@@ -331,11 +325,11 @@
     {
       "id": "typescript-build-windows-sir-runtime-closure",
       "title": "Repair the TypeScript BUILD_windows SIR runtime prerequisite closure",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/typescript-build-windows-sir-runtime-closure",
       "pr_number": null,
-      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. sir-runtime-core lacks exceptions and pairs, sir-runtime-oop lacks core plus exceptions and pairs, and sir-runtime-symbolic lacks cas-pattern-matching plus symbolic-ir. Repair these three related Windows front doors as a separate SIR runtime dependency closure."
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. sir-runtime-core lacks exceptions and pairs, sir-runtime-oop lacks core plus exceptions and pairs, and sir-runtime-symbolic lacks cas-pattern-matching plus symbolic-ir. Repair these three related Windows front doors as a separate SIR runtime dependency closure. Selected after guarded PR #9909 merged because the exact three-package red baseline is the complete remaining TypeScript BUILD_windows validator debt; this bounded dependency family has higher immediate closure leverage than the still-unclassified repository-wide TS6059 input-boundary audit. The collision-checked 4c9d1a6f6b inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets."
     },
     {
       "id": "typescript-standalone-tsconfig-input-boundaries",
