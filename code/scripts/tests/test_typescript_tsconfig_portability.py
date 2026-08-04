@@ -10,7 +10,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-import typescript_tsconfig_portability as portability
+import typescript_tsconfig_portability as portability  # noqa: E402
 
 
 def write_json(path: Path, value: object) -> None:
@@ -27,15 +27,21 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
         extends_shared: bool = True,
         compiler_options: dict[str, object] | None = None,
         config_fields: dict[str, object] | None = None,
+        dev_dependencies: dict[str, str] | None = None,
+        locked_dev_dependencies: dict[str, str] | None = None,
+        locked_node_version: str | None = None,
         typescript_version: str = "5.7.3",
     ) -> Path:
         project = root / "code" / "packages" / "typescript" / name
+        manifest: dict[str, object] = {
+            "name": f"@coding-adventures/{name}",
+            "scripts": {"build": "tsc"},
+        }
+        if dev_dependencies is not None:
+            manifest["devDependencies"] = dev_dependencies
         write_json(
             project / "package.json",
-            {
-                "name": f"@coding-adventures/{name}",
-                "scripts": {"build": "tsc"},
-            },
+            manifest,
         )
         config: dict[str, object] = {}
         if extends_shared:
@@ -45,15 +51,22 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
         if config_fields is not None:
             config.update(config_fields)
         write_json(project / "tsconfig.json", config)
+        lock_root_dependencies = {"typescript": "^5.5.0"}
+        if locked_dev_dependencies is not None:
+            lock_root_dependencies.update(locked_dev_dependencies)
+        elif dev_dependencies is not None:
+            lock_root_dependencies.update(dev_dependencies)
+        lock_packages: dict[str, object] = {
+            "": {"devDependencies": lock_root_dependencies},
+            "node_modules/typescript": {"version": typescript_version},
+        }
+        if locked_node_version is not None:
+            lock_packages["node_modules/@types/node"] = {
+                "version": locked_node_version
+            }
         write_json(
             project / "package-lock.json",
-            {
-                "lockfileVersion": 3,
-                "packages": {
-                    "": {"devDependencies": {"typescript": "^5.5.0"}},
-                    "node_modules/typescript": {"version": typescript_version},
-                },
-            },
+            {"lockfileVersion": 3, "packages": lock_packages},
         )
         return project
 
@@ -227,6 +240,163 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
             self.assertEqual(summary.unbounded_root_projects, 0)
             self.assertEqual(summary.outside_root_inputs, 0)
 
+    def test_rejects_node_apis_without_direct_dev_provider(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(root, "node-user")
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text(
+                """
+export { readFile } from "node:fs";
+const path = await import("path");
+const url = require("url");
+process.cwd();
+Buffer.from("value");
+const env: NodeJS.ProcessEnv = process.env;
+console.log(__dirname, __filename, path, url, env);
+""".lstrip(),
+                encoding="utf-8",
+            )
+
+            summary = portability.audit_repository(root)
+
+            self.assertEqual(
+                [(issue.code, issue.path) for issue in summary.issues],
+                [
+                    (
+                        "NODE_TYPES_NOT_OWNED",
+                        "code/packages/typescript/node-user/package.json",
+                    )
+                ],
+            )
+            self.assertEqual(summary.node_api_projects, 1)
+            self.assertEqual(summary.node_provider_projects, 0)
+            self.assertEqual(summary.missing_node_provider_projects, 1)
+
+    def test_accepts_direct_node_provider_with_synchronized_lock(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(
+                root,
+                "owned-node-types",
+                dev_dependencies={"@types/node": "^22.0.0"},
+                locked_node_version="22.19.18",
+            )
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text(
+                'import { readFile } from "node:fs";\nexport { readFile };\n',
+                encoding="utf-8",
+            )
+
+            summary = portability.validate_repository(root)
+
+            self.assertEqual(summary.node_api_projects, 1)
+            self.assertEqual(summary.node_provider_projects, 1)
+            self.assertEqual(summary.missing_node_provider_projects, 0)
+            self.assertEqual(summary.stale_node_provider_locks, 0)
+            self.assertEqual(summary.node_lock_exemptions, 0)
+
+    def test_accepts_the_reviewed_native_napi_lock_exception(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(
+                root,
+                "matrix-rust-napi",
+                dev_dependencies={"@types/node": "^20.0.0"},
+            )
+            (project / "package-lock.json").unlink()
+            (project / ".gitignore").write_text(
+                "package-lock.json\n", encoding="utf-8"
+            )
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text(
+                'import { createRequire } from "node:module";\n'
+                "export { createRequire };\n",
+                encoding="utf-8",
+            )
+
+            summary = portability.validate_repository(root)
+
+            self.assertEqual(summary.node_api_projects, 1)
+            self.assertEqual(summary.node_provider_projects, 1)
+            self.assertEqual(summary.stale_node_provider_locks, 0)
+            self.assertEqual(summary.node_lock_exemptions, 1)
+
+    def test_ignores_node_words_in_comments_strings_and_properties(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(root, "browser-only")
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text(
+                """
+// process.cwd(); import "node:fs";
+const prose = 'require("path") and Buffer.from("value")';
+const worker = { process() { return prose; }, Buffer: prose };
+worker.process();
+console.log(worker.Buffer);
+""".lstrip(),
+                encoding="utf-8",
+            )
+
+            summary = portability.validate_repository(root)
+
+            self.assertEqual(summary.node_api_projects, 0)
+            self.assertEqual(summary.missing_node_provider_projects, 0)
+
+    def test_checks_template_expressions_but_ignores_template_prose(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(root, "template-node-user")
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text(
+                """
+const prose = `process.cwd() and require(\"node:fs\")`;
+const nested = `outer ${{ path: `${process.cwd()}` }.path}`;
+console.log(prose, nested);
+""".lstrip(),
+                encoding="utf-8",
+            )
+
+            summary = portability.audit_repository(root)
+
+            self.assertEqual(summary.node_api_projects, 1)
+            self.assertEqual(summary.missing_node_provider_projects, 1)
+
+    def test_rejects_node_provider_with_stale_lock_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(
+                root,
+                "stale-node-lock",
+                dev_dependencies={"@types/node": "^22.0.0"},
+                locked_dev_dependencies={},
+            )
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text(
+                'import "node:fs";\n', encoding="utf-8"
+            )
+
+            summary = portability.audit_repository(root)
+
+            self.assertEqual(
+                [(issue.code, issue.path) for issue in summary.issues],
+                [
+                    (
+                        "NODE_TYPES_LOCK_MISMATCH",
+                        "code/packages/typescript/stale-node-lock/package-lock.json",
+                    )
+                ],
+            )
+            self.assertEqual(summary.node_api_projects, 1)
+            self.assertEqual(summary.node_provider_projects, 1)
+            self.assertEqual(summary.stale_node_provider_locks, 1)
+
     def test_repository_contract_is_portable(self) -> None:
         summary = portability.validate_repository(REPO_ROOT)
 
@@ -238,7 +408,12 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
         self.assertEqual(summary.isolated_standalone_projects, 143)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
-        self.assertEqual(summary.locked_compilers, 444)
+        self.assertEqual(summary.node_api_projects, 93)
+        self.assertEqual(summary.node_provider_projects, 93)
+        self.assertEqual(summary.missing_node_provider_projects, 0)
+        self.assertEqual(summary.stale_node_provider_locks, 0)
+        self.assertEqual(summary.node_lock_exemptions, 1)
+        self.assertEqual(summary.locked_compilers, 449)
 
 
 if __name__ == "__main__":

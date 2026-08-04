@@ -806,6 +806,74 @@ committed diff plan reports exactly 96 changed and 248 affected TypeScript
 packages. The collision-checked inventory remains unchanged at 1,264
 identities and 4,419 slots with zero collisions or unknown buckets.
 
+All 20 exact-head checks reached terminal acceptable conclusions for PR #9912;
+two independent readings returned `MERGEABLE/CLEAN`; guarded squash
+auto-completion merged final head `787e73baab` as `355348901e`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419 slots,
+173 high-consensus packages with 270 gaps, 814 singleton packages with 11,396
+gaps, 618 Rust singletons, and zero collisions or unknown buckets. A quick
+direct-ownership scan finds up to 74 build-script TypeScript projects with Node
+builtin/global references but no manifest-owned `@types/node` provider. The
+dependency/leverage pass selects an executable syntax-aware audit of that
+corpus ahead of the separately pending 10-file Lua `BUILD_windows` wave; the
+audit must refine the exact set before any manifest or lockfile repair.
+
+The executable syntax-aware audit refines that prioritization ceiling to
+exactly 93 Node API build projects: 31 already own direct providers, 62 are
+missing them, one of the 31 lacks synchronized lock metadata, and
+matrix-rust-napi retains its reviewed native-workspace lock exception. The
+optimized scan excludes comments, string and template prose, member properties,
+and sources outside effective roots while inspecting nested template
+expressions. This exact 62-manifest plus one-stale-lock corpus is the selected
+metadata closure.
+
+Real new-lock validation then exposes a separate strict-build owner in
+`typescript/starlark-interpreter`: its 119-test Windows front door remains green
+at 92.05% statement coverage, while `npm run build` reaches three TS2367
+comparisons, one TS2352 cast, one TS2345 return mismatch, and two missing
+`VMValue` names. The pending `typescript-starlark-interpreter-strict-build`
+item owns those source/type repairs; this metadata-only tranche does not absorb
+them.
+
+The dependency-first generic `lattice-docs` BUILD front door also passes all
+six tests after its stale lock is materialized. Its optional `tsc -b` reaches
+three separate strict diagnostics in compiler-owned dependencies: unused
+`LatticeList`, a readonly-child cast in `lattice-ast-to-css`, and unused lexer
+`peek`; its Vite production build separately cannot resolve the repository
+`lattice.tokens?raw` asset at the current relative path. The pending
+`typescript-lattice-docs-strict-build` item owns that exact typecheck and asset
+closure without widening the selected lock repair.
+
+The selected tranche's full Go BUILD validator reproduces the exact same 17
+diagnostics on clean detached `355348901e`: two Perl, 12 Python, and three Swift,
+with no TypeScript diagnostics. The backlog now materializes the remaining
+families rather than retaining only umbrella counts: the refreshed two-package
+Perl wave; Python CAS/Macsyma, Prolog, SIR runtime, ALGOL WASM, and IRC daemon
+closures; and separate Swift Conduit-CAPI and IRC-CAPI closures. This is a
+zero-delta baseline discovery and does not widen Node declaration ownership.
+
+The implemented metadata closure adds the direct Node 22 provider to exactly
+62 manifests, synchronizes 63 locks including five newly tracked locks, and
+preserves every non-provider manifest and lock field. The executable audit now
+reports 93/93 providers, zero missing, zero stale, one reviewed exception, and
+449 compiler locks. Sixteen focused tests pass with 91% branch-aware audit
+coverage; Ruff, Bandit, compileall, JSON, diff, and added-line secret gates are
+clean. Real front doors cover lexer/parser, CLI/tooling, server/runtime,
+browser-scaffold, new-lock library, LSP, Starlark, and Lattice families; the
+seven selected representative builds pass and all nine production audits are
+clean. Go test, vet, build, and module verification pass, and the full Go
+validator has zero TypeScript diagnostics while matching the clean baseline's
+17 unrelated Perl/Python/Swift diagnostics exactly.
+
+After one unrelated curriculum merge, the branch rebases cleanly onto
+`00e47db9a4`; the refreshed collision inventory and all contract/Go gates remain
+unchanged. The committed TypeScript plan reports exactly 63 changed packages,
+236 affected packages, 470 total packages, and 1,076 dependency edges.
+
+Ready-for-review PR #9916 opened at exact validated implementation head
+`2cc08914712409f83ed56048829a142072fc541b`; the loop now monitors that one
+active parity PR and will not select another item until it merges.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are

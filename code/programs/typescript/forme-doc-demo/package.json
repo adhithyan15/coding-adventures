@@ -37,6 +37,7 @@
     "vitest": "^4.1.0",
     "@vitest/coverage-v8": "^4.1.0",
     "esbuild": "^0.28.1",
-    "jsdom": "^22.0.0"
+    "jsdom": "^22.0.0",
+    "@types/node": "^22.20.1"
   }
 }
