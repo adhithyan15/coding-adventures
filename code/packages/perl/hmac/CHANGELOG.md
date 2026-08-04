@@ -6,6 +6,8 @@
 
 - Declare the four internal hash packages used by the HMAC implementation and
   materialize their library paths in standalone BUILD runs.
+- Install only the external Test2 test harness during BUILD execution instead
+  of asking CPAN to resolve repository-local hash packages.
 
 ## [0.1.0] — 2026-04-06
 
