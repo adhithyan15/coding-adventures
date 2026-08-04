@@ -25,6 +25,14 @@
       { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
       { "unicodeScript": "Arabic", "scriptCommand": "ar" }
     ],
+    "tamil-comparisons": [
+      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
+      { "unicodeScript": "Telugu", "scriptCommand": "te" },
+      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
+      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
+      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ],
     "arabic-main": [
       { "unicodeScript": "Arabic", "scriptCommand": "ar" },
       { "unicodeScript": "Hebrew", "scriptCommand": "he" }
@@ -1449,6 +1457,214 @@
       "label": "ch:hi-good-afternoon",
       "output": "hindi/book/chapters/ch33-good-afternoon.tex",
       "scriptSet": "hindi-main"
+    },
+    {
+      "language": "tamil",
+      "chapter": 6,
+      "title": "Dative Case and Dative Subjects",
+      "label": "ch:ta-dative-case",
+      "output": "tamil/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ta-numbers-one-to-ten",
+      "output": "tamil/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ta-please",
+      "output": "tamil/book/chapters/ch08-please.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ta-sorry",
+      "output": "tamil/book/chapters/ch09-sorry.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ta-days-of-the-week",
+      "output": "tamil/book/chapters/ch10-days.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 11,
+      "title": "Colours",
+      "label": "ch:ta-colours",
+      "output": "tamil/book/chapters/ch11-colours.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ta-family",
+      "output": "tamil/book/chapters/ch12-family.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 13,
+      "title": "Body Parts",
+      "label": "ch:ta-body-parts",
+      "output": "tamil/book/chapters/ch13-body-parts.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ta-seasons",
+      "output": "tamil/book/chapters/ch14-seasons.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ta-water-and-rice",
+      "output": "tamil/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 16,
+      "title": "Tamil Months",
+      "label": "ch:ta-tamil-months",
+      "output": "tamil/book/chapters/ch16-months.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ta-noon-and-midnight",
+      "output": "tamil/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ta-telling-time",
+      "output": "tamil/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ta-asking-age",
+      "output": "tamil/book/chapters/ch19-age.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 20,
+      "title": "Numbers Eleven to Twenty and Weather",
+      "label": "ch:ta-numbers-and-weather",
+      "output": "tamil/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ta-dog-and-cat",
+      "output": "tamil/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ta-green-and-yellow",
+      "output": "tamil/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ta-day",
+      "output": "tamil/book/chapters/ch23-day.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ta-night",
+      "output": "tamil/book/chapters/ch24-night.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ta-good-night",
+      "output": "tamil/book/chapters/ch25-good-night.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ta-morning",
+      "output": "tamil/book/chapters/ch26-morning.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ta-evening",
+      "output": "tamil/book/chapters/ch27-evening.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ta-afternoon",
+      "output": "tamil/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ta-good-morning",
+      "output": "tamil/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ta-good-evening",
+      "output": "tamil/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ta-good-afternoon",
+      "output": "tamil/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "tamil-comparisons"
     },
     {
       "language": "bengali",

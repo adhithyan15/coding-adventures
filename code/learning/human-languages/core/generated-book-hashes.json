@@ -1626,6 +1626,257 @@
       "tex": "spanish/book/chapters/ch06-first-verbs.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:f39b57f3b08140c4",
+      "lessonIds": [
+        "TA-C06-dative-ukku",
+        "TA-C06-dative-stacking",
+        "TA-C06-dative-subject",
+        "TA-C06-dative-subject-family"
+      ],
+      "tex": "tamil/book/chapters/ch06-dative-case.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:1c193954d5aaadb3",
+      "lessonIds": [
+        "TA-C07-numbers-1-5",
+        "TA-C07-numbers-1-5-family",
+        "TA-C07-numbers-6-10",
+        "TA-C07-numbers-6-10-family"
+      ],
+      "tex": "tamil/book/chapters/ch07-numbers-1-10.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:f6321c5249da200d",
+      "lessonIds": [
+        "TA-C08-tayavuseytu",
+        "TA-C08-please-register"
+      ],
+      "tex": "tamil/book/chapters/ch08-please.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:ceed6b208e6e60b0",
+      "lessonIds": [
+        "TA-C09-mannikkavum",
+        "TA-C09-sorry-register"
+      ],
+      "tex": "tamil/book/chapters/ch09-sorry.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:1e54c48f58723696",
+      "lessonIds": [
+        "TA-C10-vaara-kizhamai"
+      ],
+      "tex": "tamil/book/chapters/ch10-days.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:bbcb6ccf4fd05171",
+      "lessonIds": [
+        "TA-C11-nirangal"
+      ],
+      "tex": "tamil/book/chapters/ch11-colours.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:c60c5953173c6f66",
+      "lessonIds": [
+        "TA-C12-kudumbam"
+      ],
+      "tex": "tamil/book/chapters/ch12-family.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:1dbbb29d47b23eee",
+      "lessonIds": [
+        "TA-C13-udal-uruppugal"
+      ],
+      "tex": "tamil/book/chapters/ch13-body-parts.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:89ffa688255fddbc",
+      "lessonIds": [
+        "TA-C14-kaalangal"
+      ],
+      "tex": "tamil/book/chapters/ch14-seasons.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:5ab3afd6c620e3aa",
+      "lessonIds": [
+        "TA-C15-thanneer-arisi"
+      ],
+      "tex": "tamil/book/chapters/ch15-water-and-rice.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:4adcb4d90d11981d",
+      "lessonIds": [
+        "TA-C16-thamizh-maadangal"
+      ],
+      "tex": "tamil/book/chapters/ch16-months.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:06273003bfe95d72",
+      "lessonIds": [
+        "TA-C17-nanpakal-nalliravu",
+        "TA-C17-transparent-middle-synonyms"
+      ],
+      "tex": "tamil/book/chapters/ch17-noon-and-midnight.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:b273f5380b760010",
+      "lessonIds": [
+        "TA-C18-mani",
+        "TA-C18-mani-homophone-time"
+      ],
+      "tex": "tamil/book/chapters/ch18-telling-time.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:44a46feca59b14fa",
+      "lessonIds": [
+        "TA-C19-vayathu",
+        "TA-C19-age-register-grammar"
+      ],
+      "tex": "tamil/book/chapters/ch19-age.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:974d434fad0acba2",
+      "lessonIds": [
+        "TA-C20-pathinondru-irupathu",
+        "TA-C20-vaanilai"
+      ],
+      "tex": "tamil/book/chapters/ch20-numbers-and-weather.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:99b608014f6d04e5",
+      "lessonIds": [
+        "TA-C21-naay-poonai"
+      ],
+      "tex": "tamil/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:3c34a0b9cf9e6a96",
+      "lessonIds": [
+        "TA-C22-paccai-manjal"
+      ],
+      "tex": "tamil/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:cbbbe0dcc581dbf8",
+      "lessonIds": [
+        "TA-C23-naal",
+        "TA-C23-day-family-register"
+      ],
+      "tex": "tamil/book/chapters/ch23-day.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:5eac37ebcb9ae8cc",
+      "lessonIds": [
+        "TA-C24-iravu",
+        "TA-C24-night-register-darkness"
+      ],
+      "tex": "tamil/book/chapters/ch24-night.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:d95cb3daafa21b66",
+      "lessonIds": [
+        "TA-C25-iniya-iravu",
+        "TA-C25-goodnight-alternatives"
+      ],
+      "tex": "tamil/book/chapters/ch25-good-night.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:cbad1f7eb1bb2816",
+      "lessonIds": [
+        "TA-C26-kaalai"
+      ],
+      "tex": "tamil/book/chapters/ch26-morning.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:771849e1943269f5",
+      "lessonIds": [
+        "TA-C27-maalai"
+      ],
+      "tex": "tamil/book/chapters/ch27-evening.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:925a2b9b870e5d0f",
+      "lessonIds": [
+        "TA-C28-pirpakal",
+        "TA-C28-afternoon-boundary"
+      ],
+      "tex": "tamil/book/chapters/ch28-afternoon.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:98b7381596bab2bd",
+      "lessonIds": [
+        "TA-C29-kaalai-vanakkam"
+      ],
+      "tex": "tamil/book/chapters/ch29-good-morning.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:f4dbb1b65e6b99db",
+      "lessonIds": [
+        "TA-C30-maalai-vanakkam"
+      ],
+      "tex": "tamil/book/chapters/ch30-good-evening.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:f8ee12008eeeb646",
+      "lessonIds": [
+        "TA-C31-matiya-vanakkam",
+        "TA-C31-afternoon-greeting-root"
+      ],
+      "tex": "tamil/book/chapters/ch31-good-afternoon.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:a0d2c6d28e4fa358",

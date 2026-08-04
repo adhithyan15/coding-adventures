@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C14-kaalangal
+spine_node: SPINE-TIME-OF-DAY
+sequence: 340
 chapter: 14
 type: word
 headword: வசந்த காலம் கோடைக் காலம் மழைக் காலம் குளிர் காலம்
@@ -9,19 +12,33 @@ prerequisites: [TA-C13-udal-uruppugal]
 sounds: [tamil-vowel-sign-ai, tamil-retroflex-lla]
 roots: [dravidian-kodai-mazhai-kulir, sanskrit-vasantha]
 etymology_hook: "கோடை kodai (summer heat) and குளிர் kulir (cold) are native Tamil words; வசந்தம் vasantham (spring) is a Sanskrit loan — but the season that actually shapes life in Tamil Nadu is மழைக்காலம், the RAINS, not any of the four Western ones"
-est_minutes: 4
+duration:
+  max_seconds: 284
+requires:
+  knowledge: [TA-LEX-UDAL-URUPPUGAL-01]
+introduces:
+  knowledge: [TA-LEX-KAALANGAL-01, TA-PRAGMATICS-KAALANGAL-02]
+practises:
+  knowledge: [TA-LEX-UDAL-URUPPUGAL-01, TA-LEX-KAALANGAL-01, TA-PRAGMATICS-KAALANGAL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C13-udal-uruppugal]
 ---
 
 # வசந்த காலம், கோடை, மழை, குளிர் — the four words, and the real season underneath
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-UDAL-URUPPUGAL-01] -->
 
 [PAUSE 2s] Tamil has words that line up with Spanish's four seasons — but,
 just like the Hindi lesson on ऋतु, forcing them into a clean four-way split
 hides what actually matters on the ground.
 
-## The four words
+## You'll want to know: The four words
+<!-- hl-knowledge: introduces=[TA-LEX-KAALANGAL-01]; assesses=[] -->
 
 | Tamil | meaning | source |
 |---|---|---|
@@ -38,7 +55,8 @@ into Tamil so long ago and so thoroughly that it functions as completely
 ordinary vocabulary today, quite unlike a fresh, still-foreign-feeling loan
 like *vasantham*.
 
-## Be honest: the rains are the real season here
+## Why it's said this way: Be honest: the rains are the real season here
+<!-- hl-knowledge: introduces=[TA-PRAGMATICS-KAALANGAL-02]; assesses=[] -->
 
 Just as Hindi's traditional calendar makes the monsoon (*varṣā*) its own
 central season rather than a footnote, Tamil Nadu's actual climate is
@@ -55,6 +73,7 @@ words and register you'd teach first, and whether there's more to say about
 how Tamil Nadu's own seasonal year is actually divided in practice.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-UDAL-URUPPUGAL-01, TA-LEX-KAALANGAL-01, TA-PRAGMATICS-KAALANGAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kodai" — heat/summer, native — then "kaalam," time/season]
@@ -63,6 +82,7 @@ how Tamil Nadu's own seasonal year is actually divided in practice.)
 - [YOU SAY: the one loanword — "vasantha kaalam," spring, from Sanskrit]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-UDAL-URUPPUGAL-01, TA-LEX-KAALANGAL-01, TA-PRAGMATICS-KAALANGAL-02] -->
 
 [PAUSE 3s] Which of the four season-words is a Sanskrit loan, and which are
 native Tamil? (**வசந்தம்** *vasantham* is Sanskrit; **கோடை, மழை, குளிர்**

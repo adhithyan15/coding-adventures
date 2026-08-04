@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C16-thamizh-maadangal
+spine_node: SPINE-TIME-OF-DAY
+sequence: 360
 chapter: 16
 type: word
 headword: சித்திரை வைகாசி ஆனி ஆடி ஆவணி புரட்டாசி ஐப்பசி கார்த்திகை மார்கழி தை மாசி பங்குனி
@@ -9,19 +12,33 @@ prerequisites: [TA-C15-thanneer-arisi]
 sounds: [tamil-vowel-sign-ai, tamil-retroflex-lla]
 roots: [tamil-solar-calendar-nakshatra]
 etymology_hook: "The Tamil solar calendar's twelve months are named for nakshatras (lunar-mansion star groups) the MOON sits near on the full-moon day within that month — a THIRD calendar system, alongside the Gregorian and the pan-Indian Hindu lunisolar calendar, still governing Tamil New Year and Pongal today"
-est_minutes: 4
+duration:
+  max_seconds: 267
+requires:
+  knowledge: [TA-LEX-THANNEER-ARISI-01]
+introduces:
+  knowledge: [TA-LEX-THAMIZH-MAADANGAL-01, TA-PRAGMATICS-THAMIZH-MAADANGAL-02]
+practises:
+  knowledge: [TA-LEX-THANNEER-ARISI-01, TA-LEX-THAMIZH-MAADANGAL-01, TA-PRAGMATICS-THAMIZH-MAADANGAL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C15-thanneer-arisi]
 ---
 
 # சித்திரை to பங்குனி — Tamil's own solar calendar
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-THANNEER-ARISI-01] -->
 
 [PAUSE 2s] By now you've seen Arabic and Hindi each juggle two calendars.
 Tamil adds a **third distinct system** to the mix — one still actively
 used for Tamil New Year and Pongal, not a historical curiosity.
 
-## The twelve Tamil months
+## You'll want to know: The twelve Tamil months
+<!-- hl-knowledge: introduces=[TA-LEX-THAMIZH-MAADANGAL-01]; assesses=[] -->
 
 **சித்திரை, வைகாசி, ஆனி, ஆடி, ஆவணி, புரட்டாசி, ஐப்பசி, கார்த்திகை,
 மார்கழி, தை, மாசி, பங்குனி** (*Chithirai, Vaikāsi, Āṉi, Āḍi, Āvaṇi,
@@ -35,7 +52,8 @@ the **moon** sits near on the **full-moon (pournami) day** that falls
 within that month — the moon's position, not the sun's, and tied to that
 month's full moon specifically, not simply the month's start.
 
-## Be honest: this is a THIRD calendar, not a variant of the others
+## Why it's said this way: Be honest: this is a THIRD calendar, not a variant of the others
+<!-- hl-knowledge: introduces=[TA-PRAGMATICS-THAMIZH-MAADANGAL-02]; assesses=[] -->
 
 You've now met three genuinely separate calendar traditions across this
 course: the Gregorian solar calendar (borrowed names, everyday civil use
@@ -50,6 +68,7 @@ dates do) because it's solar too — just a different solar calendar,
 starting its year at a different point and naming its months differently.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-THANNEER-ARISI-01, TA-LEX-THAMIZH-MAADANGAL-01, TA-PRAGMATICS-THAMIZH-MAADANGAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the twelve — "Chithirai, Vaikāsi, Āṉi, Āḍi, Āvaṇi, Puraṭṭāsi,
@@ -58,6 +77,7 @@ starting its year at a different point and naming its months differently.
 - [YOU SAY: "Thai 1" — Pongal]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-THANNEER-ARISI-01, TA-LEX-THAMIZH-MAADANGAL-01, TA-PRAGMATICS-THAMIZH-MAADANGAL-02] -->
 
 [PAUSE 3s] What kind of calendar is the Tamil month system — solar,
 lunar, or lunisolar? (**Solar** — a genuinely separate calendar from both

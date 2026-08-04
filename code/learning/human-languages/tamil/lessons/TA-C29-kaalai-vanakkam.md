@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C29-kaalai-vanakkam
+spine_node: SPINE-TIME-OF-DAY
+sequence: 570
 chapter: 29
 type: phrase
 headword: காலை வணக்கம்
@@ -9,20 +12,34 @@ prerequisites: [TA-C26-kaalai, TA-C01-vanakkam-family-register]
 sounds: [tamil-geminate-kka, tamil-vowel-sign-ai]
 roots: [vaṇaṅku]
 etymology_hook: "காலை வணக்கம் (kālai vaṇakkam, 'good morning'), literally 'morning greetings/salutations,' is confirmed by TWO independently-fetched sources (talkpal.ai, preply.com — practical language-learning content, not lexicographic/scholarly references like TA-C26's Wiktionary and Tamil Lexicon; worth naming that source-tier difference explicitly) as Tamil's standard greeting for this time of day — talkpal.ai glosses it directly as காலை ('morning') + வணக்கம் ('a respectful greeting, similar to hello or salutations'), and preply.com independently labels it 'formal,' 'used before noon'; both agree on timing (roughly sunrise to 11 AM). Be honest about what this ISN'T: unlike Hindi/Kannada/Telugu/Malayalam, which each build their morning greeting on a śubha-equivalent word ('good, auspicious') plus a time-word, Tamil's own greeting is entirely different in structure — it's simply its own general greeting word, வணக்கம் (already met, TA-C01, 'reverence, homage,' Tamil's everyday word for 'hello'), specified with the time-of-day word காலை (already met, TA-C26) in front of it. Also be honest about a claim that did NOT check out: an initial WebSearch summary suggested a Sanskrit-borrowed word, 'suprabhatham,' serves as a casual alternative — but this claim appears on NEITHER of the two directly-fetched pages, so it is deliberately NOT asserted here"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-ETYMON-KAALAI-01]
+introduces:
+  knowledge: [TA-LEX-KAALAI-VANAKKAM-01, TA-PRAGMATICS-KAALAI-VANAKKAM-02]
+practises:
+  knowledge: [TA-ETYMON-KAALAI-01, TA-LEX-KAALAI-VANAKKAM-01, TA-PRAGMATICS-KAALAI-VANAKKAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C26-kaalai, TA-C01-vanakkam-family-register, TA-C01-vanakkam]
 ---
 
 # காலை வணக்கம் (kālai vaṇakkam) — "morning greetings," built from two words you already know
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01] -->
 
 [PAUSE 2s] Every other language in this arc built its "good morning"
 on a word meaning "good" or "auspicious." Tamil does something
 completely different: it just puts its everyday greeting word after
 its word for "morning."
 
-## காலை வணக்கம் — literally, "morning greetings"
+## You'll want to know: காலை வணக்கம் — literally, "morning greetings"
+<!-- hl-knowledge: introduces=[TA-LEX-KAALAI-VANAKKAM-01]; assesses=[] -->
 
 **காலை வணக்கம்** (**kālai vaṇakkam**) — "**good morning**" —
 is confirmed, by two independently-fetched sources, as Tamil's
@@ -33,7 +50,8 @@ around 11 AM**." It's built from two words you already have:
 Tamil's everyday word for "hello"). Literally: "**morning
 salutations**."
 
-## Be honest: this breaks the pattern every other language followed
+## Why it's said this way: Be honest: this breaks the pattern every other language followed
+<!-- hl-knowledge: introduces=[TA-PRAGMATICS-KAALAI-VANAKKAM-02]; assesses=[] -->
 
 Here's the honest structural surprise: Hindi, Kannada, Telugu, and
 Malayalam each build their morning greeting on a **śubha**-equivalent
@@ -48,6 +66,7 @@ appears on **neither** of the two pages actually fetched, so it's
 deliberately **not** asserted here.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01, TA-LEX-KAALAI-VANAKKAM-01, TA-PRAGMATICS-KAALAI-VANAKKAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kālai vaṇakkam" — "good morning," literally "morning
@@ -58,6 +77,7 @@ deliberately **not** asserted here.
   vaṇakkam (Chapter 1)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01, TA-LEX-KAALAI-VANAKKAM-01, TA-PRAGMATICS-KAALAI-VANAKKAM-02] -->
 
 [PAUSE 3s] What two already-known words does காலை வணக்கம் build
 from? (காலை, "morning" + வணக்கம், "reverence/hello.") Does

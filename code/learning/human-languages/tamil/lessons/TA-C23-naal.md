@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C23-naal
+spine_node: SPINE-TIME-OF-DAY
+sequence: 470
 chapter: 23
 type: word
 headword: நாள்
@@ -9,19 +12,33 @@ prerequisites: [TA-C04-naalai, TA-C17-transparent-middle-synonyms]
 sounds: [tamil-retroflex-lla, tamil-vowel-sign-aa]
 roots: [proto-dravidian-naal-day, sanskrit-dina]
 etymology_hook: "நாள் (nāḷ, 'day') is native Dravidian, from Proto-Dravidian *nāḷ, already met inside நாளை (nāḷai, 'tomorrow,' Chapter 4) — and it is genuinely Tamil's plain, everyday, unmarked word for counting a day (as in மூன்று நாள், mūnṟu nāḷ, 'three days'); this makes Tamil the odd one out among this arc's Dravidian languages so far — Kannada's ದಿನ/dina and Malayalam's ദിവസം/divasam are both Sanskrit tatsama words doing the everyday job, and Telugu's రోజు/rōju is a Persian loanword doing it — Tamil is the only one where a NATIVE word holds that plain, everyday spot, uncontested; Tamil ALSO has தினம் (tiṉam), the exact same Sanskrit tatsama as Kannada's dina/Malayalam's dinam (← Sanskrit दिन/dina ← PIE *dyew-, 'to shine'), but here it functions mainly in formal/adverbial and compound use — சுதந்திர தினம் (sutantira tiṉam, 'Independence Day') and தினசரி (tiṉacari, 'daily') — not as the plain everyday noun"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01]
+introduces:
+  knowledge: [TA-ETYMON-NAAL-01]
+practises:
+  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NAAL-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C04-naalai, TA-C17-transparent-middle-synonyms, TA-C17-nanpakal-nalliravu]
 ---
 
 # நாள் (nāḷ) — "day," the one this arc's Dravidian languages didn't lose
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01] -->
 
 [PAUSE 2s] You've now seen three Dravidian languages reach for a
 loanword — Sanskrit, twice, and Persian once — to name their everyday
 word for "day." Tamil doesn't. This lesson is about the one that didn't.
 
-## நாள் — genuinely native, genuinely everyday
+## The word, taken apart - நாள் — genuinely native, genuinely everyday
+<!-- hl-knowledge: introduces=[TA-ETYMON-NAAL-01]; assesses=[] -->
 
 **நாள்** (**nāḷ**) — "**day**" — is native **Dravidian**, from
 **Proto-Dravidian** ***\*nāḷ***. You've already met it, hiding inside
@@ -32,12 +49,14 @@ some native words elsewhere in this arc have been — it is simply Tamil's
 **மூன்று நாள்** (*mūnṟu nāḷ*, "**three days**").
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NAAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nāḷ" — "day," native Dravidian, already met inside "tomorrow"]
 - [YOU SAY: "mūnṟu nāḷ" — three days]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NAAL-01] -->
 
 [PAUSE 3s] Where did you already meet **நாள்** before this lesson? (Inside
 **நாளை**, *nāḷai*, "tomorrow," Chapter 4.) Is Tamil's everyday day-word a

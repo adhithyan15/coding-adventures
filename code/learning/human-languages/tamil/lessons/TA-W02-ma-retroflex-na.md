@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-W02-ma-retroflex-na
+spine_node: SPINE-MEET-GREET
+sequence: 120
 chapter: 1
 type: writing
 headword: "ம, ண"
@@ -9,19 +12,33 @@ prerequisites: [TA-W01-abugida-va-ka]
 sounds: [retroflex-n]
 roots: []
 etymology_hook: "ண is a RETROFLEX n, made with the tongue curled back to the roof of the mouth — a sound English does not have and cannot hear at first; Tamil writes it with its own letter because words genuinely differ by it, which is why the script needs three separate n-letters"
-est_minutes: 4
+duration:
+  max_seconds: 299
+requires:
+  knowledge: [TA-SCRIPT-ABUGIDA-VA-KA-01]
+introduces:
+  knowledge: [TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-MA-RETROFLEX-NA-02, TA-SOUND-MA-RETROFLEX-NA-03]
+practises:
+  knowledge: [TA-SCRIPT-ABUGIDA-VA-KA-01, TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-MA-RETROFLEX-NA-02, TA-SOUND-MA-RETROFLEX-NA-03]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-W01-abugida-va-ka, TA-W01-curves-va-ka]
 ---
 
 # ம and ண — a loop, and a curled tongue
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-ABUGIDA-VA-KA-01] -->
 
 [PAUSE 2s] Two more letters, and with them you'll have every letter of the
 course's first word. One is easy. The other is a sound you may not be able to
 hear yet.
 
-## ம — "ma"
+## Script you'll notice: ம
+<!-- hl-knowledge: introduces=[TA-SCRIPT-MA-RETROFLEX-NA-01]; assesses=[] -->
 
 1. **a straight vertical stroke on the LEFT**
 2. **a horizontal along the bottom**
@@ -31,7 +48,8 @@ Get the sides the right way round. The **upright is on the left** and the
 **curve on the right** — which is the reverse of what most people guess, and the
 reverse of the Devanagari habit of hanging a shape off a right-hand spine.
 
-## ண — "ṇa"
+## Script you'll notice: ண
+<!-- hl-knowledge: introduces=[TA-SCRIPT-MA-RETROFLEX-NA-02]; assesses=[] -->
 
 1. **a straight top bar**
 2. **a loop on the left**
@@ -40,7 +58,8 @@ reverse of the Devanagari habit of hanging a shape off a right-hand spine.
 
 The dot under the romanization — **ṇ**, not plain *n* — is doing real work.
 
-## Retroflex: the tongue curls back
+## Sounds you'll need: Retroflex
+<!-- hl-knowledge: introduces=[TA-SOUND-MA-RETROFLEX-NA-03]; assesses=[] -->
 
 Say English **n**. Your tongue touches just behind your teeth.
 
@@ -59,6 +78,7 @@ a *linguistic area*: neighbouring languages that borrowed a sound from each othe
 rather than inheriting it.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-ABUGIDA-VA-KA-01, TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-MA-RETROFLEX-NA-02, TA-SOUND-MA-RETROFLEX-NA-03] -->
 
 [PAUSE 1s]
 - [YOU WRITE: ம — "left upright, bottom, **right** arch"]
@@ -66,6 +86,7 @@ rather than inheriting it.
 - [YOU SAY: plain *n*, then curl the tongue back — **ṇ**]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-ABUGIDA-VA-KA-01, TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-MA-RETROFLEX-NA-02, TA-SOUND-MA-RETROFLEX-NA-03] -->
 
 [PAUSE 3s] Draw **ம** — which side is the upright on? (**The left**; the
 arch closes it on the right.) Draw **ண** — what makes it *not* ன? (**One extra arch**: ண has **two** arches where ன has one. Both end in the same straight vertical.) What does the dot in **ṇ** mean? (**Retroflex** — the tongue curls

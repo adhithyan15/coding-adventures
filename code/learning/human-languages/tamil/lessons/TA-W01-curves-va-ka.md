@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-W01-curves-va-ka
+spine_node: SPINE-MEET-GREET
+sequence: 100
 chapter: 1
 type: writing
 headword: "தமிழ் எழுத்து"
@@ -9,13 +12,26 @@ prerequisites: [TA-C01-vanakkam-family-register]
 sounds: [tamil-inherent-a]
 roots: [palm-leaf-stylus]
 etymology_hook: "the usual explanation for Tamil's curves is PALM LEAVES — a long straight cut runs along the leaf's fibres and can split it, so a stylus favours curves; treat it as the standard account rather than settled, since early Tamil-Brahmi was angular and the rounding came later via Vatteluttu"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-SCRIPT-CURVES-VA-KA-01]
+practises:
+  knowledge: [TA-SCRIPT-CURVES-VA-KA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C01-vanakkam-family-register, TA-C01-vanakkam]
 ---
 
 # Tamil's curves — the writing surface leaves a trace
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Before the first letter, look at a line of Tamil and notice what
 isn't there:
@@ -27,7 +43,8 @@ Devanagari — no hanging head-line, and a great deal of curve. (Straight stroke
 do exist: most of these letters have a flat bar across the top.) The roundness
 has a usual explanation, and it is the best story in this chapter.
 
-## The script is the shape of its writing surface
+## Script you'll notice: The script is the shape of its writing surface
+<!-- hl-knowledge: introduces=[TA-SCRIPT-CURVES-VA-KA-01]; assesses=[] -->
 
 Tamil was written for centuries on **palm leaves**, scratched with a metal
 stylus and then rubbed with soot to make the scratches show.
@@ -48,6 +65,7 @@ leaves fingerprints on the letters.** Latin's straight strokes suit a wax tablet
 and a chisel; Tamil's curves suit a stylus and a leaf.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-CURVES-VA-KA-01] -->
 
 [PAUSE 1s]
 - [YOU TRACE: a curve crossing the imagined grain of a palm leaf]
@@ -55,6 +73,7 @@ and a chisel; Tamil's curves suit a stylus and a leaf.
 - [YOU SAY: the usual reason for the curves — "a straight line can **split the leaf**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-CURVES-VA-KA-01] -->
 
 [PAUSE 3s] Why is Tamil round? (The **usual** explanation: it was incised on **palm
 leaves**, where a straight stroke along the grain can **split** them — though

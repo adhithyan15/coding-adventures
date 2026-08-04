@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C09-mannikkavum
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 280
 chapter: 9
 type: phrase
 headword: மன்னிக்கவும்
@@ -9,19 +12,33 @@ prerequisites: [TA-C08-please-register]
 sounds: [tamil-double-nnna, pulli-virama]
 roots: [manni-tamil]
 etymology_hook: "மன்னிக்கவும் maṉṉikkavum is built on மன்னி maṉṉi 'to forgive' — Tamil's OWN native word, unlike its Dravidian cousins' Sanskrit kṣamā"
-est_minutes: 4
+duration:
+  max_seconds: 245
+requires:
+  knowledge: [TA-PRAGMATICS-PLEASE-REGISTER-01]
+introduces:
+  knowledge: [TA-ETYMON-MANNIKKAVUM-01, TA-ETYMON-MANNIKKAVUM-02]
+practises:
+  knowledge: [TA-PRAGMATICS-PLEASE-REGISTER-01, TA-ETYMON-MANNIKKAVUM-01, TA-ETYMON-MANNIKKAVUM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C08-please-register, TA-C08-tayavuseytu]
 ---
 
 # மன்னிக்கவும் (maṉṉikkavum) — please forgive
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-PLEASE-REGISTER-01] -->
 
 [PAUSE 2s] You already know **தயவுசெய்து**, "please." Tamil's "sorry" gives
 you something its Dravidian cousins don't: a forgiveness-word that's Tamil
 through and through, not borrowed from Sanskrit.
 
-## The word, taken apart
+## The word, taken apart - Roots and family
+<!-- hl-knowledge: introduces=[TA-ETYMON-MANNIKKAVUM-01]; assesses=[] -->
 
 **மன்னிக்கவும்** is built from three pieces:
 
@@ -37,7 +54,8 @@ So **மன்னிக்கவும்** reads as something like "**may [one]
 a polite, slightly formal way of asking for forgiveness, more at home in
 writing or a considered apology than tossed off in passing.
 
-## The Dravidian family, side by side — and Tamil's own path
+## The word, taken apart - The Dravidian family, side by side — and Tamil's own path
+<!-- hl-knowledge: introduces=[TA-ETYMON-MANNIKKAVUM-02]; assesses=[] -->
 
 Where Kannada, Telugu, and Malayalam all reach for the Sanskrit noun **kṣamā**
 ("patience, forgiveness") and turn it into a verb, **Tamil uses its own root**:
@@ -52,6 +70,7 @@ Where "please" showed the whole family sharing one Sanskrit-derived idea
 cousins borrowed the same Sanskrit one.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-PLEASE-REGISTER-01, TA-ETYMON-MANNIKKAVUM-01, TA-ETYMON-MANNIKKAVUM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "maṉṉi" — forgive — the Tamil root, not from Sanskrit]
@@ -59,6 +78,7 @@ cousins borrowed the same Sanskrit one.
 - [YOU SAY: contrast — Kannada, Telugu, Malayalam all use kṣamā instead]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-PLEASE-REGISTER-01, TA-ETYMON-MANNIKKAVUM-01, TA-ETYMON-MANNIKKAVUM-02] -->
 
 [PAUSE 3s] What does **மன்னிக்கவும்** mean, and what is it built from?
 (**"Please forgive"** — *maṉṉi* "to forgive" + *‑kkavum*, a formal request

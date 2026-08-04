@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-W02-three-ns
+spine_node: SPINE-MEET-GREET
+sequence: 130
 chapter: 1
 type: writing
 headword: "ந, ன, ண"
@@ -8,17 +11,31 @@ romanization: "na, ṉa, ṇa"
 prerequisites: [TA-W02-ma-retroflex-na]
 sounds: [dental-n, alveolar-n, retroflex-n]
 roots: [south-asian-linguistic-area]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-SCRIPT-MA-RETROFLEX-NA-01]
+introduces:
+  knowledge: [TA-SCRIPT-THREE-NS-01]
+practises:
+  knowledge: [TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-THREE-NS-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-W02-ma-retroflex-na]
 ---
 
 # ந, ன, ண — three stops on one tongue-map
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-MA-RETROFLEX-NA-01] -->
 
 [PAUSE 2s] English writes one *n*. Tamil keeps three tongue positions apart.
 
-## The backward walk
+## Script you'll notice: The backward walk
+<!-- hl-knowledge: introduces=[TA-SCRIPT-THREE-NS-01]; assesses=[] -->
 
 | letter | sound | tongue |
 |---|---|---|
@@ -39,6 +56,7 @@ shared geography makes the region a **linguistic area**: neighbors can borrow a
 sound pattern without inheriting it from one ancestor.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-THREE-NS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: dental ந at the teeth]
@@ -47,6 +65,7 @@ sound pattern without inheriting it from one ancestor.
 - [YOU TRACE: one arch in ன · two arches in ண]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-THREE-NS-01] -->
 
 [PAUSE 3s] How many n-letters does Tamil have? (**Three**.) What separates them?
 (Tongue position: **dental, alveolar, retroflex**.) Which two differ by one

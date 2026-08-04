@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C07-numbers-1-5
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 220
 chapter: 7
 type: word
 headword: ஒன்று இரண்டு மூன்று நான்கு ஐந்து
@@ -9,18 +12,32 @@ prerequisites: [TA-C01-vanakkam]
 sounds: [tamil-inherent-a, pulli-virama, alveolar-rra, retroflex-nn]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Tamil's numbers are native Dravidian, not borrowed — and 2–5 stay visibly cousin across Tamil, Kannada, Telugu, Malayalam"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-LEX-NUMBERS-1-5-01]
+practises:
+  knowledge: [TA-LEX-NUMBERS-1-5-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C01-vanakkam]
 ---
 
 # ஒன்று, இரண்டு, மூன்று, நான்கு, ஐந்து — one to five
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Five words — and the same point *vaṇakkam* made, told again in
 numbers: Tamil counts with **its own** words, not borrowed ones.
 
-## The five
+## You'll want to know: The five
+<!-- hl-knowledge: introduces=[TA-LEX-NUMBERS-1-5-01]; assesses=[] -->
 
 | | numeral | word | said |
 |---|---|---|---|
@@ -41,12 +58,14 @@ dot that stacks *ன்ற* into the single cluster you hear in **ஒன்ற�
 **மூன்று**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "oṉṟu, iraṇṭu, mūṉṟu, nāṉku, aintu"]
 - [YOU SAY: read the digits aloud — ௧ ௨ ௩ ௪ ௫]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
 
 [PAUSE 3s] Count to five in Tamil. (*Oṉṟu, iraṇṭu, mūṉṟu, nāṉku, aintu*.) Are
 Tamil's numbers borrowed from Sanskrit, like Hindi's? (**No** — they're native
