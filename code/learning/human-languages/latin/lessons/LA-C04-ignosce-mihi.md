@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C04-ignosce-mihi
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 190
 chapter: 4
 type: phrase
 headword: ignōsce mihi
@@ -9,19 +12,33 @@ prerequisites: [LA-C03-quaeso]
 sounds: [gn-cluster, macron-long-vowel]
 roots: [gnoscere-latin]
 etymology_hook: "ignōsce ← in-/ig- 'not' + (g)nōscere 'to know' — 'don't hold it against me,' cousin of English know, recognize, cognition"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02]
+introduces:
+  knowledge: [LA-ETYMON-IGNOSCE-MIHI-01, LA-PRAGMATICS-IGNOSCE-MIHI-02]
+practises:
+  knowledge: [LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02, LA-ETYMON-IGNOSCE-MIHI-01, LA-PRAGMATICS-IGNOSCE-MIHI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C03-quaeso]
 ---
 
 # ignōsce mihi — "forgive me" / I'm sorry
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02] -->
 
 [PAUSE 2s] You've met **quaesō**, the worn-down "I ask" Romans used for
 *please*. Their word for *sorry* is built the very same way — a small verb
 carrying the whole apology.
 
 ## The phrase, taken apart
+<!-- hl-knowledge: introduces=[LA-ETYMON-IGNOSCE-MIHI-01]; assesses=[] -->
 
 - **ignōsce** — the imperative "**forgive!**," from **ignōscere**, itself
   **in-** (here appearing as **ig-**, "not") + **(g)nōscere**, "**to know.**"
@@ -38,7 +55,8 @@ itself traces to the very same ancient root, alongside **recognize**
 ("know again"), **cognition**, and **notice**. Latin's word for "sorry" and
 English's word for "know" are, at bottom, blood relatives.
 
-## Latin's other way to say it: paenitet mē
+## Why it's said this way: Latin's other way to say it: paenitet mē
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-IGNOSCE-MIHI-02]; assesses=[] -->
 
 Latin also had an **impersonal** construction for plain regret — no imperative,
 no "you" at all: **paenitet mē**, literally "**it grieves me**" (*mē* here is
@@ -52,6 +70,7 @@ names your own **regret** — closer to "I'm sorry [that happened]" than to
 again across languages.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02, LA-ETYMON-IGNOSCE-MIHI-01, LA-PRAGMATICS-IGNOSCE-MIHI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ignōsce" — forgive — then "mihi," to me]
@@ -59,6 +78,7 @@ again across languages.
 - [YOU SAY: the other one — "paenitet mē" = I regret it]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02, LA-ETYMON-IGNOSCE-MIHI-01, LA-PRAGMATICS-IGNOSCE-MIHI-02] -->
 
 [PAUSE 3s] What does **ignōsce mihi** literally mean, piece by piece?
 (**"Forgive to me"** — *ignōscere* "to not-know/overlook" + *mihi* "to me.")

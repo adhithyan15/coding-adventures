@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C30-bonam-noctem
+spine_node: SPINE-TIME-OF-DAY
+sequence: 540
 chapter: 30
 type: phrase
 headword: bonam noctem
@@ -9,19 +12,33 @@ prerequisites: [LA-C29-nox]
 sounds: [macron-none-short-vowel, accusative-am-em]
 roots: [bonus-latin, nox-latin]
 etymology_hook: "bonam noctem, 'good night,' uses a genuinely classical Latin grammatical principle — Latin wishes and exclamations conventionally take the ACCUSATIVE case, not the nominative (the same 'Accusative of Exclamation' construction behind Fēlīcem nātālem, 'happy birthday'); be honest, though: while the accusative-of-wishing rule is solid, this SPECIFIC fixed phrase, bonam noctem, is NOT itself attested as a Roman farewell formula in any surviving classical text — a later, post-classical convention"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03]
+introduces:
+  knowledge: [LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02]
+practises:
+  knowledge: [LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C29-nox]
 ---
 
 # bonam noctem — real grammar, not a real citation
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03] -->
 
 [PAUSE 2s] You already have *bonus* (good) and *nox* (night, last lesson).
 Put them together for "good night" — but the case they end up in is the
 real lesson here.
 
-## bonam noctem — why accusative, not nominative
+## Grammar Lens: bonam noctem — why accusative, not nominative
+<!-- hl-knowledge: introduces=[LA-GRAMMAR-BONAM-NOCTEM-01]; assesses=[] -->
 
 **Bonam noctem** = "**good night**" — but notice: **not** *bona nox*
 (nominative). Latin wishes and exclamations conventionally use the
@@ -36,7 +53,8 @@ greetings to Atticus"). The bare nominative *bona nox* would
 work too (with an implied "*sit*," "may it be"), but the accusative is the
 more natural, idiomatic choice for a wish like this.
 
-## Be honest: real grammar, not a real citation
+## Grammar Lens: Be honest: real grammar, not a real citation
+<!-- hl-knowledge: introduces=[LA-GRAMMAR-BONAM-NOCTEM-02]; assesses=[] -->
 
 Here's the careful part, matching the same honesty already applied to
 *quōmodo tē habēs?*, *nihil est*, and *crās tē vidēbō* earlier in this
@@ -49,6 +67,7 @@ Treat the grammar as reliable and the exact phrase as a well-formed
 construction, not a quotation from a Roman text.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bonam noctem" — "good night," accusative]
@@ -58,6 +77,7 @@ construction, not a quotation from a Roman text.
   ancient farewell]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02] -->
 
 [PAUSE 3s] Why is it **bonam noctem** and not **bona nox**? (**Latin
 wishes/exclamations conventionally take the accusative case**, not the

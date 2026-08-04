@@ -1077,6 +1077,333 @@
       "tex": "kannada/book/chapters/ch31-good-afternoon.tex"
     },
     {
+      "language": "latin",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:898dd008f6cb6e08",
+      "lessonIds": [
+        "LA-C02-numbers-1-5",
+        "LA-C02-numbers-6-10"
+      ],
+      "tex": "latin/book/chapters/ch02-numbers-1-10.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:3662fdf3d0d3281d",
+      "lessonIds": [
+        "LA-C03-quaeso"
+      ],
+      "tex": "latin/book/chapters/ch03-please.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:af8c86fea4e23dd8",
+      "lessonIds": [
+        "LA-C04-ignosce-mihi"
+      ],
+      "tex": "latin/book/chapters/ch04-sorry.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:f10d90cbc6a9bb23",
+      "lessonIds": [
+        "LA-C05-dies-lunae-veneris",
+        "LA-C05-saturni-solis"
+      ],
+      "tex": "latin/book/chapters/ch05-days.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:ed8c641caa3d95e0",
+      "lessonIds": [
+        "LA-C06-niger-albus",
+        "LA-C06-ruber-caeruleus"
+      ],
+      "tex": "latin/book/chapters/ch06-colours.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:cad110c49d4d24a0",
+      "lessonIds": [
+        "LA-C07-pater-mater",
+        "LA-C07-frater-soror"
+      ],
+      "tex": "latin/book/chapters/ch07-family.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:bd30fdc59052d494",
+      "lessonIds": [
+        "LA-C08-caput",
+        "LA-C08-manus"
+      ],
+      "tex": "latin/book/chapters/ch08-head-and-hand.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:edc64f98539cbfbd",
+      "lessonIds": [
+        "LA-C09-anni-tempora"
+      ],
+      "tex": "latin/book/chapters/ch09-seasons.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:1e7cf552260ff65d",
+      "lessonIds": [
+        "LA-C10-aqua-vinum",
+        "LA-C10-panis"
+      ],
+      "tex": "latin/book/chapters/ch10-water-wine-bread.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:cd0f435f0e35bd16",
+      "lessonIds": [
+        "LA-C11-menses"
+      ],
+      "tex": "latin/book/chapters/ch11-months.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:1bfb3b5087967528",
+      "lessonIds": [
+        "LA-C12-medius-dies-nox"
+      ],
+      "tex": "latin/book/chapters/ch12-noon-midnight.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:70129fcfaa529aeb",
+      "lessonIds": [
+        "LA-C13-hora"
+      ],
+      "tex": "latin/book/chapters/ch13-telling-time.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:4cacc8aa4dbfcb69",
+      "lessonIds": [
+        "LA-C14-annos-natus"
+      ],
+      "tex": "latin/book/chapters/ch14-age.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:c3e1e79882a479ae",
+      "lessonIds": [
+        "LA-C15-tempestas-pluit",
+        "LA-C15-weather-verbs"
+      ],
+      "tex": "latin/book/chapters/ch15-weather.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:e837b83ec32bb5ad",
+      "lessonIds": [
+        "LA-C16-undecim-viginti"
+      ],
+      "tex": "latin/book/chapters/ch16-numbers-11-20.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:46fa833e7f3a6f21",
+      "lessonIds": [
+        "LA-C17-canis-feles-cattus"
+      ],
+      "tex": "latin/book/chapters/ch17-dog-and-cat.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:cbc0896ad4cd0986",
+      "lessonIds": [
+        "LA-C18-viridis-flavus"
+      ],
+      "tex": "latin/book/chapters/ch18-green-and-yellow.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:3fd9f154ff079ca9",
+      "lessonIds": [
+        "LA-C19-quid-agis",
+        "LA-C19-valeo-family"
+      ],
+      "tex": "latin/book/chapters/ch19-how-are-you.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:a2461bf89cfc590f",
+      "lessonIds": [
+        "LA-C20-quid-tibi-nomen",
+        "LA-C20-name-case-variation"
+      ],
+      "tex": "latin/book/chapters/ch20-exchanging-names.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:51a83aba61a2bb64",
+      "lessonIds": [
+        "LA-C21-volup-est-convenisse",
+        "LA-C21-meeting-phrase-context"
+      ],
+      "tex": "latin/book/chapters/ch21-nice-to-meet-you.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:06d81dea738f71b3",
+      "lessonIds": [
+        "LA-C22-tu-vos"
+      ],
+      "tex": "latin/book/chapters/ch22-you-singular-plural.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:5a51c5425280c9de",
+      "lessonIds": [
+        "LA-C23-nihil-est"
+      ],
+      "tex": "latin/book/chapters/ch23-youre-welcome.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:fbfe6bfdc8699ad8",
+      "lessonIds": [
+        "LA-C24-propediem-te-videbo"
+      ],
+      "tex": "latin/book/chapters/ch24-see-you-soon.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:909f8cccf78a29c4",
+      "lessonIds": [
+        "LA-C25-cras-te-videbo"
+      ],
+      "tex": "latin/book/chapters/ch25-see-you-tomorrow.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:f50df97989beb1d1",
+      "lessonIds": [
+        "LA-C26-quomodo"
+      ],
+      "tex": "latin/book/chapters/ch26-how.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:4f1ddd5d47387816",
+      "lessonIds": [
+        "LA-C27-bene"
+      ],
+      "tex": "latin/book/chapters/ch27-well.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:040b4a9eb03ace92",
+      "lessonIds": [
+        "LA-C28-dies"
+      ],
+      "tex": "latin/book/chapters/ch28-day.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:6fc771adb72bf7be",
+      "lessonIds": [
+        "LA-C29-nox"
+      ],
+      "tex": "latin/book/chapters/ch29-night.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:cab2e9e1d5a63bcc",
+      "lessonIds": [
+        "LA-C30-bonam-noctem"
+      ],
+      "tex": "latin/book/chapters/ch30-good-night.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:d9f6f591d0ed8564",
+      "lessonIds": [
+        "LA-C31-mane"
+      ],
+      "tex": "latin/book/chapters/ch31-morning.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:34fa2e1f92230d90",
+      "lessonIds": [
+        "LA-C32-bonum-mane"
+      ],
+      "tex": "latin/book/chapters/ch32-good-morning.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:3ae7f1218b5dcee0",
+      "lessonIds": [
+        "LA-C33-vesper",
+        "LA-C33-vesper-afterlives"
+      ],
+      "tex": "latin/book/chapters/ch33-evening.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:d620539a00f8c156",
+      "lessonIds": [
+        "LA-C34-bonum-vesperum"
+      ],
+      "tex": "latin/book/chapters/ch34-good-evening.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:efb6b7c9fb361a59",
+      "lessonIds": [
+        "LA-C35-meridies"
+      ],
+      "tex": "latin/book/chapters/ch35-noon-and-afternoon.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:f53ba68fee383655",
+      "lessonIds": [
+        "LA-C36-salve-post-meridiem",
+        "LA-C36-timeless-salve"
+      ],
+      "tex": "latin/book/chapters/ch36-good-afternoon.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:a395cc73dc812086",

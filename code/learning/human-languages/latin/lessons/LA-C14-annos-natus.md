@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C14-annos-natus
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 340
 chapter: 14
 type: phrase
 headword: vīgintī annōs nātus sum
@@ -9,19 +12,33 @@ prerequisites: [LA-C13-hora]
 sounds: [macron-long-vowel, accusative-duration]
 roots: [nascor-natus-born, annus-latin]
 etymology_hook: "vīgintī annōs nātus sum, 'I am twenty years [having been] born' — Classical Latin's age construction used nātus ('born') + the ACCUSATIVE of duration, not habēre ('have'); the Romance 'I HAVE my years' pattern (Spanish tengo, French j'ai) is a LATER Vulgar Latin innovation, not inherited from Classical Latin itself"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03]
+introduces:
+  knowledge: [LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02]
+practises:
+  knowledge: [LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03, LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C13-hora]
 ---
 
 # vīgintī annōs nātus sum — a THIRD way to say your age
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03] -->
 
 [PAUSE 2s] You already know that Spanish and French say "I HAVE my years," and
 German/English say "I AM my years." Here's the honest surprise: Latin itself did
 **neither**.
 
-## vīgintī annōs nātus sum — "twenty years born"
+## You'll want to know: vīgintī annōs nātus sum — "twenty years born"
+<!-- hl-knowledge: introduces=[LA-LEX-ANNOS-NATUS-01]; assesses=[] -->
 
 **vīgintī annōs nātus sum** = "**I am twenty years old**" — literally "**I am,
 having been born, twenty years**" (a man speaking; a woman says **nāta**). Taken
@@ -40,7 +57,8 @@ Cato's own voice: **quīnque et sexāgintā annōs nātus**, "having been born
 sixty-**five** years," i.e., "at sixty-five years old" — the same section also
 gives Ennius's age as **annōs septuāgintā nātus**, "seventy."
 
-## Be honest: this is neither the Romance nor the Germanic pattern
+## Why it's said this way: Be honest: this is neither the Romance nor the Germanic pattern
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-ANNOS-NATUS-02]; assesses=[] -->
 
 You've already met the clean Romance/Germanic split for this concept — Romance
 languages **have** their years (*tengo*, *j'ai*, *ho*), Germanic languages **are**
@@ -54,6 +72,7 @@ older *nātus* construction — so Spanish's *tengo veinte años* is NOT a direc
 continuation of how Cicero would have said it.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03, LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "vīgintī annōs nātus sum" — I am twenty years old, literally "born
@@ -63,6 +82,7 @@ continuation of how Cicero would have said it.
   simple "be"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03, LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02] -->
 
 [PAUSE 3s] What does **vīgintī annōs nātus sum** literally mean? ("I am, having
 been **born**, twenty years" — using the perfect participle *nātus* + the

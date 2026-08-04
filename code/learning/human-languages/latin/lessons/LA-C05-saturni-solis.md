@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C05-saturni-solis
+spine_node: SPINE-TIME-OF-DAY
+sequence: 210
 chapter: 5
 type: phrase
 headword: diēs Saturnī, diēs Sōlis
@@ -9,19 +12,33 @@ prerequisites: [LA-C05-dies-lunae-veneris]
 sounds: [macron-long-vowel]
 roots: [saturnus-latin, sol-latin, sabbatum-latin, dominus-latin]
 etymology_hook: "Latin ORIGINALLY said diēs Saturnī and diēs Sōlis — English Saturday/Sunday kept these pagan names directly, while Spanish/French later swapped in the Christian Sabbatum/Dominica"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02]
+introduces:
+  knowledge: [LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02]
+practises:
+  knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C05-dies-lunae-veneris]
 ---
 
 # diēs Saturnī, diēs Sōlis — Saturday and Sunday, before the renaming
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02] -->
 
 [PAUSE 2s] The Roman planetary week had **seven** days, not five. The last
 two — Saturn's and the Sun's — tell a story neither Spanish nor French kept:
 a **religious renaming** that some languages accepted, and others didn't.
 
-## The two original names
+## You'll want to know: The two original names
+<!-- hl-knowledge: introduces=[LA-LEX-SATURNI-SOLIS-01]; assesses=[] -->
 
 - **diēs Saturnī** — "**day of Saturn**." This one survives almost
   untouched in English: **Saturday** (Old English *Sæternesdæg*) is a **direct
@@ -32,7 +49,8 @@ a **religious renaming** that some languages accepted, and others didn't.
   **Sunday** (*Sunnandæg*), a plain translation — the Sun didn't need a
   separate Germanic identity to be swapped in.
 
-## Then Christianity renamed both — and Spanish/French followed
+## Why it's said this way: Then Christianity renamed both — and Spanish/French followed
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-SATURNI-SOLIS-02]; assesses=[] -->
 
 As Christianity spread through the Empire, Latin usage **replaced** both
 pagan names:
@@ -49,6 +67,7 @@ more pagan forms**, while Spanish and French's weekend names are the
 depending which language you're standing in.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "diēs Saturnī" — day of Saturn — then "diēs Sōlis," day of the Sun]
@@ -57,6 +76,7 @@ depending which language you're standing in.
   dimanche (the Lord's day)"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02] -->
 
 [PAUSE 3s] What did Rome originally call Saturday and Sunday? (**Diēs
 Saturnī** "day of Saturn," **diēs Sōlis** "day of the Sun.") Which modern

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C23-nihil-est
+spine_node: SPINE-COURTESY-THANK
+sequence: 470
 chapter: 23
 type: phrase
 headword: nihil est
@@ -9,25 +12,40 @@ prerequisites: [LA-C01-gratias]
 sounds: [h-aspirated, nihil-two-syllables]
 roots: [nihil-latin, est-latin]
 etymology_hook: "Classical Latin has no single fixed reply to grātiās agō the way modern languages do; nihil est ('it's nothing,' from nihil, 'nothing,' ← ne + hīlum, 'not [even] a tiny bit') is the phrase modern conversational-Latin communities reach for — the words themselves are genuinely classical, but no surviving text shows this exact phrase used specifically as a reply to thanks, so treat it as a well-grounded modern convention, not an ancient one"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03]
+introduces:
+  knowledge: [LA-LEX-NIHIL-EST-01, LA-ETYMON-NIHIL-EST-02, LA-PRAGMATICS-NIHIL-EST-03]
+practises:
+  knowledge: [LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-LEX-NIHIL-EST-01, LA-ETYMON-NIHIL-EST-02, LA-PRAGMATICS-NIHIL-EST-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C01-gratias]
 ---
 
 # nihil est — "you're welcome," another honest gap
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03] -->
 
 [PAUSE 2s] You already learned that Latin has no fixed "nice to meet you."
 Here's the same honest gap again: no fixed reply to "thank you" either.
 
-## nihil est — "it's nothing"
+## You'll want to know: nihil est — "it's nothing"
+<!-- hl-knowledge: introduces=[LA-LEX-NIHIL-EST-01]; assesses=[] -->
 
 **Nihil est** = literally "[it] **is nothing**" — **nihil** ("nothing")
 + **est** ("is"). This is the phrase modern conversational-Latin
 communities commonly reach for as "you're welcome," parallel to English
 "it's nothing" or Spanish *de nada*.
 
-## nihil — a real word, worn down from "not one tiny bit"
+## The word, taken apart: nihil — a real word, worn down from "not one tiny bit"
+<!-- hl-knowledge: introduces=[LA-ETYMON-NIHIL-EST-02]; assesses=[] -->
 
 **Nihil** itself is genuinely classical and richly attested, from an older
 ***nihilum***, itself built from **ne-** ("not") + **hīlum** ("a tiny
@@ -37,7 +55,8 @@ started life as "not [even] a tiny bit" — the
 same shape of story as French's *pas* ("not," originally "a step") or
 Spanish's *nada* (from *nāta*, "a thing born").
 
-## Be honest: the words are real, the specific reply is a modern habit
+## Why it's said this way: Be honest: the words are real, the specific reply is a modern habit
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-NIHIL-EST-03]; assesses=[] -->
 
 Here's the careful part: **nihil** and **est** are both thoroughly
 classical, and *nihil est* itself appears in real Latin texts — but always
@@ -50,6 +69,7 @@ treated *quōmodo tē habēs?*: real Latin words, put to a genuinely useful
 modern job, but not a citation from a Roman play.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-LEX-NIHIL-EST-01, LA-ETYMON-NIHIL-EST-02, LA-PRAGMATICS-NIHIL-EST-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nihil est" — "it's nothing," Latin's answer to "thank you"]
@@ -58,6 +78,7 @@ modern job, but not a citation from a Roman play.
   citation]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-LEX-NIHIL-EST-01, LA-ETYMON-NIHIL-EST-02, LA-PRAGMATICS-NIHIL-EST-03] -->
 
 [PAUSE 3s] What does **nihil est** literally mean, and what job does it do
 here? ("**[It] is nothing**" — the reply to *grātiās agō*, "thank you.")

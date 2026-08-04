@@ -23,15 +23,19 @@ book.
 
 ## Progress
 
-- **Chapter 1 — Greetings** ([`lessons/LA-C01-*`](./lessons/)): salvē, avē, valē,
-  grātiās agō, ita/nōn, practice. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *quis es?*, *nōmen mihi est…*,
-  the first-person endings that let Latin drop pronouns.
+- **Chapters 1–36 are authored** as 53 prerequisite-ordered lessons, from
+  greetings and numbers through names, time, everyday courtesy, and the honest
+  limits of reconstructed conversational phrases.
+- **Chapters 2–36 are generated from the same schema-v2 lessons used by Language
+  Ladder.** Chapter 1 remains the hand-authored opening; deterministic source
+  hashes keep every later app/book chapter pair aligned.
+- Every lesson has a shared-spine placement, explicit knowledge boundaries, and
+  an effective duration below five minutes.
 
 ## Book
 
-Compiles with XeLaTeX (Latin script, Latin Modern font — no vendored font
-needed). `latexmk -xelatex book.tex`.
+The 36-chapter book compiles with XeLaTeX (Latin script, Latin Modern font — no
+vendored font needed): `latexmk -xelatex book.tex`.
 
 ## Files
 

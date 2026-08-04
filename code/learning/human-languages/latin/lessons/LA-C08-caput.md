@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C08-caput
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 260
 chapter: 8
 type: word
 headword: caput
@@ -9,18 +12,32 @@ prerequisites: [LA-C07-frater-soror]
 sounds: [macron-long-vowel]
 roots: [pie-kaput]
 etymology_hook: "caput 'head' gives English captain/capital/decapitate/capitulate and Spanish cabeza (via capitia) — but French quietly REPLACED it with testa, 'pot,' Roman soldiers' slang for the skull"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03]
+introduces:
+  knowledge: [LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02]
+practises:
+  knowledge: [LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C07-frater-soror, LA-C07-pater-mater]
 ---
 
 # caput — the head, still working two thousand years later
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03] -->
 
 [PAUSE 2s] Few Latin words stayed as busy in English as this one. And yet —
 one of Latin's own descendants **abandoned** it for the actual body part.
 
-## The word
+## The word, taken apart: The word
+<!-- hl-knowledge: introduces=[LA-ETYMON-CAPUT-01]; assesses=[] -->
 
 **caput, capitis** — "**head**." A perfectly ordinary noun, and one of
 Latin's most productive exports:
@@ -35,7 +52,8 @@ Latin's most productive exports:
 Spanish kept *caput* as its everyday word too: **cabeza** descends from it
 (by way of Vulgar Latin *capitia*).
 
-## Be honest about what happened in French
+## Why it's said this way: Be honest about what happened in French
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-CAPUT-02]; assesses=[] -->
 
 French had *caput* available — and **dropped it** for the body part
 entirely. Instead French says **tête**, from Latin **testa**, "an
@@ -52,6 +70,7 @@ never used it for the body part at all, only for these borrowed "head of
 something" senses.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "caput, capitis" — head]
@@ -59,6 +78,7 @@ something" senses.
 - [YOU SAY: the twist — French swapped *caput* out for *testa*, "pot"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02] -->
 
 [PAUSE 3s] What does **caput** mean, and what English words come from it?
 (**"Head"** — *captain, capital, decapitate, capitulate*.) Did every Romance

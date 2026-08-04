@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C28-dies
+spine_node: SPINE-TIME-OF-DAY
+sequence: 520
 chapter: 28
 type: word
 headword: diēs
@@ -9,18 +12,32 @@ prerequisites: [LA-C05-dies-lunae-veneris, LA-C12-medius-dies-nox]
 sounds: [macron-long-vowel, diphthong-ie]
 roots: [dies-latin]
 etymology_hook: "diēs ('day') is the same word already hiding inside diēs Lūnae ('Monday') and medius diēs ('noon') — its derivative diurnum ('daytime, daily') gives English diurnal and, via French jour/journée/jornel, journal and journey; a SIBLING derivative, diārium ('daily allowance'), gives English diary directly, a separate path from diurnum; a genuine PIE root (*dyēws-, 'to shine, sky') also connects diēs to deus ('god') and Jupiter"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02]
+introduces:
+  knowledge: [LA-LEX-DIES-01, LA-ETYMON-DIES-02]
+practises:
+  knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02, LA-LEX-DIES-01, LA-ETYMON-DIES-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C05-dies-lunae-veneris, LA-C12-medius-dies-nox]
 ---
 
 # diēs — the word you already know, now standing alone
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02] -->
 
 [PAUSE 2s] You've used this word twice already without a lesson of its own —
 inside *diēs Lūnae* and *medius diēs*. Time to meet it directly.
 
-## diēs — "day"
+## You'll want to know: diēs — "day"
+<!-- hl-knowledge: introduces=[LA-LEX-DIES-01]; assesses=[] -->
 
 **Diēs** — "**day**" — is a genuinely common, everyday Classical Latin word,
 not a rare or bookish one. You've already met it embedded in:
@@ -30,7 +47,8 @@ not a rare or bookish one. You've already met it embedded in:
 
 Now it's the headword itself.
 
-## A rich family of English cousins
+## The word, taken apart: A rich family of English cousins
+<!-- hl-knowledge: introduces=[LA-ETYMON-DIES-02]; assesses=[] -->
 
 Diēs has its own derivative, **diurnum** ("daytime, daily"), which gives
 English **diurnal** directly — and, through French's *jour*, *journée*,
@@ -45,6 +63,7 @@ connects *diēs* to Latin's own **deus** ("god") and to **Iuppiter**
 sky-god imagery of gods across the Indo-European world.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02, LA-LEX-DIES-01, LA-ETYMON-DIES-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "diēs" — "day"]
@@ -52,6 +71,7 @@ sky-god imagery of gods across the Indo-European world.
 - [YOU SAY: the English cousins — diurnal, diary, journal, journey]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02, LA-LEX-DIES-01, LA-ETYMON-DIES-02] -->
 
 [PAUSE 3s] Where have you already met **diēs** twice before this lesson?
 (**Diēs Lūnae**, "Monday"; **medius diēs**, "noon.") What English word

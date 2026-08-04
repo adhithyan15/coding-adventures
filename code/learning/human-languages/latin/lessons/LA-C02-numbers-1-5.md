@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C02-numbers-1-5
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 160
 chapter: 2
 type: word
 headword: ūnus duo trēs quattuor quīnque
@@ -9,18 +12,32 @@ prerequisites: [LA-C01-salve]
 sounds: [macron-long-vowel, qu-as-kw, v-as-w]
 roots: [unus, duo, tres, quattuor, quinque]
 etymology_hook: "the ancestors the Spanish and French tracks point back to — quattuor is the source of both quatre and cuatro"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
+introduces:
+  knowledge: [LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03]
+practises:
+  knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C01-salve]
 ---
 
 # ūnus, duo, trēs, quattuor, quīnque — one to five
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03] -->
 
 [PAUSE 2s] You've seen these numbers before — worn down. Here they are new,
 before a thousand years of erosion set to work.
 
-## The five
+## You'll want to know: The five
+<!-- hl-knowledge: introduces=[LA-LEX-NUMBERS-1-5-01]; assesses=[] -->
 
 | | numeral | Latin | said |
 |---|---|---|---|
@@ -35,7 +52,8 @@ clock faces — one, two, three strokes, then **IV** (one *before* five) and **V
 (five itself). (The **qu** in *quattuor*/*quīnque* is said **kw**, and every
 Latin **v** is a **w** — so *quīnque* is *KWEEN-kwe*.)
 
-## The root of a whole family
+## The word, taken apart: The root of a whole family
+<!-- hl-knowledge: introduces=[LA-ETYMON-NUMBERS-1-5-02]; assesses=[] -->
 
 Latin is the well the Romance tracks keep drawing from. Line these up against
 their descendants and you see the erosion happen:
@@ -57,7 +75,8 @@ softening in Europe, one in India. And they seed English too: *ūnus* in *unit*
 and *union*, *duo* in *duo* and *dual*, *trēs* in *trio* and *triple*, *quīnque*
 in *quintet*.
 
-## A grammar seed: the first three bend
+## Grammar Lens: A grammar seed: the first three bend
+<!-- hl-knowledge: introduces=[LA-GRAMMAR-NUMBERS-1-5-03]; assesses=[] -->
 
 Here's something Latin does that its children mostly dropped: **one, two and
 three change their endings** to match what they count — *ūnus/ūna/ūnum*,
@@ -66,6 +85,7 @@ full tables yet; just notice that *ūnus* is really *ūn-* with a changeable tai
 and file away that Latin makes even its numbers agree.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ūnus, duo, trēs, quattuor, quīnque" — remember v = w, qu = kw]
@@ -73,6 +93,7 @@ and file away that Latin makes even its numbers agree.
 - [YOU SAY: the tally — I, II, III, IV, V]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03] -->
 
 [PAUSE 3s] Count to five in Latin. (*Ūnus, duo, trēs, quattuor, quīnque*.) Which
 Latin word is the source of both French *quatre* and Spanish *cuatro*?

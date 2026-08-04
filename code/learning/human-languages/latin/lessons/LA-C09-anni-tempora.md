@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C09-anni-tempora
+spine_node: SPINE-TIME-OF-DAY
+sequence: 280
 chapter: 9
 type: word
 headword: vēr, aestās, autumnus, hiems
@@ -9,19 +12,33 @@ prerequisites: [LA-C08-manus, LA-C08-caput]
 sounds: [macron-long-vowel, ae-diphthong]
 roots: [ver-latin, aestas-latin, autumnus-latin, hiems-latin]
 etymology_hook: "vēr, aestās, autumnus, hiems are Latin's own four season-nouns — but Spanish/French didn't always keep the plain nouns; for spring and winter, they built new words from ADJECTIVE phrases instead (prīma vēra 'first spring,' hībernum tempus 'wintry time')"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02]
+introduces:
+  knowledge: [LA-LEX-ANNI-TEMPORA-01, LA-PRAGMATICS-ANNI-TEMPORA-02]
+practises:
+  knowledge: [LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-LEX-ANNI-TEMPORA-01, LA-PRAGMATICS-ANNI-TEMPORA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C08-manus, LA-C08-caput]
 ---
 
 # vēr, aestās, autumnus, hiems — Latin's own four seasons
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02] -->
 
 [PAUSE 2s] Four Latin nouns, one for each season — and a genuine surprise
 about which ones actually survived into Spanish and French as ordinary
 words.
 
-## The four seasons, plain and simple
+## You'll want to know: The four seasons, plain and simple
+<!-- hl-knowledge: introduces=[LA-LEX-ANNI-TEMPORA-01]; assesses=[] -->
 
 | Latin | meaning |
 |---|---|
@@ -30,7 +47,8 @@ words.
 | **autumnus, autumnī** | **autumn** |
 | **hiems, hiemis** | **winter** |
 
-## Be honest about which ones actually survived as-is
+## Why it's said this way: Be honest about which ones actually survived as-is
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-ANNI-TEMPORA-02]; assesses=[] -->
 
 **autumnus** survived plainly: it's the direct ancestor of Spanish *otoño*,
 French *automne*, and English *autumn* itself — no detours.
@@ -65,6 +83,7 @@ words instead (or, in *verano*'s case, by a related word whose meaning
 simply moved).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-LEX-ANNI-TEMPORA-01, LA-PRAGMATICS-ANNI-TEMPORA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "vēr, aestās, autumnus, hiems" — the four seasons]
@@ -74,6 +93,7 @@ simply moved).
   → invierno, hiver"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-LEX-ANNI-TEMPORA-01, LA-PRAGMATICS-ANNI-TEMPORA-02] -->
 
 [PAUSE 3s] What are Latin's four season-nouns? (**Vēr, aestās, autumnus,
 hiems**.) Which one survived plainly into Spanish, French, and English?

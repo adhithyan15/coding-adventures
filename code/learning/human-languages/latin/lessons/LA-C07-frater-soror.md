@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C07-frater-soror
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 250
 chapter: 7
 type: word
 headword: frater, soror
@@ -9,24 +12,39 @@ prerequisites: [LA-C07-pater-mater]
 sounds: [macron-long-vowel]
 roots: [pie-bhrater, pie-swesor]
 etymology_hook: "frater and English brother are cousins via PIE *bhreh2ter (Grimm's Law bh→b); soror and English sister are cousins via PIE *swesor, NOT soror turning into sister — Latin simplified sw- to s-, Germanic kept it"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02]
+introduces:
+  knowledge: [LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03]
+practises:
+  knowledge: [LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02, LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C07-pater-mater]
 ---
 
 # frater, soror — Latin's original siblings, before Spanish moved on
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02] -->
 
 [PAUSE 2s] Two more ancient words — and a preview of a twist: these are the
 very words that later got **pushed aside** in everyday Latin, on the road to
 Spanish.
 
 ## Taken apart
+<!-- hl-knowledge: introduces=[LA-ETYMON-FRATER-SOROR-01]; assesses=[] -->
 
 - **frāter** ("brother") ← PIE ***bʰréh₂tēr***.
 - **soror** ("sister") ← PIE ***swésōr***.
 
-## Cousins with English, not ancestors of it
+## The word, taken apart: Cousins with English, not ancestors of it
+<!-- hl-knowledge: introduces=[LA-ETYMON-FRATER-SOROR-02]; assesses=[] -->
 
 Same rule as *pater/māter*: **frāter is not the source of English
 "brother"** — they're **cousins**, both from *bʰréh₂tēr*, with Grimm's Law
@@ -40,7 +58,8 @@ longer (Old English had *sweostor*). So *soror* and *sister* are, once
 again, **cousins from the same PIE word**, *swésōr* — neither one turned
 into the other; each branch just handled that opening *sw-* differently.
 
-## Be honest about what happened next: germanus took over
+## Why it's said this way: Be honest about what happened next: germanus took over
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-FRATER-SOROR-03]; assesses=[] -->
 
 Here's the twist: classical Latin could say **frāter germānus**, "a brother
 **of the same blood**," to mark a *full* sibling. Over time, in everyday
@@ -51,6 +70,7 @@ the opposite path and kept *frāter* as its everyday word — different Latin
 regions, different survivors.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02, LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "frāter, soror" — brother, sister]
@@ -60,6 +80,7 @@ regions, different survivors.)
   "hermano"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02, LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03] -->
 
 [PAUSE 3s] Is English "sister" descended from Latin *soror*? (**No** — both
 are cousins from PIE *swésōr*; Latin dropped the *w*, Germanic kept it

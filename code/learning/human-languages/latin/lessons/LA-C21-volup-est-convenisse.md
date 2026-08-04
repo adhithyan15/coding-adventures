@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C21-volup-est-convenisse
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 440
 chapter: 21
 type: phrase
 headword: volup est convēnisse
@@ -9,19 +12,33 @@ prerequisites: [LA-C20-name-case-variation]
 sounds: [macron-long-vowel, perfect-infinitive]
 roots: [volup-latin, convenire-latin]
 etymology_hook: "Plautus's Miles Gloriosus supplies Tē ... volup est convēnisse, literally 'to have met you is a pleasure': volup ('pleasant') + est ('is') + the perfect infinitive convēnisse ('to have met')"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02]
+introduces:
+  knowledge: [LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01]
+practises:
+  knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C20-name-case-variation, LA-C20-quid-tibi-nomen]
 ---
 
 # volup est convēnisse — the phrase Latin uses instead of a fixed idiom
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02] -->
 
 [PAUSE 2s] Every modern language in this course has one fixed phrase for
 "nice to meet you." Latin, honestly, does **not** — but it has something
 better: a real line from a Roman comedy that does the job.
 
-## volup est convēnisse — a genuinely attested phrase for the job
+## Why it's said this way: volup est convēnisse — a genuinely attested phrase for the job
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01]; assesses=[] -->
 
 **Plautus**'s comedy *Miles Gloriosus* (Act 2, Scene 3) gives us a real
 line that does exactly this work: **"Tē, [name], volup est convēnisse"** —
@@ -38,6 +55,7 @@ Put together: "**to have met [you] is a pleasure.**" This is a genuine,
 attested line — not a modern reconstruction.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "volup est convēnisse" — "it's a pleasure to have met you"]
@@ -46,6 +64,7 @@ attested line — not a modern reconstruction.
 - [YOU SAY: the grammar — convēnisse is a perfect infinitive]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01] -->
 
 [PAUSE 3s] Does Classical Latin have one single fixed idiom for "nice to
 meet you"? (**No** — Romans expressed the sentiment according to context.)

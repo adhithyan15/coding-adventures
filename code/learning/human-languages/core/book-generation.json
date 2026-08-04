@@ -1667,6 +1667,251 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "latin",
+      "chapter": 2,
+      "title": "Numbers One to Ten",
+      "label": "ch:la-numbers-one-to-ten",
+      "output": "latin/book/chapters/ch02-numbers-1-10.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 3,
+      "title": "Please",
+      "label": "ch:la-please",
+      "output": "latin/book/chapters/ch03-please.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 4,
+      "title": "Sorry",
+      "label": "ch:la-sorry",
+      "output": "latin/book/chapters/ch04-sorry.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 5,
+      "title": "Days of the Week",
+      "label": "ch:la-days-of-the-week",
+      "output": "latin/book/chapters/ch05-days.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 6,
+      "title": "Colours",
+      "label": "ch:la-colours",
+      "output": "latin/book/chapters/ch06-colours.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 7,
+      "title": "Family",
+      "label": "ch:la-family",
+      "output": "latin/book/chapters/ch07-family.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 8,
+      "title": "Head and Hand",
+      "label": "ch:la-head-and-hand",
+      "output": "latin/book/chapters/ch08-head-and-hand.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 9,
+      "title": "Seasons",
+      "label": "ch:la-seasons",
+      "output": "latin/book/chapters/ch09-seasons.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 10,
+      "title": "Water, Wine, and Bread",
+      "label": "ch:la-water-wine-bread",
+      "output": "latin/book/chapters/ch10-water-wine-bread.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 11,
+      "title": "Months",
+      "label": "ch:la-months",
+      "output": "latin/book/chapters/ch11-months.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 12,
+      "title": "Noon and Midnight",
+      "label": "ch:la-noon-and-midnight",
+      "output": "latin/book/chapters/ch12-noon-midnight.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 13,
+      "title": "Telling Time",
+      "label": "ch:la-telling-time",
+      "output": "latin/book/chapters/ch13-telling-time.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 14,
+      "title": "Asking Someone's Age",
+      "label": "ch:la-asking-age",
+      "output": "latin/book/chapters/ch14-age.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 15,
+      "title": "Weather",
+      "label": "ch:la-weather",
+      "output": "latin/book/chapters/ch15-weather.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 16,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:la-numbers-eleven-to-twenty",
+      "output": "latin/book/chapters/ch16-numbers-11-20.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 17,
+      "title": "Dog and Cat",
+      "label": "ch:la-dog-and-cat",
+      "output": "latin/book/chapters/ch17-dog-and-cat.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 18,
+      "title": "Green and Yellow",
+      "label": "ch:la-green-and-yellow",
+      "output": "latin/book/chapters/ch18-green-and-yellow.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 19,
+      "title": "How Are You?",
+      "label": "ch:la-how-are-you",
+      "output": "latin/book/chapters/ch19-how-are-you.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 20,
+      "title": "Exchanging Names",
+      "label": "ch:la-exchanging-names",
+      "output": "latin/book/chapters/ch20-exchanging-names.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 21,
+      "title": "Nice to Meet You",
+      "label": "ch:la-nice-to-meet-you",
+      "output": "latin/book/chapters/ch21-nice-to-meet-you.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 22,
+      "title": "You, Singular and Plural",
+      "label": "ch:la-you-singular-plural",
+      "output": "latin/book/chapters/ch22-you-singular-plural.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 23,
+      "title": "You're Welcome",
+      "label": "ch:la-youre-welcome",
+      "output": "latin/book/chapters/ch23-youre-welcome.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 24,
+      "title": "See You Soon",
+      "label": "ch:la-see-you-soon",
+      "output": "latin/book/chapters/ch24-see-you-soon.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 25,
+      "title": "See You Tomorrow",
+      "label": "ch:la-see-you-tomorrow",
+      "output": "latin/book/chapters/ch25-see-you-tomorrow.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 26,
+      "title": "How",
+      "label": "ch:la-how",
+      "output": "latin/book/chapters/ch26-how.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 27,
+      "title": "Well",
+      "label": "ch:la-well",
+      "output": "latin/book/chapters/ch27-well.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 28,
+      "title": "Day",
+      "label": "ch:la-day",
+      "output": "latin/book/chapters/ch28-day.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 29,
+      "title": "Night",
+      "label": "ch:la-night",
+      "output": "latin/book/chapters/ch29-night.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 30,
+      "title": "Good Night",
+      "label": "ch:la-good-night",
+      "output": "latin/book/chapters/ch30-good-night.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 31,
+      "title": "Morning",
+      "label": "ch:la-morning",
+      "output": "latin/book/chapters/ch31-morning.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 32,
+      "title": "Good Morning",
+      "label": "ch:la-good-morning",
+      "output": "latin/book/chapters/ch32-good-morning.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 33,
+      "title": "Evening",
+      "label": "ch:la-evening",
+      "output": "latin/book/chapters/ch33-evening.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 34,
+      "title": "Good Evening",
+      "label": "ch:la-good-evening",
+      "output": "latin/book/chapters/ch34-good-evening.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 35,
+      "title": "Noon and Afternoon",
+      "label": "ch:la-noon-and-afternoon",
+      "output": "latin/book/chapters/ch35-noon-and-afternoon.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 36,
+      "title": "Good Afternoon",
+      "label": "ch:la-good-afternoon",
+      "output": "latin/book/chapters/ch36-good-afternoon.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",

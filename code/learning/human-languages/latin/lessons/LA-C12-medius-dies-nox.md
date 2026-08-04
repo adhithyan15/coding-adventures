@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C12-medius-dies-nox
+spine_node: SPINE-TIME-OF-DAY
+sequence: 320
 chapter: 12
 type: phrase
 headword: medius diēs, media nox
@@ -9,25 +12,40 @@ prerequisites: [LA-C11-menses]
 sounds: [macron-long-vowel]
 roots: [medius-latin, dies-latin, nox-latin]
 etymology_hook: "medius diēs 'mid-day' and media nox 'mid-night' survived at wildly different rates: Spanish kept both halves fully alive, French kept nox/nuit but wore diēs/-di to a fossil, and English's OWN word for noon isn't even this phrase — it's nōna hōra, 'the ninth hour,' which drifted from 3pm to midday"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02]
+introduces:
+  knowledge: [LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02]
+practises:
+  knowledge: [LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C11-menses]
 ---
 
 # medius diēs, media nox — the source phrase, worn down at different rates
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02] -->
 
 [PAUSE 2s] Here's the same Latin phrase, followed into three languages —
 and each one treated it completely differently.
 
-## The two phrases
+## You'll want to know: The two phrases
+<!-- hl-knowledge: introduces=[LA-LEX-MEDIUS-DIES-NOX-01]; assesses=[] -->
 
 - **medius diēs** — literally "**the middle day**," meaning "**midday,
   noon**" (*medius*, "middle" + *diēs*, "day").
 - **media nox** — literally "**the middle night**," meaning "**midnight**"
   (*media*, the feminine of *medius* + *nox, noctis*, "night").
 
-## Be honest: three languages, three different erosion stories
+## Why it's said this way: Be honest: three languages, three different erosion stories
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-MEDIUS-DIES-NOX-02]; assesses=[] -->
 
 - **Spanish** kept **both halves of both phrases** as fully ordinary,
   living words: *medio/media* ("middle") and *día/noche* ("day/night") —
@@ -48,6 +66,7 @@ One Latin phrase, three completely different fates: fully kept, half-worn,
 and simply replaced by another Latin phrase altogether.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "medius diēs" — mid-day, then "media nox" — mid-night]
@@ -57,6 +76,7 @@ and simply replaced by another Latin phrase altogether.
   "noon"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02] -->
 
 [PAUSE 3s] What do **medius diēs** and **media nox** literally mean? ("The
 middle day" = noon; "the middle night" = midnight.) Which language kept

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C34-bonum-vesperum
+spine_node: SPINE-TIME-OF-DAY
+sequence: 590
 chapter: 34
 type: phrase
 headword: bonum vesperum
@@ -9,19 +12,33 @@ prerequisites: [LA-C33-vesper-afterlives, LA-C30-bonam-noctem, LA-C32-bonum-mane
 sounds: [macron-none-short-vowel, accusative-am-em]
 roots: [bonus-latin, vesper-latin]
 etymology_hook: "bonum vesperum, 'good evening,' is a modern, pedagogical phrase — like bonam noctem and bonum māne, not attested as a fixed Roman greeting in any surviving classical text; but unlike bonum māne (where the grammar point was invisible, since māne is neuter), this one CAN show real grammar again: vesper is MASCULINE, and Latin masculine nouns DO distinguish nominative (vesper) from accusative (vesperum) — so bonum vesperum genuinely demonstrates the same Accusative-of-Exclamation rule as bonam noctem, just with a different gender's endings; a separate feminine noun, vespera, gives the alternate bonam vesperam, agreeing the SAME WAY bonam noctem does — the adjective bonam matches bonam exactly — but the noun endings themselves differ, since vespera is 1st declension (accusative -am) while nox is 3rd declension (accusative -em, noctem, NOT -am)"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-VESPER-AFTERLIVES-01, LA-ETYMON-VESPER-AFTERLIVES-02, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02]
+introduces:
+  knowledge: [LA-GRAMMAR-BONUM-VESPERUM-01, LA-GRAMMAR-BONUM-VESPERUM-02]
+practises:
+  knowledge: [LA-LEX-VESPER-AFTERLIVES-01, LA-ETYMON-VESPER-AFTERLIVES-02, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02, LA-GRAMMAR-BONUM-VESPERUM-01, LA-GRAMMAR-BONUM-VESPERUM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C33-vesper-afterlives, LA-C33-vesper, LA-C30-bonam-noctem, LA-C32-bonum-mane]
 ---
 
 # bonum vesperum — the accusative rule returns, this time visibly
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VESPER-AFTERLIVES-01, LA-ETYMON-VESPER-AFTERLIVES-02, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02] -->
 
 [PAUSE 2s] Two lessons ago, *bonum māne* couldn't show you Latin's real
 wish-grammar, because *māne* is neuter. This time it's back — because
 *vesper* isn't.
 
-## bonum vesperum — masculine, and the case shows again
+## Grammar Lens: bonum vesperum — masculine, and the case shows again
+<!-- hl-knowledge: introduces=[LA-GRAMMAR-BONUM-VESPERUM-01]; assesses=[] -->
 
 **Bonum vesperum** = "**good evening**." Like *bonam noctem* and *bonum
 māne*, this specific phrase is **not** classically attested as a fixed
@@ -34,7 +51,8 @@ Accusative-of-Exclamation rule again, the same wish-construction behind
 *bonam noctem* and the genuinely attested *Fēlīcem nātālem!* — just
 dressed in masculine endings instead of feminine ones.
 
-## A feminine alternate: bonam vesperam
+## Grammar Lens: A feminine alternate: bonam vesperam
+<!-- hl-knowledge: introduces=[LA-GRAMMAR-BONUM-VESPERUM-02]; assesses=[] -->
 
 Latin also has a separate **feminine** noun for evening, **vespera**
 (distinct from masculine *vesper*, though built from the same root —
@@ -48,6 +66,7 @@ declension** (accusative *-em*, *noctem* — **not** *-am*). Same
 adjective agreement, genuinely different noun declensions underneath.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VESPER-AFTERLIVES-01, LA-ETYMON-VESPER-AFTERLIVES-02, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02, LA-GRAMMAR-BONUM-VESPERUM-01, LA-GRAMMAR-BONUM-VESPERUM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bonum vesperum" — "good evening," masculine accusative]
@@ -57,6 +76,7 @@ adjective agreement, genuinely different noun declensions underneath.
   noctem's own shape]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VESPER-AFTERLIVES-01, LA-ETYMON-VESPER-AFTERLIVES-02, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02, LA-GRAMMAR-BONUM-VESPERUM-01, LA-GRAMMAR-BONUM-VESPERUM-02] -->
 
 [PAUSE 3s] Is *bonum vesperum* itself directly attested as a classical
 Roman greeting? (**No** — a modern, pedagogical phrase, like *bonam

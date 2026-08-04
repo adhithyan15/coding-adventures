@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C06-ruber-caeruleus
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 230
 chapter: 6
 type: word
 headword: ruber, caeruleus
@@ -9,20 +12,34 @@ prerequisites: [LA-C06-niger-albus]
 sounds: [ae-diphthong, macron-long-vowel]
 roots: [pie-rewdh, caeruleus-latin]
 etymology_hook: "ruber is a rock-solid PIE-rooted red, ancestor of BOTH Spanish rojo (via russus) and French rouge (via rubeus) — but Latin's closest word for 'blue', caeruleus, was never a clean single color the way ruber was"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02]
+introduces:
+  knowledge: [LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02]
+practises:
+  knowledge: [LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02, LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C06-niger-albus]
 ---
 
 # ruber, caeruleus — a rock-solid red, and a shaky blue
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02] -->
 
 [PAUSE 2s] One of these two words is about as old and stable a color-word as
 language gets. The other is a genuine puzzle — because Latin, like a
 surprising number of ancient languages, never quite settled on a clean word
 for "blue."
 
-## ruber — ancient, and the parent of two Romance reds
+## The word, taken apart: ruber — ancient, and the parent of two Romance reds
+<!-- hl-knowledge: introduces=[LA-ETYMON-RUBER-CAERULEUS-01]; assesses=[] -->
 
 **ruber** ("red") descends from PIE ***h₁rewdʰ-***, a root so old it also
 gives English **red**, **rust**, **ruddy**, and German **rot**. Latin's own
@@ -31,7 +48,8 @@ family used **two** everyday variants of this root — **rubeus** and
 comes from *rubeus*; Spanish **rojo** comes from *russus*. Different Latin
 words, same ancient root, same color.
 
-## caeruleus — Latin's shakiest color word
+## The word, taken apart: caeruleus — Latin's shakiest color word
+<!-- hl-knowledge: introduces=[LA-ETYMON-RUBER-CAERULEUS-02]; assesses=[] -->
 
 You might expect a clean Latin ancestor for "blue" the way *ruber* is for
 red. There isn't really one. **Caeruleus** is the closest word Latin had —
@@ -50,6 +68,7 @@ splitting off late from words that also covered green, dark, or grey. Latin's
 reasons are still debated among linguists rather than fully settled.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02, LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ruber" — red — the ancient, PIE-rooted color word]
@@ -59,6 +78,7 @@ reasons are still debated among linguists rather than fully settled.
   color word]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02, LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02] -->
 
 [PAUSE 3s] What PIE root gives **ruber**, and what English words share it?
 (***h₁rewdʰ-*** — **red, rust, ruddy**.) Which two Latin red-words split

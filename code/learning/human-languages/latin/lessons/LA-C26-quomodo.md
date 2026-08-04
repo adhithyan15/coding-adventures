@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C26-quomodo
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 500
 chapter: 26
 type: word
 headword: quōmodo
@@ -9,19 +12,33 @@ prerequisites: [LA-C19-valeo-family]
 sounds: [macron-long-vowel, qu-kw-sound]
 roots: [quo-latin, modus-latin, mens-latin]
 etymology_hook: "quōmodo, 'how, in what way,' is a genuine classical word — a univerbation of quō (ablative of quis/quid, 'what') + modō (ablative of modus, 'manner, measure'), literally 'by what manner,' attested in Cicero and Seneca; it's the direct source of Italian come and Spanish cómo, but French's comment went one step further, with comme (← quōmodo) picking up its own French -ment suffix (← mēns, 'mind,' the same suffix in rapidement) — one well-attested account has it double-marking 'manner' rather than carrying it once, though the exact historical mechanism has more than one proposal"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-VALEO-FAMILY-01]
+introduces:
+  knowledge: [LA-LEX-QUOMODO-01, LA-ETYMON-QUOMODO-02, LA-ETYMON-QUOMODO-03]
+practises:
+  knowledge: [LA-LEX-VALEO-FAMILY-01, LA-LEX-QUOMODO-01, LA-ETYMON-QUOMODO-02, LA-ETYMON-QUOMODO-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C19-valeo-family, LA-C19-quid-agis]
 ---
 
 # quōmodo — the real word behind "how," in three Romance languages at once
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VALEO-FAMILY-01] -->
 
 [PAUSE 2s] You've already met *quōmodo* once, as part of a phrase that
 turned out **not** to be classically attested. This lesson is honest about
 the flip side: the **word itself** is completely genuine.
 
-## quōmodo — genuinely classical, "by what manner"
+## You'll want to know: quōmodo — genuinely classical, "by what manner"
+<!-- hl-knowledge: introduces=[LA-LEX-QUOMODO-01]; assesses=[] -->
 
 **Quōmodo** ("**how, in what way**") is a real, common Classical Latin
 word — a fusion of **quō** (ablative of *quis/quid*, "what") + **modō**
@@ -32,13 +49,15 @@ It's attested in both **Cicero** (*Dē Inventiōne*) and **Seneca**
 construction. The **word** is real; it was only that one **exact phrase**
 that wasn't.
 
-## The direct Romance descendants: Italian come, Spanish cómo
+## The word, taken apart: The direct Romance descendants: Italian come, Spanish cómo
+<!-- hl-knowledge: introduces=[LA-ETYMON-QUOMODO-02]; assesses=[] -->
 
 **Quōmodo** is the **direct source** of Italian's **come** and Spanish's
 **cómo** — both simply continue *quōmodo*, worn down by ordinary sound
 change.
 
-## French's comment — the same word, doubled
+## The word, taken apart: French's comment — the same word, doubled
+<!-- hl-knowledge: introduces=[LA-ETYMON-QUOMODO-03]; assesses=[] -->
 
 Here's the honest surprise: French's **comment** is **not** a simple
 continuation of *quōmodo* the way Italian and Spanish's words are. French's
@@ -52,6 +71,7 @@ via *-ment*'s *mente* — where Italian and Spanish mark it only once,
 though the exact historical steps have more than one scholarly account.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VALEO-FAMILY-01, LA-LEX-QUOMODO-01, LA-ETYMON-QUOMODO-02, LA-ETYMON-QUOMODO-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "quōmodo" — "how," genuinely classical]
@@ -60,6 +80,7 @@ though the exact historical steps have more than one scholarly account.
   Italian/Spanish's come/cómo mark it once]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VALEO-FAMILY-01, LA-LEX-QUOMODO-01, LA-ETYMON-QUOMODO-02, LA-ETYMON-QUOMODO-03] -->
 
 [PAUSE 3s] Is **quōmodo** itself genuinely classical, even though the
 specific phrase *quōmodo tē habēs?* wasn't? (**Yes** — the word is real,
