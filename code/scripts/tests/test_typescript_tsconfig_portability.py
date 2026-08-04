@@ -6,12 +6,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-import typescript_tsconfig_portability as portability  # noqa: E402
+import typescript_tsconfig_portability as portability
 
 
 def write_json(path: Path, value: object) -> None:
