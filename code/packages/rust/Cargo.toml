@@ -730,6 +730,7 @@ members = [
     "nib-jvm-compiler",
     "bitset-c",
     "http-core",
+    "http-digest-auth",
     "ieee802154-core",
     "ieee802154-security",
     "http1",

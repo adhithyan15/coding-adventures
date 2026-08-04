@@ -3,9 +3,11 @@
 #![forbid(unsafe_code)]
 
 use base64::{engine::general_purpose::STANDARD as BASE64, Engine as _};
+use coding_adventures_csprng::random_array;
 use coding_adventures_zeroize::Zeroizing;
 use http1::{parse_response_head, Http1ParseError};
-use http_core::{find_header, BodyKind};
+use http_core::{find_header, BodyKind, Header};
+use http_digest_auth::{DigestAuthError, DigestChallenge};
 use serde_json::{json, Map as JsonMap, Value as JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode,
@@ -31,7 +33,7 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 pub const INTEGRATION_ID: &str = "axis_vapix";
 pub const PROTOCOL_ID: &str = "axis_vapix";
 pub const VIDEO_MDNS_SERVICE_TYPE: &str = "_axis-video._tcp.local";
@@ -58,6 +60,7 @@ pub enum AxisError {
     Tls(String),
     Http(String),
     HttpStatus(u16),
+    Authentication(String),
     ResponseTooLarge {
         limit: usize,
     },
@@ -92,6 +95,9 @@ impl fmt::Display for AxisError {
             Self::Tls(message) => write!(formatter, "Axis TLS failed: {message}"),
             Self::Http(message) => write!(formatter, "invalid Axis HTTP response: {message}"),
             Self::HttpStatus(status) => write!(formatter, "Axis endpoint returned HTTP {status}"),
+            Self::Authentication(message) => {
+                write!(formatter, "Axis authentication failed: {message}")
+            }
             Self::ResponseTooLarge { limit } => {
                 write!(formatter, "Axis response exceeds {limit} bytes")
             }
@@ -148,6 +154,12 @@ impl From<serde_json::Error> for AxisError {
 impl From<RuntimeError> for AxisError {
     fn from(error: RuntimeError) -> Self {
         Self::Runtime(error)
+    }
+}
+
+impl From<DigestAuthError> for AxisError {
+    fn from(error: DigestAuthError) -> Self {
+        Self::Authentication(error.to_string())
     }
 }
 
@@ -453,6 +465,16 @@ pub struct AxisLanTransport {
     connector: Box<dyn TlsConnector>,
     tls_config: TlsConfig,
     maximum_response_bytes: usize,
+    auth_state: Option<AxisAuthState>,
+}
+
+#[derive(Clone)]
+enum AxisAuthState {
+    Basic,
+    Digest {
+        challenge: DigestChallenge,
+        nonce_count: u32,
+    },
 }
 
 impl Default for AxisLanTransport {
@@ -467,6 +489,7 @@ impl AxisLanTransport {
             connector,
             tls_config,
             maximum_response_bytes: DEFAULT_MAX_RESPONSE_BYTES,
+            auth_state: None,
         }
     }
 
@@ -474,16 +497,58 @@ impl AxisLanTransport {
         self.maximum_response_bytes = maximum.max(1);
         self
     }
-}
 
-impl AxisTransport for AxisLanTransport {
-    fn execute(
+    fn authorization_header(
         &mut self,
+        url: &Url,
         plan: &LocalHttpRequestPlan,
         credentials: &AxisCredentials,
+    ) -> Result<Zeroizing<String>, AxisError> {
+        match self.auth_state.as_mut().ok_or_else(|| {
+            AxisError::Authentication("device did not select an authentication scheme".to_string())
+        })? {
+            AxisAuthState::Basic => {
+                let raw = Zeroizing::new(format!(
+                    "{}:{}",
+                    credentials.username.as_str(),
+                    credentials.password.as_str()
+                ));
+                let encoded = Zeroizing::new(BASE64.encode(raw.as_bytes()));
+                Ok(Zeroizing::new(format!("Basic {}", encoded.as_str())))
+            }
+            AxisAuthState::Digest {
+                challenge,
+                nonce_count,
+            } => {
+                *nonce_count = nonce_count.checked_add(1).ok_or_else(|| {
+                    AxisError::Authentication("Digest nonce count exhausted".to_string())
+                })?;
+                let random = Zeroizing::new(
+                    random_array::<16>()
+                        .map_err(|error| AxisError::Authentication(error.to_string()))?,
+                );
+                let client_nonce = Zeroizing::new(hex_bytes(random.as_slice()));
+                challenge
+                    .authorization(
+                        credentials.username.as_str(),
+                        credentials.password.as_str(),
+                        plan.method.as_str(),
+                        &request_target(url)?,
+                        client_nonce.as_str(),
+                        *nonce_count,
+                    )
+                    .map_err(AxisError::from)
+            }
+        }
+    }
+
+    fn exchange(
+        &mut self,
+        url: &Url,
+        plan: &LocalHttpRequestPlan,
         session_cookie: Option<&str>,
-    ) -> Result<AxisHttpResponse, AxisError> {
-        let url = Url::parse(&plan.url)?;
+        authorization: Option<&str>,
+    ) -> Result<AxisWireResponse, AxisError> {
         let host = url
             .host
             .as_deref()
@@ -491,17 +556,12 @@ impl AxisTransport for AxisLanTransport {
         let port = url
             .effective_port()
             .ok_or(AxisError::MissingField("request URL port"))?;
-        if url.scheme == "http" && !is_loopback_host(host) {
-            return Err(AxisError::Validation(
-                "Basic credentials may use HTTP only on loopback tests".to_string(),
-            ));
-        }
         let timeout = Duration::from_millis(plan.timeout_ms.max(1));
         let request = Zeroizing::new(encode_http_request(
-            &url,
+            url,
             plan,
-            credentials,
             session_cookie,
+            authorization,
         )?);
         let response = match url.scheme.as_str() {
             "http" => {
@@ -531,7 +591,42 @@ impl AxisTransport for AxisLanTransport {
                 )))
             }
         };
-        decode_http_response(&response, self.maximum_response_bytes)
+        decode_wire_response(&response, self.maximum_response_bytes)
+    }
+}
+
+impl AxisTransport for AxisLanTransport {
+    fn execute(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        credentials: &AxisCredentials,
+        session_cookie: Option<&str>,
+    ) -> Result<AxisHttpResponse, AxisError> {
+        let url = Url::parse(&plan.url)?;
+        let host = url
+            .host
+            .as_deref()
+            .ok_or(AxisError::MissingField("request URL host"))?;
+        let _ = url
+            .effective_port()
+            .ok_or(AxisError::MissingField("request URL port"))?;
+        if url.scheme == "http" && !is_loopback_host(host) {
+            return Err(AxisError::Validation(
+                "Axis credentials may use HTTP only on loopback tests".to_string(),
+            ));
+        }
+        let mut response = if self.auth_state.is_some() {
+            let authorization = self.authorization_header(&url, plan, credentials)?;
+            self.exchange(&url, plan, session_cookie, Some(authorization.as_str()))?
+        } else {
+            self.exchange(&url, plan, session_cookie, None)?
+        };
+        if response.status == 401 {
+            self.auth_state = Some(select_auth_state(&response.headers)?);
+            let authorization = self.authorization_header(&url, plan, credentials)?;
+            response = self.exchange(&url, plan, session_cookie, Some(authorization.as_str()))?;
+        }
+        response.into_success()
     }
 }
 
@@ -1389,11 +1484,80 @@ fn has_unsafe_http_text(value: &str) -> bool {
     value.contains(['\r', '\n', '\0'])
 }
 
+fn request_target(url: &Url) -> Result<String, AxisError> {
+    let target = if url.path.is_empty() {
+        "/".to_string()
+    } else if let Some(query) = &url.query {
+        format!("{}?{query}", url.path)
+    } else {
+        url.path.clone()
+    };
+    if has_unsafe_http_text(&target) {
+        Err(AxisError::Validation(
+            "request target contains unsafe HTTP text".to_string(),
+        ))
+    } else {
+        Ok(target)
+    }
+}
+
+fn hex_bytes(bytes: &[u8]) -> String {
+    bytes.iter().map(|byte| format!("{byte:02x}")).collect()
+}
+
+fn select_auth_state(headers: &[Header]) -> Result<AxisAuthState, AxisError> {
+    let challenges = headers
+        .iter()
+        .filter(|header| header.name.eq_ignore_ascii_case("WWW-Authenticate"))
+        .map(|header| header.value.trim())
+        .collect::<Vec<_>>();
+    let mut digest_error = None;
+    let mut digest = Vec::new();
+    for value in &challenges {
+        if value
+            .split_ascii_whitespace()
+            .next()
+            .is_some_and(|scheme| scheme.eq_ignore_ascii_case("Digest"))
+        {
+            match DigestChallenge::parse(value) {
+                Ok(challenge) => digest.push(challenge),
+                Err(error) => digest_error = Some(error),
+            }
+        }
+    }
+    if let Some(challenge) = digest.into_iter().max_by_key(|challenge| {
+        use http_digest_auth::DigestAlgorithm;
+        match challenge.algorithm() {
+            DigestAlgorithm::Sha256 | DigestAlgorithm::Sha256Sess => 2,
+            DigestAlgorithm::Md5 | DigestAlgorithm::Md5Sess => 1,
+        }
+    }) {
+        return Ok(AxisAuthState::Digest {
+            challenge,
+            nonce_count: 0,
+        });
+    }
+    if challenges.iter().any(|value| {
+        value
+            .split_ascii_whitespace()
+            .next()
+            .is_some_and(|scheme| scheme.eq_ignore_ascii_case("Basic"))
+    }) {
+        return Ok(AxisAuthState::Basic);
+    }
+    if let Some(error) = digest_error {
+        return Err(AxisError::from(error));
+    }
+    Err(AxisError::Authentication(
+        "401 response did not offer supported Basic or Digest authentication".to_string(),
+    ))
+}
+
 fn encode_http_request(
     url: &Url,
     plan: &LocalHttpRequestPlan,
-    credentials: &AxisCredentials,
     session_cookie: Option<&str>,
+    authorization: Option<&str>,
 ) -> Result<Vec<u8>, AxisError> {
     let host = url
         .host
@@ -1402,13 +1566,7 @@ fn encode_http_request(
     let port = url
         .effective_port()
         .ok_or(AxisError::MissingField("request URL port"))?;
-    let target = if url.path.is_empty() {
-        "/".to_string()
-    } else if let Some(query) = &url.query {
-        format!("{}?{query}", url.path)
-    } else {
-        url.path.clone()
-    };
+    let target = request_target(url)?;
     if has_unsafe_http_text(&target) || has_unsafe_http_text(host) {
         return Err(AxisError::Validation(
             "request target contains unsafe HTTP text".to_string(),
@@ -1417,6 +1575,11 @@ fn encode_http_request(
     if session_cookie.is_some_and(has_unsafe_http_text) {
         return Err(AxisError::Validation(
             "session cookie contains unsafe HTTP text".to_string(),
+        ));
+    }
+    if authorization.is_some_and(has_unsafe_http_text) {
+        return Err(AxisError::Validation(
+            "authorization contains unsafe HTTP text".to_string(),
         ));
     }
     let default_port = if url.scheme == "https" { 443 } else { 80 };
@@ -1439,15 +1602,9 @@ fn encode_http_request(
         }
         seen.insert(header.name.to_ascii_lowercase());
         if header.name.eq_ignore_ascii_case("Authorization") {
-            let raw = Zeroizing::new(format!(
-                "{}:{}",
-                credentials.username.as_str(),
-                credentials.password.as_str()
-            ));
-            let encoded = Zeroizing::new(BASE64.encode(raw.as_bytes()));
-            request.extend_from_slice(
-                format!("Authorization: Basic {}\r\n", encoded.as_str()).as_bytes(),
-            );
+            if let Some(value) = authorization {
+                request.extend_from_slice(format!("Authorization: {value}\r\n").as_bytes());
+            }
         } else if header.name.eq_ignore_ascii_case("Cookie") {
             return Err(AxisError::Validation(
                 "session cookies must not be stored in Axis request plans".to_string(),
@@ -1458,7 +1615,7 @@ fn encode_http_request(
     }
     if !seen.contains("authorization") {
         return Err(AxisError::Validation(
-            "Axis request plan is missing Vault-backed Basic authorization".to_string(),
+            "Axis request plan is missing a Vault-backed authorization placeholder".to_string(),
         ));
     }
     if let Some(cookie) = session_cookie {
@@ -1528,12 +1685,33 @@ fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, AxisEr
     Ok(bytes)
 }
 
+struct AxisWireResponse {
+    status: u16,
+    headers: Vec<Header>,
+    body: Vec<u8>,
+    session_cookie: Option<Zeroizing<String>>,
+}
+
+impl AxisWireResponse {
+    fn into_success(self) -> Result<AxisHttpResponse, AxisError> {
+        if !(200..300).contains(&self.status) {
+            return Err(AxisError::HttpStatus(self.status));
+        }
+        Ok(AxisHttpResponse {
+            body: self.body,
+            session_cookie: self.session_cookie,
+        })
+    }
+}
+
+#[cfg(test)]
 fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<AxisHttpResponse, AxisError> {
+    decode_wire_response(bytes, maximum)?.into_success()
+}
+
+fn decode_wire_response(bytes: &[u8], maximum: usize) -> Result<AxisWireResponse, AxisError> {
     let parsed = parse_response_head(bytes)
         .map_err(|error: Http1ParseError| AxisError::Http(error.to_string()))?;
-    if !(200..300).contains(&parsed.head.status) {
-        return Err(AxisError::HttpStatus(parsed.head.status));
-    }
     let input = &bytes[parsed.body_offset..];
     let body = match parsed.body_kind {
         BodyKind::None => Vec::new(),
@@ -1566,7 +1744,9 @@ fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<AxisHttpResponse
             }
         })
         .transpose()?;
-    Ok(AxisHttpResponse {
+    Ok(AxisWireResponse {
+        status: parsed.head.status,
+        headers: parsed.head.headers,
         body,
         session_cookie,
     })
@@ -1629,6 +1809,27 @@ mod tests {
 
     fn queue_response(body: &str) -> Vec<u8> {
         format!("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nSet-Cookie: ptz=lease-token; Path=/\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len()).into_bytes()
+    }
+
+    fn auth_challenge(value: &str) -> Vec<u8> {
+        format!(
+            "HTTP/1.1 401 Unauthorized\r\nWWW-Authenticate: {value}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+        )
+        .into_bytes()
+    }
+
+    fn request_header<'a>(request: &'a str, name: &str) -> Option<&'a str> {
+        request.lines().find_map(|line| {
+            let (candidate, value) = line.split_once(':')?;
+            candidate.eq_ignore_ascii_case(name).then_some(value.trim())
+        })
+    }
+
+    fn quoted_directive<'a>(header: &'a str, name: &str) -> Option<&'a str> {
+        let marker = format!("{name}=\"");
+        let start = header.find(&marker)? + marker.len();
+        let end = header[start..].find('\"')? + start;
+        Some(&header[start..end])
     }
 
     fn start_server(
@@ -1781,10 +1982,38 @@ mod tests {
     }
 
     #[test]
+    fn challenge_selection_prefers_supported_sha256_digest() {
+        let headers = vec![
+            Header {
+                name: "WWW-Authenticate".to_string(),
+                value: r#"Basic realm="AXIS""#.to_string(),
+            },
+            Header {
+                name: "WWW-Authenticate".to_string(),
+                value: r#"Digest realm="AXIS", nonce="md5", algorithm=MD5, qop="auth""#.to_string(),
+            },
+            Header {
+                name: "WWW-Authenticate".to_string(),
+                value: r#"Digest realm="AXIS", nonce="sha", algorithm=SHA-256, qop="auth""#
+                    .to_string(),
+            },
+        ];
+        let state = select_auth_state(&headers).unwrap();
+        assert!(matches!(
+            state,
+            AxisAuthState::Digest { challenge, nonce_count: 0 }
+                if challenge.algorithm() == http_digest_auth::DigestAlgorithm::Sha256
+        ));
+    }
+
+    #[test]
     fn waiting_queue_request_is_dropped_before_control_is_rejected() {
         let waiting = r#"<a name="2"></a><a name="8"></a><a name="30"></a>"#;
-        let (port, requests, handle) =
-            start_server(vec![queue_response(waiting), text_response("")]);
+        let (port, requests, handle) = start_server(vec![
+            auth_challenge(r#"Basic realm="AXIS""#),
+            queue_response(waiting),
+            text_response(""),
+        ]);
         let mut client =
             AxisClient::new(config(port), credentials(), AxisLanTransport::default()).unwrap();
         assert!(matches!(
@@ -1793,15 +2022,22 @@ mod tests {
         ));
         handle.join().unwrap();
         let requests = requests.lock().unwrap();
-        assert_eq!(requests.len(), 2);
-        assert!(requests[1].contains("control=drop&camera=1"));
-        assert!(requests[1].contains("Cookie: ptz=lease-token"));
+        assert_eq!(requests.len(), 3);
+        assert!(request_header(&requests[0], "Authorization").is_none());
+        assert!(requests[2].contains("control=drop&camera=1"));
+        assert!(requests[2].contains("Cookie: ptz=lease-token"));
     }
 
     #[test]
     fn real_http_inspection_installs_confirmed_axis_camera() {
-        let (port, requests, handle) =
-            start_server(vec![response(DEVICE_INFO), response(API_LIST)]);
+        let digest_value = r#"Digest realm="AXIS", nonce="server-nonce", algorithm=SHA-256, qop="auth", opaque="axis-opaque""#;
+        let stale_digest_value = r#"Digest realm="AXIS", nonce="fresh-nonce", algorithm=SHA-256, qop="auth", opaque="axis-opaque", stale=true"#;
+        let (port, requests, handle) = start_server(vec![
+            auth_challenge(digest_value),
+            response(DEVICE_INFO),
+            auth_challenge(stale_digest_value),
+            response(API_LIST),
+        ]);
         let client =
             AxisClient::new(config(port), credentials(), AxisLanTransport::default()).unwrap();
         let mut integration = AxisRuntimeIntegration::new(client);
@@ -1833,19 +2069,47 @@ mod tests {
         );
 
         let requests = requests.lock().unwrap();
-        assert_eq!(requests.len(), 2);
+        assert_eq!(requests.len(), 4);
         assert!(requests[0].contains(&format!("POST {BASIC_DEVICE_INFO_PATH} HTTP/1.1")));
-        assert!(requests[1].contains(&format!("POST {API_DISCOVERY_PATH} HTTP/1.1")));
-        assert!(requests
-            .iter()
-            .all(|request| request.contains("Authorization: Basic cm9vdDpzZWNyZXQ=")));
+        assert!(request_header(&requests[0], "Authorization").is_none());
+        assert!(requests[1].contains(&format!("POST {BASIC_DEVICE_INFO_PATH} HTTP/1.1")));
+        assert!(requests[2].contains(&format!("POST {API_DISCOVERY_PATH} HTTP/1.1")));
+        assert!(requests[3].contains(&format!("POST {API_DISCOVERY_PATH} HTTP/1.1")));
+        let challenge = DigestChallenge::parse(digest_value).unwrap();
+        for (request, uri, nonce_count) in [
+            (&requests[1], BASIC_DEVICE_INFO_PATH, 1),
+            (&requests[2], API_DISCOVERY_PATH, 2),
+        ] {
+            let authorization = request_header(request, "Authorization").unwrap();
+            let client_nonce = quoted_directive(authorization, "cnonce").unwrap();
+            let expected = challenge
+                .authorization("root", "secret", "POST", uri, client_nonce, nonce_count)
+                .unwrap();
+            assert_eq!(authorization, expected.as_str());
+        }
+        let stale_challenge = DigestChallenge::parse(stale_digest_value).unwrap();
+        let authorization = request_header(&requests[3], "Authorization").unwrap();
+        let client_nonce = quoted_directive(authorization, "cnonce").unwrap();
+        let expected = stale_challenge
+            .authorization(
+                "root",
+                "secret",
+                "POST",
+                API_DISCOVERY_PATH,
+                client_nonce,
+                1,
+            )
+            .unwrap();
+        assert_eq!(authorization, expected.as_str());
         assert!(requests.iter().all(|request| !request.contains("vault://")));
+        assert!(requests.iter().all(|request| !request.contains("secret")));
     }
 
     #[test]
     fn real_http_ptz_probe_queue_recall_and_bounded_move_are_exact() {
         let queue_granted = r#"<a name="1"></a><a name="0"></a><a name="30"></a>"#;
         let (port, requests, handle) = start_server(vec![
+            auth_challenge(r#"Basic realm="AXIS""#),
             response(DEVICE_INFO),
             response(PTZ_API_LIST),
             text_response("continuouspantiltmove=-100..100,-100..100\ngotoserverpresetno=integer\nspeed=integer\nquery=position\n"),
@@ -1956,18 +2220,20 @@ mod tests {
             .as_deref()
             .is_some_and(|message| message.contains("bounded PTZ left")));
         let requests = requests.lock().unwrap();
-        assert_eq!(requests.len(), 13);
-        assert!(requests[2].starts_with(&format!("GET {PTZ_CONTROL_PATH}?info=1&camera=1 ")));
-        assert!(requests[5].contains("group=PTZ.Various.V1.CtlQueueing"));
-        assert!(requests[6].contains("control=request&camera=1"));
-        assert!(requests[7].contains("gotoserverpresetno=3&speed=50&camera=1"));
-        assert!(requests[7].contains("Cookie: ptz=lease-token"));
-        assert!(requests[8].contains("control=drop&camera=1"));
-        assert!(requests[10].contains("continuouspantiltmove=-25,0&camera=1"));
-        assert!(requests[11].contains("continuouspantiltmove=0,0&camera=1"));
-        assert!(requests[12].contains("control=drop&camera=1"));
+        assert_eq!(requests.len(), 14);
+        assert!(request_header(&requests[0], "Authorization").is_none());
+        assert!(requests[3].starts_with(&format!("GET {PTZ_CONTROL_PATH}?info=1&camera=1 ")));
+        assert!(requests[6].contains("group=PTZ.Various.V1.CtlQueueing"));
+        assert!(requests[7].contains("control=request&camera=1"));
+        assert!(requests[8].contains("gotoserverpresetno=3&speed=50&camera=1"));
+        assert!(requests[8].contains("Cookie: ptz=lease-token"));
+        assert!(requests[9].contains("control=drop&camera=1"));
+        assert!(requests[11].contains("continuouspantiltmove=-25,0&camera=1"));
+        assert!(requests[12].contains("continuouspantiltmove=0,0&camera=1"));
+        assert!(requests[13].contains("control=drop&camera=1"));
         assert!(requests
             .iter()
+            .skip(1)
             .all(|request| request.contains("Authorization: Basic cm9vdDpzZWNyZXQ=")));
         assert!(requests.iter().all(|request| !request.contains("vault://")));
     }
@@ -2025,9 +2291,10 @@ mod tests {
 
     #[test]
     fn client_rejects_vapix_errors() {
-        let (port, _requests, handle) = start_server(vec![response(
-            r#"{"apiVersion":"1.0","error":{"code":1000,"message":"bad input"}}"#,
-        )]);
+        let (port, _requests, handle) = start_server(vec![
+            auth_challenge(r#"Basic realm="AXIS""#),
+            response(r#"{"apiVersion":"1.0","error":{"code":1000,"message":"bad input"}}"#),
+        ]);
         let mut client =
             AxisClient::new(config(port), credentials(), AxisLanTransport::default()).unwrap();
         assert!(matches!(

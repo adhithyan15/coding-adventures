@@ -1,5 +1,7 @@
 # Changelog
 
+- Record challenge-selected Basic/Digest authentication for the Axis VAPIX
+  production transport.
 - Promote Enphase Envoy to a first-party authenticated local IQ Gateway meter
   telemetry runtime with Vault-backed bearer-token and TLS trust-root boundaries.
 - Promote UniFi Network to a first-party local API-key runtime for bounded
