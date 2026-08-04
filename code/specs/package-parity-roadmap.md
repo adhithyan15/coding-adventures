@@ -699,6 +699,19 @@ configs, so it has broader immediate package-build leverage than a
 single-engine follow-up without mixing resolver semantics or the separately
 owned 58-package BUILD_windows debt.
 
+PR #9905 made that shared boundary executable with a strict repository audit,
+TypeScript 5.5 `${configDir}` paths, and real effective-config validation for
+all 129 `rootDir` and 132 `outDir` inheritors. Guarded squash auto-completion
+merged exact final head `23302beda2` as `1198eda2eb` after all 19 checks were
+terminal acceptable and two independent mergeability readings were
+`MERGEABLE/CLEAN`. The refreshed collision-checked inventory remains unchanged
+at 1,264 identities and 4,419 slots with zero collisions or unknown buckets.
+The next quick dependency/leverage pass selects the separately logged
+two-package standalone output-isolation closure: it finishes the TypeScript
+compiler-output integrity boundary and stops `window-core` and `window-canvas`
+builds from emitting into tracked source trees without widening the 58-package
+`BUILD_windows` wave.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
