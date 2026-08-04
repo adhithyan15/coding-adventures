@@ -76,7 +76,9 @@ consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
 rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
 handwritten LaTeX during the staged one-source migration. `units/` is legacy
-source material, not a second canonical copy.
+source material, not a second canonical copy. The complete 214-page PDF builds
+without missing glyphs, layout-box warnings, bookmark warnings, duplicate
+destinations, LaTeX warnings, or font fallbacks.
 
 ## Progress
 
@@ -127,7 +129,7 @@ exactly where a word needs it:
   eleven through twenty → dog and cat → green and yellow.
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. **All 33 chapters are authored and in the book (210 pages);
+to its root. **All 33 chapters are authored and in the book (214 pages);
 Chapters 1–6 and 19–33 are generated from canonical lessons.**
 Lessons are named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives
 in the book (which LaTeX auto-numbers) and in `session-map.md`, so inserting a

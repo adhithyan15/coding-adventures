@@ -7,7 +7,9 @@
 % Latin Modern ships with every standard TeX distribution (MiKTeX, TeX
 % Live) as OpenType fonts, so this compiles the same way on any machine --
 % no dependency on whatever system fonts happen to be installed locally.
-\setmainfont{Latin Modern Roman}
+\setmainfont{Latin Modern Roman}[
+  SmallCapsFont={Latin Modern Roman Caps}
+]
 \setsansfont{Latin Modern Sans}
 \setmonofont{Latin Modern Mono}
 
@@ -18,6 +20,7 @@
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{tabularx}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
 
@@ -37,6 +40,32 @@
   BoldItalicFont=NotoNaskhArabic-Static.ttf
 ]{NotoNaskhArabic-Static.ttf}
 \newcommand{\esar}[1]{\textarabic{#1}}
+
+% Micro-lessons end at natural pause points instead of stretching their
+% callout boxes to force every page to the same depth. The small reserve gives
+% prose and legacy tables a cleaner line break before they exceed the measure.
+\raggedbottom
+\emergencystretch=2em
+
+% Several legacy chapter and section titles are intentionally descriptive.
+% Keep the running heads useful and stable without forcing those full titles
+% into one unbreakable line at the top of every verso.
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection}}
+
+% book.cls inserts a verso before each open-right chapter. Preserve that print
+% layout while suppressing running heads and page numbers on the blank page.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
 
 \hypersetup{
   pdftitle={Spanish, Step by Step, Root by Root},
