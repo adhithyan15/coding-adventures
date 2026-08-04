@@ -6,7 +6,6 @@ description = "Fail-closed Level 1 SKILL.md parser and agent manifest generator"
 license = "MIT"
 
 [dependencies]
-coding-adventures-json-serializer = { path = "../json-serializer" }
-coding-adventures-json-value = { path = "../json-value" }
+chief-of-staff-agent-manifest = { path = "../chief-of-staff-agent-manifest" }
 commonmark-parser = { path = "../commonmark-parser" }
 document-ast = { path = "../document-ast" }

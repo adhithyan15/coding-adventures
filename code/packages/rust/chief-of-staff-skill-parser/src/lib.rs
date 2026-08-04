@@ -3,68 +3,10 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use coding_adventures_json_serializer::{serialize_pretty, JsonSerializerError, SerializerConfig};
-use coding_adventures_json_value::{JsonNumber, JsonValue};
+pub use chief_of_staff_agent_manifest::{AgentManifest, Capability, ChannelAccess};
 use document_ast::{BlockNode, InlineNode, ListChildNode};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Display, Formatter};
-
-const MANIFEST_SCHEMA: &str = "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/agent_manifest.schema.json";
-
-/// One validated operating-system capability from an agent manifest.
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Capability {
-    /// Capability taxonomy category.
-    pub category: String,
-    /// Operation within the category.
-    pub action: String,
-    /// Narrow resource selected by the operation.
-    pub target: String,
-    /// Human-readable reason for the access.
-    pub justification: String,
-}
-
-/// Declared channel access for one agent.
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub struct ChannelAccess {
-    /// Channels consumed by the agent.
-    pub reads: Vec<String>,
-    /// Channels produced by the agent.
-    pub writes: Vec<String>,
-}
-
-/// Typed schema-v1 manifest generated from one Level 1 skill.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct AgentManifest {
-    /// Stable lowercase agent identifier.
-    pub agent: String,
-    /// Reviewer-facing purpose statement.
-    pub description: String,
-    /// D18 privilege tier in the inclusive range zero through three.
-    pub privilege_tier: u8,
-    /// Declared input and output channels.
-    pub channels: ChannelAccess,
-    /// Validated OS capability profile.
-    pub capabilities: Vec<Capability>,
-    /// Supervisor behavior: `always`, `on-failure`, or `never`.
-    pub restart_policy: String,
-    /// Overall capability-profile justification.
-    pub justification: String,
-}
-
-impl AgentManifest {
-    /// Render deterministic, schema-shaped pretty JSON with a trailing newline.
-    pub fn to_json(&self) -> Result<String, JsonSerializerError> {
-        serialize_pretty(
-            &manifest_json(self),
-            &SerializerConfig {
-                sort_keys: false,
-                trailing_newline: true,
-                ..SerializerConfig::default()
-            },
-        )
-    }
-}
 
 /// Complete parsed Level 1 skill and its derived runtime plan.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -227,6 +169,7 @@ pub fn parse_skill(source: &str) -> Result<ParsedSkill, SkillParseError> {
         description,
         privilege_tier,
         channels,
+        vault_access: None,
         capabilities,
         restart_policy,
         justification: format!(
@@ -536,78 +479,6 @@ fn inline_text(nodes: &[InlineNode]) -> String {
             InlineNode::RawInline(_) => String::new(),
         })
         .collect()
-}
-
-fn manifest_json(manifest: &AgentManifest) -> JsonValue {
-    let strings = |values: &[String]| {
-        JsonValue::Array(values.iter().cloned().map(JsonValue::String).collect())
-    };
-    JsonValue::Object(vec![
-        (
-            "$schema".to_string(),
-            JsonValue::String(MANIFEST_SCHEMA.to_string()),
-        ),
-        (
-            "version".to_string(),
-            JsonValue::Number(JsonNumber::Integer(1)),
-        ),
-        (
-            "agent".to_string(),
-            JsonValue::String(manifest.agent.clone()),
-        ),
-        (
-            "description".to_string(),
-            JsonValue::String(manifest.description.clone()),
-        ),
-        (
-            "privilege_tier".to_string(),
-            JsonValue::Number(JsonNumber::Integer(i64::from(manifest.privilege_tier))),
-        ),
-        (
-            "channels".to_string(),
-            JsonValue::Object(vec![
-                ("reads".to_string(), strings(&manifest.channels.reads)),
-                ("writes".to_string(), strings(&manifest.channels.writes)),
-            ]),
-        ),
-        (
-            "capabilities".to_string(),
-            JsonValue::Array(
-                manifest
-                    .capabilities
-                    .iter()
-                    .map(|capability| {
-                        JsonValue::Object(vec![
-                            (
-                                "category".to_string(),
-                                JsonValue::String(capability.category.clone()),
-                            ),
-                            (
-                                "action".to_string(),
-                                JsonValue::String(capability.action.clone()),
-                            ),
-                            (
-                                "target".to_string(),
-                                JsonValue::String(capability.target.clone()),
-                            ),
-                            (
-                                "justification".to_string(),
-                                JsonValue::String(capability.justification.clone()),
-                            ),
-                        ])
-                    })
-                    .collect(),
-            ),
-        ),
-        (
-            "restart_policy".to_string(),
-            JsonValue::String(manifest.restart_policy.clone()),
-        ),
-        (
-            "justification".to_string(),
-            JsonValue::String(manifest.justification.clone()),
-        ),
-    ])
 }
 
 #[cfg(test)]
