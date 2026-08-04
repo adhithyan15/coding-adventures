@@ -5,12 +5,12 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-03. Current baseline after the first cross-language
-and Russian legacy activity-coverage tranches:
-20 registered tracks, 1,066 Markdown lessons, 20 downloadable LaTeX books, zero
+Last prioritized: 2026-08-03. Current baseline after the Persian and Urdu
+Chapter 3 shared-spine tranche:
+20 registered tracks, 1,076 Markdown lessons, 20 downloadable LaTeX books, zero
 duration violations, and 20 validated realization maps containing 346 ordered
-path segments, 247 typed extension nodes, and 896 prerequisite-closed mapped
-lessons. Nineteen mapped non-lexical lessons across 16 tracks now carry
+path segments, 257 typed extension nodes, and 906 prerequisite-closed mapped
+lessons. Twenty-one mapped non-lexical lessons across 18 tracks now carry
 compiled objective activities; 94 mapped non-lexical lessons remain explicit
 activity-coverage debt, including 16 legacy lessons that first need schema-v2
 body contracts. HL-V01 keeps the remaining migration debt reproducible in both
@@ -75,9 +75,10 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-S02 | Complete (#9634) | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | All 27 lessons have typed blocks, unique sequence, transitive knowledge closure, and sub-five-minute duration guarantees. |
 | HL-G03 | Complete (#9646) | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
 | HL-G04 | Queued | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose should use true opening and closing marks under every book's language rules without changing the canonical app text or code spans. |
+| HL-G05 | Queued | Preserve canonical Markdown hyperlinks in generated LaTeX chapters. | Source notes and learner-facing links render as live `\href` targets in PDFs instead of retaining only their labels. |
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
-| HL-A01 | In progress (#9901 + Russian slice) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; the Russian slice migrates the minimal six-lesson naming chain and covers its two non-lexical frontiers. 94 lessons remain, including 16 that first need schema-v2 migration. |
+| HL-A01 | In progress (#9901 + Russian and Persian/Urdu slices) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; later slices cover Russian's naming chain and Persian/Urdu Chapter 3 practice. Coverage is 21 of 115 across 18 tracks; 94 lessons remain, including 16 that first need schema-v2 migration. |
 | HL-Q01 | Queued | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npx tsc --noEmit` should pass after fixing the pre-existing DOM element type, review-log cast, missing Node test types, and unused/implicit test symbols; HL-V03 introduces no additional type errors. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
@@ -127,14 +128,15 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-M07 | Queued | Reconcile Tamil's roadmap and authoritative session map with canonical Chapters 1–31 and the eight-step writing sequence. | The roadmap details only Chapters 1–6 and still calls Chapter 7+ planned; the session map stops at Chapter 5 even though prerequisite-ordered canonical lessons continue through Chapter 31. |
 | HL-M08 | Queued | Reconcile Latin's roadmap and authoritative session map with canonical Chapters 1–36. | Both files stop at Chapter 1 and describe Chapter 2+ as planned even though prerequisite-ordered canonical lessons continue through Chapter 36. |
 | HL-M09 | Queued | Reconcile Spanish's roadmap and authoritative session map with canonical Chapters 1–33 and the new support steps. | The roadmap stops at Chapter 18 and calls Chapter 19 next, while the session map stops at Chapter 3; both lag the prerequisite-ordered canonical curriculum. |
-| HL-T01 | Complete in this PR | Complete session maps and pronunciation references for Persian and Urdu. | Both five-lesson prefixes now have authoritative N+1/N+3/N+7/N+15 ledgers and sound-id-keyed references; the Urdu guide explicitly preserves the Naskh fallback debt. |
+| HL-T01 | Complete (#9904) | Complete session maps and pronunciation references for Persian and Urdu. | Both five-lesson prefixes now have authoritative N+1/N+3/N+7/N+15 ledgers and sound-id-keyed references; the Urdu guide explicitly preserves the Naskh fallback debt. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
 
 ## P2 — corpus growth
 
 | ID | Status | Work item | Completion signal |
 |---|---|---|---|
-| HL-E01 | Next | Author Persian and Urdu Chapter 3 through the rest of `SPINE-EXCHANGE-NAMES`. | Each track gains prerequisite-safe, schema-v2 micro-lessons for the name question, its formality distinction, and a meeting response; realization maps, objective activities, generated book chapters, and Language Ladder consume the same AST. |
+| HL-E01 | Complete in this PR | Author Persian and Urdu Chapter 3 through the rest of `SPINE-EXCHANGE-NAMES`. | Each track gains prerequisite-safe, schema-v2 micro-lessons for the name question, its formality distinction, and a meeting response; realization maps, objective activities, generated book chapters, and Language Ladder consume the same AST. |
+| HL-E02 | Next | Author Persian and Urdu Chapter 4 through `SPINE-CHECK-WELLBEING` and reconcile the older identity-first roadmap. | Both tracks gain a gentle wellbeing exchange before identity grammar, with language-specific register/script extensions, exact review ledgers, objective practice, and generated book chapters from the canonical AST. |
 
 - Expand every track toward B1 using the gap report to choose the next missing
   can-do, skill, mode, register, or realization.
@@ -1684,6 +1686,32 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The next smallest corpus-growth slice is now explicit as HL-E01: complete the
   shared name exchange in both tracks from one canonical schema-v2 source before
   advancing either language to the wellbeing cluster.
+
+## Findings from HL-E01
+
+- Persian and Urdu each add five prerequisite-safe Chapter 3 micro-lessons:
+  address/register, the question word, the complete name question, a meeting
+  response, and cumulative objective practice. Each track now has ten mapped
+  lessons across three published chapters.
+- The two earlier name-statement lessons now use schema v2, so every Chapter 3
+  prompt closes over explicitly owned knowledge. All twelve touched lessons
+  remain below five minutes, with effective budgets from 210 through 240 seconds.
+- Both realization maps add register, script, grammar, culture, and consolidation
+  extensions without changing the shared path-segment count. Their session maps
+  schedule the new lessons and every N+1, N+3, N+7, and N+15 retrieval through
+  session 25 while allowing Chapter 4 to begin at session 11.
+- Objective activity coverage rises from 19 of 113 to 21 of 115 mapped
+  non-lexical lessons across 18 tracks. The remaining count stays at 94 because
+  the two newly mapped practice lessons arrive with activities; 16 legacy
+  candidates still require schema-v2 migration first.
+- Generated Persian and Urdu Chapter 3 files carry the same canonical lesson
+  hashes consumed by Language Ladder. The audit also found that Markdown link
+  labels survive generation while their URLs do not; HL-G05 records that
+  traceability gap instead of widening this curriculum tranche.
+- The shared spine next calls for `SPINE-CHECK-WELLBEING`, while both older
+  roadmaps currently plan identity grammar for Chapter 4. HL-E02 therefore
+  reconciles that order explicitly rather than silently letting the two tracks
+  drift from the shared spine.
 
 ## Completed foundations
 

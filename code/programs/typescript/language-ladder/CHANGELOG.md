@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Persian and Urdu Chapter 3 frontiers
+
+- Load ten new prerequisite-safe name-exchange steps across Persian and Urdu,
+  including each track's inline register, script, grammar, culture, and
+  consolidation extensions.
+- Use the authored cumulative-practice checks for both tracks, raising objective
+  coverage to 21 of 115 mapped non-lexical lessons across 18 tracks while
+  retaining independent focused-before-mixed progression.
+
 ### Changed — objective Russian naming progression
 
 - Replace temporary confirmation on both mapped Russian non-lexical frontiers

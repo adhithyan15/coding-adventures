@@ -49,11 +49,21 @@ describe("per-language shared-spine maps", () => {
       "FA-C01-bale",
       "FA-C01-na",
       "FA-C02-esm-e-man",
+      "FA-C03-shoma-to",
+      "FA-C03-chist",
+      "FA-C03-esm-e-shoma-chist",
+      "FA-C03-khoshvaghtam",
+      "FA-C03-practice",
       "UR-C01-salam",
       "UR-C01-shukriya",
       "UR-C01-ji-han",
       "UR-C01-nahin",
       "UR-C02-mera-naam",
+      "UR-C03-aap-tum-tu",
+      "UR-C03-kya",
+      "UR-C03-aap-ka-naam-kya-hai",
+      "UR-C03-khushi-hui",
+      "UR-C03-practice",
     ]));
   });
 

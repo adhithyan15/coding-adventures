@@ -2062,6 +2062,24 @@
       "output": "sanskrit/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
+    },
+    {
+      "language": "persian",
+      "chapter": 3,
+      "title": "Ask and Answer Names",
+      "label": "ch:fa-ask-and-answer-names",
+      "output": "persian/book/chapters/ch03-ask-and-answer-names.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "urdu",
+      "chapter": 3,
+      "title": "Ask and Answer Names",
+      "label": "ch:ur-ask-and-answer-names",
+      "output": "urdu/book/chapters/ch03-ask-and-answer-names.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
     }
   ]
 }

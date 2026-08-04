@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 — 2026-08-03
+
+- Added five schema-v2 Chapter 3 micro-lessons for respectful/familiar “you,”
+  *chist*, the full name question, *khoshvaghtam*, and cumulative practice.
+- Added objective activity contracts and prerequisite-closed knowledge atoms for
+  the migrated Chapter 2 name frame and every new lesson.
+- Generated Chapter 3 for the downloadable book from the same canonical lesson
+  AST used by Language Ladder and extended the review ledger through S25.
+
 ## 0.3.0 — 2026-08-03
 
 - Added the authoritative five-lesson session map with exact N+1, N+3, N+7,

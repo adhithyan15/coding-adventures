@@ -18,12 +18,14 @@ Persian-Arabic vocabulary with inherited Indo-Aryan **nahī̃**.
 extension is the final copula **hai**. The phrase is learned as one reliable
 frame before possessive agreement or broader copula tables are introduced.
 
-## Chapter 3 — Ask and answer names *(planned)*
+## Chapter 3 — Ask and answer names *(authored)*
 
-- **آپ کا نام کیا ہے؟** *āp kā nām kyā hai?* — What is your name?
-- respectful **آپ** *āp* before familiar pronouns;
-- question intonation and the Urdu question mark;
-- focused retrieval before the expressions enter mixed Urdu/Hindi practice.
+**آپ / تم / تو** *āp / tum / tū* → **کیا** *kyā* → **آپ کا نام کیا ہے؟**
+*āp kā nām kyā hai?* → **آپ سے مل کر خوشی ہوئی** *āp se mil kar khushī huī*
+→ one cumulative exchange. The schema-v2 chain adds register, the consonantal
+job of **ی**, fixed **āp kā nām**, the Urdu question mark, and a gently chunked
+meeting response. Every objective retrieval happens in Urdu script before the
+lesson can enter mixed Urdu/Hindi or Urdu/Persian review.
 
 ## Chapter 4 — People and simple identity *(planned)*
 

@@ -39,10 +39,21 @@
       "id": "FA-PATH-004",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
-        "FA-C02-esm-e-man"
+        "FA-C02-esm-e-man",
+        "FA-C03-shoma-to",
+        "FA-C03-chist",
+        "FA-C03-esm-e-shoma-chist",
+        "FA-C03-khoshvaghtam",
+        "FA-C03-practice"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "FA-EXT-002-REGISTER",
+        "FA-EXT-003-SCRIPT",
+        "FA-EXT-004-GRAMMAR",
+        "FA-EXT-005-ETYMOLOGY",
+        "FA-EXT-006-CONSOLIDATION"
+      ],
       "after": []
     }
   ],
@@ -83,15 +94,11 @@
         "FA-PATH-004"
       ],
       "omits": [
-        "QUESTION-WHAT",
         "PRONOUN-I",
         "PRONOUN-ME",
-        "PRONOUN-YOU",
         "PRONOUN-MY",
         "WORD-NAME",
-        "WORD-IS",
-        "INTRO-WHATS-YOUR-NAME",
-        "INTRO-NICE-TO-MEET-YOU"
+        "WORD-IS"
       ],
       "relocates": {}
     },
@@ -173,6 +180,72 @@
       "prerequisites": [],
       "lessons": [
         "FA-C01-salam"
+      ]
+    },
+    {
+      "id": "FA-EXT-002-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose shomâ for a respectful first meeting and distinguish it from familiar to.",
+      "prerequisites": [
+        "FA-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C03-shoma-to"
+      ]
+    },
+    {
+      "id": "FA-EXT-003-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read Persian che and ye inside chist without completing an alphabet gate.",
+      "prerequisites": [
+        "FA-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C03-chist"
+      ]
+    },
+    {
+      "id": "FA-EXT-004-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can reuse ezafe and the chi-plus-ast fusion in a respectful name question.",
+      "prerequisites": [
+        "FA-EXT-002-REGISTER",
+        "FA-EXT-003-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C03-esm-e-shoma-chist"
+      ]
+    },
+    {
+      "id": "FA-EXT-005-ETYMOLOGY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use khoshvaghtam and recognize its Persian, Arabic-loan, and personal-ending layers.",
+      "prerequisites": [
+        "FA-EXT-004-GRAMMAR"
+      ],
+      "lessons": [
+        "FA-C03-khoshvaghtam"
+      ]
+    },
+    {
+      "id": "FA-EXT-006-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can complete a respectful Persian name exchange using only independently learned lines.",
+      "prerequisites": [
+        "FA-EXT-005-ETYMOLOGY"
+      ],
+      "lessons": [
+        "FA-C03-practice"
       ]
     }
   ]
