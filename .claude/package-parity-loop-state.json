@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "4b8e56938be4741aff5bdcb6a6018f500c06cb5a",
+    "revision": "28df5db2b85deeaa564cb02fc80f6f81b086937c",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -500,7 +500,7 @@
       "depends_on": ["build-tool-post-dart-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-dotnet-field-aware-resolution",
       "pr_number": null,
-      "notes": "Materialized by the exact post-Dart audit as the next independent shared grammar after Gradle. The implemented contract reads only literal Include attributes on unqualified ProjectReference elements in root project files, matches lexically normalized exact root-project paths across the shared .NET scope, and never opens referenced files. Three shared fixtures cover C#, F#, and cross-language references plus XML, MSBuild, nested-project, absolute-path, and unknown-target decoys. The repaired real graphs match edge-for-edge at 198 C# packages/238 edges and 197 F# packages/239 edges with zero one-sided drift. TypeScript and standalone BUILD debt remain independently pending."
+      "notes": "Materialized by the exact post-Dart audit as the next independent shared grammar after Gradle. The implemented contract reads only literal Include attributes on unqualified ProjectReference elements in root project files, matches lexically normalized exact root-project paths across the shared .NET scope, and never opens referenced files. Three shared fixtures cover C#, F#, and cross-language references plus XML, MSBuild, nested-project, absolute-path, and unknown-target decoys. The repaired real graphs match edge-for-edge at 198 C# packages/238 edges and 197 F# packages/239 edges with zero one-sided drift. Representative C# and F# MiniSqlite plus F# GFM, Deflate, and Parser downstream tests pass; both front doors validate and dry-run every package in both lanes. Full implementation, coverage, warning, conformance, inventory, diff, and security gates pass. TypeScript and standalone BUILD debt remain independently pending."
     },
     {
       "id": "build-tool-post-dotnet-typescript-field-aware-manifest-resolution",
