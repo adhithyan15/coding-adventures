@@ -106,19 +106,19 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 3, 2026 from `24f64fed` after the
-Perl resolver branch rebased onto current main. The inventory contains 1,258
-normalized implementation identities across 4,412 established-lane package slots and
+working inventory was regenerated on August 3, 2026 from `6d206c3c` after the
+Perl resolver branch rebased onto current main. The inventory contains 1,260
+normalized implementation identities across 4,415 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 173 | 271 |
+| Present in 10-15 languages | 173 | 270 |
 | Present in 5-9 languages | 120 | 905 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 808 | 11,312 |
+| Present in one language | 810 | 11,340 |
 
-The loop must not start by attempting 11,312 singleton ports. It should finish
+The loop must not start by attempting 11,340 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -369,10 +369,10 @@ shared repair removes nine internal test-phase declarations, registers exact
 module names plus current and legacy distribution aliases, and leaves Haskell
 and Go identical across all 256 packages and 217 total edges: 216 authoritative
 manifest edges plus one qualified BUILD dependency, with zero one-sided edges.
-The rebased `24f64fed` collision-checked inventory has 1,258
-identities and 4,412 implementation slots across 15 established lanes, with
-173 high-consensus packages and 271 missing slots, 808 singleton packages and
-11,312 missing slots, 612 Rust singletons, and zero collisions or unknown
+The rebased `6d206c3c` collision-checked inventory has 1,260
+identities and 4,415 implementation slots across 15 established lanes, with
+173 high-consensus packages and 270 missing slots, 810 singleton packages and
+11,340 missing slots, 614 Rust singletons, and zero collisions or unknown
 buckets. The resolver slice adds the newly authoritative AES prerequisite to
 aes-modes, restores HMAC's four authoritative hash prerequisites, and teaches
 Linux BUILD validation to admit test-only cpanfile references and their runtime
@@ -439,6 +439,17 @@ credentialed HTTPS login, short-lived JWT custody, TLS, and runtime effects, so
 it has an excluded native-authority review rather than an artificial
 all-language port target. None broadens or displaces the completed Perl
 field-boundary slice.
+
+The latest rebase adds one C# ZIP implementation to an established portable
+identity and two classified Rust singleton identities. The zero-capability
+`chief-of-staff-agent-stdio-protocol` codec now has a portable conformance owner
+for its bounded JSON-lines framing, canonical fields, base64, and exact response
+correlation. The authority-free `http-digest-auth` parser and authorization
+builder now has a separate security-vector owner for bounded RFC 7616 parsing,
+MD5/SHA-256 families, qop handling, escaping, rejection, and secret-lifetime
+behavior. Network I/O, credentials, counters, retries, and client-nonce entropy
+remain injected or native. These dependency-shaped owners do not displace the
+active field-aware Perl resolver repair.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
