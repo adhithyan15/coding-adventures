@@ -32,16 +32,76 @@
 \setotherlanguage{arabic}
 \setotherlanguage{russian}
 
-% Vendored Devanagari font (../../_fonts/ from <lang>/book/).
-\newfontfamily\hindifont[Path=../../_fonts/, Script=Devanagari]{NotoSansDevanagari-Static.ttf}
-\newfontfamily\devanagarifont[Path=../../_fonts/, Script=Devanagari]{NotoSansDevanagari-Static.ttf}
-\newfontfamily\arabicfont[Path=../../_fonts/, Script=Arabic]{NotoNaskhArabic-Static.ttf}
-\newfontfamily\russianfont[Path=../../_fonts/, Script=Cyrillic]{NotoSansCyrillic-Static.ttf}
+% Vendored static script fonts. Explicitly map every requested shape to the
+% same complete glyph file so bold or italic teaching context cannot fall back
+% to a system font or emit a substitution warning.
+\newfontfamily\hindifont[
+  Path=../../_fonts/,
+  Script=Devanagari,
+  BoldFont=NotoSansDevanagari-Static.ttf,
+  ItalicFont=NotoSansDevanagari-Static.ttf,
+  BoldItalicFont=NotoSansDevanagari-Static.ttf
+]{NotoSansDevanagari-Static.ttf}
+\newfontfamily\devanagarifont[
+  Path=../../_fonts/,
+  Script=Devanagari,
+  BoldFont=NotoSansDevanagari-Static.ttf,
+  ItalicFont=NotoSansDevanagari-Static.ttf,
+  BoldItalicFont=NotoSansDevanagari-Static.ttf
+]{NotoSansDevanagari-Static.ttf}
+\newfontfamily\arabicfont[
+  Path=../../_fonts/,
+  Script=Arabic,
+  BoldFont=NotoNaskhArabic-Static.ttf,
+  ItalicFont=NotoNaskhArabic-Static.ttf,
+  BoldItalicFont=NotoNaskhArabic-Static.ttf
+]{NotoNaskhArabic-Static.ttf}
+\newfontfamily\russianfont[
+  Path=../../_fonts/,
+  Script=Cyrillic,
+  BoldFont=NotoSansCyrillic-Static.ttf,
+  ItalicFont=NotoSansCyrillic-Static.ttf,
+  BoldItalicFont=NotoSansCyrillic-Static.ttf
+]{NotoSansCyrillic-Static.ttf}
 
 % Inline Hindi snippet within English text.
 \newcommand{\hi}[1]{\texthindi{#1}}
 \newcommand{\ar}[1]{\textarabic{#1}}
 \newcommand{\ru}[1]{\textrussian{#1}}
+\pdfstringdefDisableCommands{%
+  \def\hi#1{#1}% Keep script text while dropping font-only presentation.
+  \def\ar#1{#1}%
+  \def\ru#1{#1}%
+  \def\hindifont{}%
+  \def\devanagarifont{}%
+  \def\arabicfont{}%
+  \def\russianfont{}%
+}
+
+% Micro-lessons intentionally end at natural pause points instead of stretching
+% their callout boxes to force every page to the same depth. The small reserve
+% also lets prose choose a cleaner line break before it exceeds the measure.
+\raggedbottom
+\emergencystretch=2em
+% TeX's default 1000 threshold reports three visually sound lines in the
+% 1200--1900 range after choosing safer breaks. Keep reporting genuinely loose
+% lines while accepting those mild stretches.
+\hbadness=2000
+
+% Polyglossia's bidi support can leave running heads on the blank verso that
+% book.cls inserts before an open-right chapter. Keep the print-friendly verso,
+% but make it truly empty.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
 
 \hypersetup{
   pdftitle={Hindi, Step by Step, Root by Root},

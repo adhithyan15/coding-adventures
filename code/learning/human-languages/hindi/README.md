@@ -64,7 +64,9 @@ The 33-chapter book compiles with XeLaTeX using **vendored** Noto Sans
 Devanagari, Noto Naskh Arabic, and Noto Sans Cyrillic fonts (`../../_fonts/`),
 loaded by relative path — so it builds identically locally and in CI, with no
 system-font dependency. Chapters 6–33 are generated from canonical lesson ASTs
-and checked against Language Ladder source hashes. `latexmk -xelatex book.tex`.
+and checked against Language Ladder source hashes. A forced 114-page build is
+warning-free, and every intentionally blank open-right verso is truly empty.
+`latexmk -xelatex book.tex`.
 
 ## Files
 
