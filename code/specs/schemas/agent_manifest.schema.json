@@ -6,6 +6,30 @@
   "type": "object",
   "required": ["version", "agent", "description", "privilege_tier", "channels", "capabilities", "justification"],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {"version": {"const": 1}},
+        "required": ["version"]
+      },
+      "then": {
+        "properties": {
+          "channels": {"$ref": "#/$defs/channelsV1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"version": {"const": 2}},
+        "required": ["version"]
+      },
+      "then": {
+        "properties": {
+          "channels": {"$ref": "#/$defs/channelsV2"}
+        }
+      }
+    }
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -13,8 +37,8 @@
     },
     "version": {
       "type": "integer",
-      "const": 1,
-      "description": "Schema version. Currently 1. Allows schema evolution without breaking existing manifests."
+      "enum": [1, 2],
+      "description": "Schema version. Version 1 is accepted for installed legacy packages. Version 2 requires an explicit payload-schema version for every declared channel."
     },
     "agent": {
       "type": "string",
@@ -36,28 +60,7 @@
       "description": "The privilege tier for this agent. Tier 0: no approval needed. Tier 1: notification with auto-approve. Tier 2: biometric required. Tier 3: hardware key required. The orchestrator uses the maximum tier across all resources in a pipeline to determine the required approval level."
     },
     "channels": {
-      "type": "object",
-      "required": ["reads", "writes"],
-      "additionalProperties": false,
-      "description": "Declares which channels this agent can read from and write to. An agent cannot read or write channels not listed here. An agent cannot be both reader and writer on the same channel.",
-      "properties": {
-        "reads": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9-]*$"
-          },
-          "description": "Channel names this agent subscribes to (receives messages from). The orchestrator provides the decryption key for each listed channel during pipeline wiring."
-        },
-        "writes": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9-]*$"
-          },
-          "description": "Channel names this agent publishes to (sends messages to). The orchestrator assigns this agent as the originator for each listed channel during pipeline wiring."
-        }
-      }
+      "description": "Declares which channels this agent can read from and write to. Schema v1 uses legacy string lists. Schema v2 maps each channel name to its positive payload-schema version. An agent cannot be both reader and writer on the same channel."
     },
     "vault_access": {
       "type": "object",
@@ -106,6 +109,50 @@
     }
   },
   "$defs": {
+    "channelName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "channelsV1": {
+      "type": "object",
+      "required": ["reads", "writes"],
+      "additionalProperties": false,
+      "properties": {
+        "reads": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/channelName"}
+        },
+        "writes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/channelName"}
+        }
+      }
+    },
+    "channelsV2": {
+      "type": "object",
+      "required": ["reads", "writes"],
+      "additionalProperties": false,
+      "properties": {
+        "reads": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/channelName"},
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4294967295
+          }
+        },
+        "writes": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/channelName"},
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4294967295
+          }
+        }
+      }
+    },
     "capability": {
       "type": "object",
       "required": ["category", "action", "target", "justification"],

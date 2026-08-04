@@ -3,7 +3,9 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-pub use chief_of_staff_agent_manifest::{AgentManifest, Capability, ChannelAccess};
+pub use chief_of_staff_agent_manifest::{
+    AgentManifest, Capability, ChannelAccess, MANIFEST_VERSION,
+};
 use document_ast::{BlockNode, InlineNode, ListChildNode};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Display, Formatter};
@@ -46,6 +48,8 @@ pub enum SkillParseError {
     InvalidRestartPolicy,
     /// A channel identifier is invalid or is both read and written.
     InvalidChannel(String),
+    /// A per-channel message-schema version declaration is malformed or incomplete.
+    InvalidMessageSchemaVersion(String),
     /// The required capability section is absent.
     MissingCapabilitiesSection,
     /// The capability section has no list.
@@ -84,6 +88,12 @@ impl Display for SkillParseError {
             }
             Self::InvalidRestartPolicy => formatter.write_str("SKILL.md restart_policy is invalid"),
             Self::InvalidChannel(value) => write!(formatter, "invalid SKILL.md channel: {value}"),
+            Self::InvalidMessageSchemaVersion(value) => {
+                write!(
+                    formatter,
+                    "invalid SKILL.md message schema version: {value}"
+                )
+            }
             Self::MissingCapabilitiesSection => {
                 formatter.write_str("SKILL.md requires a Capabilities needed section")
             }
@@ -162,13 +172,16 @@ pub fn parse_skill(source: &str) -> Result<ParsedSkill, SkillParseError> {
         return Err(SkillParseError::InvalidRestartPolicy);
     }
     let channels = parse_channels(&metadata)?;
+    let message_schema_versions = parse_message_schema_versions(&metadata, &channels)?;
     let capabilities = parse_capabilities(&document.children, &agent)?;
     let deno_permissions = deno_permissions(&capabilities);
     let manifest = AgentManifest {
+        version: MANIFEST_VERSION,
         agent: agent.clone(),
         description,
         privilege_tier,
         channels,
+        message_schema_versions,
         vault_access: None,
         capabilities,
         restart_policy,
@@ -204,7 +217,13 @@ fn split_frontmatter(source: &str) -> Result<(BTreeMap<String, String>, String),
         }
         if !matches!(
             key,
-            "agent" | "description" | "privilege_tier" | "reads" | "writes" | "restart_policy"
+            "agent"
+                | "description"
+                | "privilege_tier"
+                | "reads"
+                | "writes"
+                | "message_schema_versions"
+                | "restart_policy"
         ) {
             return Err(SkillParseError::UnknownFrontmatterKey(key.to_string()));
         }
@@ -274,6 +293,44 @@ fn parse_channels(metadata: &BTreeMap<String, String>) -> Result<ChannelAccess, 
         return Err(SkillParseError::InvalidChannel(channel.clone()));
     }
     Ok(ChannelAccess { reads, writes })
+}
+
+fn parse_message_schema_versions(
+    metadata: &BTreeMap<String, String>,
+    channels: &ChannelAccess,
+) -> Result<BTreeMap<String, u32>, SkillParseError> {
+    let declared_channels = channels
+        .reads
+        .iter()
+        .chain(&channels.writes)
+        .cloned()
+        .collect::<BTreeSet<_>>();
+    let Some(raw) = metadata.get("message_schema_versions") else {
+        return Ok(declared_channels
+            .into_iter()
+            .map(|channel| (channel, 1))
+            .collect());
+    };
+    let mut versions = BTreeMap::new();
+    for declaration in parse_list(Some(raw))? {
+        let (channel, version) = declaration
+            .split_once('=')
+            .ok_or_else(|| SkillParseError::InvalidMessageSchemaVersion(declaration.clone()))?;
+        if !valid_identifier(channel) || !declared_channels.contains(channel) {
+            return Err(SkillParseError::InvalidMessageSchemaVersion(declaration));
+        }
+        let version = version
+            .parse::<u32>()
+            .map_err(|_| SkillParseError::InvalidMessageSchemaVersion(declaration.clone()))?;
+        if version == 0 || versions.insert(channel.to_string(), version).is_some() {
+            return Err(SkillParseError::InvalidMessageSchemaVersion(declaration));
+        }
+    }
+    if versions.keys().collect::<BTreeSet<_>>() != declared_channels.iter().collect::<BTreeSet<_>>()
+    {
+        return Err(SkillParseError::InvalidMessageSchemaVersion(raw.clone()));
+    }
+    Ok(versions)
 }
 
 fn parse_list(value: Option<&String>) -> Result<Vec<String>, SkillParseError> {
@@ -497,8 +554,10 @@ mod tests {
         let skill = parse_skill(MINIMAL).unwrap();
         assert_eq!(skill.title, "Weather Reporter");
         assert_eq!(skill.manifest.agent, "weather-reporter");
+        assert_eq!(skill.manifest.version, MANIFEST_VERSION);
         assert_eq!(skill.manifest.privilege_tier, 0);
         assert_eq!(skill.manifest.channels, ChannelAccess::default());
+        assert!(skill.manifest.message_schema_versions.is_empty());
         assert_eq!(skill.manifest.restart_policy, "on-failure");
         assert_eq!(skill.deno_permissions, ["--allow-net=api.weather.gov:443"]);
         assert!(skill.instructions.starts_with("# Weather Reporter"));
@@ -506,11 +565,19 @@ mod tests {
 
     #[test]
     fn frontmatter_overrides_metadata_and_sorts_runtime_access() {
-        let source = "---\nagent: 'forecast-agent'\ndescription: \"Produces precise forecasts for subscribed cities.\"\nprivilege_tier: 1\nreads: [weather-requests]\nwrites: [weather-reports]\nrestart_policy: always\n---\n# Forecast\n\nIgnored description because frontmatter wins.\n\n## Capabilities needed\n- fs:write:/tmp/cache | Stores short-lived forecast cache data.\n- net:connect:api.weather.gov:443\n- fs:read:/tmp/cache\n- net:dns:api.weather.gov\n";
+        let source = "---\nagent: 'forecast-agent'\ndescription: \"Produces precise forecasts for subscribed cities.\"\nprivilege_tier: 1\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=2]\nrestart_policy: always\n---\n# Forecast\n\nIgnored description because frontmatter wins.\n\n## Capabilities needed\n- fs:write:/tmp/cache | Stores short-lived forecast cache data.\n- net:connect:api.weather.gov:443\n- fs:read:/tmp/cache\n- net:dns:api.weather.gov\n";
         let skill = parse_skill(source).unwrap();
         assert_eq!(skill.manifest.agent, "forecast-agent");
         assert_eq!(skill.manifest.channels.reads, ["weather-requests"]);
         assert_eq!(skill.manifest.channels.writes, ["weather-reports"]);
+        assert_eq!(
+            skill.manifest.message_schema_version("weather-requests"),
+            Some(1)
+        );
+        assert_eq!(
+            skill.manifest.message_schema_version("weather-reports"),
+            Some(2)
+        );
         assert_eq!(
             skill.deno_permissions,
             [
@@ -522,7 +589,8 @@ mod tests {
         assert!(!skill.instructions.contains("privilege_tier"));
         let json = skill.manifest.to_json().unwrap();
         assert!(json.contains("\"target\": \"/tmp/cache\""));
-        assert!(json.contains("\"reads\": [\n      \"weather-requests\"\n    ]"));
+        assert!(json.contains("\"reads\": {\n      \"weather-requests\": 1\n    }"));
+        assert!(json.contains("\"weather-reports\": 2"));
     }
 
     #[test]
@@ -639,6 +707,37 @@ mod tests {
     }
 
     #[test]
+    fn message_schema_versions_default_to_one_and_fail_closed() {
+        let base = "---\nreads: [request-channel]\nwrites: [response-channel]\n---\n# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        let skill = parse_skill(base).unwrap();
+        assert_eq!(
+            skill.manifest.message_schema_version("request-channel"),
+            Some(1)
+        );
+        assert_eq!(
+            skill.manifest.message_schema_version("response-channel"),
+            Some(1)
+        );
+
+        for declarations in [
+            "[request-channel=1]",
+            "[request-channel=0, response-channel=1]",
+            "[request-channel=x, response-channel=1]",
+            "[request-channel=1, extra-channel=1]",
+            "[request-channel=1, request-channel=2, response-channel=1]",
+        ] {
+            let source = base.replace(
+                "writes: [response-channel]",
+                &format!("writes: [response-channel]\nmessage_schema_versions: {declarations}"),
+            );
+            assert!(matches!(
+                parse_skill(&source),
+                Err(SkillParseError::InvalidMessageSchemaVersion(_))
+            ));
+        }
+    }
+
+    #[test]
     fn rejects_capability_failures() {
         let base = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n";
         assert_eq!(
@@ -699,6 +798,7 @@ mod tests {
             SkillParseError::InvalidPrivilegeTier,
             SkillParseError::InvalidRestartPolicy,
             SkillParseError::InvalidChannel("channel".to_string()),
+            SkillParseError::InvalidMessageSchemaVersion("channel=0".to_string()),
             SkillParseError::MissingCapabilitiesSection,
             SkillParseError::MissingCapabilitiesList,
             SkillParseError::AmbiguousCapabilitiesSection,

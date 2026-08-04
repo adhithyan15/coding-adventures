@@ -93,6 +93,37 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                     )
                     self.assertTrue(errors, "unknown vocabulary must fail closed")
 
+    def test_agent_manifest_schema_versions_are_explicitly_evolved(self) -> None:
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["agent"])
+        legacy = self.manifest("agent", "net", "connect")
+        validator.validate(legacy)
+
+        current = dict(legacy)
+        current["version"] = 2
+        current["channels"] = {
+            "reads": {},
+            "writes": {"agent-output": 1},
+        }
+        validator.validate(current)
+
+        missing = dict(current)
+        missing["channels"] = {
+            "reads": {},
+            "writes": ["agent-output"],
+        }
+        self.assertTrue(list(validator.iter_errors(missing)))
+
+        legacy_with_current_binding = dict(legacy)
+        legacy_with_current_binding["channels"] = current["channels"]
+        self.assertTrue(list(validator.iter_errors(legacy_with_current_binding)))
+
+        invalid = dict(current)
+        invalid["channels"] = {
+            "reads": {},
+            "writes": {"agent-output": 0},
+        }
+        self.assertTrue(list(validator.iter_errors(invalid)))
+
     def test_repository_required_capabilities_use_only_valid_pairs(self) -> None:
         known_categories = set(self.taxonomy["categories"])
         known_actions = set(self.taxonomy["all_actions"])
