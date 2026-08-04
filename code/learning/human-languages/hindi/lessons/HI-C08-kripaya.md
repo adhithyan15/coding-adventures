@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C08-kripaya
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 260
 chapter: 8
 type: word
 headword: कृपया
@@ -9,18 +12,32 @@ prerequisites: [HI-C01-dhanyavad]
 sounds: [vocalic-r-matra, retroflex-flap]
 roots: [krpa-sanskrit]
 etymology_hook: "कृपया kṛpayā is 'kindly', from Sanskrit kṛpā 'grace, compassion' — the same 'invoke grace' idea as Arabic min faḍlik"
-est_minutes: 4
+duration:
+  max_seconds: 226
+requires:
+  knowledge: []
+introduces:
+  knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02]
+practises:
+  knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C01-dhanyavad]
 ---
 
 # कृपया (kṛpayā) — please (kindly)
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Hindi's dictionary word for "please" is really the word **compassion**
 in disguise — and it's more formal than you might expect.
 
-## The word
+## You'll want to know — The word
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C08-KRIPAYA-01]; assesses=[] -->
 
 **कृपया** = **please**, literally "**kindly / graciously**." It's built on the
 Sanskrit noun **कृपा** (*kṛpā*), "**grace, compassion, mercy**" — so asking with
@@ -32,10 +49,11 @@ whole swathe of Asia says *please* by naming the kindness it hopes for — a
 different instinct from French's "if it **pleases** you."
 
 The first letter hides a sound you met in the syllabary track: **कृ** is *ka*
-carrying the **vocalic r** (the *ृ* mark) — *kṛ*, the same *r̥* vowel Sanskrit and
+carrying the **vocalic r** (the *ृ* mark) — *kṛ*, the same *ṛ* vowel Sanskrit and
 the Dravidian scripts share.
 
-## Be honest about how it's used
+## You'll want to know — Be honest about how it's used
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C08-KRIPAYA-02]; assesses=[] -->
 
 Here's the catch a textbook often hides: **कृपया is formal and bookish.** You'll
 see it on signs and hear it in announcements ("*kṛpayā* mind the gap"), but in
@@ -48,6 +66,7 @@ So learn *kṛpayā* to **read** it and to be formally polite — but know that 
 living "please" of Hindi is baked into the verb.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kṛpayā" — kṛ with the vocalic r, then -payā]
@@ -55,6 +74,7 @@ living "please" of Hindi is baked into the verb.
 - [YOU SAY: the everyday way — the verb ending: "baiṭhiye" = "please sit"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02] -->
 
 [PAUSE 3s] What is the formal Hindi word for please? (**कृपया** *kṛpayā*.) What
 does its root *kṛpā* mean, and which other languages ask the same way? (**"Grace

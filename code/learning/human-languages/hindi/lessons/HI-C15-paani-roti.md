@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C15-paani-roti
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 370
 chapter: 15
 type: word
 headword: पानी रोटी
@@ -9,19 +12,33 @@ prerequisites: [HI-C14-ritu]
 sounds: [devanagari-long-ii, retroflex-tta]
 roots: [paaniiya-sanskrit-drink, roti-uncertain]
 etymology_hook: "पानी paanii doesn't come from Sanskrit's ancient water-words (ap, jala) — it's from पानीय paaniiya, 'the drinkable thing,' from पा paa 'to drink' — water named for what you DO with it, not what it IS"
-est_minutes: 4
+duration:
+  max_seconds: 220
+requires:
+  knowledge: [HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02]
+introduces:
+  knowledge: [HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02]
+practises:
+  knowledge: [HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C14-ritu]
 ---
 
 # पानी, रोटी (pānī, roṭī) — water (the "drinkable thing") and bread
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Hindi's everyday word for water isn't the ancient Sanskrit word
 you might expect — it names water by what you **do** with it, not by what
 it **is**.
 
-## पानी — "the drinkable thing"
+## You'll want to know — पानी — "the drinkable thing"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C15-PAANI-ROTI-01]; assesses=[] -->
 
 **पानी** (*pānī*) = "**water**." Sanskrit actually has older, more
 "basic" words for water — **आप्** (*āp*) and **जल** (*jala*) among them
@@ -31,7 +48,8 @@ drink**," plus a suffix meaning roughly "**fit for**." So *pānīya*, and
 Hindi's *pānī* after it, literally means "**the drinkable thing**" —
 water defined by its use, not named as a substance in its own right.
 
-## रोटी — bread, honestly uncertain in origin
+## You'll want to know — रोटी — bread, honestly uncertain in origin
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C15-PAANI-ROTI-02]; assesses=[] -->
 
 **रोटी** (*roṭī*) = "**bread, flatbread**" — the everyday word for the
 flatbreads (roti, chapati-style breads) central to North Indian meals.
@@ -46,6 +64,7 @@ scholars rather than a settled chain. Worth knowing honestly rather than
 forcing a confident derivation that isn't there.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pānī" — water, "the drinkable thing"]
@@ -53,6 +72,7 @@ forcing a confident derivation that isn't there.
 - [YOU SAY: "roṭī" — bread, flatbread]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02] -->
 
 [PAUSE 3s] Does **पानी** come from Sanskrit's ancient water-words, *āp* or
 *jala*? (**No** — from **पानीय** *pānīya*, "the drinkable thing," from

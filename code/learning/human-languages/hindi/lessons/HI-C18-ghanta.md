@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C18-ghanta
+spine_node: SPINE-TIME-OF-DAY
+sequence: 400
 chapter: 18
 type: word
 headword: घंटा
@@ -9,18 +12,32 @@ prerequisites: [HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-anusvara, devanagari-conjunct-none]
 roots: [sanskrit-ghanta-bell]
 etymology_hook: "घंटा (ghanṭā, 'hour') comes from Sanskrit घण्टा (ghaṇṭā), 'bell, gong' — the SAME word Hindi still uses for an actual bell, because clocks and towns once marked the hour by striking one; telling time uses बजना (bajnā), 'to strike/toll,' the same imagery"
-est_minutes: 4
+duration:
+  max_seconds: 222
+requires:
+  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]
+introduces:
+  knowledge: [HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02]
+practises:
+  knowledge: [HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C17-dopahar-aadhi-raat]
 ---
 
 # घंटा — "hour," literally "bell"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Here's a word that wears its history on its sleeve: Hindi's word for
 "hour" is the exact same word as "bell."
 
-## घंटा — bell AND hour, one word
+## You'll want to know — घंटा — bell AND hour, one word
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C18-GHANTA-01]; assesses=[] -->
 
 **घंटा** (*ghanṭā*) = "**hour**" — and it means "**bell, gong**" just as commonly.
 It comes from Sanskrit **घण्टा** (*ghaṇṭā*), "bell, gong." The
@@ -32,6 +49,7 @@ the clock**," or French's **il est … heures**: different languages, but time-t
 vocabulary keeps circling back to the *instrument* used to mark it.
 
 ## Grammar Lens: बजना — "to strike, to toll"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C18-GHANTA-02]; assesses=[] -->
 
 Hindi tells the time with the verb **बजना** (*bajnā*), "**to strike, to toll**" —
 the same imagery as a bell striking the hour:
@@ -44,6 +62,7 @@ switches **बज रहा है** (singular) to **बज रहे हैं*
 one — matching the number, not just tacking on "o'clock."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ghanṭā" — hour, also "bell"]
@@ -51,6 +70,7 @@ one — matching the number, not just tacking on "o'clock."
 - [YOU SAY: "do baj rahe hain" — it is two o'clock, "two are striking"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02] -->
 
 [PAUSE 3s] What does **घंटा** literally mean besides "hour"? (**"Bell, gong"** —
 from Sanskrit *ghaṇṭā*.) Why did "bell" come to mean "hour"? (Because clocks/towns

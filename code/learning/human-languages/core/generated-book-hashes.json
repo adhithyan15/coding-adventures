@@ -398,6 +398,270 @@
       "tex": "gujarati/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:6442776b5a8abb61",
+      "lessonIds": [
+        "HI-C06-numbers-1-5",
+        "HI-C06-tin-char-history",
+        "HI-C06-paanch-nasal"
+      ],
+      "tex": "hindi/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:b863d0e49f93094c",
+      "lessonIds": [
+        "HI-C07-haan",
+        "HI-C07-nahin"
+      ],
+      "tex": "hindi/book/chapters/ch07-yes-and-no.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:f095f38d028fb75c",
+      "lessonIds": [
+        "HI-C08-kripaya"
+      ],
+      "tex": "hindi/book/chapters/ch08-please.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:42c3b5981fc5bf8e",
+      "lessonIds": [
+        "HI-C09-maaf-kijiye"
+      ],
+      "tex": "hindi/book/chapters/ch09-sorry.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:74d9dfe51926b5a9",
+      "lessonIds": [
+        "HI-C10-somavaar-shukravaar",
+        "HI-C10-shanivaar-ravivaar"
+      ],
+      "tex": "hindi/book/chapters/ch10-days.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:5cc0b729b5b2ccd4",
+      "lessonIds": [
+        "HI-C11-kaalaa-safed",
+        "HI-C11-laal-niila"
+      ],
+      "tex": "hindi/book/chapters/ch11-colours.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:77993917c3517139",
+      "lessonIds": [
+        "HI-C12-pitaa-maataa",
+        "HI-C12-bhaai-bahin"
+      ],
+      "tex": "hindi/book/chapters/ch12-family.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:f4a891a22720b76e",
+      "lessonIds": [
+        "HI-C13-sir",
+        "HI-C13-haath"
+      ],
+      "tex": "hindi/book/chapters/ch13-head-and-hand.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:ab989406c824d264",
+      "lessonIds": [
+        "HI-C14-ritu"
+      ],
+      "tex": "hindi/book/chapters/ch14-seasons.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:af7d14a9901f6b3a",
+      "lessonIds": [
+        "HI-C15-paani-roti"
+      ],
+      "tex": "hindi/book/chapters/ch15-water-and-bread.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:f36135079a7a332d",
+      "lessonIds": [
+        "HI-C16-mahine"
+      ],
+      "tex": "hindi/book/chapters/ch16-months.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:9c78b121b2e9a9b7",
+      "lessonIds": [
+        "HI-C17-dopahar-aadhi-raat"
+      ],
+      "tex": "hindi/book/chapters/ch17-noon-and-midnight.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:a720d6b0f6833ce7",
+      "lessonIds": [
+        "HI-C18-ghanta"
+      ],
+      "tex": "hindi/book/chapters/ch18-telling-time.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:9a434df12509f11d",
+      "lessonIds": [
+        "HI-C19-umr",
+        "HI-C19-age-grammar"
+      ],
+      "tex": "hindi/book/chapters/ch19-age.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:6d86ec71fd68d1c5",
+      "lessonIds": [
+        "HI-C20-mausam"
+      ],
+      "tex": "hindi/book/chapters/ch20-weather.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:0999275d157d7bf0",
+      "lessonIds": [
+        "HI-C21-numbers-6-10",
+        "HI-C21-six-nine-ten-history"
+      ],
+      "tex": "hindi/book/chapters/ch21-numbers-6-10.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:cb46bfa9d45d54ce",
+      "lessonIds": [
+        "HI-C22-gyarah-bees"
+      ],
+      "tex": "hindi/book/chapters/ch22-numbers-11-20.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:b2050e3126777350",
+      "lessonIds": [
+        "HI-C23-kutta-billi",
+        "HI-C23-billi-history"
+      ],
+      "tex": "hindi/book/chapters/ch23-dog-and-cat.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:0934b8a539c16d43",
+      "lessonIds": [
+        "HI-C24-hara-pila",
+        "HI-C24-pila-history"
+      ],
+      "tex": "hindi/book/chapters/ch24-green-and-yellow.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:f9422ee3db11cac4",
+      "lessonIds": [
+        "HI-C25-din"
+      ],
+      "tex": "hindi/book/chapters/ch25-day.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:71df9fc06faf5b68",
+      "lessonIds": [
+        "HI-C26-raat"
+      ],
+      "tex": "hindi/book/chapters/ch26-night.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:f646044fadb6cb52",
+      "lessonIds": [
+        "HI-C27-shubh-raatri"
+      ],
+      "tex": "hindi/book/chapters/ch27-good-night.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:eb678603dbd8f2ac",
+      "lessonIds": [
+        "HI-C28-subah"
+      ],
+      "tex": "hindi/book/chapters/ch28-morning.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:f6f1e36cd9fc2d17",
+      "lessonIds": [
+        "HI-C29-shaam"
+      ],
+      "tex": "hindi/book/chapters/ch29-evening.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:6c4a5388df1e208c",
+      "lessonIds": [
+        "HI-C30-dopahar-widened"
+      ],
+      "tex": "hindi/book/chapters/ch30-afternoon.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:ed596102fbc3b667",
+      "lessonIds": [
+        "HI-C31-suprabhat"
+      ],
+      "tex": "hindi/book/chapters/ch31-good-morning.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:623dae6a35c8d188",
+      "lessonIds": [
+        "HI-C32-shubh-sandhya",
+        "HI-C32-evening-register"
+      ],
+      "tex": "hindi/book/chapters/ch32-good-evening.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:c139b9d53fd52489",
+      "lessonIds": [
+        "HI-C33-shubh-dopahar"
+      ],
+      "tex": "hindi/book/chapters/ch33-good-afternoon.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:03633dd64e873a05",

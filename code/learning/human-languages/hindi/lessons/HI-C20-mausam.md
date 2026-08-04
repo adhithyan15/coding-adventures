@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C20-mausam
+spine_node: SPINE-TIME-OF-DAY
+sequence: 430
 chapter: 20
 type: phrase
 headword: मौसम
@@ -9,18 +12,32 @@ prerequisites: [HI-C19-age-grammar]
 sounds: [devanagari-vowel-sign-au, devanagari-conjunct-rsha]
 roots: [arabic-mawsim-season, sanskrit-varsha-rain, persian-baarish-rain]
 etymology_hook: "मौसम (mausam, 'weather') is ANOTHER Arabic loan via Persian (mawsim, 'season'), like umr — and the SAME root as English 'monsoon' (via Portuguese/Dutch traders, 1580s, not the later British Raj); be careful, though: बारिश (baarish, 'rain,' from Persian bāriš) and वर्षा (varṣā, native Sanskrit 'rain,' PIE cousin of Greek hérsē 'dew') sound alike but are flagged by dictionaries as PROBABLY unrelated — a likely false-friend trap, not a confirmed doublet"
-est_minutes: 4
+duration:
+  max_seconds: 289
+requires:
+  knowledge: [HI-CONCEPT-C19-AGE-GRAMMAR-01]
+introduces:
+  knowledge: [HI-CONCEPT-C20-MAUSAM-01, HI-CONCEPT-C20-MAUSAM-02, HI-CONCEPT-C20-MAUSAM-03]
+practises:
+  knowledge: [HI-CONCEPT-C20-MAUSAM-01, HI-CONCEPT-C20-MAUSAM-02, HI-CONCEPT-C20-MAUSAM-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C19-age-grammar, HI-C19-umr]
 ---
 
 # मौसम — another Perso-Arabic loan, and a false-friend trap
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've already seen Hindi borrow *umr* from Arabic. Here's another
 one — and this time, English borrowed the SAME root too.
 
-## मौसम — the same root as "monsoon"
+## You'll want to know — मौसम — the same root as "monsoon"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C20-MAUSAM-01]; assesses=[] -->
 
 **मौसम** (*mausam*) = "**weather**" — borrowed from Classical **Persian**
 **موسم** (*mawsim*), itself from **Arabic** **مَوْسِم** (*mawsim*, "season,
@@ -32,7 +49,8 @@ carried into English in the **1580s**, well before the British Raj, via
 "monsoon" and Hindi's everyday word for "weather" are, quite directly, the
 same word.
 
-## गर्मी है, ठंड है — heat and cold, native words
+## You'll want to know — गर्मी है, ठंड है — heat and cold, native words
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C20-MAUSAM-02]; assesses=[] -->
 
 > **गर्मी है।** — "It's hot." — literally "**there is heat**." (*garmī hai.*)
 > **ठंड है।** — "It's cold." — literally "**there is cold**." (*ṭhanḍ hai.*)
@@ -41,7 +59,8 @@ Both use ordinary Hindi nouns (**गर्मी**, "heat"; **ठंड**, "cold
 **है** (*hai*, "is/there is") — simpler in shape than Arabic's fully verbless
 pattern, since Hindi still needs *hai* here.
 
-## बारिश vs. वर्षा — a genuine false-friend trap
+## You'll want to know — बारिश vs. वर्षा — a genuine false-friend trap
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C20-MAUSAM-03]; assesses=[] -->
 
 Hindi has **two** words for "rain" that sound similar enough to assume
 they're related — **don't** make that assumption:
@@ -60,6 +79,7 @@ inheritance from deep in the Indo-European family. A likely false-friend
 trap, not a confirmed doublet.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C20-MAUSAM-01, HI-CONCEPT-C20-MAUSAM-02, HI-CONCEPT-C20-MAUSAM-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mausam" — weather, same root as English "monsoon"]
@@ -68,6 +88,7 @@ trap, not a confirmed doublet.
   related despite sounding alike]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C20-MAUSAM-01, HI-CONCEPT-C20-MAUSAM-02, HI-CONCEPT-C20-MAUSAM-03] -->
 
 [PAUSE 3s] What English word shares मौसम's exact root, and how did it reach
 English? (**Monsoon** — from Arabic *mawsim* via Persian, carried into

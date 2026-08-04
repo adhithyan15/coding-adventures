@@ -28,6 +28,11 @@
     "arabic-main": [
       { "unicodeScript": "Arabic", "scriptCommand": "ar" },
       { "unicodeScript": "Hebrew", "scriptCommand": "he" }
+    ],
+    "hindi-main": [
+      { "unicodeScript": "Devanagari", "scriptCommand": "hi" },
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" },
+      { "unicodeScript": "Cyrillic", "scriptCommand": "ru" }
     ]
   },
   "targets": [
@@ -1220,6 +1225,230 @@
       "label": "ch:ar-good-night",
       "output": "arabic/book/chapters/ch27-good-night.tex",
       "scriptSet": "arabic-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 6,
+      "title": "Numbers One to Five",
+      "label": "ch:hi-numbers-1-5",
+      "output": "hindi/book/chapters/ch06-numbers-1-5.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 7,
+      "title": "Yes and No",
+      "label": "ch:hi-yes-and-no",
+      "output": "hindi/book/chapters/ch07-yes-and-no.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:hi-please",
+      "output": "hindi/book/chapters/ch08-please.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:hi-sorry",
+      "output": "hindi/book/chapters/ch09-sorry.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:hi-days-of-the-week",
+      "output": "hindi/book/chapters/ch10-days.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:hi-core-colours",
+      "output": "hindi/book/chapters/ch11-colours.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:hi-family",
+      "output": "hindi/book/chapters/ch12-family.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:hi-head-and-hand",
+      "output": "hindi/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:hi-seasons",
+      "output": "hindi/book/chapters/ch14-seasons.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 15,
+      "title": "Water and Bread",
+      "label": "ch:hi-water-and-bread",
+      "output": "hindi/book/chapters/ch15-water-and-bread.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 16,
+      "title": "Months",
+      "label": "ch:hi-months",
+      "output": "hindi/book/chapters/ch16-months.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:hi-noon-and-midnight",
+      "output": "hindi/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:hi-telling-time",
+      "output": "hindi/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:hi-asking-age",
+      "output": "hindi/book/chapters/ch19-age.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 20,
+      "title": "Weather",
+      "label": "ch:hi-weather",
+      "output": "hindi/book/chapters/ch20-weather.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 21,
+      "title": "Numbers Six to Ten",
+      "label": "ch:hi-numbers-six-to-ten",
+      "output": "hindi/book/chapters/ch21-numbers-6-10.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 22,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:hi-numbers-eleven-to-twenty",
+      "output": "hindi/book/chapters/ch22-numbers-11-20.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 23,
+      "title": "Dog and Cat",
+      "label": "ch:hi-dog-and-cat",
+      "output": "hindi/book/chapters/ch23-dog-and-cat.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 24,
+      "title": "Green and Yellow",
+      "label": "ch:hi-green-and-yellow",
+      "output": "hindi/book/chapters/ch24-green-and-yellow.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 25,
+      "title": "Day",
+      "label": "ch:hi-day",
+      "output": "hindi/book/chapters/ch25-day.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 26,
+      "title": "Night",
+      "label": "ch:hi-night",
+      "output": "hindi/book/chapters/ch26-night.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 27,
+      "title": "Good Night",
+      "label": "ch:hi-good-night",
+      "output": "hindi/book/chapters/ch27-good-night.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 28,
+      "title": "Morning",
+      "label": "ch:hi-morning",
+      "output": "hindi/book/chapters/ch28-morning.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 29,
+      "title": "Evening",
+      "label": "ch:hi-evening",
+      "output": "hindi/book/chapters/ch29-evening.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 30,
+      "title": "Afternoon",
+      "label": "ch:hi-afternoon",
+      "output": "hindi/book/chapters/ch30-afternoon.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 31,
+      "title": "Good Morning",
+      "label": "ch:hi-good-morning",
+      "output": "hindi/book/chapters/ch31-good-morning.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 32,
+      "title": "Good Evening",
+      "label": "ch:hi-good-evening",
+      "output": "hindi/book/chapters/ch32-good-evening.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 33,
+      "title": "Good Afternoon",
+      "label": "ch:hi-good-afternoon",
+      "output": "hindi/book/chapters/ch33-good-afternoon.tex",
+      "scriptSet": "hindi-main"
     },
     {
       "language": "bengali",

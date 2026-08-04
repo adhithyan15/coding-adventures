@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C17-dopahar-aadhi-raat
+spine_node: SPINE-TIME-OF-DAY
+sequence: 390
 chapter: 17
 type: phrase
 headword: दोपहर आधी रात
@@ -9,18 +12,32 @@ prerequisites: [HI-C16-mahine]
 sounds: [devanagari-vowel-sign-o, devanagari-long-ii]
 roots: [do-two, pahar-traditional-watch, aadhi-half, raat-night]
 etymology_hook: "दोपहर (dopahar) 'noon' is literally 'two pahars' — pahar being a traditional ~3-hour time-unit, with noon falling at the end of the second pahar after sunrise; आधी रात (aadhi raat) 'half night' is fully transparent, just like Latin's media nox"
-est_minutes: 4
+duration:
+  max_seconds: 186
+requires:
+  knowledge: [HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02]
+introduces:
+  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]
+practises:
+  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C16-mahine]
 ---
 
 # दोपहर, आधी रात — noon by an old clock, midnight fully transparent
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Hindi's word for noon hides a whole traditional timekeeping
 system inside it — one very different from hours and minutes.
 
-## दोपहर — "two pahars"
+## You'll want to know — दोपहर — "two pahars"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01]; assesses=[] -->
 
 **दोपहर** (*dopahar*) = "**noon, midday**" — literally "**two** (*do*) +
 **pahar**." A **पहर** (*pahar*, from Sanskrit *prahara*) is a traditional
@@ -33,7 +50,8 @@ is the standard one, though — as with any folk-timekeeping etymology this
 old — treat the exact number of pahars as the general shape of the story
 rather than a precisely dated fact.)
 
-## आधी रात — fully transparent "half night"
+## You'll want to know — आधी रात — fully transparent "half night"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]; assesses=[] -->
 
 **आधी रात** (*ādhī rāt*) = "**midnight**," literally "**half night**" —
 **आधी** (*ādhī*, the feminine form of **आधा**, *ādhā*, "half") + **रात**
@@ -41,6 +59,7 @@ rather than a precisely dated fact.)
 Latin's *media nox* and Spanish's *medianoche*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pahar" — a traditional ~3-hour watch — then "do-pahar," two
@@ -50,6 +69,7 @@ Latin's *media nox* and Spanish's *medianoche*.
   plainly "half" + "night"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02] -->
 
 [PAUSE 3s] What does **दोपहर** literally mean, and what's a *pahar*? ("**Two
 pahars**" — a *pahar* being a traditional ~3-hour time-unit, with noon

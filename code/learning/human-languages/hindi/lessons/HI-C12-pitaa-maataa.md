@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C12-pitaa-maataa
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 320
 chapter: 12
 type: word
 headword: पिता माता
@@ -9,19 +12,33 @@ prerequisites: [HI-C11-laal-niila]
 sounds: [devanagari-long-aa, retroflex-vs-dental-ta]
 roots: [pie-pater, pie-mater]
 etymology_hook: "पिता pitā and माता mātā are Sanskrit cousins of Latin pater/mater and English father/mother; बाप bāp and माँ māṁ are ALSO Sanskrit-descended, just via a different root (vaptṛ) and a Prakrit doublet, not uncertain outliers"
-est_minutes: 4
+duration:
+  max_seconds: 227
+requires:
+  knowledge: [HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02]
+introduces:
+  knowledge: [HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C12-PITAA-MAATAA-02]
+practises:
+  knowledge: [HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C12-PITAA-MAATAA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C11-laal-niila]
 ---
 
 # पिता, माता (pitā, mātā) — father and mother, cousins across a huge family
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've already met Latin **pater/māter** and their English
 cousins **father/mother** — all descending from one ancient shared word.
 Hindi keeps a cousin of its own, in the very same family.
 
 ## Taken apart
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C12-PITAA-MAATAA-01]; assesses=[] -->
 
 - **पिता** (*pitā*) = "**father**" — Sanskrit **पितृ** (*pitṛ*), from the
   **same PIE root**, ***ph₂tḗr***, as Latin *pater* and English *father*.
@@ -32,7 +49,8 @@ So *pitā* and *father* are, at the deepest level, the **same ancient word**
 — reaching you here through Sanskrit rather than through Latin or Germanic,
 one more branch of the same very old family tree.
 
-## Be honest about register — the everyday words
+## You'll want to know — Be honest about register — the everyday words
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C12-PITAA-MAATAA-02]; assesses=[] -->
 
 **पिता/माता** are correct, respectable Hindi — but the words you'll hear
 **most often in daily life** are different: **बाप** (*bāp*, "father," an
@@ -45,6 +63,7 @@ different path than *pitā/mātā*: **बाप** traces through Prakrit to Sans
 Sanskrit *mātṛ*, just worn down along a more colloquial Prakrit line.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C12-PITAA-MAATAA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pitā, mātā" — the Sanskrit-descended, formal pair]
@@ -53,6 +72,7 @@ Sanskrit *mātṛ*, just worn down along a more colloquial Prakrit line.
   word"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C12-PITAA-MAATAA-02] -->
 
 [PAUSE 3s] What are पिता and माता cousins of, in Latin and English? (**Pater/
 father** and **māter/mother** — all from the same PIE roots.) What are the

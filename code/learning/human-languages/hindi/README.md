@@ -45,12 +45,26 @@ Two things shape this track.
 - **Chapter 5 — First Verbs** ([`lessons/HI-C05-*`](./lessons/)): bolnā, **maiṁ
   hindī boltā hūṁ**, rahnā, karnā (← √kṛ), practice. The present habitual and
   gender agreement. In the book.
+- **Chapters 6–33 — Shared-spine expansion**
+  ([`lessons/HI-C06-*`](./lessons/)): forty prerequisite-ordered lessons add
+  numbers, yes/no and polite repair, days and time, colours, family, body,
+  seasons, food, months, age, weather, animals, and progressively finer
+  morning/evening/afternoon register. Every lesson stays below five minutes and
+  every chapter is generated into the book from the same canonical source used
+  by Language Ladder.
+- **Writing companions W01–W05** ([`lessons/HI-W*`](./lessons/)): eleven short
+  steps introduce the headline, letter bodies, inherent vowel, mātrās,
+  preposed short **ि**, spineless letters, virama, conjuncts, and finally whole
+  words. They remain inline in the opening chapters rather than becoming a
+  prerequisite alphabet drill.
 
 ## Book / fonts
 
-The book compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
-(`../../_fonts/`), loaded by relative path — so it builds identically locally
-and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
+The 33-chapter book compiles with XeLaTeX using **vendored** Noto Sans
+Devanagari, Noto Naskh Arabic, and Noto Sans Cyrillic fonts (`../../_fonts/`),
+loaded by relative path — so it builds identically locally and in CI, with no
+system-font dependency. Chapters 6–33 are generated from canonical lesson ASTs
+and checked against Language Ladder source hashes. `latexmk -xelatex book.tex`.
 
 ## Files
 

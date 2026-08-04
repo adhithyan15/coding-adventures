@@ -256,6 +256,43 @@ describe("generated book source hashes", () => {
     expect(bookHashStatus(lessons, "arabic", chapter)).toBe("synced");
   });
 
+  it.each([
+    [6, 3],
+    [7, 2],
+    [8, 1],
+    [9, 1],
+    [10, 2],
+    [11, 2],
+    [12, 2],
+    [13, 2],
+    [14, 1],
+    [15, 1],
+    [16, 1],
+    [17, 1],
+    [18, 1],
+    [19, 2],
+    [20, 1],
+    [21, 2],
+    [22, 1],
+    [23, 2],
+    [24, 2],
+    [25, 1],
+    [26, 1],
+    [27, 1],
+    [28, 1],
+    [29, 1],
+    [30, 1],
+    [31, 1],
+    [32, 2],
+    [33, 1],
+  ])("matches the browser-loaded Hindi Chapter %i AST across %i lessons", (chapter, count) => {
+    const lessons = loadLessons();
+    const expected = expectedBookHash("hindi", chapter);
+    expect(expected?.lessonIds).toHaveLength(count);
+    expect(actualChapterHash(lessons, "hindi", chapter)).toBe(expected?.sourceHash);
+    expect(bookHashStatus(lessons, "hindi", chapter)).toBe("synced");
+  });
+
   it("reports a generated chapter stale when one canonical lesson changes", () => {
     const lessons = loadLessons();
     const changed = lessons.map((lesson) =>

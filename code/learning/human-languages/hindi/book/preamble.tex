@@ -22,19 +22,26 @@
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
+\usepackage{tabularx}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
 
 \usepackage{polyglossia}
 \setmainlanguage{english}
 \setotherlanguage{hindi}
+\setotherlanguage{arabic}
+\setotherlanguage{russian}
 
 % Vendored Devanagari font (../../_fonts/ from <lang>/book/).
 \newfontfamily\hindifont[Path=../../_fonts/, Script=Devanagari]{NotoSansDevanagari-Static.ttf}
 \newfontfamily\devanagarifont[Path=../../_fonts/, Script=Devanagari]{NotoSansDevanagari-Static.ttf}
+\newfontfamily\arabicfont[Path=../../_fonts/, Script=Arabic]{NotoNaskhArabic-Static.ttf}
+\newfontfamily\russianfont[Path=../../_fonts/, Script=Cyrillic]{NotoSansCyrillic-Static.ttf}
 
 % Inline Hindi snippet within English text.
 \newcommand{\hi}[1]{\texthindi{#1}}
+\newcommand{\ar}[1]{\textarabic{#1}}
+\newcommand{\ru}[1]{\textrussian{#1}}
 
 \hypersetup{
   pdftitle={Hindi, Step by Step, Root by Root},
@@ -53,10 +60,10 @@
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
   fonttitle=\bfseries, title={Why it's said this way}
 }
-\newtcolorbox{grammarlens}{
+\newtcolorbox{grammarlens}[1][]{
   breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
-  fonttitle=\bfseries, title={Grammar Lens}
+  fonttitle=\bfseries, title={Grammar Lens}, #1
 }
 \newtcolorbox{sounds}{
   breakable, skin=enhanced, colback=green!6, colframe=green!30!black,

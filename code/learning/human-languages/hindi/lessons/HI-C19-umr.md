@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C19-umr
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 410
 chapter: 19
 type: phrase
 headword: उम्र
@@ -9,18 +12,32 @@ prerequisites: [HI-C18-ghanta]
 sounds: [devanagari-conjunct-mra, devanagari-independent-vowel]
 roots: [arabic-umr-life, sanskrit-aayu-lifespan]
 etymology_hook: "उम्र (umr, 'age') is the SAME Arabic ʿumr you just met, borrowed into Hindi/Urdu via Persian — everyday Hindi uses this Perso-Arabic loan, while more formal/shuddh Hindi uses the native Sanskrit आयु (āyu) instead; telling age uses 'kitne saal ke ho,' literally 'of how many years are you,' a genitive-possessive shape distinct from Romance's 'have,' Germanic's 'be,' Latin's 'born + duration,' or Arabic's no-verb noun sentence"
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02]
+introduces:
+  knowledge: [HI-CONCEPT-C19-UMR-01]
+practises:
+  knowledge: [HI-CONCEPT-C19-UMR-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C18-ghanta]
 ---
 
 # उम्र — the same word as Arabic
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You just met Arabic's *ʿumr*. Hindi's everyday word for "age" is the
 **exact same word**, carried through Persian.
 
-## उम्र — a Perso-Arabic loan, and a native alternative
+## You'll want to know — उम्र — a Perso-Arabic loan, and a native alternative
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C19-UMR-01]; assesses=[] -->
 
 **उम्र** (*umr*) = "**age**" — this is **Arabic's ʿumr**, borrowed into Hindi
 through Persian, and it's the everyday, colloquial word most Hindi speakers use.
@@ -31,12 +48,14 @@ Tamil's native words for the same concepts, just flipped here: the **borrowed**
 word is the everyday one, the **native** word is the formal one).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C19-UMR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "umr" — age, same word as Arabic's ʿumr]
 - [YOU CONTRAST: everyday *umr* · formal/literary *āyu*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C19-UMR-01] -->
 
 [PAUSE 3s] What language does Hindi's **उम्र** come from, and what's the native
 Sanskrit alternative? (**Arabic** *ʿumr*, via Persian; native alternative is

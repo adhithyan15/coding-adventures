@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-W02-ka-ta-mouth-order
+spine_node: SPINE-MEET-GREET
+sequence: 130
 chapter: 1
 type: writing
 headword: "क, त"
@@ -8,24 +11,39 @@ romanization: "ka, ta"
 prerequisites: [HI-W02-abugida-ka-ta]
 sounds: [devanagari-inherent-vowel, devanagari-spine]
 roots: [sanskrit-varga, panini-phonetics]
-est_minutes: 4
+duration:
+  max_seconds: 205
+requires:
+  knowledge: [HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02]
+introduces:
+  knowledge: [HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03]
+practises:
+  knowledge: [HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03]
+skills: [writing, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-W02-abugida-ka-ta, HI-W01-na-ma]
 ---
 
 # क and त — two letters on a map of the mouth
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The built-in vowel means these are **ka** and **ta**, not bare *k*
 and *t*. Their shapes share the frame you already know.
 
-## क — "ka"
+## You'll want to know — क — "ka"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01]; assesses=[] -->
 
 1. **a left loop**
 2. **a vertical spine** on the right
 3. **the top bar** — last.
 
-## त — "ta"
+## You'll want to know — त — "ta"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02]; assesses=[] -->
 
 1. **a small left curl**
 2. **a tall spine**
@@ -34,7 +52,8 @@ and *t*. Their shapes share the frame you already know.
 Same frame as before: spine right, shape left, bar on top. Only the left-hand
 part changes.
 
-## Why the letters are in this order
+## You'll want to know — Why the letters are in this order
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03]; assesses=[] -->
 
 The heart of the Devanagari consonant order is not a historical accident like
 A-B-C. Its five stop families (*vargas*) are sorted by **where in your mouth the
@@ -53,6 +72,7 @@ whole list; and **ट** is not yet in this curriculum's stroke data. Read it her
 and draw it only after its entry is authored.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03] -->
 
 [PAUSE 1s]
 - [YOU WRITE: क — "loop, spine, bar last"]
@@ -60,6 +80,7 @@ and draw it only after its entry is authored.
 - [YOU SAY: "ka … ca … ṭa … ta … pa", back to front]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03] -->
 
 [PAUSE 3s] What do **क** and **त** say alone? (**Ka**, **ta** — each has an
 inherent vowel.) What orders the five stop families? (**Place of articulation**,

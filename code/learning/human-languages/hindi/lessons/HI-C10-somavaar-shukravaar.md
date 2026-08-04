@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C10-somavaar-shukravaar
+spine_node: SPINE-TIME-OF-DAY
+sequence: 280
 chapter: 10
 type: word
 headword: सोमवार मंगलवार बुधवार गुरुवार शुक्रवार
@@ -9,19 +12,33 @@ prerequisites: [HI-C06-paanch-nasal]
 sounds: [devanagari-conjunct-kra, anusvara]
 roots: [vara-sanskrit, navagraha]
 etymology_hook: "सोमवार somavār 'Moon's day' and its four siblings are India's OWN planet-week — the same seven-body idea as Rome's, likely both downstream of a shared Babylonian source, not one copying the other"
-est_minutes: 4
+duration:
+  max_seconds: 235
+requires:
+  knowledge: [HI-CONCEPT-C06-PAANCH-NASAL-01]
+introduces:
+  knowledge: [HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02]
+practises:
+  knowledge: [HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C06-paanch-nasal, HI-C06-numbers-1-5]
 ---
 
 # सोमवार to शुक्रवार — Hindi's own planet-week
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've seen Spanish, Latin, and French name their weekdays for
 planet-gods. Here's the surprise: **Hindi does too** — with its own,
 independent set of gods.
 
-## The pattern: [deity] + वार, "day"
+## You'll want to know — The pattern: [deity] + वार, "day"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01]; assesses=[] -->
 
 Every Hindi weekday is a **deity's name** plus **वार** (*vār*), "**day**"
 (Sanskrit *vāra*):
@@ -34,7 +51,8 @@ Every Hindi weekday is a **deity's name** plus **वार** (*vār*), "**day**"
 | **गुरुवार** (*guruvār*) | Guru's day | **Jupiter** (*Bṛhaspati*, called "Guru," teacher of the gods) | Thursday |
 | **शुक्रवार** (*śukravār*) | Śukra's day | **Venus** | Friday |
 
-## Be honest about where this system came from
+## You'll want to know — Be honest about where this system came from
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02]; assesses=[] -->
 
 This is **the same seven-body idea** as Rome's planetary week — Sun, Moon,
 Mercury, Venus, Mars, Jupiter, Saturn — and it is **not** an isolated Indian
@@ -48,6 +66,7 @@ a case of Rome and India copying each other directly — both are more like
 **cousins**, downstream of one much older shared idea of the sky.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "somavār" — Soma/Moon's day — then "maṅgalvār," Mangala/Mars's
@@ -56,6 +75,7 @@ a case of Rome and India copying each other directly — both are more like
 - [YOU SAY: "guruvār" — Thursday — Bṛhaspati, called "Guru"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02] -->
 
 [PAUSE 3s] What does every Hindi weekday end in, and what does it mean?
 (**वार** *vār*, "day.") Which planet is **गुरुवार**, and what title does its

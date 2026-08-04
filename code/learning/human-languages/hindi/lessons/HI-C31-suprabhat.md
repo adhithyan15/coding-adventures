@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C31-suprabhat
+spine_node: SPINE-TIME-OF-DAY
+sequence: 570
 chapter: 31
 type: phrase
 headword: सुप्रभात
@@ -9,19 +12,33 @@ prerequisites: [HI-C28-subah]
 sounds: [devanagari-conjunct-pra, devanagari-bha]
 roots: [su-good, prabhata-dawn-sanskrit]
 etymology_hook: "सुप्रभात (suprabhāt, 'good morning') = सु ('good') + प्रभात (prabhāta, native Sanskrit 'dawn, daybreak,' from प्रभा/prabhā, 'light, splendour,' itself from भा, 'to shine,' + preverb प्र-, 'forth' + suffix -त) — a COMPLETELY DIFFERENT root from सुबह (subah, HI-C28's Persian/Arabic loan for the everyday noun 'morning'); be honest about its actual register, though: sources describe सुप्रभात as skewing FORMAL and WRITTEN (speeches, radio, greeting-card/WhatsApp-forward culture) rather than casual spoken Hindi, where नमस्ते commonly covers mornings too — this is a genuine formal/everyday split, though there's no strong evidence सुप्रभात itself is being routinely code-switched to English the way some sources (thinly) suggested for other languages' night greetings in this arc"
-est_minutes: 4
+duration:
+  max_seconds: 296
+requires:
+  knowledge: [HI-CONCEPT-C28-SUBAH-01, HI-CONCEPT-C28-SUBAH-02, HI-CONCEPT-C28-SUBAH-03]
+introduces:
+  knowledge: [HI-CONCEPT-C31-SUPRABHAT-01, HI-CONCEPT-C31-SUPRABHAT-02]
+practises:
+  knowledge: [HI-CONCEPT-C31-SUPRABHAT-01, HI-CONCEPT-C31-SUPRABHAT-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C28-subah]
 ---
 
 # सुप्रभात (suprabhāt) — "good morning," a different root than the noun
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] सुबह was Persian, borrowed whole. This lesson's "good
 morning" isn't built on it at all — it reaches for entirely different,
 native vocabulary.
 
-## सुप्रभात — सु + प्रभात, native Sanskrit throughout
+## The two words — सुप्रभात
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C31-SUPRABHAT-01]; assesses=[] -->
 
 **सुप्रभात** (**suprabhāt**) — "**good morning**" — is built from **सु**
 (*su*, "good") plus **प्रभात** (*prabhāta*, "**dawn, daybreak**") — and
@@ -32,7 +49,8 @@ splendour"), itself from the root **भा** ("to shine") plus the preverb
 Persian/Arabic loan you use for the everyday noun "morning." Hindi's
 "morning" and "good morning" don't share a root at all.
 
-## Be honest: formal register, not code-switched to English
+## The exchange — Formal register
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C31-SUPRABHAT-02]; assesses=[] -->
 
 Here's a genuine, checked-not-assumed finding — hedged carefully, since
 this arc's earlier lesson (Telugu's TE-C25) only ever offered a
@@ -52,6 +70,7 @@ language this course covers follows the same displacement story; verify
 each one on its own, and don't flatten a hedge into a fact either way.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C31-SUPRABHAT-01, HI-CONCEPT-C31-SUPRABHAT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "suprabhāt" — "good morning," su + prabhāt]
@@ -61,6 +80,7 @@ each one on its own, and don't flatten a hedge into a fact either way.
   covers casual mornings; no strong evidence of English displacement]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C31-SUPRABHAT-01, HI-CONCEPT-C31-SUPRABHAT-02] -->
 
 [PAUSE 3s] Does सुप्रभात share a root with सुबह? (**No** — सुबह is
 Persian/Arabic; प्रभात, inside suprabhāt, is native Sanskrit, ultimately

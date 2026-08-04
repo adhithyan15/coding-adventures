@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C25-din
+spine_node: SPINE-TIME-OF-DAY
+sequence: 510
 chapter: 25
 type: word
 headword: दिन
@@ -9,25 +12,40 @@ prerequisites: [HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-short-i, devanagari-na]
 roots: [sanskrit-dina, pie-dyew-shine]
 etymology_hook: "दिन (din, 'day') ← Sanskrit दिन (dina) ← Proto-Indo-Iranian *dinám ← a SUFFIXED formation on Proto-Indo-European *dyew-/*dyēws- ('to shine, sky') — the same ultimate root as Latin's diēs (*dyēws-, same root at a different ablaut grade), but a SEPARATE derivational branch: din patterns with Lithuanian diena and Proto-Slavic *dьnь, not directly with diēs; Sanskrit's own द्यु (dyu) and दिव् (div) are the unsuffixed root-nouns, actually closer, more direct cousins of diēs than din itself is"
-est_minutes: 4
+duration:
+  max_seconds: 213
+requires:
+  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]
+introduces:
+  knowledge: [HI-CONCEPT-C25-DIN-01, HI-CONCEPT-C25-DIN-02]
+practises:
+  knowledge: [HI-CONCEPT-C25-DIN-01, HI-CONCEPT-C25-DIN-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C17-dopahar-aadhi-raat]
 ---
 
 # दिन (din) — "day," the same root as diēs, a different branch
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've already met this word once, tucked inside *dopahar*
 ("noon," literally "two pahars" of the **day**). Now it stands alone —
 and its connection to Latin's *diēs* is real, but more careful than it
 first looks.
 
-## दिन — "day"
+## You'll want to know — दिन — "day"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C25-DIN-01]; assesses=[] -->
 
 **दिन** (**din**) — "**day**" — is the ordinary Hindi word for "day,"
 already implicit in **दोपहर** (*dopahar*, "noon," Chapter 17).
 
-## The same ultimate root as diēs — but a separate branch
+## You'll want to know — The same ultimate root as diēs — but a separate branch
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C25-DIN-02]; assesses=[] -->
 
 **Din** traces to **Sanskrit** **दिन** (*dina*), from **Proto-Indo-Iranian**
 ***\*dinám*** — a **suffixed** formation built on **Proto-Indo-European**
@@ -42,6 +60,7 @@ yet another everyday Hindi word for "day." So the honest picture: *din* and
 *diēs* share one distant ancestor, but *dyu*/*div* are the tighter match.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C25-DIN-01, HI-CONCEPT-C25-DIN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "din" — "day," already met inside dopahar]
@@ -51,6 +70,7 @@ yet another everyday Hindi word for "day." So the honest picture: *din* and
   unsuffixed match for diēs]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C25-DIN-01, HI-CONCEPT-C25-DIN-02] -->
 
 [PAUSE 3s] Where have you already met **दिन** before this lesson?
 (**दोपहर**, *dopahar*, "noon.") What ancient PIE root connects Hindi's

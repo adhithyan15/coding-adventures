@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C23-kutta-billi
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 470
 chapter: 23
 type: word
 headword: कुत्ता
@@ -9,18 +12,32 @@ prerequisites: [HI-C22-gyarah-bees]
 sounds: [conjunct-tta, conjunct-lli]
 roots: [uncertain-kutta, dravidian-bidala-cat]
 etymology_hook: "कुत्ता (kuttā, 'dog') is of genuinely UNCERTAIN origin — either onomatopoeic or non-Indo-Aryan, linguists disagree — and it displaced Sanskrit's own PIE-inherited word for dog, श्वान (śvān, cognate with Latin canis, English hound/German Hund), the SAME shape of mystery-word-displaces-inherited-word as Spanish's perro and English's dog; बिल्ली (billī, 'cat') most likely traces to Sanskrit बिडाल (biḍāla), itself most likely (though not universally agreed) a loan from Dravidian — a probable fourth, separate cat-word family, distinct from the Afro-Asiatic cattus/qitt story"
-est_minutes: 4
+duration:
+  max_seconds: 198
+requires:
+  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04]
+introduces:
+  knowledge: [HI-CONCEPT-C23-KUTTA-BILLI-01]
+practises:
+  knowledge: [HI-CONCEPT-C23-KUTTA-BILLI-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C22-gyarah-bees]
 ---
 
 # कुत्ता — a third mystery dog-word
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You have met a mystery dog-word in Spanish and another in
 English/German. Hindi genuinely gives you a **third**.
 
-## कुत्ता — a third mystery, displacing Sanskrit's own PIE word
+## You'll want to know — कुत्ता — a third mystery, displacing Sanskrit's own PIE word
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C23-KUTTA-BILLI-01]; assesses=[] -->
 
 Sanskrit's actual, **inherited** word for dog was **श्वान** (*śvān*) — the
 **exact same PIE root**, ***\*ḱwon-***, behind Latin's *canis*, English's
@@ -38,6 +55,7 @@ Three unrelated language families, three mystery words, all crowding out the
 same inherited PIE word for "dog."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C23-KUTTA-BILLI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kuttā" — dog, genuinely uncertain origin, displacing
@@ -45,6 +63,7 @@ same inherited PIE word for "dog."
 - [YOU SAY: "śvān" — the PIE-inherited word, now rare and formal]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C23-KUTTA-BILLI-01] -->
 
 [PAUSE 3s] What was Sanskrit's actual inherited word for "dog," and what
 family does it belong to? (**श्वान**, *śvān* — same PIE root as Latin

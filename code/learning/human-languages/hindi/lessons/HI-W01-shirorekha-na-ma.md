@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-W01-shirorekha-na-ma
+spine_node: SPINE-MEET-GREET
+sequence: 100
 chapter: 1
 type: writing
 headword: "शिरोरेखा"
@@ -9,13 +12,26 @@ prerequisites: [HI-C01-namaste]
 sounds: [devanagari-top-bar, devanagari-spine]
 roots: [sanskrit-shiras, sanskrit-rekha]
 etymology_hook: "shirorekhā = शिरोरेखा, literally 'HEAD-LINE' — śiras 'head' + rekhā 'line'; and śiras comes from PIE *ḱerh₂-, the same root that gave Latin cornu 'horn' and cerebrum 'brain', and English HORN — so the line over Hindi writing is, etymologically, its horn"
-est_minutes: 4
+duration:
+  max_seconds: 257
+requires:
+  knowledge: []
+introduces:
+  knowledge: [HI-CONCEPT-W01-SHIROREKHA-NA-MA-01]
+practises:
+  knowledge: [HI-CONCEPT-W01-SHIROREKHA-NA-MA-01]
+skills: [writing, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C01-namaste, HI-C01-namaskar]
 ---
 
 # The line on top — Devanagari's head-line
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Look at any line of Hindi:
 
@@ -25,7 +41,8 @@ Before any individual letter, notice the thing you cannot miss: **a horizontal
 line running across the top of the whole word.** Latin letters sit *on* a line.
 Devanagari letters **hang from** one.
 
-## The shirorekhā
+## You'll want to know — The shirorekhā
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W01-SHIROREKHA-NA-MA-01]; assesses=[] -->
 
 That line is the **शिरोरेखा** (*shirorekhā*) — literally the **"head-line"**:
 *śiras* "head" + *rekhā* "line."
@@ -54,6 +71,7 @@ letters whose stroke data actually exists, and it will say so every time that ga
 shows up.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-SHIROREKHA-NA-MA-01] -->
 
 [PAUSE 1s]
 - [YOU TRACE: the bar across **नमस्ते**, from left edge to right edge]
@@ -61,6 +79,7 @@ shows up.
 - [YOU SAY: "शिरोरेखा — the **head-line**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-SHIROREKHA-NA-MA-01] -->
 
 [PAUSE 3s] What is the line across the top called, and what does the word
 literally mean? (**Shirorekhā** — "**head-line**".) When is it usually drawn?

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C16-mahine
+spine_node: SPINE-TIME-OF-DAY
+sequence: 380
 chapter: 16
 type: word
 headword: जनवरी फ़रवरी मार्च अप्रैल मई जून जुलाई अगस्त सितंबर अक्टूबर नवंबर दिसंबर
@@ -9,19 +12,33 @@ prerequisites: [HI-C15-paani-roti]
 sounds: [nukta-f, devanagari-long-ii]
 roots: [gregorian-months-borrowed, vikrama-samvat-sanskrit]
 etymology_hook: "janvarii, maarch, agast... are borrowed English/international month-names for everyday civil use — Hindu tradition keeps a SEPARATE calendar, Vikram Samvat, whose months (Chaitra, Vaishaakh...) map onto the SIX ritu from the seasons lesson, not four Western seasons"
-est_minutes: 4
+duration:
+  max_seconds: 253
+requires:
+  knowledge: [HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02]
+introduces:
+  knowledge: [HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02]
+practises:
+  knowledge: [HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C15-paani-roti]
 ---
 
 # जनवरी to दिसंबर — borrowed names, and a second calendar underneath
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Like Arabic, Hindi doesn't have just **one** set of months —
 everyday civil life and traditional/religious life run on **two different
 calendars**.
 
-## The Gregorian months — recent, borrowed
+## You'll want to know — The Gregorian months — recent, borrowed
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C16-MAHINE-01]; assesses=[] -->
 
 For dates, school, business, and government, Hindi uses month names
 borrowed straightforwardly from **English**:
@@ -32,7 +49,8 @@ sitambar, aktūbar, navambar, disambar*) — you can hear "January," "March,"
 "August" right through the Hindi pronunciation. This is a modern civil
 borrowing, not an ancient Sanskrit system.
 
-## Be honest: the traditional calendar is a genuinely different structure
+## You'll want to know — Be honest: the traditional calendar is a genuinely different structure
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C16-MAHINE-02]; assesses=[] -->
 
 Hindu tradition keeps its **own**, much older lunisolar calendar — **विक्रम
 संवत्** (*Vikram Samvat*) — with twelve **different** month names:
@@ -48,6 +66,7 @@ dated by **this** calendar, not the Gregorian one — which is why their
 Gregorian-calendar date shifts from year to year.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "janvarī, mārc, agast" — hear the borrowed English names]
@@ -56,6 +75,7 @@ Gregorian-calendar date shifts from year to year.
   because they're dated by Vikram Samvat instead]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02] -->
 
 [PAUSE 3s] Where do Hindi's everyday civil month names come from?
 (**Borrowed from English** — *janvarī, mārc, agast*...) What traditional
