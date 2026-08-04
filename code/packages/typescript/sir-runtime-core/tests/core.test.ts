@@ -319,6 +319,21 @@ describe("polymorphic << (Ruby's shift operator)", () => {
   it("is registered in the builtin dispatch table", () => {
     expect(sir.callBuiltin("<<", [5, 2])).toBe(20);
   });
+
+  it("the dispatch table does not resolve inherited Object.prototype members", () => {
+    // Security-review regression: `builtins` is indexed by a SIR-name
+    // string, so a plain object literal would resolve `constructor`/
+    // `toString`/`hasOwnProperty`/etc. for a lookup MISS instead of the
+    // intended `undefined`, letting it slip past `callBuiltin`'s
+    // `fn === undefined` guard and get INVOKED (the [[dynamic-dispatch-rce]]
+    // hazard the JS sibling backend already guards against via
+    // `Object.create(null)`). Adding `"<<"` to the table must not
+    // regress that guard.
+    expect(() => sir.callBuiltin("constructor", [])).toThrow();
+    expect(() => sir.callBuiltin("toString", [])).toThrow();
+    expect(() => sir.callBuiltin("hasOwnProperty", [])).toThrow();
+    expect(() => sir.callBuiltin("__defineGetter__", [])).toThrow();
+  });
 });
 
 describe("polymorphic * (string/array repeat and join)", () => {

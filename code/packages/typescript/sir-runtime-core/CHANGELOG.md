@@ -4,6 +4,25 @@ All notable changes to `@coding-adventures/sir-runtime-core` are documented here
 
 ## [0.2.0] - 2026-08-03
 
+### Fixed — `builtins` dispatch table was not null-prototype
+
+Security review (of the `shiftLeft` addition below) caught that this
+package's `builtins` table (`runtime.ts`) — indexed by a SIR-name
+string via `callBuiltin`/`builtinClosure` — was a plain object literal,
+so a lookup for `"constructor"`/`"toString"`/`"hasOwnProperty"`/
+`"__defineGetter__"`/etc. resolved an INHERITED `Object.prototype`
+member instead of the intended `undefined`, slipping past the
+`fn === undefined` guard and getting INVOKED — the same
+`[[dynamic-dispatch-rce]]` hazard the sibling JS backend's own
+`builtins` table already guards against via `Object.create(null)`. Not
+currently reachable from any call site in this monorepo (every caller
+passes a compile-time string literal), but both `callBuiltin` and
+`builtinClosure` are public API of a published package. Fixed by
+building the table the same way the JS backend does:
+`Object.assign(Object.create(null), {...})`. New regression test
+asserts `callBuiltin` throws (rather than silently invoking an
+inherited method) for each of those four names.
+
 ### Added — `shiftLeft` (Ruby's `<<` operator)
 
 Part of "TypeScript backend: implement shift-operator runtime dispatch".

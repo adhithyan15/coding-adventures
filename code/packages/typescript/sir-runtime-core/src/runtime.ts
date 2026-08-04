@@ -190,7 +190,17 @@ export function puts(...args: Val[]): null {
 
 // --- Builtin dispatch ------------------------------------------------------
 
-const builtins: Record<string, (...args: Val[]) => Val> = {
+// Built with a null prototype (matching the JS sibling backend's own
+// `Object.assign(Object.create(null), {...})` table) — `callBuiltin`/
+// `builtinClosure` index this by a SIR-NAME string, and a plain object
+// literal would resolve an inherited `Object.prototype` member
+// (`constructor`/`toString`/`hasOwnProperty`/`__defineGetter__`/…) for a
+// lookup miss instead of the intended `undefined`, letting it slip past
+// the `fn === undefined` guard and get INVOKED — a define-a-getter-on-
+// global-style gadget (the [[dynamic-dispatch-rce]] hazard this repo's
+// specs name explicitly). No call site here passes a non-literal name
+// today, but both functions are public API of a published package.
+const builtins: Record<string, (...args: Val[]) => Val> = Object.assign(Object.create(null), {
   "+": add,
   "<<": shiftLeft,
   "-": sub,
@@ -208,7 +218,7 @@ const builtins: Record<string, (...args: Val[]) => Val> = {
   "symbol?": (v) => isSymbol(v!),
   print: (v) => print(v!),
   puts: (...args) => puts(...args),
-};
+});
 
 /** Invoke a builtin by SIR name with a list of arguments. */
 export function callBuiltin(name: string, args: Val[]): Val {
