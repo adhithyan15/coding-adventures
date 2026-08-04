@@ -1029,6 +1029,7 @@ members = [
   "chief-of-staff-daemon-installer",
   "chief-of-staff-cli",
   "chief-of-staff-agent-manifest",
+  "chief-of-staff-agent-discovery",
   "chief-of-staff-skill-parser",
   "chief-of-staff-skill-runtime",
   "chief-of-staff-agent-stdio-protocol",

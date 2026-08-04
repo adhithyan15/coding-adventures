@@ -29,6 +29,8 @@ before SHA-256, preventing concatenation ambiguity. `SIGNATURE` is 64 raw
 Ed25519 bytes over that digest, while `PUBKEY_ID` selects a reviewed key from the
 orchestrator keyring. Production, developer, and third-party keys carry explicit
 privilege ceilings; developer keys are structurally capped at Tier 1.
+The verified result retains the exact authenticated manifest bytes so discovery
+does not re-read policy through a verify/read race.
 
 `spawn_deno_verified` closes the next launch boundary. It re-verifies the sealed
 package immediately before creating processes, requires the signed

@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-agent-discovery && cargo clippy -p chief-of-staff-agent-discovery --all-targets -- -D warnings
