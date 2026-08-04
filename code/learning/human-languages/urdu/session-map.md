@@ -1,6 +1,6 @@
-# Urdu Session Map — Authored Chapters 1–2
+# Urdu Session Map — Authored Chapters 1–4
 
-This is the authoritative order for the five authored Urdu lessons. Each new
+This is the authoritative order for the sixteen authored Urdu lessons. Each new
 lesson is a self-contained, prerequisite-safe step of three or four minutes.
 A longer study session may combine the new step with its due reviews while the
 book and app keep every lesson independently completable.
@@ -37,6 +37,21 @@ Each row still points to one independently resumable lesson.
 | **S9** | [`UR-C03-khushi-hui`](./lessons/UR-C03-khushi-hui.md): **آپ سے مل کر خوشی ہوئی** | *shukriyā* *(N+7)*; the three “you” forms *(N+3)*; the name question *(N+1)* | close the introduction warmly |
 | **S10** | [`UR-C03-practice`](./lessons/UR-C03-practice.md): full exchange | *jī hā̃* *(N+7)*; *kyā* *(N+3)*; the meeting response *(N+1)* | run both voices using only known lines |
 
+## Chapter 4 — Ask about wellbeing
+
+Urdu uses six sessions so addressee agreement and the first-person answer frame
+arrive separately. Each lesson remains independently completable in under five
+minutes.
+
+| Session | New lesson | Reviews due | Cumulative practice |
+|---|---|---|---|
+| **S11** | [`UR-C04-kaise-kaisi`](./lessons/UR-C04-kaise-kaisi.md): **کیسے / کیسی** | *nahī̃* *(N+7)*; the name question *(N+3)*; Chapter 3 practice *(N+1)* | choose “how” for the person addressed |
+| **S12** | [`UR-C04-aap-kaise-hain`](./lessons/UR-C04-aap-kaise-hain.md): **آپ کیسے ہیں؟ / آپ کیسی ہیں؟** | *merā nām ... hai* *(N+7)*; the meeting response *(N+3)*; *kaise / kaisī* *(N+1)* | ask respectfully with final *haiṅ* |
+| **S13** | [`UR-C04-main-hun`](./lessons/UR-C04-main-hun.md): **میں ... ہوں** | the three “you” forms *(N+7)*; Chapter 3 practice *(N+3)*; the wellbeing question *(N+1)* | open with *maiṅ* and close with *hūṅ* |
+| **S14** | [`UR-C04-thik`](./lessons/UR-C04-thik.md): **ٹھیک** *ṭhīk* | *kyā* *(N+7)*; *kaise / kaisī* *(N+3)*; *maiṅ ... hūṅ* *(N+1)* | place the state word inside the answer frame |
+| **S15** | [`UR-C04-main-thik-hun`](./lessons/UR-C04-main-thik-hun.md): **میں ٹھیک ہوں، شکریہ** | the name question *(N+7)*; the wellbeing question *(N+3)*; *ṭhīk* *(N+1)* | keep *hūṅ* final, then add known thanks |
+| **S16** | [`UR-C04-practice`](./lessons/UR-C04-practice.md): full wellbeing exchange | *salām* *(N+15)*; the meeting response *(N+7)*; *maiṅ ... hūṅ* *(N+3)*; the reply *(N+1)* | run both respectful question variants and one answer |
+
 ## Carry-forward review ledger
 
 Future chapters may supply the new lesson in these sessions. Until then, use
@@ -45,21 +60,21 @@ with already learned material.
 
 | Session | Fixed review due |
 |---|---|
-| **S11** | *nahī̃* *(N+7)*; the name question *(N+3)*; Chapter 3 practice *(N+1)* |
-| **S12** | *merā nām ... hai* *(N+7)*; the meeting response *(N+3)* |
-| **S13** | the three “you” forms *(N+7)*; Chapter 3 practice *(N+3)* |
-| **S14** | *kyā* *(N+7)* |
-| **S15** | the name question *(N+7)* |
-| **S16** | *salām* *(N+15)*; the meeting response *(N+7)* |
-| **S17** | *shukriyā* *(N+15)*; Chapter 3 practice *(N+7)* |
-| **S18** | *jī hā̃* *(N+15)* |
-| **S19** | *nahī̃* *(N+15)* |
-| **S20** | *merā nām ... hai* *(N+15)* |
-| **S21** | the three “you” forms *(N+15)* |
-| **S22** | *kyā* *(N+15)* |
-| **S23** | the name question *(N+15)* |
+| **S17** | *shukriyā* *(N+15)*; Chapter 3 practice *(N+7)*; *ṭhīk* *(N+3)*; Chapter 4 practice *(N+1)* |
+| **S18** | *jī hā̃* *(N+15)*; *kaise / kaisī* *(N+7)*; the reply *(N+3)* |
+| **S19** | *nahī̃* *(N+15)*; the wellbeing question *(N+7)*; Chapter 4 practice *(N+3)* |
+| **S20** | *merā nām ... hai* *(N+15)*; *maiṅ ... hūṅ* *(N+7)* |
+| **S21** | the three “you” forms *(N+15)*; *ṭhīk* *(N+7)* |
+| **S22** | *kyā* *(N+15)*; the reply *(N+7)* |
+| **S23** | the name question *(N+15)*; Chapter 4 practice *(N+7)* |
 | **S24** | the meeting response *(N+15)* |
 | **S25** | Chapter 3 practice *(N+15)* |
+| **S26** | *kaise / kaisī* *(N+15)* |
+| **S27** | the wellbeing question *(N+15)* |
+| **S28** | *maiṅ ... hūṅ* *(N+15)* |
+| **S29** | *ṭhīk* *(N+15)* |
+| **S30** | the reply *(N+15)* |
+| **S31** | Chapter 4 practice *(N+15)* |
 
 Sessions not listed in the ledger have no fixed starter item due; use their
 bonus queue for adaptive or cumulative retrieval.
@@ -70,7 +85,7 @@ review; the fixed ledger remains the book's no-tracking fallback.
 
 ## Schedule check
 
-Every Chapter 1–3 lesson now has all four fixed resurfacing sessions through
-S25. The app may pull a missed item forward, but it cannot skip the local
-prerequisites. Chapter 4 can begin in S11 while the ledger continues in the
-review portion of each session.
+Every Chapter 1–4 lesson now has all four fixed resurfacing sessions through
+S31. The app may pull a missed item forward, but it cannot skip the local
+prerequisites. A future Chapter 5 can begin in S17 while this ledger continues
+in the review portion of each session.

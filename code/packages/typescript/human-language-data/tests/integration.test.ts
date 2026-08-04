@@ -67,12 +67,12 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "persian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3]);
+    ).toEqual([1, 2, 3, 4]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3]);
+    ).toEqual([1, 2, 3, 4]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -107,6 +107,12 @@ describe("real curriculum", () => {
       "FA-C03-khoshvaghtam-close",
       "FA-C03-practice-next-line",
       "FA-C03-shoma-to-first-meeting",
+      "FA-C04-chetor-how",
+      "FA-C04-hal-e-shoma-chetor-ast-question",
+      "FA-C04-hal-meaning",
+      "FA-C04-khub-good",
+      "FA-C04-khubam-reply",
+      "FA-C04-practice-next-line",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
@@ -128,6 +134,12 @@ describe("real curriculum", () => {
       "UR-C03-khushi-hui-close",
       "UR-C03-kya-what",
       "UR-C03-practice-next-line",
+      "UR-C04-aap-kaise-hain-man",
+      "UR-C04-kaise-kaisi-woman",
+      "UR-C04-main-hun-frame",
+      "UR-C04-main-thik-hun-reply",
+      "UR-C04-practice-next-line",
+      "UR-C04-thik-well",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
@@ -172,6 +184,28 @@ describe("real curriculum", () => {
       expect(
         report.prerequisites.laterChapterWithoutPrerequisites.filter(
           (lesson) => lesson.language === language && lesson.chapter === 3,
+        ),
+      ).toEqual([]);
+    }
+  });
+
+  it("keeps the Persian and Urdu Chapter 4 wellbeing chains closed, objective, and under five minutes", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    for (const language of ["persian", "urdu"]) {
+      const chapter = lessons.filter(
+        (lesson) => lesson.language === language && lesson.realization.chapter === 4,
+      );
+      expect(chapter).toHaveLength(6);
+      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        report.duration.violations.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 4,
+        ),
+      ).toEqual([]);
+      expect(
+        report.prerequisites.laterChapterWithoutPrerequisites.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 4,
         ),
       ).toEqual([]);
     }

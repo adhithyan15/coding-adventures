@@ -2073,11 +2073,29 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 4,
+      "title": "How Are You?",
+      "label": "ch:fa-how-are-you",
+      "output": "persian/book/chapters/ch04-how-are-you.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "title": "Ask and Answer Names",
       "label": "ch:ur-ask-and-answer-names",
       "output": "urdu/book/chapters/ch03-ask-and-answer-names.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 4,
+      "title": "How Are You?",
+      "label": "ch:ur-how-are-you",
+      "output": "urdu/book/chapters/ch04-how-are-you.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
     }

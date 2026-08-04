@@ -29,11 +29,20 @@ romanization once the Urdu form is familiar.
 |---|---|---|
 | `rtl` | follow the word from its right edge leftward | **سلام** *salām* |
 | `long-a` | hold *ā* steady; **ا** carries it in **سلام** | **سلام** *salām* |
+| `alif-madd` | read **آ** as word-initial long *ā* | **آپ** *āp* |
 | `short-vowels-unwritten` | supply the learned short vowels even when vowel marks are absent | **شکریہ** *shukriyā* |
 | `long-i` | hold **ی** as *ī* in this word | **جی** *jī* |
+| `long-u` | hold **و** as long *ū* in the learned word | **ہوں** *hūṅ* |
 | `nasal-vowel` | let air pass through the nose; final **ں** does not add a full English *n* | **ہاں** *hā̃*, **نہیں** *nahī̃* |
 | `long-vowels` | read the word's written long-vowel cues rather than stretching every vowel | **میرا نام** *merā nām* |
 | `hai-diphthong` | say **ہے** as one *hai* syllable, ending in an *ai* glide | **ہے** *hai* |
+| `sh` | read three-dotted **ش** as *sh* | **شکریہ** *shukriyā* |
+| `kh` | make **خ** farther back than English *h* | **خوشی** *khushī* |
+| `consonantal-ye` | let **ی** supply consonantal *y* before a vowel | **کیا** *kyā* |
+| `ai-diphthong` | say *ai* as one glide in the learned question word | **کیسے** *kaise* |
+| `final-ye` | distinguish broad final **ے** *e* from final **ی** long *ī* | **کیسے / کیسی** *kaise / kaisī* |
+| `retroflex-aspirated-th` | curl the tongue slightly back for **ٹ**, then release the aspiration marked by **ھ** | **ٹھیک** *ṭhīk* |
+| `urdu-question-mark` | recognize **؟** at the left end of a right-to-left question | **آپ کا نام کیا ہے؟** |
 
 ## Shape families already in use
 
@@ -42,8 +51,10 @@ romanization once the Urdu form is familiar.
   nasalization in **ہاں** and **نہیں**.
 - **ی** supplies the long *ī* in **جی** and **نہیں**. Final **ے** participates
   in *hai* in **ہے**. Learn each role in its word before generalizing.
-- Urdu will later add its Indic sound distinctions—retroflex consonants and
-  aspirated pairs—inline when a communicative expression first needs them.
+- **کیا** gives **ی** its consonantal *y* job; **کیسے / کیسی** then contrast
+  broad final **ے** with long-*ī* final **ی**.
+- **ٹھیک** introduces the Indic retroflex-plus-aspiration sequence **ٹھ** only
+  when the wellbeing reply needs it.
 
 ## The Persian-Arabic and Indo-Aryan layers
 

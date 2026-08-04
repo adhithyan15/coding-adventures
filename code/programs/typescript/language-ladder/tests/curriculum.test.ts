@@ -54,6 +54,12 @@ describe("per-language shared-spine maps", () => {
       "FA-C03-esm-e-shoma-chist",
       "FA-C03-khoshvaghtam",
       "FA-C03-practice",
+      "FA-C04-hal",
+      "FA-C04-chetor",
+      "FA-C04-hal-e-shoma-chetor-ast",
+      "FA-C04-khub",
+      "FA-C04-khubam",
+      "FA-C04-practice",
       "UR-C01-salam",
       "UR-C01-shukriya",
       "UR-C01-ji-han",
@@ -64,6 +70,12 @@ describe("per-language shared-spine maps", () => {
       "UR-C03-aap-ka-naam-kya-hai",
       "UR-C03-khushi-hui",
       "UR-C03-practice",
+      "UR-C04-kaise-kaisi",
+      "UR-C04-aap-kaise-hain",
+      "UR-C04-main-hun",
+      "UR-C04-thik",
+      "UR-C04-main-thik-hun",
+      "UR-C04-practice",
     ]));
   });
 

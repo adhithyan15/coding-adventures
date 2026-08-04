@@ -1,6 +1,6 @@
-# Persian Session Map — Authored Chapters 1–2
+# Persian Session Map — Authored Chapters 1–4
 
-This is the authoritative order for the five authored Persian lessons. Every
+This is the authoritative order for the sixteen authored Persian lessons. Every
 lesson is an independent, prerequisite-safe step of three or four minutes. A
 study session may combine the new step with the reviews shown here, but it never
 turns the combined session into one indivisible lesson.
@@ -36,6 +36,20 @@ Each row still points to one independently resumable lesson.
 | **S9** | [`FA-C03-khoshvaghtam`](./lessons/FA-C03-khoshvaghtam.md): **خوشوقتم** | *mamnun* *(N+7)*; *shomâ / to* *(N+3)*; the name question *(N+1)* | close the introduction warmly |
 | **S10** | [`FA-C03-practice`](./lessons/FA-C03-practice.md): full exchange | *bale* *(N+7)*; *chist* *(N+3)*; *khoshvaghtam* *(N+1)* | run both voices using only known lines |
 
+## Chapter 4 — Ask about wellbeing
+
+Chapter 4 fills six sessions because Persian's compact answer deserves its own
+copula step. Each lesson remains independently completable in under five minutes.
+
+| Session | New lesson | Reviews due | Cumulative practice |
+|---|---|---|---|
+| **S11** | [`FA-C04-hal`](./lessons/FA-C04-hal.md): **حال** *hâl* | *na* *(N+7)*; the name question *(N+3)*; Chapter 3 practice *(N+1)* | name the state a wellbeing question asks about |
+| **S12** | [`FA-C04-chetor`](./lessons/FA-C04-chetor.md): **چطور** *chetor* | *esm-e man ... ast* *(N+7)*; *khoshvaghtam* *(N+3)*; *hâl* *(N+1)* | ask “how?” and rebuild *che + tor* |
+| **S13** | [`FA-C04-hal-e-shoma-chetor-ast`](./lessons/FA-C04-hal-e-shoma-chetor-ast.md): **حال شما چطور است؟** | *shomâ / to* *(N+7)*; Chapter 3 practice *(N+3)*; *chetor* *(N+1)* | ask the careful respectful question |
+| **S14** | [`FA-C04-khub`](./lessons/FA-C04-khub.md): **خوب** *khub* | *chist* *(N+7)*; *hâl* *(N+3)*; the wellbeing question *(N+1)* | answer with the positive state word |
+| **S15** | [`FA-C04-khubam`](./lessons/FA-C04-khubam.md): **خوبم، ممنون** | the name question *(N+7)*; *chetor* *(N+3)*; *khub* *(N+1)* | attach first-person **-am**, then add known thanks |
+| **S16** | [`FA-C04-practice`](./lessons/FA-C04-practice.md): full wellbeing exchange | *salâm* *(N+15)*; *khoshvaghtam* *(N+7)*; the wellbeing question *(N+3)*; *khubam* *(N+1)* | run both voices using only learned forms |
+
 ## Carry-forward review ledger
 
 Future chapters may supply the new lesson in these sessions. Until then, use
@@ -44,21 +58,21 @@ with already learned material.
 
 | Session | Fixed review due |
 |---|---|
-| **S11** | *na* *(N+7)*; the name question *(N+3)*; Chapter 3 practice *(N+1)* |
-| **S12** | *esm-e man ... ast* *(N+7)*; *khoshvaghtam* *(N+3)* |
-| **S13** | *shomâ / to* *(N+7)*; Chapter 3 practice *(N+3)* |
-| **S14** | *chist* *(N+7)* |
-| **S15** | the name question *(N+7)* |
-| **S16** | *salâm* *(N+15)*; *khoshvaghtam* *(N+7)* |
-| **S17** | *mamnun* *(N+15)*; Chapter 3 practice *(N+7)* |
-| **S18** | *bale* *(N+15)* |
-| **S19** | *na* *(N+15)* |
-| **S20** | *esm-e man ... ast* *(N+15)* |
-| **S21** | *shomâ / to* *(N+15)* |
-| **S22** | *chist* *(N+15)* |
-| **S23** | the name question *(N+15)* |
+| **S17** | *mamnun* *(N+15)*; Chapter 3 practice *(N+7)*; *khub* *(N+3)*; Chapter 4 practice *(N+1)* |
+| **S18** | *bale* *(N+15)*; *hâl* *(N+7)*; *khubam* *(N+3)* |
+| **S19** | *na* *(N+15)*; *chetor* *(N+7)*; Chapter 4 practice *(N+3)* |
+| **S20** | *esm-e man ... ast* *(N+15)*; the wellbeing question *(N+7)* |
+| **S21** | *shomâ / to* *(N+15)*; *khub* *(N+7)* |
+| **S22** | *chist* *(N+15)*; *khubam* *(N+7)* |
+| **S23** | the name question *(N+15)*; Chapter 4 practice *(N+7)* |
 | **S24** | *khoshvaghtam* *(N+15)* |
 | **S25** | Chapter 3 practice *(N+15)* |
+| **S26** | *hâl* *(N+15)* |
+| **S27** | *chetor* *(N+15)* |
+| **S28** | the wellbeing question *(N+15)* |
+| **S29** | *khub* *(N+15)* |
+| **S30** | *khubam* *(N+15)* |
+| **S31** | Chapter 4 practice *(N+15)* |
 
 Sessions not listed in the ledger have no fixed starter item due; use their
 bonus queue for adaptive or cumulative retrieval.
@@ -69,7 +83,7 @@ review; the fixed ledger remains the book's no-tracking fallback.
 
 ## Schedule check
 
-Every Chapter 1–3 lesson now has all four fixed resurfacing sessions through
-S25. The app may pull a missed item forward, but it cannot skip the local
-prerequisites. Chapter 4 can begin in S11 while the ledger continues in the
-review portion of each session.
+Every Chapter 1–4 lesson now has all four fixed resurfacing sessions through
+S31. The app may pull a missed item forward, but it cannot skip the local
+prerequisites. A future Chapter 5 can begin in S17 while this ledger continues
+in the review portion of each session.

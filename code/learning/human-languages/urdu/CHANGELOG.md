@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0 — 2026-08-04
+
+- Added six schema-v2 Chapter 4 micro-lessons for *kaise/kaisī*, respectful
+  **āp ... haiṅ**, the first-person **maiṅ ... hūṅ** frame, *ṭhīk*, the polite
+  reply, and cumulative practice.
+- Kept addressee agreement separate from honorific register, introduced the
+  retroflex-aspiration sequence only inside **ٹھیک**, and made the Hindi bridge
+  follow independent Urdu-script retrieval.
+- Extended the sound-id reference and exact N+1/N+3/N+7/N+15 ledger through
+  S31, with objective activities and a generated four-chapter book.
+
 ## 0.4.0 — 2026-08-03
 
 - Added five schema-v2 Chapter 3 micro-lessons for **āp/tum/tū**, *kyā*, the

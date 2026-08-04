@@ -55,6 +55,28 @@
         "UR-EXT-006-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "UR-PATH-005",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "UR-C04-kaise-kaisi",
+        "UR-C04-aap-kaise-hain",
+        "UR-C04-main-hun",
+        "UR-C04-thik",
+        "UR-C04-main-thik-hun",
+        "UR-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-007-GENDERED-HOW",
+        "UR-EXT-008-HONORIFIC-COPULA",
+        "UR-EXT-009-FIRST-PERSON-FRAME",
+        "UR-EXT-010-SCRIPT-BRIDGE",
+        "UR-EXT-011-WELLBEING-WORD-ORDER",
+        "UR-EXT-012-WELLBEING-CONSOLIDATION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -103,12 +125,11 @@
       "relocates": {}
     },
     "SPINE-CHECK-WELLBEING": {
-      "segments": [],
+      "segments": [
+        "UR-PATH-005"
+      ],
       "omits": [
-        "QUESTION-HOW",
-        "STATE-HOW-ARE-YOU",
         "WORD-GOOD",
-        "WORD-WELL",
         "WORD-SOSO"
       ],
       "relocates": {}
@@ -246,6 +267,84 @@
       ],
       "lessons": [
         "UR-C03-practice"
+      ]
+    },
+    {
+      "id": "UR-EXT-007-GENDERED-HOW",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can choose kaise or kaisī according to the person addressed while keeping respectful āp unchanged.",
+      "prerequisites": [
+        "UR-EXT-006-CONSOLIDATION"
+      ],
+      "lessons": [
+        "UR-C04-kaise-kaisi"
+      ]
+    },
+    {
+      "id": "UR-EXT-008-HONORIFIC-COPULA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can pair respectful āp with final haiṅ and keep the addressee agreement choice separate from politeness.",
+      "prerequisites": [
+        "UR-EXT-007-GENDERED-HOW"
+      ],
+      "lessons": [
+        "UR-C04-aap-kaise-hain"
+      ]
+    },
+    {
+      "id": "UR-EXT-009-FIRST-PERSON-FRAME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can open an Urdu answer with maiṅ and close it with hūṅ without learning the full copula table.",
+      "prerequisites": [
+        "UR-EXT-008-HONORIFIC-COPULA"
+      ],
+      "lessons": [
+        "UR-C04-main-hun"
+      ]
+    },
+    {
+      "id": "UR-EXT-010-SCRIPT-BRIDGE",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "script",
+      "canDo": "I can read Urdu ṭhīk and connect it to Hindi only after recognizing the Urdu retroflex and aspiration sequence.",
+      "prerequisites": [
+        "UR-EXT-009-FIRST-PERSON-FRAME"
+      ],
+      "lessons": [
+        "UR-C04-thik"
+      ]
+    },
+    {
+      "id": "UR-EXT-011-WELLBEING-WORD-ORDER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can place ṭhīk inside the maiṅ ... hūṅ frame and add known shukriyā after the completed clause.",
+      "prerequisites": [
+        "UR-EXT-010-SCRIPT-BRIDGE"
+      ],
+      "lessons": [
+        "UR-C04-main-thik-hun"
+      ]
+    },
+    {
+      "id": "UR-EXT-012-WELLBEING-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can complete a respectful Urdu wellbeing exchange while choosing the addressed form deliberately.",
+      "prerequisites": [
+        "UR-EXT-011-WELLBEING-WORD-ORDER"
+      ],
+      "lessons": [
+        "UR-C04-practice"
       ]
     }
   ]

@@ -29,8 +29,15 @@ lessons will introduce them only when a useful word needs them.
 | `rtl` | start at the right edge and follow the word leftward | **سلام** *salâm* |
 | `long-a` | hold **ا** as a steady *â*, near the vowel in “father” | **سلام** *salâm* |
 | `long-u` | hold **و** as *u*, near “oo” in “food,” without an English off-glide | **ممنون** *mamnun* |
+| `long-i` | hold **ی** as long *i* in the learned word | **چیست** *chist* |
 | `short-vowels-unwritten` | supply learned *a, e,* or *o* even when no separate vowel letter appears | **بله** *bale*, **نه** *na* |
 | `ezafe-e` | say a light linking *-e* after a noun before its owner or description; ordinary text often leaves it unmarked | **اسمِ من** *esm-e man* |
+| `sh` | read three-dotted **ش** as *sh* | **شما** *shomâ* |
+| `persian-che` | read Persian **چ** as *ch* | **چیست** *chist* |
+| `kh` | make **خ** farther back than English *h*; a gentle approximation is acceptable first | **خوب** *khub* |
+| `gh` | use the modern Iranian Persian voiced back-of-the-mouth sound for **غ** | **خوشوقتم** *khoshvaghtam* |
+| `vav-o` | let **و** carry the learned *o* value in this word | **چطور** *chetor* |
+| `persian-question-mark` | recognize **؟** at the left end of a right-to-left question | **اسم شما چیست؟** |
 
 ## Read the current word before the whole alphabet
 
@@ -41,6 +48,10 @@ lessons will introduce them only when a useful word needs them.
   spelling supplies a consonantal frame; the learned word supplies *a/e*.
 - **اسم من ... است** recombines familiar letters and adds one spoken grammar
   cue, ezafe **-e**. The cue is often heard but not printed.
+- **شما**, **چیست**, and **خوشوقتم** add *sh*, Persian **چ**, and the back
+  sounds in **خ/غ** only inside the name exchange.
+- **حال شما چطور است؟** reuses ezafe and the Persian question mark; **چطور**
+  gives **و** its learned *o* value, while **خوبم** returns to long-*u* **و**.
 
 One spelling symbol can do more than one job in later words—especially **و**
 and **ی**—so read from the word and context rather than assigning each shape one
