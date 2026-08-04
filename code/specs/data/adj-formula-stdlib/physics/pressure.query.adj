@@ -1,0 +1,29 @@
+% ============================================================================
+% pressure.query.adj — worked examples over the physics pressure library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a pressure
+% question: it states NO arithmetic and NO definition — it only `import`s the
+% grounded library, `observe`s the mechanical quantities it decomposed from the
+% prompt (each a byte-provenanced span, elided here), and asks the engine to APPLY
+% the cited definition. The native adj-lang engine binds the parameters, computes
+% each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The two questions INVERT: a 50 N force over 2 m² gives a pressure of 25 Pa,
+% which is exactly the pressure the force formula multiplies back by the 2 m² area
+% to recover the 50 N force.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pressure.query.adj
+% ============================================================================
+
+import "pressure.adj"
+
+% A 50 N force over a 2 m² area: pressure = 50 / 2.
+observe force(50)
+observe area(2)
+? pressure(force, area)     % expect 25   (definition: P = F/A)
+
+% That 25 Pa pressure over the same 2 m² area: force = 25 * 2.
+observe pressure(25)
+? force(pressure, area)      % expect 50   (same definition, solved for F = P·A)

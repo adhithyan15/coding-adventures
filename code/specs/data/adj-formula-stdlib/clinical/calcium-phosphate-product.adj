@@ -1,0 +1,93 @@
+% ============================================================================
+% calcium-phosphate-product.adj — the definition of the calcium phosphate product
+% (CPP = serum calcium × serum phosphate) in the ADJ standard library.
+% ============================================================================
+% The calcium-phosphate-product entry of the *clinical* track, a renal/bone-mineral bedside
+% index (CKD-MBD). Where the rate pressure product multiplies two cardiovascular vitals, the
+% calcium phosphate product MULTIPLIES two serum minerals: THE CALCIUM PHOSPHATE PRODUCT IS THE
+% SERUM CALCIUM TIMES THE SERUM PHOSPHATE — a surrogate for the tendency of calcium and phosphate
+% to precipitate out of solution and deposit in soft tissue and vasculature, because the
+% saturation of the two ions with respect to their mineral phase scales with the product of their
+% concentrations. It rises in chronic kidney disease, hyperphosphataemia and hyperparathyroidism
+% and is watched as a calcification / calciphylaxis risk marker. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the serum
+% calcium a product implies for a given phosphate, and the serum phosphate it implies for a given
+% calcium). As with every compute library, a consumer states NO arithmetic: it `import`s this
+% file, binds the measured labs from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited definition on the CPU. Zero math is performed by the model; the engine computes
+% each value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "calcium-phosphate-product.adj"
+%     observe serum_calcium(9)      % "…serum calcium 9 mg/dL…"       (span cited by the model)
+%     observe serum_phosphate(4)    % "…serum phosphate 4 mg/dL…"     (span cited by the model)
+%     ? calcium_phosphate_product(serum_calcium, serum_phosphate)
+%                                   % engine → 36, carrying CPP = Ca × PO4
+%
+% All three formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case serum calcium = 9 mg/dL, serum phosphate
+% = 4 mg/dL (CPP = 9 × 4 = 36): the `calcium_phosphate_product` a consumer computes from the two
+% minerals is exactly the value the `serum_calcium` formula divides by the phosphate to recover 9,
+% and exactly the value the `serum_phosphate` formula divides by the calcium to recover 4.
+%
+%   calcium_phosphate_product(serum_calcium, serum_phosphate)
+%       = serum_calcium * serum_phosphate                 % CPP = Ca × PO4  (definition)
+%   serum_calcium(calcium_phosphate_product, serum_phosphate)
+%       = calcium_phosphate_product / serum_phosphate      % Ca = CPP ÷ PO4  (solved for calcium)
+%   serum_phosphate(calcium_phosphate_product, serum_calcium)
+%       = calcium_phosphate_product / serum_calcium        % PO4 = CPP ÷ Ca  (solved for phosphate)
+%
+% NOTE ON UNITS: the serum calcium and serum phosphate are each in milligrams per decilitre; the
+% calcium phosphate product comes out in mg²/dL² (the units are conventionally dropped), and this
+% library computes the exact product over whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME clause — "Calcium phosphate product (CPP) is
+% measured by multiplying the total serum calcium by total serum phosphorus concentration" —
+% because that one definition (the product IS the calcium-times-phosphate product) sanctions the
+% relation read every way. The quote is transcribed verbatim from a peer-reviewed review archived
+% on the NCBI PMC repository, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored
+% — the clause is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable serum lab the definition ranges over, and each
+% result is a derived quantity. `serum_calcium`, `serum_phosphate` and `calcium_phosphate_product`
+% each appear BOTH as a derived result and as an input (of the other formulas), so each is a single
+% dictionary term used in both roles. The `surface` lists are the everyday names a decomposer maps
+% onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary calcium_phosphate_product_vocab {
+    define serum_calcium              : finding  surface "serum calcium", "calcium", "Ca"                                   % milligrams per decilitre (mg/dL)
+    define serum_phosphate            : finding  surface "serum phosphate", "serum phosphorus", "phosphate", "phosphorus"   % milligrams per decilitre (mg/dL)
+    define calcium_phosphate_product  : finding  surface "calcium phosphate product", "calcium-phosphate product", "CPP"    % mg squared per dL squared (mg2/dL2)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the cited review
+% on the NCBI PMC repository (a quote is required on a shipped formula). Each is an exact product or
+% ratio of measured labs, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook calcium_phosphate_product_laws {
+    use calcium_phosphate_product_vocab
+
+    % Calcium phosphate product — the serum calcium times the serum phosphate, i.e. CPP = Ca × PO4.
+    formula calcium_phosphate_product(serum_calcium, serum_phosphate) = serum_calcium * serum_phosphate
+        source "Calcium phosphate product (CPP) is measured by multiplying the total serum calcium by total serum phosphorus concentration"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC2989826/"
+        trust authoritative
+
+    % Serum calcium — the same definition solved for the calcium a product implies for a given
+    % phosphate (Ca = CPP ÷ PO4). Defended by the SAME clause.
+    formula serum_calcium(calcium_phosphate_product, serum_phosphate) = calcium_phosphate_product / serum_phosphate
+        source "Calcium phosphate product (CPP) is measured by multiplying the total serum calcium by total serum phosphorus concentration"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC2989826/"
+        trust authoritative
+
+    % Serum phosphate — the same definition solved for the phosphate (PO4 = CPP ÷ Ca): the calcium
+    % phosphate product divided by the serum calcium. The SAME clause, read the third way.
+    formula serum_phosphate(calcium_phosphate_product, serum_calcium) = calcium_phosphate_product / serum_calcium
+        source "Calcium phosphate product (CPP) is measured by multiplying the total serum calcium by total serum phosphorus concentration"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC2989826/"
+        trust authoritative
+}

@@ -1,0 +1,16 @@
+{
+  "kind": "text_transform",
+  "operations": [
+    {
+      "operation": "copy",
+      "result_end": 154,
+      "result_start": 0,
+      "source_end": 403,
+      "source_start": 249
+    }
+  ],
+  "result_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+  "result_size": 154,
+  "source_sha256": "8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf",
+  "source_size": 52191
+}

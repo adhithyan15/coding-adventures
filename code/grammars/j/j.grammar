@@ -1,0 +1,156 @@
+# @version 1
+
+# =============================================================================
+# j.grammar — Parser grammar for the J historical core (MA-6c)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from the J lexer (code/grammars/j/j.tokens). See
+# code/specs/MA06-j-language.md, especially §3 (the grammar design this file
+# implements) and §4 (the exact primitive/adverb/conjunction scope).
+#
+# Token names (UPPERCASE) come from the J lexer:
+#   NUMBER NAME                                      literals and variables
+#   ASSIGN_LOCAL (=.)  ASSIGN_GLOBAL (=:)             assignment
+#   PLUS MINUS STAR PERCENT CARET FLOOR CEILING       primitive verbs
+#   DOLLAR IDOT RAVEL HASH
+#   EQ NE LT GT LE GE                                 dyadic comparison verbs
+#   REDUCE (/)  SCAN (\)                               adverbs
+#   AT (@)                                             the one in-scope conjunction
+#   LPAREN RPAREN                                      grouping
+#   NEWLINE
+#
+# -----------------------------------------------------------------------------
+# Two nonterminals, reused from APL almost verbatim (MA06 §3)
+# -----------------------------------------------------------------------------
+# Exactly like `apl.grammar`, J needs TWO expression nonterminals, because its
+# adverbs (`/`, `\`) and its one conjunction (`@`) combine with VERBS, not
+# nouns:
+#
+#   noun_expr  — arrays and scalars (APL's `value_expr`, renamed to J's own
+#                terminology). Built from `term`s combined by `verb_expr`s.
+#   verb_expr  — a primitive glyph, a primitive glyph with an adverb applied
+#                (a "derived verb"), two verbs joined by the `@` conjunction
+#                (compose), or — MA06 §3's one genuinely new production,
+#                with no APL precedent — a parenthesised TRAIN (hook/fork).
+#
+# -----------------------------------------------------------------------------
+# One precedence tier, right-to-left — unchanged from APL (MA06 §3)
+# -----------------------------------------------------------------------------
+# `noun_expr`'s dyadic continuation stays the SAME single right-recursive
+# rule MA05 §3 already designed for APL: `a F b G c` parses as `a F (b G c)`.
+# Trains don't change this at all — see the `verb_expr` comment below.
+#
+# -----------------------------------------------------------------------------
+# Monadic vs. dyadic dispatch is still a runtime concern, not a lexer or
+# grammar concern (MA06 §3, unchanged from MA05 §3 bullet 3)
+# -----------------------------------------------------------------------------
+# `noun_expr`'s two productions that start with a `verb_expr` (monadic:
+# nothing precedes it) vs. that have a `term` before it (dyadic) are exactly
+# the "which application rule matched" a later runtime reads off — this is
+# true whether the `verb_expr` in question is a bare primitive or a train.
+#
+# -----------------------------------------------------------------------------
+# The one genuinely new grammar problem: trains (MA06 §3)
+# -----------------------------------------------------------------------------
+# A `verb_train` is 2+ consecutive `train_tooth`s (a bare primitive/derived
+# verb, a parenthesised sub-verb or sub-train, or — only meaningful in the
+# LEADING position of a 3+-tooth fork — a bare noun used as a literal
+# constant) with no application between them. Per MA06 §3's own disclosed
+# restriction, trains are scoped to the PARENTHESISED form only in this cut
+# (`(f g)`, `(f g h)`, ...) — this sidesteps a genuine grammar ambiguity an
+# unparenthesised top-level train would introduce without deeper lookahead
+# than this cut's grammar needs (an unparenthesised run of verbs and nouns
+# would otherwise be indistinguishable from an ordinary application chain).
+#
+# `verb_train`'s own production only needs to recognise the SHAPE (a flat
+# run of 2+ teeth) — whether that run means a hook (exactly 2 teeth) or a
+# fork (3+, right-to-left recursively reduced per MA06 §3's exact formulas,
+# `(a b c d)` = the fork `(a (b c d))`) is resolved by a later pass
+# (lowering), exactly the same "grammar builds the flat shape, a later pass
+# assigns meaning" division APL's own stranding (`NUMBER { NUMBER }`, MA05
+# §4) already established: the grammar doesn't know or care whether three
+# juxtaposed numbers form a 3-element vector any more than this grammar
+# knows or cares whether three juxtaposed verbs form a fork.
+#
+# This grammar also does not itself enforce "a bare noun tooth may only
+# appear in a fork's leading position, never in a hook, and never anywhere
+# else" — exactly like `apl.grammar`'s own `function_atom`/REDUCE-SCAN
+# restriction and `semantic-ir`'s own `Expr::SymPatternBlank` placement
+# restriction, this is a semantic constraint a later pass enforces, not a
+# syntactic one this grammar encodes. A concrete, disclosed consequence:
+# `(A B)` (two bare NAMEs) parses successfully as a syntactically well-formed
+# 2-tooth train under this grammar, even though no real J hook or fork has
+# an all-noun shape — lowering is expected to reject that combination with a
+# clear error, not this grammar.
+# =============================================================================
+
+program = { line } ;
+
+line = statement NEWLINE
+     | statement
+     | NEWLINE ;
+
+statement = assignment ;
+
+# Assignment (MA06 §4): `=.` (local) / `=:` (global), right-associative and
+# right-to-left evaluated — mirrors `apl.grammar`'s own `assignment`
+# production exactly (including chained assignment, `A=.B=.3`), with J's own
+# two assignment operators standing in for APL's one `ARROW`.
+assignment = NAME ASSIGN_LOCAL assignment
+           | NAME ASSIGN_GLOBAL assignment
+           | noun_expr ;
+
+# The core two-nonterminal, one-precedence-tier, right-to-left application
+# chain (MA06 §3), reused from `apl.grammar`'s `value_expr` verbatim in
+# shape (renamed nonterminals only). Ordered as ONE alternative per
+# starting-token class (a `term`-starting noun vs. a `verb_expr`-starting
+# one) with the dyadic continuation as an OPTIONAL trailing part of the
+# first alternative — NOT two competing "bare term" vs. "term then more"
+# alternatives, for the identical reason `apl.grammar` gives.
+noun_expr = term [ verb_expr noun_expr ]
+          | verb_expr noun_expr ;
+
+# A noun atom: a run of one or more juxtaposed NUMBER literals (stranding,
+# MA06 §4 inherits APL's own numeric-only restriction unchanged: `1 2 3`
+# strands, `A B` does not), a NAME, or a fully parenthesised noun_expr.
+term = NUMBER { NUMBER }
+     | NAME
+     | LPAREN noun_expr RPAREN ;
+
+# The other nonterminal (MA06 §3): verb-valued expressions. A bare
+# primitive verb, optionally with one adverb applied (a "derived verb",
+# e.g. `+/`); two verb_exprs joined by the `@` conjunction (compose,
+# right-recursive so `f@g@h` falls out naturally — MA06 §4 only specifies
+# the 2-verb case, but nothing restricts chaining, and this mirrors the
+# same "optional trailing continuation, recurse for free" idiom this
+# grammar already uses for assignment chaining); or — the one genuinely
+# new shape (see the header note above) — a parenthesised train.
+verb_expr = simple_verb [ AT verb_expr ]
+          | LPAREN verb_train RPAREN ;
+
+# One primitive verb glyph (MA06 §4's full primitive list), optionally
+# postfixed by one adverb. REDUCE and SCAN are the same two AR-2 primitives
+# APL already uses — adverbs, unlike verbs, mostly didn't need re-spelling
+# (MA06 §3). Like `apl.grammar`'s own REDUCE/SCAN restriction, stacking
+# adverbs (applying one to an already-adverbed verb) is not part of this
+# first cut's scope.
+simple_verb = verb_primitive [ REDUCE | SCAN ] ;
+
+verb_primitive = PLUS | MINUS | STAR | PERCENT | CARET | FLOOR | CEILING
+               | DOLLAR | IDOT | RAVEL | HASH
+               | EQ | NE | LT | GT | LE | GE ;
+
+# MA06 §3's one new production: a flat run of 2+ train teeth, parenthesised
+# only (see the header note above for the full ambiguity-avoidance
+# rationale and the "grammar builds the shape, lowering assigns hook/fork
+# meaning" division of labour).
+verb_train = train_tooth train_tooth { train_tooth } ;
+
+# One tooth of a train: a bare or adverbed primitive verb, a `@`-composed
+# verb, a parenthesised sub-verb or sub-train (so trains can nest, e.g.
+# `((f g) h)`), or a bare noun (only meaningful in a fork's leading
+# position — see the header note on why that restriction is not encoded
+# here syntactically).
+train_tooth = verb_expr
+            | term ;

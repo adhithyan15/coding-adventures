@@ -149,9 +149,7 @@ pub fn avl_delete<T: Ord + Clone>(
     root: Option<Box<AVLNode<T>>>,
     value: &T,
 ) -> Option<Box<AVLNode<T>>> {
-    let Some(mut node) = root else {
-        return None;
-    };
+    let mut node = root?;
 
     match value.cmp(&node.value) {
         Ordering::Less => node.left = avl_delete(node.left.take(), value),
@@ -335,10 +333,10 @@ fn bst_successor<'a, T: Ord>(
     best
 }
 
-fn bst_kth_smallest<'a, T: Ord>(
-    root: &'a Option<Box<AVLNode<T>>>,
+fn bst_kth_smallest<T: Ord>(
+    root: &Option<Box<AVLNode<T>>>,
     k: usize,
-) -> Option<&'a T> {
+) -> Option<&T> {
     if k == 0 {
         return None;
     }

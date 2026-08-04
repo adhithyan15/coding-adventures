@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-axiom-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `axiom` binary for Axiom (a subset)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-axiom-runtime = { path = "../axiom-runtime" }
+
+[[bin]]
+name = "axiom"
+path = "src/main.rs"

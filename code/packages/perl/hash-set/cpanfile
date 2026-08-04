@@ -1,0 +1,1 @@
+requires 'CodingAdventures::HashMap', '>= 0.1.0';

@@ -175,7 +175,7 @@ pub struct Bitset {
 fn words_needed(bit_count: usize) -> usize {
     // Integer ceiling division without overflow risk:
     // (bit_count + BITS_PER_WORD - 1) / BITS_PER_WORD
-    (bit_count + BITS_PER_WORD - 1) / BITS_PER_WORD
+    bit_count.div_ceil(BITS_PER_WORD)
 }
 
 /// Which word contains bit `i`? Simply i / 64.
@@ -1240,7 +1240,7 @@ impl Eq for Bitset {}
 // without consuming the operands. We also implement for owned values.
 
 // &Bitset & &Bitset
-impl<'a, 'b> BitAnd<&'b Bitset> for &'a Bitset {
+impl<'b> BitAnd<&'b Bitset> for &Bitset {
     type Output = Bitset;
     fn bitand(self, rhs: &'b Bitset) -> Bitset {
         self.and(rhs)
@@ -1256,7 +1256,7 @@ impl BitAnd for Bitset {
 }
 
 // &Bitset | &Bitset
-impl<'a, 'b> BitOr<&'b Bitset> for &'a Bitset {
+impl<'b> BitOr<&'b Bitset> for &Bitset {
     type Output = Bitset;
     fn bitor(self, rhs: &'b Bitset) -> Bitset {
         self.or(rhs)
@@ -1272,7 +1272,7 @@ impl BitOr for Bitset {
 }
 
 // &Bitset ^ &Bitset
-impl<'a, 'b> BitXor<&'b Bitset> for &'a Bitset {
+impl<'b> BitXor<&'b Bitset> for &Bitset {
     type Output = Bitset;
     fn bitxor(self, rhs: &'b Bitset) -> Bitset {
         self.xor(rhs)
@@ -1288,7 +1288,7 @@ impl BitXor for Bitset {
 }
 
 // !&Bitset
-impl<'a> Not for &'a Bitset {
+impl Not for &Bitset {
     type Output = Bitset;
     fn not(self) -> Bitset {
         Bitset::not(self)

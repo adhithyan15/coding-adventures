@@ -1,0 +1,24 @@
+% ============================================================================
+% electric-inductance-conversions.query.adj — worked lookups over the NIST inductance → henry table.
+% ============================================================================
+% The shape a consumer produces to convert an inductance given in a traditional CGS-EMU unit into
+% SI: it `import`s the grounded table and asks the engine to bind the factor. No arithmetic and
+% no factor is stated by the consumer; the engine returns the cell WITH the table's NIST citation
+% as its proof, on the CPU.
+%
+%   ? electric_inductance_to_henry(abhenry, $v)   % 0.000000001   (abhenry = 1.0 E-09 H, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS
+% rather than mis-converting across dimensions. The "abfarad" is an electric-CAPACITANCE unit (it
+% converts to the farad), NOT an inductance unit:
+%
+%   ? electric_inductance_to_henry(abfarad, $v)   % abstains (abfarad is capacitance → farad)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electric-inductance-conversions.query.adj
+% ============================================================================
+
+import "electric-inductance-conversions.adj"
+
+? electric_inductance_to_henry(abhenry, $v)   % expect 0.000000001  (exact NIST SP 811 B.9 factor)
+? electric_inductance_to_henry(abfarad, $v)   % expect abstain      (capacitance unit, wrong dimension)

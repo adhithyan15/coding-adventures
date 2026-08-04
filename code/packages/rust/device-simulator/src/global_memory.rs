@@ -166,6 +166,9 @@ impl SimpleGlobalMemory {
     /// * `host_bandwidth` - PCIe/NVLink bandwidth in bytes per cycle.
     /// * `host_latency` - Initial latency for host transfers in cycles.
     /// * `unified` - If true, host transfers are zero-cost (Apple).
+    // Each argument is a distinct, independent memory-model parameter; grouping
+    // them into a config struct would only add indirection for this constructor.
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         capacity: u64,
         bandwidth: f64,
@@ -265,8 +268,8 @@ impl SimpleGlobalMemory {
         self.stats.bytes_transferred += size as u64;
 
         let mut result = vec![0u8; size];
-        for i in 0..size {
-            result[i] = *self.data.get(&(address + i as u64)).unwrap_or(&0);
+        for (i, slot) in result.iter_mut().enumerate() {
+            *slot = *self.data.get(&(address + i as u64)).unwrap_or(&0);
         }
         Ok(result)
     }

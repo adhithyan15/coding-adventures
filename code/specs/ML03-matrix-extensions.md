@@ -8,9 +8,9 @@ These operations are required by ST01 (Statistics) and bring the Matrix
 closer to NumPy expressiveness while remaining a pure, dependency-free
 implementation in each language.
 
-All operations are added to the existing Matrix class/struct in each of
-the 9 language packages. This spec also creates the Swift matrix package
-(the 9th language) with full parity — both base operations and extensions.
+All operations are part of the Matrix class/struct in every established lane.
+New lanes must implement both the base operations and these extensions rather
+than claiming parity from directory presence alone.
 
 Existing methods (zeros, add, subtract, scale, transpose, dot) remain
 unchanged.
@@ -129,5 +129,6 @@ All 9 languages must produce identical results for:
 | Lua | `code/packages/lua/matrix/` | `src/coding_adventures/matrix/init.lua` |
 | Perl | `code/packages/perl/matrix/` | `lib/CodingAdventures/Matrix.pm` |
 | Swift | `code/packages/swift/matrix/` | **NEW** — full package with base + extensions |
+| Dart | `code/packages/dart/matrix/` | **NEW** — full package with base + extensions |
 
 **Dependencies:** None. Pure math only. Extends ML03.

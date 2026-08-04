@@ -1,0 +1,65 @@
+% ============================================================================
+% speed-conversions — speed-unit → metre-per-second factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `pressure-conversions.adj` / `energy-conversions.adj`: a
+% native tabular relation ingested VERBATIM from a published NIST conversion table.
+% Each row states the factor converting one speed (velocity) unit to the SI unit of
+% speed, the metre per second (m/s):
+%
+%     ? speed_to_metres_per_second(mile_per_hour, $mps)    % 0.44704   (a mph)
+%     ? speed_to_metres_per_second(foot_per_second, $mps)  % 0.3048    (a ft/s)
+%
+% It also pairs with the `arithmetic/speed.adj` formula (v = d/t): that formula
+% COMPUTES a speed from a distance and a time, and this table NORMALISES a speed
+% given in customary units to the SI unit — one grounded artifact feeding another
+% (write-once-use-many). Why a `table` and not several hand-written `relate` clauses:
+% this is exactly the shape reference data comes in — a published table, not prose.
+% The citable artifact IS the NIST conversion-factors table at the `locator` below;
+% every factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors
+% for units listed alphabetically"), and the whole table is defended by one provenance
+% envelope rather than repeating `source`/`locator`/`trust` on every row. Each `row`
+% lowers to a ground relation `speed_to_metres_per_second(unit, mps)`, so the exact
+% lookup above is the ordinary SLD binding query — the engine returns the factor WITH
+% this table's citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like pressure-conversions, these are EXACT defined factors, not
+% rounded ones): NIST SP 811 B.9 prints these six "Speed or velocity" factors in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here
+% as the plain decimal number of metres per second each unit names:
+%
+%     foot per second (ft/s)     3.048    E-01   →  0.3048
+%     foot per minute (ft/min)   5.08     E-03   →  0.00508
+%     inch per second (in/s)     2.54     E-02   →  0.0254
+%     mile per hour (mi/h)       4.4704   E-01   →  0.44704
+%     mile per minute (mi/min)   2.682 24 E+01   →  26.8224
+%     mile per second (mi/s)     1.609344 E+03   →  1609.344
+%
+% These six are exact because the foot, inch and international mile are exact by
+% definition (0.3048 m, 0.0254 m, 1609.344 m) and the minute and hour are exactly 60
+% and 3600 s, so each ratio terminates: e.g. mile/hour = 1609.344 / 3600 = 0.44704
+% exactly. Deliberately OMITTED: the foot per hour (8.466667 E-05, a repeating
+% ratio), the kilometre per hour (2.777778 E-01 = 1000/3600, repeating) and the knot
+% (5.144444 E-01), each of which NIST prints NOT in boldface (a rounded value, not a
+% single exact factor), so a `? speed_to_metres_per_second(kilometer_per_hour, $mps)`
+% (etc.) ABSTAINS rather than committing to a rounded value. The only claim this table
+% makes is "these are the exact factors NIST SP 811 B.9 prints" — which is exactly
+% what a byte-check against the cited table verifies. `trust authoritative` — a
+% primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — every factor is a verbatim cell of the cited
+% table, nothing asserted from memory.)
+% ============================================================================
+
+table speed_to_metres_per_second {
+    columns unit, mps
+
+    row (foot_per_second, 0.3048)
+    row (foot_per_minute, 0.00508)
+    row (inch_per_second, 0.0254)
+    row (mile_per_hour, 0.44704)
+    row (mile_per_minute, 26.8224)
+    row (mile_per_second, 1609.344)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

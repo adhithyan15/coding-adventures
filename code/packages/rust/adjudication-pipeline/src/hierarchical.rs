@@ -542,12 +542,12 @@ impl IdState {
         }
     }
     fn next_node_id(&mut self, prefix: &str) -> NodeId {
-        let id = NodeId::new(&format!("{}{}", prefix, self.next_node));
+        let id = NodeId::new(format!("{}{}", prefix, self.next_node));
         self.next_node += 1;
         id
     }
     fn next_edge_id(&mut self) -> EdgeId {
-        let id = EdgeId::new(&format!("ce{}", self.next_edge));
+        let id = EdgeId::new(format!("ce{}", self.next_edge));
         self.next_edge += 1;
         id
     }
@@ -1215,6 +1215,9 @@ fn term_to_json(t: &Term) -> serde_json::Value {
         Term::Num(n) => match n {
             logic_core::Number::Int(i) => serde_json::json!({ "num": *i }),
             logic_core::Number::Float(f) => serde_json::json!({ "num": *f }),
+            // Exact decimals carry unbounded digits: serialise the full-precision
+            // string so a consumer's JSON-number parse can't silently truncate it.
+            logic_core::Number::Exact(d) => serde_json::json!({ "num": d.to_string() }),
         },
         Term::Str(s) => serde_json::json!({ "str": s }),
         Term::Var(v) => serde_json::json!({ "var": v.to_string() }),

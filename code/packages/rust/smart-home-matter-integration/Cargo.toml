@@ -1,0 +1,11 @@
+[package]
+name = "smart-home-matter-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Matter application adapter for the normalized smart-home runtime"
+license = "MIT"
+
+[dependencies]
+matter-core = { path = "../matter-core" }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }

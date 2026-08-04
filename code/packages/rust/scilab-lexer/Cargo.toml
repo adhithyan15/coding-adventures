@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-scilab-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the Scilab numerical/array frontend (MA10 MA-10b)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

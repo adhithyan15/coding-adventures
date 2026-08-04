@@ -1,0 +1,5 @@
+% Worked binding queries over the vitamin recall library.
+import "vitamin-edges.adj"
+
+? deficiency_causes(thiamine, $Disease)  % expect beriberi
+? classic_finding(cobalamin, $Finding)  % expect subacute_combined_degeneration

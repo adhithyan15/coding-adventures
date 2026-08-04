@@ -43,6 +43,7 @@ WriteMakefile(
     # available, otherwise falls back to the inline graph implementation).
     PREREQ_PM => {
         'Digest::SHA'     => '0',
+        'Encode'          => '0',
         'JSON::PP'        => '2.0',
         'File::Find'      => '0',
         'File::Spec'      => '0',

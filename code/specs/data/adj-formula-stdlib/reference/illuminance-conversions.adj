@@ -1,0 +1,53 @@
+% ============================================================================
+% illuminance-conversions — illuminance-unit → lux factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `magnetic-flux-density-conversions.adj` and the other
+% NIST-cited conversion tables: a native tabular relation ingested VERBATIM from a
+% published NIST conversion table. The row states the factor converting the CGS
+% illuminance unit to the SI coherent unit of illuminance, the lux (lx):
+%
+%     ? illuminance_to_lux(phot, $v)   % 10000
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-
+% density tables: where those normalise their own quantity, this one normalises an
+% ILLUMINANCE (luminous flux per unit area, one lux being one lumen per square metre).
+% Put a light level given in the CGS phot into SI first, then reason (write-once-
+% use-many). Why a `table` and not a hand-written `relate` clause: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable artifact IS
+% the NIST conversion-factors table at the `locator` below; the factor here is a CELL of
+% NIST Special Publication 811, Appendix B.9 ("Factors for units listed
+% alphabetically"), defended by one provenance envelope. Each `row` lowers to a ground
+% relation `illuminance_to_lux(unit, lux)`, so the exact lookup above is the ordinary SLD
+% binding query — the engine returns the factor WITH this table's citation as its proof,
+% on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like force-/viscosity-conversions, only the EXACT defined factor gets a
+% row, not the rounded ones): NIST SP 811 B.9 prints the "phot" illuminance factor in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here as
+% the plain decimal number of lux it names:
+%
+%     phot (ph)   1.0 E+04  →  10000
+%
+% This is exact because the phot is a coherent CGS unit — one phot is one lumen per
+% square centimetre, i.e. exactly 10⁴ lux. It terminates; nothing here is a rounded
+% measurement. NIST's other illuminance rows are customary units whose factors NIST
+% prints in plain (non-boldface) type as ROUNDED values — e.g. the "footcandle" (lumen
+% per square foot) at 1.076 391 E+01 lux — so they are NOT given rows here; a
+% `? illuminance_to_lux(footcandle, $v)` ABSTAINS rather than committing to a rounded
+% factor. The only claim this table makes is "this is the exact factor NIST SP 811 B.9
+% prints" — which is exactly what a byte-check against the cited table verifies.
+% `trust authoritative` — a primary, re-fetchable standards reference. (See
+% ADJ-TABLES.md; and feedback_nothing_human_authored — the factor is a verbatim cell of
+% the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table illuminance_to_lux {
+    columns unit, lux
+
+    row (phot, 10000)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

@@ -1,0 +1,63 @@
+% Preamble for "Urdu, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only. The Urdu fallback font is vendored so local and CI builds match.
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+% bidi, loaded by polyglossia for Urdu, requires color-related packages to be
+% loaded first on TeX Live.
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguage[numerals=western]{urdu}
+
+\newfontfamily\urdufont[
+  Path=../../_fonts/,
+  Script=Arabic,
+  Language=Urdu,
+  BoldFont=NotoNaskhArabic-Static.ttf,
+  ItalicFont=NotoNaskhArabic-Static.ttf,
+  BoldItalicFont=NotoNaskhArabic-Static.ttf
+]{NotoNaskhArabic-Static.ttf}
+
+\hypersetup{
+  pdftitle={Urdu, Step by Step, Root by Root},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven contemporary Urdu curriculum},
+  pdfkeywords={Urdu, etymology, script, language learning, Indo-Aryan}
+}
+
+\newcommand{\ur}[1]{\texturdu{#1}}
+
+\newtcolorbox{scriptstep}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Read only what this expression needs}
+}
+\newtcolorbox{rootweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Where the expression came from}
+}
+\newtcolorbox{usage}{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Use it now}
+}
+\newtcolorbox{checkpoint}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={One-minute checkpoint}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}

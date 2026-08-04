@@ -1,0 +1,4 @@
+--js
+tests/diff/self-assign/input/a.js
+--compilation_level
+SIMPLE

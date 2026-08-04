@@ -1,64 +1,64 @@
-/// Pipe -- a unidirectional byte stream between two endpoints.
-///
-/// A pipe is the simplest IPC mechanism. Think of a pneumatic tube in an old
-/// bank: you stuff a message capsule in one end, and it arrives at the other
-/// end. The tube only goes one direction, and messages arrive in the order
-/// they were sent (FIFO).
-///
-/// Under the hood, a pipe is a **circular buffer** -- a fixed-size array where
-/// the write position wraps around to the beginning when it reaches the end.
-/// This avoids the need to shift data forward after each read.
-///
-/// ## Circular Buffer Mechanics
-///
-/// Imagine a buffer of 8 bytes (we use 4096 in practice, but 8 is easier to
-/// draw):
-///
-/// ```text
-///   Initial state (empty):
-///     +-+-+-+-+-+-+-+-+
-///     | | | | | | | | |    read_pos = 0, write_pos = 0
-///     +-+-+-+-+-+-+-+-+
-///      ^R              ^W  (R and W at same position = empty)
-///
-///   After writing "hello" (5 bytes):
-///     +-+-+-+-+-+-+-+-+
-///     |h|e|l|l|o| | | |    read_pos = 0, write_pos = 5
-///     +-+-+-+-+-+-+-+-+
-///      ^R          ^W
-///
-///   After reading 3 bytes ("hel"):
-///     +-+-+-+-+-+-+-+-+
-///     | | | |l|o| | | |    read_pos = 3, write_pos = 5
-///     +-+-+-+-+-+-+-+-+
-///            ^R    ^W
-///
-///   Wrapping -- write "fghij" (wraps around the end):
-///     +-+-+-+-+-+-+-+-+
-///     |i|j| |l|o|f|g|h|    read_pos = 3, write_pos = 2
-///     +-+-+-+-+-+-+-+-+
-///        ^W  ^R             write_pos BEHIND read_pos = wrapped
-/// ```
-///
-/// ## EOF and Broken Pipe
-///
-/// Two important signals arise from reference counting:
-///
-/// ```text
-///   +---------------------+------------------------------------------+
-///   | Condition           | Result                                   |
-///   +---------------------+------------------------------------------+
-///   | writer_count == 0   | Read returns empty (EOF). No more data   |
-///   | AND buffer empty    | will ever arrive.                        |
-///   +---------------------+------------------------------------------+
-///   | reader_count == 0   | Write returns Err(BrokenPipe). Nobody    |
-///   |                     | is reading.                              |
-///   +---------------------+------------------------------------------+
-/// ```
-///
-/// In a shell pipeline like `ls | grep foo`, when `ls` finishes and closes
-/// its write end, `grep` sees EOF on the read end. Conversely, if `grep`
-/// exits early, `ls` gets SIGPIPE (broken pipe).
+//! Pipe -- a unidirectional byte stream between two endpoints.
+//!
+//! A pipe is the simplest IPC mechanism. Think of a pneumatic tube in an old
+//! bank: you stuff a message capsule in one end, and it arrives at the other
+//! end. The tube only goes one direction, and messages arrive in the order
+//! they were sent (FIFO).
+//!
+//! Under the hood, a pipe is a **circular buffer** -- a fixed-size array where
+//! the write position wraps around to the beginning when it reaches the end.
+//! This avoids the need to shift data forward after each read.
+//!
+//! ## Circular Buffer Mechanics
+//!
+//! Imagine a buffer of 8 bytes (we use 4096 in practice, but 8 is easier to
+//! draw):
+//!
+//! ```text
+//!   Initial state (empty):
+//!     +-+-+-+-+-+-+-+-+
+//!     | | | | | | | | |    read_pos = 0, write_pos = 0
+//!     +-+-+-+-+-+-+-+-+
+//!      ^R              ^W  (R and W at same position = empty)
+//!
+//!   After writing "hello" (5 bytes):
+//!     +-+-+-+-+-+-+-+-+
+//!     |h|e|l|l|o| | | |    read_pos = 0, write_pos = 5
+//!     +-+-+-+-+-+-+-+-+
+//!      ^R          ^W
+//!
+//!   After reading 3 bytes ("hel"):
+//!     +-+-+-+-+-+-+-+-+
+//!     | | | |l|o| | | |    read_pos = 3, write_pos = 5
+//!     +-+-+-+-+-+-+-+-+
+//!            ^R    ^W
+//!
+//!   Wrapping -- write "fghij" (wraps around the end):
+//!     +-+-+-+-+-+-+-+-+
+//!     |i|j| |l|o|f|g|h|    read_pos = 3, write_pos = 2
+//!     +-+-+-+-+-+-+-+-+
+//!        ^W  ^R             write_pos BEHIND read_pos = wrapped
+//! ```
+//!
+//! ## EOF and Broken Pipe
+//!
+//! Two important signals arise from reference counting:
+//!
+//! ```text
+//!   +---------------------+------------------------------------------+
+//!   | Condition           | Result                                   |
+//!   +---------------------+------------------------------------------+
+//!   | writer_count == 0   | Read returns empty (EOF). No more data   |
+//!   | AND buffer empty    | will ever arrive.                        |
+//!   +---------------------+------------------------------------------+
+//!   | reader_count == 0   | Write returns Err(BrokenPipe). Nobody    |
+//!   |                     | is reading.                              |
+//!   +---------------------+------------------------------------------+
+//! ```
+//!
+//! In a shell pipeline like `ls | grep foo`, when `ls` finishes and closes
+//! its write end, `grep` sees EOF on the read end. Conversely, if `grep`
+//! exits early, `ls` gets SIGPIPE (broken pipe).
 
 use crate::IpcError;
 

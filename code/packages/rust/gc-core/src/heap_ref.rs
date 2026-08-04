@@ -65,6 +65,29 @@ impl HeapRef {
     pub fn is_null(self) -> bool {
         self.0 == 0
     }
+
+    /// A raw pointer to this `HeapRef`'s interior address word.
+    ///
+    /// Lets a caller that embeds a `HeapRef` inside its own root storage (a VM
+    /// register, a global slot, ...) hand that exact address to a precise GC
+    /// root walk (`FlatHeap::collect_mixed`/`collect_compacting`) as a root
+    /// slot: the collector reads the current address through this pointer,
+    /// and — under a compacting collection — writes the post-move address
+    /// back through it, transparently updating the `HeapRef` in place. Taking
+    /// `&mut self.0` addresses the interior field directly, so this is sound
+    /// regardless of `HeapRef`'s layout; no `#[repr(transparent)]` needed.
+    ///
+    /// ```
+    /// use gc_core::HeapRef;
+    ///
+    /// let mut r = HeapRef::new(0x10042);
+    /// let p = r.as_mut_ptr();
+    /// unsafe { assert_eq!(*p, 0x10042) };
+    /// ```
+    #[inline]
+    pub fn as_mut_ptr(&mut self) -> *mut usize {
+        &mut self.0
+    }
 }
 
 impl std::fmt::Display for HeapRef {
@@ -74,5 +97,23 @@ impl std::fmt::Display for HeapRef {
         } else {
             write!(f, "ref({:#x})", self.0)
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn as_mut_ptr_reads_and_writes_through_to_the_ref() {
+        let mut r = HeapRef::new(0x1000);
+        let p = r.as_mut_ptr();
+        unsafe {
+            assert_eq!(*p, 0x1000);
+            // A compacting collector's root-slot rewrite writes through exactly
+            // this pointer — simulate that here, independent of FlatHeap.
+            *p = 0x2000;
+        }
+        assert_eq!(r.addr(), 0x2000, "the write through as_mut_ptr updated the HeapRef itself");
     }
 }

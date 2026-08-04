@@ -614,7 +614,7 @@ impl ProcessManager {
             parent.children.iter().find(|&&child_pid| {
                 self.process_table
                     .get(&child_pid)
-                    .map_or(false, |c| c.is_zombie())
+                    .is_some_and(|c| c.is_zombie())
             }).copied()
         };
 

@@ -11,3 +11,6 @@ compute-ir        = { path = "../compute-ir" }
 executor-protocol = { path = "../executor-protocol" }
 matrix-runtime    = { path = "../matrix-runtime" }
 matrix-profile    = { path = "../matrix-profile" }
+
+[dev-dependencies]
+matrix-ir-json    = { path = "../matrix-ir-json" }

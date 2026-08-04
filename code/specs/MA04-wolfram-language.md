@@ -93,13 +93,15 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   (with `checked_mul`) before allocation (§19.5). No grammar change.
 - **W-22 — the `cas-*` function surface under Wolfram names.** *(in
   progress — see §24.)* Wires the existing `cas-*` crates in one head at a
-  time: `Simplify` (a thin call into `cas-simplify`'s `simplify()`) and
-  `Expand` (a thin call into `cas-simplify`'s `expand()`) are both
-  delivered — each the same function its Macsyma counterpart calls, so the
-  two languages agree on every result this crate can produce. Remaining:
-  `Factor`, `Solve`, `D`, `Integrate`, each its own item — no grammar
-  change for any of them (all ordinary `Head[args]` forms the existing
-  grammar already parses).
+  time: `Simplify` (a thin call into `cas-simplify`'s `simplify()`),
+  `Expand` (a thin call into `cas-simplify`'s `expand()`), `Factor` (a
+  direct call into `symbolic-vm`'s own `factor_handler`), `D` (a direct
+  call into `symbolic-vm`'s own `differentiate`), and `Integrate` (a direct
+  call into `symbolic-vm`'s own `integrate_expr`, indefinite form only) are
+  all delivered — each the same function its Macsyma counterpart calls, so
+  the two languages agree on every result this crate can produce.
+  Remaining: `Solve`, each its own item — no grammar change (an ordinary
+  `Head[args]` form the existing grammar already parses).
 
 ## §3 The supported surface (the grammar)
 
@@ -2098,7 +2100,7 @@ it). `ReplaceRepeated` retains its §22.4 hard iteration cap
 (`REPLACE_GROWTH_NODE_CAP`) — the `//.` operator lowers to the very same head, so
 the DoS bounds apply identically whether written as operator or `Head[args]`.
 
-## §24 W-22 the `cas-*` function surface under Wolfram names — `Simplify`, `Expand` (in progress)
+## §24 W-22 the `cas-*` function surface under Wolfram names — `Simplify`, `Expand`, `Factor`, `D` (in progress)
 
 W-22 starts closing §2's previously unnumbered "Future" item: wiring the
 existing `cas-*` algorithm crates under Wolfram's own head names. Unlike
@@ -2154,11 +2156,121 @@ gap):** `expand` does not collect like terms — e.g. `Expand[(x+1)^2]`
 produces `1 + x + x + x*x`, not the fully-collected `1 + 2*x + x^2` —
 tracked as a separate follow-up (see `cas-simplify`'s own module docs).
 
-### §24.3 Remaining (not yet delivered)
+### §24.3 `Factor` (delivered)
 
-`Factor`, `Solve`, `D`, `Integrate`, and the rest of §2's original list —
-each is a separate future item, no grammar change required for any of them
-(all are ordinary `Head[args]` forms the existing grammar already parses).
+`Factor[expr]` is a direct call into `symbolic_vm::handlers::factor_handler`
+— **the exact function** Macsyma's own `factor()` surface function calls
+(`macsyma-runtime`'s `factor_handler`). Unlike `Simplify`/`Expand` (thin
+calls into the standalone `cas-simplify` crate), `Factor`'s implementation
+lives directly inside `symbolic-vm` itself, so this wiring reuses that
+function directly rather than going through a separate `cas-*` crate;
+`factor_handler` was made `pub` in `symbolic-vm` specifically for this
+cross-language reuse (see that crate's own changelog). No algorithm is
+reimplemented; a test pins both languages' call sites to agree on the same
+input, exactly like `Simplify`/`Expand`'s own parity tests.
+
+`factor_handler` itself factors a univariate integer polynomial (via
+`cas_factor::factor_integer_polynomial`), or recognises one of a handful of
+common multivariate patterns (perfect square/cube, difference of squares,
+cubic identities, a common symbolic/integer term to pull out, bivariate and
+n-variate Hensel lifting), falling back to the unevaluated form when none
+apply — see `symbolic-vm`'s own module docs for the full algorithm
+inventory (shared, not reimplemented, with Macsyma).
+
+Like `Simplify` and `Expand`, `Factor` is an ordinary eager `Head[args]`
+form requiring exactly one argument; any other arity leaves the form
+unevaluated. That arity check lives inside `factor_handler` itself, so
+(unlike `simplify_handler`/`expand_handler`, which must unwrap a single
+expression argument themselves before calling a function that only takes
+one bare expression) the Wolfram wiring needs no arity check of its own.
+
+```
+Factor[x^2 - 1]     (* (1 + x) * (-1 + x) *)
+Factor[x + y]       (* x + y — unevaluated, no recognised pattern *)
+```
+
+### §24.4 `D` (delivered)
+
+`D[expr, x]` is a thin call into `symbolic_vm::handlers::differentiate` —
+**the exact pipeline** Macsyma's own `D` already runs via
+`derivative_handler` (`macsyma-runtime`'s own dispatch). Unlike
+`Simplify`/`Expand` (thin calls into the standalone `cas-simplify` crate),
+the differentiation logic lives directly inside `symbolic-vm` itself, same
+as `Factor`; `differentiate` was extracted out of `derivative_handler`'s
+closure body and made `pub` in `symbolic-vm` specifically for this
+cross-language reuse (see that crate's own changelog). No algorithm is
+reimplemented; a test pins both languages' call sites to agree on the same
+input, exactly like `Simplify`/`Expand`/`Factor`'s own parity tests.
+
+`differentiate` applies the standard sum/product/quotient/power/chain
+rules plus the elementary transcendental functions (`Sin`, `Cos`, `Exp`,
+`Log`, `Sqrt`, the inverse and hyperbolic trig functions, …), fully
+recursing `diff` and then running the result back through the VM's `eval`
+so constant folding and any nested rule output collapse into one final
+form — see `symbolic-vm`'s own module docs for the full rule inventory
+(shared, not reimplemented, with Macsyma).
+
+Unlike `Factor` — whose arity check lives inside `factor_handler` itself,
+so the Wolfram wiring needs none of its own — `derivative_handler`'s
+existing arity contract *panics* on the wrong argument count (a genuine
+internal invariant for `symbolic-vm`'s own dispatch table, not a fail-soft
+contract). Since `D` still needs Wolfram's usual "leave it unevaluated"
+behaviour, `D`'s wrapper validates the shape itself before calling through:
+exactly two arguments, and the second must be a bare symbol.
+
+```
+D[x^3, x]      (* 3 * x^2 *)
+D[x^2, 2]      (* x^2 unevaluated — second argument isn't a symbol *)
+```
+
+### §24.5 `Integrate` (delivered, indefinite form only)
+
+`Integrate[expr, x]` is a thin call into
+`symbolic_vm::handlers::integrate_expr` — **the exact indefinite-integral
+pipeline** `integrate_handler`'s own 2-argument branch runs, which is in
+turn the same pipeline Macsyma's own `integrate` surface function already
+calls. Unlike `Simplify`/`Expand` (thin calls into the standalone
+`cas-simplify` crate), the integration logic lives directly inside
+`symbolic-vm` itself, same as `Factor`/`D`; `integrate_expr` was extracted
+out of `integrate_handler`'s closure body and made `pub` in `symbolic-vm`
+specifically for this cross-language reuse (see that crate's own
+changelog). No algorithm is reimplemented; a test pins both languages'
+call sites to agree on the same input, exactly like
+`Simplify`/`Expand`/`Factor`/`D`'s own parity tests.
+
+`integrate_expr` tries shape-specific closed forms in sequence (polynomial
+power rule, elementary transcendentals, the Weierstrass trig-rational
+substitution, incomplete-elliptic recognition, …), falling back to a
+generic tabular integration-by-parts sweep when none apply — see
+`symbolic-vm`'s own module docs for the full algorithm inventory (shared,
+not reimplemented, with Macsyma).
+
+Like `D`, `Integrate`'s underlying handler (`integrate_handler`) has an
+existing arity contract that *panics* on the wrong argument count (2 or 4
+expected — a genuine internal invariant for `symbolic-vm`'s own dispatch,
+not a fail-soft contract). Since `Integrate` still needs Wolfram's usual
+"leave it unevaluated" behaviour, `Integrate`'s wrapper validates the shape
+itself before calling through: exactly two arguments, and the second must
+be a bare symbol.
+
+Only the indefinite (2-argument) form is wired under the Wolfram name here.
+The 4-argument definite-integral shape `integrate_handler` also supports
+internally (this repo's flat `Integrate[f, x, a, b]` convention for the
+complete-elliptic-integral recognisers) is deliberately not exposed yet —
+real Wolfram spells a definite integral `Integrate[f, {x, a, b}]`, bounds
+wrapped in a `List`, a different shape needing its own `List`-destructuring
+wrapper as a follow-up rather than a same-shape passthrough.
+
+```
+Integrate[x^2, x]      (* x^3 / 3 *)
+Integrate[x^2, 2]      (* x^2 unevaluated — second argument isn't a symbol *)
+```
+
+### §24.6 Remaining (not yet delivered)
+
+`Solve`, and the rest of §2's original list — each is a separate future
+item, no grammar change required (an ordinary `Head[args]` form the
+existing grammar already parses).
 
 ### §6 References
 

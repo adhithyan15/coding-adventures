@@ -56,6 +56,57 @@ def add(*args: Any) -> Any:
     return total
 
 
+def shift_left(*args: Any) -> Any:
+    """Ruby's ``<<`` (shift operator) — polymorphic like ``add``, but Python's
+    own ``<<`` doesn't line up for every receiver type the way ``+`` did, so
+    this dispatches explicitly on the runtime tag:
+
+    | Receiver | Behaviour                                                  |
+    |----------|-------------------------------------------------------------|
+    | ``list`` | push each RHS operand IN PLACE (``.extend``), returns the   |
+    |          | (mutated) receiver — Ruby ``Array#<<`` mutates, unlike ``+``|
+    |          | which returns a fresh array. Chains left-to-right: ``a << 1 |
+    |          | << 2`` pushes both (the frontend lowers a ``<<`` chain to   |
+    |          | ONE variadic call, the same convention ``add`` folds over). |
+    | ``str``  | concatenates and returns a NEW string, via Python's own     |
+    |          | ``+`` (which already raises ``TypeError`` for a non-``str`` |
+    |          | RHS — Ruby raises ``TypeError`` too, so no explicit check   |
+    |          | is needed, matching ``add``'s String arm).                  |
+    | numeric  | bitwise shift. Python ints are ARBITRARY PRECISION, so this |
+    |          | needs NO saturation logic — ``1 << 63`` naturally produces  |
+    |          | the true mathematical result, matching real Ruby's own      |
+    |          | bignum-growing ``<<`` MORE faithfully than the fixed-width  |
+    |          | C/Go/Rust backends (which saturate at ``INT64_MAX`` as a    |
+    |          | documented v0 limitation — a cross-backend divergence for   |
+    |          | overflow inputs specifically, not a bug here). Python's     |
+    |          | native ``<<``/``>>`` reject a NEGATIVE shift count (raise   |
+    |          | ``ValueError``), so a negative amount is handled explicitly:|
+    |          | it REVERSES direction, a right shift by the absolute value  |
+    |          | (``5 << -1 == 5 >> 1 == 2``), matching Ruby.                |
+    """
+    if not args:
+        return 0
+    first = args[0]
+    if isinstance(first, list):
+        first.extend(args[1:])
+        return first
+    if isinstance(first, str):
+        out = first
+        for a in args[1:]:
+            out = out + a
+        return out
+    acc = first
+    for a in args[1:]:
+        # `bool` is an `int` subclass in Python but is not a SIR shift
+        # amount (mirrors `mul`'s `str`/`list` × `int` guard above); a
+        # non-numeric operand contributes a 0 shift, matching the C/Go/Rust
+        # backends' `shift_amount_arg` catch-all.
+        is_amount = isinstance(a, (int, float)) and not isinstance(a, bool)
+        amount = int(a) if is_amount else 0
+        acc = acc >> -amount if amount < 0 else acc << amount
+    return acc
+
+
 def sub(*args: Any) -> Any:
     """Variadic difference; ``sub(x)`` negates, ``sub()`` is ``0``."""
     if not args:
@@ -201,3 +252,15 @@ def lt(a: Any, b: Any) -> bool:
 def gt(a: Any, b: Any) -> bool:
     """Greater-than."""
     return bool(a > b)
+
+
+def le(a: Any, b: Any) -> bool:
+    """Less-than-or-equal.  Native ``<=`` — so `1 <= 1.0` is true (Python, like
+    Ruby, compares an int and a float by value).  The Ruby frontend lowers
+    `a <= b` to a `<=` builtin, previously unlowered on this backend."""
+    return bool(a <= b)
+
+
+def ge(a: Any, b: Any) -> bool:
+    """Greater-than-or-equal — the mirror of :func:`le`."""
+    return bool(a >= b)

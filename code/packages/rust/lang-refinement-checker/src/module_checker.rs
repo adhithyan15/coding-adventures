@@ -1291,7 +1291,7 @@ mod tests {
 
         let mut checker = ModuleChecker::new(ModuleScope::new());
         // Must not panic and output Vecs must stay within their limits.
-        let result = checker.check_function(&sig, &*node);
+        let result = checker.check_function(&sig, &node);
         assert!(result.call_sites.len() <= MAX_MODULE_CALL_SITES);
         assert!(result.return_sites.len() <= MAX_MODULE_RETURN_SITES);
     }

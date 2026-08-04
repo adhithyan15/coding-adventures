@@ -1,0 +1,92 @@
+% ============================================================================
+% respiratory-quotient.adj — the respiratory quotient from CO2 production and O2 consumption
+% (RQ = VCO2 / VO2) in the ADJ standard library.
+% ============================================================================
+% The respiratory-quotient entry of the *clinical* track — the ratio of the carbon dioxide a person PRODUCES
+% to the oxygen they CONSUME over the same period, measured at the whole-body level by indirect calorimetry.
+% RQ is a window onto which fuel is being burned: oxidising pure carbohydrate gives an RQ of 1.0 (equal CO2 out
+% and O2 in), pure fat about 0.7, and a mixed diet roughly 0.8. It is used in nutrition support (to titrate
+% feeding and avoid overfeeding, which drives RQ up toward and past 1.0) and it feeds the respiratory-exchange
+% term of the alveolar gas equation. THE RESPIRATORY QUOTIENT IS THE VOLUME OF CO2 PRODUCED DIVIDED BY THE
+% VOLUME OF O2 CONSUMED — i.e. RQ = VCO2 / VO2.
+%
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with two exact rearrangements
+% (the CO2 production and the O2 consumption a given RQ implies). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds VCO2 and VO2 from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "respiratory-quotient.adj"
+%     observe co2_production(300)   % "…VCO2 300 mL/min…"  (span cited by the model)
+%     observe o2_consumption(400)    % "…VO2 400 mL/min…"   (span cited by the model)
+%     ? respiratory_quotient(co2_production, o2_consumption)   % engine → 0.75 (dimensionless)
+%
+% Structurally this is a PLAIN RATIO — one measured quantity over another, no constants at all — a shape
+% distinct from the constant-scaled-product-over-a-value (elimination-half-life), single-value-over-a-constant
+% (arm-span-height) and sum-with-a-constant (mid-parental-height, expected-aa-gradient) forms of the other
+% clinical libraries. There are NO embedded constants; VCO2 and VO2 are the two formal parameters bound at
+% apply time, so every value the engine returns is exact.
+%
+%   respiratory_quotient(co2_production, o2_consumption) = co2_production / o2_consumption % (dimensionless)
+%   co2_production(respiratory_quotient, o2_consumption) = respiratory_quotient * o2_consumption % (solved for VCO2)
+%   o2_consumption(co2_production, respiratory_quotient) = co2_production / respiratory_quotient % (solved for VO2)
+%
+% The three formulas COMPOSE and invert cleanly around the worked case VCO2 = 300, VO2 = 400 (RQ =
+% 300 / 400 = 0.75): the `respiratory_quotient` a consumer computes is exactly the value each inverse formula
+% back-solves to recover its own measured input (300, 400).
+%
+% NOTE ON UNITS AND MODELLING: VCO2 and VO2 are volumes per unit time in the SAME unit (e.g. mL/min), so RQ is
+% dimensionless; it must lie between about 0.7 (pure fat) and 1.0 (pure carbohydrate) physiologically. This is
+% the WHOLE-BODY respiratory quotient measured by indirect calorimetry; the closely related respiratory
+% EXCHANGE ratio (R) can differ transiently from RQ during hyperventilation or non-steady state (a distinction
+% the source notes but this library does not model). Interpreting a measured RQ (fuel mix, overfeeding) is the
+% clinician's task, stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted RQ expression — because that one expression
+% (VCO2 / VO2) sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls
+% article "Physiology, Respiratory Quotient", where it is printed as the typed, all-ASCII, operand-complete
+% expression "RQ = Vol CO2 released/Vol O2 absorbed". Each `formula` therefore carries the provenance envelope
+% every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `co2_production`, `o2_consumption` and `respiratory_quotient` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary respiratory_quotient_vocab {
+    define co2_production        : finding  surface "CO2 production", "VCO2", "carbon dioxide production", "volume of CO2 released" % vol/time (e.g. mL/min)
+    define o2_consumption        : finding  surface "O2 consumption", "VO2", "oxygen consumption", "volume of O2 absorbed"          % vol/time (e.g. mL/min)
+    define respiratory_quotient  : finding  surface "respiratory quotient", "RQ", "respiratory ratio"                               % dimensionless
+}
+
+% ----------------------------------------------------------------------------
+% The respiratory quotient, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the RQ expression from the StatPearls article (a quote is
+% required on a shipped formula). Each is an exact expression in the measured values, so the engine returns
+% each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook respiratory_quotient_laws {
+    use respiratory_quotient_vocab
+
+    % Respiratory quotient — the CO2 produced over the O2 consumed.
+    formula respiratory_quotient(co2_production, o2_consumption) = co2_production / o2_consumption
+        source "RQ = Vol CO2 released/Vol O2 absorbed"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK531494/"
+        trust authoritative
+
+    % CO2 production — the same expression solved for VCO2. Defended by the SAME clause.
+    formula co2_production(respiratory_quotient, o2_consumption) = respiratory_quotient * o2_consumption
+        source "RQ = Vol CO2 released/Vol O2 absorbed"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK531494/"
+        trust authoritative
+
+    % O2 consumption — the same expression solved for VO2, the third reading of the one law.
+    formula o2_consumption(co2_production, respiratory_quotient) = co2_production / respiratory_quotient
+        source "RQ = Vol CO2 released/Vol O2 absorbed"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK531494/"
+        trust authoritative
+}

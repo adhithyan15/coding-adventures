@@ -1,0 +1,62 @@
+% ============================================================================
+% exposure-conversions — exposure-unit → coulomb-per-kilogram factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `absorbed-dose-conversions.adj`, `dose-equivalent-conversions.adj`,
+% `radioactivity-conversions.adj` and the other NIST-cited conversion tables: a native tabular
+% relation ingested VERBATIM from a published NIST conversion table. The row states the factor
+% converting the traditional unit of EXPOSURE (the ionization a beam of x- or gamma radiation
+% produces in air — the electric charge liberated per unit mass of air) to the SI coherent
+% derived unit, the coulomb per kilogram (C/kg):
+%
+%     ? exposure_to_coulomb_per_kilogram(roentgen, $v)   % 0.000258
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent tables. It completes the
+% radiological trio: RADIOACTIVITY (the curie → the becquerel) counts disintegrations in the
+% source per second; ABSORBED DOSE (the rad → the gray) measures the energy the radiation
+% deposits per kilogram of the irradiated body; DOSE EQUIVALENT (the rem → the sievert)
+% weights that energy for biological damage; and EXPOSURE (the roentgen → the coulomb per
+% kilogram) measures something else again — the ionizing ability of the beam itself, as the
+% charge it liberates per kilogram of AIR, before any body is even present. The traditional
+% unit is the roentgen (R); the SI unit is the coulomb per kilogram. Put an exposure given in
+% roentgen into SI first, then reason (write-once-use-many). Why a `table` and not a
+% hand-written `relate` clause: this is exactly the shape reference data comes in — a
+% published table, not prose. The citable artifact IS the NIST conversion-factors table at the
+% `locator` below; the factor here is a CELL of NIST Special Publication 811, Appendix B.9
+% ("Factors for units listed alphabetically"), defended by one provenance envelope. Each `row`
+% lowers to a ground relation `exposure_to_coulomb_per_kilogram(unit, ckg)`, so the exact
+% lookup above is the ordinary SLD binding query — the engine returns the factor WITH this
+% table's citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like absorbed-dose-/dose-equivalent-/radioactivity-conversions, only the EXACT
+% defined factor gets a row): NIST SP 811 B.9 prints the "roentgen" exposure factor in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here as the
+% plain decimal number of coulombs per kilogram it names:
+%
+%     roentgen (R)   2.58 E-04  →  0.000258
+%
+% This is exact because the roentgen is DEFINED as exactly 2.58 x 10^-4 coulomb per kilogram
+% (one roentgen liberates exactly 2.58 x 10^-4 C of charge per kilogram of air, by definition —
+% the same defining relation NIST prints in boldface). It terminates; nothing here is a rounded
+% measurement. This table is SPECIFIC to exposure: a unit of a DIFFERENT radiological quantity
+% — e.g. the "rad", which NIST SP 811 B.9 lists separately as an ABSORBED-DOSE unit converting
+% to the gray, NOT the coulomb per kilogram (see `absorbed-dose-conversions.adj`) — therefore
+% gets no row here, and a `? exposure_to_coulomb_per_kilogram(rad, $v)` ABSTAINS rather than
+% mis-converting an absorbed-dose unit as if it were an exposure unit. The only claim this table
+% makes is "this is the exact factor NIST SP 811 B.9 prints for the roentgen's conversion to the
+% coulomb per kilogram" — which is exactly what a byte-check against the cited table verifies.
+% `trust authoritative` — a primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — the factor is a verbatim cell of the cited table, nothing
+% asserted from memory.)
+% ============================================================================
+
+table exposure_to_coulomb_per_kilogram {
+    columns unit, coulomb_per_kilogram
+
+    row (roentgen, 0.000258)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

@@ -1,3 +1,7 @@
+// `val.max(lo).min(hi)` is kept over `f64::clamp`: for a NaN input the max/min
+// chain yields a clamped bound, whereas `f64::clamp` would propagate NaN — the
+// max/min form preserves the intended saturating (non-NaN) activation behavior.
+#![allow(clippy::manual_clamp)]
 //! NeuralEngineCore -- Apple ANE Core simulator.
 //!
 //! # What is the Apple Neural Engine?

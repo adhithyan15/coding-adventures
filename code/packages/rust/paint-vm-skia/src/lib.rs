@@ -452,7 +452,7 @@ fn fill_paint(ctx: &RenderContext, fill: Option<&str>) -> Option<Paint> {
         if let Some(shader) = ctx
             .gradients
             .get(id)
-            .and_then(|gradient| shader_for_gradient(gradient))
+            .and_then(shader_for_gradient)
         {
             let mut paint = Paint::default();
             paint.set_anti_alias(true);

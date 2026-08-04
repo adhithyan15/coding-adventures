@@ -6,6 +6,7 @@ description = "Smart-home runtime coordinator for event routing, command validat
 license = "MIT"
 
 [dependencies]
+serde = { version = "1", features = ["derive"] }
 smart-home-core = { path = "../smart-home-core" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-integration-catalog = { path = "../smart-home-integration-catalog" }

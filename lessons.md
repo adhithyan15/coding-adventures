@@ -48,7 +48,23 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Python downstream tests should not assert exact dependency versions.** Assert minimum-compatible (`__version__ >= "0.3.0"`) or capability — exact-version asserts fail when a foundational package bumps and downstream gets force-rebuilt.
 - **TypeScript `package.json` must use `"main": "src/index.ts"`** (not `dist/index.js`) because Vitest resolves `file:` deps via `main` and we don't pre-compile. Also: `"type": "module"`, `@vitest/coverage-v8` in devDeps, run real coverage gate locally before pushing. Never commit `.js`/`.d.ts` transpile outputs alongside `.ts` sources.
 - **Vite-based TS programs with `file:` deps must NOT use `tsc -b` in build script.** `tsc -b` follows imports into nested `node_modules` (npm copies, not symlinks on Windows) and fails on un-installed transitives. Use plain `vite build`; type-check via vitest.
+- **Clean Vite deploys with source-level `file:` dependencies must install every local source package in dependency order.** Vite follows `main: src/index.ts` links back into the repository, so each package needs its own `node_modules` on a fresh runner. `npm install --install-links` is not a portable shortcut: npm 11 packed the recursive graph in a Windows repro, but GitHub's Node 20/npm 10 runner stopped at a nested `file:` dependency with ENOENT. Mirror the full production closure explicitly, then run the app's normal install and prove it on the deployment runner.
+- **Do not label a forward-only runtime as a training compiler.** Use the real
+  runtime for saved forward evidence, then name a new language-neutral
+  backward/optimizer contract explicitly. Keep backward, gradient reduction,
+  optimizer update, and zeroing as separate observable operations until the
+  production runtime implements those contracts. Prove persistence with a
+  nonzero incoming gradient buffer: reduce the current batch separately, add it
+  to the prior buffer, and finite-difference only the current batch loss.
+- **Backend parity needs distinct evidence levels.** A deterministic oracle,
+  a native fixture test, and a live accelerator probe answer different
+  questions. Treat an unavailable accelerator as an honest result, never label
+  a CPU oracle as GPU execution, keep MatrixIR and byte payloads language-
+  neutral, and test a Node-free Rust helper without forcing host-linked N-API
+  symbols into standalone Windows binaries.
 - **Haskell `cabal.project` must list every transitive local package.** Cabal does not discover sibling deps from a sibling's own `cabal.project`. Single-package validation: plain `cabal test` (NOT `cabal test all`, which builds the whole universe).
+- **Haskell record accessors share the module's top-level namespace.** A field such as `requestBodyKind` creates a function with that exact name, so a private helper with the same spelling fails with `Multiple declarations`. Name decision helpers distinctly (`determineRequestBodyKind`) before compiling.
+- **HTTP/1 parity must preserve fail-closed wire grammar, not legacy parser permissiveness.** Reject TE+CL ambiguity, conflicting duplicate lengths, non-final request chunking, whitespace before a field colon, variable start-line delimiters, and unbounded heads; response framing must receive HEAD/CONNECT request context, and parse errors must not retain raw targets or field values.
 - **Add `gradle-build` directory override** in every Java/Kotlin `build.gradle.kts`: `layout.buildDirectory = file("gradle-build")` BEFORE the plugins block. Gradle's default `build/` collides with the `BUILD` file on case-insensitive filesystems (macOS/Windows) and explodes with `Could not create problems-report directory`. Also: don't pin `java { toolchain { languageVersion } }` — let Gradle use the running JDK so CI's `actions/setup-java` is honored.
 - **JVM composite Gradle BUILDs need a shared lock** when multiple packages reuse the same included builds — parallel runs corrupt shared `gradle-build` class outputs. Use `--no-daemon --no-build-cache --max-workers=1` plus a repo-local file lock.
 - **Lua rockspecs must pin immutable refs** (release tag or commit SHA) over `https://`, never moving branch tips. Patch flaky LuaRocks GitHub-archive URLs to the stable `archive/refs/tags/<tag>.tar.gz` form during CI install.
@@ -144,6 +160,11 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Recursive walkers on attacker-controlled input need a depth bound.** `walk()`/`deepEqual()` style functions on JSON Schemas / validator inputs / parsed TOML can crash with `RangeError` on adversarial 10k-deep nesting. Thread an explicit `depth` counter through the recursion and short-circuit at `MAX_WALK_DEPTH = 256` (well beyond any sane input). Never throw — push a synthetic violation/finding and return.
 - **`new RegExp(userControlledPattern)` is a ReDoS vector.** Cap pattern length (`MAX_PATTERN_LENGTH = 1024` is generous for any real schema) before construction. Document the cap; treat oversize as a validation failure, not an exception. Found in `forme-pipeline-config`'s JSON Schema `pattern` keyword.
 - **Per-spec security review BEFORE pushing catches things linters miss.** The `/security-review` skill spawns a sub-agent to audit every diff; ~50% of overnight PRs surface findings (most LOW/INFO, occasionally MEDIUM, rare CRITICAL) the main agent didn't see. Treat as mandatory pre-push, not optional.
+- **A numerical fixture validator must pin its tolerance and validate derived finiteness.** A caller-controlled `absolute_tolerance` with only a `> 0` check can be raised until a dishonest oracle passes. Require the corpus's canonical tolerance in both schema and executable validator. Likewise, checking that inputs are finite is not enough: addition, multiplication, reductions, and finite differences can overflow into `Infinity` or `NaN`. Bound teaching inputs at the runtime boundary, verify arrays before invoking array methods, catch host-language numeric conversion overflow, and assert every derived output, gradient, score, and audit error remains finite. This was caught in the NN26 tensor-broadcasting pre-push review.
+- **Python `math.isfinite(huge_int)` can raise `OverflowError` before a validator rejects the value.** Check an integer's absolute magnitude before asking a float-oriented finiteness helper to convert it. Keep the `isfinite` call for bounded floats. Caught by the NN29 hostile thousand-digit input regression.
+- **Fixture document IDs and executable node IDs can require different grammars.** Corpus IDs commonly use descriptive hyphens (`nn27-dynamic-graph-and-saved-values`), while graph node IDs benefit from a tighter identifier grammar for portable map keys. Reusing the node-ID regex for the top-level lab ID rejected a valid checked-in fixture before execution. Validate each namespace according to its contract instead of sharing the strictest helper by convenience.
+- **Testing Library button names include all descendant text unless an explicit accessible name is provided.** A scenario button containing a title and explanatory `<span>` is named `"Title explanation"`, so an exact `{ name: "Title" }` query fails even though the visible title is correct. Use a deliberate `aria-label` when the compact name is part of the UI contract, or use a sufficiently specific regex when the description should remain in the accessible name. Caught while adding NN28 gradient-buffer scenario tests.
+- **`grid-template-columns` has no effect until the element is a grid container.** A new NN28 workbench inherited spacing from `.workspace` but not `display: grid`; computed columns looked correct in devtools while the stage and sidebar still stacked at full width. Declare `display: grid` on each standalone workspace variant and assert both computed display and element rectangles during desktop browser QA.
 - **Windows path separators in `path.join` output break POSIX-only test assertions.** `f.endsWith("/foo.md")` against `path.join(root, "foo.md")` succeeds on Linux/macOS, fails on Windows where `\` is the separator. Fix: normalise the assertion with `.split(/[/\\]/).join("/")`. Pre-existing bugs in this pattern can hide if the package's BUILD never runs on Windows CI (the build-tool only runs BUILDs for *changed* packages, so dormant tests stay dormant).
 - **`String.prototype.replace` regex flags: include `g` when replacing every occurrence.** Without `g`, only the first match is replaced — common foot-gun when the pattern looks deceptively "all-occurrences." Use `/pattern/g`.
 - **Multi-pass validator pattern (collect all violations, throw once).** `validateConfig` / `validateManifest` / `validateStyleDocument` should aggregate every violation into a single error rather than throw on the first. Users want the full punch list; chasing errors one at a time is the slowest possible feedback loop. Pattern established in FM03 §2.4's `ConfigError` and adopted across FM02 (`ManifestError`), FM03 (`ConfigError`), FM04 (`StyleError`).
@@ -154,11 +175,20 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Recursive local functions need a 2-step declaration.** Short assignment `addConstant := func(...)` can't reference itself. Use `var addConstant func(...)` then `addConstant = func(...)`. (Same pattern in Go.)
 - **Validate caller-controlled lengths before `int` casts.** Binary parsers must explicit-bounds-check `u4`/`u8` lengths against host capacity; never recursively decode nested structures unless the format requires it.
 - **Don't run `cargo fmt --all` for package-scoped work** — it reformats hundreds of unrelated crates and buries the feature diff. Use `cargo fmt -p <pkg>`.
+- **`cargo fmt -p moslayout-compiler` is especially destructive: it rewrites the GENERATED `src/_grammar.rs` (600+ lines) AND explodes the hand-formatted compact `PRIMITIVES` array (several entries per line) into one-per-line.** Adding two UI35 primitives — a genuinely +15-line change — produced an 837-line diff across a generated file and a roster nobody asked me to reformat. Verify with `git diff --stat`: a purely additive registration should show insertions only. Fix: `git checkout --` both files and re-apply the addition by hand in the file's existing compact style, skipping `cargo fmt` for this crate entirely. Same family as the `adj-lang` generated-grammar lesson below and the `cargo fmt -p <pkg>` scope lesson.
+- **`cargo fmt -p <pkg>` is still not safe — it reformats files *inside that package* you never touched, and `main` is not necessarily clean under YOUR local rustfmt.** Hit twice on `task-core`: adding a struct to `model.rs` and running `cargo fmt -p task-core` also rewrote `scheduler.rs` (~30 lines of match-guard/assert re-wrapping) because the local rustfmt version disagrees with whatever formatted main. That churn is unrelated to the change, invites a "why is scheduler.rs in this diff?" review, and risks conflicting with concurrent PRs. **Always `git diff --stat` right after `cargo fmt -p <pkg>` and `git checkout -- <file>` anything you didn't intend to touch**, then re-run the tests. Corollary: don't "fix" a fmt diff in a file your change doesn't own — CI does not run `cargo fmt --check` as a blocking gate, so leave main's formatting alone. (Same shape as the generated-file lesson below: fmt, then selectively revert.)
 - **wasm-bindgen `JsValue::from_str` aborts on native test targets.** Gate behind `#[cfg(target_arch = "wasm32")]`; use `JsValue::NULL` placeholders for native error-path tests.
 - **FFI input enums must be primitive ints, never `repr(C)` Rust enums.** Foreign callers can pass any bit pattern; observing an out-of-range Rust enum is UB before validation runs. Use `u32`/`c_int` in the ABI struct, then `TryFrom`.
 - **Linux `epoll_event` is packed.** A plain `#[repr(C)]` mirror works for single events but corrupts/drops readiness when `epoll_wait` returns multiples. Always use the kernel's packed layout.
 
 ## Native extensions & FFI
+
+- **Do not drive a Lua state from the test runner while native worker threads
+  invoke callbacks on that same state.** A Rust mutex can serialize the worker
+  callbacks with each other, but it cannot guard ordinary Lua execution in the
+  parent test thread. The result is nondeterministic stack corruption and
+  SIGSEGVs. Exercise a foreground native server in a dedicated Lua child process
+  and drive it over TCP from the parent.
 
 - **Ruby `QNIL = 0x04` on 64-bit Ruby (USE_FLONUM), not `0x08`.** The pre-FLONUM `0x08` causes Ruby to dereference it as an object pointer (klass at `+8` → SIGSEGV at `0x10`). Constants: `QFALSE=0x00, QNIL=0x04, QTRUE=0x14, QUNDEF=0x24`. Confirm against `ruby/internal/special_consts.h`. When a Ruby native ext SIGSEGVs at low addresses like `0x10`, suspect a special-constant bit-pattern bug.
 - **Lua 5.4 `LUA_REGISTRYINDEX = -1_001_000`** (derived from `-LUAI_MAXSTACK - 1000`), NOT the Lua 5.1 value `-10000`. Using `-10000` in `luaL_ref` treats it as a regular negative stack index, landing 10000 slots below the frame and causing SIGBUS/SIGSEGV.
@@ -249,7 +279,14 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **CI detect outputs must use `steps.toolchains` (not `steps.detect`).** Adding a new language to CI requires THREE places: `allLanguages` in `main.go`, the detect job `outputs:`, AND `steps.toolchains` normalization (BOTH the `is_main=true` and `else` branches).
 - **CodeQL flags `int64 → int` downcasts of CLI input** as `go/incorrect-integer-conversion`. Add explicit platform-sized bounds checks first; for `float64`, reject NaN/Inf/non-integral before the cast.
 - **Miri timeout grows with code, not with test count.** `lang-runtime-safety.yml` had `timeout-minutes: 30`; PR 5 (closures) tripled `twig-vm` Miri wallclock and one of two parallel runs failed at 30:15 from runner variance, not a real bug. Bump generously (90 min) and shard by crate when wallclock crosses 60 min. Locally, `MIRIFLAGS="-Zmiri-ignore-leaks" cargo +nightly miri test -p twig-vm` is the canonical pre-push smoke check; don't trust the timeout to catch slowdown.
-- **Miri belongs on unsafe code, not the integration seam — and not on every PR.** PR 7 moved `twig-vm` Miri off the per-PR critical path entirely.  PRs only run Miri on `lang-runtime-core` + `lispy-runtime` (where the unsafe is); both run in ~5 min total, blocking.  `twig-vm` Miri runs only on **post-merge to main** + a nightly cron, both via `lang-runtime-safety-deep.yml`, and **never gates anything** (`continue-on-error: true`) because twig-vm has zero unsafe — a Miri failure there is an integration-seam regression worth investigating, not a "main is broken" signal.  Engineers run `scripts/miri-twig-vm.sh` locally before pushing twig-vm changes — that's the canonical verification.  Lessons: (a) when Miri wallclock exceeds the per-PR budget, split by **where the unsafe lives**, not by tightening the cap further; (b) intensive checks belong on **main, not PRs** — fast PR iteration matters more than 100% per-PR coverage; (c) for crates without unsafe, even main-side Miri stays non-blocking — the workflow run history is the regression marker, not a status-badge red X.
+- **Miri belongs on unsafe code, not the integration seam — and not on every PR.** PR 7 moved `twig-vm` Miri off the per-PR critical path entirely.  PRs only run Miri on `lang-runtime-core` + `dynval-runtime` (where the unsafe is); both run in ~5 min total, blocking.  `twig-vm` Miri runs only on **post-merge to main** + a nightly cron, both via `lang-runtime-safety-deep.yml`, and **never gates anything** (`continue-on-error: true`) because twig-vm has zero unsafe — a Miri failure there is an integration-seam regression worth investigating, not a "main is broken" signal.  Engineers run `code/scripts/miri-twig-vm.sh` locally before pushing twig-vm changes — that's the canonical verification.  Lessons: (a) when Miri wallclock exceeds the per-PR budget, split by **where the unsafe lives**, not by tightening the cap further; (b) intensive checks belong on **main, not PRs** — fast PR iteration matters more than 100% per-PR coverage; (c) for crates without unsafe, even main-side Miri stays non-blocking — the workflow run history is the regression marker, not a status-badge red X.
+- **Clippy is a blocking CI gate via the build tool's `-clippy` flag, not a `cargo clippy --workspace` job.** `cargo clippy --workspace` CANNOT run in this repo: platform-gated crates (`paint-metal`/`metal-compute`/`objc-bridge` need macOS, `paint-vm-direct2d`/`paint-vm-gdi` need Windows) `compile_error!` off their platform, so a whole-workspace clippy always fails somewhere. Instead, `build-tool -clippy` runs `cargo clippy --all-targets -- -D warnings` PER affected Rust package, from the crate dir, before its BUILD commands. `clippyStepFor` mirrors each BUILD's own platform guard: unconditional `cargo …` → lint unconditionally; `if [ "$(uname)" = "Darwin" ]; then cargo …` → reuse the condition; pure `echo SKIP` (no cargo) → no clippy. Diff-based on PRs, full on main. Setup gotchas, all learned the hard way wiring this gate:
+  (1) `dtolnay/rust-toolchain` installs the **minimal** profile (no clippy) — add `with: components: clippy`.
+  (2) **Match the clippy version you verify against to CI's `@stable`.** A stale local toolchain (mise's cached "stable" was 1.94 while CI stable was 1.97) hid ~65 lints that only failed in CI (`manual_checked_ops`, stricter `collapsible_match`/`while_let_loop`/`question_mark`/`unnecessary_sort_by`). Before pushing: `rustup update stable` then `cargo +stable clippy`.
+  (3) **Do NOT pin the toolchain to a version for determinism.** `dtolnay/rust-toolchain@1.97.0` makes the *default* toolchain a version, not the `stable` **alias** — which breaks every BUILD that runs `rustup run stable …`/`rustup target add …` (wasm packages, embedded `thumbv7em` firmware): `rustup target add` adds to the default but `rustup run stable` uses a different, target-less toolchain → `E0463: can't find crate for std/core`. Clippy drift on `@stable` is cheaper to maintain (fix new lints when a stable bump surfaces them) than pinning.
+  (4) **Clippy lints are platform-conditional; a macOS-only local run misses Linux-only lints.** Crates whose real path is `#[cfg(target_vendor="apple")]` leave dead code / unused imports on Linux (`barcode-layout-1d` `let_unit_value` — Linux font stub returns `()`; `paint-metal`/`text-native-coretext`/`window-appkit` dead_code). The gate runs on ubuntu AND macOS, so clean BOTH. Reproduce Linux lints locally without a Linux box by **cross-checking** (clippy checks, doesn't link): `rustup target add x86_64-unknown-linux-gnu` then `cargo clippy --target x86_64-unknown-linux-gnu …`. Fix with `#![cfg_attr(not(target_vendor = "apple"), allow(...))]` — enforced where the code is live, allowed where it's inactive.
+  (5) **The gate runs on EVERY affected Rust package the build tool knows, not just the `code/packages/rust` workspace.** `code/programs/rust/*` are separate cargo projects and wasm/rust packages too; a `--workspace` clippy in `packages/rust` misses them all. It also surfaces pre-existing host-un-buildable crates (`os-kernel`: `#![no_std]` + crates.io `uefi` dep with `panic_handler` → `cargo test` can never link on a std host) — guard such a crate's BUILD to skip on hosts (it targets `x86_64-unknown-uefi`).
+- **Getting a large workspace to zero clippy warnings: `cargo clippy --fix` first, but it stops at the first deny-by-default hard error.** `absurd_extreme_comparisons`/`approx_constant`/`not_unsafe_ptr_arg_deref`/`never_loop` are deny-by-default, and a deny error aborts that crate's compile so `--fix` can't touch its other (machine-applicable) warnings. Clear/allow the hard errors first, then re-run `--fix`; crates that previously failed to compile now get auto-fixed. `--fix` only applies `MachineApplicable` suggestions — `approx_constant` (replacing `3.14159` with `PI` changes the value) is `MaybeIncorrect`, so it is NEVER auto-fixed; resolve those with a scoped `#[allow(clippy::approx_constant)]` + justification, never by editing the literal (it's usually test data / codegen input / an intentional hand-written constant). FFI crates that expose raw-pointer C ABIs (`node-bridge`, `ruby-bridge`) get a crate-level `#![allow(clippy::not_unsafe_ptr_arg_deref)]` with a comment rather than ~80 per-fn annotations.
 - **Changing a shared frontend compiler runs DOWNSTREAM consumers' tests in CI — run them locally first.** Editing `twig-ir-compiler`'s lowering (LANG-FULL TW2: value-defines → typed locals) passed `cargo test -p twig-ir-compiler` and the lang-aot matrix locally, but CI's affected-package detection also rebuilt `twig-vm`, whose `dispatch.rs` test compiled a real Twig program and asserted on the *exact* emitted ops (`(define x 5)` → a `global_set` writing `x` to the host global table).  The new lowering dropped that `global_set`, so the downstream test's expectation broke (the result was still correct).  This is NOT a latent bug to defer — it's a test that legitimately tracks the compiler output you changed, so update it in the same PR.  Rule: when a PR touches a shared `*-ir-compiler` (or any crate many others depend on), enumerate consumers with `grep -rln '<crate>' */Cargo.toml` and run **each** consumer's tests (`cargo test -p <consumer>`) before pushing — not just the changed crate + the integration matrix.  Preserve a downstream test's *intent* when updating it (here: keep exercising `global_set` by switching to a lambda-**captured** define, which still hits the global table) rather than deleting the assertion.
 
 ## QR / format-marker / file-format specifics
@@ -288,6 +325,8 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Custom Elements need backing fields for ALL slot types, not just attribute-observed ones.** Scalar primitive slots (text, number, bool, image, color) appear in `observedAttributes` and get string backing fields. List and node slots must NOT appear in `observedAttributes` (the browser would stringify them); instead, expose them through explicit JavaScript property setters and initialize their backing fields as `[]` or `null` in the constructor.
 - **Add new primitives to `is_primitive_node()` in `mosaic-analyzer`.** When a new layout element (e.g. `Grid`) is added to the Mosaic spec, it must be included in the `is_primitive_node()` function in `mosaic-analyzer/src/lib.rs` so that `is_primitive = true` is set correctly. Missing this causes the VM to emit it as a custom element tag (e.g. `<grid>`) instead of the intended HTML element.
 - **`_grammar.rs` hand-edit caveat:** the general rule is "never hand-edit"; however for embedded grammar reordering (alternation order fix) it is acceptable when `grammar-tools` is not available in the current environment. Always note the edit prominently and regenerate properly before the next full CI run.
+- **`mosaic-compile pkg --output X` treats `X` as a DIRECTORY and writes `X/react/<Component>.tsx` (+ `index.ts`, `.lattice`) — passing a file path silently creates a directory literally named `Foo.tsx`.** This is true with *and* without `--emit-project`; the flag only adds the Vite shell side-files (`package.json`, `vite.config.ts`, `index.html`, `README.md`, `src/main.tsx`) next to the component. So `--output "$WEB/src/TaskApp.tsx"` produced `.../src/TaskApp.tsx/react/TaskApp.tsx`. To land a single component in a hand-written host: emit to a scratch dir, copy `<scratch>/react/<Component>.tsx` to its destination, and delete the scratch dir. The emitted component is self-contained (imports only `react`, exports `<Component>` + `<Component>Event`), so copying just that one file is sufficient.
+- **Don't build a real app by overlaying host files onto `--emit-project` output — the generated `package.json` is banner-stamped `"AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit."`, so app dependencies cannot live there.** The overlay model works only for a zero-dependency demo. The moment the host needs a real dep (a storage layer, a router), make the host a **committed npm package** that owns `package.json`/`vite.config.ts`/`tsconfig.json`/`index.html`/`BUILD`/tests, and have the build emit *only* the component into its `src/` (see the previous lesson). Done for `task-app/host/web`. Consequence to remember: such a host sits several levels below `code/`, and BUILD lines run with cwd reset to the package dir **for every line** (`cmd.Dir = pkg.Path` in `build-tool/internal/executor`), so every `cd ../../../../../packages/typescript/<dep>` uses the *same* depth — do not write cumulative `cd`s.
 
 - **N-API `napi_unwrap` is type-agnostic — when an addon registers more than one `napi_wrap`-ed class, each unwrap helper MUST check a type tag before casting.** Discovered in matrix-rust-napi Phase 2b: the `Graph` and `Runtime` classes both went through `napi_wrap`, and `unwrap_graph` only checked `napi_unwrap`'s `status == NAPI_OK` + non-null pointer. A JS caller could pass a `Runtime` instance where a `Graph` was expected (`rt.run(rt, [])` or `g.toJson.call(rt)`); the bare unwrap returned the `Box<WrappedRuntime>` pointer, which `unwrap_graph` cast to `&Graph`, causing immediate UB on the first `graph.tensors.len()` read. **Fix pattern**: prefix every wrapped payload with `#[repr(C)] struct Wrapped<T> { tag: [u64; 2], inner: T }` using a class-specific 128-bit constant for `tag`, and validate the tag in every unwrap helper before dereferencing the rest. The "right" long-term answer is `napi_type_tag_object` / `napi_check_object_type_tag` (N-API v8+) — defer until node-bridge grows those bindings. Single-wrap-class addons like `font-parser-node` are not a model for this: with only one class, the bug doesn't exist. The lesson applies the moment a second wrapped class joins.
 
@@ -339,6 +378,14 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Prep-locally-while-blocked: when a shared-crate PR blocks the next move, draft the follow-up in its own worktree without pushing — verify build + tests + security review locally, then push the moment the blocker merges.** Surfaced during the CLOC13 cascade: PR #4778 (CLOC13.B inline body, a pass-body PR) sat in CI for ~6 minutes; the natural next move was CLOC13.0 (analyzer body activation), which was a *shared-crate* PR and therefore blocked by the standing "one shared-crate PR at a time" rule. Idling 6 minutes is wasted wall-clock. **Pattern**: `git worktree add .claude/worktrees/<next-task>-tree -b <branch> origin/main`, then write the full implementation + tests + CHANGELOG + version bump + run the local cargo test suite + run /security-review via Agent — all *without* pushing. When the blocker's `mergedAt` flips non-null: `git fetch origin && git merge origin/main` in the prepped worktree (fast-forward in the common case), re-run tests against the now-current main, and push. **Numbers from CLOC13.0**: prep took ~4 minutes (read analyzer source, write 119-line body, write 7 new tests, run cargo test, run security review). When #4778 merged, time from "merged" to "PR open" was ~25 seconds (rebase + retest + push + gh pr create). Without the prep, that gap would have been the full 4 minutes. **When the rule doesn't apply**: if the worktree's diff would conflict with the blocker's diff (e.g., both modify the same lines of the same file), the rebase after merge fails and the prep is wasted. Detect by checking `git diff origin/main...<blocker-branch>` against your intended changes before starting prep. **Why this beats "just wait"**: the blocker's merge is itself a signal that the system is ready for the next layer. Prep lets you ride that wave instead of starting from cold context every time. Especially valuable in autonomous-loop mode where idle minutes are dead minutes.
 
 - **closurec version bumps are a 3-file change, not a 2-file change.** Bumping `code/programs/rust/closurec/Cargo.toml` requires synchronised bumps in **both** `code/programs/rust/closurec/cli.spec.json` (the version cli-builder reads at startup to populate `ParserOutput::Version(v).version`, which the `--version` banner prints) **and** `code/programs/rust/closurec/tests/diff/help-markdown/expected.stdout` (the golden line `Version: X.Y.Z` for the `--help_markdown` byte-exact integration test). Surfaced in CLOC14 (PR #4929): bumped Cargo.toml 0.43.0 → 0.44.0, missed both downstream spots, `tests::version_string_matches_crate_version` (which asserts `--version` output contains `env!("CARGO_PKG_VERSION")`) failed on macos-latest CI. Required a follow-up fix commit. **Mitigation**: before pushing a version bump, `grep -rn "$OLD_VERSION" code/programs/rust/closurec/` and confirm zero hits. The unit test that catches the spec drift is in the main binary's `mod tests` (`cargo test --bin closurec`), not in `tests/`, so a partial test run via `--test diff_minify` won't catch it.
+
+- **`cargo test` STOPS at the first failing test TARGET — so a unit-test failure hides every integration-fixture failure behind it. After regenerating goldens, re-run the whole suite with `--no-fail-fast` before declaring it green.** Surfaced in CLOC #214 (emitter 0.55.0, the "terminate only the last program item" change, PR #8644). The emitter change drifted goldens in three places: the emitter's own tests, the pass crates' tests, and closurec's `tests/diff/*` fixtures. The first full `cargo test --manifest-path .../closurec/Cargo.toml` reported `675 passed; 11 failed`, all 11 in the main binary's `run::tests::*` — and I fixed exactly those. What I did not notice is that cargo **never ran the `tests/*.rs` integration binaries at all**, because it aborts remaining targets once one target fails. My follow-up runs were filtered (`cargo test ... run::`), which re-confirmed the unit tests and still never touched the integration targets. Result: `tests/diff/advanced-bigpass/expected.stdout` kept the stale `function f(x){return x*10};report(...)` and CI went red on three of four platforms after the PR was already open. **Mitigation**: any change that can move emitted bytes (emitter, any pass, the printer) must end with ONE unfiltered `cargo test --no-fail-fast` per affected workspace — `code/packages/rust` AND each `code/programs/rust/*` project, which are separate cargo projects. Treat a filtered or fail-fast run as "not yet verified", never as green. **Tell**: a suite summary that shows a single `test result:` line when the crate has several `tests/*.rs` files means the other targets were skipped, not that they passed — count the `test result:` lines against the number of test binaries. Companion to the closurec-3-file-version-bump lesson above: both are "the run you did was narrower than the blast radius you created".
+
+- **A bare `}` (or `{`) inside a Rust `assert!`/`panic!` message is parsed as a FORMAT BRACE — `error: invalid format string: unmatched \`}\` found`. Never paste emitted-code snippets straight into an assertion message.** Bit me TWICE in the same arc (CLOC #214, emitter 0.55.0): first writing ``"lone class declaration terminates with `};`"`` in a closure-emitter upstream test, then again in six closurec integration tests (``"class declaration must terminate with `};` ..."``), the second time breaking the compile of all six test targets *in the commit that was fixing the first problem*. The trap is specific to macros that take a format string: `assert!(cond, "…{actual}")` runs the message through `format_args!`, so `}` must be escaped `}}` — but the emitted-JS snippets this repo asserts on (`class C{…};`, `function f(){}g()`) are *full of* braces, so the temptation to quote them verbatim is constant. **Mitigations, in order of preference**: (1) describe the shape in prose instead of quoting it — "must terminate with a semicolon as the last program item" beats ``"must end with `};`"``; (2) if you must show the bytes, put them in a `{:?}`-formatted argument (`"unexpected tail: {tail:?}"`), never inline in the literal; (3) only as a last resort, double the braces (`}}`), which is unreadable next to real JS. **Tell**: the error points at the *string literal column*, not the brace, so it reads like a mysterious macro failure. If a test file that only had its assertion text edited suddenly fails to compile, this is why. Note that a plain `assert_eq!(a, b)` with NO message is immune — the danger only appears once you add the explanatory message, i.e. exactly when you're being a good citizen.
+
+- **Writing a `\u`-followed-by-four-hex-digits sequence into a tool call silently injects a REAL control byte into the source file, because the tool payload is JSON and JSON unescapes `\uXXXX` before the file is ever written.** Hit three times in the CLOC #204 control-char arc, twice in a doc comment and once in test comments, each time while writing prose that *described* the escape (`the oracle emits \u001b`). The file then contains an actual ESC/BEL/DEL byte where the text should read backslash-u-0-0-1-b. It compiles, it usually passes tests, and it is invisible in normal `cat`/editor output -- I only caught it with `cat -v`, which renders the bytes as `^[`, `^G`, `^?`. A pre-existing instance from an earlier PR was still sitting in `closure-emitter/CHANGELOG.md` (a raw BEL inside `(`U+0007` -> `\x07`)`), which is how these survive: nothing flags them. **Rules**: (1) never type a bare `\uXXXX` into a tool call -- build the string in a heredoc'd script where you control the bytes (`B=chr(92)` then `"%su001b" % B`), or write it split (`backslash-u-001b`) in prose; (2) after ANY edit whose text discusses escapes, run a contamination check -- `python3 -c "s=open(F).read(); print(sum(1 for c in s if (ord(c)<0x20 and c not in chr(10)+chr(9)) or ord(c)==0x7f))"` -- and expect 0; `grep` with a bracket range is NOT reliable here (it silently matched nothing while `cat -v` showed the bytes plainly). (3) The same trap applies to `\x41`-style and `\0` sequences in any JSON-transported payload. This is a *documentation* hazard, not a code hazard: Rust source escapes like `'\u{1b}'` are fine because the brace form is not valid JSON escape syntax and passes through literally.
+
+- **`cargo clippy` without `-- -D warnings` EXITS 0 ON WARNINGS, so a clean local clippy run does not reproduce CI.** CI lints with warnings denied; a bare `cargo clippy -p <crate> --all-targets` prints the warning and still returns 0, so the pre-push gate silently passes. Burned on PR #8722 (CLOC #204): `clippy::type_complexity` fired on `[(&str, fn(&str) -> String); 3]` -- an array of function pointers I introduced while WIDENING A TEST to address a security-review coverage nit. So the hardening itself turned CI red, on a PR whose code was otherwise fully verified. The local run had reported `CLIPPY_EMITTER=0` and I took that as the gate passing. **Rule**: every pre-push clippy invocation must be `cargo clippy -p <crate> --all-targets --manifest-path <ws>/Cargo.toml -- -D warnings`, run for EVERY affected crate in EVERY affected workspace (`code/packages/rust` AND each `code/programs/rust/*`, which are separate cargo projects). **Fix pattern for type_complexity**: hoist the type behind an alias (`type Escaper = fn(&str) -> String;`) rather than restructuring the code. **Family resemblance**: this is the same failure shape as the `--no-fail-fast` lesson above -- in both cases the command I ran was WEAKER than the command CI runs, reported success, and I trusted it. When a gate passes suspiciously easily, check that the local invocation actually matches CI's flags, not just CI's tool.
 
 - **Pull-from-origin-first failure mode: a multi-hour-stale main worktree silently hides recently-landed files, leading to redundant PR work that has to be closed.** Surfaced when I drafted PR #4784 (a CLOC13 spec) at `code/specs/CLOC13-scope-analyzer-and-pass-bodies.md` without realising `code/specs/CLOC13-scope-analyzer.md` had already landed on main (in a commit I never pulled). My local main worktree had been on commit `69dbb4119` for the entire session; main had advanced past that with the CLOC13 spec + ADJ14 + LP19e + others. The redundant PR ran CI, sat in review queue, then had to be closed with a self-correcting comment. CLAUDE.md working principle #1 ("Pull from origin/main first") exists precisely for this. **Mitigation**: at the start of every loop iteration that does any work in the main worktree (not just feature worktrees), run `git fetch origin && git merge origin/main` BEFORE any Read/Edit/Write. Feature worktrees forked from `origin/main` are immune to this specific bug because they're forked fresh — but the main worktree is sticky-stateful and silently rots. **Detection**: if `code/...` paths returned from `git ls-tree -r origin/main` don't appear in `ls code/...`, the worktree is stale. Treat that mismatch as a stop-the-line signal. **Cost**: ~40 minutes of wall-clock to draft, push, and then close #4784 — plus the contributor-trust hit from a self-acknowledged "this was redundant" comment.
 
@@ -422,6 +469,29 @@ end
 ```
 
 The same check belongs in every language port. A strict decoder is far safer — it surfaces truncation and concatenation bugs immediately rather than silently returning partial output or accepting garbage.
+
+---
+
+## Lesson 97 — `code/packages/haskell/zstd` inherited the same repo-wide FSE sequences-codec + FHD checksum-bit bugs as java/rust, confirmed via real `zstd` CLI interop (TC-9)
+
+**Date:** 2026-08-03
+
+**What happened:** A sibling effort (PR #9780, `java/zstd`; see its `lessons.md` entries once merged, titled "ZStd FHD Content_Checksum_Flag is bit 2, not bit 4" and "ZStd sequences-section FSE codec had THREE compounding bugs") found and fixed a cluster of RFC 8878 non-conformance bugs in the sequences-section FSE codec, and confirmed the same bugs in `code/packages/rust/zstd` (the shared reference the ports were designed against). `code/packages/haskell/zstd` was added independently, months after that reference (PR #8712) — so it was audited from scratch rather than assumed guilty or innocent. It turned out to have inherited the identical bug pattern:
+
+1. `spreadSymbols`'s table-spread used a fabricated two-pass split (all `count > 1` symbols in ascending order, then all `count == 1` symbols in ascending order) instead of the real single-pass algorithm (`FSE_buildDTable_internal`: one pass over symbols `0..maxSymbolValue`, placing each symbol's full count immediately).
+2. `decodeSequences`/`encodeOne` fused FSE symbol-peek and state-update into one step, in the wrong order (LL, OF, ML) and *before* reading any extra bits, instead of: peek LL/ML/OF (free), read extras OF/ML/LL, then update states LL/ML/OF. The one-time initial-state read at the top of a compressed block was also wrong (read LL, ML, OF instead of the RFC's asymmetric LL, OF, ML).
+3. The state-transition update was performed unconditionally for every sequence, including the last one in a block, where a real decoder never performs it (no "next" sequence needs a prepared state) and a real encoder cannot produce it via a normal bit-flushing transition (no corresponding decode-side read exists to consume it) — it needs a direct-formula init (`FSE_initCState2`) that writes zero bits.
+4. Frame Header Descriptor `Content_Checksum_Flag` was read from bit 4 (`Unused_bit`) instead of bit 2, and the "reserved bits" check treated bits 2+3 as jointly reserved — rejecting every real checksummed frame while never detecting a checksum trailer on any frame (same root cause as Lesson 94's trailing-bytes check: the two bugs mask each other until both a strict trailing-bytes check AND a correct checksum-flag bit are in place simultaneously).
+
+**Why it survived undetected:** Exactly Lesson 94's shape — bugs 1-3 are self-cancelling as long as encode and decode agree on the same wrong convention, and this package's own encoder/decoder pair always did. All 16 pre-existing unit tests passed throughout, including a hard-coded "established cross-language compressed vector" fixture — because that fixture had been generated by the *same* buggy encoder, so it was internally consistent with itself, not with real zstd. There was no CLI-interop test in this package (or any other language's `zstd` port) before this — confirmed nothing under `code/packages/*/zstd` shelled out to `subprocess`/`ProcessBuilder`/`Command::new`/ the real `zstd` binary prior to PR #9780.
+
+**Rule:**
+- Ported/parallel-developed code should never be assumed correct-by-association *or* buggy-by-association — audit it. Here the "maybe it's fine, it's a different author/era" hope was wrong; the "assume it's broken like the others" shortcut would have skipped the actual verification step (running the real interop test) that this task required regardless.
+- Fixed by porting the corrected Java algorithm (`gh pr diff 9780`) into idiomatic Haskell: `spreadSymbols` reduced to a single ascending pass; `decodeSequences` restructured into explicit peek/extras/conditional-update phases; a new `encodeInitState` function (mirrors `FSE_initCState2`) added for the reverse-encode loop's first (semantically last) sequence; the FHD checksum-flag/reserved-bit masks corrected from `0x10`/`0x0C` to `0x04`/`0x08`.
+- Verified via a new `ZstdCliInteropSpec` (TC-9): `compress` here / `zstd -d` there, and `zstd -c` there / `decompress` here, both directions, plus a high-sequence-count case crossing the 1-byte→2-byte sequence-count wire-format boundary. Also spot-checked ad hoc against a 6-case fuzz corpus (periodic patterns, pseudo-random bytes, prose, mixed, repeat-distance) and a real `zstd -c`/`--no-check` checksum-bit probe, all outside the committed test suite, before writing the permanent test. The pre-fix code failed the real CLI with `Decoding error (36): Data corruption detected` on every input that produced more than a trivial number of LZ77 sequences, exactly as in the java/rust findings — confirming this is a systemic bug in the shared design, not a language-specific porting mistake.
+- Two of the 16 pre-existing unit tests needed their hard-coded byte fixtures regenerated post-fix (the cross-language compressed vector, and the hand-crafted checksum-frame descriptor byte) — a expected consequence of fixing a bug that both the implementation *and* its fixtures were built around.
+
+See also `gh pr diff 9780` (java/zstd fix) and PR #9774 for the same audit's discovery trail across languages.
 
 ---
 
@@ -1431,3 +1501,586 @@ error string. Check the command's EXIT CODE (`if cargo build -p X >/dev/null 2>&
 FAIL`), or grep for the POSITIVE signal (`Finished`/`test result: ok`) and require it. A new
 `Expression`/exhaustive-enum variant breaks EVERY crate that matches it without a catch-all —
 enumerate them by exit code, not by a fragile error-string grep.
+
+## Enum-variant additions: grep the WHOLE repo for matchers, not just the crates you plan to touch (CLOC12.175)
+
+Adding `ClassMember::Field` to javascript-ast broke `javascript-parser`'s **test**
+build (`let ClassMember::Method(m) = &c.body[0];` → refutable) — a crate I never
+built locally because I only tested the 9 pass crates + emitter I edited. CI's
+affected-package graph builds ALL transitive consumers of the changed shared crate,
+so it caught it on macos ("Build and test affected packages"). Fix: before pushing
+a shared-enum change, `grep -rl --include="*.rs" "EnumName::" code/` to find EVERY
+consumer (production AND test code — refutable-let sites live in tests too), and
+build each. A per-crate build of only the crates you edited is NOT the affected set.
+Cross-refs feedback_run_downstream_consumer_tests, feedback_affected_package_latent_bugs.
+
+## Lesson: `const T[N][M]` array-of-array params fail on real gcc but not Apple clang
+
+**Context:** The c/des and c/aes ports built clean locally (macOS `gcc` = Apple
+clang) but FAILED on ubuntu CI's real gcc with:
+`error: invalid use of pointers to arrays with different qualifiers in ISO C
+before C2X [-Wpedantic]`.
+
+**Cause:** In ISO C before C23, a `T (*)[N]` does NOT implicitly convert to
+`const T (*)[N]` — `const`-ness does not compose through the array-of-array
+pointer. So passing a non-const `uint8_t subkeys[16][6]` / `uint8_t state[4][4]`
+local as an argument to a parameter declared `const uint8_t [16][6]` /
+`const uint8_t [4][4]` is a constraint violation. (This is unlike 1-D
+pointer-to-scalar, where `int* -> const int*` is fine.) Apple clang accepts it;
+real gcc with `-pedantic-errors` rejects it.
+
+**Fix:** Drop `const` on 2-D (and higher) array parameters of internal helpers
+that receive a non-const array — leave the read-only intent to a comment. Grep
+before pushing: `grep -rnE "const [a-z0-9_]+ [a-z_]+\[[0-9]*\]\[" src/`.
+
+**Blind spot:** Apple clang (the macOS `gcc`) is more permissive than ubuntu
+gcc on several pedantic ISO-C rules. "Verified under gcc/clang locally" does not
+cover the ubuntu gcc arm — the pure-ISO guarantee is only firm once CI's gcc has
+run. Watch babysit CI to green, don't assume from a local build.
+
+## Lesson: new grammar frontends must opt into the parser's recursion depth cap
+
+**Context:** Adding `IF` to the COBOL runtime introduced the first *nestable*
+construct. A security review found that deeply-nested `IF … IF … IF …` (one per
+80-column card, so a statement flows across cards and the nest is real)
+overflowed the native stack — an uncatchable `SIGSEGV`/abort that a
+`Result`-returning entry point cannot report.
+
+**Cause:** `parser::GrammarParser::new(...)` defaults `max_depth` to
+`usize::MAX` — the recursion-depth guard is **opt-in**. `cobol-parser` built the
+parser with `GrammarParser::new(...)` and never chained `.with_max_depth(...)`,
+so every deep nest recursed once per level through `parse_rule` with no ceiling.
+The shared parser already HAS the fix (`DEFAULT_MAX_RULE_DEPTH = 128`, below the
+~192–224 overflow point on a 2 MB thread); the frontend just wasn't using it.
+
+**Fix:** Every frontend that constructs a `GrammarParser` must chain
+`.with_max_depth(DEFAULT_MAX_RULE_DEPTH)` on *all* construction paths (both the
+panicking and the `try_` entry points). Deep nesting then returns a clean
+"input nests deeper than the supported limit" parse error. This transitively
+bounds any *runtime* tree-walk (e.g. a recursive `exec_stmt`) too, since the CST
+can no longer be built deeper than the cap.
+
+**Blind spot / grep before pushing a new frontend:**
+`grep -rn "GrammarParser::new" code/packages/rust/<lang>-parser/src/` — every hit
+that lacks a following `.with_max_depth(` is an unguarded native-stack DoS. This
+is the same class as the closurec/json-parser deep-recursion DoS
+(project_closurec_deep_recursion_dos): a nestable construct is the trigger, and
+the mitigation belongs at the parser layer, not the runtime.
+
+## Lesson: grammar `{ }` repetition width is NOT bounded by the parser depth cap
+
+**Context:** After hardening `cobol-parser` with `.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`
+(which stops deeply-*nested* input like `IF … IF …` or `((((…))))` from
+overflowing the native stack), the COMPUTE runtime added an expression evaluator.
+A security review found a *second*, distinct stack-overflow DoS that the depth
+cap does **not** catch: a flat operator chain `COMPUTE R = A + A + A + … + A`
+with tens of thousands of terms.
+
+**Cause:** The depth cap counts *rule recursion* (`parse_rule` re-entry). But a
+grammar repetition `arith_expr = arith_term { ("+"|"-") arith_term }` is a **flat
+loop** in the parser — it appends children without recursing, so N terms produce
+ONE `arith_expr` CST node with 2N−1 children at *bounded* parse depth, for
+arbitrarily large N (there is no token/source-size cap). The consumer then folded
+those children into an N-deep left-nested `Expr` tree, and both the tree-walking
+`eval_expr` and the **recursive `Drop` of `Box<Expr>`** recursed N frames deep →
+uncatchable `SIGSEGV` on a few hundred KB of source.
+
+**Fix:** Any reader that folds a grammar *repetition* into a *recursive* tree
+(binary-operator chains, list-of-list structures, etc.) must bound the operand
+count itself — the parser's depth cap won't. Here: thread a single
+`MAX_EXPR_OPERANDS` (1024) budget through every expression reader, charged once
+per primary (across parenthesised levels too, so nested parens can't multiply it),
+returning a clean `RuntimeError` when exhausted. That bounds the folded tree
+height, hence both eval and Drop recursion.
+
+**Blind spot / how to catch it:** when reviewing a new tree-walking evaluator,
+ask two *separate* questions — (1) is nesting depth bounded? (parser cap) and
+(2) is repetition *width* bounded? (needs its own budget). They are different
+axes; the depth cap only answers the first. Cross-refs the depth-cap lesson above
+and [[project_closurec_deep_recursion_dos]].
+
+## ISO C (pre-C23) forbids implicit `T[N][M]` → `const T[N][M]`; clang allows it, gcc `-pedantic-errors` rejects it
+
+**Symptom:** A pure-ISO C package built clean on macOS (Apple clang) but failed
+on ubuntu CI (real gcc) with `-pedantic-errors`:
+`invalid use of pointers to arrays with different qualifiers in ISO C before C2X
+[-Wpedantic]` at every call site passing a **non-const** 2-D array to a function
+whose parameter is `const double m[3][3]`.
+
+**Cause:** For a plain pointer, `T*` → `const T*` is a permitted implicit
+conversion. For a pointer to an *array*, `T(*)[N]` → `const T(*)[N]` is **not**
+permitted in ISO C before C23 (C11/C17 6.3.2.3 only qualifies the immediately
+pointed-to type, and a 2-D array parameter decays to `double(*)[3]`, so the const
+lands one level too deep). C23/C2X finally allows it. **Clang does not diagnose
+this even under `-pedantic-errors`; real gcc does.** So a Mac-only local build
+(where `gcc` is an Apple-clang shim) cannot catch it — only ubuntu CI will.
+
+**Fix (caller side, minimal):** make every *input-only* array `const` at its
+definition so the call passes `const → const` (identical qualifiers, always
+clean); for a genuinely non-const array that is also read as input (e.g. an
+out-param from an earlier call reused as input), add an explicit
+`(const double (*)[3])` cast at the call. Do **not** drop the `const` from the
+library parameter — that just flips the error onto the const fixtures (`ID`,
+`SWAP`) instead.
+
+**Blind spot / how to catch it:** any C API that takes a multi-dimensional array
+by `const` parameter is a portability trap you cannot verify on a clang-only
+machine. When writing such tests, declare read-only matrix fixtures `const` from
+the start. Treat ubuntu-gcc CI as the source of truth for pure-ISO C conformance,
+not the local build. Cross-ref [[feedback_no_third_party_ffi]] and the C/C++
+lane's strict-ISO intent.
+
+## gcc `-Werror=format-truncation`: `snprintf("...%s", buf)` where `buf` is a known-size array can overflow the destination
+
+**Symptom:** A pure-ISO C package built clean on macOS (Apple clang) but failed
+on ubuntu CI (real gcc) with:
+`error: '%s' directive output may be truncated writing up to 127 bytes into a
+region of size 101 [-Werror=format-truncation=]`
+for `snprintf(err->message, sizeof err->message, "CompileError: Parse error: %s", perr.message);`
+where both `err->message` and `perr.message` are `char[128]`.
+
+**Why:** When the `%s` argument is a *fixed-size array* (e.g. `char[128]`), gcc
+knows its maximum length (127) and can prove that `prefix + 127` may exceed the
+destination buffer, so `-Werror=format-truncation` fires. It does NOT fire when
+the argument is a bare `const char *` of unknown length (gcc can't bound it) —
+which is why sibling `snprintf(... "%s", value)` calls with `char *` args were
+not flagged. Apple clang doesn't implement this warning, so it only surfaces on
+ubuntu CI.
+
+**Fix:** Bound the embedded string with a precision so the total provably fits:
+`"CompileError: Parse error: %.100s"` (128 − 27-char prefix − NUL = 100 usable).
+Truncating an over-long nested message inside a fixed error buffer is correct
+behaviour anyway. Do NOT silence the warning; cap the field.
+
+## An agent isolated in a `.claude/worktrees/<id>` worktree must NEVER `cd` to the repo's top-level absolute path — it silently lands in a DIFFERENT sibling checkout
+
+**Context:** Started a task already inside a dedicated worktree at
+`/Users/.../coding-adventures/.claude/worktrees/agent-<id>` (Bash's default cwd,
+confirmed by an early `pwd`). Ran a later command as
+`cd /Users/.../coding-adventures && git checkout -b <branch>` out of habit —
+`/Users/.../coding-adventures` LOOKS like "the repo root" and IS a valid git
+checkout, but it is the **main/shared checkout**, a sibling of the worktree, not
+an ancestor or the same directory. The `git checkout -b` succeeded there with no
+error (it's a completely valid repo), silently switching the SHARED checkout's
+active branch and leaving the actual worktree untouched and still on its
+original branch.
+
+**How it was caught:** The Write tool refused a subsequent absolute-path write
+under `/Users/.../coding-adventures/code/...` with: "This agent is isolated in
+the worktree .../.claude/worktrees/agent-<id>. Edit the worktree copy of this
+file instead of the shared-checkout path." — i.e. the write guard, not the git
+command, is what flags the mistake. `git`/`find`/`grep`/`Read` all succeed
+silently against the wrong checkout because it's a real, valid repo with
+(usually) identical file content at the same commit — there is no error to
+notice until a Write/Edit call is rejected, or until `git status`/`git log` is
+inspected side-by-side in both directories.
+
+**Fix:** In an isolated-worktree session, never `cd` to (or hardcode absolute
+paths rooted at) the plain top-level clone path — always use the cwd Bash
+already defaults to (the actual worktree path), or explicitly prefix every
+absolute path with the worktree's own directory. If a stray `cd` to the wrong
+checkout already happened: check `git branch --show-current` and `git status
+--short` in BOTH directories, restore the shared checkout's original branch
+(`git checkout main` or whatever it was), and delete any stray branch created
+there (safe with `git branch -d` if it has no unique commits — verify with `git
+log <stray> --oneline` first). Do all actual work (branch, commits, file
+writes) only inside the real worktree path. Cross-refs the existing
+`git worktree add inherits HEAD` and "default to a fresh worktree" lessons
+above — this is the write-side counterpart: even with a correctly-created
+worktree, a single absolute-path `cd` habit can still misdirect an entire
+session.
+
+## Flat repetition chains fold into a deep tree → stack-overflow DoS (parser depth cap does NOT catch them)
+
+**Context:** COBOL compound conditions (`A AND B AND C AND …`). The parser's
+`with_max_depth` rule-depth cap bounds *rule-reference nesting* (e.g. parenthesised
+`((((…))))`), so I assumed any crafted-deep condition was already refused before
+the AST was built. It is not.
+
+**Mistake:** A grammar `{ op tail }` repetition (a flat `AND`/`OR` chain) parses as
+N flat *sibling* children at CONSTANT rule-depth — the depth cap never fires; it's
+bounded only by source length. I then folded those N siblings into a left-leaning
+binary tree (`And(Box, And(Box, …))`) and evaluated it with recursion
+(`eval_cond(l) && eval_cond(r)`). A crafted `IF A=1 AND A=1 AND … (thousands)`
+recurses N frames deep → uncatchable stack-overflow `abort` (and the recursive
+`Drop` of the deep `Box` tree overflows too). The security review caught it; my
+"parser caps depth" reasoning was the bug.
+
+**Fix / rule:** Represent repetition-folded operators as a **flat n-ary list**
+(`And(Vec<Cond>)` / `Or(Vec<Cond>)`), collected iteratively and evaluated with a
+loop (`for part in parts { … }`, short-circuiting). Then recursion depth = only the
+genuinely-nested (parenthesised) structure the parser *does* cap; a flat chain is
+O(1) stack. Dropping a flat `Vec` is iterative too. Cross-ref
+`feedback_depth_guards_dont_compose` and `feedback_verify_dos_guards_adversarially`:
+when a construct can repeat unboundedly, add an ADVERSARIAL test (here a 5000-term
+chain) that would overflow the naive version, and confirm it evaluates by
+iteration. The compiler was already safe because it *emitted* the fold iteratively
+(a flat loop over children) rather than building a tree — mirror that shape in the
+interpreter.
+
+## A rank-0 SIR22 `NDArray`'s shape doesn't identify which frontend produced it — gate display conventions on `source_language`, not value shape
+
+**Context:** Fixing `semantic-ir-to-javascript`'s three APL monadic-scalar-atom
+bugs (`neg` printing ASCII `-5` instead of APL's high-minus `¯5`; `neg` on a
+rank ≥ 1 array giving `NaN`; `sign`/`recip`/`ceil`/`floor` crashing outright) —
+bugs found by `apl-to-semantic-ir/tests/oracle.rs`. The task's own suggested
+fix (verified before implementing, per its own explicit instruction) was: "make
+`neg` check whether its operand IS a genuine NDArray, and if so, preserve the
+box (any rank including 0) so `formatSeen` routes it through the high-minus
+`ArrayRt.display` path; only fall back to the old behavior for a non-NDArray
+operand."
+
+**Mistake almost made:** That fix looks locally correct and is exactly what a
+"generalize from the bug report" pass would produce — but a rank-0 `{shape: [],
+data}` NDArray is genuinely NOT unique to APL. `matlab-to-semantic-ir`'s `^`/
+`.^` unconditionally lower to `ElementwiseOp::Pow` even for two literals (no
+scalar fast path for power), so a plain MATLAB `2 ^ 2` reaches the byte-for-byte
+identical rank-0 representation an APL scalar does by the time it reaches
+`neg`. `matlab-to-semantic-ir/tests/oracle.rs`'s own `unary_minus_on_power` case
+(`-2 ^ 2` must print ASCII `-4`) already exercises exactly this shape. Applying
+the suggested fix (box-preserve ANY rank, including 0) would have flipped that
+MATLAB case to high-minus `¯4`, silently breaking an existing, currently-green
+downstream oracle test — a real regression that a purely value-shape-driven
+fix cannot avoid, because the two languages' scalars are representationally
+indistinguishable at that point.
+
+**How it was caught:** Traced the actual generated JS for `-2 ^ 2` (a scratch
+`cargo test`-based dump of the real compiled output, not just reading source)
+*before* writing the fix, and separately traced the actual generated JS for a
+bare APL `-5` (also via a scratch dump) — which revealed the operand there is
+a BARE `IntLit`-shaped number, never an NDArray at all, meaning the "box
+preservation" idea wouldn't even fix the literal bug-report example. Both
+traces disproved a plausible-sounding, not-yet-tested design before it was
+implemented.
+
+**Fix / rule:** Only the SOURCE LANGUAGE (`module.metadata.source_language`),
+never the runtime value's own shape, can decide a *display convention* when
+two unrelated frontends can legally produce the identical runtime
+representation. The existing precedent for this is `SIR_DISPLAY_RUBY` (a
+per-module boolean baked into the emitted JS via a `__SIR_DISPLAY_RUBY__`
+placeholder substitution, gating `true`/`false` vs `#t`/`#f`) — the fix here
+added a second, analogous `SIR_DISPLAY_APL_HIGH_MINUS` flag rather than
+inventing a new mechanism. Concretely: keep VALUE-computing functions
+(`neg`/`sign`/`recip`/`ceil`/`floor`) unaware of source language entirely — a
+rank-0 operand always unwraps to a bare number exactly as before, for every
+language — and make ONLY the actual glyph decision, inside `formatSeen`
+(the shared `print`/`puts`/`format` display path), consult the new flag. This
+cleanly separates "is the VALUE correct" (source-language-independent, safe to
+fix unconditionally — e.g. the rank ≥ 1 NDArray branch, which no frontend
+besides APL ever prints raw anyway) from "is the DISPLAY SPELLING correct"
+(source-language-dependent, needs the flag). Before trusting a "box-preserve
+the value to fix the display" pattern for a value that flows through a SHARED
+backend, check whether every consumer that can construct that same runtime
+shape agrees on how it should be displayed — grep for other frontends
+lowering to the same builtin/node and read their own oracle/e2e test
+expectations, don't assume the bug report's one example generalizes.
+
+## Inserting a function above another orphans its doc comment (clippy `-D warnings` failure)
+
+Bit me twice in one session, in two different crates. When you insert a new
+function immediately *before* an existing one, you land between that function
+and its `///` doc comment:
+
+```rust
+/// Shared helper: build the `style="..."` attribute …   <- now documents nothing
+                                                          <- blank line
+/// UI35 — lower a `HostDraggable` …                      <- your new fn
+fn emit_host_draggable(…) { … }
+
+fn build_style_attr(…) { … }                              <- lost its docs
+```
+
+`cargo test` passes. `cargo clippy -- -D warnings` fails with `empty line after
+doc comment`, so it only shows up in CI unless you lint locally — which is
+exactly why the repo rule is to run clippy in BOTH feature configs before
+pushing. Insert *after* the preceding function's body instead, anchoring on its
+closing brace rather than on the next function's signature; or if you do anchor
+on a signature, move the doc block down with the insertion. Also worth knowing:
+the clippy message names the function it thinks you meant to document, which is
+your *new* function, not the one that actually lost its docs — read the line
+number, not the name.
+
+## Rewriting a CRLF file with Python can break a compiler — and `grep -c $'\r'` lies about it
+
+Editing `TaskApp.light.msl` (CRLF in the working tree, `eol=lf` in `.gitattributes`)
+by reading + rewriting it in Python produced a file the mosstyle lexer rejected:
+
+```
+mosstyle tokenization failed: LexerError at 8:1: Unexpected sequence '\r'
+```
+
+Two traps, one after the other:
+
+1. **Mixed endings.** Python's text mode translates on read *and* write, so a
+   partial rewrite can leave the original CRLF lines alongside freshly written LF
+   ones. Some hand-written lexers (mosstyle's included) accept a consistent file
+   but choke on the mix.
+2. **The obvious check gives a false negative.** `grep -c $'\r' file` reported
+   **0** under Git Bash while `od -c file | grep -c '\r'` reported **238**. I
+   nearly concluded the file was clean. Verify with `od -c`, or
+   `python -c "print(open('f','rb').read().count(b'\r'))"` — not `grep`.
+
+Fix: normalize to LF on disk, which is what git stores and what CI sees anyway
+(`git check-attr text eol -- <file>` to confirm). When scripting an edit to a
+tracked file, read and write **binary** (`open(p,'rb')` / `'wb'`) so you never
+silently re-encode line endings you weren't asked to touch.
+
+## Two OOP backend bugs the per-backend tests missed because the tests sidestepped the exercised path
+
+The `sir-conformance` matrix (real Ruby source → every backend) caught two latent
+backend bugs that every per-backend unit test passed over — both because the unit
+test happened to avoid the exact construct that breaks:
+
+1. **Ruby backend: `Foo.new` never ran `initialize`.** A `def initialize` is
+   registered like every method under the reserved `sir_um_` prefix as
+   `sir_um_initialize` — a name Ruby's own `Class#new` never calls. The `__new__`
+   emitter emitted a native `Foo.new`, so the constructor body (its `@ivar`
+   initialisers) never ran; `@n` stayed nil and `@n + 1` raised. The two existing
+   ivar e2e tests used an explicit `start`/`set` method (`c = Counter.new; c.start;
+   c.inc`), calling the initialiser BY HAND — so they never exercised construction-
+   time init. Fix: `__new__` → a `sir_new` runtime helper that `allocate`s then
+   invokes `sir_um_initialize` (mirroring Go/C/Rust). semantic-ir-to-ruby 0.18.1.
+
+2. **C backend: `raise ArgumentError, "boom"` looked up a nonexistent constant.**
+   The frontend lowers it to `raise(VarRef(Const "ArgumentError"), "boom")`; the C
+   `raise` emitter used only arg 0 and let the `Const` fall through to
+   `_sir_const_get("ArgumentError")` — but the C runtime registers no builtin
+   exception-class CONSTANTS, so it raised `NameError: uninitialized constant
+   ArgumentError` (and dropped the message). Every existing C exception test raised
+   a bare STRING (`raise "boom"` → RuntimeError), never a named class — so the
+   class-name path was never emitted. Fix: intercept a `Const` first arg as a class
+   name → `_sir_raise(_sir_error("ArgumentError", <msg>))`, on BOTH the simple and
+   the compound (non-simple message) emit paths. semantic-ir-to-c 0.17.1.
+
+**The pattern:** a unit test that reaches the same *observable outcome* by a
+different *code path* (hand-calling the initialiser; raising a string not a class)
+gives false confidence. When a backend has two ways to express a feature, cover the
+one the FRONTEND actually emits — a real-source conformance oracle is what surfaces
+the gap. (Also: both were pre-existing failures on green main, each in a DIFFERENT
+subsystem; when the whole suite is red, don't assume one root cause — bisect each
+failing `(program, backend)` cell independently.)
+
+**Third occurrence (moslayout-compiler), with a new symptom.** Inserting a test before
+an existing one splits that test's `#[test]` from its `fn` too, giving:
+
+```rust
+/// G3-4: Index access …
+#[test]                      // <- orphaned from its fn
+/// A string literal …
+#[test]
+fn my_new_test() { … }       // <- now carries TWO #[test] attributes
+```
+
+`cargo test` still passes — it just silently runs `my_new_test` **twice** (the count
+went 82 → 86 instead of 85, which is the tell). Only `clippy -D warnings` fails, as
+`duplicate_macro_attributes`. Same root cause, so the same rule applies and is worth
+restating as a hard habit: **anchor an insertion on the previous item's closing brace,
+never on the next item's signature** — attributes and doc comments both live above the
+signature, and anchoring there always cuts through them.
+
+## A brand-new `concept_tag` fails CI even with perfect content — register it in `concepts/taxonomy.json` first
+
+Adding lessons with a fresh `concept_tag` (e.g. `COURTESY-SORRY`, introducing a new
+courtesy concept alongside existing `COURTESY-PLEASE`/`COURTESY-THANKS`) failed both
+`human-language-data` integration tests — "every concept id is canonical or
+namespaced" and "has zero validation errors" — with `concept_tag 'COURTESY-SORRY' is
+neither canonical nor namespaced`. `COURTESY-PLEASE` needed no such step because it
+was already a registered concept from an earlier PR; a genuinely new concept has no
+such precedent.
+
+`code/learning/human-languages/concepts/taxonomy.json` is the canonical concept
+registry (`code/packages/typescript/human-language-data/src/loader.ts` loads it;
+`validate.ts` rejects any `concept_tag` that is neither `in taxonomy.concepts` nor
+matching the language-local `NAMESPACED_TAG` pattern like `TA-NUMBERS-1-5`). Before
+writing the first lesson for a brand-new cross-language concept, add its entry to
+`taxonomy.json` (`family`, `gloss`, `core`, optional `retires`/`notes` — copy the
+shape of a neighboring entry, e.g. `COURTESY-PLEASE`) and validate it's still parseable
+JSON, THEN write the lessons. Re-run both suites
+(`code/packages/typescript/human-language-data` + the app suite) after any new
+concept_tag lands — a green run before is not evidence the new tag is registered.
+
+## Accumulator-PR pattern: GitHub auto-deletes the head branch on merge — a push right after merge silently recreates an empty-history branch with no PR
+
+Running a "keep adding commits to one PR" loop (per explicit user instruction, see
+`feedback_consolidate_pr_when_reviewer_away.md`), a background push to
+`content/dravidian-please` succeeded with `git push` printing `[new branch]` instead
+of a normal fast-forward update — the tell that something was wrong. The repo has
+"automatically delete head branches" enabled, so the moment the user merged PR
+#9210, GitHub deleted `content/dravidian-please` on the remote. My next `git push`
+to that same branch name didn't fail or warn — it just recreated the ref from
+scratch, accepting local history that was still based on the *old* pre-merge
+`main`. The commit landed on a branch with no PR, silently orphaned, invisible
+until `gh pr list --head <branch>` came up empty.
+
+**The check that catches it:** after ANY push in an accumulator-PR loop, don't
+just verify `git rev-parse HEAD == origin/<branch>` (that was true here — the
+push "succeeded"). Also check `git push`'s own output for `[new branch]` on a
+branch you believe already has history/a PR, and independently confirm the PR
+still exists and is still open (`gh pr view <N> --json state,mergedAt`) *before*
+building the next slice, not just before pushing it. A merge can land at any
+point mid-loop, not only when you happen to check.
+
+**The fix, once caught:** `git fetch origin --quiet`, diff origin/main against
+the orphaned branch to see which commits are already merged (`git ls-tree
+origin/main -- <path>` per file, or compare `git log --oneline` lines) vs. still
+new, then `git switch -c <fresh-name> origin/main` and `git cherry-pick` only the
+truly-new commits onto a clean base — don't just re-push the stale branch. Delete
+the orphaned remote branch afterward (`git push origin --delete <name>`) so it
+doesn't linger with no PR pointing at it.
+
+## A recursion depth cap sized for an 8 MB stack still overflows Windows' 1 MB stack
+
+The C backend guards cyclic-structure display (`_sir_fmt`) and equality
+(`_sir_value_eq_d`) with a depth cap — past the cap it prints `[...]` / assumes
+equal, so `h[0] = h` terminates instead of recursing forever. The cap was `5000`,
+commented "comfortably under the stack limit." It was: on Linux/macOS (8 MB
+stack) 5000 frames (~875 KB on the display path) fit fine, so CI and the sibling
+cyclic-**sequence** test both passed. But Windows' default stack is **1 MB**, and
+5000 frames overran it **before** the cap could trip — so the very guard meant to
+prevent the overflow was unreachable there. Symptom: `cyclic_map_does_not_stack_
+overflow` failed ONLY on Windows, exit `0xC00000FD` (STACK_OVERFLOW / -1073741571).
+
+Lessons:
+1. **A depth/recursion cap must be sized for the SMALLEST stack the artifact can
+   run on, not the dev box.** Windows 1 MB is the floor for emitted C/Rust; pick
+   caps (here lowered to `500`, ~90 KB) with margin for an *unoptimised* build
+   (debug frames are 2–3× larger than the `-O` frames you might estimate from).
+2. **"Passes in CI" can mean "CI's stack is bigger," not "correct."** A
+   platform-dependent resource limit (stack, fd count, path length, default int
+   width) makes a bug invisible on the CI OS. When a guard is about a resource
+   limit, test against the tightest limit — or assert the guard *fires* (reaches
+   the `[...]` branch), not just that the program happens not to crash.
+3. `0xC00000FD` / exit `-1073741571` on Windows == stack overflow; suspect
+   unbounded (or insufficiently-bounded) recursion.
+
+## Prefer PowerShell filtering over nested jq quoting in PowerShell commands
+
+A parity-loop pre-push check embedded a jq expression containing spaces and
+quoted regular expressions in one PowerShell command. PowerShell split the
+expression before `gh` received it, so `gh pr list` rejected part of the jq
+program as an unknown argument. The following independent `git push` still ran,
+which made the noisy read-only failure easy to miss.
+
+Lessons:
+
+1. On PowerShell, request JSON from `gh`, pipe it through `ConvertFrom-Json`,
+   and filter with `Where-Object` when the jq program needs nested quoting.
+2. Keep a required precondition check separate from the external write it is
+   meant to guard. A failed check must prevent the push rather than merely share
+   a command invocation with it.
+
+## Verify pinned-tool assertions against the pinned CLI before publishing CI
+
+The OCaml toolchain workflow pinned opam `2.5.2` but tried to attest its
+repository with `opam repository get-url default`. That subcommand does not
+exist in opam 2.5, so all three runners finished compiler setup and then failed
+the same preflight before dependency installation.
+
+Lessons:
+
+1. Pinning a tool version also pins its command surface. Run every scripted
+   assertion against that exact version, rather than relying on a plausible
+   subcommand name.
+2. Do not assume a materialized `repo/<name>` checkout survives setup. The
+   setup action may populate opam's repository cache and then remove unused
+   mirrors, as it does on Windows. Query opam's own color-disabled repository
+   report, assert the exact configured name set, and require the reviewed
+   commit-qualified URL exactly once.
+3. A cross-platform failure at the same post-setup step is a shared contract
+   defect until logs prove otherwise; wait for the matrix logs and fix the one
+   common assertion.
+4. Exact machine comparisons must explicitly disable color. A CI action can
+   export `CLICOLOR_FORCE=1`, causing a correct version such as `1.9.0` to
+   arrive wrapped in ANSI escapes unless the probe passes `--color=never`.
+
+## Authenticate a WebSocket control plane in application state, not in client claims
+
+A portable WebSocket server cannot assume Unix-socket peer credentials, and the
+RFC 6455 handshake layer may intentionally expose no HTTP headers to its
+application handler. The clean boundary is a connection-local unauthenticated
+state whose first successful application request exchanges one bounded opaque
+credential through an injected authenticator. Store only the opaque authority
+returned by that adapter, drop it with the connection, and ask the adapter again
+for every operation; never treat a request field such as `principal` or `role`
+as authority.
+
+Two less obvious bounds matter at this seam:
+
+1. A 64 KiB JSON limit applied *after* WebSocket assembly still lets the runtime
+   allocate its larger default message limit. Clamp both frame and assembled
+   message limits when binding the API, then retain the pre-parse check as
+   defense in depth.
+2. Recursive duplicate-key rejection implemented by scanning every prior key is
+   quadratic. An attacker can spend the whole request budget on object keys, so
+   use a per-object `HashSet` and keep the parser recursion-depth capped.
+
+Encode revisions and nanosecond timestamps as decimal strings in JSON. They are
+opaque or 64-bit values; passing them through an IEEE-754-backed JSON consumer
+can otherwise silently destroy the exact compare-and-swap or health evidence.
+
+The matching client codec belongs beside the server codec, not inside the CLI.
+A hand-built CLI request can look correct while omitting response-version checks,
+accepting the wrong request ID, or interpreting a malformed error envelope. A
+typed sequential client should generate IDs, require an exact response ID, apply
+the same size/depth/duplicate-key bounds in the reverse direction, and return
+only a validated result or stable remote error. Then the terminal layer owns
+only argument parsing, secure credential acquisition, and human rendering.
+
+---
+
+## Lesson 95 — ZStd FHD Content_Checksum_Flag is bit 2, not bit 4 (repo-wide mistake in spec + Go + Rust)
+
+**Date:** 2026-08-03
+
+**What happened:** Rescuing `java/zstd` (CMP07) from a stale branch and running it against the real `zstd` CLI for TC-9 interop testing surfaced that `code/specs/CMP07-zstd.md`, `code/packages/go/zstd/zstd.go`, and `code/packages/rust/zstd/src/lib.rs` all document/parse the Frame Header Descriptor's `Content_Checksum_Flag` at **bit 4**. That is wrong. Verified empirically: `zstd -c file.txt` (checksum on by default) emits FHD byte `0x64`; `zstd -c --no-check file.txt` emits FHD byte `0x60` — the differing bit is **bit 2**, and the checksummed output is exactly 4 bytes longer (the trailing xxHash64). RFC 8878 §3.1.1.1 agrees: bit 4 is `Unused_bit`, bit 2 is `Content_Checksum_Flag`.
+
+**Why it went unnoticed:** Go and Rust's decoders read the (wrong) bit 4, silently discard the value (`_ = (fhd >> 4) & 1` / `let _checksum_flag = ...`), and never actually skip checksum bytes or reject trailing data after the last block — so a real checksummed `.zst` frame still "worked" by accident (the trailing 4 bytes were just ignored, per the anti-pattern in Lesson 94). The bug only becomes fatal once a decoder correctly implements the Lesson-94 "reject trailing bytes after the last block" check without ALSO fixing the checksum-flag bit position — that combination throws a false "trailing data" error on every real-world checksummed frame, breaking TC-9 CLI interop in the CLI→ours direction.
+
+**Rule:** `Content_Checksum_Flag` is FHD bit 2 (`(fhd >> 2) & 1`), not bit 4. When adding/verifying a Lesson-94-style trailing-bytes check to any ZStd port, the checksum-flag bit MUST be fixed first (or simultaneously), and the check must skip 4 bytes when it's set, before comparing final `pos` to `data.length`. Fixed in `java/zstd` (PR landing this lesson); Go and Rust still have the wrong bit documented/parsed as of this writing — low urgency there only because neither enforces the trailing-bytes check yet, but both should be corrected the next time either package is touched, to avoid the same trap resurfacing if the trailing-bytes check is ever added.
+
+---
+
+## Lesson 96 — ZStd sequences-section FSE codec had THREE compounding bugs, none catchable by internal round-trip tests; all found via real `zstd` CLI interop (TC-9)
+
+**Date:** 2026-08-03
+
+**What happened:** After fixing the seq-count byte-order bug (Lesson 250) and the FHD checksum-bit bug (Lesson 95), `java/zstd`'s TC-9 CLI interop test (compress with ours, decompress with real `zstd -d`) STILL failed with `Decoding error (36): Data corruption detected` on any input that produced more than a trivial number of LZ77 matches. All prior tests — including 17 unit tests and an isolated "encode/decode two sequences" FSE codec test — passed, because they only ever round-tripped through our OWN encoder/decoder pair. Bisecting confirmed Raw and RLE blocks interoperated fine; only Compressed (FSE) blocks failed, and the SAME minimal repro (`compress("ababababab"*3)`, one sequence: ll=2, ml=28, offset=2) also failed when compressed with the **Rust reference implementation** — i.e. this was not a Java-specific porting mistake, it was inherited from the shared design both ports followed.
+
+Three independent, compounding bugs were found by comparing against the real RFC 8878 text and the actual zstd C reference source (`ZSTD_decodeSequence`, `FSE_encodeSymbol`, `FSE_initCState2`, `FSE_buildDTable_internal` — fetched directly from `github.com/facebook/zstd`, not recalled from memory, after two independent RFC-text fetches gave answers too imprecise to trust on their own):
+
+1. **FSE table-spread algorithm used a fabricated two-pass split.** `buildDecodeTable`/`buildEncodeTable` spread symbols into table slots using "first all symbols with count>1, then all symbols with count==1" (both in ascending symbol order) — a plausible-looking but entirely invented convention. The real algorithm (`FSE_buildDTable_internal`'s low-probability branch) is a SINGLE pass over symbols 0..maxSymbolValue, placing each symbol's full count immediately when encountered. The two-pass version produces a completely different (but internally self-consistent) table layout.
+
+2. **Per-sequence field order was wrong in two ways.** RFC 8878 §3.1.1.3.2.1.2 (confirmed against `ZSTD_decodeSequence`'s literal C code): a decoder PEEKS all three symbols from current state (free — the state IS the table index, no bits consumed), THEN reads extra bits in order **OF, ML, LL**, THEN (see bug 3) updates states in order **LL, ML, OF**. The pre-fix code combined peek-and-update into one step and got both the extras/updates relative order AND the OF/ML sub-order wrong.
+
+3. **The state-transition "update" is skipped entirely for the last sequence in a block** (`if (!isLastSeq) { update LL; update ML; update OF; }` in the real decoder) — there is no "next" sequence to prepare a state for. The encoder side must mirror this: the first symbol processed in the reverse encode loop (which is the semantically LAST real sequence) cannot get its starting state via a normal bit-flushing transition (there is no corresponding decode-side bit-read to consume it) — it must be computed directly via `FSE_initCState2`'s formula (no bits written at all). The pre-fix encoder always flushed a transition for every sequence uniformly, writing bits a real decoder would never read, shifting the bit-alignment of everything that followed.
+
+**Why it went unnoticed:** All three bugs are self-cancelling as long as encode and decode use the SAME (wrong) convention — every internal round-trip test, including a dedicated low-level "build tables, encode two sequences by hand, decode them, check `(ll,ml,off)` match" unit test, passes regardless of which of the 3 bugs are present, because both sides of the comparison are wrong in the identical way. Round-trip testing against yourself can never catch a systematic, symmetric protocol deviation — only testing against an INDEPENDENT, spec-conformant implementation (the real `zstd` CLI, via TC-9) can.
+
+**Rule:**
+- For any binary codec claiming wire-format compatibility with an external spec, a same-language/same-codebase round-trip test is necessary but never sufficient. Budget real interop testing (TC-9-style: compress-here/decompress-there AND the reverse, against the actual reference tool) as early as possible, not as an afterthought — three bugs of this severity survived undetected through this package's entire history because the interop test was simply never written (confirmed: it doesn't exist in Go, Rust, Python, TypeScript, or any other language's `zstd` port in this repo either — grep for `subprocess`/`ProcessBuilder`/`Command::new`/`zstd -d` across all `code/packages/*/zstd` turned up nothing before this PR).
+- When re-deriving a "should be self-evident" wire-format detail (bit order, field order, table-construction algorithm) from memory or from a paraphrased RFC fetch, and a test still fails after the fix, DON'T iterate on more memory-based guesses — fetch the actual reference C source (`fse.h`, `fse_decompress.c`, `zstd_decompress_block.c` from `github.com/facebook/zstd`) and quote the literal code. English-prose descriptions of bit-level algorithms (even official RFC text, even fetched twice independently) are lossy in exactly the ways that matter here; C code is not.
+- This bug class is NOT Java-specific — reproduced identically against the Rust reference (`code/packages/rust/zstd`) with the same minimal repro. Every other language port's `compress()` output is very likely equally non-conformant to real zstd for any input producing more than a handful of LZ77 sequences. Flagged as a follow-up task rather than fixed in this PR (scope: `java/zstd` only) — see the spawned task for cross-language remediation.
+
+Fixed in `java/zstd`: `code/packages/java/zstd/src/main/java/com/codingadventures/zstd/Zstd.java` (`buildDecodeTable`, `buildEncodeTable`, `encodeSequencesSection`, `decompressBlock`, new `fseInitState` method). Verified against the real `zstd` CLI across an 82-case fuzz corpus (varying periodic patterns, semi-random run-length data, pure random data, and prose at multiple repeat counts) in both directions, plus the two dedicated JUnit interop tests (`tc9CliInterop`, `rtCliInteropHighSequenceCount`).
+
+## Adjudicate oracle differences against the manifest contract
+
+A full Haskell-versus-Go Rust graph comparison initially showed two Haskell-only
+edges. Deleting them to match the reference engine would have hidden valid Cargo
+dependencies: each entry used a local source alias plus an authoritative
+`package = "..."` published-name override. A reference engine is evidence, not
+the specification. When parity comparison finds an extra edge, inspect the real
+manifest and shared behavior contract before classifying it as false. If the
+oracle is incomplete, add a language-neutral fixture and repair every affected
+engine in the same dependency-shaped slice.
+
+## Adding shared build-tool fixtures must update the pinned corpus-summary tests
+
+Adding three valid conformance cases changed `validate-corpus` from 38 to 41,
+but the fixture-specific validation command still passed because it reports the
+new count rather than asserting it. CI later failed two
+`test_build_tool_conformance_runner.py` assertions that deliberately pin the
+checked-in corpus size. Whenever a shared case is added or removed, update both
+the direct `validate_corpus` summary assertion and the CLI machine-readable
+summary assertion, then run the full conformance-runner test module—not only
+`build_tool_conformance.py validate-corpus`.

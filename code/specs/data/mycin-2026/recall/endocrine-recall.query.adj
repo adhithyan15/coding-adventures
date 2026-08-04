@@ -1,0 +1,5 @@
+% Worked binding queries over the endocrine recall library.
+import "endocrine-edges.adj"
+
+? secreted_by(insulin, $Gland)  % expect pancreatic_beta_cells
+? deficiency_syndrome(adh, $Syndrome)  % expect central_diabetes_insipidus

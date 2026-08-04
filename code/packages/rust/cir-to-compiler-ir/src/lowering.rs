@@ -860,6 +860,9 @@ mod tests {
         assert_eq!(load.operands[1], IrOperand::Immediate(0));
     }
 
+    // 3.14 is arbitrary float test input for the "f64 unsupported" path, not an
+    // approximation of PI to be replaced with a constant.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_const_f64_raises_error() {
         let err = lower_err(vec![

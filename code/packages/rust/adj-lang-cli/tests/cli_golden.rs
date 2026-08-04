@@ -41,6 +41,32 @@ fn single_hypothesis_emits_cited_proof_dag() {
 }
 
 #[test]
+fn precision_lost_derived_value_is_explicit_and_not_labeled_exact() {
+    let (ok, s) = run(
+        "adjcli_precision_loss.adj",
+        r#"
+formulabook formulas {
+    formula sine(x) = latex "$\sin(x)$"
+        source "sine definition" trust authoritative
+}
+let narrowed = sine(1e-400)
+"#,
+    );
+
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"name\":\"narrowed\""), "{s}");
+    assert!(s.contains("\"precision_loss\":true"), "{s}");
+    let narrowed = s
+        .split("\"name\":\"narrowed\"")
+        .nth(1)
+        .expect("narrowed binding")
+        .split("}")
+        .next()
+        .unwrap();
+    assert!(!narrowed.contains("\"exact\""), "{s}");
+}
+
+#[test]
 fn two_hypothesis_differential_ranks_and_decides() {
     // bacterial gets a strong observed LR, viral does not → bacterial leads.
     let (ok, s) = run(
@@ -146,12 +172,23 @@ fn let_derived_value_reports_its_inferred_dimension() {
          ? speed\n",
     );
     assert!(ok, "CLI exited non-zero: {s}");
-    assert!(s.contains("\"derived\":["), "expected a derived section: {s}");
+    assert!(
+        s.contains("\"derived\":["),
+        "expected a derived section: {s}"
+    );
     assert!(s.contains("\"name\":\"speed\""), "{s}");
     assert!(s.contains("\"value\":80"), "{s}");
-    assert!(s.contains("\"dim\":\"km/h\""), "expected inferred km/h: {s}");
+    assert!(
+        s.contains("\"dim\":\"km/h\""),
+        "expected inferred km/h: {s}"
+    );
     // Exact integer arithmetic is preserved alongside the f64.
-    assert!(s.contains("\"exact\":{\"num\":80,\"den\":1}"), "{s}");
+    // NUM-5: the exact value is an arbitrary-precision BigRational, so num/den are emitted as
+    // JSON strings (they can exceed JSON's safe integer range) rather than bare numbers.
+    assert!(
+        s.contains("\"exact\":{\"num\":\"80\",\"den\":\"1\"}"),
+        "{s}"
+    );
 }
 
 #[test]
@@ -198,7 +235,10 @@ fn programs_without_a_let_omit_the_derived_section() {
          observe symptom(pressure)\n? acs\n",
     );
     assert!(ok, "CLI exited non-zero: {s}");
-    assert!(!s.contains("\"derived\""), "no let ⇒ no derived section: {s}");
+    assert!(
+        !s.contains("\"derived\""),
+        "no let ⇒ no derived section: {s}"
+    );
 }
 
 #[test]
@@ -274,12 +314,18 @@ fn compile_error_is_reported_as_json() {
 
 #[test]
 fn malformed_numeric_clauses_do_not_panic_the_cli() {
-    // Regression: a non-positive LR / out-of-range prior / overflowing
+    // Regression: a non-positive LR / out-of-range prior / un-representable
     // literal must be a clean `{"error":...}` (exit 1), never a panic.
+    //
+    // Note the numeric-literal case changed with ADJ-EXACT-NUMBERS NX-2: `1e400` is no longer
+    // malformed — it is a perfectly good exact decimal (`10^400`) now stored with full precision
+    // instead of saturating to `f64` infinity. The remaining un-representable literal is a
+    // scale-amplification payload (`1e-2000000000`), which `BigDecimal`'s `MAX_SCALE` budget
+    // rejects at parse — a few bytes that would otherwise force a multi-gigabyte materialization.
     for src in [
         "contributes -5 from x to y\n? y\n",
         "prior 2 for x\n? x\n",
-        "observe gross_income(1e400)\n? required_to_file\n",
+        "observe gross_income(1e-2000000000)\n? required_to_file\n",
     ] {
         let (ok, s) = run("adjcli_malformed.adj", src);
         assert!(!ok, "expected non-zero exit for {src:?}: {s}");

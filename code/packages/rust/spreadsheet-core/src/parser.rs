@@ -568,6 +568,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14 here is arbitrary numeric test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn parse_decimal_with_leading_equals() {
         let r = parse("=3.14").unwrap();
         assert_eq!(r, FormulaAst::Literal(CellValue::Number(3.14)));

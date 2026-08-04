@@ -1,25 +1,25 @@
-/// # IPC -- Inter-Process Communication
-///
-/// This crate implements three classic IPC mechanisms that operating systems
-/// use to let isolated processes exchange data:
-///
-/// 1. **Pipes** -- unidirectional byte streams (like pneumatic tubes)
-/// 2. **Message Queues** -- FIFO queues of typed messages (like a shared mailbox)
-/// 3. **Shared Memory** -- memory regions visible to multiple processes
-///    (like a shared whiteboard)
-///
-/// Plus an `IpcManager` that acts as the kernel component owning all IPC
-/// resources.
-///
-/// ## Quick start
-/// ```
-/// use ipc::{Pipe, MessageQueue, SharedMemoryRegion, IpcManager};
-///
-/// let mut pipe = Pipe::new(4096);
-/// pipe.write(&[72, 101, 108]).unwrap();
-/// let data = pipe.read(3);
-/// assert_eq!(data, vec![72, 101, 108]);
-/// ```
+//! # IPC -- Inter-Process Communication
+//!
+//! This crate implements three classic IPC mechanisms that operating systems
+//! use to let isolated processes exchange data:
+//!
+//! 1. **Pipes** -- unidirectional byte streams (like pneumatic tubes)
+//! 2. **Message Queues** -- FIFO queues of typed messages (like a shared mailbox)
+//! 3. **Shared Memory** -- memory regions visible to multiple processes
+//!    (like a shared whiteboard)
+//!
+//! Plus an `IpcManager` that acts as the kernel component owning all IPC
+//! resources.
+//!
+//! ## Quick start
+//! ```
+//! use ipc::{Pipe, MessageQueue, SharedMemoryRegion, IpcManager};
+//!
+//! let mut pipe = Pipe::new(4096);
+//! pipe.write(&[72, 101, 108]).unwrap();
+//! let data = pipe.read(3);
+//! assert_eq!(data, vec![72, 101, 108]);
+//! ```
 
 pub mod pipe;
 pub mod message_queue;

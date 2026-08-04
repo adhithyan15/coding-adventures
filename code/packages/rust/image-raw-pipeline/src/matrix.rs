@@ -129,6 +129,9 @@ pub fn invert_3x3(m: &[[f64; 3]; 3]) -> Option<[[f64; 3]; 3]> {
 
 #[cfg(test)]
 mod tests {
+    // Fixed 3×3 loops index two dimensions and reuse the indices in assert
+    // messages; explicit `r`/`c`/`i`/`j` ranges read clearer than iterators.
+    #![allow(clippy::needless_range_loop)]
     use super::*;
 
     // ── mat3x3_mul ────────────────────────────────────────────────────────

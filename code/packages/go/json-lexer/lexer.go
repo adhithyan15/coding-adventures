@@ -31,58 +31,19 @@
 package jsonlexer
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
-// getGrammarPath computes the absolute path to the json.tokens grammar file.
+// CreateJSONLexer returns a GrammarLexer configured with the JSON token
+// grammar, ready to tokenize the given JSON text.
 //
-// We use runtime.Caller(0) to find the directory of this Go source file at
-// runtime, then navigate up three levels (json-lexer -> go -> packages ->
-// code) to reach the grammars directory. This approach works regardless of the
-// working directory, which is important because tests and the build tool may
-// run from different locations.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    json.tokens        <-- this is what we want
-//	  packages/
-//	    go/
-//	      json-lexer/
-//	        lexer.go        <-- we are here (3 levels below code/)
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "json", "json.tokens")
-}
-
-// CreateJSONLexer loads the JSON token grammar and returns a configured
-// GrammarLexer ready to tokenize the given JSON text.
-//
-// The returned lexer operates in default mode (no indentation tracking).
-// JSON's whitespace is handled by skip patterns: spaces, tabs, carriage
-// returns, and newlines are all consumed silently between tokens.
-//
-// Returns an error if the grammar file cannot be read or parsed.
+// The grammar is embedded at compile time as native Go in _grammar.go
+// (TokenGrammarData); nothing is read from disk at run time. The lexer works
+// unchanged when the package is built standalone and needs no filesystem
+// capability. The error result is retained for API compatibility and is
+// always nil.
 func CreateJSONLexer(source string) (*lexer.GrammarLexer, error) {
-	return StartNew[*lexer.GrammarLexer]("jsonlexer.CreateJSONLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	return lexer.NewGrammarLexer(source, TokenGrammarData), nil
 }
 
 // TokenizeJSON is a convenience function that tokenizes JSON text in a single

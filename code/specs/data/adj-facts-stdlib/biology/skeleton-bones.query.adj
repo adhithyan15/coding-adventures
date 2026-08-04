@@ -1,0 +1,22 @@
+% ============================================================================
+% skeleton-bones.query.adj — a worked recall over the biology skeleton-bones library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where is the femur?": it
+% states no anatomy fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `bone_region`
+% rows and returns the region + the table's source/locator/trust. The fourth
+% query runs the relation BACKWARD (bind the region `arm`, recall the bones in
+% it — humerus, radius, ulna). A word that is not one of these bones abstains
+% honestly — the engine never invents a region.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli skeleton-bones.query.adj
+% ============================================================================
+
+import "skeleton-bones.adj"
+
+? bone_region(femur, $Region)      % expect leg
+? bone_region(patella, $Region)    % expect knee
+? bone_region(sternum, $Region)    % expect chest
+? bone_region($Bone, arm)          % reverse bind — expect humerus ; radius ; ulna
+? bone_region(spleen, $Region)     % expect abstain — the spleen is an organ, not a bone

@@ -198,7 +198,7 @@ arithmetic.
 
 ### Harness
 
-- `scripts/adj_pr6_foundation_bench.py` — Python driver that iterates
+- `code/scripts/adj_pr6_foundation_bench.py` — Python driver that iterates
   the 8 ADJ18 declarations × 5 ADJ12 models matrix, shells out to
   the bench binary per cell, captures JSON output, writes to
   `code/specs/data/adj25-pr6-foundation-bench-YYYY-MM-DD.json`.

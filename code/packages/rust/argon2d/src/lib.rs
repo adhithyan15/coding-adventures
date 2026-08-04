@@ -179,7 +179,7 @@ fn blake2b_long(t: usize, x: &[u8]) -> Result<Vec<u8>, Argon2Error> {
             .map_err(|e| Argon2Error::Blake2b(format!("{:?}", e)));
     }
 
-    let r = (t + 31) / 32 - 2;
+    let r = t.div_ceil(32) - 2;
     let mut v = blake2b(&input, &Blake2bOptions::new().digest_size(64))
         .map_err(|e| Argon2Error::Blake2b(format!("{:?}", e)))?;
     let mut out = Vec::with_capacity(t);
@@ -275,6 +275,9 @@ fn fill_segment(
     }
 }
 
+// Validation mirrors RFC 9106's parameter list one-to-one, so the argument
+// count is intrinsic to the spec rather than a design smell.
+#[allow(clippy::too_many_arguments)]
 fn validate(
     password: &[u8],
     salt: &[u8],
@@ -304,7 +307,7 @@ fn validate(
     if tag_length < 4 {
         return Err(Argon2Error::TagLengthTooSmall(tag_length as usize));
     }
-    if parallelism < 1 || parallelism > 0xFF_FFFF {
+    if !(1..=0xFF_FFFF).contains(&parallelism) {
         return Err(Argon2Error::InvalidParallelism(parallelism));
     }
     if memory_cost < 8 * parallelism {
@@ -368,6 +371,10 @@ pub fn argon2d(
         .map(|_| (0..q).map(|_| vec![0u64; BLOCK_WORDS]).collect())
         .collect();
 
+    // `i` is the lane index: it is both hashed into the block seed via
+    // `le32(i as u32)` and used to place two blocks per lane, so an
+    // enumerate-based rewrite would not simplify the body.
+    #[allow(clippy::needless_range_loop)]
     for i in 0..p {
         let mut in0 = Vec::with_capacity(h0.len() + 8);
         in0.extend_from_slice(&h0);
@@ -394,6 +401,9 @@ pub fn argon2d(
     }
 
     let mut final_block = memory[0][q - 1].clone();
+    // `lane` starts at 1 (lane 0 seeds `final_block`) and the inner loop XORs
+    // word-by-word across two distinct arrays, so keep the explicit indices.
+    #[allow(clippy::needless_range_loop)]
     for lane in 1..p {
         for k in 0..BLOCK_WORDS {
             final_block[k] ^= memory[lane][q - 1][k];

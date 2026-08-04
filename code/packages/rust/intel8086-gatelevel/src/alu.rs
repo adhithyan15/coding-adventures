@@ -341,7 +341,7 @@ pub fn shl(value: u16, count: u8, width: u8) -> (u16, u8) {
     if cnt >= w { return (0, 0); }
     let cf = bits[w - cnt];
     let mut rb = vec![0u8; w];
-    for i in cnt..w { rb[i] = bits[i - cnt]; }
+    rb[cnt..w].copy_from_slice(&bits[0..w - cnt]);
     let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, cf)
 }
@@ -358,7 +358,7 @@ pub fn shr(value: u16, count: u8, width: u8) -> (u16, u8) {
     if cnt >= w { return (0, 0); }
     let cf = bits[cnt - 1];
     let mut rb = vec![0u8; w];
-    for i in 0..(w - cnt) { rb[i] = bits[i + cnt]; }
+    rb[0..w - cnt].copy_from_slice(&bits[cnt..w]);
     let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, cf)
 }
@@ -378,7 +378,7 @@ pub fn sar(value: u16, count: u8, width: u8) -> (u16, u8) {
     } else {
         let cf = bits[cnt - 1];
         let mut rb = vec![sign; w];
-        for i in 0..(w - cnt) { rb[i] = bits[i + cnt]; }
+        rb[0..w - cnt].copy_from_slice(&bits[cnt..w]);
         (cf, rb)
     };
     let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));

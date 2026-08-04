@@ -40,6 +40,10 @@ statement   = prior_decl
             | dictionary_decl
             | define_decl
             | rulebook_decl
+            | formulabook_decl
+            | table_decl
+            | statemachine_decl
+            | argument_decl
             | use_decl
             | import_decl
             ;
@@ -64,13 +68,21 @@ contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation }
 # very large LR over a CPU-evaluated comparison, not a second engine.
 evidence  = predicate | term ;
 
-predicate = IDENT ( GE | LE | GT | LT | EQEQ ) expr ;
+# The left-hand side is ordinarily a bare slot IDENT (`gross_income >= 14600`).
+# ADJ-RULE-SUBSTRATE RS-1 also allows a FORMULA APPLICATION there
+# (`bmi(body_mass, height) >= 30`) so a rulebook can BRANCH ON A FORMULA: the
+# lowerer computes the formula into a derived value and gates the contribution on
+# it. `apply` is tried first; because it begins with the same IDENT as the bare
+# slot, the parser backtracks — `apply` consumes the IDENT, fails when no `(`
+# follows, and the alternation falls back to a bare IDENT slot (the same
+# maximal-backtracking discipline `evidence = predicate | term` already relies on).
+predicate = ( apply | IDENT ) ( GE | LE | GT | LT | EQEQ ) expr ;
 
 interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for" term { annotation } ;
 
 uncertain_decl   = "uncertain" LBRACE term { COMMA term } RBRACE "for" term { annotation } ;
 
-observe_decl     = "observe" term ;
+observe_decl     = "observe" term { annotation } ;
 
 # ----------------------------------------------------------------
 # `relate <rel>(<a>, <b>)` — a ground RELATIONAL EDGE (MYCIN-2026 REL-2),
@@ -131,7 +143,19 @@ context_order_decl = "context_order" LBRACE IDENT GT IDENT { COMMA IDENT GT IDEN
 # ----------------------------------------------------------------
 functional_decl  = "functional" term ;
 
-query_decl       = QUESTION term ;
+query_decl       = QUESTION ( lookup_expr | term ) ;
+
+# `lookup <table> <keycol> = <n> mode <mode> give <valcol>` — a table lookup
+# (ADJ-TABLES RS-5c/RS-5d). A `?`-prefixed recall over a `table` read as a numeric
+# function of its key column. `mode range` reads it as a STEP function: it selects
+# the breakpoint row whose key is the greatest key `<=` the query and returns that
+# row's value column verbatim WITH the row's citation. `mode interpolated` reads it
+# as a PIECEWISE-LINEAR function: it blends the two bracketing rows exactly and
+# carries both citations. Outside the table's domain either abstains honestly.
+# `lookup`/`mode`/`give` are IDENT-matched literals — no new lexer tokens — and
+# `mode <name>` selects the tactic (`range` or `interpolated`; both built).
+lookup_expr      = "lookup" IDENT IDENT EQUALS signed_number "mode" IDENT "give" IDENT ;
+signed_number    = [ MINUS ] NUMBER ;
 
 # ----------------------------------------------------------------
 # `let <name> = <expr>` — a COMPUTED value (ADJ expansion step 3).
@@ -151,9 +175,34 @@ expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
 term_expr = factor { ( STAR | SLASH ) factor } ;
 
-factor    = latex_expr | asciimath_expr | mathml_expr | unicodemath_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+factor    = latex_expr | asciimath_expr | mathml_expr | unicodemath_expr | agg | apply | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
+
+# ----------------------------------------------------------------
+# apply — a FORMULA APPLICATION as a sub-expression (ADJ-RULE-SUBSTRATE RS-1).
+#
+#   quotient(numerator, denominator)      % formula calling formula
+#   ratio(product(a, b), c)               % arbitrarily nested
+#
+# This is the composition core: wherever the arithmetic `expr` grammar appears —
+# a `formula` body, a `let`, a `contributes … from <expr>` predicate — a named
+# library formula may be applied to argument EXPRESSIONS (each arg is a full
+# `expr`, so applications nest). The lowerer resolves the name against the
+# imported `formulabook`s, binds params → args, and substitutes the callee's body
+# recursively (with a depth guard), then lowers the expanded, application-free
+# expression through the SAME compute path a `let` uses.
+#
+# ORDERING: `apply` is listed AFTER `agg` in `factor`, so the aggregation
+# keywords (`sum`/`count`/`min`/`max`/`avg`) with a single-slot argument still
+# parse as `agg` (their alternative wins first); a non-aggregation `IDENT(` — or
+# an aggregation keyword given the wrong arity — falls through to `apply`. And
+# `apply` is BEFORE the bare `IDENT` alternative, so `IDENT(` is an application
+# while a bare `IDENT` (no paren) remains a slot reference — the parser backtracks
+# out of `apply` when no `(` follows, exactly as `evidence = predicate | term`
+# does. An `IDENT` that names a formula but is written WITHOUT parentheses is a
+# plain slot reference, not a zero-arg application (arity is checked at lowering).
+apply     = IDENT LPAREN [ expr { COMMA expr } ] RPAREN ;
 
 # Native LaTeX math input. The model may write `latex "$5 \times 12$"` anywhere
 # an ADJ arithmetic expression is accepted; the adj-lang frontend parses the
@@ -280,6 +329,180 @@ rulebook_decl = "rulebook" IDENT LBRACE { statement } RBRACE ;
 use_decl      = "use" IDENT ;
 
 # ----------------------------------------------------------------
+# Formulabook + formula (ADJ-FORMULA-LIBRARIES rung-0 — the importable,
+# provenanced, PARAMETERIZED formula as a first-class library construct, a
+# SIBLING of `rulebook`). This is the substrate the ladder always named but
+# never built: a reusable, cited formula that lives in a library, is `import`ed,
+# and is APPLIED — not inlined per question.
+#
+#   formulabook body_metrics {
+#       use bmi_vocab
+#       formula bmi(body_mass, height) = body_mass / (height * height)
+#           source "BMI is body mass divided by the square of body height … kg/m²."
+#           locator "https://www.who.int/…/body-mass-index"
+#           trust authoritative
+#   }
+#
+# A `formulabook <name> { … }` groups formulas under one importable name; a
+# `use <dict>` brings a dictionary's terms into scope so the formula's parameter
+# names are typed vocabulary. A `formula <name>(<p>, …) = <expr>` is a NAMED,
+# PARAMETERIZED `let`: `<expr>` REUSES the existing `let` expression grammar
+# (`expr`) verbatim — fractions / products / sums / calls / parens over
+# identifiers + numbers — and the only new idea is that a leaf naming a `<param>`
+# is a FORMAL PARAMETER, bound at apply time (`? bmi(body_mass, height)`) instead
+# of a `Ref` to an already-`observe`d fact. Each formula carries the SAME
+# provenance envelope every grounded clause carries (`source "…" locator "…"
+# trust <tier>`, the `{ annotation }` tail); a shipped formula MUST be sourced
+# (the provenance-required lint, enforced in the lowerer). `formulabook`/`formula`
+# are IDENT-matched literals — no lexer keywords, exactly like `rulebook`/`define`.
+# ----------------------------------------------------------------
+
+formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE ;
+
+formulabook_item = use_decl | formula_decl ;
+
+formula_decl     = "formula" IDENT LPAREN [ formula_params ] RPAREN formula_body [ formula_requires ] { annotation } ;
+
+formula_params   = IDENT { COMMA IDENT } ;
+
+# The formula body is EITHER the single-expression sugar (`= <expr>`, the
+# rung-0 form every shipped library uses) OR a MULTI-STEP block
+# (ADJ-RULE-SUBSTRATE RS-2): `{ let s1 = e1  let s2 = e2  … <final-expr> }`.
+# Each `let`-step names an intermediate value (a conjunction of sub-goals); a
+# later step and the final expression may reference an earlier step's name in
+# addition to the formula parameters. The `let`-literal that opens a step and
+# the `factor` that opens the final expression have DISJOINT first-sets (no
+# expression begins with the `let` literal), so `{ formula_step } expr` is
+# unambiguous. The lowerer desugars the steps into the final expression by
+# in-order substitution, so a multi-step body reuses the RS-1 apply/expand
+# pipeline verbatim (worked example: `cockcroft_gault` with named steps).
+formula_body     = EQUALS expr | LBRACE { formula_step } expr RBRACE ;
+
+formula_step     = "let" IDENT EQUALS expr ;
+
+formula_requires = "requires" formula_precondition { COMMA formula_precondition } ;
+
+formula_precondition = IDENT LPAREN [ expr { COMMA expr } ] RPAREN ;
+
+# ----------------------------------------------------------------
+# Table (ADJ-TABLES RS-5 — native tabular data as a first-class construct,
+# a SIBLING of `rulebook`/`formulabook`). Real reference knowledge (unit
+# conversions, reference ranges, dose-by-weight charts, tax brackets,
+# nomograms, defining constants) is TABULAR, not prose — and today each row
+# has to be hand-expanded into a separate `relate` with the provenance
+# envelope repeated per row. A `table` ingests a published table verbatim:
+#
+#   table unit_conversions {
+#       columns unit, centimetres          # ordered column names = row arity
+#       row (inch, 2.54)                   # atoms + exact numbers, one per column
+#       row (foot, 30.48)
+#       source  "General Tables of Units of Measurement …"
+#       locator "https://www.nist.gov/…"   # the published table's page
+#       trust   authoritative
+#   }
+#
+#   ? unit_conversions(inch, $cm)          # EXACT lookup → 2.54, cited to the table
+#
+# Each `row (v1, …, vn)` lowers to a ground relation `unit_conversions(v1, …, vn)`
+# carrying the table's provenance — BYTE-IDENTICAL to how `relate` lowers — so
+# EXACT lookup is just the existing SLD binding query, with zero new engine code,
+# and a looked-up number feeds a `let`/`formula` through the existing slot/`Ref`
+# path. The `columns` clause fixes the arity (a row of a different length is a
+# compile error). The `{ annotation }` tail is the SAME `source/locator/trust`
+# provenance envelope every grounded clause carries; a shipped table must be
+# sourced. `use <dict>` (optional) vocabulary-checks the column entities.
+# Range/bracket and interpolated lookup are staged follow-ups (see ADJ-TABLES.md);
+# they read the SAME table declaration differently. `table`/`columns`/`row` are
+# IDENT-matched literals — no lexer keywords, exactly like `rulebook`/`formulabook`.
+# ----------------------------------------------------------------
+
+table_decl   = "table" IDENT LBRACE { use_decl } columns_decl { table_row } { annotation } RBRACE ;
+
+columns_decl = "columns" IDENT { COMMA IDENT } ;
+
+# A row may carry its OWN provenance block (ADJ-TABLES RS-5e), overriding the
+# table envelope field-by-field for that row — so a lookup cites the span that
+# defends the row it actually SELECTED, not the table's first sentence. The block
+# is BRACED deliberately: a table's envelope is written AFTER its rows, so a bare
+# trailing annotation would be ambiguous (last row's? or the table's?). LBRACE
+# disambiguates, and a row with no block inherits the envelope exactly as before.
+table_row    = "row" LPAREN row_item { COMMA row_item } RPAREN [ LBRACE { annotation } RBRACE ] ;
+
+row_item     = NUMBER | IDENT | STRING ;
+
+# ----------------------------------------------------------------
+# State machine (ADJ-STATEMACHINE.md — RS-3). A `statemachine` is the control-flow
+# construct for long-horizon procedural reasoning (triage→work-up→decision;
+# titrate-until-target). Like `table`/`formulabook` it is a sibling top-level
+# declaration lowering onto the existing engine; `statemachine`/`initial`/`state`/
+# `transition`/`on`/`to`/`do`/`exit`/`when`/`yield`/`budget`/`steps`/`assert` are
+# IDENT-matched literals — no lexer keywords. The declared order is: vocabulary,
+# the initial state, the states, the exit criteria, then the required step budget.
+# RS-3b (this slice) parses + lowers the STRUCTURE; the driver is RS-3c.
+# ----------------------------------------------------------------
+
+statemachine_decl = "statemachine" IDENT LBRACE
+                        { use_decl }
+                        "initial" IDENT
+                        { sm_state }
+                        { sm_exit }
+                        "budget" NUMBER "steps"
+                        { annotation }
+                    RBRACE ;
+
+sm_state      = "state" IDENT LBRACE { sm_transition } RBRACE ;
+
+# A transition fires when its guard holds, moving to the target state and
+# running its (optional) actions. Guard/action reuse the existing expression and
+# term grammar; the RS-3b minimal subset is `guard = (apply|IDENT) [ relop expr ]`
+# and `action = "assert" term` (formula-valued guards and `let`-actions are a
+# follow-up, rejected as a typed LowerError — never silently dropped).
+sm_transition = "transition" "on" sm_guard "to" IDENT [ "do" sm_action { COMMA sm_action } ] ;
+
+sm_exit       = "exit" "when" sm_guard "yield" expr ;
+
+sm_guard      = ( apply | IDENT ) [ ( GE | LE | GT | LT | EQEQ ) expr ] ;
+
+sm_action     = "assert" term ;
+
+# ----------------------------------------------------------------
+# Argument graph (ADJ-ARGUMENT-IR — ADR-2). An `argument` decomposes a piece of
+# prose into named PREMISES and INFERENCE steps that DESUGAR to the existing
+# substrate: a premise → a provenanced `relate` fact; an inference → a `rule`
+# whose body is the premises/inferences it cites `from`; the paper's thesis is the
+# derived head a trailing `? thesis(…)` queries. Because it lowers to facts + rules,
+# the engine derives the thesis and `--explain` renders the chain for free (no new
+# evaluator). `argument`/`premise`/`infer`/`conclude`/`from` are IDENT-matched
+# literals — no lexer keywords, exactly like `statemachine`/`table`. A premise's
+# `<kind>` is `extracted | imported | inferred`; an inference's `<connective>` is the
+# open-vocabulary connective as written (because/therefore/suggests/…). Each carries
+# the same `{ annotation }` source/locator/trust envelope every grounded clause does
+# — that is the cite/warrant the ADR-3 grounding gate will check. `from` references
+# are `arg_ref` nodes so they are cleanly separable from the name/connective tokens.
+# ----------------------------------------------------------------
+
+argument_decl = "argument" IDENT LBRACE { arg_premise } { arg_infer } RBRACE ;
+
+arg_premise   = "premise" IDENT COLON IDENT term { annotation } ;
+
+# arg_infer (ADJ-ARGUMENT-REBUTTAL AR-3) — an inference may now carry a paper's
+# ATTACK edges, so support AND rebuttal/undercut compose in ONE `argument` block:
+#   * `unless <defeater> { , <defeater> }` — an UNDERCUT guard. Each defeater term
+#     lowers to a `not <term>` body literal (negation-as-failure), so the step fires
+#     only while its warrant is not defeated. Wrapped in an `arg_unless` node so it is
+#     cleanly separable from the `conclude` term (exactly as `from` refs are `arg_ref`s).
+#   * trailing `context: <name>` — the CONTEXT this inference is grounded in, mirroring
+#     `rule_decl` (ADJ73 PR-B). With a `functional` thesis + `context_order`, a rival
+#     inference in an outranking context REBUTS (defeats) this one — the engine withdraws
+#     the loser. Both desugar to the proven `rule`/`context`/NAF machinery — zero new
+#     engine code.
+arg_infer     = "infer" IDENT COLON IDENT "conclude" term "from" arg_ref { COMMA arg_ref } [ arg_unless ] { annotation } [ "context" COLON IDENT ] ;
+
+arg_unless    = "unless" term { COMMA term } ;
+
+arg_ref       = IDENT ;
+
+# ----------------------------------------------------------------
 # Import (MYCIN-2026 M3 — composition across files). `import "<path>"`
 # parses a sibling `.adj` file and splices its `dictionary` / `define` /
 # `rulebook` declarations (and any bare clauses) into the importing program,
@@ -309,12 +532,21 @@ annotation = source_annotation
            | locator_annotation
            | trust_annotation
            | cites_annotation
+           | quote_annotation
            ;
 
 source_annotation  = "source" STRING ;
 locator_annotation = "locator" STRING ;
 trust_annotation   = "trust" trust_tier ;
 cites_annotation   = "cites" STRING "locator" STRING ;
+
+# quote_annotation (RS-4 PR-D4, ADJ-REASON-MATH §E.3.1) — a PINNED verbatim span:
+# the exact bytes at `at <offset>` in the document whose sha256 is `snapshot`.
+# This is what makes `adj-verify` report `fully_verified`, and it is FAIL-CLOSED:
+# the compiler re-checks the span against the bundled snapshot and rejects a pin
+# that does not verify. The `at` offset is SPIDER-emitted at ingest, never hand-
+# or model-authored (feedback_no_byte_arithmetic_for_llm).
+quote_annotation   = "quote" STRING "at" NUMBER "snapshot" STRING ;
 
 trust_tier = "consensus"
            | "authoritative"

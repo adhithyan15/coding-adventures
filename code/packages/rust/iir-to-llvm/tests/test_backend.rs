@@ -803,6 +803,54 @@ fn call_user_fn_non_void_emits_typed_call() {
 }
 
 #[test]
+fn boolean_call_result_stays_i1_for_logical_ops_and_branches() {
+    let id = IIRFunction::new(
+        "id",
+        vec![("p".into(), "bool".into())],
+        "bool",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("p".into())], "bool")],
+    );
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("f".into()), vec![Operand::Bool(false)], "bool"),
+            IIRInstr::new(
+                "call",
+                Some("called".into()),
+                vec![Operand::Var("id".into()), Operand::Var("f".into())],
+                "bool",
+            ),
+            IIRInstr::new("not", Some("inverted".into()), vec![Operand::Var("called".into())], "bool"),
+            IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var("inverted".into()), Operand::Var("no".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("label", None, vec![Operand::Var("no".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "bool_call".into(),
+        functions: vec![id, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+
+    let ll = lower(&module);
+    assert!(ll.contains("%called = call i1 @id(i1 0)"), "expected bool call; got:\n{ll}");
+    assert!(ll.contains("%inverted = xor i1 %called, -1"), "expected i1 not; got:\n{ll}");
+    assert!(ll.contains("br i1 %inverted"), "expected i1 branch; got:\n{ll}");
+    assert!(!ll.contains("trunc i64 %called to i1"), "must not widen and truncate a bool call; got:\n{ll}");
+}
+
+#[test]
 fn call_void_return_omits_lhs() {
     // sink(x) { ret_void }
     // f() { v = const 7; call sink(v); ret_void }
@@ -1355,13 +1403,13 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRLlvmError::UndefinedVariable { function: "f".into(), name: "nope".into() });
 }
 
-/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "lispy_cons"`) lowers
-/// to a `call i64 @__twig_lispy_cons(i64, i64)` and emits exactly one matching
+/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "dyn_cons"`) lowers
+/// to a `call i64 @__dyn_cons(i64, i64)` and emits exactly one matching
 /// `declare`. A lisp heap reference type (`ref<LispyPair>`) is accepted (carried
 /// as a tagged `i64`); a non-lisp `ref<Foo>` is still rejected (see
 /// `validate_rejects_unsupported_type`).
 #[test]
-fn lispy_cons_lowers_to_runtime_call() {
+fn dyn_cons_lowers_to_runtime_call() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1373,7 +1421,7 @@ fn lispy_cons_lowers_to_runtime_call() {
                 "call_builtin",
                 Some("p".into()),
                 vec![
-                    Operand::Var("lispy_cons".into()),
+                    Operand::Var("dyn_cons".into()),
                     Operand::Var("a".into()),
                     Operand::Var("b".into()),
                 ],
@@ -1382,22 +1430,22 @@ fn lispy_cons_lowers_to_runtime_call() {
             IIRInstr::new(
                 "call_builtin",
                 Some("h".into()),
-                vec![Operand::Var("lispy_car".into()), Operand::Var("p".into())],
+                vec![Operand::Var("dyn_car".into()), Operand::Var("p".into())],
                 "any",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "any"),
         ],
     );
     let ll = lower(&module_with(f));
-    assert!(ll.contains("declare i64 @__twig_lispy_cons(i64, i64)"), "cons declare; got:\n{ll}");
-    assert!(ll.contains("declare i64 @__twig_lispy_car(i64)"), "car declare; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__twig_lispy_cons(i64 "), "cons call site; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__twig_lispy_car(i64 "), "car call site; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_cons(i64, i64)"), "cons declare; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_car(i64)"), "car declare; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_cons(i64 "), "cons call site; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_car(i64 "), "car call site; got:\n{ll}");
     // Exactly one declare per used builtin (no duplicates from two call sites).
-    assert_eq!(ll.matches("declare i64 @__twig_lispy_cons").count(), 1, "one cons declare");
+    assert_eq!(ll.matches("declare i64 @__dyn_cons").count(), 1, "one cons declare");
 }
 
-/// An unknown `lispy_*`-shaped builtin that is NOT in `LISPY_BUILTINS` is rejected.
+/// An unknown `dyn_*`-shaped builtin that is NOT in `DYN_BUILTINS` is rejected.
 #[test]
 fn unknown_builtin_still_rejected() {
     let f = IIRFunction::new(
@@ -1408,7 +1456,7 @@ fn unknown_builtin_still_rejected() {
             IIRInstr::new(
                 "call_builtin",
                 Some("x".into()),
-                vec![Operand::Var("lispy_bogus".into())],
+                vec![Operand::Var("dyn_bogus".into())],
                 "i64",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
@@ -1493,9 +1541,11 @@ fn symbol_typed_const_validates_and_lowers() {
 // 8. LLVM05 — byte-tape memory + Brainfuck I/O (LANG-MATRIX LM-L Brainfuck)
 // ===========================================================================
 
-/// `alloc_bytes dest <- size` lowers to a zero-filling `@calloc` and declares it.
+/// `alloc_bytes dest <- size` lowers to a zero-filling, GC-tracked
+/// `@__twig_alloc_bytes` call (Twig GC completion round — no longer the raw,
+/// never-freed `@calloc` this used to emit) and declares it.
 #[test]
-fn alloc_bytes_emits_calloc_and_declare() {
+fn alloc_bytes_emits_twig_alloc_bytes_and_declare() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1508,10 +1558,18 @@ fn alloc_bytes_emits_calloc_and_declare() {
         ],
     );
     let ll = lower(&module_with(f));
-    assert!(ll.contains("declare ptr @calloc(i64, i64)"), "calloc declared once; got:\n{ll}");
     assert!(
-        ll.contains("%t = call ptr @calloc(i64 30000, i64 1)"),
-        "alloc_bytes → zero-filled calloc; got:\n{ll}"
+        ll.contains("declare i64 @__twig_alloc_bytes(i64)"),
+        "__twig_alloc_bytes declared once; got:\n{ll}"
+    );
+    assert!(!ll.contains("@calloc"), "calloc must no longer be called; got:\n{ll}");
+    assert!(
+        ll.contains("call i64 @__twig_alloc_bytes(i64 30000)"),
+        "alloc_bytes → GC-tracked __twig_alloc_bytes; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("%t = inttoptr i64 ") && ll.contains(" to ptr"),
+        "the i64 handle must be recovered as a ptr for load_byte/store_byte; got:\n{ll}"
     );
 }
 
@@ -1845,11 +1903,22 @@ fn integer_local_still_gets_i64_slot() {
 // LANG-FULL E5 — bounds-checked arrays (static length-prefixed model)
 // ===========================================================================
 
-/// `alloc_array`/`array_set`/`array_get`/`array_len` lower to a length-prefixed
-/// `@calloc` block with an explicit `icmp uge`/`llvm.trap` bounds check and a
-/// typed `getelementptr`+`load`/`store`.
+/// `alloc_array`/`array_set`/`array_get`/`array_len` lower to a
+/// length-prefixed block with an explicit `icmp uge`/`llvm.trap` bounds
+/// check and a typed `getelementptr`+`load`/`store`. A genuinely scalar
+/// element type (`i64` here) allocates via the plain no-ref
+/// `@__twig_alloc_bytes` — no longer the raw, never-freed `@calloc` this
+/// used to emit, but also NOT the reference-tracing
+/// `@__twig_alloc_ref_array_bytes` allocator, since a scalar array holds no
+/// GC handles for the collector to trace. (See
+/// `array_of_str_elements_emits_twig_alloc_ref_array_bytes` below for the
+/// reference-typed-element case, and `lower_alloc_array`'s doc comment /
+/// `AOT00-T7-array-reference-tracing.md` for why the two must stay
+/// distinct — applying the reference-tracing allocator unconditionally was
+/// found by security review to risk silently corrupting a scalar array's
+/// contents during compaction.)
 #[test]
-fn array_ops_emit_calloc_trap_and_gep() {
+fn array_ops_emit_twig_alloc_bytes_trap_and_gep() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1868,9 +1937,25 @@ fn array_ops_emit_calloc_trap_and_gep() {
         ],
     );
     let ll = lower(&module_with(f));
-    // Allocation: length-prefixed calloc block.
-    assert!(ll.contains("declare ptr @calloc(i64, i64)"), "calloc declared; got:\n{ll}");
-    assert!(ll.contains("call ptr @calloc(i64"), "alloc_array uses calloc");
+    // Allocation: length-prefixed, GC-tracked, but the plain no-ref
+    // allocator — this instantiation's element type is scalar i64.
+    assert!(
+        ll.contains("declare i64 @__twig_alloc_bytes(i64)"),
+        "__twig_alloc_bytes declared; got:\n{ll}"
+    );
+    assert!(!ll.contains("@calloc"), "calloc must no longer be called; got:\n{ll}");
+    assert!(
+        ll.contains("call i64 @__twig_alloc_bytes(i64"),
+        "alloc_array of a scalar element uses __twig_alloc_bytes"
+    );
+    assert!(
+        !ll.contains("call i64 @__twig_alloc_ref_array_bytes"),
+        "a scalar-element array must NOT use the reference-tracing allocator; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("inttoptr i64 ") && ll.contains(" to ptr"),
+        "the i64 handle must be recovered as a ptr for the length store/element GEPs"
+    );
     // Trap infra + explicit unsigned bounds check (catches negative + >= len).
     assert!(ll.contains("declare void @llvm.trap()"), "llvm.trap declared");
     assert!(ll.contains("icmp uge i64"), "explicit bounds compare");
@@ -1879,6 +1964,35 @@ fn array_ops_emit_calloc_trap_and_gep() {
     // Typed element access + length header read.
     assert!(ll.contains("getelementptr i64, ptr"), "typed element GEP");
     assert!(ll.contains("store i64"), "array_set stores the element");
+}
+
+/// A `str`-element array (`array<str>`) carries a GC reference in every
+/// element slot, so `alloc_array` must instead allocate via the
+/// reference-tracing `@__twig_alloc_ref_array_bytes` (registers under
+/// `__gc_register_ref_array_kind`, tracing every element slot as a possible
+/// reference) — the precise counterpart to the scalar case proven above.
+#[test]
+fn array_of_str_elements_emits_twig_alloc_ref_array_bytes() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<str>"),
+            IIRInstr::new("array_len", Some("m".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("m".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare i64 @__twig_alloc_ref_array_bytes(i64)"),
+        "__twig_alloc_ref_array_bytes declared; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("call i64 @__twig_alloc_ref_array_bytes(i64"),
+        "alloc_array of a str element uses __twig_alloc_ref_array_bytes; got:\n{ll}"
+    );
 }
 
 /// An `f64` array uses `double` element GEPs / loads / stores.
@@ -2358,6 +2472,48 @@ fn runtime_str_concat_lowers_to_twig_str_concat_call() {
         "the @__twig_str_concat extern must be declared; got:\n{ll}");
 }
 
+/// A runtime string copy is represented as a concat with the empty literal suffix.
+/// The literal global must be converted to an i64 handle before the helper call.
+#[test]
+fn runtime_str_concat_ptrtoints_a_mixed_literal_operand() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("runtime".into()),
+                vec![Operand::Var("input_str".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("empty".into()),
+                vec![Operand::Str(String::new())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_concat",
+                Some("copy".into()),
+                vec![Operand::Var("runtime".into()), Operand::Var("empty".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("copy".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("ptrtoint ptr @__twig_str_0 to i64"),
+        "a mixed literal concat operand must become an i64 handle; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("call i64 @__twig_str_concat(i64 %runtime, i64 %__scch"),
+        "the runtime concat must receive the converted literal handle; got:\n{ll}"
+    );
+}
+
 /// LANG-FULL tail — a string LITERAL passed across a function boundary must be
 /// converted from its global-pointer form to an i64 handle with `ptrtoint` before
 /// the call. Otherwise `call i64 @strlen(i64 @__twig_str_0)` puts a `ptr` constant
@@ -2423,4 +2579,206 @@ fn str_eq_over_params_calls_twig_str_eq() {
         "str_eq over params must call the runtime helper; got:\n{ll}");
     assert!(ll.contains("declare i64 @__twig_str_eq(i64, i64)"),
         "the @__twig_str_eq extern must be declared; got:\n{ll}");
+}
+
+/// LANG-FULL tail — runtime lexical string ordering has the same handle path as
+/// equality, but preserves the shared -1/0/1 contract for a downstream numeric branch.
+#[test]
+fn str_cmp_over_params_calls_twig_str_cmp() {
+    let compare = IIRFunction::new(
+        "compare",
+        vec![("a".into(), "str".into()), ("b".into(), "str".into())],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_cmp",
+                Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(compare));
+    assert!(
+        ll.contains("call i64 @__twig_str_cmp(i64 %a, i64 %b)"),
+        "str_cmp over params must call the runtime helper; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("declare i64 @__twig_str_cmp(i64, i64)"),
+        "the @__twig_str_cmp extern must be declared; got:\n{ll}"
+    );
+}
+
+// ===========================================================================
+// 8. E6d-6-LLVM — structural heap ops (alloc / field_store / field_load /
+//    is_null) + special-char function-name quoting.
+//
+//    These give the LLVM column the same word-granular heap model the native
+//    backend uses, so Twig records (and, once the tagged-world int→any
+//    coercion lands, unions) run on LLVM. A heap object is a `__twig_gc_alloc`'d
+//    block; the handle + every field are raw 64-bit words, so a field lives at
+//    byte offset `idx*8` — one `getelementptr i64, ptr, i64 <idx>`.
+// ===========================================================================
+
+/// A one-function module that exercises all four heap ops, threading a param
+/// `v` into a freshly-allocated object and reading it back.
+fn heap_ops_module() -> IIRModule {
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("c".into()), Operand::Int(0), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new(
+                "field_load",
+                Some("r".into()),
+                vec![Operand::Var("c".into()), Operand::Int(1)],
+                "ref<any>",
+            ),
+            IIRInstr::new("is_null", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    module_with(f)
+}
+
+#[test]
+fn alloc_calls_gc_alloc_with_default_size_and_declares_extern() {
+    let ll = lower(&heap_ops_module());
+    // Default payload is a 2-word LispyPair (16 bytes), matching the native backend.
+    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 16)"), "{ll}");
+    // The extern must be declared exactly once when `alloc` is used.
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
+}
+
+#[test]
+fn alloc_honours_explicit_payload_size() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![Operand::Int(24)], "ref<LispyPair>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 24)"), "{ll}");
+}
+
+#[test]
+fn field_store_writes_word_at_scaled_offset() {
+    let ll = lower(&heap_ops_module());
+    // inttoptr the i64 handle, GEP by the field index (i64-scaled → *8), store the word.
+    assert!(ll.contains("inttoptr i64 %c to ptr"), "{ll}");
+    assert!(ll.contains("getelementptr i64, ptr"), "{ll}");
+    assert!(ll.contains("store i64 %v, ptr"), "{ll}");
+}
+
+#[test]
+fn field_load_reads_word_at_scaled_offset() {
+    let ll = lower(&heap_ops_module());
+    // field_load[1] → GEP index 1 then load an i64 into the dest.
+    assert!(ll.contains("getelementptr i64, ptr %flp") || ll.contains("getelementptr i64, ptr"), "{ll}");
+    assert!(ll.contains("%r = load i64, ptr"), "{ll}");
+}
+
+#[test]
+fn is_null_compares_handle_to_zero_and_zexts() {
+    let ll = lower(&heap_ops_module());
+    assert!(ll.contains("icmp eq i64 %c, 0"), "{ll}");
+    assert!(ll.contains("zext i1 %n.i1 to i64"), "{ll}");
+}
+
+#[test]
+fn field_store_must_not_have_dest() {
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "void",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                Some("bad".into()),
+                vec![Operand::Var("c".into()), Operand::Int(0), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default()).unwrap_err();
+    assert!(matches!(err, IIRLlvmError::InvalidOperand { .. }), "{err:?}");
+}
+
+#[test]
+fn field_index_must_be_non_negative_int() {
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "void",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                // srcs[1] is a Var, not an Int field index → rejected.
+                vec![Operand::Var("c".into()), Operand::Var("v".into()), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default()).unwrap_err();
+    assert!(matches!(err, IIRLlvmError::InvalidOperand { .. }), "{err:?}");
+}
+
+/// A function whose name needs LLVM quoting (`?`), called from `main`. Both the
+/// `define` and the `call` must use the SAME quoted spelling so the reference
+/// resolves — an unquoted `@Some?` is a hard LLVM parse error.
+#[test]
+fn special_char_function_names_are_quoted_at_define_and_call() {
+    let predicate = IIRFunction::new(
+        "Some?",
+        vec![("v".into(), "i64".into())],
+        "i64",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64")],
+    );
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("Some?".into()), Operand::Var("k".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "t".into(),
+        functions: vec![predicate, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert!(ll.contains(r#"define i64 @"Some?"("#), "define not quoted:\n{ll}");
+    assert!(ll.contains(r#"call i64 @"Some?"("#), "call not quoted:\n{ll}");
+    // A hyphenated name (Twig record accessor `point-x`) also needs quoting; a
+    // plain identifier must stay UNQUOTED (quoting is conservative but the common
+    // case must not regress to noisy output).
+    assert!(!ll.contains(r#"@"main""#), "plain name should stay unquoted:\n{ll}");
 }

@@ -1,0 +1,90 @@
+% ============================================================================
+% expected-aa-gradient.adj — the age-predicted NORMAL alveolar–arterial oxygen gradient
+% (expected A-a gradient = (Age + 10) / 4) in the ADJ standard library.
+% ============================================================================
+% The expected-A-a-gradient entry of the *clinical* track — the UPPER-BOUND-OF-NORMAL alveolar-to-arterial
+% oxygen tension difference a healthy person of a given age should have. The measured A-a gradient (the
+% alveolar PO2 minus the arterial PO2) rises slowly with age as the lungs' ventilation–perfusion matching
+% loosens, so a raw gradient cannot be judged "high" without an age-adjusted reference. The cited page gives
+% that reference as a compact rule of thumb: take the patient's age, add 10, and divide by 4 — the result is
+% the largest A-a gradient (in mmHg) still considered normal at that age. THE EXPECTED A-a GRADIENT IS THE AGE
+% PLUS 10, ALL DIVIDED BY 4 — i.e. expected = (age + 10) / 4. A measured gradient (computed by the separate
+% `alveolar-arterial-gradient` library as alveolar PO2 − arterial PO2) is then compared against THIS expected
+% value to decide whether oxygenation is age-appropriate.
+%
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its one exact
+% rearrangement (the age at which a given gradient is exactly the upper limit of normal). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the patient's age from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "expected-aa-gradient.adj"
+%     observe patient_age(50)   % "…a 50-year-old…"   (span cited by the model)
+%     ? expected_aa_gradient(patient_age)   % engine → 15 (mmHg, upper limit of normal at 50)
+%
+% Structurally this is a SUM-WITH-A-CONSTANT OVER A CONSTANT — the age plus 10, quartered — the same shape as
+% the mid-parental-height library ((father + mother + 13) / 2), but over a SINGLE variable (the age) rather
+% than two, and with a distinct clinical meaning (a normal-value nomogram, not a sum of measurements). Two
+% embedded constants — the offset 10 (mmHg) and the divisor 4 — both exact integers as the cited expression
+% prints them; the patient's age is the one formal parameter bound at apply time, so every value the engine
+% returns is exact.
+%
+%   expected_aa_gradient(patient_age)     = (patient_age + 10) / 4        % (mmHg, upper limit of normal)
+%   patient_age(expected_aa_gradient)     = expected_aa_gradient * 4 - 10 % (solved for the age)
+%
+% The two formulas COMPOSE and invert cleanly around the worked case patient_age = 50 years (expected A-a
+% gradient = (50 + 10) / 4 = 60 / 4 = 15 mmHg): the `expected_aa_gradient` a consumer computes is exactly the
+% value the inverse formula back-solves to recover its own measured input (50).
+%
+% NOTE ON UNITS AND MODELLING: the age is in years and the expected gradient comes out in mmHg. This is a
+% linear age-adjustment RULE OF THUMB — a bedside approximation of the true (mildly non-linear) rise of the
+% normal A-a gradient with age, printed by the cited page as (Age + 10) / 4. It gives the UPPER LIMIT OF NORMAL
+% only; interpreting a patient's measured gradient against it (and looking for a cause when it is exceeded) is
+% the clinician's task, stated by the cited source but applied by the reader. The MEASURED gradient itself is
+% grounded separately in `alveolar-arterial-gradient.adj` (alveolar PO2 − arterial PO2); this library grounds
+% the AGE-BASED EXPECTED value the measurement is compared against — a distinct relation over a distinct
+% variable, from the same page.
+%
+% Both formulas are defended by the SAME clause — the quoted expected-gradient expression — because that one
+% expression ((Age + 10) / 4) sanctions the relation read either way. The quote is transcribed verbatim from
+% the StatPearls article "Physiology, Alveolar to Arterial Oxygen Gradient", where the age-based normal is
+% printed as the typed, operand-complete, correctly-bracketed expression "A-a gradient = (Age + 10) / 4" (the
+% whole numerator is parenthesized before the / 4, so strict precedence reads it correctly). Each `formula`
+% therefore carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not
+% asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `patient_age` and `expected_aa_gradient` each appear BOTH as a derived result and as an input
+% (of the other formula), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary expected_aa_gradient_vocab {
+    define patient_age           : finding  surface "age", "patient age", "patient's age", "years old"                                       % years
+    define expected_aa_gradient  : finding  surface "expected A-a gradient", "normal A-a gradient", "predicted A-a gradient", "upper limit of normal A-a gradient" % mmHg
+}
+
+% ----------------------------------------------------------------------------
+% The age-predicted normal A-a gradient, both ways. Each is a named, importable, reusable formula over its
+% formal parameter, bound at apply time, and each carries the expected-gradient expression from the StatPearls
+% article (a quote is required on a shipped formula). Each is an exact expression in the measured age and the
+% exact integers 10 and 4, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook expected_aa_gradient_laws {
+    use expected_aa_gradient_vocab
+
+    % Expected A-a gradient — the age plus the 10 mmHg offset, quartered: the upper limit of normal at that age.
+    formula expected_aa_gradient(patient_age) = (patient_age + 10) / 4
+        source "A-a gradient = (Age + 10) / 4"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545153/"
+        trust authoritative
+
+    % Age — the same expression solved for the age at which a given gradient is exactly the upper limit of
+    % normal. Defended by the SAME clause.
+    formula patient_age(expected_aa_gradient) = expected_aa_gradient * 4 - 10
+        source "A-a gradient = (Age + 10) / 4"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545153/"
+        trust authoritative
+}

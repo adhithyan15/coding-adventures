@@ -194,6 +194,7 @@ pub struct RegistryProtocolSourceSummary {
     pub scenes_without_native_refs: usize,
     pub protocol_identifiers: usize,
     pub hue_identifiers: usize,
+    pub onvif_identifiers: usize,
     pub zigbee_identifiers: usize,
     pub zwave_identifiers: usize,
     pub thread_identifiers: usize,
@@ -220,6 +221,7 @@ impl RegistryProtocolSourceSummary {
     pub fn has_multi_family_sources(&self) -> bool {
         [
             self.hue_identifiers,
+            self.onvif_identifiers,
             self.zigbee_identifiers,
             self.zwave_identifiers,
             self.thread_identifiers,
@@ -237,6 +239,7 @@ impl RegistryProtocolSourceSummary {
         self.protocol_identifiers += 1;
         match family {
             ProtocolFamily::Hue => self.hue_identifiers += 1,
+            ProtocolFamily::Onvif => self.onvif_identifiers += 1,
             ProtocolFamily::Zigbee => self.zigbee_identifiers += 1,
             ProtocolFamily::ZWave => self.zwave_identifiers += 1,
             ProtocolFamily::Thread => self.thread_identifiers += 1,
@@ -254,6 +257,8 @@ pub struct RegistryTopologySummary {
     pub entities: usize,
     pub scenes: usize,
     pub lan_http_bridges: usize,
+    pub lan_tcp_bridges: usize,
+    pub lan_udp_bridges: usize,
     pub mdns_bridges: usize,
     pub serial_bridges: usize,
     pub ble_bridges: usize,
@@ -270,6 +275,7 @@ pub struct RegistryTopologySummary {
     pub devices_with_room: usize,
     pub devices_without_room: usize,
     pub unique_rooms: usize,
+    pub camera_entities: usize,
     pub light_entities: usize,
     pub light_group_entities: usize,
     pub switch_entities: usize,
@@ -324,6 +330,8 @@ impl RegistryTopologySummary {
     pub fn has_multi_transport_bridges(&self) -> bool {
         [
             self.lan_http_bridges,
+            self.lan_tcp_bridges,
+            self.lan_udp_bridges,
             self.mdns_bridges,
             self.serial_bridges,
             self.ble_bridges,
@@ -340,6 +348,8 @@ impl RegistryTopologySummary {
         self.bridges += 1;
         match bridge.transport {
             BridgeTransport::LanHttp => self.lan_http_bridges += 1,
+            BridgeTransport::LanTcp => self.lan_tcp_bridges += 1,
+            BridgeTransport::LanUdp => self.lan_udp_bridges += 1,
             BridgeTransport::Mdns => self.mdns_bridges += 1,
             BridgeTransport::Serial => self.serial_bridges += 1,
             BridgeTransport::Ble => self.ble_bridges += 1,
@@ -383,6 +393,7 @@ impl RegistryTopologySummary {
     fn add_entity(&mut self, entity: &Entity, state: Option<&StateSnapshot>) {
         self.entities += 1;
         match entity.kind {
+            EntityKind::Camera => self.camera_entities += 1,
             EntityKind::Light => self.light_entities += 1,
             EntityKind::LightGroup => self.light_group_entities += 1,
             EntityKind::Switch => self.switch_entities += 1,
@@ -2003,6 +2014,7 @@ impl From<&ProtocolIdentifier> for ProtocolIndexKey {
 fn protocol_family_key(family: &ProtocolFamily) -> String {
     match family {
         ProtocolFamily::Hue => "hue".to_string(),
+        ProtocolFamily::Onvif => "onvif".to_string(),
         ProtocolFamily::Zigbee => "zigbee".to_string(),
         ProtocolFamily::ZWave => "zwave".to_string(),
         ProtocolFamily::Thread => "thread".to_string(),
@@ -2528,6 +2540,7 @@ mod tests {
                 scenes_without_native_refs: 1,
                 protocol_identifiers: 4,
                 hue_identifiers: 2,
+                onvif_identifiers: 0,
                 zigbee_identifiers: 1,
                 zwave_identifiers: 0,
                 thread_identifiers: 0,
@@ -2554,9 +2567,13 @@ mod tests {
         let mut cloud_bridge = bridge_with_native("bridge-3", "bridge-native-3");
         cloud_bridge.transport = BridgeTransport::Cloud;
         cloud_bridge.health = Health::AuthFailed;
+        let mut tcp_bridge = bridge_with_native("bridge-4", "bridge-native-4");
+        tcp_bridge.transport = BridgeTransport::LanTcp;
+        tcp_bridge.health = Health::Online;
         registry.upsert_bridge(lan_bridge).unwrap();
         registry.upsert_bridge(mdns_bridge).unwrap();
         registry.upsert_bridge(cloud_bridge).unwrap();
+        registry.upsert_bridge(tcp_bridge).unwrap();
 
         let mut kitchen_light = device_with_native("device-1", "bridge-1", "device-native-1");
         kitchen_light.room_id = Some("kitchen".to_string());
@@ -2636,17 +2653,19 @@ mod tests {
         assert_eq!(
             summary,
             RegistryTopologySummary {
-                bridges: 3,
+                bridges: 4,
                 devices: 4,
                 entities: 3,
                 scenes: 2,
                 lan_http_bridges: 1,
+                lan_tcp_bridges: 1,
+                lan_udp_bridges: 0,
                 mdns_bridges: 1,
                 serial_bridges: 0,
                 ble_bridges: 0,
                 cloud_bridges: 1,
                 local_process_bridges: 0,
-                online_bridges: 1,
+                online_bridges: 2,
                 pairing_candidate_bridges: 1,
                 attention_bridges: 1,
                 online_devices: 2,
@@ -2657,6 +2676,7 @@ mod tests {
                 devices_with_room: 3,
                 devices_without_room: 1,
                 unique_rooms: 2,
+                camera_entities: 0,
                 light_entities: 1,
                 light_group_entities: 0,
                 switch_entities: 0,

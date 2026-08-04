@@ -1,0 +1,18 @@
+[package]
+name = "task-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "Linear-memory WASM ABI exposing the pure task-core engine to the browser / Electron."
+license = "MIT"
+
+[lib]
+# cdylib for the wasm32 target; rlib so the ABI logic is unit-testable natively.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# The pure engine. `serde` is on so operations/queries marshal as JSON across the
+# linear-memory boundary. There is NO facade layer — this ABI calls the engine's
+# own operation/query functions directly, one export each.
+task-core = { path = "../task-core", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

@@ -818,9 +818,11 @@ mod tests {
 
     #[test]
     fn test_runtime_stats_utilization() {
-        let mut stats = RuntimeStats::default();
-        stats.total_device_cycles = 800;
-        stats.total_idle_cycles = 200;
+        let mut stats = RuntimeStats {
+            total_device_cycles: 800,
+            total_idle_cycles: 200,
+            ..Default::default()
+        };
         stats.update_utilization();
         assert!((stats.gpu_utilization - 0.8).abs() < 0.001);
     }

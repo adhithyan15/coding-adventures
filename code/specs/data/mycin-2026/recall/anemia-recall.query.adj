@@ -1,0 +1,5 @@
+% Worked binding queries over the anemia recall library.
+import "anemia-edges.adj"
+
+? has_mcv(iron_deficiency_anemia, $Class)  % expect microcytic
+? classic_finding(b12_deficiency_anemia, $Finding)  % expect hypersegmented_neutrophils

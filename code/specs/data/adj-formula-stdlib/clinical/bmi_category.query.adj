@@ -1,0 +1,7 @@
+% Worked consumer for a rule that branches on a computed BMI.
+import "bmi_category.adj"
+
+observe body_mass(100)
+observe height(1.7)
+
+? obese  % expect a near-certain posterior because BMI is at least 30

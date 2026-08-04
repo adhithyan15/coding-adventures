@@ -1,0 +1,91 @@
+% ============================================================================
+% molarity.adj — the definition of molarity (amount concentration) in the ADJ
+% standard library.
+% ============================================================================
+% The molarity entry of the *chemistry* track, a sibling of `ideal-gas-law.adj`:
+% the foundational solution-concentration definition a first course states as
+% MOLARITY IS MOLES OF SOLUTE PER LITER OF SOLUTION, as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the moles of solute a molarity implies for a volume, and the
+% volume it implies for a given amount of solute). As with every compute library,
+% a consumer states NO arithmetic: it `import`s this file, binds the measured
+% quantities from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited definition on the CPU. Zero math is performed by the model; the
+% engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "molarity.adj"
+%     observe moles(6)               % "…6 mol of solute…"    (span cited by the model)
+%     observe volume(2)              % "…in 2 L of solution…" (span cited by the model)
+%     ? molarity(moles, volume)      % engine → 3, carrying the def M = n/V
+%
+% All three formulas are EXACT over their parameters — one a quotient, one a product,
+% one a quotient — of measured quantities. There is no *separately grounded*
+% physical constant here, so every value the engine returns is exact. The three
+% COMPOSE and invert cleanly: the `molarity` a consumer computes from an amount of
+% solute in a volume is exactly the `molarity` the `moles` formula multiplies back
+% by that volume to recover the amount, and exactly the `molarity` the `volume`
+% formula divides that amount by to recover the volume.
+%
+%   molarity(moles, volume)    = moles / volume        %  M = n/V   (definition of molarity)
+%   moles(molarity, volume)    = molarity * volume       %  n = M·V   (the same definition, solved for n)
+%   volume(moles, molarity)    = moles / molarity        %  V = n/M   (the same definition, solved for V)
+%
+% All three formulas are defended by the SAME definitional sentence — "Molarity is
+% defined as the number of moles of solute in exactly 1 liter (1 L) of the
+% solution:" — because that one definition sanctions the relation read every way (M
+% from n and V, n from M and V, or V from n and M). The quote is transcribed verbatim
+% from Chemistry LibreTexts (the OpenSTAX general-chemistry text — a university-hosted
+% .org educational reference, the chemistry analogue of the HyperPhysics .edu source
+% the physics libraries cite), so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (Note: molarity
+% uses the volume of the whole SOLUTION, not of the solvent — the cited page is explicit
+% on this; see feedback_nothing_human_authored — the definitional sentence is a verbatim
+% span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable measured quantity the definition
+% ranges over, and each result is the derived quantity. `molarity`, `moles` and
+% `volume` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary molarity_vocab {
+    define moles    : finding  surface "moles", "amount", "n"                    % amount of solute, mol
+    define volume   : finding  surface "volume", "V"                             % volume of solution, L
+    define molarity : finding  surface "molarity", "concentration", "M"         % molarity, mol/L
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over
+% its formal parameters, bound at apply time, and each carries the definitional
+% quote from Chemistry LibreTexts (a quote is required on a shipped formula). Two
+% are quotients and one a product, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook molarity_laws {
+    use molarity_vocab
+
+    % Molarity — moles of solute per liter of solution. LibreTexts defines molarity as
+    % the number of moles of solute in exactly one liter of the solution, i.e. M = n/V.
+    formula molarity(moles, volume) = moles / volume
+        source "Molarity is defined as the number of moles of solute in exactly 1 liter (1 L) of the solution:"
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/03:_Composition_of_Substances_and_Solutions/3.03:_Molarity"
+        trust authoritative
+
+    % Moles — the same definition solved for the amount of solute a molarity implies
+    % in a volume (n = M·V). Defended by the SAME definitional sentence, read the
+    % other way.
+    formula moles(molarity, volume) = molarity * volume
+        source "Molarity is defined as the number of moles of solute in exactly 1 liter (1 L) of the solution:"
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/03:_Composition_of_Substances_and_Solutions/3.03:_Molarity"
+        trust authoritative
+
+    % Volume — the same definition solved for the solution volume a given amount of
+    % solute occupies at a molarity (V = n/M). Again the SAME definitional sentence,
+    % read the third way.
+    formula volume(moles, molarity) = moles / molarity
+        source "Molarity is defined as the number of moles of solute in exactly 1 liter (1 L) of the solution:"
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/03:_Composition_of_Substances_and_Solutions/3.03:_Molarity"
+        trust authoritative
+}

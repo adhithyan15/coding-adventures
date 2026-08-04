@@ -107,7 +107,7 @@ impl CacheConfig {
             "associativity must be positive, got {associativity}"
         );
         assert!(
-            total_size % (line_size * associativity) == 0,
+            total_size.is_multiple_of(line_size * associativity),
             "total_size ({total_size}) must be divisible by line_size * associativity ({})",
             line_size * associativity
         );

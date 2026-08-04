@@ -1,0 +1,21 @@
+% ============================================================================
+% volume-conversions.query.adj — a worked lookup over the volume-conversions table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many cubic
+% metres in a U.S. gallon?" question: it states no conversion fact — it only
+% `import`s the grounded table and asks binding queries. The native adj-lang
+% engine resolves each `?` against the table's rows (lowered to
+% `volume_to_cubic_metres` relations) and returns the binding + the table's
+% source/locator/trust. A unit not in the table abstains honestly — the engine
+% never invents a factor.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli volume-conversions.query.adj
+% ============================================================================
+
+import "volume-conversions.adj"
+
+? volume_to_cubic_metres(gallon, $M3)       % expect 0.003785412
+? volume_to_cubic_metres(cubic_foot, $M3)   % expect 0.02831685
+? volume_to_cubic_metres(barrel, $M3)       % expect 0.1589873
+? volume_to_cubic_metres(litre, $M3)        % expect abstain — not in the table (litre is SI, not a customary unit)

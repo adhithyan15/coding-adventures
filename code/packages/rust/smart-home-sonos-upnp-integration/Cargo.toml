@@ -1,0 +1,17 @@
+[package]
+name = "smart-home-sonos-upnp-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Sonos UPnP discovery and read-only player inspection for the smart-home runtime"
+license = "MIT"
+
+[dependencies]
+coding-adventures-xml-parser = { path = "../xml-parser" }
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+udp-client = { path = "../udp-client" }
+url-parser = { path = "../url-parser" }

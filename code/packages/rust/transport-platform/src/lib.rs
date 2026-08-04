@@ -261,6 +261,9 @@ pub struct WakeHandle {
 impl WakeHandle {
     /// Build a handle from a backend-specific trigger closure.  Crate-internal:
     /// only the platform backends construct these.
+    // Windows currently uses the trait's unsupported fallback, so this helper
+    // is intentionally unused when that platform is the compilation target.
+    #[allow(dead_code)]
     pub(crate) fn from_trigger(
         trigger: impl Fn() -> Result<(), PlatformError> + Send + Sync + 'static,
     ) -> Self {
@@ -2567,8 +2570,7 @@ pub mod windows {
                     domain,
                     accept_ex,
                     accept_queue_depth: (options.backlog as usize)
-                        .max(1)
-                        .min(WINDOWS_MAX_PENDING_ACCEPTS),
+                        .clamp(1, WINDOWS_MAX_PENDING_ACCEPTS),
                     pending_accepts: 0,
                     completed_accepts: VecDeque::new(),
                 },
@@ -3103,7 +3105,9 @@ mod tests {
 
         let mut buffer = [0u8; 16];
         assert_eq!(
-            platform.read(stream, &mut buffer).expect("read adopted stream"),
+            platform
+                .read(stream, &mut buffer)
+                .expect("read adopted stream"),
             ReadOutcome::Read(4)
         );
         assert_eq!(&buffer[..4], b"PING");

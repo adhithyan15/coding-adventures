@@ -1,0 +1,117 @@
+% ============================================================================
+% lens-types — the basic types of optical element (converging vs diverging
+% lens and mirror) and how each one acts on parallel light (adj-facts-stdlib,
+% PHYSICS).
+% ============================================================================
+% One of the first big ideas of geometric optics, and a rung an OPTICS or
+% ASTRONOMY agent reasons UP from: every simple lens and curved mirror sorts
+% into one of two families by what it does to a bundle of parallel light rays.
+% A CONVERGING element (a convex lens, a concave mirror) bends those rays TOWARD
+% each other so they meet at a focal point; a DIVERGING element (a concave lens,
+% a convex mirror) bends them APART so they spread out (and only seem to come
+% from a focal point behind the element). Before you can reason about a
+% telescope, a magnifier, or a car's wing mirror you must first know WHICH way
+% the element pushes light. Recall is a binding query:
+%
+%     ? optic_action(convex_lens, $Action)      % converges_light
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `optic_action(optic, action)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the action
+% WITH its source, on the CPU, with zero model calls, and abstains on an optical
+% element that is not one of these four basic types (it never invents an action).
+%
+% The four basic optical elements and how the source states each one acts on
+% parallel light, as a little truth table:
+%
+%     optic            action on parallel light   a beginner's cue
+%     --------------   ------------------------   -----------------------------
+%     convex_lens      converges_light            fat in the middle, focuses rays
+%     concave_lens     diverges_light             thin in the middle, spreads rays
+%     concave_mirror   converges_light            bowl-shaped, focuses rays (a dish)
+%     convex_mirror    diverges_light             dome-shaped, spreads rays (a wing mirror)
+%
+% Notice the symmetry: a CONVEX *lens* and a CONCAVE *mirror* both CONVERGE
+% light, while a CONCAVE *lens* and a CONVEX *mirror* both DIVERGE it — the shape
+% word alone does not tell you the behavior, you must also know lens-vs-mirror,
+% which is exactly why the key is the full element name (`convex_lens`, not just
+% `convex`).
+%
+% The query also runs BACKWARD — bind an action and recall which elements do it:
+%
+%     ? optic_action($Optic, converges_light)   % convex_lens AND concave_mirror
+%
+% An optical element that is NOT one of these four basic types — a `prism` (it
+% disperses/refracts light, it is not a converging or diverging lens/mirror), a
+% `flat_mirror` — is deliberately NOT a row, so a recall ABSTAINS on it rather
+% than inventing an action. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the element→action pairs
+% it can ground, and only those.
+%
+% The `action` value of every row is a SINGLE lowercase atom, chosen to be the
+% behavior the source EXPLICITLY states for that element — never one the source
+% does not support. `converges_light` is used wherever the source says the rays
+% "converge" / "intersect (or focus)" / are "reflected through the focal point";
+% `diverges_light` wherever the source says the rays "diverge" / the element is a
+% "diverging" element, so every value stays literally checkable against the
+% quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every element→action pair
+% below was read out of a fetched OpenStax physics page, hosted on the Physics
+% LibreTexts library, and any pair whose action could not be verified there
+% would have been dropped). Each pair, with the primary source it was copied
+% from and the verbatim span that states it:
+%
+%   convex_lens → converges_light
+%     https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/02:_Geometric_Optics_and_Image_Formation/2.05:_Thin_Lenses
+%     (OpenStax University Physics III — Optics and Modern Physics, via Physics LibreTexts)
+%     "A convex or converging lens is shaped so that all light rays that enter it
+%      parallel to its optical axis intersect (or focus) at a single point on the
+%      optical axis on the opposite side of the lens"
+%
+%   concave_lens → diverges_light
+%     https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/02:_Geometric_Optics_and_Image_Formation/2.05:_Thin_Lenses
+%     (OpenStax University Physics III — Optics and Modern Physics, via Physics LibreTexts)
+%     "A concave or diverging lens is shaped so that all rays that enter it
+%      parallel to the optical axis diverge"
+%
+%   concave_mirror → converges_light
+%     https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/25:_Geometric_Optics/25.07:_Image_Formation_by_Mirrors
+%     (OpenStax College Physics — via Physics LibreTexts)
+%     "A ray approaching a concave converging mirror parallel to its axis is
+%      reflected through the focal point F of the mirror on the same side."
+%      (and: "The focal length f of a concave mirror is positive, since it is a
+%      converging mirror")
+%
+%   convex_mirror → diverges_light
+%     https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/25:_Geometric_Optics/25.07:_Image_Formation_by_Mirrors
+%     (OpenStax College Physics — via Physics LibreTexts)
+%     "The focal length and power of a convex mirror are negative, since it is a
+%      diverging mirror." (a diverging mirror spreads the reflected rays; "A ray
+%      approaching a convex diverging mirror parallel to its axis is reflected so
+%      that it seems to come from the focal point F behind the mirror.")
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the OpenStax statement that fixes
+% the first row (convex_lens → converges_light). Every OTHER row's per-fact
+% source and verbatim span is listed above, so each action remains independently
+% checkable. All sources are OpenStax physics textbooks hosted on the Physics
+% LibreTexts library — a widely used teaching resource, not a primary
+% government/standards body — so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table optic_action {
+    columns optic, action
+
+    row (convex_lens, converges_light)
+    row (concave_lens, diverges_light)
+    row (concave_mirror, converges_light)
+    row (convex_mirror, diverges_light)
+
+    source "A convex or converging lens is shaped so that all light rays that enter it parallel to its optical axis intersect (or focus) at a single point on the optical axis on the opposite side of the lens"
+    locator "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/02:_Geometric_Optics_and_Image_Formation/2.05:_Thin_Lenses"
+    trust consensus
+}

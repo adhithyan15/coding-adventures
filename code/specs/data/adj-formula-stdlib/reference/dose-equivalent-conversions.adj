@@ -1,0 +1,61 @@
+% ============================================================================
+% dose-equivalent-conversions — dose-equivalent-unit → sievert factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `absorbed-dose-conversions.adj`, `radioactivity-conversions.adj` and
+% the other NIST-cited conversion tables: a native tabular relation ingested VERBATIM from a
+% published NIST conversion table. The row states the factor converting the traditional unit
+% of DOSE EQUIVALENT (the biological-effect-weighted absorbed dose — the absorbed dose scaled
+% by a radiation-weighting factor so that equal numbers mean equal stochastic risk) to the SI
+% coherent unit, the sievert (Sv = one joule per kilogram, weighted):
+%
+%     ? dose_equivalent_to_sievert(rem, $v)   % 0.01
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% illuminance/luminance/radioactivity/absorbed-dose tables. It is the companion to
+% `absorbed-dose-conversions.adj`: absorbed dose (the rad → the gray) measures the raw energy
+% ionizing radiation deposits per kilogram; DOSE EQUIVALENT (the rem → the sievert) measures
+% that same energy weighted for how biologically damaging the particular radiation is, so two
+% doses with the same sievert value carry the same stochastic risk even when their gray values
+% differ. The traditional unit is the rem (roentgen equivalent man); the SI unit is the
+% sievert. Put a dose given in rem into SI first, then reason (write-once-use-many). Why a
+% `table` and not a hand-written `relate` clause: this is exactly the shape reference data
+% comes in — a published table, not prose. The citable artifact IS the NIST conversion-
+% factors table at the `locator` below; the factor here is a CELL of NIST Special
+% Publication 811, Appendix B.9 ("Factors for units listed alphabetically"), defended by
+% one provenance envelope. Each `row` lowers to a ground relation
+% `dose_equivalent_to_sievert(unit, sv)`, so the exact lookup above is the ordinary SLD
+% binding query — the engine returns the factor WITH this table's citation as its proof, on
+% the CPU, with zero model calls.
+%
+% HONESTY NOTE (like absorbed-dose-/radioactivity-conversions, only the EXACT defined factor
+% gets a row): NIST SP 811 B.9 prints the "rem" dose-equivalent factor in BOLDFACE, its
+% convention for factors that are EXACT by definition, transcribed here as the plain decimal
+% number of sieverts it names:
+%
+%     rem (rem)   1.0 E-02  →  0.01
+%
+% This is exact because the rem is DEFINED as exactly 10⁻² sievert (one rem is 0.01 J/kg of
+% weighted dose, by definition — the same defining relation NIST prints in boldface). It
+% terminates; nothing here is a rounded measurement. This table is SPECIFIC to dose
+% equivalent: a unit of a DIFFERENT radiological quantity — e.g. the "rad", which NIST SP 811
+% B.9 lists separately as an ABSORBED-DOSE unit converting to the gray, NOT the sievert (see
+% `absorbed-dose-conversions.adj`) — therefore gets no row here, and a
+% `? dose_equivalent_to_sievert(rad, $v)` ABSTAINS rather than mis-converting an absorbed-dose
+% unit as if it were a dose-equivalent unit. The only claim this table makes is "this is the
+% exact factor NIST SP 811 B.9 prints for the rem's conversion to the sievert" — which is
+% exactly what a byte-check against the cited table verifies. `trust authoritative` — a
+% primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — the factor is a verbatim cell of the cited table,
+% nothing asserted from memory.)
+% ============================================================================
+
+table dose_equivalent_to_sievert {
+    columns unit, sievert
+
+    row (rem, 0.01)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

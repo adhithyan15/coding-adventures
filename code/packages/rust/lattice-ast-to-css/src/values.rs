@@ -459,6 +459,8 @@ mod tests {
     // -----------------------------------------------------------------------
 
     #[test]
+    // `3.14` here is literal CSS test data, not an intended approximation of π.
+    #[allow(clippy::approx_constant)]
     fn test_number_formats() {
         assert_eq!(LatticeValue::Number(42.0).to_css_string(), "42");
         assert_eq!(LatticeValue::Number(3.14).to_css_string(), "3.14");
@@ -547,6 +549,8 @@ mod tests {
     // -----------------------------------------------------------------------
 
     #[test]
+    // `3.14` here is literal CSS test data, not an intended approximation of π.
+    #[allow(clippy::approx_constant)]
     fn test_token_to_value_number() {
         let v = token_to_value("Number", "42");
         assert_eq!(v, LatticeValue::Number(42.0));

@@ -820,7 +820,7 @@ fn parse_code_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Was
             for _ in 0..n {
                 // ValueType is no longer Copy (WasmGC added StructRef(u32));
                 // clone for each local in the run.
-                locals.push(vt.clone());
+                locals.push(vt);
             }
         }
 

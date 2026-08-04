@@ -1,5 +1,11 @@
 # Changelog — qr-code (Go)
 
+## Unreleased
+
+### Fixed
+
+- Made the Reed-Solomon generator cache safe for concurrent QR encodes.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

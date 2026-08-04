@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "dart/scaffold-generator",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "scaffold-generator.json",
+      "justification": "Loads the checked-in CLI Builder specification before parsing scaffold arguments."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../../code",
+      "justification": "Confirms the fixed repository root before resolving any generated output path."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../../lessons.md",
+      "justification": "Confirms the fixed repository root before resolving any generated output path."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../packages/dart/*",
+      "justification": "Checks Dart package directory metadata while resolving dependencies and refusing an existing library target."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../packages/dart/*/pubspec.yaml",
+      "justification": "Reads Dart package metadata to validate dependencies and compute their transitive order."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../*",
+      "justification": "Checks Dart program directory metadata while resolving dependencies and refusing an existing program target."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../*/pubspec.yaml",
+      "justification": "Reads Dart program metadata when a generated target depends on a sibling program."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "../../../packages/dart/*/**",
+      "justification": "Creates the selected Dart library scaffold and its standard nested directories."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "../*/**",
+      "justification": "Creates the selected Dart program scaffold and its standard nested directories."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../../packages/dart/*/**",
+      "justification": "Writes the reviewed library scaffold files beneath the selected target directory."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../*/**",
+      "justification": "Writes the reviewed program scaffold files beneath the selected target directory."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the current date for the generated package changelog entry."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Reports dry-run previews, successful output paths, and argument or validation errors."
+    }
+  ],
+  "justification": "The scaffold generator reads repository metadata, creates and writes one selected Dart target, dates its changelog, and reports through standard output or standard error. It uses no network, subprocess, environment, FFI, or stdin authority."
+}

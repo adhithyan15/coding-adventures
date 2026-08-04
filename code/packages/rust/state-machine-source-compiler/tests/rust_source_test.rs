@@ -252,8 +252,10 @@ fn html1_toml_compiles_to_rust_source() {
     ));
     assert!(source.contains("definition.profile = Some(\"lexer/v1\".to_string())"));
     assert!(source.contains("name: \"Comment\".to_string()"));
+    assert!(source.contains("name: \"ProcessingInstruction\".to_string()"));
     assert!(source.contains("name: \"Doctype\".to_string()"));
     assert!(source.contains("\"create_comment\".to_string()"));
+    assert!(source.contains("\"finalize_processing_instruction_target\".to_string()"));
     assert!(source.contains("\"create_doctype\".to_string()"));
     assert!(source.contains("\"emit_rcdata_end_tag_or_text\".to_string()"));
 }

@@ -1,0 +1,92 @@
+% ============================================================================
+% geometry-formulas.adj — foundational plane-geometry area & perimeter formulas.
+% ============================================================================
+% The FIRST entry of the *mathematics* track of the compute standard library: the
+% area and perimeter formulas a grade-schooler meets, each an importable,
+% byte-provenanced, PARAMETERIZED `formula`. Like `arithmetic/arithmetic.adj` and
+% `clinical/bmi.adj`, a consumer states NO arithmetic — it `import`s this file,
+% binds the side lengths from its own byte-provenance decomposition, and asks the
+% engine to apply the cited formula on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY, carrying the formula's citation.
+%
+%     import "geometry-formulas.adj"
+%     observe length(4)     % "…a 4 m wall…"   (span cited by the model)
+%     observe width(3)      % "…3 m deep…"     (span cited by the model)
+%     ? rectangle_area(length, width)   % engine → 12, carrying MathWorld's A=ab
+%
+% Every formula here is EXACT over its parameters — an area or perimeter is a
+% product / sum of side lengths, with no cited constant (that is why circle area
+% and circumference, which need π as a *separately grounded* constant, live in a
+% different library and are deliberately absent here). The definitions come from
+% Wolfram MathWorld, the authoritative reference for mathematics; each `formula`
+% carries the same provenance envelope every shipped grounded clause carries.
+%
+% These formulas COMPOSE with the geometry *facts* elsewhere in the stdlib (a
+% recall library's polygon side counts, right-angle counts, and the like): the
+% facts say WHAT a rectangle is; these formulas say how to MEASURE one. Answer a
+% mixed question by importing both — recall the shape, then apply its measure.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable length the formulas range over, and
+% each result is the derived measure. Rung-0's grammar types an observable slot as
+% `finding` (dimensional typing of parameters is a later rung — the engine already
+% infers + checks dimensions when a formula is APPLIED: length·width reports an
+% area, 2·(length+width) reports a length). The `surface` lists are the everyday
+% names a decomposer maps onto the canonical term.
+% ----------------------------------------------------------------------------
+dictionary geometry_vocab {
+    define length : finding  surface "length", "long side", "l"           % a side length
+    define width  : finding  surface "width", "breadth", "short side", "w" % a side length
+    define base   : finding  surface "base", "base length", "b"           % a triangle's base
+    define height : finding  surface "height", "altitude", "h"            % a triangle's height
+    define side   : finding  surface "side", "side length", "edge", "s"   % a square's side
+
+    define rectangle_area      : finding  surface "area of the rectangle", "rectangle area"
+    define rectangle_perimeter : finding  surface "perimeter of the rectangle", "rectangle perimeter"
+    define triangle_area       : finding  surface "area of the triangle", "triangle area"
+    define square_area         : finding  surface "area of the square", "square area"
+}
+
+% ----------------------------------------------------------------------------
+% The formulas. Each is a named, importable, reusable `let` over its formal
+% parameters, bound at apply time, and each carries a definitional quote from
+% Wolfram MathWorld (required on a shipped formula; the linter rejects an
+% unsourced one). MathWorld writes each side length as `a`, `b` (rectangle),
+% `a` = base / `h` = height (triangle), and `a` = side (square) — named here with
+% the plain schoolbook words so the audit trail reads in everyday geometry terms.
+%
+%   rectangle_area(length, width)      = length * width         %  A = a b
+%   rectangle_perimeter(length, width) = 2 * (length + width)   %  P = 2(a+b)
+%   triangle_area(base, height)        = base * height / 2      %  Δ = ½ a h
+%   square_area(side)                  = side * side            %  A = a²
+% ----------------------------------------------------------------------------
+formulabook geometry_formulas {
+    use geometry_vocab
+
+    % Rectangle area — the product of its two side lengths.
+    formula rectangle_area(length, width) = length * width
+        source "The area of the rectangle is A=ab."
+        locator "https://mathworld.wolfram.com/Rectangle.html"
+        trust authoritative
+
+    % Rectangle perimeter — twice the sum of its two side lengths. MathWorld's
+    % perimeter table lists the rectangle (lamina) perimeter as 2(a+b).
+    formula rectangle_perimeter(length, width) = 2 * (length + width)
+        source "rectangle | 2(a+b)"
+        locator "https://mathworld.wolfram.com/Perimeter.html"
+        trust authoritative
+
+    % Triangle area — half the base times the height. MathWorld: let a be the
+    % base length and h be the height; then Delta = (1/2) a h.
+    formula triangle_area(base, height) = base * height / 2
+        source "Let a be the base length and h be the height."
+        locator "https://mathworld.wolfram.com/Triangle.html"
+        trust authoritative
+
+    % Square area — the side length squared.
+    formula square_area(side) = side * side
+        source "and the area is A=a^2."
+        locator "https://mathworld.wolfram.com/Square.html"
+        trust authoritative
+}

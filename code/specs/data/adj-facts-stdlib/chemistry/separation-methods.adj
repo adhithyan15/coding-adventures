@@ -1,0 +1,102 @@
+% ============================================================================
+% separation-methods — the common laboratory methods for separating a mixture,
+% each mapped to the property/basis it separates by (as its source states it)
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% A mixture is two or more substances physically combined, and because they are
+% only PHYSICALLY combined they can be pulled apart again — but HOW you pull
+% them apart depends on which physical property the components DIFFER in. That
+% is the one big idea a chemistry agent reasons UP from: pick the separation
+% method whose basis matches the property the two components do not share.
+% "Filtration separates by particle size; distillation by volatility; chromato-
+% graphy because the components move at different rates; evaporation drives the
+% liquid off the solid." Before you can choose a method you must first know
+% WHAT property it exploits. Recall is a binding query:
+%
+%     ? separation_basis(distillation, $Basis)   % by_volatility
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `separation_basis(method, basis)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% basis WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these separation methods (it never invents a basis).
+%
+% Each separation method and the property/basis its source states it separates
+% by, as a little truth table:
+%
+%     method          separates by / what it separates      a beginner's cue
+%     -------------   -----------------------------------   ---------------------
+%     filtration      by_particle_size                      a porous filter traps big particles
+%     distillation    by_volatility                         boil off the most volatile part first
+%     evaporation     separates_liquid_from_solid           drive the liquid off, leave the salt
+%     chromatography  by_different_rates                    parts travel through a medium at diff. speeds
+%
+% The query also runs BACKWARD — bind a basis and recall its method:
+%
+%     ? separation_basis($Method, by_particle_size)   % filtration
+%
+% A word that is NOT one of these separation methods — `centrifuge` is not in
+% this source's list, `rock` is not a method at all — is deliberately NOT a
+% row, so a separation recall ABSTAINS on it rather than inventing a basis. That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the method→basis pairs it can ground, and only those.
+%
+% The `basis` value of every row is a SINGLE lowercase atom, chosen to be the
+% property/basis the source EXPLICITLY states for that method — never one the
+% source does not support. Where the source's own word differs from the everyday
+% word (it says "volatile"/"vaporizes", not "boiling point"; it says the
+% components "move at different rates", not "adsorption"), the atom uses the
+% source's own word, so every value stays literally checkable against the quoted
+% span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every method→basis pair
+% below was read out of a fetched Chemistry LibreTexts page, and any pair whose
+% basis could not be verified there would have been dropped). Each pair, with
+% the primary source it was copied from and the verbatim span that states it:
+%
+%   filtration → by_particle_size
+%     "Filtration is a separation method used to separate out pure substances in
+%      mixtures comprised of particles—some of which are large enough in size to
+%      be captured with a porous material. Particle size can vary considerably,
+%      given the type of mixture."
+%
+%   distillation → by_volatility
+%     "In simple distillation, a mixture is heated, and the most volatile
+%      component vaporizes at the lowest temperature."
+%
+%   evaporation → separates_liquid_from_solid
+%     "The method drives off the liquid components from the solid components."
+%
+%   chromatography → by_different_rates
+%     "Chromatography is the separation of a mixture by passing it in solution or
+%      suspension, or as a vapor (as in gas chromatography), through a medium in
+%      which the components move at different rates."
+%
+% All four spans are from the same Chemistry LibreTexts teaching page
+% (Portland Community College, CH100 Everyday Chemistry, 1.16 Methods for
+% Separating Mixtures):
+% https://chem.libretexts.org/Courses/Portland_Community_College/CH100:_Everyday_Chemistry/01:_Matter_and_Measurements/1.16:_Methods_for_Separating_Mixtures
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the LibreTexts statement that
+% fixes the first row (filtration → by_particle_size). Every OTHER row's
+% verbatim span is listed above, so each basis remains independently checkable.
+% Chemistry LibreTexts is a curated open-education teaching resource (a teaching
+% summary, not a primary standards body), so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table separation_basis {
+    columns method, basis
+
+    row (filtration, by_particle_size)
+    row (distillation, by_volatility)
+    row (evaporation, separates_liquid_from_solid)
+    row (chromatography, by_different_rates)
+
+    source "Filtration is a separation method used to separate out pure substances in mixtures comprised of particles—some of which are large enough in size to be captured with a porous material. Particle size can vary considerably, given the type of mixture."
+    locator "https://chem.libretexts.org/Courses/Portland_Community_College/CH100:_Everyday_Chemistry/01:_Matter_and_Measurements/1.16:_Methods_for_Separating_Mixtures"
+    trust consensus
+}

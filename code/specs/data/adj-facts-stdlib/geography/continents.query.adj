@@ -1,0 +1,21 @@
+% ============================================================================
+% continents.query.adj — a worked recall over the geography continents library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which is the biggest
+% continent?" — it states no geography fact, only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% continent_size_rank rows and returns the rank (or the continent, on a reverse
+% query) + the National Geographic source/locator/trust. A landmass that is not
+% one of the seven named continents abstains honestly — the engine never invents
+% a rank.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli continents.query.adj
+% ============================================================================
+
+import "continents.adj"
+
+? continent_size_rank(asia, $R)          % expect 1  (the largest continent)
+? continent_size_rank(australia, $R)     % expect 7  (the smallest of the seven)
+? continent_size_rank($Continent, 3)     % expect north_america (reverse: who is #3?)
+? continent_size_rank(greenland, $R)     % expect abstain — an island, not a continent

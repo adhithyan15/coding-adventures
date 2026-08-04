@@ -58,6 +58,13 @@ Cargo.lock
 # Dart
 .dart_tool/
 
+# OCaml
+_opam/
+*.install
+bisect*.coverage
+.merlin
+.merlin-exist-*
+
 # Gradle
 .gradle/
 gradle-build/

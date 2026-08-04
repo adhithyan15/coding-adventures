@@ -594,9 +594,7 @@ impl CpuMipsR2000 {
                 let sign = byte_bits[7];
                 let mut extended = [0u8; 32];
                 extended[..8].copy_from_slice(&byte_bits[..8]);
-                for i in 8..32 {
-                    extended[i] = sign;
-                }
+                extended[8..].fill(sign);
                 self.rf.write_reg(rt, bits_to_u32(extended));
             }
             0x21 => {
@@ -607,9 +605,7 @@ impl CpuMipsR2000 {
                 let sign = half_bits[15];
                 let mut extended = [0u8; 32];
                 extended[..16].copy_from_slice(&half_bits[..16]);
-                for i in 16..32 {
-                    extended[i] = sign;
-                }
+                extended[16..].fill(sign);
                 self.rf.write_reg(rt, bits_to_u32(extended));
             }
             0x22 => {

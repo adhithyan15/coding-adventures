@@ -348,7 +348,7 @@ fn word_match(text: &str, pattern: &str, fixed: bool) -> bool {
         // We find matches using simple_match and check boundaries.
         // Simplified: split text into words and check each
         let words: Vec<&str> = text.split(|c: char| !c.is_alphanumeric() && c != '_').collect();
-        words.iter().any(|word| simple_match(&pattern, word))
+        words.iter().any(|word| simple_match(pattern, word))
     }
 }
 

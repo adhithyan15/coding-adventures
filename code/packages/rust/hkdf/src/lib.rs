@@ -297,7 +297,7 @@ pub fn hkdf_expand(
     }
 
     // Number of HMAC blocks needed: ceil(length / hash_len).
-    let n = (length + hash_len - 1) / hash_len;
+    let n = length.div_ceil(hash_len);
 
     // Build OKM block by block.
     //

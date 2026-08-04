@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/dynamic-autograd-v1.json",
+  "title": "Dynamic Autograd V1 Lab",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "operation", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "const": 1e-8 },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "graph_construction", "saved_value_policy", "backward_traversal", "finite_difference_epsilon"],
+      "properties": {
+        "kind": { "const": "dynamic-scalar-reverse-mode" },
+        "graph_construction": { "const": "executed-operations-only" },
+        "saved_value_policy": { "const": "immutable-forward-snapshots" },
+        "backward_traversal": { "const": "reverse-topological" },
+        "finite_difference_epsilon": { "const": 0.00001 }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$" },
+    "numberMap": {
+      "type": "object",
+      "maxProperties": 16,
+      "additionalProperties": { "type": "number" }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "value", "requires_gradient"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "value": { "type": "number" },
+        "requires_gradient": { "const": true }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "inputs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "operation": { "enum": ["multiply", "add", "square", "negate", "branch_nonnegative"] },
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/identifier" }
+        }
+      }
+    },
+    "saved": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source_id", "value"],
+      "properties": {
+        "name": { "enum": ["left", "right", "input"] },
+        "source_id": { "$ref": "#/$defs/identifier" },
+        "value": { "type": "number" }
+      }
+    },
+    "derivative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent_id", "value", "source"],
+      "properties": {
+        "parent_id": { "$ref": "#/$defs/identifier" },
+        "value": { "type": "number" },
+        "source": { "type": "string", "minLength": 1, "maxLength": 32 }
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent_id", "value"],
+      "properties": {
+        "parent_id": { "$ref": "#/$defs/identifier" },
+        "value": { "type": "number" }
+      }
+    },
+    "backwardStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_id", "operation", "upstream_gradient", "local_derivatives", "parent_contributions"],
+      "properties": {
+        "node_id": { "$ref": "#/$defs/identifier" },
+        "operation": { "enum": ["multiply", "add", "square", "negate", "identity"] },
+        "upstream_gradient": { "type": "number" },
+        "local_derivatives": { "type": "array", "maxItems": 2, "items": { "$ref": "#/$defs/derivative" } },
+        "parent_contributions": { "type": "array", "maxItems": 2, "items": { "$ref": "#/$defs/contribution" } }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executed_node_ids", "executed_operations", "topological_order", "backward_order", "forward_values", "branch_choices", "saved_values", "live_input_values", "backward_steps", "gradients", "finite_difference_gradients", "max_gradient_absolute_error"],
+      "properties": {
+        "executed_node_ids": { "type": "array", "maxItems": 16, "items": { "$ref": "#/$defs/identifier" } },
+        "executed_operations": { "type": "object", "maxProperties": 16, "additionalProperties": { "enum": ["input", "multiply", "add", "square", "negate", "identity"] } },
+        "topological_order": { "type": "array", "maxItems": 16, "items": { "$ref": "#/$defs/identifier" } },
+        "backward_order": { "type": "array", "maxItems": 16, "items": { "$ref": "#/$defs/identifier" } },
+        "forward_values": { "$ref": "#/$defs/numberMap" },
+        "branch_choices": { "type": "object", "maxProperties": 16, "additionalProperties": { "enum": ["nonnegative", "negative"] } },
+        "saved_values": { "type": "object", "maxProperties": 16, "additionalProperties": { "type": "array", "maxItems": 2, "items": { "$ref": "#/$defs/saved" } } },
+        "live_input_values": { "$ref": "#/$defs/numberMap" },
+        "backward_steps": { "type": "array", "maxItems": 16, "items": { "$ref": "#/$defs/backwardStep" } },
+        "gradients": { "$ref": "#/$defs/numberMap" },
+        "finite_difference_gradients": { "$ref": "#/$defs/numberMap" },
+        "max_gradient_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "inputs", "steps", "output", "mutations_after_forward", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "title": { "type": "string", "minLength": 1 },
+        "inputs": { "type": "array", "minItems": 1, "maxItems": 4, "items": { "$ref": "#/$defs/input" } },
+        "steps": { "type": "array", "minItems": 1, "maxItems": 12, "items": { "$ref": "#/$defs/step" } },
+        "output": { "$ref": "#/$defs/identifier" },
+        "mutations_after_forward": { "$ref": "#/$defs/numberMap" },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    }
+  }
+}

@@ -194,6 +194,13 @@ class TestStarlarkLexer < Minitest::Test
     assert indent_idx > colon_idx, "INDENT should come after COLON"
   end
 
+  def test_final_statement_newline_precedes_dedent
+    source = "def foo():\n    return {}\n"
+    types = token_types(source)
+
+    assert_equal [TT::NEWLINE, DEDENT_TYPE, TT::EOF], types.last(3)
+  end
+
   # ------------------------------------------------------------------
   # Operators: multi-character operators
   # ------------------------------------------------------------------

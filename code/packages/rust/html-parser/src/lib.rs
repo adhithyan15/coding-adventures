@@ -5,6 +5,12 @@
 //! pretending HTML is context-free. Future batches can add the full WHATWG
 //! insertion-mode machinery on top of this DOM target.
 
+// The WHATWG tree-construction algorithm threads a lot of parser state through
+// its helpers; several fns legitimately take many parameters mirroring the spec.
+// Refactoring their signatures would obscure the correspondence to the standard,
+// so allow the too_many_arguments lint crate-wide.
+#![allow(clippy::too_many_arguments)]
+
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer_with_context, Attribute as LexerAttribute,
     Diagnostic, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState,
@@ -646,9 +652,32 @@ pub fn parse_browser_render_tree(source: &str) -> Result<BrowserRenderTree, Pars
     parse_html(source).map(|document| extract_browser_render_tree(&document))
 }
 
+/// Parse HTML into a browser render tree using the fetched document URL as
+/// the fallback base for relative links and resources.
+///
+/// An authored `<base href>` still takes precedence. Relative authored base
+/// URLs are first resolved against `document_url`, matching the navigation
+/// context a browser host supplies after redirects.
+pub fn parse_browser_render_tree_with_document_url(
+    source: &str,
+    document_url: &str,
+) -> Result<BrowserRenderTree, ParseError> {
+    parse_html(source)
+        .map(|document| extract_browser_render_tree_with_document_url(&document, document_url))
+}
+
 /// Extract a browser-facing render-tree input from a parsed DOM document.
 pub fn extract_browser_render_tree(document: &Document) -> BrowserRenderTree {
     BrowserRenderTree::from_document(document)
+}
+
+/// Extract a browser render tree using the fetched document URL as its
+/// fallback URL-resolution base.
+pub fn extract_browser_render_tree_with_document_url(
+    document: &Document,
+    document_url: &str,
+) -> BrowserRenderTree {
+    BrowserRenderTree::from_document_with_document_url(document, document_url)
 }
 
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
@@ -4071,10 +4100,16 @@ impl BrowserDocument {
 
 impl BrowserContentTree {
     pub fn from_document(document: &Document) -> Self {
-        let head = find_first_element_in_nodes(&document.children, "head");
-        let base_href = head
-            .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
-            .and_then(|element| element.attribute("href"));
+        let base_href = browser_authored_base_href(document);
+        Self::from_document_with_base(document, base_href)
+    }
+
+    pub fn from_document_with_document_url(document: &Document, document_url: &str) -> Self {
+        let base_href = browser_effective_base_href(document, document_url);
+        Self::from_document_with_base(document, base_href.as_deref())
+    }
+
+    fn from_document_with_base(document: &Document, base_href: Option<&str>) -> Self {
         let body = find_first_element_in_nodes(&document.children, "body");
         let body_children = body
             .map(|element| element.children.as_slice())
@@ -4098,6 +4133,13 @@ impl BrowserContentTree {
 impl BrowserRenderTree {
     pub fn from_document(document: &Document) -> Self {
         Self::from_content_tree(&BrowserContentTree::from_document(document))
+    }
+
+    pub fn from_document_with_document_url(document: &Document, document_url: &str) -> Self {
+        Self::from_content_tree(&BrowserContentTree::from_document_with_document_url(
+            document,
+            document_url,
+        ))
     }
 
     pub fn from_content_tree(content_tree: &BrowserContentTree) -> Self {
@@ -4299,6 +4341,31 @@ impl BrowserRenderNode {
     }
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum DocumentTailMode {
+    InBody,
+    AfterBody,
+    AfterHtml,
+}
+
+impl DocumentTailMode {
+    fn diagnostic_code(self) -> &'static str {
+        match self {
+            Self::AfterBody => "unexpected-token-after-body",
+            Self::AfterHtml => "unexpected-token-after-html",
+            Self::InBody => unreachable!("the in-body mode does not report tail diagnostics"),
+        }
+    }
+
+    fn name(self) -> &'static str {
+        match self {
+            Self::AfterBody => "after body",
+            Self::AfterHtml => "after after body",
+            Self::InBody => "in body",
+        }
+    }
+}
+
 /// Streaming-friendly parser core over already-tokenized HTML.
 #[derive(Debug)]
 pub struct HtmlParser {
@@ -4308,12 +4375,15 @@ pub struct HtmlParser {
     prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
+    is_fragment: bool,
+    initial_insertion_mode: bool,
     quirks_mode: bool,
     strip_next_leading_lf: bool,
     explicit_head_end_seen: bool,
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
+    document_tail_mode: DocumentTailMode,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
@@ -4329,12 +4399,15 @@ impl Default for HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options: HtmlParseOptions::default(),
+            is_fragment: false,
+            initial_insertion_mode: true,
             quirks_mode: true,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            document_tail_mode: DocumentTailMode::InBody,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4349,8 +4422,11 @@ impl HtmlParser {
     }
 
     pub fn with_options(options: HtmlParseOptions) -> Self {
+        let initial_insertion_mode =
+            options.initial_tokenizer_context == HtmlInitialTokenizerContext::Data;
         Self {
             options,
+            initial_insertion_mode,
             ..Self::default()
         }
     }
@@ -4377,12 +4453,15 @@ impl HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
+            is_fragment: true,
+            initial_insertion_mode: false,
             quirks_mode: true,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            document_tail_mode: DocumentTailMode::InBody,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4400,12 +4479,15 @@ impl HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
+            is_fragment: true,
+            initial_insertion_mode: false,
             quirks_mode: true,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
             explicit_body_end_seen: false,
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
+            document_tail_mode: DocumentTailMode::InBody,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
@@ -4514,9 +4596,7 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        repair_table_cell_fostered_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
-        repair_insanely_badly_nested_table_sequence(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -4524,6 +4604,8 @@ impl HtmlParser {
     }
 
     fn process_token(&mut self, token: Token) {
+        self.process_initial_insertion_mode(&token);
+        self.process_document_tail_mode(&token);
         if matches!(token, Token::Eof) {
             self.flush_foreign_cdata_text();
         }
@@ -4540,6 +4622,9 @@ impl HtmlParser {
                     } => self.append_start_tag(name, attributes, self_closing),
                     Token::EndTag { name } => self.handle_end_tag(&name),
                     Token::Comment(comment) => self.append_comment(comment),
+                    Token::ProcessingInstruction { target, data } => {
+                        self.append_processing_instruction(target, data)
+                    }
                     Token::Doctype {
                         name,
                         public_identifier,
@@ -4571,11 +4656,132 @@ impl HtmlParser {
                         }));
                     }
                     Token::Eof => {
+                        if self.current_element_is_authored_text_mode_element() {
+                            self.diagnostics.push(ParserDiagnostic::new(
+                                "eof-in-text-mode",
+                                "end of file was reached while parsing a text element",
+                            ));
+                            self.open_elements.pop();
+                        }
+                        if (self.is_fragment || self.has_open_element("body"))
+                            && self.has_disallowed_authored_open_element_for_eof()
+                        {
+                            self.diagnostics.push(ParserDiagnostic::new(
+                                "eof-with-unclosed-elements",
+                                "end of file was reached with disallowed open elements",
+                            ));
+                        }
                         self.populate_selectedcontent_for_open_selects();
+                        repair_table_cell_fostered_nobr_adoption(&mut self.document);
+                        repair_insanely_badly_nested_table_sequence(&mut self.document.children);
                         self.open_elements.clear();
                     }
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
                 }
+            }
+        }
+    }
+
+    fn process_document_tail_mode(&mut self, token: &Token) {
+        if self.is_fragment {
+            return;
+        }
+        if self.document_has_closed_frameset() {
+            self.process_closed_frameset_tail_mode(token);
+            return;
+        }
+
+        if matches!(self.document_tail_mode, DocumentTailMode::InBody) {
+            return;
+        }
+        let allowed_in_both_modes = matches!(
+            token,
+            Token::Comment(_)
+                | Token::ProcessingInstruction { .. }
+                | Token::Doctype { .. }
+                | Token::Eof
+        ) || matches!(token, Token::Text(text) if is_html_whitespace_text(text))
+            || matches!(token, Token::StartTag { name, .. } if name == "html");
+        let allowed = allowed_in_both_modes
+            || (matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+                && matches!(token, Token::EndTag { name } if name == "html"));
+
+        if matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+            && matches!(token, Token::EndTag { name } if name == "html")
+        {
+            self.document_tail_mode = DocumentTailMode::AfterHtml;
+        } else if !allowed {
+            let mode = self.document_tail_mode;
+            self.diagnostics.push(ParserDiagnostic::new(
+                mode.diagnostic_code(),
+                format!(
+                    "unexpected token was reprocessed from the {} insertion mode",
+                    mode.name()
+                ),
+            ));
+            self.document_tail_mode = DocumentTailMode::InBody;
+        }
+    }
+
+    fn process_closed_frameset_tail_mode(&mut self, token: &Token) {
+        if !self.explicit_html_end_seen || self.current_element_is("noframes") {
+            return;
+        }
+
+        let allowed = matches!(
+            token,
+            Token::Comment(_)
+                | Token::ProcessingInstruction { .. }
+                | Token::Doctype { .. }
+                | Token::Eof
+        ) || matches!(token, Token::Text(text) if is_html_whitespace_text(text))
+            || matches!(
+                token,
+                Token::StartTag { name, .. }
+                    if matches!(name.as_str(), "html" | "noframes")
+            );
+
+        if !allowed {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-token-after-after-frameset",
+                "unexpected token was ignored in the after after frameset insertion mode",
+            ));
+        }
+    }
+
+    fn process_initial_insertion_mode(&mut self, token: &Token) {
+        if !self.initial_insertion_mode {
+            return;
+        }
+
+        match token {
+            Token::Text(text) if is_html_whitespace_text(text) => {}
+            Token::Comment(_) | Token::ProcessingInstruction { .. } => {}
+            Token::Doctype {
+                name,
+                public_identifier,
+                system_identifier,
+                ..
+            } => {
+                if !is_conforming_initial_doctype(
+                    name.as_deref(),
+                    public_identifier.as_deref(),
+                    system_identifier.as_deref(),
+                ) {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "nonconforming-doctype",
+                        "initial doctype did not match the HTML Standard's allowed form",
+                    ));
+                }
+                self.initial_insertion_mode = false;
+            }
+            _ => {
+                self.initial_insertion_mode = false;
+                self.quirks_mode = true;
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "missing-doctype",
+                    "document started without a doctype token",
+                ));
             }
         }
     }
@@ -4636,6 +4842,9 @@ impl HtmlParser {
             Token::Comment(comment) => {
                 self.consume_foreign_cdata_text(format!("<!--{comment}-->"));
             }
+            Token::ProcessingInstruction { target, data } => {
+                self.consume_foreign_cdata_text(format!("<?{target} {data}?>"));
+            }
             Token::Doctype { name, .. } => {
                 self.consume_foreign_cdata_text(format!("<!DOCTYPE {}>", name.unwrap_or_default()));
             }
@@ -4682,6 +4891,7 @@ impl HtmlParser {
             ));
             name = "img".to_string();
         }
+        let body_element_existed_before_start_tag = self.document_has_body_element();
         if name == "body" {
             self.explicit_body_start_seen = true;
         }
@@ -4711,6 +4921,10 @@ impl HtmlParser {
             && !self.current_node_is_svg_html_integration_point()
             && exits_foreign_content_on_start_tag(&name, &attributes)
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-html-start-tag-in-foreign-content",
+                format!("HTML start tag `<{name}>` forced recovery from foreign content"),
+            ));
             if self.has_open_svg_html_integration_point() {
                 while self.current_namespace().is_some()
                     && !self.current_node_is_svg_html_integration_point()
@@ -4989,6 +5203,10 @@ impl HtmlParser {
                 || self.document_has_non_frameset_compatible_body_content())
             && self.has_open_element("body")
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-frameset-start-tag",
+                "start tag `<frameset>` was ignored after body content",
+            ));
             return;
         }
 
@@ -5026,6 +5244,10 @@ impl HtmlParser {
             && matches!(name.as_str(), "svg" | "math")
             && self.current_element_is_table_structure()
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-foreign-start-tag-in-table",
+                format!("start tag `<{name}>` in a table context was foster parented"),
+            ));
             let namespace = self.namespace_for_start_tag(&name);
             let name = adjusted_foreign_start_tag_name(name, namespace);
             let attributes = adjusted_foreign_attributes(attributes, namespace);
@@ -5199,6 +5421,13 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "html" && self.has_document_element() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-html-start-tag",
+                "html start tag was recovered against the existing document element",
+            ));
+        }
+
         if !in_foreign_content
             && name == "html"
             && self.merge_attributes_into_open_element("html", &attributes)
@@ -5216,16 +5445,11 @@ impl HtmlParser {
             return;
         }
 
-        if !in_foreign_content
-            && name == "head"
-            && self.has_open_element("head")
-            && !self.current_element_is("head")
-        {
-            return;
-        }
-
         if !in_foreign_content && name == "head" && self.has_open_element("head") {
-            self.merge_attributes_into_open_element("head", &attributes);
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-head-start-tag",
+                "duplicate head start tag was ignored",
+            ));
             return;
         }
 
@@ -5252,6 +5476,17 @@ impl HtmlParser {
 
         if !in_foreign_content && name == "body" && self.has_open_element("template") {
             return;
+        }
+
+        if !in_foreign_content
+            && name == "body"
+            && body_element_existed_before_start_tag
+            && self.has_open_element("body")
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-body-start-tag",
+                "body start tag was recovered against the existing body element",
+            ));
         }
 
         if !in_foreign_content
@@ -5289,11 +5524,24 @@ impl HtmlParser {
         if namespace.is_none() && name == "form" {
             self.form_element_pointer_set = true;
         }
-        let child_index = self.append_node(element_node(name.clone(), attributes, namespace));
-        if !acknowledges_self_closing && !html_void_element {
+        let node = element_node(name.clone(), attributes, namespace);
+        let inserted_path = if !in_foreign_content
+            && self.current_element_is_table_structure()
+            && self.has_open_element("table")
+            && !starts_table_context(&name)
+            && !is_head_element(&name)
+        {
+            self.insert_node_before_open_table(node)
+        } else {
+            let child_index = self.append_node(node);
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
-            self.open_elements.push(path);
+            Some(path)
+        };
+        if !acknowledges_self_closing && !html_void_element {
+            if let Some(path) = inserted_path {
+                self.open_elements.push(path);
+            }
         }
         if namespace.is_none()
             && name == "div"
@@ -5390,7 +5638,7 @@ impl HtmlParser {
 
         let text = if text.contains('\u{FFFD}')
             && (self.current_node_is_svg_html_integration_point()
-                || self.current_namespace() == Some("math")
+                || self.current_node_is_mathml_integration_point()
                 || (self.replacement_text_is_ignorable_in_current_context(&text)
                     && !self.current_element_is("plaintext")))
         {
@@ -5549,6 +5797,10 @@ impl HtmlParser {
                 return;
             }
             let pending = std::mem::take(&mut self.pending_table_text);
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-character-in-table",
+                "non-whitespace character data in a table context was foster parented",
+            ));
             if self.foster_text_before_open_table(pending) {
                 return;
             }
@@ -5635,7 +5887,14 @@ impl HtmlParser {
                 return;
             }
         }
-        let node = Node::comment(comment);
+        self.append_comment_or_processing_instruction(Node::comment(comment));
+    }
+
+    fn append_processing_instruction(&mut self, target: String, data: String) {
+        self.append_comment_or_processing_instruction(Node::processing_instruction(target, data));
+    }
+
+    fn append_comment_or_processing_instruction(&mut self, node: Node) {
         if self.explicit_head_end_seen
             && self.current_element_is("head")
             && self.has_document_element()
@@ -5954,8 +6213,8 @@ impl HtmlParser {
         incoming_name: &str,
         attributes: &[Attribute],
     ) -> bool {
-        if !self.current_element_is_table_structure()
-            && !(matches!(incoming_name, "i" | "nobr")
+        if !(self.current_element_is_table_structure()
+            || matches!(incoming_name, "i" | "nobr")
                 && self.has_open_table_context()
                 && self.current_parent_is_fostered_before_open_table())
         {
@@ -5964,8 +6223,7 @@ impl HtmlParser {
 
         if !self.current_element_is_table_structure()
             && self.current_parent_is_fostered_before_open_table()
-        {
-            if incoming_name == "nobr" {
+            && incoming_name == "nobr" {
                 let formatting_above_nobr = self.formatting_above_open_element("nobr");
                 self.close_open_element_silently("nobr");
                 if !formatting_above_nobr.is_empty() {
@@ -5973,7 +6231,6 @@ impl HtmlParser {
                         trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
                 }
             }
-        }
 
         if !self.current_element_is_table_structure()
             && self.current_parent_is_fostered_before_open_table()
@@ -6464,6 +6721,17 @@ impl HtmlParser {
                 || self.current_namespace() == Some("svg")
                 || (self.current_namespace() == Some("math") && name == "p"))
         {
+            if is_table_context_element(name) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-table-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` forced table recovery from foreign content"),
+                ));
+            } else if self.current_namespace() == Some("math") && name == "p" {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag-in-foreign-content",
+                    "end tag `</p>` in MathML foreign content forced HTML recovery",
+                ));
+            }
             self.pop_foreign_elements();
         } else if self.current_namespace().is_some()
             && !self.current_element_is(name)
@@ -6486,6 +6754,24 @@ impl HtmlParser {
         if name == "body" && self.has_open_element("body") && self.current_element_is("bdy") {
             return;
         }
+        if !self.is_fragment
+            && !self.document_has_closed_frameset()
+            && name == "body"
+            && self.has_open_element("body")
+            && !self.has_disallowed_open_element_for_body_end_tag()
+        {
+            self.document_tail_mode = DocumentTailMode::AfterBody;
+        }
+        if !self.is_fragment
+            && !self.document_has_closed_frameset()
+            && name == "html"
+            && self.has_open_element("html")
+            && !self.has_open_table_context()
+            && (!self.has_open_element("body")
+                || !self.has_disallowed_open_element_for_body_end_tag())
+        {
+            self.document_tail_mode = DocumentTailMode::AfterHtml;
+        }
         if name == "body" {
             self.explicit_body_end_seen = true;
         }
@@ -6494,6 +6780,15 @@ impl HtmlParser {
         }
         if name == "html" {
             self.explicit_html_end_seen = true;
+        }
+        if matches!(name, "body" | "html")
+            && self.has_open_element("body")
+            && self.has_disallowed_open_element_for_body_end_tag()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "shell-end-tag-with-unclosed-elements",
+                format!("end tag `</{name}>` was seen with disallowed open elements"),
+            ));
         }
         match name {
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
@@ -6512,6 +6807,7 @@ impl HtmlParser {
                 self.append_implied_element("html");
                 self.append_implied_element("body");
                 self.open_elements.clear();
+                self.document_tail_mode = DocumentTailMode::AfterBody;
             }
             "br" => {
                 self.diagnostics.push(ParserDiagnostic::new(
@@ -6538,7 +6834,13 @@ impl HtmlParser {
             "p" if !self.has_open_element("p")
                 && !self.has_open_element("body")
                 && !self.document_has_body_element()
-                && !self.body_has_non_whitespace_child() => {}
+                && !self.body_has_non_whitespace_child() =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag-before-body",
+                    "end tag `</p>` before body content was ignored",
+                ));
+            }
             "p" if self.current_parent_has_element_ancestor("button")
                 && !self.current_parent_has_element_in_button_scope("p") =>
             {
@@ -6654,7 +6956,12 @@ impl HtmlParser {
                 self.remove_pending_formatting_reconstruction(name);
             }
             name if is_heading_element(name) => {
-                self.close_open_heading_if_in_scope(None);
+                if !self.close_open_heading_if_in_scope(Some(name)) {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-heading-end-tag",
+                        format!("end tag `</{name}>` did not match the current heading element"),
+                    ));
+                }
             }
             _ => self.close_element(name),
         }
@@ -6696,6 +7003,12 @@ impl HtmlParser {
                 return;
             }
             if is_formatting_element(name) && self.has_table_context_above(index) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-formatting-end-tag-in-table",
+                    format!(
+                        "end tag `</{name}>` could not close a formatting element across table scope"
+                    ),
+                ));
                 if self.open_element_is_fostered_before_open_table(index) {
                     self.capture_formatting_above(index);
                     self.open_elements.truncate(index);
@@ -6722,6 +7035,16 @@ impl HtmlParser {
                 && self.adopt_formatting_end_tag_across_special_block(index)
             {
                 return;
+            }
+            let reports_scope_error = !matches!(name, "body" | "html")
+                && special_scope_blocks_end_tag(name)
+                && self
+                    .has_element_above(index, |candidate| !is_implied_end_tag_element(candidate));
+            if reports_scope_error {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-non-current-end-tag",
+                    format!("end tag `</{name}>` was seen before its open element was current"),
+                ));
             }
             if special_scope_blocks_end_tag(name)
                 && self.has_special_element_above(index)
@@ -6884,7 +7207,7 @@ impl HtmlParser {
             })
             .map_or(0, |index| index + 1);
         let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+            element_at_path(&self.document, path).is_some_and(&predicate)
         }) else {
             return false;
         };
@@ -6901,6 +7224,13 @@ impl HtmlParser {
             if !self.current_parent_has_element_ancestor("button") {
                 self.close_open_anchor_for_reconstruction_boundary();
                 self.close_open_element_if(|name| name == "p");
+                if !self.current_element_is("li") && self.open_list_item_in_scope_index().is_some()
+                {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-li-start-tag",
+                        "start tag `<li>` implied the end of a non-current list item",
+                    ));
+                }
                 self.close_open_list_item_if_in_scope();
             }
         } else if incoming_name == "dt" || incoming_name == "dd" {
@@ -7029,8 +7359,18 @@ impl HtmlParser {
         let Some(index) = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| name == "menuitem")
         }) else {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-menuitem-end-tag",
+                "end tag `</menuitem>` did not match the current open element",
+            ));
             return;
         };
+        if index + 1 < self.open_elements.len() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-menuitem-end-tag",
+                "end tag `</menuitem>` did not match the current open element",
+            ));
+        }
         if self
             .open_elements
             .iter()
@@ -7042,17 +7382,22 @@ impl HtmlParser {
         self.open_elements.truncate(index);
     }
 
-    fn close_open_list_item_if_in_scope(&mut self) -> bool {
-        let Some(index) = self.open_elements.iter().rposition(|path| {
+    fn open_list_item_in_scope_index(&self) -> Option<usize> {
+        let index = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| name == "li")
-        }) else {
-            return false;
-        };
+        })?;
         if self.open_elements.iter().skip(index + 1).any(|path| {
             element_at_path(&self.document, path).is_some_and(is_list_item_scope_boundary)
         }) {
-            return false;
+            return None;
         }
+        Some(index)
+    }
+
+    fn close_open_list_item_if_in_scope(&mut self) -> bool {
+        let Some(index) = self.open_list_item_in_scope_index() else {
+            return false;
+        };
         self.open_elements.truncate(index);
         true
     }
@@ -7078,9 +7423,7 @@ impl HtmlParser {
 
     fn close_open_heading_if_in_scope(&mut self, expected_name: Option<&str>) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| {
-                is_heading_element(name) && expected_name.map_or(true, |expected| name == expected)
-            })
+            element_at_path(&self.document, path).is_some_and(is_heading_element)
         }) else {
             return false;
         };
@@ -7094,8 +7437,13 @@ impl HtmlParser {
             self.pop_current_if(is_heading_element);
             return false;
         }
+        if expected_name.is_some() {
+            self.generate_implied_end_tags_above(index);
+        }
+        let matched_current =
+            expected_name.is_none_or(|expected| self.current_element_is(expected));
         self.open_elements.truncate(index);
-        true
+        matched_current
     }
 
     fn close_open_formatting_element_silently(&mut self, name: &str) -> bool {
@@ -7218,7 +7566,7 @@ impl HtmlParser {
 
     fn close_open_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+            element_at_path(&self.document, path).is_some_and(&predicate)
         }) else {
             return false;
         };
@@ -7278,7 +7626,7 @@ impl HtmlParser {
         });
         let lower_bound = last_ruby.map_or(0, |index| index + 1);
         let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+            element_at_path(&self.document, path).is_some_and(&predicate)
         }) else {
             return false;
         };
@@ -7655,11 +8003,10 @@ impl HtmlParser {
             .open_elements
             .iter()
             .skip(formatting_index + 1)
-            .filter(|path| {
+            .rfind(|path| {
                 path.starts_with(&first_div_path)
                     && element_at_path(&self.document, path).is_some_and(|name| name == "div")
             })
-            .last()
             .cloned()
             .unwrap_or_else(|| first_div_path.clone());
 
@@ -7892,6 +8239,44 @@ impl HtmlParser {
             .any(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
     }
 
+    fn has_disallowed_open_element_for_body_end_tag(&self) -> bool {
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(is_disallowed_open_element_for_body_end)
+        })
+    }
+
+    fn has_disallowed_authored_open_element_for_eof(&self) -> bool {
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                !has_fragment_context_marker(element)
+                    && is_disallowed_open_element_for_body_end(element)
+            })
+        })
+    }
+
+    fn current_element_is_authored_text_mode_element(&self) -> bool {
+        self.open_elements
+            .last()
+            .and_then(|path| element_ref_at_path(&self.document, path))
+            .is_some_and(|element| {
+                element.namespace.is_none()
+                    && !has_fragment_context_marker(element)
+                    && (matches!(
+                        element.name.as_str(),
+                        "iframe"
+                            | "noembed"
+                            | "noframes"
+                            | "script"
+                            | "style"
+                            | "textarea"
+                            | "title"
+                            | "xmp"
+                    ) || (element.name == "noscript"
+                        && self.options.scripting == HtmlScriptingMode::Enabled))
+            })
+    }
+
     fn has_document_type(&self) -> bool {
         self.document
             .children
@@ -7910,7 +8295,7 @@ impl HtmlParser {
         self.document
             .children
             .iter()
-            .any(|node| !matches!(node, Node::Comment(_)))
+            .any(|node| !matches!(node, Node::Comment(_) | Node::ProcessingInstruction(_)))
     }
 
     fn reopen_document_body(&mut self) {
@@ -8299,8 +8684,10 @@ impl HtmlParser {
 
     fn document_has_non_frameset_compatible_body_content(&self) -> bool {
         self.document.children.iter().any(|node| {
-            !matches!(node, Node::DocumentType(_) | Node::Comment(_))
-                && !is_ignorable_before_frameset_node(node)
+            !matches!(
+                node,
+                Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_)
+            ) && !is_ignorable_before_frameset_node(node)
         })
     }
 
@@ -8991,7 +9378,7 @@ fn collect_text_content(nodes: &[Node], text: &mut String) {
         match node {
             Node::Text(data) => text.push_str(&data.data),
             Node::Element(element) => collect_text_content(&element.children, text),
-            Node::Comment(_) | Node::DocumentType(_) => {}
+            Node::Comment(_) | Node::ProcessingInstruction(_) | Node::DocumentType(_) => {}
         }
     }
 }
@@ -9319,7 +9706,9 @@ fn normalize_document_shell(document: Document) -> Document {
     for node in document.children {
         match node {
             Node::DocumentType(_) => normalized.push_child(node),
-            Node::Comment(_) if !builder.seen_document_element => normalized.push_child(node),
+            Node::Comment(_) | Node::ProcessingInstruction(_) if !builder.seen_document_element => {
+                normalized.push_child(node)
+            }
             Node::Element(mut element) if element.name == "html" => {
                 builder.seen_document_element = true;
                 builder.seen_html_element_node = true;
@@ -9328,7 +9717,7 @@ fn normalize_document_shell(document: Document) -> Document {
                     builder.push_html_child(child);
                 }
             }
-            Node::Comment(_) if builder.seen_html_element_node => {
+            Node::Comment(_) | Node::ProcessingInstruction(_) if builder.seen_html_element_node => {
                 builder.trailing_document_children.push(node);
             }
             node => {
@@ -9356,13 +9745,39 @@ fn append_missing_attributes(target: &mut Vec<Attribute>, attributes: Vec<Attrib
     }
 }
 
+fn is_disallowed_open_element_for_body_end(element: &Element) -> bool {
+    element.namespace.is_some()
+        || !matches!(
+            element.name.as_str(),
+            "dd" | "dt"
+                | "li"
+                | "optgroup"
+                | "option"
+                | "p"
+                | "rb"
+                | "rp"
+                | "rt"
+                | "rtc"
+                | "tbody"
+                | "td"
+                | "tfoot"
+                | "th"
+                | "thead"
+                | "tr"
+                | "body"
+                | "html"
+        )
+}
+
 fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
     let mut fragment = Vec::new();
 
     for node in document.children.drain(..) {
         match node {
             Node::DocumentType(_) => {}
-            Node::Comment(_) | Node::Text(_) => fragment.push(node),
+            Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_) => {
+                fragment.push(node)
+            }
             Node::Element(mut element) if element.name == "html" => {
                 for child in element.children.drain(..) {
                     match child {
@@ -9373,7 +9788,9 @@ fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
                                     .filter(|node| !matches!(node, Node::DocumentType(_))),
                             );
                         }
-                        Node::Comment(_) | Node::Text(_) => fragment.push(child),
+                        Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_) => {
+                            fragment.push(child)
+                        }
                         _ => {}
                     }
                 }
@@ -9398,7 +9815,7 @@ fn fragment_context_shell(context_element: &str) -> (Document, Vec<Vec<usize>>) 
         let marker = index == chain.len() - 1
             || is_fragment_table_shell_wrapper(element_name, context_element);
         let namespace = marker
-            .then_some(foreign_context.and_then(|(namespace, _)| Some(namespace)))
+            .then_some(foreign_context.map(|(namespace, _)| namespace))
             .flatten();
         let child_index = {
             let parent = element_at_path_mut(&mut document, &parent_path)
@@ -9664,7 +10081,10 @@ fn move_leading_html_fragment_misc_after_body(nodes: &mut Vec<Node>) {
     };
 
     let mut leading_misc = Vec::new();
-    while matches!(nodes.first(), Some(Node::Comment(_) | Node::Text(_))) {
+    while matches!(
+        nodes.first(),
+        Some(Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_))
+    ) {
         leading_misc.push(nodes.remove(0));
     }
     if leading_misc.is_empty() {
@@ -9724,13 +10144,15 @@ impl DocumentShellBuilder {
                 append_missing_attributes(&mut self.body_attributes, element.attributes);
                 self.body_children.append(&mut element.children);
             }
-            Node::Comment(_) if self.seen_body_content && !self.seen_body_element => {
+            Node::Comment(_) | Node::ProcessingInstruction(_)
+                if self.seen_body_content && !self.seen_body_element =>
+            {
                 self.body_children.push(node);
             }
-            Node::Comment(_) if self.seen_body_content => {
+            Node::Comment(_) | Node::ProcessingInstruction(_) if self.seen_body_content => {
                 self.trailing_html_children.push(node);
             }
-            Node::Comment(_) if !self.seen_body_content => {
+            Node::Comment(_) | Node::ProcessingInstruction(_) if !self.seen_body_content => {
                 if !self.seen_head_element && self.head_children.is_empty() {
                     self.pre_head_html_children.push(node);
                 } else if !self.seen_head_element {
@@ -9843,10 +10265,7 @@ fn coalesce_adjacent_text_nodes(nodes: &mut Vec<Node>) {
 
     let mut index = 1;
     while index < nodes.len() {
-        let merge = match (&nodes[index - 1], &nodes[index]) {
-            (Node::Text(_), Node::Text(_)) => true,
-            _ => false,
-        };
+        let merge = matches!((&nodes[index - 1], &nodes[index]), (Node::Text(_), Node::Text(_)));
         if !merge {
             index += 1;
             continue;
@@ -10006,14 +10425,14 @@ fn starts_body_after_head(name: &str) -> bool {
 fn is_ignorable_before_body(node: &Node) -> bool {
     match node {
         Node::Text(text) => text.data.chars().all(char::is_whitespace),
-        Node::Comment(_) => true,
+        Node::Comment(_) | Node::ProcessingInstruction(_) => true,
         _ => false,
     }
 }
 
 fn is_body_content_node(node: &Node) -> bool {
     match node {
-        Node::DocumentType(_) | Node::Comment(_) => false,
+        Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => false,
         Node::Text(text) => !text.data.chars().all(char::is_whitespace),
         Node::Element(_) => true,
     }
@@ -10102,6 +10521,16 @@ fn doctype_triggers_quirks(
         system_identifier
             .eq_ignore_ascii_case("http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd")
     })
+}
+
+fn is_conforming_initial_doctype(
+    name: Option<&str>,
+    public_identifier: Option<&str>,
+    system_identifier: Option<&str>,
+) -> bool {
+    name.is_some_and(|name| name.eq_ignore_ascii_case("html"))
+        && public_identifier.is_none()
+        && system_identifier.is_none_or(|identifier| identifier == "about:legacy-compat")
 }
 
 fn is_table_section(name: &str) -> bool {
@@ -11224,7 +11653,7 @@ fn browser_image_map_descriptor(
         missing_alt_area_count: map
             .areas
             .iter()
-            .filter(|area| area.alt.as_deref().map_or(true, str::is_empty))
+            .filter(|area| area.alt.as_deref().is_none_or(str::is_empty))
             .count(),
         missing_href_area_count: map.areas.iter().filter(|area| area.href.is_none()).count(),
         missing_coords_area_count: map
@@ -11294,7 +11723,7 @@ fn browser_image_map_block_reasons(
     missing_image_reference: bool,
 ) -> Vec<String> {
     let mut reasons = Vec::new();
-    if map.name.as_deref().map_or(true, str::is_empty) {
+    if map.name.as_deref().is_none_or(str::is_empty) {
         reasons.push("missing-name".to_string());
     }
     if map.areas.is_empty() {
@@ -11309,7 +11738,7 @@ fn browser_image_map_block_reasons(
     if map
         .areas
         .iter()
-        .any(|area| area.alt.as_deref().map_or(true, str::is_empty))
+        .any(|area| area.alt.as_deref().is_none_or(str::is_empty))
     {
         reasons.push("areas-without-alt".to_string());
     }
@@ -12458,9 +12887,7 @@ fn browser_navigation_target_descriptor(
     base_href: Option<&str>,
     base_target: Option<&str>,
 ) -> Option<BrowserNavigationTargetDescriptor> {
-    if element.attribute("href").is_none() {
-        return None;
-    }
+    element.attribute("href")?;
 
     let rel_tokens = browser_rel_tokens(element);
     let ping = browser_anchor_ping(element);
@@ -13416,6 +13843,23 @@ fn resolve_browser_url(url: &str, base_href: Option<&str>) -> Option<String> {
     Some(format!("{scheme}://{authority}{resolved_path}{suffix}"))
 }
 
+fn browser_authored_base_href(document: &Document) -> Option<&str> {
+    find_first_element_in_nodes(&document.children, "head")
+        .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+        .and_then(|element| element.attribute("href"))
+}
+
+fn browser_effective_base_href(document: &Document, document_url: &str) -> Option<String> {
+    let document_url = document_url.trim();
+    if !is_absolute_url(document_url) {
+        return None;
+    }
+
+    browser_authored_base_href(document)
+        .and_then(|base_href| resolve_browser_url(base_href, Some(document_url)))
+        .or_else(|| Some(document_url.to_string()))
+}
+
 fn is_absolute_url(url: &str) -> bool {
     let Some(index) = url.find(':') else {
         return false;
@@ -13819,7 +14263,7 @@ fn collect_browser_content_nodes_with_mode(
                     output.push(content_node);
                 }
             }
-            Node::DocumentType(_) | Node::Comment(_) => {}
+            Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => {}
         }
     }
 }
@@ -21273,7 +21717,7 @@ fn browser_control_validation_barred_reason(
 }
 
 fn browser_control_successful(control_type: &str, element: &Element, disabled: bool) -> bool {
-    if disabled || element.attribute("name").map_or(true, str::is_empty) {
+    if disabled || element.attribute("name").is_none_or(str::is_empty) {
         return false;
     }
 
@@ -24330,7 +24774,7 @@ fn browser_form_control(
     }
 }
 
-fn first_direct_child_named<'a>(element: &'a Element, name: &str) -> Option<*const Element> {
+fn first_direct_child_named(element: &Element, name: &str) -> Option<*const Element> {
     element.children.iter().find_map(|child| match child {
         Node::Element(child_element) if child_element.name == name => {
             Some(child_element as *const Element)
@@ -24425,7 +24869,7 @@ fn collect_visible_text(nodes: &[Node], text: &mut String) {
                 collect_visible_text(&element.children, text);
                 text.push(' ');
             }
-            Node::DocumentType(_) | Node::Comment(_) => {}
+            Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => {}
         }
     }
 }
@@ -24441,7 +24885,7 @@ fn collect_browser_text_content(nodes: &[Node], text: &mut String) {
         match node {
             Node::Text(value) => text.push_str(&value.data),
             Node::Element(element) => collect_browser_text_content(&element.children, text),
-            Node::DocumentType(_) | Node::Comment(_) => {}
+            Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => {}
         }
     }
 }
@@ -24618,7 +25062,7 @@ fn browser_table_block_reasons(table: &BrowserTable, cells: &[BrowserTableCell])
     if table.row_count == 0 {
         reasons.push("missing-rows".to_string());
     }
-    if table.caption.as_deref().map_or(true, str::is_empty) {
+    if table.caption.as_deref().is_none_or(str::is_empty) {
         reasons.push("missing-caption".to_string());
     }
     if table.header_cell_count == 0 {
@@ -24819,6 +25263,24 @@ mod tests {
 
     fn body(document: &Document) -> &Element {
         element(&html(document).children[1])
+    }
+
+    #[test]
+    fn parser_preserves_processing_instruction_target_and_data() {
+        let mut parser = HtmlParser::with_options(HtmlParseOptions::default());
+        parser.process_token(Token::ProcessingInstruction {
+            target: "xml-model".to_string(),
+            data: "href=\"schema.rng\"".to_string(),
+        });
+        parser.process_token(Token::Eof);
+
+        let document = parser.finish_document();
+
+        assert!(matches!(
+            &document.children[0],
+            Node::ProcessingInstruction(pi)
+                if pi.target == "xml-model" && pi.data == "href=\"schema.rng\""
+        ));
     }
 
     #[test]
@@ -29717,7 +30179,7 @@ mod tests {
 
     #[test]
     fn reports_unmatched_end_tags_without_dropping_content() {
-        let output = parse_html_with_diagnostics("<p>Hello</section>").unwrap();
+        let output = parse_html_with_diagnostics("<!doctype html><p>Hello</section>").unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
@@ -30268,16 +30730,22 @@ mod tests {
     #[test]
     fn ignores_nested_form_start_tags() {
         let output = parse_html_with_diagnostics(
-            "<form id=outer><div>One<form id=inner><input name=x></form><p>After",
+            "<!doctype html><form id=outer><div>One<form id=inner><input name=x></form><p>After",
         )
         .unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "nested-form-start-tag",
-                "nested form start tag was ignored while a form element was already open"
-            )]
+            vec![
+                ParserDiagnostic::new(
+                    "nested-form-start-tag",
+                    "nested form start tag was ignored while a form element was already open"
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )
+            ]
         );
 
         let body = body(&output.document);
@@ -31208,7 +31676,7 @@ mod tests {
     #[test]
     fn ignores_self_closing_flag_on_non_void_html_elements() {
         let output = parse_html_with_diagnostics(
-            "<div/>Text</div><span/>Tail</span><p/>Next<section/>Block</section>",
+            "<!doctype html><div/>Text</div><span/>Tail</span><p/>Next<section/>Block</section>",
         )
         .unwrap();
 
@@ -31246,7 +31714,7 @@ mod tests {
     #[test]
     fn self_closing_text_mode_elements_still_drive_tokenizer_handoff() {
         let output = parse_html_with_diagnostics(
-            "<title/>Tom &amp; Jerry</title><style/>a < b &amp; c</style><script/>if (a < b)</script><textarea/>\nA &lt; B</textarea><p>x</p>",
+            "<!doctype html><title/>Tom &amp; Jerry</title><style/>a < b &amp; c</style><script/>if (a < b)</script><textarea/>\nA &lt; B</textarea><p>x</p>",
         )
         .unwrap();
 
@@ -31285,9 +31753,10 @@ mod tests {
 
     #[test]
     fn self_closing_plaintext_still_consumes_until_eof() {
-        let output =
-            parse_html_with_diagnostics("<p>before</p><plaintext/><b>&amp;</b></plaintext>")
-                .unwrap();
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><p>before</p><plaintext/><b>&amp;</b></plaintext>",
+        )
+        .unwrap();
 
         let body = body(&output.document);
         let paragraph = element(&body.children[0]);
@@ -31300,17 +31769,25 @@ mod tests {
         );
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "non-void-html-element-self-closing",
-                "self-closing flag on non-void HTML element `<plaintext>` was ignored"
-            )]
+            vec![
+                ParserDiagnostic::new(
+                    "non-void-html-element-self-closing",
+                    "self-closing flag on non-void HTML element `<plaintext>` was ignored"
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )
+            ]
         );
     }
 
     #[test]
     fn self_closing_noscript_uses_scripting_sensitive_handoff() {
-        let enabled =
-            parse_html_with_diagnostics("<noscript/><p>&amp;</p></noscript><p>x</p>").unwrap();
+        let enabled = parse_html_with_diagnostics(
+            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
+        )
+        .unwrap();
 
         let enabled_noscript = element(&head(&enabled.document).children[0]);
         assert_eq!(enabled_noscript.name, "noscript");
@@ -31321,7 +31798,7 @@ mod tests {
         );
 
         let disabled = parse_html_with_diagnostics_and_options(
-            "<noscript/><p>&amp;</p></noscript><p>x</p>",
+            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
             HtmlParseOptions {
                 scripting: HtmlScriptingMode::Disabled,
                 ..HtmlParseOptions::default()
@@ -31364,7 +31841,7 @@ mod tests {
     #[test]
     fn acknowledges_self_closing_void_starts_and_ignores_void_end_tags() {
         let output = parse_html_with_diagnostics(
-            "<p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After",
+            "<!doctype html><p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After",
         )
         .unwrap();
 
@@ -31418,6 +31895,28 @@ mod tests {
         assert_eq!(nested_frameset.name, "frameset");
         assert_eq!(element(&nested_frameset.children[0]).name, "frame");
         assert_eq!(element(&frameset.children[2]).name, "noframes");
+    }
+
+    #[test]
+    fn reports_frameset_start_tags_rejected_after_body_content() {
+        for source in [
+            "<!doctype html><body><frameset>",
+            "<!doctype html><input><frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-frameset-start-tag",
+                    "start tag `<frameset>` was ignored after body content"
+                )],
+                "source {source:?}"
+            );
+            assert!(body(&output.document)
+                .children
+                .iter()
+                .all(|node| !matches!(node, Node::Element(element) if element.name == "frameset")));
+        }
     }
 
     #[test]
@@ -31514,7 +32013,8 @@ mod tests {
 
     #[test]
     fn treats_legacy_image_start_tag_as_img() {
-        let output = parse_html_with_diagnostics("<p><image src=hero.png></p>").unwrap();
+        let output =
+            parse_html_with_diagnostics("<!doctype html><p><image src=hero.png></p>").unwrap();
 
         let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.name, "p");
@@ -31532,8 +32032,10 @@ mod tests {
 
     #[test]
     fn ignores_self_closing_flag_inside_implied_table_structure() {
-        let output =
-            parse_html_with_diagnostics("<table><tr/><td/>A<td/>B</table><p>after</p>").unwrap();
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><table><tr/><td/>A<td/>B</table><p>after</p>",
+        )
+        .unwrap();
 
         let table = element(&body(&output.document).children[0]);
         let tbody = element(&table.children[0]);
@@ -32505,8 +33007,64 @@ mod tests {
     }
 
     #[test]
+    fn reports_missing_doctype_for_non_initial_tokens() {
+        for source in ["", "text", "<p>", "</p>"] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "missing-doctype")
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn initial_whitespace_comments_and_processing_instructions_allow_a_doctype() {
+        let output = parse_html_with_diagnostics(
+            " \n<!--before--><?xml-model href='schema.rng'?><!doctype html><p>x",
+        )
+        .unwrap();
+
+        assert!(!output
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "missing-doctype"));
+    }
+
+    #[test]
+    fn reports_nonconforming_initial_doctypes() {
+        for source in [
+            "<!doctype potato>",
+            "<!doctype html public 'legacy'>",
+            "<!doctype html system 'legacy'>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "nonconforming-doctype",
+                    "initial doctype did not match the HTML Standard's allowed form"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html>",
+            "<!doctype html system 'about:legacy-compat'>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.is_empty(), "source {source:?}");
+        }
+    }
+
+    #[test]
     fn ignores_stray_paragraph_end_tag_before_body_starts() {
-        let output = parse_html_with_diagnostics("<head></p><meta><p>").unwrap();
+        let output = parse_html_with_diagnostics("<!doctype html><head></p><meta><p>").unwrap();
 
         let head = head(&output.document);
         assert_eq!(head.children.len(), 1);
@@ -32522,6 +33080,21 @@ mod tests {
                 "end tag `</p>` before body content was ignored"
             )]
         );
+
+        for source in [
+            "<!doctype html><html></p><!--foo-->",
+            "<!doctype html><head></head></p><!--foo-->",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-p-end-tag-before-body",
+                    "end tag `</p>` before body content was ignored"
+                )],
+                "source {source:?}"
+            );
+        }
     }
 
     #[test]
@@ -32551,27 +33124,520 @@ mod tests {
     }
 
     #[test]
-    fn merges_duplicate_html_and_head_start_tags_without_nesting() {
-        let document = parse_html(
-            "<html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>",
+    fn reports_and_recovers_duplicate_html_and_head_start_tags() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>",
         )
         .unwrap();
+        let document = output.document;
 
         assert_eq!(html(&document).attribute("lang"), Some("en"));
         assert_eq!(html(&document).attribute("data-app"), Some("venture"));
         assert_eq!(head(&document).attribute("id"), Some("main"));
-        assert_eq!(head(&document).attribute("data-h"), Some("yes"));
+        assert_eq!(head(&document).attribute("data-h"), None);
         assert_eq!(head(&document).children.len(), 1);
         assert_eq!(element(&head(&document).children[0]).name, "title");
         assert_eq!(body(&document).children.len(), 1);
         assert_eq!(element(&body(&document).children[0]).name, "p");
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-html-start-tag",
+                    "html start tag was recovered against the existing document element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-head-start-tag",
+                    "duplicate head start tag was ignored"
+                )
+            ]
+        );
+    }
+
+    #[test]
+    fn reports_and_recovers_duplicate_body_start_tags() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><body class=first><body data-app=venture class=ignored><p>x",
+        )
+        .unwrap();
+
+        assert_eq!(body(&output.document).attribute("class"), Some("first"));
+        assert_eq!(
+            body(&output.document).attribute("data-app"),
+            Some("venture")
+        );
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-body-start-tag",
+                "body start tag was recovered against the existing body element"
+            )]
+        );
+    }
+
+    #[test]
+    fn reports_shell_end_tags_with_disallowed_open_elements() {
+        for (source, end_tag) in [
+            ("<!doctype html><menuitem></body>", "body"),
+            ("<!doctype html><menuitem></html>", "html"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "shell-end-tag-with-unclosed-elements",
+                    format!("end tag `</{end_tag}>` was seen with disallowed open elements")
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let table = parse_html_with_diagnostics(
+            "<!doctype html><table><tbody><tr><td></body>",
+        )
+        .unwrap();
+        assert_eq!(
+            table.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "shell-end-tag-with-unclosed-elements",
+                    "end tag `</body>` was seen with disallowed open elements"
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )
+            ]
+        );
+
+        let allowed = parse_html_with_diagnostics("<!doctype html><p></body>").unwrap();
+        assert!(allowed.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn reports_eof_with_disallowed_open_elements() {
+        for source in [
+            "<!doctype html><menuitem>",
+            "<!doctype html><div>",
+            "<!doctype html><svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        for source in ["<!doctype html><p>", "<!doctype html><head>"] {
+            let allowed = parse_html_with_diagnostics(source).unwrap();
+            assert!(allowed.parser_diagnostics.is_empty(), "source {source:?}");
+        }
+    }
+
+    #[test]
+    fn reports_in_body_end_tags_seen_before_their_open_element_is_current() {
+        for (source, end_tag) in [
+            (
+                "<!doctype html><figcaption><article></figcaption>a",
+                "figcaption",
+            ),
+            ("<!doctype html><address><button></address>a", "address"),
+            ("<!doctype html><font><p><b>test</font>", "font"),
+            ("<!doctype html><select><menuitem></select>", "select"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let expected = ParserDiagnostic::new(
+                "unexpected-non-current-end-tag",
+                format!("end tag `</{end_tag}>` was seen before its open element was current"),
+            );
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .any(|diagnostic| diagnostic == &expected),
+                "source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn reports_heading_end_tags_without_a_matching_current_heading() {
+        for (source, end_tag) in [
+            ("<!doctype html><p></h3>foo", "h3"),
+            ("<!doctype html><h3><li>abc</h2>foo", "h2"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-heading-end-tag",
+                    format!("end tag `</{end_tag}>` did not match the current heading element")
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let matching =
+            parse_html_with_diagnostics("<!doctype html><h3><li>abc</h3>foo").unwrap();
+        assert!(matching.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn reports_li_start_tags_that_close_non_current_list_items() {
+        for source in [
+            "<!DOCTYPE html><li><menuitem><li>",
+            "<!DOCTYPE html><html><head></head><body><ul><li><div><p><li></ul></body></html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-li-start-tag",
+                    "start tag `<li>` implied the end of a non-current list item"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let adjacent = parse_html_with_diagnostics("<!doctype html><ul><li>one<li>two").unwrap();
+        assert!(!adjacent
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-li-start-tag"));
+    }
+
+    #[test]
+    fn reports_paragraph_end_tag_recovery_from_mathml_foreign_content() {
+        let output = parse_html_with_diagnostics("<!doctype html><p><math></p>a").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-p-end-tag-in-foreign-content",
+                "end tag `</p>` in MathML foreign content forced HTML recovery"
+            )]
+        );
+    }
+
+    #[test]
+    fn reports_formatting_end_tag_recovery_across_table_scope() {
+        let output =
+            parse_html_with_diagnostics("<!DOCTYPE html><font><table></font></table></font>")
+                .unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-formatting-end-tag-in-table",
+                "end tag `</font>` could not close a formatting element across table scope"
+            )]
+        );
+    }
+
+    #[test]
+    fn reports_menuitem_end_tags_without_a_matching_current_element() {
+        for source in [
+            "<!DOCTYPE html><menuitem><asdf></menuitem>x",
+            "<!DOCTYPE html></menuitem>",
+            "<!DOCTYPE html><html></menuitem>",
+            "<!DOCTYPE html><head></menuitem>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-menuitem-end-tag",
+                    "end tag `</menuitem>` did not match the current open element"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let matching = parse_html_with_diagnostics("<!doctype html><menuitem></menuitem>").unwrap();
+        assert!(matching.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn reports_non_whitespace_character_data_fostered_from_tables() {
+        for source in [
+            "<!doctype html><table> x</table>",
+            "<!doctype html><table><tr> x</table>",
+            "<!doctype html><div><table><a>foo</a> <tr><td>bar</td></tr></table></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-character-in-table",
+                            "non-whitespace character data in a table context was foster parented",
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let whitespace = parse_html_with_diagnostics("<!doctype html><table> \n</table>").unwrap();
+        assert!(whitespace
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
+    }
+
+    #[test]
+    fn reports_foreign_start_tags_fostered_from_tables() {
+        for (source, name) in [
+            ("<!doctype html><table><svg></svg></table>", "svg"),
+            ("<!doctype html><table><math></math></table>", "math"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-foreign-start-tag-in-table",
+                            format!("start tag `<{name}>` in a table context was foster parented"),
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let cell = parse_html_with_diagnostics(
+            "<!doctype html><table><tr><td><svg></svg><math></math></td></tr></table>",
+        )
+        .unwrap();
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-foreign-start-tag-in-table"));
+    }
+
+    #[test]
+    fn reports_html_start_tags_that_break_out_of_foreign_content() {
+        for source in [
+            "<!doctype html><svg><g><p>x",
+            "<!doctype html><math><mrow><div>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic.code == "unexpected-html-start-tag-in-foreign-content"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let integration_point =
+            parse_html_with_diagnostics("<!doctype html><svg><foreignObject><p>x").unwrap();
+        assert!(integration_point
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-html-start-tag-in-foreign-content"));
+    }
+
+    #[test]
+    fn reports_table_end_tags_that_break_out_of_foreign_content() {
+        for source in [
+            "<!doctype html><table><caption><svg><g>x</table>",
+            "<!doctype html><table><caption><math><mrow>x</table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-table-end-tag-in-foreign-content",
+                            "end tag `</table>` forced table recovery from foreign content",
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let closed_foreign = parse_html_with_diagnostics(
+            "<!doctype html><table><caption><svg></svg></caption></table>",
+        )
+        .unwrap();
+        assert!(closed_foreign.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
+        }));
+    }
+
+    #[test]
+    fn reports_fragment_eof_with_authored_disallowed_open_elements() {
+        for (context, source) in [
+            ("body", "<div>"),
+            ("html", "<span>"),
+            ("svg path", "<nobr>X"),
+        ] {
+            let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            let mut expected = Vec::new();
+            if context == "svg path" {
+                expected.push(ParserDiagnostic::new(
+                    "unexpected-html-start-tag-in-foreign-content",
+                    "HTML start tag `<nobr>` forced recovery from foreign content",
+                ));
+            }
+            expected.push(ParserDiagnostic::new(
+                "eof-with-unclosed-elements",
+                "end of file was reached with disallowed open elements",
+            ));
+            assert_eq!(
+                output.parser_diagnostics,
+                expected,
+                "context {context:?}, source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn reports_eof_in_text_insertion_mode() {
+        for source in [
+            "<!doctype html><script>",
+            "<!doctype html><style> EOF",
+            "<!doctype html><title>title",
+            "<!doctype html><frameset></frameset><noframes>fallback",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "eof-in-text-mode",
+                    "end of file was reached while parsing a text element"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let output = parse_html_fragment_with_diagnostics("<script>").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "eof-in-text-mode",
+                "end of file was reached while parsing a text element"
+            )]
+        );
+    }
+
+    #[test]
+    fn text_fragment_context_eof_does_not_diagnose_the_seeded_element() {
+        for context in ["script", "style", "textarea", "title"] {
+            let output = parse_html_fragment_for_context_with_diagnostics("", context).unwrap();
+            assert!(
+                output.parser_diagnostics.is_empty(),
+                "context {context:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn fragment_eof_ignores_seeded_contexts_and_allowed_open_elements() {
+        for (context, source) in [("div", ""), ("svg path", ""), ("body", "<p>")] {
+            let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(
+                output.parser_diagnostics.is_empty(),
+                "context {context:?}, source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn reports_unexpected_tokens_after_body_and_html() {
+        for (source, code) in [
+            (
+                "<!doctype html><body></body><p>x</p><div>y</div>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html><body></body></html>text<p>x</p>",
+                "unexpected-token-after-html",
+            ),
+            (
+                "<!doctype html></body><meta>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html></body><title>x</title>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html></body><frameset>",
+                "unexpected-token-after-body",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == code)
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+
+        let allowed = parse_html_with_diagnostics(
+            "<!doctype html><body></body> \n<!--after body--><?pi?></html><!--after html-->",
+        )
+        .unwrap();
+        assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
+            !matches!(
+                diagnostic.code.as_str(),
+                "unexpected-token-after-body" | "unexpected-token-after-html"
+            )
+        }));
+
+        let ignored_html_end =
+            parse_html_with_diagnostics("<!doctype html><menuitem></html><p>x").unwrap();
+        assert!(!ignored_html_end.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-token-after-html"
+        }));
+    }
+
+    #[test]
+    fn reports_unexpected_tokens_after_after_frameset() {
+        for (source, expected_count) in [
+            ("<!doctype html><frameset></frameset></html>text", 1),
+            ("<!doctype html><frameset></frameset></html><p>", 1),
+            ("<!doctype html><frameset></frameset></html></p>", 1),
+            (
+                "<!doctype html><frameset></frameset></html><plaintext></plaintext>",
+                2,
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-token-after-after-frameset"
+                    })
+                    .count(),
+                expected_count,
+                "source {source:?}"
+            );
+        }
+
+        let allowed = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset></html> \n<!--tail--><?pi?><noframes>x</noframes>",
+        )
+        .unwrap();
+        assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-token-after-after-frameset"
+        }));
     }
 
     #[test]
     fn ignores_head_start_tags_after_body_content_starts() {
-        let output =
-            parse_html_with_diagnostics("<body><p>before</p><head data-late=yes><p>after</p>")
-                .unwrap();
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><body><p>before</p><head data-late=yes><p>after</p>",
+        )
+        .unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
@@ -32594,7 +33660,8 @@ mod tests {
 
     #[test]
     fn recovers_special_p_and_br_end_tags() {
-        let output = parse_html_with_diagnostics("Before</p>Middle</br>After").unwrap();
+        let output =
+            parse_html_with_diagnostics("<!doctype html>Before</p>Middle</br>After").unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
@@ -32701,11 +33768,17 @@ mod tests {
     #[test]
     fn recovers_omitted_shell_end_tag_boundaries() {
         let output = parse_html_with_diagnostics(
-            "<title>T</title></head><p>before</body>after<section>next</html>tail",
+            "<!doctype html><title>T</title></head><p>before</body>after<section>next</html>tail",
         )
         .unwrap();
 
-        assert!(output.parser_diagnostics.is_empty());
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "shell-end-tag-with-unclosed-elements",
+                "end tag `</html>` was seen with disallowed open elements"
+            )]
+        );
         assert_eq!(element(&head(&output.document).children[0]).name, "title");
 
         let output_body = body(&output.document);

@@ -167,7 +167,7 @@ fn rejects_undefined_tensor_input() {
 
 #[test]
 fn rejects_shape_mismatch_in_add() {
-    let g = make_graph(
+    let _g = make_graph(
         vec![
             Tensor::new(TensorId(0), DType::F32, Shape::from(&[3])),
             Tensor::new(TensorId(1), DType::F32, Shape::from(&[4])),

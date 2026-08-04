@@ -152,7 +152,7 @@ fn does_not_rename_property_access() {
 fn does_not_rename_object_literal_key() {
     assert_eq!(
         rename("function f(val) { return { keyName: val }; }"),
-        "function f(a){return {keyName:a}};"
+        "function f(a){return{keyName:a}};"
     );
 }
 

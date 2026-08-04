@@ -12,7 +12,7 @@
 // line; that statement is followed by `return`, not a `}`.)
 //
 // At SIMPLE this becomes:
-//   function area(w){var s;s=3;return w * s};report(area(10));
+//   function area(w){var s=3;return w*s}report(area(10));
 // while WHITESPACE_ONLY keeps `var s=1+2` verbatim (it runs no passes).
 function area(w) {
   var s = 1 + 2;

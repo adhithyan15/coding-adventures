@@ -7,10 +7,12 @@ duplicating diode, BJT, JFET, and Level-1 MOS parameter mapping logic.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
+from mosfet_models.level1 import OXIDE_PERMITTIVITY
 
 from spice_engine.elements import (
     BJT,
@@ -28,6 +30,16 @@ from spice_engine.engine import (
     format_deck_table_csv,
     format_deck_table_json,
 )
+
+_BOLTZMANN = 1.380_649e-23
+_ELECTRON_CHARGE = 1.602_176_634e-19
+_SILICON_PERMITTIVITY = 11.70 * 8.854_214_871e-12
+_INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER = 1.45e16
+_CUBIC_CENTIMETERS_PER_CUBIC_METER = 1.0e6
+
+
+def _silicon_band_gap_electron_volts(temperature_kelvin: float) -> float:
+    return 1.16 - 7.02e-4 * temperature_kelvin**2 / (temperature_kelvin + 1108.0)
 
 
 @dataclass(frozen=True, slots=True)
@@ -306,13 +318,13 @@ _MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
     "PMOS",
 )
 _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
-    "D": (7, 11, 3, 3),
-    "NPN": (7, 15, 4, 4),
-    "PNP": (7, 15, 4, 4),
-    "NJF": (5, 11, 5, 3),
-    "PJF": (5, 11, 5, 3),
-    "NMOS": (18, 25, 6, 3),
-    "PMOS": (18, 25, 6, 3),
+    "D": (15, 21, 5, 3),
+    "NPN": (41, 58, 13, 4),
+    "PNP": (41, 58, 13, 4),
+    "NJF": (22, 30, 7, 3),
+    "PJF": (22, 30, 7, 3),
+    "NMOS": (33, 41, 7, 3),
+    "PMOS": (33, 41, 7, 3),
 }
 
 
@@ -345,6 +357,16 @@ _DIODE_PARAMETER_ALIASES: dict[str, str] = {
     "CJ": "CJO",
     "CJ0": "CJO",
     "TT": "TT",
+    "VJ": "VJ",
+    "PB": "VJ",
+    "M": "M",
+    "MJ": "M",
+    "FC": "FC",
+    "XTI": "XTI",
+    "EG": "EG",
+    "RS": "RS",
+    "KF": "KF",
+    "AF": "AF",
 }
 
 _BJT_PARAMETER_ALIASES: dict[str, str] = {
@@ -361,8 +383,51 @@ _BJT_PARAMETER_ALIASES: dict[str, str] = {
     "CJC": "CJC",
     "CJC0": "CJC",
     "CBC": "CJC",
+    "XCJC": "XCJC",
     "TF": "TF",
     "TR": "TR",
+    "XTI": "XTI",
+    "EG": "EG",
+    "VAF": "VAF",
+    "VA": "VAF",
+    "VAR": "VAR",
+    "VB": "VAR",
+    "IKF": "IKF",
+    "IK": "IKF",
+    "IKR": "IKR",
+    "TNOM": "TNOM",
+    "T_NOM": "TNOM",
+    "KF": "KF",
+    "AF": "AF",
+    "PTF": "PTF",
+    "XTF": "XTF",
+    "ITF": "ITF",
+    "VTF": "VTF",
+    "RE": "RE",
+    "RC": "RC",
+    "RB": "RB",
+    "RBM": "RBM",
+    "IRB": "IRB",
+    "ISE": "ISE",
+    "C2": "C2",
+    "NE": "NE",
+    "ISC": "ISC",
+    "C4": "C4",
+    "NC": "NC",
+    "XTB": "XTB",
+    "BR": "BR",
+    "BETA_R": "BR",
+    "NF": "NF",
+    "NR": "NR",
+    "VJE": "VJE",
+    "PE": "VJE",
+    "MJE": "MJE",
+    "ME": "MJE",
+    "VJC": "VJC",
+    "PC": "VJC",
+    "MJC": "MJC",
+    "MC": "MJC",
+    "FC": "FC",
 }
 
 _JFET_PARAMETER_ALIASES: dict[str, str] = {
@@ -377,6 +442,25 @@ _JFET_PARAMETER_ALIASES: dict[str, str] = {
     "CGS0": "CGS",
     "CGD": "CGD",
     "CGD0": "CGD",
+    "KF": "KF",
+    "AF": "AF",
+    "PB": "PB",
+    "VJ": "PB",
+    "FC": "FC",
+    "IS": "IS",
+    "XTI": "XTI",
+    "EG": "EG",
+    "B": "B",
+    "NLEV": "NLEV",
+    "GDSNOI": "GDSNOI",
+    "RD": "RD",
+    "RS": "RS",
+    "TNOM": "TNOM",
+    "T_NOM": "TNOM",
+    "TCV": "TCV",
+    "VTOTC": "VTOTC",
+    "BEX": "BEX",
+    "BETATCE": "BETATCE",
 }
 
 _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
@@ -391,9 +475,19 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "PHI": "PHI",
     "W": "W",
     "L": "L",
+    "LD": "LD",
+    "TOX": "TOX",
+    "U0": "U0",
+    "UO": "U0",
+    "RD": "RD",
+    "RS": "RS",
+    "RSH": "RSH",
     "IS": "IS",
+    "JS": "JS",
     "NSUB": "N_SUB",
     "N_SUB": "N_SUB",
+    "NSS": "NSS",
+    "TPG": "TPG",
     "TNOM": "T_NOM",
     "T_NOM": "T_NOM",
     "CGSO": "CGSO",
@@ -403,8 +497,14 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "CJS": "CBS",
     "CBD": "CBD",
     "CJD": "CBD",
+    "CJ": "CJ",
+    "CJSW": "CJSW",
     "PB": "PB",
     "MJ": "MJ",
+    "MJSW": "MJSW",
+    "FC": "FC",
+    "KF": "KF",
+    "AF": "AF",
 }
 
 
@@ -463,11 +563,87 @@ def normalize_model_card(
             continue
         value = float(raw_value)
         if canonical == "LEVEL":
-            if abs(value - 1.0) > 1.0e-12:
+            if not math.isfinite(value) or abs(value - 1.0) > 1.0e-12:
                 raise ValueError(f"{name}: only MOS LEVEL=1 model cards are supported")
             normalized[canonical] = 1.0
+        elif canonical == "TPG" and value not in {-1.0, 0.0, 1.0}:
+            raise ValueError(f"{name}: MOSFET TPG must be -1, 0, or 1")
+        elif canonical == "NSS" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET NSS must be finite and non-negative")
+        elif canonical == "T_NOM" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET TNOM must be finite and positive")
+        elif canonical == "N_SUB" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET NSUB must be finite and positive")
+        elif canonical == "TOX" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET TOX must be finite and positive")
+        elif canonical == "U0" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET U0 must be finite and non-negative")
+        elif canonical == "RD" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET RD must be finite and non-negative")
+        elif canonical == "RS" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET RS must be finite and non-negative")
+        elif canonical == "RSH" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET RSH must be finite and non-negative")
+        elif canonical == "KF" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET KF must be finite and non-negative")
+        elif canonical == "AF" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET AF must be finite and non-negative")
+        elif canonical == "KP" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET KP must be finite and positive")
+        elif canonical == "W" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET W must be finite and positive")
+        elif canonical == "L" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET L must be finite and positive")
+        elif canonical == "VT0" and not math.isfinite(value):
+            raise ValueError(f"{name}: MOSFET VT0 must be finite")
+        elif canonical == "LAMBDA" and not math.isfinite(value):
+            raise ValueError(f"{name}: MOSFET LAMBDA must be finite")
+        elif canonical == "PHI" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET PHI must be finite and positive")
+        elif canonical == "GAMMA" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET GAMMA must be finite and non-negative")
+        elif canonical == "PB" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET PB must be finite and positive")
+        elif canonical == "MJ" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET MJ must be finite and non-negative")
+        elif canonical == "FC" and (
+            not math.isfinite(value) or value < 0.0 or value >= 1.0
+        ):
+            raise ValueError(f"{name}: MOSFET FC must be finite and in [0, 1)")
+        elif canonical == "MJSW" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET MJSW must be finite and non-negative")
+        elif canonical == "CJ" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CJ must be finite and non-negative")
+        elif canonical == "CJSW" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CJSW must be finite and non-negative")
+        elif canonical == "CBS" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CBS must be finite and non-negative")
+        elif canonical == "CBD" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CBD must be finite and non-negative")
+        elif canonical == "CGSO" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CGSO must be finite and non-negative")
+        elif canonical == "CGDO" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CGDO must be finite and non-negative")
+        elif canonical == "CGBO" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CGBO must be finite and non-negative")
+        elif canonical == "IS" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET IS must be finite and positive")
+        elif canonical == "JS" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET JS must be finite and non-negative")
         else:
             normalized[canonical] = value
+    if kind in {"NMOS", "PMOS"}:
+        defaults = Level1Params()
+        length = normalized.get("L", defaults.L)
+        lateral_diffusion_length = normalized.get("LD", defaults.LD)
+        if (
+            not math.isfinite(lateral_diffusion_length)
+            or lateral_diffusion_length < 0.0
+            or length - 2.0 * lateral_diffusion_length <= 0.0
+        ):
+            raise ValueError(
+                f"{name}: MOSFET LD must be finite and non-negative with L - 2*LD > 0"
+            )
     return NormalizedModelCard(
         name=name,
         kind=kind,
@@ -854,6 +1030,14 @@ def diode_from_model_card(
         IBV=p.get("IBV", 1.0e-3),
         Cjo=p.get("CJO", 0.0),
         Tt=p.get("TT", 0.0),
+        Vj=p.get("VJ", 1.0),
+        M=p.get("M", 0.5),
+        Fc=p.get("FC", 0.5),
+        Xti=p.get("XTI", 3.0),
+        Eg=p.get("EG", 1.11),
+        Rs=p.get("RS", 0.0),
+        Kf=p.get("KF", 0.0),
+        Af=p.get("AF", 1.0),
     )
 
 
@@ -869,19 +1053,52 @@ def bjt_from_model_card(
     if model.kind not in {"NPN", "PNP"}:
         raise ValueError(f"{name}: expected BJT model card, got {model.kind}")
     p = model.parameters
+    saturation_current = p.get("IS", 1.0e-14)
     return BJT(
         name,
         collector,
         base,
         emitter,
         polarity=model.kind,
-        Is=p.get("IS", 1.0e-14),
+        Is=saturation_current,
         beta_f=p.get("BF", 100.0),
         Vt=p.get("VT", 0.02585),
         Cje=p.get("CJE", 0.0),
         Cjc=p.get("CJC", 0.0),
         Tf=p.get("TF", 0.0),
         Tr=p.get("TR", 0.0),
+        Xti=p.get("XTI", 3.0),
+        Eg=p.get("EG", 1.11),
+        Vaf=p.get("VAF", 0.0),
+        Nf=p.get("NF", 1.0),
+        Nr=p.get("NR", 1.0),
+        Vje=p.get("VJE", 0.75),
+        Mje=p.get("MJE", 0.33),
+        Vjc=p.get("VJC", 0.75),
+        Mjc=p.get("MJC", 0.33),
+        Fc=p.get("FC", 0.5),
+        Var=p.get("VAR", 0.0),
+        Ikf=p.get("IKF", 0.0),
+        Ise=p.get("ISE", p.get("C2", 0.0) * saturation_current),
+        Ne=p.get("NE", 1.0),
+        Isc=p.get("ISC", p.get("C4", 0.0) * saturation_current),
+        Nc=p.get("NC", 2.0),
+        Xtb=p.get("XTB", 0.0),
+        beta_r=p.get("BR", 1.0),
+        Ikr=p.get("IKR", 0.0),
+        Tnom=(p["TNOM"] + 273.15) if "TNOM" in p else None,
+        Kf=p.get("KF", 0.0),
+        Af=p.get("AF", 1.0),
+        Ptf=p.get("PTF", 0.0),
+        Xtf=p.get("XTF", 0.0),
+        Itf=p.get("ITF", 0.0),
+        Vtf=p.get("VTF", 0.0),
+        Re=p.get("RE", 0.0),
+        Rc=p.get("RC", 0.0),
+        Rb=p.get("RB", 0.0),
+        Rbm=p.get("RBM"),
+        Irb=p.get("IRB", 0.0),
+        Xcjc=p.get("XCJC", 1.0),
     )
 
 
@@ -908,6 +1125,23 @@ def jfet_from_model_card(
         lambda_=p.get("LAMBDA", 0.0),
         Cgs=p.get("CGS", 0.0),
         Cgd=p.get("CGD", 0.0),
+        Kf=p.get("KF", 0.0),
+        Af=p.get("AF", 1.0),
+        Pb=p.get("PB", 1.0),
+        Fc=p.get("FC", 0.5),
+        Is=p.get("IS", 1.0e-14),
+        Xti=p.get("XTI", 3.0),
+        Eg=p.get("EG", 1.11),
+        B=p.get("B", 1.0),
+        Nlev=p.get("NLEV", 1.0),
+        Gdsnoi=p.get("GDSNOI", 1.0),
+        Rd=p.get("RD", 0.0),
+        Rs=p.get("RS", 0.0),
+        Tcv=p.get("TCV", 0.0),
+        Vtotc=p.get("VTOTC"),
+        Tnom=p["TNOM"] + 273.15 if "TNOM" in p else None,
+        Bex=p.get("BEX", 0.0),
+        Betatce=p.get("BETATCE"),
     )
 
 
@@ -925,16 +1159,91 @@ def mosfet_from_model_card(
         raise ValueError(f"{name}: expected MOSFET model card, got {model.kind}")
     p = model.parameters
     defaults = Level1Params()
+    surface_mobility = p.get("U0", defaults.U0)
+    transconductance = p.get("KP", defaults.KP)
+    if "KP" not in p and "TOX" in p and p["TOX"] > 0.0:
+        transconductance = (
+            surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / p["TOX"]
+        )
+    surface_potential = p.get("PHI", defaults.PHI)
+    body_effect_coefficient = p.get("GAMMA", defaults.GAMMA)
+    if "N_SUB" in p and "TOX" in p:
+        substrate_doping_per_cubic_meter = (
+            p["N_SUB"] * _CUBIC_CENTIMETERS_PER_CUBIC_METER
+        )
+        if (
+            substrate_doping_per_cubic_meter
+            <= _INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER
+        ):
+            raise ValueError(
+                f"{name}: MOSFET NSUB must exceed the intrinsic carrier density"
+            )
+        if p["TOX"] > 0.0:
+            if "PHI" not in p:
+                thermal_voltage = (
+                    _BOLTZMANN * p.get("T_NOM", defaults.T_NOM) / _ELECTRON_CHARGE
+                )
+                surface_potential = max(
+                    0.1,
+                    2.0
+                    * thermal_voltage
+                    * math.log(
+                        substrate_doping_per_cubic_meter
+                        / _INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER
+                    ),
+                )
+            if "GAMMA" not in p:
+                oxide_capacitance = OXIDE_PERMITTIVITY / p["TOX"]
+                body_effect_coefficient = math.sqrt(
+                    2.0
+                    * _SILICON_PERMITTIVITY
+                    * _ELECTRON_CHARGE
+                    * substrate_doping_per_cubic_meter
+                ) / oxide_capacitance
+    threshold_voltage = p.get("VT0", defaults.VT0)
+    if "VT0" not in p and "N_SUB" in p and "TOX" in p and p["TOX"] > 0.0:
+        nominal_temperature = p.get("T_NOM", defaults.T_NOM)
+        oxide_capacitance = OXIDE_PERMITTIVITY / p["TOX"]
+        polarity = 1.0 if model.kind == "NMOS" else -1.0
+        band_gap = _silicon_band_gap_electron_volts(nominal_temperature)
+        gate_type = p.get("TPG", 1.0)
+        substrate_fermi_potential = polarity * 0.5 * surface_potential
+        gate_work_function = 3.2
+        if gate_type != 0.0:
+            gate_fermi_potential = polarity * gate_type * 0.5 * band_gap
+            gate_work_function = 3.25 + 0.5 * band_gap - gate_fermi_potential
+        gate_substrate_work_function = gate_work_function - (
+            3.25 + 0.5 * band_gap + substrate_fermi_potential
+        )
+        surface_state_shift = (
+            p.get("NSS", 0.0) * 1.0e4 * _ELECTRON_CHARGE / oxide_capacitance
+        )
+        threshold_voltage = (
+            gate_substrate_work_function
+            - surface_state_shift
+            + polarity
+            * (
+                body_effect_coefficient * math.sqrt(surface_potential)
+                + surface_potential
+            )
+        )
     params = replace(
         defaults,
-        VT0=p.get("VT0", defaults.VT0),
-        KP=p.get("KP", defaults.KP),
+        VT0=threshold_voltage,
+        KP=transconductance,
         LAMBDA=p.get("LAMBDA", defaults.LAMBDA),
-        GAMMA=p.get("GAMMA", defaults.GAMMA),
-        PHI=p.get("PHI", defaults.PHI),
+        GAMMA=body_effect_coefficient,
+        PHI=surface_potential,
         W=p.get("W", defaults.W),
         L=p.get("L", defaults.L),
+        LD=p.get("LD", defaults.LD),
+        TOX=p.get("TOX", defaults.TOX),
+        U0=surface_mobility,
+        RD=p.get("RD", defaults.RD),
+        RS=p.get("RS", defaults.RS),
+        RSH=p.get("RSH", defaults.RSH),
         IS=p.get("IS", defaults.IS),
+        JS=p.get("JS", defaults.JS),
         N_SUB=p.get("N_SUB", defaults.N_SUB),
         T_NOM=p.get("T_NOM", defaults.T_NOM),
         CGSO=p.get("CGSO", defaults.CGSO),
@@ -942,8 +1251,14 @@ def mosfet_from_model_card(
         CGBO=p.get("CGBO", defaults.CGBO),
         CBS=p.get("CBS", defaults.CBS),
         CBD=p.get("CBD", defaults.CBD),
+        CJ=p.get("CJ", defaults.CJ),
+        CJSW=p.get("CJSW", defaults.CJSW),
         PB=p.get("PB", defaults.PB),
         MJ=p.get("MJ", defaults.MJ),
+        MJSW=p.get("MJSW", defaults.MJSW),
+        FC=p.get("FC", defaults.FC),
+        KF=p.get("KF", defaults.KF),
+        AF=p.get("AF", defaults.AF),
     )
     mos_type = MosfetType.NMOS if model.kind == "NMOS" else MosfetType.PMOS
     return Mosfet(name, drain, gate, source, body, MOSFET(mos_type, Level1Model(params)))
@@ -1141,7 +1456,10 @@ def device_model_temperature_audit_fixtures() -> tuple[DeviceModelTemperatureBeh
     behavior_by_name = {
         "diode-forward-bias": "diode saturation current and thermal voltage scale with temperature",
         "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
-        "jfet-source-bias": "JFET temperature scaling is intentionally invariant until a policy lands",
+        "jfet-source-bias": (
+            "JFET temperature scaling defaults to invariant; VTOTC overrides "
+            "TCV for threshold-voltage scaling; BETATCE overrides BEX for beta scaling"
+        ),
         "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
     }
     return tuple(

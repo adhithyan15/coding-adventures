@@ -45,6 +45,7 @@
 
 /// Options controlling the du traversal and output.
 #[derive(Debug, Clone)]
+#[derive(Default)]
 pub struct DuOptions {
     /// Show all files, not just directories (-a).
     pub all: bool,
@@ -62,19 +63,6 @@ pub struct DuOptions {
     pub dereference: bool,
 }
 
-impl Default for DuOptions {
-    fn default() -> Self {
-        Self {
-            all: false,
-            human_readable: false,
-            si: false,
-            summarize: false,
-            total: false,
-            max_depth: None,
-            dereference: false,
-        }
-    }
-}
 
 /// A single entry in the du output.
 #[derive(Debug, Clone)]
@@ -284,7 +272,7 @@ fn format_si_size(bytes: u64) -> String {
 
 /// Convert bytes to 1K-blocks.
 fn bytes_to_1k_blocks(bytes: u64) -> u64 {
-    (bytes + 1023) / 1024
+    bytes.div_ceil(1024)
 }
 
 // ---------------------------------------------------------------------------

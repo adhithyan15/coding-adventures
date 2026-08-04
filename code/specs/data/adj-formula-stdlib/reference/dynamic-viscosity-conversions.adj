@@ -1,0 +1,61 @@
+% ============================================================================
+% dynamic-viscosity-conversions — dynamic-viscosity-unit → pascal-second factors
+% (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `pressure-conversions.adj` / `force-conversions.adj`: a
+% native tabular relation ingested VERBATIM from a published NIST conversion table.
+% Each row states the factor converting one dynamic-viscosity unit to the SI
+% coherent unit of dynamic viscosity, the pascal second (Pa·s):
+%
+%     ? dynamic_viscosity_to_pascal_seconds(poise, $v)         % 0.1
+%     ? dynamic_viscosity_to_pascal_seconds(centipoise, $v)    % 0.001
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration tables: where those normalise their own quantity, this
+% one normalises a DYNAMIC VISCOSITY. It pairs naturally with the pressure table (a
+% pascal second is a pascal times a second) and with any fluid-mechanics reasoning —
+% put a viscosity given in the CGS poise into SI first, then reason (write-once-
+% use-many). Why a `table` and not several hand-written `relate` clauses: this is
+% exactly the shape reference data comes in — a published table, not prose. The
+% citable artifact IS the NIST conversion-factors table at the `locator` below; every
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for
+% units listed alphabetically"), and the whole table is defended by one provenance
+% envelope rather than repeating `source`/`locator`/`trust` on every row. Each `row`
+% lowers to a ground relation `dynamic_viscosity_to_pascal_seconds(unit, pas)`, so the
+% exact lookup above is the ordinary SLD binding query — the engine returns the factor
+% WITH this table's citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like force-conversions, only the EXACT defined factors get a row, not
+% the rounded ones): NIST SP 811 B.9 prints these two "Viscosity, dynamic" factors in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here
+% as the plain decimal number of pascal seconds each unit names:
+%
+%     poise (P)        1.0 E-01  →  0.1
+%     centipoise (cP)  1.0 E-03  →  0.001
+%
+% These two are exact because the poise is a coherent CGS unit — one poise is one gram
+% per centimetre second, i.e. exactly 0.1 pascal second (10⁻¹ Pa·s) — and the
+% centipoise is exactly one hundredth of a poise, i.e. exactly 10⁻³ Pa·s. Both
+% terminate; nothing here is a rounded measurement. NIST's other dynamic-viscosity
+% rows are customary units whose factors NIST prints in plain (non-boldface) type as
+% ROUNDED values — e.g. "pound-force second per square foot" at 4.788 026 E+01 Pa·s
+% and "poundal second per square foot" at 1.488 164 E+00 Pa·s — so they are NOT given
+% rows here; a `? dynamic_viscosity_to_pascal_seconds(pound_force_second_per_square_foot,
+% $v)` ABSTAINS rather than committing to a rounded factor. The only claim this table
+% makes is "these are the exact factors NIST SP 811 B.9 prints" — which is exactly what
+% a byte-check against the cited table verifies. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — every factor is a verbatim cell of the cited
+% table, nothing asserted from memory.)
+% ============================================================================
+
+table dynamic_viscosity_to_pascal_seconds {
+    columns unit, pas
+
+    row (poise, 0.1)
+    row (centipoise, 0.001)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

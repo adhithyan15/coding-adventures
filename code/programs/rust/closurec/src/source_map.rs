@@ -203,7 +203,7 @@ mod tests {
                 *c == '"' && (*i == 0 || s.as_bytes()[*i - 1] != b'\\')
             })
             .count();
-        assert!(unescaped_quotes % 2 == 0, "balanced quotes: {s}");
+        assert!(unescaped_quotes.is_multiple_of(2), "balanced quotes: {s}");
     }
 
     #[test]

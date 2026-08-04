@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.Argon2d.Tests/CodingAdventures.Argon2d.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Include=[CodingAdventures.Argon2d]*"

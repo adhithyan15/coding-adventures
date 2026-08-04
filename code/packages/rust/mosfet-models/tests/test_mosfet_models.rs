@@ -1,6 +1,4 @@
-use mosfet_models::{
-    evaluate_level1, Level1Model, Level1Params, MosfetType, Mosfet, Region,
-};
+use mosfet_models::{evaluate_level1, Level1Model, Level1Params, Mosfet, MosfetType, Region};
 
 // ---------------------------------------------------------------------------
 // Level1Params defaults
@@ -16,6 +14,13 @@ fn test_default_params() {
     assert_eq!(p.phi, 0.84);
     assert_eq!(p.w, 1e-6);
     assert!((p.l - 130e-9).abs() < 1e-15);
+    assert_eq!(p.ld, 0.0);
+    assert_eq!(p.nrd, 1.0);
+    assert_eq!(p.nrs, 1.0);
+    assert_eq!(p.ad, 0.0);
+    assert_eq!(p.cj, 0.0);
+    assert_eq!(p.kf, 0.0);
+    assert_eq!(p.af, 1.0);
     assert!(p.subthreshold_enable);
 }
 
@@ -44,8 +49,10 @@ fn test_triode_region() {
 #[test]
 fn test_cutoff_region() {
     // V_GS = 0 V → V_OV = -0.42 V → cutoff (subthreshold disabled)
-    let mut p = Level1Params::default();
-    p.subthreshold_enable = false;
+    let p = Level1Params {
+        subthreshold_enable: false,
+        ..Level1Params::default()
+    };
     let r = evaluate_level1(&p, 0.0, 1.0, 0.0, 300.15);
     assert_eq!(r.region, Region::Cutoff);
     assert_eq!(r.id, 0.0);
@@ -77,16 +84,359 @@ fn test_gm_positive_in_saturation() {
 fn test_gds_positive_in_saturation() {
     let p = Level1Params::default();
     let r = evaluate_level1(&p, 1.8, 1.8, 0.0, 300.15);
-    assert!(r.gds > 0.0, "gds must be positive (channel-length modulation)");
+    assert!(
+        r.gds > 0.0,
+        "gds must be positive (channel-length modulation)"
+    );
 }
 
 #[test]
 fn test_gds_without_clm() {
     // With lambda = 0, gds should be near 0 in saturation
-    let mut p = Level1Params::default();
-    p.lambda = 0.0;
+    let p = Level1Params {
+        lambda: 0.0,
+        ..Level1Params::default()
+    };
     let r = evaluate_level1(&p, 1.8, 1.8, 0.0, 300.15);
     assert!(r.gds.abs() < 1e-12, "gds≈0 when lambda=0");
+}
+
+#[test]
+fn test_lateral_diffusion_uses_effective_channel_length() {
+    let base = Level1Params {
+        l: 1.0e-6,
+        cgbo: 2.0e-6,
+        subthreshold_enable: false,
+        ..Level1Params::default()
+    };
+    let diffused = Level1Params {
+        ld: 0.1e-6,
+        ..base.clone()
+    };
+    let nominal = evaluate_level1(&base, 1.8, 1.8, 0.0, 300.15);
+    let shortened = evaluate_level1(&diffused, 1.8, 1.8, 0.0, 300.15);
+
+    assert!((shortened.id / nominal.id - 1.25).abs() < 1.0e-12);
+    assert!((shortened.cgb / nominal.cgb - 0.8).abs() < 1.0e-12);
+    assert!(shortened.cgs < nominal.cgs);
+}
+
+#[test]
+#[should_panic(expected = "MOSFET LD must be finite and non-negative with L - 2*LD > 0")]
+fn test_lateral_diffusion_rejects_nonpositive_effective_length() {
+    let params = Level1Params {
+        l: 1.0e-6,
+        ld: 0.5e-6,
+        ..Level1Params::default()
+    };
+    let _ = evaluate_level1(&params, 1.8, 1.8, 0.0, 300.15);
+}
+
+#[test]
+fn test_oxide_thickness_scales_intrinsic_gate_capacitance() {
+    let capacitance = |tox| {
+        evaluate_level1(
+            &Level1Params {
+                w: 2.0e-6,
+                l: 1.0e-6,
+                tox,
+                ..Level1Params::default()
+            },
+            1.8,
+            1.8,
+            0.0,
+            300.15,
+        )
+        .cgs
+    };
+
+    assert!((capacitance(50.0e-9) / capacitance(100.0e-9) - 2.0).abs() < 1.0e-12);
+}
+
+#[test]
+#[should_panic(expected = "MOSFET TOX must be finite and positive")]
+fn test_oxide_thickness_rejects_nonpositive_value() {
+    evaluate_level1(
+        &Level1Params {
+            tox: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET RD must be finite and non-negative")]
+fn test_drain_resistance_rejects_negative_value() {
+    evaluate_level1(
+        &Level1Params {
+            rd: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET RS must be finite and non-negative")]
+fn test_source_resistance_rejects_negative_value() {
+    evaluate_level1(
+        &Level1Params {
+            rs: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET RSH must be finite and non-negative")]
+fn test_sheet_resistance_rejects_negative_value() {
+    evaluate_level1(
+        &Level1Params {
+            rsh: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET NRD must be finite and non-negative")]
+fn test_drain_squares_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            nrd: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET NRS must be finite and non-negative")]
+fn test_source_squares_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            nrs: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+fn test_drain_area_scales_bottom_junction_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            cbd: 1.0e-12,
+            cj: 2.0e-3,
+            ad: 3.0e-9,
+            mj: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        0.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbd - 7.0e-12).abs() < 1.0e-24);
+}
+
+#[test]
+fn test_drain_perimeter_scales_sidewall_junction_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            cbd: 1.0e-12,
+            pd: 3.0e-6,
+            cjsw: 2.0e-6,
+            mj: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        0.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbd - 7.0e-12).abs() < 1.0e-24);
+}
+
+#[test]
+fn test_source_area_scales_bottom_junction_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            cbs: 1.0e-12,
+            cj: 2.0e-3,
+            as_: 3.0e-9,
+            mj: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        0.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbs - 7.0e-12).abs() < 1.0e-24);
+}
+
+#[test]
+fn test_source_perimeter_scales_sidewall_junction_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            cbs: 1.0e-12,
+            ps: 3.0e-6,
+            cjsw: 2.0e-6,
+            mj: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        0.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbs - 7.0e-12).abs() < 1.0e-24);
+}
+
+#[test]
+fn test_sidewall_grading_coefficient_shapes_reverse_bias_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            pd: 1.0e-6,
+            cjsw: 4.0e-6,
+            mj: 0.0,
+            mjsw: 0.5,
+            pb: 1.0,
+            ..Level1Params::default()
+        },
+        0.0,
+        1.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbd - 4.0e-12 / 2.0_f64.sqrt()).abs() < 1.0e-24);
+}
+
+#[test]
+#[should_panic(expected = "MOSFET AD must be finite and non-negative")]
+fn test_drain_area_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            ad: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET AS must be finite and non-negative")]
+fn test_source_area_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            as_: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET PD must be finite and non-negative")]
+fn test_drain_perimeter_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            pd: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET PS must be finite and non-negative")]
+fn test_source_perimeter_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            ps: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET MJSW must be finite and non-negative")]
+fn test_sidewall_grading_coefficient_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            mjsw: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET CJSW must be finite and non-negative")]
+fn test_sidewall_junction_capacitance_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            cjsw: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET CJ must be finite and non-negative")]
+fn test_bottom_junction_capacitance_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            cj: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -109,6 +459,35 @@ fn test_gmb_nonzero_with_body_bias() {
     assert!(r.gmb > 0.0, "gmb must be positive with reverse body bias");
 }
 
+#[test]
+fn test_bulk_junction_capacitance_uses_continuous_forward_bias_transition() {
+    let params = Level1Params {
+        cbs: 4.0e-12,
+        pb: 1.0,
+        mj: 0.5,
+        fc: 0.4,
+        subthreshold_enable: false,
+        ..Level1Params::default()
+    };
+    let below = evaluate_level1(&params, 0.0, 0.0, 0.4 - 1.0e-9, 300.15).cbs;
+    let above = evaluate_level1(&params, 0.0, 0.0, 0.4 + 1.0e-9, 300.15).cbs;
+    let later_transition = evaluate_level1(
+        &Level1Params {
+            fc: 0.8,
+            ..params.clone()
+        },
+        0.0,
+        0.0,
+        0.7,
+        300.15,
+    )
+    .cbs;
+    let early_transition = evaluate_level1(&params, 0.0, 0.0, 0.7, 300.15).cbs;
+
+    assert!((below - above).abs() < 1.0e-19);
+    assert!(later_transition > early_transition);
+}
+
 // ---------------------------------------------------------------------------
 // PMOS wrapper sign conventions
 // ---------------------------------------------------------------------------
@@ -116,8 +495,10 @@ fn test_gmb_nonzero_with_body_bias() {
 #[test]
 fn test_pmos_dc_negative_id() {
     // PMOS with V_GS = -1.8 V should give negative Id
-    let mut p = Level1Params::default();
-    p.vt0 = 0.42; // PMOS threshold (magnitude)
+    let p = Level1Params {
+        vt0: 0.42, // PMOS threshold (magnitude)
+        ..Level1Params::default()
+    };
     let m = Mosfet::new(MosfetType::Pmos, p);
     let r = m.dc(-1.8, -1.8, 0.0, 300.15);
     assert!(r.id < 0.0, "PMOS Id should be negative: {}", r.id);
@@ -181,9 +562,11 @@ fn test_capacitances_nonnegative() {
 
 #[test]
 fn test_overlap_caps_scale_with_w() {
-    let mut p = Level1Params::default();
-    p.cgso = 5e-10; // 0.5 nF/m gate-source overlap cap
-    p.w = 2e-6;     // 2 µm wide
+    let p = Level1Params {
+        cgso: 5e-10, // 0.5 nF/m gate-source overlap cap
+        w: 2e-6,     // 2 µm wide
+        ..Level1Params::default()
+    };
     let r = evaluate_level1(&p, 1.8, 1.8, 0.0, 300.15);
     // Overlap alone: Cgs_overlap = cgso * W = 5e-10 * 2e-6 = 1e-15 F
     assert!(r.cgs > 5e-10 * 2e-6, "Cgs should include overlap cap");
@@ -196,8 +579,10 @@ fn test_overlap_caps_scale_with_w() {
 #[test]
 fn test_saturation_id_formula() {
     // With lambda = 0, Id = (KP/2)(W/L) V_OV²
-    let mut p = Level1Params::default();
-    p.lambda = 0.0;
+    let p = Level1Params {
+        lambda: 0.0,
+        ..Level1Params::default()
+    };
     let v_gs = 1.8_f64;
     let v_t = p.vt0; // V_BS=0 → V_t = VT0
     let v_ov = v_gs - v_t;

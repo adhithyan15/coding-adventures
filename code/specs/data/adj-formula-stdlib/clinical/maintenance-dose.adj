@@ -1,0 +1,96 @@
+% ============================================================================
+% maintenance-dose.adj — the pharmacokinetic maintenance dose
+% (MD = steady-state concentration × clearance × dosing interval / bioavailability) in the ADJ standard library.
+% ============================================================================
+% The maintenance-dose entry of the *clinical* track — the amount of drug to give each dosing interval to
+% hold a chosen steady-state concentration. At steady state the amount delivered per interval must exactly
+% replace the amount the body clears over that interval, so the dose scales with how fast the drug is
+% cleared (the clearance), how long the interval is (a longer interval means more is cleared before the
+% next dose), and the target concentration, and is divided by the bioavailability because only that fraction
+% of an administered dose reaches the circulation (an oral drug with 50% bioavailability needs twice the IV
+% dose). It is the companion of the loading dose (loading-dose.adj, which fills the volume of distribution
+% once): the loading dose gets the concentration up, the maintenance dose keeps it there. THE MAINTENANCE
+% DOSE IS THE STEADY-STATE CONCENTRATION TIMES THE CLEARANCE TIMES THE DOSING INTERVAL, DIVIDED BY THE
+% BIOAVAILABILITY — i.e. MD = SSC × CL × DI / B. It ships as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with two exact rearrangements (the steady-state concentration a given dose achieves,
+% and the clearance a given dose implies). As with every compute library, a consumer states NO arithmetic:
+% it `import`s this file, binds the target concentration, clearance, interval, and bioavailability from its
+% own byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "maintenance-dose.adj"
+%     observe ssc(10)   % "…target 10 mg/L…"     (span cited by the model)
+%     observe cl(5)      % "…clearance 5 L/h…"    (span cited by the model)
+%     observe di(8)      % "…every 8 hours…"      (span cited by the model)
+%     observe b(1)       % "…IV, F = 1…"          (span cited by the model)
+%     ? md(ssc, cl, di, b)   % engine → 400 (mg)
+%
+% Structurally this is a THREE-WAY PRODUCT OVER A SINGLE DIVISOR — the target concentration, clearance, and
+% interval multiplied, then divided by the bioavailability — a shape distinct from the ratio,
+% ratio-of-ratios, percentage-sum, product-over-constant, chained-division, constant-scaled-difference, and
+% product-times-constant forms of the other clinical libraries. There is NO embedded constant: all four
+% quantities are formal parameters bound at apply time (the cited equation is stated with these as symbols),
+% so every value the engine returns is exact. The three formulas COMPOSE and invert cleanly around the
+% worked case steady-state concentration = 10, clearance = 5, dosing interval = 8, bioavailability = 1
+% (MD = 10 × 5 × 8 / 1 = 400): the `md` a consumer computes is exactly the value each inverse formula
+% back-solves to recover its own measured input (10, 5).
+%
+%   md(ssc, cl, di, b) = ssc * cl * di / b        % (dose per interval)
+%   ssc(md, cl, di, b) = md * b / (cl * di)        % (solved for the steady-state concentration)
+%   cl(md, ssc, di, b) = md * b / (ssc * di)       % (solved for the clearance)
+%
+% NOTE ON UNITS AND MODELLING: the units must be internally consistent — with clearance in L/h, the dosing
+% interval in h, and the target concentration in mg/L, the dose comes out in mg; bioavailability is a
+% dimensionless fraction between 0 and 1 (1 for a fully-absorbed or intravenous drug). This library only
+% COMPUTES the dose; choosing the target concentration and confirming it against the therapeutic window is
+% the clinician's judgement, stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted maintenance-dose equation — because that
+% one equation (SSC × CL × DI / B) sanctions the relation read every way. The quote is transcribed verbatim
+% from the StatPearls "Steady State Concentration" article on the NCBI Bookshelf (a current, non-archived
+% article), so each `formula` carries the provenance envelope every shipped grounded clause carries; the
+% linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span of
+% the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `ssc`, `cl`, `di`, `b` and `md` each appear BOTH as a derived result and as an input (of the
+% other formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary maintenance_dose_vocab {
+    define ssc  : finding  surface "steady-state concentration", "SSC", "Css", "target concentration"    % mg/L
+    define cl   : finding  surface "clearance", "CL", "drug clearance"                                    % L/h
+    define di   : finding  surface "dosing interval", "DI", "dose interval"                               % h
+    define b    : finding  surface "bioavailability", "B", "F"                                            % fraction 0-1
+    define md   : finding  surface "maintenance dose", "MD"                                               % mg
+}
+
+% ----------------------------------------------------------------------------
+% The maintenance dose, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the maintenance-dose equation from the StatPearls
+% "Steady State Concentration" article on the NCBI Bookshelf (a quote is required on a shipped formula).
+% Each is an exact expression in the parameters, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook maintenance_dose_laws {
+    use maintenance_dose_vocab
+
+    % Maintenance dose — target concentration times clearance times interval, over bioavailability.
+    formula md(ssc, cl, di, b) = ssc * cl * di / b
+        source "MD = SSC•CL•DI/B"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553132/"
+        trust authoritative
+
+    % Steady-state concentration — the same equation solved for SSC. Defended by the SAME equation.
+    formula ssc(md, cl, di, b) = md * b / (cl * di)
+        source "MD = SSC•CL•DI/B"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553132/"
+        trust authoritative
+
+    % Clearance — the same equation solved for the clearance, the third reading of the one dose.
+    formula cl(md, ssc, di, b) = md * b / (ssc * di)
+        source "MD = SSC•CL•DI/B"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553132/"
+        trust authoritative
+}

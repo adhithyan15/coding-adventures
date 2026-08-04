@@ -1,0 +1,34 @@
+% ============================================================================
+% inspiratory-capacity.query.adj — worked examples over the clinical inspiratory-capacity library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER an inspiratory-capacity
+% question: it states NO arithmetic and NO relation — it only `import`s the grounded
+% library, `observe`s the quantities it decomposed from the prompt (each a byte-provenanced
+% span, elided here), and asks the engine to APPLY the cited definition. The native adj-lang
+% engine binds the parameters, computes each value EXACTLY on the CPU, and returns it with
+% the definition's source/locator/trust.
+%
+% The three questions INVERT: a functional residual capacity of 2 L plus an inspiratory
+% capacity of 4 L gives a total lung capacity of 2 + 4 = 6 L; that 6 L total lung capacity
+% minus the same 2 L functional residual capacity is exactly what the inspiratory-capacity
+% formula recovers the 4 L from, and that 6 L total lung capacity minus the same 4 L
+% inspiratory capacity is exactly what the functional-residual-capacity formula recovers
+% the 2 L from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli inspiratory-capacity.query.adj
+% ============================================================================
+
+import "inspiratory-capacity.adj"
+
+% FRC 2 L, IC 4 L: total lung capacity = 2 + 4.
+observe functional_residual_capacity(2)
+observe inspiratory_capacity(4)
+? total_lung_capacity(functional_residual_capacity, inspiratory_capacity)   % expect 6  (TLC = FRC + IC)
+
+% That 6 L total lung capacity with the same 2 L functional residual capacity: IC = 6 − 2.
+observe total_lung_capacity(6)
+? inspiratory_capacity(total_lung_capacity, functional_residual_capacity)   % expect 4  (same def, solved for IC = TLC − FRC)
+
+% That 6 L total lung capacity with the same 4 L inspiratory capacity: FRC = 6 − 4.
+? functional_residual_capacity(total_lung_capacity, inspiratory_capacity)   % expect 2  (same def, solved for FRC = TLC − IC)

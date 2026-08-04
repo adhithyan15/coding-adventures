@@ -174,7 +174,7 @@ mod tests {
     #[test]
     fn decode_sethi() {
         // SETHI 1, %o0  (rd=%o0=8, imm22=1)
-        let word = (0b00u32 << 30) | (8 << 25) | (0b100 << 22) | 1;
+        let word = (8 << 25) | (0b100 << 22) | 1;
         match decode(word) {
             Instruction::Sethi { rd, imm22 } => {
                 assert_eq!(rd, 8);
@@ -196,7 +196,7 @@ mod tests {
     #[test]
     fn decode_bicc_ba() {
         // BA = cond=1000(8), op2=010, op=00; annul=0, disp22=4
-        let word = (0b00u32 << 30) | (0b1000 << 25) | (0b010 << 22) | 4;
+        let word = (0b1000 << 25) | (0b010 << 22) | 4;
         match decode(word) {
             Instruction::Bicc { cond, disp22, annul } => {
                 assert_eq!(cond, 8);
@@ -210,7 +210,7 @@ mod tests {
     #[test]
     fn decode_alu_reg_form() {
         // ADD %o0, %o1, %o0 — op=10, rd=8, op3=0, rs1=8, i=0, rs2=9
-        let word = (0b10u32 << 30) | (8 << 25) | (0u32 << 19) | (8 << 14) | 9;
+        let word = ((0b10u32 << 30) | (8 << 25)) | (8 << 14) | 9;
         match decode(word) {
             Instruction::Alu { op3, rd, rs1, src2 } => {
                 assert_eq!(op3, 0);
@@ -225,7 +225,7 @@ mod tests {
     #[test]
     fn decode_alu_imm_form() {
         // ADD %o0, 5, %o0 — op=10, rd=8, op3=0, rs1=8, i=1, simm13=5
-        let word = (0b10u32 << 30) | (8 << 25) | (0u32 << 19) | (8 << 14) | (1 << 13) | 5;
+        let word = ((0b10u32 << 30) | (8 << 25)) | (8 << 14) | (1 << 13) | 5;
         match decode(word) {
             Instruction::Alu { src2, .. } => assert_eq!(src2, Src2::Imm(5)),
             other => panic!("expected Alu, got {:?}", other),

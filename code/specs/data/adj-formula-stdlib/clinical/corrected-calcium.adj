@@ -1,0 +1,96 @@
+% ============================================================================
+% corrected-calcium.adj — the albumin-corrected serum calcium
+% (corrected calcium = measured calcium + 0.8 × (4 − serum albumin)) in the ADJ standard library.
+% ============================================================================
+% The corrected-calcium entry of the *clinical* track — the hypoalbuminaemia correction applied to a
+% measured TOTAL serum calcium. Because roughly half of serum calcium is bound to albumin, a low
+% albumin lowers the measured TOTAL calcium without changing the physiologically active IONISED
+% calcium; the correction adds back the calcium "hidden" by the albumin deficit so the total is
+% interpreted as if albumin were normal. THE CORRECTED CALCIUM IS THE MEASURED CALCIUM PLUS 0.8 mg/dL
+% FOR EACH 1 g/dL THE SERUM ALBUMIN FALLS BELOW THE 4 g/dL REFERENCE — i.e. measured calcium + 0.8 ×
+% (4 − albumin). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with
+% its two exact rearrangements (the measured calcium a corrected value implies at a given albumin, and
+% the albumin a corrected/measured pair implies). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the measured calcium and albumin from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited correction on the CPU. Zero
+% math is performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the correction's citation.
+%
+%     import "corrected-calcium.adj"
+%     observe measured_calcium(8)   % "…serum calcium 8 mg/dL…"      (span cited by the model)
+%     observe albumin(2)             % "…albumin 2 g/dL…"             (span cited by the model)
+%     ? corrected_calcium(measured_calcium, albumin)
+%                                     % engine → 9.6, carrying the corrected calcium
+%
+% The 0.8 mg/dL-per-g/dL coefficient and the 4 g/dL reference albumin are the EXACT constants of the
+% cited correction (not measurements); the formulas are otherwise exact linear expressions over the
+% parameters, so every value the engine returns is exact. They COMPOSE and invert cleanly around the
+% worked case measured calcium = 8 mg/dL, albumin = 2 g/dL (corrected = 8 + 0.8 × (4 − 2) = 8 + 1.6 =
+% 9.6 mg/dL): the `corrected_calcium` a consumer computes is exactly the value the `measured_calcium`
+% formula subtracts the same 0.8 × (4 − albumin) offset from to recover 8, and exactly the value the
+% `albumin` formula back-solves to recover 2.
+%
+%   corrected_calcium(measured_calcium, albumin) = measured_calcium + 0.8 * (4 - albumin)   % (correction)
+%   measured_calcium(corrected_calcium, albumin) = corrected_calcium - 0.8 * (4 - albumin)   % (solved for measured)
+%   albumin(corrected_calcium, measured_calcium) = 4 - (corrected_calcium - measured_calcium) / 0.8  % (solved for albumin)
+%
+% NOTE ON UNITS AND MODELLING: this is the conventional US-unit correction — calcium in mg/dL, albumin
+% in g/dL, reference albumin 4 g/dL, coefficient 0.8 mg/dL per g/dL. The correction only ADJUSTS the
+% interpretation of a TOTAL calcium for a low albumin; it does NOT replace a directly measured IONISED
+% calcium, which is preferred when available. The cited article states the correction as prose — "total
+% serum calcium should be corrected by adding approximately 0.8 mg/dL for each 1 g/dL decrease in serum
+% albumin below 4 gm/dL" — which is exactly the correction read forward; the two rearrangements are the
+% same relation solved for each input.
+%
+% All three formulas are defended by the SAME clause — the quoted correction sentence — because that
+% one statement (the corrected calcium IS the measured value plus 0.8 per g/dL of albumin deficit below
+% 4) sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls
+% "Hypocalcemia" article on the NCBI Bookshelf (a current, non-archived article), so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the correction, including its 0.8 and 4
+% constants, is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `measured_calcium`, `albumin` and `corrected_calcium` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary corrected_calcium_vocab {
+    define measured_calcium  : finding  surface "measured calcium", "serum calcium", "total calcium"   % mass per volume (mg/dL)
+    define albumin           : finding  surface "albumin", "serum albumin"                              % mass per volume (g/dL)
+    define corrected_calcium : finding  surface "corrected calcium", "albumin-corrected calcium"        % mass per volume (mg/dL)
+}
+
+% ----------------------------------------------------------------------------
+% The correction, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the correction sentence from the StatPearls
+% "Hypocalcemia" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact linear expression in the measured quantities and the cited 0.8/4 constants, so the engine
+% returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook corrected_calcium_laws {
+    use corrected_calcium_vocab
+
+    % Corrected calcium — the measured calcium plus 0.8 mg/dL per g/dL of albumin below the 4 g/dL
+    % reference.
+    formula corrected_calcium(measured_calcium, albumin) = measured_calcium + 0.8 * (4 - albumin)
+        source "total serum calcium should be corrected by adding approximately 0.8 mg/dL for each 1 g/dL decrease in serum albumin below 4 gm/dL"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430912/"
+        trust authoritative
+
+    % Measured calcium — the same correction solved for the measured calcium (subtract the offset).
+    % Defended by the SAME sentence.
+    formula measured_calcium(corrected_calcium, albumin) = corrected_calcium - 0.8 * (4 - albumin)
+        source "total serum calcium should be corrected by adding approximately 0.8 mg/dL for each 1 g/dL decrease in serum albumin below 4 gm/dL"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430912/"
+        trust authoritative
+
+    % Albumin — the same correction solved for the albumin (back out the deficit from the offset). The
+    % SAME sentence, read the third way.
+    formula albumin(corrected_calcium, measured_calcium) = 4 - (corrected_calcium - measured_calcium) / 0.8
+        source "total serum calcium should be corrected by adding approximately 0.8 mg/dL for each 1 g/dL decrease in serum albumin below 4 gm/dL"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430912/"
+        trust authoritative
+}

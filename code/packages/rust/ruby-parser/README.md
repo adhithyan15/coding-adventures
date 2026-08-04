@@ -48,3 +48,10 @@ The Ruby grammar covers:
 - **def_statement** — method definitions with parameters and body, terminated by `end`
 - **class_statement** — class definitions with methods and body, terminated by `end`
 - **if_statement** / **while_statement** — control flow with `end` terminators
+
+`src/_grammar.rs` is generated from `ruby.grammar` — never edit it by hand.
+After changing `ruby.grammar`, regenerate it with:
+
+```sh
+cargo run -p coding-adventures-ruby-parser --bin regen_grammars
+```

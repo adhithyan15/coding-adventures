@@ -150,7 +150,7 @@ H4. **The mode-1 hallucination pattern is consistent across
 ## Harness
 
 The harness is a Python script at
-[`scripts/adj18_bench.py`](../../scripts/adj18_bench.py). It:
+[`code/scripts/adj18_bench.py`](../../code/scripts/adj18_bench.py). It:
 
 - Iterates the 8 × 5 × 3 matrix, setting env vars per cell.
 - Calls the built `adjudication-tsa-demo` binary per cell as a
@@ -174,13 +174,13 @@ reuse parsing logic.
 cargo build -p adjudication-tsa-demo --release
 
 # Run the bench (allow 2-4 hours):
-python3 scripts/adj18_bench.py \
+python3 code/scripts/adj18_bench.py \
     --endpoint http://127.0.0.1:11434 \
     --cache-dir /tmp/adj18_cache \
     --out code/specs/data/adj18-tsa-bench-$(date +%F).json
 
 # Resume an interrupted run:
-python3 scripts/adj18_bench.py \
+python3 code/scripts/adj18_bench.py \
     --resume \
     --out code/specs/data/adj18-tsa-bench-2026-05-13.json
 ```

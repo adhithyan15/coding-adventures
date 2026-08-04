@@ -1,6 +1,496 @@
 # Changelog
 
+## Unreleased - derived computation identities
+
+- `KnowledgeBase::computation_id_for` exposes the stable compiler-owned identity of an exact
+  stored derived artifact while rejecting clones and similarly named values. Audit consumers can
+  now bind a derived predicate operand to the same immutable plan that `verify_derived` replays.
+
+## [0.55.0] - 2026-08-03 - derived precision markers and transactional staging
+
+- `Derived` retains whether an exact source crossed a value-changing `f64` boundary, and that
+  marker now propagates through computations. Predicate contributions, state-machine guards,
+  and proof verification reject marked operands rather than making a discrete float decision.
+- Aggregations preserve rational sidecars when every observation is exact; mixed reductions are
+  marked when an exact source would otherwise be laundered through `f64`.
+- Recursive evaluation carries the marker through exact intermediates, exact source literals
+  remain rational in `ComputeExpr`, mixed comparisons reject unsafe float fallback, and LR emits
+  a typed warning when a predicate is withheld for precision loss.
+- `KnowledgeBase::with_staged_derived` exposes one candidate and its trusted computation plan to
+  an owned-result callback, then removes both on return. Deferred branches can evaluate a
+  self-dependent RHS without cloning the complete knowledge base or leaking a failed candidate.
+
+## [0.54.0] - 2026-08-02 - NUM-7c: `adj-verify` recheck of the sqrt Real companion
+
+- `recheck_narrowing` gains two new `DerivationNode::Op` arms: `real: None` is not a narrowing
+  (unchanged catch-all behavior); `real: Some(rc)` re-promotes and re-derives `rc.source` via
+  `BigDouble::from_rational(..).sqrt(..)` at `rc`'s own recorded precision/mode and compares
+  against the recorded `BigDouble` (value-based `PartialEq`), reporting `ReChecked` or a
+  `Mismatch{why:"real_differs"}`. Reuses the existing `NarrowingCheck` machinery — a `Real`
+  companion is technically a *widening* (exact source → approximate), not a narrowing, but the
+  re-derive-and-compare shape is identical.
+- No changes to the tree-walker (`collect_narrowings`) or the `adj-verify` binary — both are
+  already generic over `DerivationNode`/`NarrowingCheck`, so this falls out of the existing
+  recursion for free. This closes NUM-7 (ADJ-NUMERIC-SUBSTRATE §8): the sqrt `Real` companion is
+  now audited, not just computed.
+
+## [0.53.0] - 2026-08-02 - NUM-7b: the sqrt `Real`/`BigDouble` audit companion
+
+- `DerivationNode::Op` gains an additive `real: Option<RealCompanion>` field (new public types
+  `ApproxReal`, `RealCompanion`), populated only when a `Pow` node is a square root (evaluated
+  exponent bit-exactly `0.5`) of a base that carried an exact rational sidecar — every other `Op`,
+  including a sqrt of an inexact base, keeps `real: None`. Detected on the evaluated `f64`
+  exponent rather than its exact sidecar, since a literal `0.5` (how both `\sqrt{x}` and
+  `\sqrt[n]{x}` lower) never carries one.
+- The plain `f64` result for this case now uses `f64::sqrt()` instead of `powf(0.5)`, so it can
+  never disagree in the last bit with the correctly-rounded `BigDouble` companion computed
+  alongside it.
+- Safety-critical: `BigDouble::sqrt` panics on a negative operand. The `result.is_finite()` guard
+  alone does **not** exclude every negative base — an exact rational whose magnitude underflows
+  the `f64` path rounds to `-0.0`, and IEEE-754 `powf(-0.0, 0.5) == +0.0` (finite!), so a
+  since-security-reviewed fix checks the *exact* sidecar's own sign explicitly before promoting,
+  skipping the companion (never a panic) for a negative base — regression-tested with an
+  underflowed-negative-exact-base case that reaches this code without one.
+- No contagion this rung: further arithmetic on a sqrt's result does not carry its `Real`
+  companion forward (ADJ-NUMERIC-SUBSTRATE §8's scoped, additive design, not the full §5 tower).
+
+## [0.52.0] - 2026-08-02 - NUM-7a: per-KnowledgeBase `Real`/`BigDouble` precision setting
+
+- Added `KnowledgeBase::real_precision_bits()`/`with_real_precision_bits(u32)`/
+  `set_real_precision_bits(u32)`, backed by a new `RealPrecisionBits` type (default 256 bits,
+  per ADJ-NUMERIC-SUBSTRATE §3). This is `KnowledgeBase`'s first per-KB configuration field —
+  every prior field was data (facts/rules/derived values/etc). Clamped to
+  `[1, bignum_core::MAX_PRECISION]`, since `BigDouble`'s internal precision guard panics outside
+  that range. No engine wiring yet (§8, NUM-7b) — this PR only lands the setting itself.
+
+## [0.51.0] - 2026-08-02 - computed-answer verification
+
+- Added `verify_derived`, which re-evaluates a compiler-owned expression stored separately
+  from the result artifact, in the original fact and derived-binding scope. It compares the
+  fresh value, exact sidecar, dimension, and complete derivation tree.
+- Prior derived inputs are verified recursively. Coordinated operator/result forgery, omitted
+  aggregation operands, stale binding substitution, and altered narrowing sidecars fail closed.
+- Every applied formula and unique observed input keeps its lossless provenance envelope and
+  is verified against pinned bytes. Inexact narrowing remains explicitly unverifiable.
+
+## [0.50.0] — 2026-07-30 — NUM-6v: audit re-check of the precision/format narrowings
+
+Closes the NUM-6 audit-exactness promise (`ADJ-NUMERIC-SUBSTRATE.md` §4.3, §6, §7): the
+compute narrowing nodes now **carry their operand's exact source**, and a new re-check turns
+their recorded rounding from testimony into evidence.
+
+- Each narrowing `DerivationNode` (`Round`/`ToScientific`/`ToPercent`/`ToCurrency`) gains an
+  `operand_exact: Option<ExactRational>` field, populated at eval time with the exact rational
+  the narrowing consumed (`None` only for a genuinely-inexact operand, e.g. a transcendental
+  with no exact sidecar). This is byte-neutral to the CLI JSON — the emitters match with `..`.
+- `recheck_narrowing(&DerivationNode) -> NarrowingCheck` re-runs the *same* exact narrowing
+  (`round_rational`/`scientific`/`percent`/`currency`) on the recorded exact source under the
+  recorded `spec`/`mode` and confirms the recorded `result` (and `rendered` string, for the
+  formatters) reproduces: `ReChecked` / `Mismatch { why, recorded, recomputed }` /
+  `Unverifiable` (no exact source) / `NotANarrowing`.
+- `recheck_narrowings(&DerivationNode) -> Vec<(usize, NarrowingCheck)>` walks a derivation
+  tree pre-order and re-checks every narrowing it contains (nested narrowings included),
+  reporting each with its depth.
+- New API re-exported from the crate root: `recheck_narrowing`, `recheck_narrowings`,
+  `NarrowingCheck`.
+- 8 unit tests: each kind re-checks; a tampered `result` and a tampered `rendered` string are
+  both caught; an inexact operand is `Unverifiable`; the walk finds nested narrowings and is
+  empty for a plain formula.
+
+## [0.49.0] — 2026-07-23 — NUM-6c: `to_currency` — money rendering (base-10-exact)
+
+Completes the NUM-6c formatter trio (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**
+op that renders a money amount to a stated number of base-10-exact decimal places and prefixes
+a currency code. Unlike `to_scientific`/`to_percent` it carries a **string** (the currency
+code), so it is a distinct node shape.
+
+### Added
+
+- `ComputeExpr::ToCurrency { code, places, mode, expr }` and the matching
+  `DerivationNode::ToCurrency { code, places, mode, rendered, operand, result }`. `result` is
+  the rounded amount the string denotes (`"USD 1234.50"` → `1234.5`).
+- `currency(r, places, mode)` — renders an exact amount as a fixed-point decimal (no code; the
+  caller prefixes it) and returns the narrowed amount alongside, both from one rounding. The
+  scaled integer is `C = round(x·10^places)` under `mode`; the string places the point `places`
+  from `C`'s right (`1234.5 → "1234.50"` at 2 places), the narrowed amount is `C / 10^places`.
+  `places = 0` drops the decimal point; zero renders `"CODE 0.00"`. All big-integer/-decimal —
+  base-10-exact money, no `f64` hop. Dimension-preserving.
+- Extracted a shared `fixed_decimal_body` helper (used by both `percent` and `currency`) — the
+  decimal-point placement + leading-zero padding, behaviour-preserving for `to_percent`.
+
+## [0.48.0] — 2026-07-23 — NUM-6c: `to_percent` — percentage rendering (exact)
+
+Adds the second NUM-6c formatter (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**
+op that takes a dimensionless ratio, scales it by 100 and rounds to a stated number of
+decimal places on the exact path, and renders the fixed-point `d.dd%` string — with the
+narrowed **fraction** carried beside it so a downstream predicate over the binding still
+sees the ratio and the audit backs the render from the exact source.
+
+### Added
+
+- `ComputeExpr::ToPercent { places, mode, expr }` and the matching
+  `DerivationNode::ToPercent { places, mode, rendered, operand, result }`. `result` is the
+  fraction the percentage denotes (`"33.33%"` → `3333/10000`).
+- `percent(r, places, mode)` — renders an exact ratio as a fixed-point percentage with a
+  `%` suffix and returns the narrowed fraction alongside, both from one rounding. The scaled
+  integer is `C = round(r · 10^(places+2))` under `mode`; the string places the decimal
+  point `places` from `C`'s right (padding to a leading zero for sub-1% values), and the
+  narrowed fraction is `C / 10^(places+2)`. `places = 0` drops the decimal point (`"50%"`);
+  zero renders `"0.00%"`. All big-integer/-decimal — no `f64` hop. Dimension-preserving.
+
+## [0.47.0] — 2026-07-22 — NUM-6c: `to_scientific` — scientific-notation rendering (exact)
+
+Adds the first formatter of the precision/format family (NUM-6c,
+`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering** op that narrows a value to a
+stated number of significant figures on the exact path (reusing the NUM-6a/6b
+`round_sig` machinery) and produces the normalized `d.ddde±E` string alongside the
+narrowed exact value — both derived from one rounding so the string and the audit
+number can never disagree.
+
+### Added
+
+- `ComputeExpr::ToScientific { figures, mode, expr }` and the matching
+  `DerivationNode::ToScientific { figures, mode, rendered, operand, result }`. The
+  node carries the rendered boundary string **and** the narrowed numeric `result`
+  (so a downstream predicate over the binding still sees a number), plus the exact
+  operand subtree — everything `adj-verify` needs to re-render from the exact source.
+- `scientific(r, figures, mode)` — renders an exact rational in normalized scientific
+  notation with exactly `figures` significant figures and returns the narrowed exact
+  value beside it. The significant coefficient is `round(|r|·10^(figures−1−e))` under
+  `mode` (`e = ⌊log₁₀|x|⌋` via the exact `msd_exponent`), with a rounding **carry**
+  (`9.99 → 10.0`) bumping the exponent; zero renders `"0e0"`. All big-integer /
+  -decimal arithmetic — no `f64` log or tie-break. Dimension-preserving.
+
+### Notes
+
+- A non-finite operand (an upstream `exp` overflow) is caught by the same
+  finite-result guard the other ops apply — it returns a clean `NonFinite` error
+  rather than rendering `"inf"` as a scientific number.
+
+## [0.46.0] — 2026-07-22 — NUM-6b: `round_sig` — significant-figures rounding (exact)
+
+Adds the significant-figures half of the precision narrowing (NUM-6b,
+`ADJ-NUMERIC-SUBSTRATE.md` §4.1–§4.4), reusing the NUM-6a `Round` node and exact
+eval path.
+
+### Added
+
+- `RoundSpec::SigFigures(u32)` — round to `n` **significant figures**. Rounding to
+  `n` sig-figs is rounding to `n − 1 − e` decimal *places*, where `e = ⌊log₁₀|x|⌋`
+  is the base-10 exponent of the operand's most-significant digit; the place count
+  (which may be **negative** — `round_sig(31_459, 3) = 31_500`) is derived exactly
+  and fed to the same `BigDecimal::div_round` path as `Places`.
+- `msd_exponent` — computes `⌊log₁₀(num/den)⌋` exactly for positive integers from
+  their decimal digit counts plus one big-integer comparison (no `f64` log, no
+  unbounded loop). `round_sig(0, n) = 0` (zero has no significant figures).
+
+## [0.45.0] — 2026-07-22 — NUM-6a: the `round_to` precision narrowing (exact + audited)
+
+Implements the compute-engine half of NUM-6a (`ADJ-NUMERIC-SUBSTRATE.md` §4.1–§4.4):
+`round_to(x, n)` — round a value to `n` decimal places as an **explicit, checkable**
+step, never a silent lossy coercion.
+
+### Added
+
+- `ComputeExpr::Round { spec: RoundSpec, mode: RoundingMode, expr }` — a precision
+  narrowing distinct from the unary rounding family (`Abs`/`Floor`/`Ceil`/`Round`),
+  because it carries a precision and a mode a bare unary op cannot hold. `RoundSpec`
+  ships the `Places(u32)` variant (NUM-6b adds `SigFigures`).
+- `DerivationNode::Round { spec, mode, operand, result }` — the audit record: the
+  precision, the stated mode, and the operand subtree it narrowed, so `adj-verify`
+  can re-round the operand's **exact** value and confirm the rendering.
+- Re-export of `bignum_core::RoundingMode` so consumers can name a rounding mode
+  without depending on `bignum-core` directly.
+
+### Behaviour
+
+- Rounding runs on the **exact rational** path: `n / d` is divided to `n` places via
+  `bignum-core`'s `BigDecimal::div_round`, uniformly for terminating and repeating
+  operands (`1/3 → 33/100`, `2.54 → 2.54`), with **no `f64` hop** deciding a tie.
+  The default mode is round-half-even (`2.5 → 2`, not `3`). Dimension-preserving,
+  like the unary round family. The `f64` result is derived from the exact value, so
+  the labeled-lossy export and the exact audit value never disagree.
+
+## [0.44.0] — 2026-07-21 — `verify`: re-execute a proof instead of believing it (RS-4 PR-D2)
+
+Implements the checkability invariant of `ADJ-REASON-MATH.md` §E.5.
+
+Every earlier PR in this arc made the audit trail *richer*. None made it
+*checkable*. A richer trail nobody can re-run is still **testimony** — the engine
+asserting what it did, in a format a confidently wrong system produces just as
+fluently. This module turns testimony into **evidence**: it never reads the
+trail's claims as authority, and instead goes back to the knowledge base and
+does the work again.
+
+### Added
+
+- **`logic_engine::verify`** — `verify_proof(&Proof, &KnowledgeBase, &dyn SnapshotStore)`
+  returns a `TraceVerification`: one verdict per step, in the proof's own
+  preorder. Every one of the seven `DerivationOrigin` variants is re-executed:
+  - `FromFact` / `FromRule` — the cited clause still exists and still unifies
+    with the goal the step claims it proved.
+  - `FromNegation` — the subgoal is **re-run** and must still have an empty
+    proof set. A truncated search is a `NegationSearchTruncated` **failure**,
+    not an absence: "I stopped looking" and "there is none" are different
+    claims, and conflating them is the accounting failure this arc exists to
+    prevent.
+  - `FromPrior` / `FromContribution` / `FromJointContribution` — the clause is
+    found by id, its evidence is re-observed, and `log(LR) × confidence` must
+    reproduce the step's inline delta.
+  - `FromPredicateContribution` — the slot is re-read and the comparison
+    re-evaluated on CPU. The trail's own `observed` and `threshold` are the
+    claim under test, never the inputs.
+- **Two independent verdicts per step.** `LogicStatus` (did the inference go
+  through?) and `QuoteStatus` (do the bytes say what it claims?) are reported
+  separately. Collapsing them would lose the most interesting failure in the
+  system: a *valid derivation from an invented fact*.
+- **`QuoteStatus`, the five-valued outcome of §E.5** — `Verified`,
+  `QuoteMissing` (the only status that fails a step), `Unverified`,
+  `SourceDrifted`, `SourceUnreachable`, plus `NotApplicable` for negation steps,
+  which rest on an absence and so have no sentence in any document. Separating
+  drift and unreachability from "the quote is wrong" means a third party's
+  outage — or a deliberate network denial — cannot invalidate a true trail.
+- **Anchored quote checking.** The check requires a recorded byte offset and
+  compares that exact range in the pinned snapshot. A span with no offset is
+  `Unverified`, never verified-by-searching: on a long document a short phrase
+  occurs *somewhere* with near-certainty, so an unanchored search would confirm
+  the words exist, not that they support the clause. `byte_len` is reported
+  alongside every verified span, because §E.3 declines to impose a minimum span
+  length — false precision — so the honest alternative is to surface it.
+- **`SnapshotStore`** (+ `NoSnapshots`, `MemorySnapshots`) — the seam through
+  which the caller supplies snapshot *bytes*, since `Provenance` stores only a
+  hash. A store that has nothing yields `Unverified(SnapshotUnavailable)`:
+  honestly unchecked, never a pass.
+
+### Security
+
+- **The verifier re-checks the blank-span invariant itself** rather than trusting
+  that a `VerbatimSpan` was built through its validating constructor. A blank or
+  zero-width-only span is a substring of *every* document at *every* offset, so
+  accepting one hands out `Verified` for free — and deserialization writes fields
+  directly, running no constructor. The duplication of `is_invisible` between
+  `provenance.rs` and `verify.rs` is deliberate: a check that only exists on the
+  producer's side does not defend the consumer.
+- **Every slice is bounds- and boundary-checked before it is taken.** An offset
+  past the end, or inside a UTF-8 character, yields a verdict
+  (`RangeOutOfBounds` / `NotACharBoundary`) rather than a panic. A verifier that
+  panics on malformed input is a denial-of-service handed to whoever writes the
+  trail.
+- **No network access, by construction.** There is no HTTP client in this
+  module. `locator`s are spider-authored strings from untrusted pages; fetching
+  one would make the verifier an SSRF primitive aimed by anyone who can land a
+  single KB entry. Live re-fetch belongs behind ADJ39's adapter registry.
+- **An empty trace is not fully verified.** `all()` over nothing is `true`, and
+  that vacuous truth would award the system's strongest verdict for having
+  checked nothing.
+
+## [0.43.0] — 2026-07-21 — the verbatim quote and its pinned snapshot (RS-4 PR-D1)
+
+Implements `ADJ-REASON-MATH.md` §E.3 — the two fields that turn the audit trail
+from something ADJ *reports* into something a third party can *check*.
+
+### Added
+
+- **`Provenance.quote: Quote`.** The verbatim span a clause rests on, separate
+  from `source`. Until now the span was *stuffed into* `source` by convention,
+  which conflates the **quotation** (bytes that must appear at the locator) with
+  the **citation label** (how a human names the document). One string cannot be
+  checked as both.
+- **`Provenance.snapshot: Option<ContentHash>`.** A SHA-256 of the source
+  document as captured at ingest. Verification runs against this, not the live
+  web — a verbatim check against a live URL is decided by whoever controls that
+  URL at verification time, so anyone able to publish there could make a
+  fabricated quote verify. Pinning makes later divergence *evidence of drift*
+  rather than a passing grade.
+- `Quote::Verbatim { text, byte_offset }` records WHERE the span sits, so
+  verification is **anchored** rather than an unanchored substring search. A
+  search would confirm the words exist somewhere — in a footnote, a nav menu, or
+  a passage saying the opposite — not that they support this clause.
+
+- `Quote::Verbatim(VerbatimSpan)` — the payload's fields are **private**, with
+  one fallible constructor. The invariant "a span must be able to support a
+  claim" therefore holds on every construction path, not just inside a builder.
+
+### Notes on two deliberate choices
+
+- **`Quote` is an enum, not the `String` the spec literally writes.** A plain
+  `String` cannot hold the `Unmigrated` state safely, and the obvious migration —
+  defaulting `quote` to the `source` label — **fails open**: labels are short
+  ("NIST", "AQI basics") and would trivially appear somewhere on the cited page,
+  so the strongest check in the system would pass while checking nothing and
+  report the step verified. A closed sum moves "never fail open" from a
+  convention someone must remember into a fact the compiler enforces.
+- **SHA-256, not the repo's `hash-functions` crate.** This hash is
+  tamper-evidence, so it needs collision resistance; FNV/DJB2/murmur/SipHash have
+  none and would look like a security control while providing nothing.
+  `coding_adventures_sha256` is the repo's own zero-dependency implementation, so
+  this stays inside the no-third-party rule.
+
+### Compatibility
+
+- Every existing `Provenance` constructor yields `Quote::Unmigrated` and
+  `snapshot: None` — the honest record of "no checkable span was captured",
+  never a guess. `adj-verify` (PR-D2) reports these `Unverified`, never
+  `Verified`. No existing call site changed.
+
+## [0.42.0] — 2026-07-21 — an empty result set now says WHY it is empty (RS-4 PR-C)
+
+### Added
+
+- **`ProofDAG.truncated`.** The search hit a resolution limit and gave up.
+  Without it, "I found no proof" and "I stopped looking" were the SAME VALUE —
+  an empty `proofs` — and they are completely different claims: the first is
+  about the knowledge base, the second is about this run's budget and says
+  nothing about the world. `ProofDAG::is_conclusively_empty()` is the predicate
+  to use before asserting anything negative.
+- **`GovernedResult::truncated()` and `conflict_status()` → `ConflictStatus`.**
+  `has_conflict()` returns `false` both when it looked and found no tie and when
+  it never finished looking. That second case was an affirmative claim ("no
+  conflict among the answers") derived from an incomplete search. `ConflictStatus`
+  makes `Unknown` a first-class third answer rather than an absence silently
+  reported as a negative.
+
+### Notes
+
+- `lr_aggregate` sets `truncated: false` unconditionally and correctly: it walks
+  a fixed clause list rather than searching, so it has no budget to exhaust.
+
 All notable changes to this project will be documented in this file.
+
+## [0.41.0] — 2026-07-20 — ordered, addressed proof steps + visible negation (RS-4 PR-B)
+
+### Fixed (security)
+
+- **Both resolvers had unbounded mutual recursion; a self-recursive rule aborted
+  the process.** `solve`/`solve_body` (enumeration) and
+  `find_first_with`/`prove_body` (deterministic) recursed with no termination
+  guard, so `p(X, Y) :- p(X, Y)` descended until the stack overflowed —
+  a `SIGABRT`, which cannot be caught, so a host embedding this crate dies with
+  it. The deterministic path is the one `search(.., AutoDetect)` selects for an
+  all-`Certain` KB, i.e. the adjudication connector's normal mode.
+- **The obvious fix would have been worse than the crash.** Returning "no proof"
+  at the cap is what negation-as-failure reads as *absence*, so a truncated
+  search would have satisfied a `not G` guard and this release's new
+  `FromNegation` step would have asserted a check that never happened. Both caps
+  therefore raise `ResolutionLimitExceeded` and **propagate**; the `?` in each
+  negation branch is load-bearing.
+- **`MAX_SLD_DEPTH = 128`** bounds rule-chain nesting. **`MAX_BODY_CONJUNCTS = 1024`**
+  bounds a separate axis the depth cap cannot: `solve_body` recurses over a
+  rule's *remaining literals* while `depth` stays constant across the body, so a
+  ~14,000-conjunct body overflowed at depth 1.
+- A query that hits either cap **abstains** rather than reporting the proofs
+  found first — a truncated search presented as a complete one is the accounting
+  failure this release exists to prevent.
+
+
+### Added
+
+- **`ProofStep.depth`.** A step now records how deeply nested it is: the root
+  query sits at depth 0, and a rule's body steps are one deeper than the rule
+  step that introduced them. `Proof.steps` was already a preorder walk, so
+  preorder + depth is a complete encoding of the derivation tree — a step's
+  parent is the nearest preceding step one level shallower, exactly the way an
+  indented outline works. Without it the flat vector was ambiguous: you could
+  not tell a sibling from a child without re-deriving each rule's body arity,
+  which is why the audit trail could show a LIST but never a STRUCTURE.
+- **`DerivationOrigin::FromNegation { goal }`.** Negation-as-failure now records
+  a step. It previously recorded **none**, so a rule guarded by
+  `not contraindicated(D)` would fire while the trail stayed silent about the
+  check that licensed it — a reader could not distinguish "we confirmed no
+  contraindication" from "nobody looked." An audit trail that omits a
+  load-bearing inference is not a shorter trail, it is a wrong one. The step
+  carries no clause id because there is no clause: the justification IS the
+  empty proof set, which is what a re-checker re-runs to verify it.
+
+### Changed
+
+- `collect_ids` handles `FromNegation` by contributing **nothing** — deliberately.
+  NAF *used* nothing; that is precisely what it established. Attributing the
+  absent goal's clauses as support would invert the meaning of the step.
+
+
+## [0.40.0] — 2026-07-14 — exact rendering of a computed result (ADJ-EXACT-NUMBERS NX-4)
+
+### Added
+
+- **`ExactRational::to_exact_decimal_string(&self) -> Option<String>`** — the rendering side of the
+  exact-numbers arc. When the exact-rational result of a computation has a finite base-10 expansion
+  it returns all its digits (`3/4 → "0.75"`; a stored 39-digit π doubled →
+  `"6.283185307179586476925286766559005768394"`); for a repeating expansion (`1/3`) it returns
+  `None`, leaving the caller to fall back to the labeled-lossy `f64` from `to_f64()`. Delegates to
+  the new `BigDecimal::from_rational_exact`. This is the compute-result analogue of NX-2's
+  `Number::Exact` recall rendering: exact by default, `f64` only as a labeled fallback.
+- Compute-layer tests: the doubled-π sidecar renders every digit and is strictly richer than its
+  `f64` form; a repeating quotient (`1/3`) renders `None` while a terminating one (`3/4`) renders
+  `"0.75"`.
+
+## [0.39.0] — 2026-07-14 — exact compute ingestion of `Number::Exact` (ADJ-EXACT-NUMBERS NX-3)
+
+### Changed
+
+- **`numeric_exact_magnitude` now ingests a `Number::Exact(BigDecimal)` leaf at full precision**,
+  replacing the NX-2 stopgap that folded the decimal through `to_f64()` (losing everything past the
+  ~16th significant digit). A `BigDecimal` is `mantissa × 10^(-scale)`, an exact ratio, so the
+  exact-rational sidecar is now populated via the new `BigDecimal::to_rational()` →
+  `ExactRational::from_ratio(...)` — **no `f64` hop**. `Int` was already exact; `Float` remains the
+  single documented inexact ingress. Net effect: `pi + pi` on the stdlib's stored 39-digit π stays
+  exact to all digits (`6.283185307179586476925286766559005768394`) instead of collapsing to the
+  f64-rounded `6.283185307179586`, and further arithmetic stays exact (NUM-5). Both the bare and
+  typed-wrapper (`Compound`) arms were migrated. No result changes for `Int`/`Float` inputs.
+- Added a compute-layer regression test proving the doubled-π sidecar equals the exact 40-digit
+  value and reduces to `3141592653589793238462643383279502884197 / (5 × 10^38)` in lowest terms.
+
+## [0.38.1] — 2026-07-14 — read `Number::Exact` valued facts (ADJ-EXACT-NUMBERS NX-2)
+
+### Changed
+
+- The compute-layer valued-fact readers now recognize the `Number::Exact` variant that `adj-lang`
+  begins producing in NX-2. `numeric_magnitude`, `numeric_exact_magnitude`, `dimensioned_value`,
+  and the `datetime` integral reader each gained an `Exact` arm that **folds into the existing
+  `Float` handling via the labeled-lossy `to_f64` boundary** — so a valued fact stored exactly is
+  visible to a formula/predicate exactly as it was when it stored an `f64`, and no compute result
+  changes. (Before this, an `Exact`-valued slot was invisible and surfaced as `UnknownSlot`.)
+  Ingesting an exact decimal's full precision into `ExactRational` **without** an `f64` hop is
+  deliberately deferred to NX-3; this release only restores parity.
+
+## [0.38.0] — exact arithmetic by default: `ExactRational` is now a `BigRational` (NUM-5)
+
+### Changed
+
+- **The compute engine's exact value is now arbitrary-precision.** `ExactRational` — the
+  exactness carrier threaded through `compute`/`Derived`/the LR gate — was a pair of `i128`s
+  that silently dropped to `None` on overflow; it is now a thin wrapper over
+  `bignum_core::BigRational`, so `+ − × ÷` of rationals stay **exact and unbounded** — `1/3`
+  is `1/3` past `i128`, `0.1 + 0.2` is exactly `3/10`, and the CSF:serum-style ratios never
+  lose a digit. Overflow → `None` is gone; the only remaining `None`s are the genuinely
+  non-rational cases (transcendentals, a fractional exponent, `gcd`/`lcm`/`mod`,
+  aggregations). The `f64` magnitude on `Derived`/`DerivationNode` is unchanged for now — it
+  is the **labeled lossy export** (`ExactRational::to_f64`), no longer the ground truth.
+- Exact integer rounding (`Abs`/`Floor`/`Ceil`/`Round` ties-away/`Trunc`/`Sign`) is
+  reconstructed from `BigInteger::div_rem`; exact ordering in the LR gate uses `BigRational`'s
+  native total order (the old `i128` cross-multiply and its `f64` overflow fallback are gone —
+  comparison is now always exact). Integer powers use `BigRational::try_pow` with a
+  result-size guard (`MAX_EXACT_POW_BITS`) replacing the old bounded multiply loop.
+- `MAX_EVAL_DEPTH` lowered `256 → 128`: each recursive `eval` frame now carries a heap-backed
+  `BigRational` rather than two `i128`s, so the "clean `TooDeep`, never a stack overflow"
+  guarantee needs a shallower cap on small (spawned-test-thread) stacks. 128 is still far
+  deeper than any real formula nests.
+- **Public JSON (adj-lang-cli):** the `exact` object's `num`/`den` are now emitted as JSON
+  **strings** (`"exact":{"num":"3","den":"10"}`) since an arbitrary-precision numerator/
+  denominator can exceed JSON's safe integer range.
+- New dependency: `bignum-core` (zero-dependency, `#![forbid(unsafe_code)]`).
+
+## [Unreleased] — optional provenance on `Derived`
+
+### Added
+
+- `Derived::provenance: Option<Provenance>` + `Derived::with_provenance(..)` — a
+  computed value may now carry the cited `source`/`locator`/`trust` of the
+  **formula** that produced it (ADJ-FORMULA-LIBRARIES rung-0 formula application).
+  `compute` sets it to `None`; a plain `let` leaves it `None` (its audit trail is
+  the derivation tree over observed facts). This is the channel by which a computed
+  answer carries *why* its formula is trustworthy, so an independent checker can
+  re-verify the citation without the model.
 
 ## [0.37.0] - 2026-07-02 — sign function (`Sign`)
 

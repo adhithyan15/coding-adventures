@@ -172,6 +172,7 @@ mod tests {
     }
 
     // Build a TIFF byte stream with an additional Make tag.
+    #[allow(clippy::too_many_arguments)] // test helper spelling out TIFF fields explicitly
     fn build_raw_tiff_with_make(
         width: u32,
         height: u32,
@@ -185,7 +186,7 @@ mod tests {
         // Build a make string: ASCII NUL-terminated, padded to even length.
         let mut make_bytes = make.as_bytes().to_vec();
         make_bytes.push(0); // NUL terminator
-        if make_bytes.len() % 2 != 0 {
+        if !make_bytes.len().is_multiple_of(2) {
             make_bytes.push(0); // pad to even
         }
         let make_len = make_bytes.len();

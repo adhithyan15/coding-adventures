@@ -1,0 +1,28 @@
+% ============================================================================
+% drug-clearance.query.adj — worked applications of the drug-clearance definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a pharmacokinetics/dosing vignette into
+% observed quantities: it `import`s the grounded formulabook, `observe`s the elimination rate and
+% plasma concentration, and asks the engine to APPLY the cited definition. No arithmetic is stated
+% by the consumer; the engine computes each value EXACTLY (over exact rationals) and carries the
+% article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (rate of drug removal = 100 mg/min, plasma concentration = 5 mg/mL): CL = 100 ÷ 5 =
+% 20 mL/min. Each query below fixes two of the three quantities and asks the engine to recover the
+% third; every answer is exact and the three COMPOSE (each inversion recovers exactly the worked
+% value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli drug-clearance.query.adj
+% ============================================================================
+
+import "drug-clearance.adj"
+
+% --- Definition: the clearance the rate and concentration imply (expect 20). -------------------
+observe rate_of_drug_removal(100)
+observe plasma_concentration(5)
+? clearance(rate_of_drug_removal, plasma_concentration)   % expect 20
+
+% --- Inverse: the elimination rate a clearance of 20 implies at that concentration (100). ------
+observe clearance(20)
+? rate_of_drug_removal(clearance, plasma_concentration)   % expect 100

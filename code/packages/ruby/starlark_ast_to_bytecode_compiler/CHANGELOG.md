@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `CALL_FUNCTION_KW` now records positional and keyword argument counts
+  separately, preserving mixed calls for the VM.
+- Bare identifiers beginning with `r`, `R`, `b`, or `B` are no longer treated
+  as prefixed string literals unless the prefix is followed by a quote.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

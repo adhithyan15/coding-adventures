@@ -59,6 +59,9 @@ impl<'a> Writer<'a> {
     pub(crate) fn u32(&mut self, v: u32) {
         self.out.extend_from_slice(&v.to_le_bytes());
     }
+    // Fixed-width u64 writer kept for symmetry with `u8`/`u32` in this wire-format
+    // primitive set; the current schema only emits varints, so it's unused today.
+    #[allow(dead_code)]
     pub(crate) fn u64(&mut self, v: u64) {
         self.out.extend_from_slice(&v.to_le_bytes());
     }

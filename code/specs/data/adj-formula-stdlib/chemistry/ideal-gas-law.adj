@@ -1,0 +1,98 @@
+% ============================================================================
+% ideal-gas-law.adj — the ideal gas law for the ADJ compute stdlib (chemistry).
+% ============================================================================
+% The FIRST entry of the SCIENCE track's CHEMISTRY layer, and the first
+% MULTI-VARIABLE STATE LAW in the ADJ stdlib: an equation of state relating three
+% independent quantities of a gas at once. Where `physics/mechanics-laws.adj`
+% ships two-variable products/quotients (F = m·a, ρ = m/V) and `clinical/bmi.adj`
+% ships a clinical definition, this ships a LAW OF NATURE that couples pressure,
+% amount, temperature, and volume through a single grounded constant.
+%
+% The ideal gas law is  P·V = n·R·T.  Solved for pressure:
+%
+%     P = n · R · T / V
+%
+% where  n = amount of substance (moles),  T = absolute temperature (kelvin),
+% V = volume (m³),  R = the molar gas constant, and  P = pressure (pascals).
+%
+% The crux of GROUNDING here is R. R is NOT a memorized number — it is copied
+% verbatim from the NIST CODATA reference below (2022 CODATA recommended value,
+% an EXACT constant since the 2019 SI redefinition fixed the Boltzmann constant):
+%
+%     R = 8.314462618 J mol⁻¹ K⁻¹   (NIST CODATA, exact) → trust authoritative
+%
+% Contract, unchanged from the rest of the ladder: THE MODEL DOES ZERO
+% ARITHMETIC. A consumer states no math. It `import`s this file, binds the three
+% quantities from its own byte-provenance decomposition of the input, and asks
+% the engine to APPLY the cited law on the CPU. The engine computes exactly, and
+% the answer carries the law's citation — auditable end to end:
+%
+%     import "ideal-gas-law.adj"
+%     observe moles(1)              % "…1 mole of gas…"        (span cited by the model)
+%     observe temperature(273.15)   % "…at 273.15 K…"          (span cited by the model)
+%     observe volume(0.022414)      % "…occupying 0.022414 m³…" (span cited by the model)
+%     ? pressure(moles, temperature, volume)   % engine → ~101325 Pa (1 atm at STP)
+%
+% Why a MEDICINE agent cares: gas laws are the substrate for respiratory and
+% anesthetic reasoning. Alveolar gas equations, the partial pressures that drive
+% oxygen uptake and CO₂ clearance, the behavior of anesthetic gases across
+% temperature and volume changes in a breathing circuit, gas-cylinder content
+% from pressure — all of it descends from PV = nRT. An agent that reasons about
+% "the pressure of n moles of an anesthetic vapor in a fixed reservoir at body
+% temperature" RECALLS this law and BINDS the numbers; it never re-derives the
+% relation or re-guesses R.
+%
+% Run a worked consumer (from a directory it can resolve this import from):
+%     adj-lang-cli ideal-gas-law.query.adj
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each term is an observable state variable of the gas the law ranges
+% over. rung-0's grammar types an observable slot as `finding` (dimensional
+% typing of formula parameters is a later rung — but the engine already INFERS
+% and CHECKS dimensions when a formula is APPLIED, so mol · (J/mol/K) · K / m³
+% reduces to J/m³ = Pa, and a unit mismatch is an error, not a silent coercion).
+% The intended dimension of each term is recorded in the trailing comment, and
+% the `surface` synonyms let a decomposer map everyday phrasing onto the term.
+%
+%   Term          Dimension                     Role in P = nRT/V
+%   ----          ---------                     -----------------
+%   moles         amount of substance (mol)     n  — how much gas
+%   temperature   temperature (K)               T  — absolute, kelvin
+%   volume        length³ (m³)                   V  — occupied volume
+%   pressure      mass/length/time² (Pa)        P  — the computed result
+% ----------------------------------------------------------------------------
+dictionary ideal_gas_vocab {
+    define moles       : finding  surface "moles", "amount of substance", "n", "number of moles"  % mol
+    define temperature : finding  surface "temperature", "absolute temperature", "T"              % kelvin (K)
+    define volume      : finding  surface "volume", "V"                                           % length³ (m³)
+    define pressure    : finding  surface "pressure", "P", "gas pressure"                         % pascals (Pa)
+}
+
+% ----------------------------------------------------------------------------
+% The law. A named, importable, reusable `let` over its three formal parameters —
+% the SAME expression grammar `let` uses (+ - * / and parens), with the parameter
+% leaves bound at apply time. R appears as a LITERAL in the body, copied verbatim
+% from the NIST CODATA value quoted in the `source` clause — so the constant is
+% grounded in the same provenance envelope as the relation itself, not asserted
+% by fiat.
+%
+% Two sources travel with this one formula:
+%   • the value of R — NIST CODATA (physics.nist.gov), the authoritative primary
+%     reference, quoted verbatim including its exact digits;
+%   • the relation PV = nRT — Wikipedia's clean statement of the ideal gas law,
+%     for the equation-of-state form itself.
+% The value of the constant is the load-bearing claim, and it is authoritative;
+% the trust tier for the shipped formula follows the constant → authoritative.
+% ----------------------------------------------------------------------------
+formulabook chemistry_ideal_gas {
+    use ideal_gas_vocab
+
+    % Ideal gas law solved for pressure — P = nRT/V. The molar gas constant R is
+    % the verbatim NIST CODATA value 8.314462618 J mol⁻¹ K⁻¹ (exact, 2022 CODATA).
+    % The relation PV = nRT is the standard ideal-gas equation of state.
+    formula pressure(moles, temperature, volume) = moles * 8.314462618 * temperature / volume
+        source "molar gas constant | Numerical value | 8.314 462 618 J mol^-1 K^-1 | Standard uncertainty | (exact). The ideal gas law: PV = nRT, where P is the pressure, V is the volume, n is the amount of substance, R is the ideal (universal) gas constant, and T is the absolute temperature."
+        locator "https://physics.nist.gov/cgi-bin/cuu/Value?r"
+        trust authoritative
+}

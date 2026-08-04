@@ -255,3 +255,226 @@ fn elf_object_has_correct_machine_field() {
     let e_machine = u16::from_le_bytes([obj[18], obj[19]]);
     assert_eq!(e_machine, 62);
 }
+
+// ── AOT00-T1 x86_64 PR-x3: precise-roots registration, end to end ──────────
+//
+// These run on the native x86-64 `ubuntu-latest` runner — the authoritative
+// validator for the x86-64 GC path (the dev host is aarch64 macOS). They prove the
+// SysV `__gc_init_stackmaps` registration codegen runs correctly and is load-bearing.
+
+/// The start-up registration actually ran in the linked image: a program that returns
+/// `__gc_stackmap_count()` exits > 0.
+#[test]
+fn gc_stackmap_registration_ran_on_linux() {
+    use interpreter_ir::function::IIRFunction;
+    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::module::IIRModule;
+
+    let main = IIRFunction::new(
+        "main", vec![], "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("c".into()),
+                vec![Operand::Var("gc_stackmap_count".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
+    let mut m = IIRModule::new("gc_count", "twig");
+    m.add_or_replace(main);
+    m.entry_point = Some("main".into());
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe = dir.path().join("gc_count");
+    twig_aot::compile_module_to_linux_executable(&m, &exe).expect("count compiles+links");
+    let code = Command::new(&exe).output().expect("count runs").status.code().unwrap();
+    assert!(code > 0, "registration must have run at start-up (count={code})");
+}
+
+/// The GC-stress `live_bytes` differential on x86-64: a 64-byte allocation whose address
+/// lives only in an `i64` (non-reference) slot is reclaimed by a precise collect but
+/// pinned by a conservative one. Precise → `live_bytes == 0`, conservative → `== 64`.
+/// This is the headline proof that precise roots are load-bearing on native x86-64.
+#[test]
+fn gc_stress_live_bytes_differential_on_linux() {
+    use interpreter_ir::function::IIRFunction;
+    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::module::IIRModule;
+
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        let mut body = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+        ];
+        body.push(if collect_returns {
+            IIRInstr::new("call_builtin", Some("f".into()), vec![Operand::Var(collect.into())], "i64")
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+        let mut m = IIRModule::new("gc_stress", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, ret: bool| -> i32 {
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_linux_executable(&build(collect, ret), &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"))
+            .status.code().unwrap_or_else(|| panic!("{tag} exited by signal"))
+    };
+
+    let conservative = run("gc_stress_cons", "gc_collect", false);
+    let precise = run("gc_stress_prec", "gc_collect_precise", true);
+    assert_eq!(conservative, 64, "conservative retains the 64-byte look-alike-pinned object");
+    assert_eq!(
+        precise, 0,
+        "precise reclaims the object reachable only via a non-reference i64 slot \
+         (conservative kept {conservative})",
+    );
+}
+
+/// AOT00-T1 x86_64 PR-x4 / PR-x5 — precise roots reach through a **self-recursive** frame.
+///
+/// The differential above proves precise roots work for `main`'s own frame. This one
+/// proves they work for an *intermediate* frame in a recursion chain — the case that, on
+/// x86-64, is precise ONLY because a self-recursive `call` is now a registered safepoint
+/// (PR-x4). A self-recursive `call <fn>` lowers to `call rel32` with an internal label
+/// fixup and no `PltRel32` relocation, so before PR-x4 its return address was not in the
+/// stack map and the collector conservatively re-scanned that frame.
+///
+/// ```text
+///   rec(stop) -> i64:
+///       a = gc_alloc(64)          ; i64 look-alike, one per active frame
+///       if stop != 0 goto base
+///       r = rec(1)                ; SELF-RECURSIVE call — a0 sits in this frame across it
+///       ret r
+///     base:
+///       <collect>                 ; gc_collect | gc_collect_precise (fires here)
+///       ret gc_live_bytes()
+///   main() -> i64: ret rec(0)
+/// ```
+///
+/// `main → rec(0) → rec(1)`. The collect fires in `rec(1)`; unwinding passes through
+/// `rec(0)`, an intermediate self-recursive frame holding a 64-byte look-alike (`a0`).
+/// **Conservative** pins both look-alikes → `128`. **Precise** maps every frame — `rec(1)`
+/// via its builtin calls, `rec(0)` via the self-recursive-call safepoint PR-x4 added — so
+/// both `i64` look-alikes are unrooted and reclaimed → `0`. A `precise` of `64` would mean
+/// `rec(0)` fell back to a conservative scan: the exact regression PR-x4 prevents. Runs on
+/// the native x86-64 `ubuntu-latest` runner (dev host is aarch64 macOS); the identical
+/// module is validated locally on aarch64 in `macos_arm64_smoke`.
+#[test]
+fn gc_recursive_frame_live_bytes_differential_on_linux() {
+    use interpreter_ir::function::IIRFunction;
+    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::module::IIRModule;
+
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        // rec(stop: i64) -> i64
+        let mut rec_body = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+            IIRInstr::new(
+                "jmp_if_true",
+                None,
+                vec![Operand::Var("stop".into()), Operand::Var("base".into())],
+                "i64",
+            ),
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("rec".into()), Operand::Var("one".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            IIRInstr::new("label", None, vec![Operand::Var("base".into())], "i64"),
+        ];
+        rec_body.push(if collect_returns {
+            IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(collect.into())],
+                "i64",
+            )
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        rec_body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        rec_body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        let main_body = vec![
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("rec".into()), Operand::Var("z".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ];
+
+        let mut m = IIRModule::new("gc_recur", "twig");
+        m.add_or_replace(IIRFunction::new(
+            "rec",
+            vec![("stop".to_string(), "i64".to_string())],
+            "i64",
+            rec_body,
+        ));
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", main_body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, ret: bool| -> i32 {
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_linux_executable(&build(collect, ret), &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        Command::new(&exe)
+            .output()
+            .unwrap_or_else(|e| panic!("{tag} runs: {e}"))
+            .status
+            .code()
+            .unwrap_or_else(|| panic!("{tag} exited by signal"))
+    };
+
+    let conservative = run("gc_recur_cons", "gc_collect", false);
+    let precise = run("gc_recur_prec", "gc_collect_precise", true);
+    assert_eq!(
+        conservative, 128,
+        "conservative pins both recursive frames' 64-byte look-alikes (got {conservative})",
+    );
+    assert_eq!(
+        precise, 0,
+        "precise reclaims both look-alikes, incl. a0 in the intermediate self-recursive \
+         frame — requires that frame be precisely mapped at the recursive-call return \
+         address (PR-x4) (got {precise}, conservative={conservative})",
+    );
+}

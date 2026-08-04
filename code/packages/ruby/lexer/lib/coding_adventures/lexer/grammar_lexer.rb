@@ -797,19 +797,22 @@ module CodingAdventures
           )
         end
 
-        # EOF: emit remaining DEDENTs.
-        while @indent_stack.length > 1
-          @indent_stack.pop
+        # EOF: terminate the final simple statement before closing blocks.
+        # The parser's simple_stmt production consumes NEWLINE, so emitting a
+        # DEDENT first leaves the last statement inside a function/conditional
+        # unterminated. This matches Python's NEWLINE, DEDENT..., EOF order.
+        if tokens.empty? || tokens.last.type != TokenType::NEWLINE
           tokens << Token.new(
-            type: "DEDENT", value: "",
+            type: TokenType::NEWLINE, value: "\\n",
             line: @line, column: @column
           )
         end
 
-        # Final NEWLINE if the last token isn't one.
-        if tokens.empty? || tokens.last.type != TokenType::NEWLINE
+        # Emit remaining DEDENTs after the statement terminator.
+        while @indent_stack.length > 1
+          @indent_stack.pop
           tokens << Token.new(
-            type: TokenType::NEWLINE, value: "\\n",
+            type: "DEDENT", value: "",
             line: @line, column: @column
           )
         end

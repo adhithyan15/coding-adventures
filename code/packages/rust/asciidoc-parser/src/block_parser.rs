@@ -372,7 +372,7 @@ fn parse_list_line(line: &str) -> Option<(usize, bool, String)> {
 // ─── List building ────────────────────────────────────────────────────────────
 
 /// Convert a flat list of `ListItemAccum` into a nested `Vec<BlockNode>`.
-fn build_list_nodes(items: &mut Vec<ListItemAccum>) -> Vec<BlockNode> {
+fn build_list_nodes(items: &mut [ListItemAccum]) -> Vec<BlockNode> {
     if items.is_empty() {
         return Vec::new();
     }

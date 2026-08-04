@@ -108,7 +108,7 @@ use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    FunctionParam, Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
+    Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
     VariableDeclaration,
 };
 
@@ -380,6 +380,17 @@ fn decl_is_inert(decl: &Declaration) -> bool {
         // function is called, which (given every preceding item is inert)
         // cannot happen before a later `const` initializes.
         Declaration::FunctionDeclaration(_) => true,
+        // A class declaration is NOT inert: evaluating its `extends` heritage
+        // (`class C extends f() {}`) and creating the class runs code at the
+        // declaration site — unlike a function declaration, which only hoists.
+        // Conservatively (and correctly) treat it as running code.
+        Declaration::ClassDeclaration(_) => false,
+        // An import declaration runs the target module for its side effects, so
+        // it is NOT inert — it can observe/mutate state before a later `const`.
+        Declaration::ImportDeclaration(_) => false,
+        Declaration::ExportNamedDeclaration(_) => false,
+        Declaration::ExportDefaultDeclaration(_) => false,
+        Declaration::ExportAllDeclaration(_) => false,
         Declaration::VariableDeclaration(vd) => vd.declarations.iter().all(|d| match &d.init {
             None => true,
             Some(init) => is_literal(init),
@@ -452,11 +463,44 @@ fn count_decl_names_decl(
         Declaration::FunctionDeclaration(fd) => {
             *out.entry(fd.id.name.clone()).or_insert(0) += 1;
             for p in &fd.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 *out.entry(id.name.clone()).or_insert(0) += 1;
             }
             for s in &fd.body.body {
                 count_decl_names_stmt(s, out, nodes_touched);
+            }
+        }
+        // A class declaration binds its name (`cd.id`), and its method bodies
+        // declare their own locals — count both, mirroring the function
+        // declaration arm (name + body-declared names). Counting more names is
+        // conservative: it only ever prevents an unsafe inline, never causes one.
+        // An import declaration binds names but holds no expressions to
+        // count/propagate through — nothing to do.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            *out.entry(cd.id.name.clone()).or_insert(0) += 1;
+            for member in &cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
+                    // A field initializer is an expression — it declares no
+                    // statement-scope names at the class-body level.
+                    ClassMember::Field(_) => {}
+                    // A static-init block's statements declare their own locals —
+                    // count them conservatively, mirroring the method-body arm
+                    // (over-counting only ever prevents an unsafe inline).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
+                }
             }
         }
     }
@@ -490,6 +534,9 @@ fn count_decl_names_stmt(
                 }
             }
             TaggedStatement::WhileStatement(ws) => {
+                count_decl_names_stmt(&ws.body, out, nodes_touched)
+            }
+            TaggedStatement::WithStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -594,6 +641,47 @@ fn count_uses_decl(decl: &Declaration, name: &str, count: &mut usize) {
                 count_uses_stmt(s, name, count);
             }
         }
+        // A class declaration can USE `name` in its `extends` operand
+        // (`class C extends name {}`) and inside its method bodies. We MUST
+        // count every such use — missing one would let the pass inline/remove
+        // `name` while the class still references it (a miscompile). Mirrors the
+        // `Expression::ClassExpression` arm of `count_uses_expr`.
+        // An import declaration binds names but holds no expressions to
+        // count/propagate through — nothing to do.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &cd.super_class {
+                count_uses_expr(sup, name, count);
+            }
+            for member in &cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            count_uses_stmt(s, name, count);
+                        }
+                    }
+                    // A field initializer can USE `name` (`x = name`) — count
+                    // it, else the pass could inline/remove a still-referenced
+                    // binding (a miscompile).
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &f.value {
+                            count_uses_expr(v, name, count);
+                        }
+                    }
+                    // SOUNDNESS: a static-init block's statements run at class-
+                    // definition time and can USE `name` — count every such use,
+                    // mirroring the method-body arm.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_uses_stmt(s, name, count);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -618,6 +706,10 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 count_uses_expr(&ws.test, name, count);
+                count_uses_stmt(&ws.body, name, count);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                count_uses_expr(&ws.object, name, count);
                 count_uses_stmt(&ws.body, name, count);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -850,6 +942,19 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                             count_uses_stmt(s, name, count);
                         }
                     }
+                    // A field initializer can use `name` — count it (soundness).
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &f.value {
+                            count_uses_expr(v, name, count);
+                        }
+                    }
+                    // SOUNDNESS: a static-init block's statements can use `name` —
+                    // count each, mirroring the method-body arm.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_uses_stmt(s, name, count);
+                        }
+                    }
                 }
             }
         }
@@ -931,6 +1036,44 @@ fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
                 changed |= propagate_in_stmt(s, cand);
             }
         }
+        // Substitute the const into the same positions `count_uses_decl`
+        // inspects — the `extends` operand and each method body — so the count
+        // and the rewrite stay in lockstep. Mirrors the
+        // `Expression::ClassExpression` arm of `propagate_in_expr`.
+        // An import declaration binds names but holds no expressions to
+        // count/propagate through — nothing to do.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &mut cd.super_class {
+                changed |= propagate_in_expr(sup, cand);
+            }
+            for member in &mut cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &mut m.value.body.body {
+                            changed |= propagate_in_stmt(s, cand);
+                        }
+                    }
+                    // Propagate the const into a field initializer, kept in
+                    // lockstep with `count_uses_decl`.
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &mut f.value {
+                            changed |= propagate_in_expr(v, cand);
+                        }
+                    }
+                    // Propagate the const into the static-init block's statements,
+                    // kept in lockstep with `count_uses` (which counts them).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= propagate_in_stmt(s, cand);
+                        }
+                    }
+                }
+            }
+        }
     }
     changed
 }
@@ -957,6 +1100,10 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
             }
             TaggedStatement::WhileStatement(ws) => {
                 changed |= propagate_in_expr(&mut ws.test, cand);
+                changed |= propagate_in_stmt(&mut ws.body, cand);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                changed |= propagate_in_expr(&mut ws.object, cand);
                 changed |= propagate_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1205,6 +1352,19 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
                             changed |= propagate_in_stmt(s, cand);
                         }
                     }
+                    // Propagate the const into a field initializer.
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &mut f.value {
+                            changed |= propagate_in_expr(v, cand);
+                        }
+                    }
+                    // Propagate the const into the static-init block's statements,
+                    // kept in lockstep with `count_uses` (which counts them).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= propagate_in_stmt(s, cand);
+                        }
+                    }
                 }
             }
         }
@@ -1431,7 +1591,7 @@ mod tests {
         let _a: InlineVariablesPass = Default::default();
         let _b: InlineVariablesPass = InlineVariablesPass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================
@@ -1569,7 +1729,7 @@ mod tests {
         // `helper` is never in the TDZ, and propagation is sound.
         assert_eq!(
             propagate_source("function helper() { return X; } const X = 5; run(helper);"),
-            "function helper(){return 5};const X=5;run(helper);"
+            "function helper(){return 5}const X=5;run(helper);"
         );
     }
 

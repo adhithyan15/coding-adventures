@@ -87,6 +87,10 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::{
+    program_contains_export_declaration, program_contains_import_declaration,
+    program_contains_with_statement,
+};
 use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
@@ -153,6 +157,42 @@ impl Pass for RenamePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+        // `with` soundness gate (CLOC12.187 PR2a). A `with (obj) …` anywhere
+        // splices `obj` onto the scope chain, so a bare name in its body may
+        // resolve at runtime to a property of `obj` rather than to the lexical
+        // binding we see. Renaming that binding (and its references) could then
+        // silently change which value the name reads — the "single declaration
+        // ⇒ single binding ⇒ every use resolves to it" safety argument below
+        // does not hold in the presence of `with`. So when the program contains
+        // a `with` we decline to rename and return the input unchanged. `with`
+        // is rare (a strict-mode syntax error), so this program-wide bail costs
+        // little in practice. See [`program_contains_with_statement`].
+        //
+        // The same bail covers ES-module `import` declarations (CLOC12.188 PR2):
+        // an import binds names that alias a foreign module's exports, so
+        // renaming them would break the cross-module contract, and — because the
+        // scope analyzer registers no binding for an import — the fresh-name
+        // allocator could also collide an unrelated local with an import name.
+        // See [`program_contains_import_declaration`].
+        //
+        // It likewise covers ES-module `export` declarations (CLOC12.189 PR2):
+        // an export publishes a binding to other modules by an exact name, so
+        // renaming an exported binding (or a specifier's exported name) would
+        // break importers the analyzer cannot see. See
+        // [`program_contains_export_declaration`].
+        if program_contains_with_statement(ctx.program)
+            || program_contains_import_declaration(ctx.program)
+            || program_contains_export_declaration(ctx.program)
+        {
+            return Ok(PassOutput {
+                program: ctx.program.clone(),
+                contributions: Vec::new(),
+                changed: false,
+                diagnostics: Vec::new(),
+                stats: PassStats { nodes_touched: 1 },
+            });
+        }
+
         // Scope: rename the uniquely-bound names of *leaf functions*
         // (function declarations whose body contains no nested function
         // declaration) — their parameters and their body's
@@ -301,6 +341,16 @@ fn process_stmt(
             process_function(fd, nodes_touched, renames)
         }
         Statement::Declaration(Declaration::VariableDeclaration(_)) => false,
+        // A class declaration is not a leaf top-level function whose params
+        // this pass renames — treat it like a variable declaration (no work
+        // here). Its method bodies are separate scopes; leaving them unrenamed
+        // is safe (a missed optimisation, never unsound).
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
+        // An import declaration binds no leaf-function params to rename here.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
         Statement::Tagged(t) => process_tagged(t, nodes_touched, renames),
     }
 }
@@ -327,6 +377,9 @@ fn process_tagged(
             }
         }
         TaggedStatement::WhileStatement(ws) => {
+            changed |= process_stmt(&mut ws.body, nodes_touched, renames);
+        }
+        TaggedStatement::WithStatement(ws) => {
             changed |= process_stmt(&mut ws.body, nodes_touched, renames);
         }
         TaggedStatement::DoWhileStatement(ds) => {
@@ -427,6 +480,17 @@ fn stmt_has_function(stmt: &Statement) -> bool {
     match stmt {
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => true,
         Statement::Declaration(Declaration::VariableDeclaration(_)) => false,
+        // A class declaration carries method *functions*. Report `true` so the
+        // leaf-binding rename is conservatively disabled in its presence — a
+        // method could capture/re-scope a name, which would make the leaf
+        // rename unsound (see this function's doc comment).
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => true,
+        // An import declaration contains no functions and cannot re-scope a
+        // leaf binding, so it does not disable the leaf rename.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
         Statement::Tagged(t) => match t {
             TaggedStatement::BlockStatement(b) => b.body.iter().any(stmt_has_function),
             TaggedStatement::IfStatement(is) => {
@@ -434,6 +498,7 @@ fn stmt_has_function(stmt: &Statement) -> bool {
                     || is.alternate.as_deref().is_some_and(stmt_has_function)
             }
             TaggedStatement::WhileStatement(ws) => stmt_has_function(&ws.body),
+            TaggedStatement::WithStatement(ws) => stmt_has_function(&ws.body),
             TaggedStatement::DoWhileStatement(ds) => stmt_has_function(&ds.body),
             TaggedStatement::ForStatement(fs) => stmt_has_function(&fs.body),
             TaggedStatement::ForInStatement(fs) => stmt_has_function(&fs.body),
@@ -509,7 +574,7 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
     // kind) is detected and skipped.
     let mut decl_order: Vec<(String, bool)> = Vec::new();
     for p in &fd.params {
-        let FunctionParam::Identifier(id) = p;
+        let id = p.binding_identifier();
         decl_order.push((id.name.clone(), true)); // params: function-scoped
     }
     collect_decl_occurrences(&fd.body, &mut decl_order, false);
@@ -524,10 +589,7 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
     // uses, and property names), so a rename can neither collide with a
     // local nor capture a free global.
     let mut avoid: HashSet<String> = HashSet::new();
-    for p in &fd.params {
-        let FunctionParam::Identifier(id) = p;
-        avoid.insert(id.name.clone());
-    }
+    collect_param_idents(&fd.params, &mut avoid);
     collect_all_idents_block(&fd.body, &mut avoid);
 
     // Decide the renames, in declaration order for deterministic output.
@@ -573,9 +635,18 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
 
     // Apply: rewrite the parameter declarations …
     for p in &mut fd.params {
-        let FunctionParam::Identifier(id) = p;
-        if let Some(new) = map.get(&id.name) {
-            id.name = new.clone();
+        {
+            let id = p.binding_identifier_mut();
+            if let Some(new) = map.get(&id.name) {
+                id.name = new.clone();
+            }
+        }
+        // … including a default parameter's `right` expression: a reference in
+        // `function f(a, b = a)` must track `a`'s new name, so rewrite the
+        // default's uses through the same map. (Defaults are evaluated in the
+        // function scope, so the same renames apply.)
+        if let Some(def) = p.default_value_mut() {
+            rewrite_uses_expr(def, &map);
         }
     }
     // … and every declaration + use inside the body.
@@ -650,6 +721,20 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
             out.push((fd.id.name.clone(), false));
             // Do NOT recurse into fd.body — separate scope.
         }
+        // An import declaration's bound names link to a foreign module's
+        // exports — renaming them would break the cross-module contract, so we
+        // never descend into it.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            // A class declaration binds a name — mark it ineligible for local
+            // renaming, like a nested function name (renaming a class name
+            // needs its own care). Do NOT recurse into the method bodies —
+            // separate scopes.
+            out.push((cd.id.name.clone(), false));
+        }
         Statement::Tagged(t) => match t {
             // Anything below this point is inside an inner block → nested.
             TaggedStatement::BlockStatement(b) => collect_decl_occurrences(b, out, true),
@@ -660,6 +745,9 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
                 }
             }
             TaggedStatement::WhileStatement(ws) => {
+                collect_decl_occurrences_stmt(&ws.body, out, true)
+            }
+            TaggedStatement::WithStatement(ws) => {
                 collect_decl_occurrences_stmt(&ws.body, out, true)
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -746,6 +834,23 @@ fn push_var_occurrences(vd: &VariableDeclaration, out: &mut Vec<(String, bool)>,
     }
 }
 
+/// Collect every identifier a parameter list introduces or references into
+/// `out`: each parameter's bound name plus — for a default parameter
+/// (`a = expr`) — every identifier in its `right` default expression. A
+/// default's `right` is live code that can read a free name (`function f(a =
+/// GLOBAL) {}`), so its identifiers must join the collision-avoidance set or a
+/// freshly-minted short name could shadow the very name the default reads. A
+/// plain or rest parameter has no such expression and contributes only its
+/// bound name.
+fn collect_param_idents(params: &[FunctionParam], out: &mut HashSet<String>) {
+    for p in params {
+        out.insert(p.binding_identifier().name.clone());
+        if let Some(def) = p.default_value() {
+            collect_all_idents_expr(def, out);
+        }
+    }
+}
+
 /// Collect EVERY identifier name appearing anywhere in `block`
 /// (declarations, uses, and property names) — used to pick collision-free
 /// fresh names. Over-inclusive on purpose: avoiding a name that only
@@ -770,11 +875,63 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
         }
         Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
             out.insert(fd.id.name.clone());
-            for p in &fd.params {
-                let FunctionParam::Identifier(id) = p;
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fd.params, out);
             collect_all_idents_block(&fd.body, out);
+        }
+        // An import declaration's bound names link to a foreign module's
+        // exports — renaming them would break the cross-module contract, so we
+        // never descend into it.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            // Soundness-critical: collect EVERY identifier the class introduces
+            // or references — its name, the heritage operand, and each method's
+            // key / value-name / params / body — so a freshly-minted short name
+            // never collides with one. Mirrors the `Expression::ClassExpression`
+            // arm of `collect_all_idents_expr` plus the required class name.
+            out.insert(cd.id.name.clone());
+            if let Some(sup) = &cd.super_class {
+                collect_all_idents_expr(sup, out);
+            }
+            for member in &cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if let PropertyKey::Identifier(id) = &m.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let Some(id) = &m.value.id {
+                            out.insert(id.name.clone());
+                        }
+                        collect_param_idents(&m.value.params, out);
+                        for s in &m.value.body.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
+                    // A field's key ident + computed-key / initializer idents,
+                    // over-collected so a fresh short name never collides.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Identifier(id) = &f.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_all_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_all_idents_expr(v, out);
+                        }
+                    }
+                    // A static-init block has no key/name/params; over-collect
+                    // every identifier in its statements so a fresh short name
+                    // never collides.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
+                }
+            }
         }
         Statement::Tagged(t) => match t {
             TaggedStatement::ExpressionStatement(es) => {
@@ -790,6 +947,10 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 collect_all_idents_expr(&ws.test, out);
+                collect_all_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                collect_all_idents_expr(&ws.object, out);
                 collect_all_idents_stmt(&ws.body, out);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1013,10 +1174,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             if let Some(id) = &fe.id {
                 out.insert(id.name.clone());
             }
-            for p in &fe.params {
-                let FunctionParam::Identifier(id) = p;
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fe.params, out);
             for s in &fe.body.body {
                 collect_all_idents_stmt(s, out);
             }
@@ -1045,11 +1203,28 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
-                        for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                        collect_param_idents(&m.value.params, out);
+                        for s in &m.value.body.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
+                    // A field's key ident + computed-key / initializer idents.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Identifier(id) = &f.key {
                             out.insert(id.name.clone());
                         }
-                        for s in &m.value.body.body {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_all_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_all_idents_expr(v, out);
+                        }
+                    }
+                    // A static-init block has no key/name/params; over-collect
+                    // every identifier in its statements so a fresh short name
+                    // never collides.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
                             collect_all_idents_stmt(s, out);
                         }
                     }
@@ -1061,10 +1236,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // fresh short name for an OUTER local can never collide with a
         // name used inside the arrow.
         Expression::ArrowFunctionExpression(ae) => {
-            for p in &ae.params {
-                let FunctionParam::Identifier(id) = p;
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&ae.params, out);
             match &ae.body {
                 ArrowBody::Block(b) => {
                     for s in &b.body {
@@ -1142,6 +1314,70 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
         // A leaf function has no nested function declarations, so this arm
         // is unreachable in practice; leave nested functions untouched.
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => {}
+        // An import declaration's bound names link to a foreign module's
+        // exports — renaming them would break the cross-module contract, so we
+        // never descend into it.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            // Rewrite renamed outer locals used in the heritage operand and
+            // inside each method body. The class's own name is marked
+            // ineligible during collection (never in `map`); each method's
+            // id/params SHADOW outer locals, so they are dropped from the active
+            // map before recursing — mirroring the `Expression::ClassExpression`
+            // arm of `rewrite_uses_expr`.
+            if let Some(sup) = &mut cd.super_class {
+                rewrite_uses_expr(sup, map);
+            }
+            let mut class_inner = map.clone();
+            class_inner.remove(&cd.id.name);
+            for member in &mut cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        let mut inner = class_inner.clone();
+                        if let Some(id) = &m.value.id {
+                            inner.remove(&id.name);
+                        }
+                        for p in &m.value.params {
+                            let id = p.binding_identifier();
+                            inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rewrite_uses_expr(def, &inner);
+                            }
+                        }
+                        for s in &mut m.value.body.body {
+                            rewrite_uses_stmt(s, &inner);
+                        }
+                    }
+                    // A field's computed key + initializer are value positions
+                    // in the class body — rewrite renamed outer locals in them
+                    // with `class_inner`. The field key is a property name, not
+                    // a local, so it is left untouched.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rewrite_uses_expr(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rewrite_uses_expr(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements run at class-def time with
+                    // the class's own name in scope — rewrite renamed outer
+                    // locals in them with `class_inner`.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rewrite_uses_stmt(s, &class_inner);
+                        }
+                    }
+                }
+            }
+        }
         Statement::Tagged(t) => rewrite_uses_tagged(t, map),
     }
 }
@@ -1159,6 +1395,10 @@ fn rewrite_uses_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         }
         TaggedStatement::WhileStatement(ws) => {
             rewrite_uses_expr(&mut ws.test, map);
+            rewrite_uses_stmt(&mut ws.body, map);
+        }
+        TaggedStatement::WithStatement(ws) => {
+            rewrite_uses_expr(&mut ws.object, map);
             rewrite_uses_stmt(&mut ws.body, map);
         }
         TaggedStatement::DoWhileStatement(ds) => {
@@ -1394,8 +1634,16 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 inner.remove(&id.name);
             }
             for p in &fe.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // A default parameter's `right` closes over the enclosing locals
+            // (`function(a = outerLocal){}`); rewrite its uses with the same
+            // shadow-stripped `inner` as the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    rewrite_uses_expr(def, &inner);
+                }
             }
             for s in &mut fe.body.body {
                 rewrite_uses_stmt(s, &inner);
@@ -1426,11 +1674,38 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                             inner.remove(&id.name);
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                            let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rewrite_uses_expr(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             rewrite_uses_stmt(s, &inner);
+                        }
+                    }
+                    // A field's computed key + initializer are value positions;
+                    // rewrite renamed outer locals in them with `class_inner`
+                    // (the class-expression's own name removed). The field key
+                    // is a property name, left untouched.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rewrite_uses_expr(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rewrite_uses_expr(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements run at class-def time with
+                    // the class's own name in scope — rewrite renamed outer
+                    // locals in them with `class_inner`.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rewrite_uses_stmt(s, &class_inner);
                         }
                     }
                 }
@@ -1444,8 +1719,16 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::ArrowFunctionExpression(ae) => {
             let mut inner = map.clone();
             for p in &ae.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression`
+            // arm. An arrow default (`(a = outerLocal) => …`) closes over the
+            // enclosing locals just as the body does.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    rewrite_uses_expr(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
@@ -1711,7 +1994,7 @@ mod tests {
         let _a: RenamePass = Default::default();
         let _b: RenamePass = RenamePass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================
@@ -1804,7 +2087,7 @@ mod tests {
         // The param `val` is renamed; the key `keyName` stays.
         assert_eq!(
             rename_source("function f(val) { return { keyName: val }; }"),
-            "function f(a){return {keyName:a}};"
+            "function f(a){return{keyName:a}};"
         );
     }
 
@@ -1839,7 +2122,7 @@ mod tests {
             rename_source(
                 "function outer(param) { function inner(innerArg) { return innerArg; } return inner(param); }"
             ),
-            "function outer(param){function inner(a){return a};return inner(param)};"
+            "function outer(param){function inner(a){return a}return inner(param)};"
         );
     }
 
@@ -1974,7 +2257,9 @@ mod tests {
             rename_source(
                 "function f(cond) { if (cond) { var hoisted = 1; } return hoisted; }"
             ),
-            "function f(a){if(a){var b=1;}return b};"
+            // The block-final `var b=1` carries no `;` before `}` — the emitter
+            // pops the redundant terminator (closure-emitter 0.58.0).
+            "function f(a){if(a){var b=1}return b};"
         );
     }
 
@@ -1994,5 +2279,263 @@ mod tests {
         };
         let out = emit(&prog, &Sidecar::new(), &mut cv, &opts).expect("emit").code;
         assert_eq!(out, "function f(){var counter=0;return counter+1};");
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.187 PR2a — `with` soundness gate.
+    //
+    // A `with (obj) …` splices `obj` onto the scope chain, so a bare name
+    // in its body can resolve to a property of `obj` at runtime rather than
+    // to the lexical binding the pass sees. Renaming would then be unsound,
+    // so `RenamePass` must bail and return the program unchanged. The bridge
+    // does not yet produce `with` (that is PR2b), so this test hand-builds
+    // the AST to exercise the gate directly.
+    // -------------------------------------------------------------------
+    #[test]
+    fn with_statement_disables_local_renaming() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            BlockStatement, Declaration, Expression, FunctionDeclaration, FunctionParam,
+            Identifier, ProgramItem, Statement, WithStatement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `function f(longParam) { return longParam; }` — a leaf function
+        // whose param `longParam` RenamePass would normally shorten to `a`.
+        let f = FunctionDeclaration {
+            cv: None,
+            id: id("f"),
+            params: vec![FunctionParam::Identifier(id("longParam"))],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("longParam"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        };
+
+        // `with (o) { <f> }`
+        let with = Statement::with_statement(WithStatement {
+            cv: None,
+            object: Expression::Identifier(id("o")),
+            body: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![Statement::Declaration(Declaration::FunctionDeclaration(f))],
+            })),
+        });
+
+        let mut prog = program();
+        prog.body = vec![ProgramItem::Statement(with)];
+
+        let pass = RenamePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename");
+
+        // The gate must fire: nothing renamed, program byte-for-byte identical.
+        assert!(!out.changed, "rename must not change a program containing `with`");
+        assert_eq!(out.program, prog, "program must be returned unchanged");
+        assert!(
+            out.contributions.is_empty(),
+            "no rename contributions when bailing on `with`"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 — default-parameter reference rewriting.
+    //
+    // A default parameter's `right` expression can REFERENCE another param
+    // (`function f(x, y = x){…}`). When rename shortens `x`, the reference in
+    // the default must move with it, or the emitted code reads a name that no
+    // longer exists. The bridge does not yet produce defaults (that is PR2), so
+    // this hand-builds the AST to exercise the rewrite directly.
+    // -------------------------------------------------------------------
+    #[test]
+    fn rewrites_reference_inside_default_parameter() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            AssignmentPattern, BlockStatement, Declaration, Expression, FunctionDeclaration,
+            FunctionParam, Identifier, ProgramItem, Statement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `function f(longX, longY = longX) { return longX; }` — two leaf params
+        // (both long enough to shorten); the second's default reads the first.
+        let f = FunctionDeclaration {
+            cv: None,
+            id: id("f"),
+            params: vec![
+                FunctionParam::Identifier(id("longX")),
+                FunctionParam::AssignmentPattern(AssignmentPattern {
+                    cv: None,
+                    left: id("longY"),
+                    right: Expression::Identifier(id("longX")),
+                }),
+            ],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("longX"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        };
+
+        let mut prog = program();
+        prog.body = vec![ProgramItem::Statement(Statement::Declaration(
+            Declaration::FunctionDeclaration(f),
+        ))];
+
+        let pass = RenamePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename");
+
+        assert!(out.changed, "the two long params should have been renamed");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::FunctionDeclaration(f))) =
+            &out.program.body[0]
+        else {
+            panic!("expected the function declaration back");
+        };
+        // `longX` shortened on the binding …
+        let x_new = f.params[0].binding_identifier().name.clone();
+        assert_ne!(x_new, "longX", "first param should have been shortened");
+        // … and the default's reference to it must track the same new name.
+        match f.params[1].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, x_new,
+                "default `= longX` must be rewritten to the renamed `{x_new}`"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 (security-review regression) — a NESTED arrow's default
+    // that closes over a renamed outer local must be rewritten too. The leaf
+    // function's own defaults were handled, but `rewrite_uses_expr` (the walk
+    // that descends into nested function/arrow values to fix closure-over uses)
+    // originally skipped their param defaults, leaving a stale reference.
+    // -------------------------------------------------------------------
+    #[test]
+    fn rewrites_outer_local_referenced_in_nested_arrow_default() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            ArrowBody, ArrowFunctionExpression, AssignmentPattern, BindingTarget, BlockStatement,
+            Declaration, Expression, FunctionDeclaration, FunctionParam, Identifier, ProgramItem,
+            Statement, VarKind, VariableDeclaration, VariableDeclarator,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `var g = (a = longName) => a;` — the arrow default closes over the
+        // outer param `longName`.
+        let arrow = Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("a"),
+                right: Expression::Identifier(id("longName")),
+            })],
+            body: ArrowBody::Expression(Box::new(Expression::Identifier(id("a")))),
+            is_async: false,
+        });
+        let var_g = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id("g")),
+                init: Some(arrow),
+            }],
+        }));
+
+        // `function outer(longName) { var g = (a = longName) => a; return g; }`
+        // — a leaf (an arrow in a var initializer does NOT disqualify leaf
+        // status), so its param `longName` is renamed everywhere it is read.
+        let outer = FunctionDeclaration {
+            cv: None,
+            id: id("outer"),
+            params: vec![FunctionParam::Identifier(id("longName"))],
+            body: BlockStatement {
+                cv: None,
+                body: vec![
+                    var_g,
+                    Statement::return_statement(ReturnStatement {
+                        cv: None,
+                        argument: Some(Expression::Identifier(id("g"))),
+                    }),
+                ],
+            },
+            generator: false,
+            is_async: false,
+        };
+
+        let mut prog = program();
+        prog.body = vec![ProgramItem::Statement(Statement::Declaration(
+            Declaration::FunctionDeclaration(outer),
+        ))];
+
+        let pass = RenamePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename");
+
+        assert!(out.changed, "`longName` should have been shortened");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::FunctionDeclaration(f))) =
+            &out.program.body[0]
+        else {
+            panic!("expected the outer function back");
+        };
+        let new_name = f.params[0].binding_identifier().name.clone();
+        assert_ne!(new_name, "longName", "outer param should have been shortened");
+        // Dig out the nested arrow's default and confirm it tracks the new name.
+        let Statement::Declaration(Declaration::VariableDeclaration(vd)) = &f.body.body[0] else {
+            panic!("expected the `var g` declaration");
+        };
+        let Some(Expression::ArrowFunctionExpression(ae)) = &vd.declarations[0].init else {
+            panic!("expected the arrow initializer");
+        };
+        match ae.params[0].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, new_name,
+                "nested arrow default `= longName` must track the renamed outer local"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
     }
 }

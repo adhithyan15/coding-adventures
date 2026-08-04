@@ -82,7 +82,7 @@ use vm_core::errors::VMError;
 
 use crate::backend::{Backend, FunctionContext};
 use crate::cache::{JITCache, JITCacheEntry};
-use crate::errors::{DeoptimizerError, JITError, UnspecializableError};
+use crate::errors::{JITError, UnspecializableError};
 use crate::optimizer::CIROptimizer;
 use crate::specialise::specialise;
 
@@ -394,12 +394,11 @@ impl JITCore {
                 !self.cache.contains(&f.name)
                     && !self.unspecializable.contains(&f.name)
                     && self.thresholds.get(&f.type_status)
-                        .map_or(false, |&thresh| {
+                        .is_some_and(|&thresh| {
                             thresh > 0 // FULLY_TYPED compiled eagerly
                                 && counts.get(&f.name).copied().unwrap_or(0) >= thresh
                         })
-            })
-            .map(|f| f.clone())
+            }).cloned()
             .collect();
 
         for fn_ in to_compile {

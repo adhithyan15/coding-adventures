@@ -1,15 +1,17 @@
 module ScaffoldGenerator
     ( ParsedArgs(..)
     , ScaffoldConfig(..)
+    , capabilityManifestContents
     , defaultConfig
     , isKebabCase
+    , isSafeDescription
     , parseArgs
     , runWithArgs
     , toModuleName
     ) where
 
 import Control.Monad (filterM, foldM, forM)
-import Data.Char (isAlphaNum, isLower, toLower, toUpper)
+import Data.Char (isAlphaNum, isControl, toLower, toUpper)
 import Data.List (intercalate, nub, sort)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
@@ -162,6 +164,10 @@ runScaffold cfg = do
                             then do
                                 putStrLn "package type must be 'library' or 'program'"
                                 pure 1
+                            else if not (isSafeDescription (configDescription cfg))
+                                then do
+                                    putStrLn "description must be a single printable line without control characters"
+                                    pure 1
                             else do
                                 registry <- discoverRegistry repoRoot
                                 dependencyClosure <- resolveDependencyClosure registry (configDependsOn cfg)
@@ -342,6 +348,9 @@ generatePackage repoRoot cfg pkgName deps targetDir = do
     writeFile (targetDir </> "CHANGELOG.md") "# Changelog\n\n## 0.1.0\n\n- Initial scaffold.\n"
     writeFile (targetDir </> "BUILD") buildFileContents
     writeFile (targetDir </> "BUILD_windows") "echo \"haskell support not enabled in windows CI yet -- skipping\"\n"
+    writeFile
+        (targetDir </> "required_capabilities.json")
+        (capabilityManifestContents (configPackageType cfg) pkgName)
     writeFile (targetDir </> "cabal.project") (cabalProjectContents relativeDepPaths)
   where
     _ = repoRoot
@@ -506,6 +515,37 @@ buildFileContents :: String
 buildFileContents =
     "if command -v cabal >/dev/null 2>&1; then cabal test all; else echo 'cabal not found -- skipping'; fi\n"
 
+capabilityManifestContents :: String -> String -> String
+capabilityManifestContents packageType pkgName =
+    case packageType of
+        "program" ->
+            unlines
+                [ "{"
+                , "  \"$schema\": \"https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json\","
+                , "  \"version\": 1,"
+                , "  \"package\": \"haskell/" ++ pkgName ++ "\","
+                , "  \"capabilities\": ["
+                , "    {"
+                , "      \"category\": \"stdout\","
+                , "      \"action\": \"write\","
+                , "      \"target\": \"*\","
+                , "      \"justification\": \"Writes the generated program description to standard output.\""
+                , "    }"
+                , "  ],"
+                , "  \"justification\": \"Generated program writes its starter description to standard output and uses no other OS capabilities.\""
+                , "}"
+                ]
+        _ ->
+            unlines
+                [ "{"
+                , "  \"$schema\": \"https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json\","
+                , "  \"version\": 1,"
+                , "  \"package\": \"haskell/" ++ pkgName ++ "\","
+                , "  \"capabilities\": [],"
+                , "  \"justification\": \"Pure computation. No filesystem, network, process, or environment access needed.\""
+                , "}"
+                ]
+
 readmeContents :: ScaffoldConfig -> String -> String -> [String] -> String
 readmeContents cfg pkgName descriptionText dependencyNames =
     unlines
@@ -556,11 +596,24 @@ splitOnComma (char : rest) =
 isKebabCase :: String -> Bool
 isKebabCase [] = False
 isKebabCase (first : rest)
-    | not (isLower first) = False
+    | not (isAsciiLower first) = False
     | otherwise = all validChar rest && lastChar /= '-' && not (hasDoubleDash (first : rest))
   where
-    validChar char = isLower char || isAlphaNum char || char == '-'
+    validChar char = isAsciiLower char || isAsciiDigit char || char == '-'
     lastChar = last (first : rest)
+
+isAsciiLower :: Char -> Bool
+isAsciiLower char = char >= 'a' && char <= 'z'
+
+isAsciiDigit :: Char -> Bool
+isAsciiDigit char = char >= '0' && char <= '9'
+
+isSafeDescription :: String -> Bool
+isSafeDescription = not . any isUnsafeDescriptionChar
+
+isUnsafeDescriptionChar :: Char -> Bool
+isUnsafeDescriptionChar char =
+    isControl char || char == '\x2028' || char == '\x2029'
 
 hasDoubleDash :: String -> Bool
 hasDoubleDash [] = False

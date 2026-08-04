@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.Ed25519.Tests/CodingAdventures.Ed25519.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Include=[CodingAdventures.Ed25519]*"

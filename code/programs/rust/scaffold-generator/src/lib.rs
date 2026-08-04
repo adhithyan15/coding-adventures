@@ -627,11 +627,10 @@ fn read_haskell_deps(pkg_dir: &Path) -> Vec<String> {
             let dep: String = rest.chars()
                 .take_while(|c| c.is_ascii_alphanumeric() || *c == '-')
                 .collect();
-            if !line.contains("name:") && !line.contains("executable") && !line.contains("library") && dep != self_name {
-                if !dep.is_empty() {
+            if !line.contains("name:") && !line.contains("executable") && !line.contains("library") && dep != self_name
+                && !dep.is_empty() {
                     deps.push(dep);
                 }
-            }
         }
     }
     deps

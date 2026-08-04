@@ -23,7 +23,6 @@
 // (up to 90° of sweep) with a cubic Bezier using the standard formula that
 // achieves very low error (< 0.027% of the radius for a full circle).
 
-use trig;
 use point2d::{Point, Rect};
 use bezier2d::CubicBezier;
 
@@ -443,6 +442,9 @@ mod tests {
         (a - b).abs() < EPS
     }
 
+    // Retained as a companion to `approx_eq` for point comparisons in tests;
+    // not every test module uses it.
+    #[allow(dead_code)]
     fn point_approx_eq(a: Point, b: Point) -> bool {
         approx_eq(a.x, b.x) && approx_eq(a.y, b.y)
     }

@@ -1,0 +1,86 @@
+% ============================================================================
+% us-bills — who is on the FRONT of each US paper bill (adj-facts-stdlib, MONEY).
+% ============================================================================
+% The sibling of `us-coins.adj`. That file answers "how many CENTS is this coin
+% worth?"; this one answers the other everyday money question a young learner
+% asks: "WHOSE FACE is on this bill?" Recall is a binding query:
+%
+%     ? bill_portrait(1,   $Who)      % washington
+%     ? bill_portrait(20,  $Who)      % jackson
+%
+% This is a native `table` (ADJ-TABLES): each `row` lowers to a ground relation
+% `bill_portrait(dollars, portrait)` carrying the table's citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the answer WITH its
+% source, on the CPU, with zero model calls, and abstains honestly on an amount
+% that is NOT a printed denomination (it never invents a name). The relation runs
+% both ways: `? bill_portrait($Dollars, lincoln)` recalls the bill Lincoln is on —
+% the five.
+%
+% The KEY is the integer number of dollars (1, 2, 5, 10, 20, 50, 100) and the
+% VALUE is the person's SURNAME as a lowercase atom (washington, jefferson, …),
+% mirroring the coin table's integer-key / lowercase-atom shape so the two money
+% libraries read and compose the same way.
+%
+% ----------------------------------------------------------------------------
+% PROVENANCE — every portrait is byte-quoted from the U.S. Currency Education
+% Program (uscurrency.gov); nothing is asserted from memory.
+% ----------------------------------------------------------------------------
+% Each row's portrait is copied VERBATIM from that note's "Portrait and Vignette"
+% description in the U.S. Currency Education Program's per-note feature sheet
+% (uscurrency.gov — the public education program run jointly by the Federal
+% Reserve Board and the Bureau of Engraving and Printing). `trust authoritative`
+% — this is the U.S. government's own currency-education authority. The per-row
+% byte-quote and its exact URL:
+%
+%   1   → washington  "The $1 note features a portrait of George Washington on the
+%                       front of the note and an image of the Great Seal of the
+%                       United States on the back of the note."
+%       https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/1-1963-present-features-en.pdf
+%   2   → jefferson   "The $2 note features a portrait of Thomas Jefferson on the
+%                       front of the note and a vignette depicting the signing of
+%                       the Declaration of Independence on the back of the note."
+%       https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/2-1976-present-features-en.pdf
+%   5   → lincoln     "The $5 note features a portrait of President Abraham Lincoln
+%                       on the front of the note."
+%       https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/5-1914-1993-features-en.pdf
+%   10  → hamilton    "The $10 note features a portrait of Secretary Hamilton on
+%                       the front of the note and a vignette of the United States
+%                       Treasury Building on the back of the note."
+%       https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/10-2006-present-features-en.pdf
+%   20  → jackson     "The $20 note features a portrait of President Jackson on the
+%                       front of the note and a vignette of the White House on the
+%                       back of the note."
+%       https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/20-2003-present-features-en.pdf
+%   50  → grant       "The $50 note features a portrait of President Grant on the
+%                       front of the note and a vignette of the United States
+%                       Capitol on the back of the note."
+%       https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/50-2004-present-features-en.pdf
+%   100 → franklin    "The $100 note features a portrait of Benjamin Franklin on
+%                       the front of the note and a vignette of Independence Hall
+%                       on the back of the note."
+%       https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/100-2013-present-features-en.pdf
+%
+% ADJ `table` carries ONE provenance envelope per table (per-row provenance is a
+% documented future extension — ADJ-TABLES §6), so the `source`/`locator` below
+% pin the SET of denominations to the Currency Education Program's "Dollars in
+% Detail" guide, which enumerates exactly these seven banknotes; the per-row
+% byte-quotes above pin each individual portrait to its own note's feature sheet.
+% (See ../README.md; ADJ-TABLES.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table bill_portrait {
+    columns dollars, portrait
+
+    row (1, washington)
+    row (2, jefferson)
+    row (5, lincoln)
+    row (10, hamilton)
+    row (20, jackson)
+    row (50, grant)
+    row (100, franklin)
+
+    source "The Federal Reserve Board issues $1, $2, $5, $10, $20, $50, and $100 banknotes."
+    locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/dollars-in-detail-guide-en-2022.pdf"
+    trust authoritative
+}

@@ -2,6 +2,36 @@
 
 All notable changes to the Ruby build tool are documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Discovery now consumes the canonical language registry, excludes
+  specification fixture trees, preserves `programs` package identities, and
+  fails closed on duplicate qualified identities with root-redacted paths and
+  CLI exit code `2`.
+- Resolution now preserves package/program identities and consumes qualified
+  dependencies from selected legacy BUILD `# build-tool: deps=` comments. The
+  shared identity and dependency fixtures cover canonical and legacy paths.
+- Canonical multiline Starlark `BUILD` files now parse and evaluate without a
+  raw-command fallback. The evaluator injects the normalized v1 context,
+  supports nested loaded rule functions and keyword arguments, and extracts
+  validated structured commands deterministically.
+- Once a `BUILD` file is classified as Starlark, parse, load, evaluation,
+  target-selection, and structured-command errors fail closed instead of being
+  downgraded to warnings and reinterpreted as shell lines.
+- Starlark evaluation failures redact the checkout root from CLI diagnostics.
+- The build-tool Gemfile now imports the repository-owned Starlark
+  interpreter's authoritative dependency closure. Clean `bundle exec` source-
+  tree runs load the evaluator without manual `RUBYLIB`, and tests no longer
+  skip when that runtime is unavailable.
+- Lua rockspecs are decoded from raw bytes as strict UTF-8 before dependency
+  parsing. Malformed metadata raises a typed `METADATA_INVALID_UTF8` error with
+  stable package and repository-relative manifest identity.
+- The real CLI maps only that metadata error to exit code 2 and root-redacted
+  stderr. Shared valid and invalid fixtures, literal U+FFFD, and five malformed
+  UTF-8 classes are covered by the Ruby test suite.
+
 ## [0.3.0] - 2026-03-29
 
 ### Added

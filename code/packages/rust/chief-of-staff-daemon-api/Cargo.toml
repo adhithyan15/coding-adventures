@@ -1,0 +1,24 @@
+[package]
+name = "chief-of-staff-daemon-api"
+version = "0.1.0"
+edition = "2021"
+description = "Authenticated WebSocket control API for the D18 Chief daemon"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+coding-adventures-json-parser = { path = "../json-parser" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }
+storage-core = { path = "../storage-core" }
+tcp-runtime = { path = "../tcp-runtime" }
+transport-platform = { path = "../transport-platform" }
+websocket-core = { path = "../websocket-core" }
+websocket-runtime = { path = "../websocket-runtime" }
+
+[dev-dependencies]
+chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
+transport-platform = { path = "../transport-platform" }

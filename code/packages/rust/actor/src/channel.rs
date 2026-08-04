@@ -309,8 +309,8 @@ mod tests {
         }
         let msgs = ch.read(0, 5);
         assert_eq!(msgs.len(), 5);
-        for i in 0..5 {
-            assert_eq!(msgs[i].payload_text(), format!("msg_{}", i));
+        for (i, m) in msgs.iter().enumerate() {
+            assert_eq!(m.payload_text(), format!("msg_{}", i));
         }
     }
 

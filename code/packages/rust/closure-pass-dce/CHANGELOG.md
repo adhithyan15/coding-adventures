@@ -2,6 +2,273 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.30.0] - 2026-07-25
+
+### Added - drop a `void` operator in statement position
+
+`void <expr>;` as an expression statement is simplified, matching the reference
+Closure Compiler at SIMPLE. The `void` operator (ECMAScript §13.5.2) evaluates
+its operand and always yields `undefined`; an expression statement already
+discards its value, so the `void` is redundant:
+
+```text
+  void f();   ->  f();      (impure operand: unwrap, keep the effect)
+  void 0;     ->  removed   (pure operand: nothing observable at all)
+```
+
+Scoped to the statement position only: `var x = void f();`, `return void f()`,
+and `h(void f())` keep the `void` because the `undefined` result is observed
+there. A `void` nested inside a larger discarding expression (`c && void f()`)
+is a separate, narrower transform, not handled here.
+
+## [0.29.0] - 2026-07-17
+
+### Added — bare-identifier self-assignment removal: `x = x;` → (removed)
+
+A statement whose whole expression is a plain `=` assignment between two
+identically-named identifiers is a no-op — it reads the variable `x` and
+writes the same value straight back to the same binding. The reference
+Closure Compiler removes it at `SIMPLE`; this pass now collapses it to an
+`EmptyStatement`, which the existing block/program sweep then drops
+(mirroring the empty-`if` → `;` path).
+
+- `x = x;` → removed; `a = a;` → removed
+- neighbours are untouched (`f(); x = x; g();` → `f(); g();`)
+
+The gate is deliberately narrow, matching Closure byte-for-byte:
+
+- **member self-assign is KEPT** — `o.x = o.x`, `a[i] = a[i]` can trigger a
+  getter/setter, so the assignment is observable and must run;
+- **compound assign is KEPT** — `x += x` is `x = x + x`, not a no-op;
+- **differently-named assign is KEPT** — `x = y` is a real write.
+
+Reading a bare identifier is treated as side-effect-free here, the same
+crate-wide contract the equal-branch / ternary folds rely on (a truly
+undeclared `x` would throw `ReferenceError`, an edge Closure also does not
+model).
+
+## [0.28.0] - 2026-07-16
+
+### Added — extract a side-effecting discriminant from an empty-body switch
+
+The mirror of the 0.27.0 empty-switch *removal*. Same shape — every consequent
+empty, every case test a literal or absent — but the discriminant **has a side
+effect**, so the switch can't simply vanish: its one observable act is
+evaluating the discriminant once. It collapses to a bare expression statement of
+the discriminant, matching the reference Closure Compiler at `SIMPLE`
+byte-for-byte:
+
+- `switch (f()) {}` → `f();`
+- `switch (a.b()) {}` → `a.b();`
+- `switch (x++) {}` → `x++;`
+- `switch (x = y) {}` → `x = y;`
+- `switch (f()) { case 1: }` → `f();` (empty literal-test case)
+- `switch (f()) { default: }` → `f();`
+
+**Scope — a new `is_terminal_impure_expr` gate.** Only a discriminant Closure
+leaves AS-IS in statement position is extracted: a **call**, an **assignment**,
+or an **update** (`++`/`--`) — each always impure and already in minimal
+statement form. A discriminant Closure *further* simplifies once extracted is
+**declined** (the switch is kept, no regression), because emitting the raw form
+would diverge and reproducing the simplified form needs a separate
+"remove useless code in statement position" pass:
+
+- `switch (f() ? a : b) {}` → Closure `f();` (pure branches dropped) — declined
+- `switch (f().x) {}` → Closure `f();` (pure member read dropped) — declined
+- `switch (-f()) {}` → Closure `f();` (pure unary dropped) — declined
+- `switch (g(), h()) {}` → Closure `g(); h();` (sequence split) — declined
+
+A case test with its own side effect (`switch (f()) { case g(): }`) also
+declines: `all_tests_pure_or_none` is false, so — as with the removal above —
+the switch is kept rather than dropping the test's effect.
+
+**Statement-start safety.** Extraction moves the discriminant to statement-start
+position, so it also declines (via `leftmost_is_object_literal`) when the
+discriminant's leftmost token is an object literal — `switch (({}).f()) {}` is
+kept, because the extracted `{}.f();` would begin with a `{` that opens a block
+and mis-parses. (The underlying emitter gap — no statement-start parens for a
+compound expression whose leftmost token is `{` — is tracked as a separate fix;
+once it lands this guard can be relaxed.)
+
+Additive; MINOR bump 0.27.0 → 0.28.0.
+
+## [0.27.0] - 2026-07-16
+
+### Changed — empty-switch removal: broaden the DISCRIMINANT gate to any side-effect-free expression
+
+The gap-014 step-2 empty-switch elimination previously required the discriminant
+to be a **leaf literal** (`is_pure_leaf`). The reference Closure Compiler removes
+an otherwise-empty switch for *any* side-effect-free discriminant, so this
+release broadens the discriminant gate to `is_side_effect_free` — closing a batch
+of oracle divergences where closurec kept a switch Closure dropped:
+
+- `switch (x) {}` → removed (bare identifier read)
+- `switch (a.b) {}` → removed (pure member read)
+- `switch (a && b) {}` → removed (pure logical)
+- `switch (!x) {}` → removed (pure unary)
+- `switch (typeof x) {}` → removed
+
+The two gates are deliberately **asymmetric**, mirroring Closure byte-for-byte:
+
+- The **discriminant** now only needs to be side-effect-free.
+- Each case **test**, however, still must be a literal (`is_pure_leaf`) or absent
+  (`default:`). Closure *keeps* a switch whose case test is a non-literal even
+  when that test is itself side-effect-free — `switch (x) { case y: }` and
+  `switch (x) { case a.b: case c: }` survive, while `switch (x) { case 1: case 2: }`
+  and `switch (x) { default: }` drop. We match that exactly rather than removing
+  more (which would diverge).
+
+Also generalised the "empty consequent" check: a consequent counts as empty when
+**every statement in it is itself empty** (via `statement_is_empty`), not only
+when the consequent list is literally empty. So `switch (x) { case 1: {} }` — a
+case whose only body is an empty block — now drops too (oracle: `→` removed).
+
+**Soundness.** The switch is removed only when evaluating the discriminant and
+every (literal) case test has no observable side effect *and* no case runs any
+statement — so the whole construct is a verified no-op. A side-EFFECTING
+discriminant such as `switch (f()) {}` is **not** side-effect-free, so this path
+declines and keeps the switch intact (Closure instead extracts the discriminant
+to `f();` via a separate transform we do not perform here — declining avoids
+dropping the call, so there is no unsound removal and no regression). Step-4
+constant-discriminant collapse is untouched: it still requires a literal
+discriminant (`is_pure_leaf`) to compile-time evaluate strict-equality.
+
+Additive behavior-narrowing to match the oracle; MINOR bump 0.26.0 → 0.27.0.
+
+## [0.26.0] - 2026-07-15
+
+### Added — empty-`if` with a side-effecting **call** test → expression statement
+
+The impure twin of the 0.25.0 empty-`if` removal. When both branches of an `if`
+are empty but the test **has** a side effect, the `if` wrapper is dead yet the
+test must still run, so it survives as an expression statement:
+
+- `if(f()){}` → `f();`
+- `if(f()){}else{}` → `f();`
+- `if(a.b()){}` → `a.b();`
+- `if(f(1,2)){}` → `f(1,2);`
+
+Verified byte-identical against the reference Closure Compiler (`SIMPLE`). The
+two empty-`if` guards are mutually exclusive: a side-effect-free test is *removed*
+(0.25.0), a side-effecting one is *kept as its test* (this release).
+
+**Scope: the test must be a plain `CallExpression`.** As an expression statement
+a bare call is already Closure's final form, so the rewrite is exact. Other
+impure tests receive *further* simplifications that are separate transforms, so
+they deliberately decline here rather than emit a non-canonical intermediate:
+
+- `!f()` — Closure drops the discarded `!` (→ `f();`);
+- `a = b` — dead-assignment removal may delete it entirely;
+- `a, f()` — the sequence is split into statements (`a;f();`);
+- `new F()` — emitted `new F` (no parens) in statement position.
+
+A non-empty branch is also out of scope: `if(f()){g()}` → `f()&&g()` is the
+`if`→logical rewrite, a different arc.
+
+## [0.25.0] - 2026-07-15
+
+### Added — empty-`if` elimination (test side-effect-free)
+
+`dce_statement` now drops an `if` statement whose consequent is empty AND whose
+alternate is absent-or-empty AND whose test is **side-effect-free**: `if(x){}`,
+`if(x.y){}`, `if(x[k]){}`, `if(a&&b){}`, `if(typeof x){}`, `if(!x){}`,
+`if(x){}else{}` all collapse to `;` (which the block/program empty-statement
+sweep then removes), matching the reference Closure Compiler. When either branch
+does real work, or the test may have side effects (`if(f()){}`, `if(x++){}`), the
+`if` is kept — the "keep the test as an expression statement" rewrite
+(`if(f()){}`→`f();`) is a deliberate follow-up, and switch elimination for a
+side-effect-free-but-non-leaf discriminant is a separate slice.
+
+A new `is_side_effect_free` predicate backs the decision: identifiers, `this`,
+literals, and property reads / unary (non-`delete`) / binary / logical /
+conditional expressions built from side-effect-free parts are pure; calls,
+`new`, assignment, `++`/`--`, `delete`, `yield`, `await`, tagged templates,
+dynamic `import()`, and (conservatively) the comma operator are not. Member
+access is pure only when its object (and computed key) are pure, so `f().y` is
+correctly excluded. Safe-by-construction: anything not positively known pure is
+never removed.
+
+## [0.24.0] - 2026-07-15
+
+### Added — CLOC12.195: strip stray top-level `EmptyStatement`s
+
+`dce_program` now sweeps bare `EmptyStatement`s (`;`) out of the **program body**,
+mirroring the sweep `dce_block_statement` already performs on block bodies. An
+empty statement at statement-list position is a pure no-op, so removing it is
+byte-safe. These arise from a hand-written `;`, from `constant-fold` /
+`fold-control-flow` folding `if (false) …` / `while (false) …` to an
+`EmptyStatement`, and — new in this cycle — from the trailing `;` a flattened
+block leaves behind (`g(0);{g(1)};g(2)` → `g(0);g(1);;g(2)` → `g(0);g(1);g(2)`),
+closing the CLOC12.194 residual. Verified byte-identical to the reference Closure
+Compiler: `;`→removed, `;;;`→removed, `g(0);;g(1)`→`g(0);g(1)`, `;g(1)`→`g(1)`,
+`if(false){g(1)}`→removed. A `for (…) ;` / `if (c) ;` empty *substatement* is a
+loop/if body, NOT a statement-list member, so it never reaches this sweep and
+stays intact — exactly as Closure keeps it. Adds an `is_empty_program_item`
+predicate and records a `removed-empty-statement` deletion (tombstoning each
+swept span for `--correlation_vector`). Additive; MINOR bump 0.23.0 → 0.24.0.
+
+## [0.23.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration rebuild clones the export; the removability predicate treats an export as live
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+rebuild clones the export; the removability predicate treats an export as live. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.22.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant: the
+rebuild clones the import unchanged, and the "is this statement removable"
+predicate treats an import as a live, side-effecting binding (never dead).
+
+## [0.21.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+`dce_statement` now rebuilds a `with` statement with a DCE'd object expression
+and body, and the cv-extraction match handles the new variant. Picks up
+javascript-ast 0.38.0.
+
+## [0.20.17] - 2026-07-11
+
+### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arm
+
+The object-literal key-rebuild match gains a `PropertyKey::PrivateName` arm that
+passes the key through unchanged (a private name never occurs in an object
+literal, but the match must stay exhaustive after `javascript-ast` 0.36.0 added
+the variant). PATCH.
+
+## [0.20.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms (class expression + declaration) running `dce_block_statement` over the block, mirroring the method body.
+
+## [0.20.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` arms (in both
+the class-expression and class-declaration member loops) that run `dce_expression`
+over the field's initializer and computed key, mirroring the `Method` arm.
+Reachable once the CLOC12.175 PR2 bridge produces the node.
+
+## [0.20.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at each of this crate's exhaustive `Declaration` match sites: the transform
+(`dce_class_declaration` runs DCE inside the heritage operand and method bodies,
+mirroring `dce_class`), and two conservative predicates — `tail_is_safe_to_truncate`
+and `block_is_scope_safe_to_flatten` both return `false` for a class declaration
+(a name-binding, block-scoped node, like a function declaration; preserving it is
+never a miscompile). Reachable once the CLOC12.174 PR2 bridge produces the node.
+
 ## [0.20.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

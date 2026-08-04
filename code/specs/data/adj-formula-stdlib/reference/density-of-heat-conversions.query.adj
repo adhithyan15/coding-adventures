@@ -1,0 +1,27 @@
+% ============================================================================
+% density-of-heat-conversions.query.adj — worked lookups over the NIST density-of-heat →
+% joule-per-square-metre table.
+% ============================================================================
+% The shape a consumer produces to convert a density of heat (an energy-per-area dose, e.g. an
+% insolation reading in langleys) into SI: it `import`s the grounded table and asks the engine to bind
+% the factor. No arithmetic and no factor is stated by the consumer; the engine returns the cell WITH
+% the table's NIST citation as its proof, on the CPU.
+%
+%   ? density_of_heat_to_joule_per_square_metre(calorie_th_per_square_centimetre, $v)   % 41840
+%   ? density_of_heat_to_joule_per_square_metre(langley, $v)                            % 41840
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram), NOT
+% a density-of-heat unit — so it is caught rather than silently mis-converted:
+%
+%   ? density_of_heat_to_joule_per_square_metre(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli density-of-heat-conversions.query.adj
+% ============================================================================
+
+import "density-of-heat-conversions.adj"
+
+? density_of_heat_to_joule_per_square_metre(calorie_th_per_square_centimetre, $v)   % expect 41840  (exact NIST SP 811 B.9 factor)
+? density_of_heat_to_joule_per_square_metre(langley, $v)                            % expect 41840  (exact NIST SP 811 B.9 factor; langley = 1 calth/cm2)
+? density_of_heat_to_joule_per_square_metre(pound, $v)                              % expect abstain (mass unit, wrong dimension)

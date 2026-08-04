@@ -5,8 +5,10 @@
 //! the typed-AST parse and closurec fell back to WHITESPACE_ONLY (zero
 //! optimization). This fixture is the end-to-end oracle proving every SIMPLE
 //! pass now runs inside the for-in body and recurses into its right-hand
-//! expression: `log(1)` is inlined to `report(1)`, `1 + 2` folds to `3`, the
-//! loop is preserved, and `after()` stays reachable.
+//! expression: `1 + 2` folds to `3`, the loop is preserved, and `after()`
+//! stays reachable. `function log` is KEPT and `log(1)` stays a call — SIMPLE
+//! is open-world and never inlines or deletes an observable top-level name;
+//! that inline runs only at ADVANCED.
 
 use std::process::Command;
 
@@ -49,10 +51,12 @@ fn simple_for_in_fixture_matches_expected_stdout() {
 /// Regression guard: the output must NOT be the WHITESPACE_ONLY fallback. If
 /// `for`-`in` ever stops being representable in the typed AST, the fixture
 /// above would still "pass" against a regenerated expected file, so we
-/// additionally assert that an optimization that can ONLY come from the typed
-/// pipeline (the `log` -> `report` inline) is present, the original
-/// `function log` declaration is gone, and the statement after the loop
-/// (`after()`) survives — proving a for-in is treated as non-terminating.
+/// additionally assert an optimization that can ONLY come from the typed
+/// pipeline: the `1 + 2` inside the loop body is constant-folded to `3`
+/// (WHITESPACE_ONLY leaves it verbatim). We also assert the statement after
+/// the loop (`after()`) survives — proving a for-in is treated as
+/// non-terminating — and that `function log` is KEPT, since open-world SIMPLE
+/// must not inline or delete an observable top-level name.
 #[test]
 fn simple_for_in_did_not_fall_back_to_whitespace_only() {
     let out = Command::new(BINARY)
@@ -62,18 +66,23 @@ fn simple_for_in_did_not_fall_back_to_whitespace_only() {
     let actual = String::from_utf8_lossy(&out.stdout);
 
     assert!(
-        actual.contains("report(1)"),
-        "expected the single-use `log` to be inlined into `report(1)` \
+        actual.contains("x=3"),
+        "expected `1 + 2` in the loop body to be constant-folded to `3` \
          (proving the typed pipeline ran, not the whitespace fallback); \
          got:\n{actual}",
     );
     assert!(
-        !actual.contains("function log"),
-        "expected the inlined `log` declaration to be removed; got:\n{actual}",
+        !actual.contains("1 + 2") && !actual.contains("1+2"),
+        "expected `1 + 2` to have been folded away; got:\n{actual}",
     );
     assert!(
         actual.contains("after()"),
         "expected the statement after the for-in loop to remain reachable; \
          got:\n{actual}",
+    );
+    assert!(
+        actual.contains("function log"),
+        "expected the top-level `log` declaration to be KEPT at open-world \
+         SIMPLE (never inlined/deleted); got:\n{actual}",
     );
 }

@@ -1,7 +1,9 @@
-import pytest
+import math
+import sys
 
-from trig import PI
+import pytest
 from coding_adventures_wave import Wave
+from trig import PI
 
 
 class TestWaveConstruction:
@@ -37,6 +39,27 @@ class TestWaveValidation:
         with pytest.raises(ValueError, match="Frequency must be > 0"):
             Wave(amplitude=1.0, frequency=-5.0)
 
+    @pytest.mark.parametrize(
+        ("amplitude", "frequency", "phase"),
+        [
+            (math.nan, 1.0, 0.0),
+            (math.inf, 1.0, 0.0),
+            (1.0, math.nan, 0.0),
+            (1.0, math.inf, 0.0),
+            (1.0, 1.0, math.nan),
+            (1.0, 1.0, math.inf),
+        ],
+    )
+    def test_nonfinite_parameters_raise(
+        self, amplitude: float, frequency: float, phase: float
+    ) -> None:
+        with pytest.raises(ValueError, match="finite"):
+            Wave(amplitude=amplitude, frequency=frequency, phase=phase)
+
+    def test_angular_frequency_overflow_raises(self) -> None:
+        with pytest.raises(ValueError, match="Angular frequency"):
+            Wave(amplitude=1.0, frequency=sys.float_info.max)
+
 
 class TestDerivedQuantities:
     def test_period(self) -> None:
@@ -69,6 +92,41 @@ class TestEvaluate:
         w = Wave(amplitude=2.5, frequency=3.0, phase=0.7)
         t = 0.137
         assert w.evaluate(t) == pytest.approx(w.evaluate(t + w.period()), abs=1e-10)
+
+    @pytest.mark.parametrize("time", [math.nan, math.inf, -math.inf])
+    def test_nonfinite_time_raises(self, time: float) -> None:
+        w = Wave(amplitude=0.0, frequency=1.0)
+        with pytest.raises(ValueError, match="Time must be finite"):
+            w.evaluate(time)
+
+    def test_extreme_inputs_stay_finite_and_bounded(self) -> None:
+        zero = Wave(
+            amplitude=0.0,
+            frequency=1e300,
+            phase=PI / 2,
+        )
+        result = zero.evaluate(sys.float_info.max)
+        assert result == 0.0
+        assert math.copysign(1.0, result) == 1.0
+
+        wave = Wave(
+            amplitude=sys.float_info.max,
+            frequency=1e300,
+            phase=PI / 2,
+        )
+        result = wave.evaluate(sys.float_info.max)
+        assert math.isfinite(result)
+        assert abs(result) <= sys.float_info.max
+
+        subnormal = Wave(
+            amplitude=1.0,
+            frequency=float.fromhex("0x0.0000000000001p-1022"),
+            phase=sys.float_info.max,
+        )
+        assert math.isinf(subnormal.period())
+        result = subnormal.evaluate(sys.float_info.max)
+        assert math.isfinite(result)
+        assert abs(result) <= 1.0
 
 
 class TestPhaseOffset:

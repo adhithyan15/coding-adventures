@@ -1,0 +1,83 @@
+% ============================================================================
+% angle-pairs — the defining condition of each named PAIR-of-angles relationship
+% (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A geometry facts library: given the NAME of a relationship between TWO angles,
+% recall the condition that defines it — "complementary angles sum to 90°,
+% supplementary angles sum to 180°." Recall is a binding query:
+%
+%     ? angle_pair(complementary, $Cond)     % sum_to_90
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `angle_pair(relationship, condition)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% condition WITH its source, on the CPU, with zero model calls, and abstains on a
+% name that is not a pair-relationship in the table.
+%
+% ---------------------------------------------------------------------------
+% DISTINCT FROM angle-types.  A sibling library (geometry/angle-types) classifies
+% a SINGLE angle by its own measure — acute (< 90°), right (= 90°), obtuse
+% (> 90°).  THIS library is about a RELATIONSHIP BETWEEN TWO angles: whether the
+% pair is complementary, supplementary, vertical, or adjacent.  `acute` is a
+% single-angle TYPE, not a pair relationship, so it is deliberately ABSENT here —
+% asking `? angle_pair(acute, $C)` abstains.  Do not confuse the two tables: one
+% answers "what kind of angle is this?", the other "how are these two angles
+% related?".
+% ---------------------------------------------------------------------------
+%
+% Truth table (relationship -> defining condition, snake_case atom):
+%
+%     relationship    | condition               | in words
+%     ----------------+-------------------------+-------------------------------
+%     complementary   | sum_to_90               | the two measures sum to 90°
+%     supplementary   | sum_to_180              | the two measures sum to 180°
+%     vertical        | equal                   | opposite angles at intersecting
+%                     |                         |   lines; they are equal
+%     adjacent        | share_side_and_vertex   | share a common vertex and one
+%                     |                         |   common side
+%
+% Backward query.  The relation runs in reverse — given a condition, recall which
+% relationship it defines:
+%
+%     ? angle_pair($Rel, sum_to_180)         % supplementary
+%
+% Abstention property.  The table is CLOSED: only the four grounded pair
+% relationships resolve.  A single-angle type (`acute`, `right`, `obtuse`), an
+% unrelated word, or a relationship the source does not define (e.g. an
+% ungrounded `explementary`) binds nothing and the engine abstains — it never
+% fabricates a condition.
+%
+% ---------------------------------------------------------------------------
+% Provenance.  Every relationship→condition pair below is copied from ONE primary
+% teaching reference — the OpenStax "Contemporary Mathematics" chapter 10.2
+% "Angles", hosted on Mathematics LibreTexts — which defines all four pair
+% relationships on a single page.  The verbatim defining sentence for each row is
+% quoted in its inline `%` span comment; the representative sentence in the
+% `source` envelope is the complementary definition, and the `locator` is that
+% one page.  `trust consensus` — Mathematics LibreTexts is a widely used,
+% peer-reviewed open textbook platform (a consensus reference), not a primary
+% research artifact, so it earns the consensus tier rather than authoritative.
+% Nothing here is asserted from memory; the atoms encode the source's OWN wording
+% ("sum of their measures equals 90°" -> sum_to_90; "one common side ... vertex"
+% -> share_side_and_vertex).  (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table angle_pair {
+    columns relationship, condition
+
+    % "Two angles are complementary if the sum of their measures equals 90°."
+    row (complementary, sum_to_90)
+    % "Two angles are supplementary if the sum of their measures equals 180°."
+    row (supplementary, sum_to_180)
+    % "When two lines intersect, the opposite angles are called vertical angles,
+    %  and vertical angles have equal measure."
+    row (vertical, equal)
+    % "Two angles with the same starting point or vertex and one common side are
+    %  called adjacent angles."
+    row (adjacent, share_side_and_vertex)
+
+    source "Two angles are complementary if the sum of their measures equals 90°."
+    locator "https://math.libretexts.org/Bookshelves/Applied_Mathematics/Contemporary_Mathematics_(OpenStax)/10:__Geometry/10.02:_Angles"
+    trust consensus
+}

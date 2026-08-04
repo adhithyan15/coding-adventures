@@ -1,0 +1,15 @@
+name: coding_adventures_image_point_ops
+version: 0.1.0
+description: IMG03 per-pixel image operations over RGBA8 PixelContainer data in pure Dart.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_pixel_container:
+    path: ../pixel-container
+
+dev_dependencies:
+  test: ^1.25.0

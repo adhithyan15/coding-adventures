@@ -34,7 +34,7 @@ pub fn substitute(text: &str, old: &str, new: &str, instance: Option<usize>) -> 
     }
     match instance {
         None => text.replace(old, new),
-        Some(k) if k == 0 => {
+        Some(0) => {
             // 1-based; instance 0 is meaningless. Match Excel's behaviour of
             // returning text unchanged (Excel returns #VALUE!, but in the
             // typical Rust API style we treat 0 as "no match wanted").

@@ -1,0 +1,25 @@
+% ============================================================================
+% thermal-conductivity-conversions.query.adj — worked lookups over the NIST thermal-conductivity →
+% watt-per-metre-kelvin table.
+% ============================================================================
+% The shape a consumer produces to convert a thermal conductivity given in a non-SI unit into SI: it
+% `import`s the grounded table and asks the engine to bind the factor. No arithmetic and no factor is
+% stated by the consumer; the engine returns the cell WITH the table's NIST citation as its proof, on
+% the CPU.
+%
+%   ? thermal_conductivity_to_watt_per_metre_kelvin(calorie_th_per_centimetre_second_celsius, $v)   % 418.4
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram), NOT
+% a thermal-conductivity unit — so it is caught rather than silently mis-converted:
+%
+%   ? thermal_conductivity_to_watt_per_metre_kelvin(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli thermal-conductivity-conversions.query.adj
+% ============================================================================
+
+import "thermal-conductivity-conversions.adj"
+
+? thermal_conductivity_to_watt_per_metre_kelvin(calorie_th_per_centimetre_second_celsius, $v)   % expect 418.4  (exact NIST SP 811 B.9 factor)
+? thermal_conductivity_to_watt_per_metre_kelvin(pound, $v)                                      % expect abstain (mass unit, wrong dimension)

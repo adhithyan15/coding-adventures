@@ -1,0 +1,639 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "path": [
+    {
+      "id": "KA-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "KA-C01-namaskara"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "KA-C01-dhanyavada"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-003",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "KA-C01-haudu",
+        "KA-C01-illa",
+        "KA-C01-sari"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-004",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C02-hesaru",
+        "KA-C02-nanna",
+        "KA-C02-nanna-hesaru",
+        "KA-C02-niinu-niivu",
+        "KA-C02-enu",
+        "KA-C02-nimma-hesaru-enu",
+        "KA-C02-santosha"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-005",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C03-hege"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-006",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C03-naanu"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-007",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C03-niivu-hegiddiira",
+        "KA-C03-cennaagi"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-008",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "KA-C03-paravaagilla"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-009",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "KA-C04-hoogu",
+        "KA-C04-hoogi-baruttene",
+        "KA-C04-naale-sigona",
+        "KA-C04-matte-sigona"
+      ],
+      "before": [
+        "KA-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-010",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C05-maatanaadu",
+        "KA-C05-iru",
+        "KA-C05-kelasa-maadu",
+        "KA-C05-naanu-kannada-maatanaaduttene",
+        "KA-C05-practice",
+        "KA-C06-dative-ge",
+        "KA-C06-dative-stacking",
+        "KA-C06-dative-subject"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-010-LANGUAGE-SPECIFIC",
+        "KA-EXT-010-CONSOLIDATION",
+        "KA-EXT-010-GRAMMAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-011",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "KA-C07-numbers-1-5",
+        "KA-C07-numbers-6-10"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-011-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-012",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "KA-C08-dayavittu",
+        "KA-C09-kshamisi"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-013",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "KA-C10-vaara"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-014",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "KA-C11-bannagalu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-015",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C12-kutumba"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-016",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C13-dehada-bhagagalu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-017",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "KA-C14-kaalagalu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-018",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "KA-C15-niiru-akki"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-019",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "KA-C16-tingalugalu",
+        "KA-C17-madhyaahna-madhyaraatri",
+        "KA-C18-gante"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-020",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C19-vayassu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-021",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "KA-C20-hannondu-ippattu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-022",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "KA-C20-havamana"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-022-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-023",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "KA-C21-naayi-bekku",
+        "KA-C22-hasiru-haladi"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-023-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-024",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "KA-C23-dina",
+        "KA-C24-ratri",
+        "KA-C25-shubha-ratri",
+        "KA-C26-belagge",
+        "KA-C27-sanje",
+        "KA-C28-aparahna",
+        "KA-C29-shubhodaya",
+        "KA-C30-shubha-sanje",
+        "KA-C31-shubha-madhyahna"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-024-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "KA-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "KA-PATH-002",
+        "KA-PATH-008"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "KA-PATH-003"
+      ],
+      "omits": [
+        "RESPONSE-YESNO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "KA-PATH-004",
+        "KA-PATH-006",
+        "KA-PATH-010",
+        "KA-PATH-015",
+        "KA-PATH-020"
+      ],
+      "omits": [
+        "PRONOUN-ME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "KA-PATH-005",
+        "KA-PATH-007",
+        "KA-PATH-016"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "KA-PATH-012",
+        "KA-PATH-018"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "KA-PATH-009"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON"
+      ],
+      "relocates": {
+        "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+      }
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "KA-PATH-013",
+        "KA-PATH-017",
+        "KA-PATH-019",
+        "KA-PATH-022",
+        "KA-PATH-024"
+      ],
+      "omits": [
+        "GREETING-DAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "KA-PATH-014",
+        "KA-PATH-023"
+      ],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "KA-PATH-011",
+        "KA-PATH-021"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "KA-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C04-hoogu"
+      ]
+    },
+    {
+      "id": "KA-EXT-010-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C05-maatanaadu",
+        "KA-C05-iru",
+        "KA-C05-kelasa-maadu",
+        "KA-C05-naanu-kannada-maatanaaduttene",
+        "KA-C06-dative-ge",
+        "KA-C06-dative-subject"
+      ]
+    },
+    {
+      "id": "KA-EXT-010-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Kannada material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C05-practice"
+      ]
+    },
+    {
+      "id": "KA-EXT-010-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Kannada-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C06-dative-stacking"
+      ]
+    },
+    {
+      "id": "KA-EXT-011-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C07-numbers-1-5",
+        "KA-C07-numbers-6-10"
+      ]
+    },
+    {
+      "id": "KA-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C10-vaara"
+      ]
+    },
+    {
+      "id": "KA-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C11-bannagalu"
+      ]
+    },
+    {
+      "id": "KA-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C12-kutumba"
+      ]
+    },
+    {
+      "id": "KA-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C13-dehada-bhagagalu"
+      ]
+    },
+    {
+      "id": "KA-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C14-kaalagalu"
+      ]
+    },
+    {
+      "id": "KA-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C15-niiru-akki"
+      ]
+    },
+    {
+      "id": "KA-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C16-tingalugalu",
+        "KA-C17-madhyaahna-madhyaraatri",
+        "KA-C18-gante"
+      ]
+    },
+    {
+      "id": "KA-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C19-vayassu"
+      ]
+    },
+    {
+      "id": "KA-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C20-hannondu-ippattu"
+      ]
+    },
+    {
+      "id": "KA-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C20-havamana"
+      ]
+    },
+    {
+      "id": "KA-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C21-naayi-bekku",
+        "KA-C22-hasiru-haladi"
+      ]
+    },
+    {
+      "id": "KA-EXT-024-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Kannada material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C25-shubha-ratri"
+      ]
+    },
+    {
+      "id": "KA-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Kannada script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C01-namaskara"
+      ]
+    }
+  ]
+}

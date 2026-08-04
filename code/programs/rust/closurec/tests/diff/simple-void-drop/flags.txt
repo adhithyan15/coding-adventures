@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE
+--js
+tests/diff/simple-void-drop/input/a.js

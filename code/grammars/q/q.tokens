@@ -1,0 +1,256 @@
+# Q Token Grammar
+# ============================================================================
+#
+# Tokenizes the historical-core subset of Q (kdb+'s scripting language) fixed
+# by MA-11a (code/specs/MA11-q-language.md §4): dense numeric arrays, the
+# primitive verbs `+ - * % ! , # _ & | ~ = < > <= >= <>`, the three adverbs
+# `'` (each) `/` (over/reduce) `\` (scan), `name:expr` assignment,
+# parenthesised grouping and explicit `(a;b;c)` list literals, `{[x;y] ...}`
+# function-literal delimiters, and `/`-to-end-of-line comments.
+#
+# ============================================================================
+# THE ONE MISTAKE TO NOT MAKE (MA11 §4 / §1)
+#
+# Q is APL/J's grandchild, but it is NOT a thin respelling of either one --
+# MA11 §1 spends its whole section establishing this ("a real second
+# frontend", not an "octave-to-semantic-ir thin wrapper"). Concretely, do NOT
+# assume a glyph's APL/J meaning carries over unchanged. Two traps this file
+# specifically guards against:
+#
+#   - Q spells NOT-EQUAL `<>` -- never `~=` (that's MATLAB/Scilab's spelling)
+#     and never `#` (which in Q is COUNT/TAKE, not comparison at all). MA11
+#     §4 says this explicitly because it's the single easiest thing to get
+#     wrong by pattern-matching against a sibling grammar file instead of
+#     reading the spec's own primitive-verb table.
+#   - Q spells a negative NUMBER with an ordinary leading `-`, unlike J's
+#     leading-underscore convention (MA06 §4, `_5`). This is not a free
+#     choice this crate is making the way MA06 did for J -- MA11 §3 bullet 2
+#     documents it as Q's own actual, real disambiguation rule, and it is
+#     the reason this crate cannot be "just another `.tokens` file" (see the
+#     whitespace-sensitivity note below).
+#
+# ============================================================================
+# WHITESPACE IS PART OF THIS GRAMMAR, NOT JUST A SEPARATOR (MA11 §3 bullet 2)
+#
+# Every other `.tokens` file in this family (apl.tokens, j.tokens,
+# scilab.tokens, ...) treats whitespace as pure separator noise: two tokens
+# either touch or they don't, and either way the same characters produce the
+# same token. Q's real lexer breaks that assumption in exactly two places,
+# both driven by *whether whitespace is present at a specific position*
+# rather than by which characters are present:
+#
+#   1. `2 -1` (space before `-`, none after) must tokenize as the two-element
+#      strand NUMBER(2) NUMBER(-1); `2 - 1` (space on both sides) must
+#      tokenize as NUMBER(2) MINUS NUMBER(1); `2-1` (no spaces at all) must
+#      ALSO tokenize as NUMBER(2) MINUS NUMBER(1) (ordinary glued
+#      subtraction, matching real q's own behavior -- this is why the rule
+#      is not simply "no space after the minus").
+#   2. `/` opens a comment-to-end-of-line when it is preceded by whitespace
+#      (or starts a line); it is the REDUCE adverb when it directly follows
+#      a verb/noun character with no preceding space (`+/x`).
+#
+# Rust's `regex` crate (what `GrammarLexer` compiles every pattern below
+# with -- see `code/packages/rust/grammar-tools/src/token_grammar.rs`'s own
+# `validate_token_grammar`, which calls `regex::Regex::new` directly) has NO
+# lookaround support: no `(?<=...)`, no `(?=...)`. So "was there whitespace
+# immediately before this character" is NOT something any pattern in THIS
+# file can express, no matter how the regex is written. This is a structural
+# limit of the shared engine, not a gap this file's author overlooked.
+#
+# There is exactly one place in this repo that already solves a
+# "same character, two token meanings, disambiguated by adjacent context"
+# problem the token-regex layer can't express on its own:
+# `code/packages/rust/scilab-lexer/src/lib.rs`'s `protect_quotes` /
+# `restore_placeholders` pair, which resolves Scilab's `'`
+# transpose-vs-string ambiguity with a **pre-tokenize hook** (rewrites the
+# raw source text before `GrammarLexer` ever sees it) and a
+# **post-tokenize hook** (patches the resulting `Vec<Token>` afterward).
+# `q-lexer/src/lib.rs` reuses that exact strategy, independently
+# reimplemented for these two, different disambiguations:
+#
+#   - The `/`-comment-vs-REDUCE-adverb rule is resolved by a *pre-tokenize*
+#     hook, because comment TEXT is arbitrary and need not lex successfully
+#     as Q code at all -- the hook must run before the regex tokenizer ever
+#     sees it, or an unrelated character inside a comment could make the
+#     whole file fail to tokenize.
+#   - The `-`-vs-negative-literal rule is resolved by a *post-tokenize*
+#     hook, because deciding it requires knowing the TYPE of the previously
+#     emitted token (is it a NUMBER/NAME/closing bracket -- i.e. does it
+#     complete a noun the way `2` does in `2-1`?), which is exactly the kind
+#     of already-classified information only the token stream carries.
+#
+# See `q-lexer/src/lib.rs`'s own doc comments for the exact algorithms
+# (`strip_slash_comments` and `fold_negative_number_literals`). Nothing in
+# THIS file encodes either rule -- by design, per this repo's own
+# declarative-grammar-first philosophy, everything that CAN live here does;
+# these two rules are the one place in this crate where that isn't possible,
+# and that boundary is deliberate and documented, not an oversight.
+#
+# @version 1
+
+# ============================================================================
+# SECTION 1: Two-character comparison digraphs, declared before any
+# single-character token they could be confused with (this repo's
+# longest-match-first lexer convention -- see j.tokens SECTION 1 for the
+# precedent this generalizes). `<=`/`>=`/`<>` must all precede the bare
+# `<`/`>` tokens in SECTION 2, or the bare 1-character pattern would win the
+# first-match race and strand a stray `=`/`>` behind it.
+# ============================================================================
+
+LE = "<="
+GE = ">="
+
+# Q's own not-equal spelling (MA11 §4) -- NOT `~=`, NOT `#`. See the header
+# callout above; this is the single easiest glyph to get wrong in this file.
+NE = "<>"
+
+# ============================================================================
+# SECTION 2: Single-character primitive verb glyphs (MA11 §4), each declared
+# after any two-character digraph sibling from SECTION 1 that shares its
+# first character.
+#
+# One glyph per row, monadic / dyadic meaning, following the monadic-first
+# ordering MA11 §4's own table uses for every other entry: flip / add,
+# negate / subtract (MINUS also participates in the whitespace-sensitive
+# negative-literal rule -- see the header note and `q-lexer/src/lib.rs`),
+# first / multiply, reciprocal / divide (always true/float division, no
+# integer-division special case), til (0-based index generator, monadic
+# only -- dyadic `!` is deferred), enlist / join, count / take, floor /
+# drop, where (monadic) / min (dyadic), reverse (monadic) / max (dyadic),
+# not (monadic) / match (dyadic), then the remaining comparison glyphs.
+#
+# NOTE: MA11 §4's own prose lists `+` as "add / flip" (dyadic-first),
+# breaking the monadic-first pattern every other entry in that same
+# sentence follows (and breaking with real q, where monadic `+` is flip --
+# dictionary/table transpose -- and dyadic `+` is ordinary add). This looks
+# like a word-order slip in the spec text rather than a deliberate
+# deviation; this file documents the monadic-first reading (flip / add) to
+# stay consistent with the rest of the table and with real q. Worth a
+# human double-check against the spec source if that matters later --
+# it has zero effect on this lexer either way, since PLUS is a single
+# token regardless of which reading applies (monadic-vs-dyadic dispatch is
+# a parser concern, not a lexer one, per the header note).
+# ============================================================================
+
+PLUS    = "+"
+MINUS   = "-"
+STAR    = "*"
+PERCENT = "%"
+BANG    = "!"
+COMMA   = ","
+HASH    = "#"
+UNDERSCORE = "_"
+AMP     = "&"
+PIPE    = "|"
+TILDE   = "~"
+
+EQ = "="
+LT = "<"
+GT = ">"
+
+# ============================================================================
+# SECTION 3: Adverbs, assignment, and grouping (MA11 §3 bullet 1 / §4).
+#
+# EACH, REDUCE (over), and SCAN are the three adverbs MA11 §4 puts in scope
+# (each-prior/each-right/each-left are explicitly deferred). REDUCE's other
+# job -- opening a line comment -- is resolved entirely by
+# `q-lexer`'s pre-tokenize hook (see the header note); by the time this
+# pattern is tried, any `/` that should have started a comment has already
+# been blanked out of the source text, so REDUCE below only ever matches a
+# genuine reduce-adverb occurrence.
+#
+# COLON is Q's assignment operator (`name:expr`) -- a colon, not J's
+# `=.`/`=:` pair and not APL's `←` (MA11 §4's "Assignment" bullet).
+# SEMICOLON separates both explicit list-literal
+# elements (`(a;b;c)`) and statements inside a function-literal body
+# (`{[x;y] stmt; stmt}`) -- one token, two grammar-level uses, exactly as
+# MA11 §3 bullets 1 and 3 both describe.
+# ============================================================================
+
+EACH   = "'"
+REDUCE = "/"
+SCAN   = "\"
+
+COLON     = ":"
+SEMICOLON = ";"
+
+LPAREN = "("
+RPAREN = ")"
+
+# ============================================================================
+# SECTION 4: Function-literal delimiters (MA11 §3 bullet 1 / §4).
+#
+# `{` opens a function literal, `}` closes it; `[` and `]` bracket the
+# OPTIONAL parameter list (`{[x;y] x+y}`), defaulting to the implicit
+# `x`/`y`/`z` names when omitted (`{x+y}`). Neither the implicit-parameter
+# convenience nor the "last statement's value is the result" rule is a
+# lexer concern -- `x`/`y`/`z` are ordinary NAME tokens (SECTION 5) with no
+# special lexer treatment, exactly mirroring how `derive-lexer` treats every
+# identifier inside its own bracketed constructs, and how MA06 §3's last
+# bullet already established that monadic-vs-dyadic dispatch is a
+# parser-production concern, not a lexer one. This subset's parser
+# (MA-11c) is what actually recognizes the production; this crate emits the
+# same four punctuation tokens it would emit anywhere else.
+# ============================================================================
+
+LBRACE   = "{"
+RBRACE   = "}"
+LBRACKET = "["
+RBRACKET = "]"
+
+# ============================================================================
+# SECTION 5: Literal value tokens
+#
+# NUMBER has NO leading sign of its own -- Q spells negative numbers with an
+# ordinary leading `-` (unlike J's `_5`), and MA11 §3 bullet 2 is explicit
+# that this is resolved by *context* (the whitespace-sensitive rule in
+# `q-lexer/src/lib.rs`), not by folding an optional sign into this regex.
+# Folding a leading `-` in here directly would make `2-1` lex as a single
+# NUMBER("-1") preceded by nothing, which is simply wrong (real q evaluates
+# `2-1` to `1`, i.e. subtraction, never a bare negative literal) -- the
+# decision to keep the sign OUT of this pattern is not an oversight, it is
+# the whole reason the disambiguation has to live in Rust instead of here.
+#
+# The optional exponent's OWN sign (`1e-5`, `2.5E+3`), by contrast, is
+# written directly into this regex and needs no such treatment: a `-`/`+`
+# immediately after `e`/`E` inside an already-started numeric literal can
+# never be misread as the subtract verb (there is no left operand at that
+# lexical position for it to subtract from), so it carries none of the
+# ambiguity the LEADING sign has. This mirrors how j.tokens' own NUMBER
+# folds its (underscore-spelled) exponent sign directly into its pattern too.
+#
+# NAME deliberately excludes `_` from its continuation characters. `_` is a
+# full primitive-verb glyph in this grammar (UNDERSCORE, floor/drop, SECTION
+# 2) -- if NAME's regex allowed `[0-9a-zA-Z_]*` the way an APL/J-derived gut
+# instinct might suggest, `a_b` would lex as one NAME token instead of
+# NAME("a") UNDERSCORE NAME("b"), silently swallowing a real primitive
+# application. This is the same *shape* of mistake
+# `feedback_check_existing_modules`-style lessons warn about elsewhere in
+# this repo (the S-language `_`-is-assignment lexer note makes the identical
+# point for a different glyph) -- independently rediscovered here for Q's
+# own `_`, not copied from that case. Real q style guides likewise steer
+# users away from underscored identifiers for exactly this reason; a human
+# should double check this specific exclusion against Kx's own reference
+# card if a future subset needs underscored names.
+# ============================================================================
+
+NUMBER = /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/
+NAME   = /[a-zA-Z][a-zA-Z0-9]*/
+
+# ============================================================================
+# SECTION 6: Significant newlines + skip patterns
+#
+# A newline separates top-level statements, exactly like APL/J
+# (apl.tokens/j.tokens SECTION 5). Unlike j.tokens, there is no `skip:`
+# entry for comments here -- Q's comment marker (`/`) is the SAME character
+# as a real token (REDUCE), so a static skip regex cannot tell them apart;
+# that job is done entirely by `q-lexer`'s pre-tokenize hook (see the header
+# note), which blanks comment text out of the source before this grammar
+# ever runs. By the time WHITESPACE below is tried, a comment region is
+# already nothing but spaces.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+skip:
+  WHITESPACE = /[ \t]+/

@@ -1,0 +1,68 @@
+% ============================================================================
+% specific-energy-conversions — specific-energy / available-energy unit → joule-per-kilogram factors
+% (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, area, volume, energy, force,
+% power, pressure, the electric-EMU family, the two viscosities, wave number, linear mass density,
+% temperature interval, mass density, moment of force, specific heat capacity, density of heat, and the
+% rest): a native tabular relation ingested VERBATIM from a published NIST conversion table. Each row
+% states the factor converting a common non-SI unit of SPECIFIC ENERGY (energy CONTENT PER UNIT MASS —
+% the energy released or stored per kilogram, as in a fuel's energy density or a food's caloric
+% content) to the SI coherent derived unit, the joule per kilogram, J/kg:
+%
+%     ? specific_energy_to_joule_per_kilogram(calorie_it_per_gram, $v)   % 4186.8
+%     ? specific_energy_to_joule_per_kilogram(calorie_th_per_gram, $v)   % 4184
+%
+% This opens a NEW dimension — SPECIFIC ENERGY (energy per mass, J/kg; NIST SP 811 B.9 labels it
+% "available energy") — alongside the already-tabulated length/mass/area/volume/time/speed/energy/
+% pressure/force/power/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% magnetic-flux/illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent/exposure/wave-number/
+% linear-mass-density/temperature-interval/mass-density/moment-of-force/specific-heat-capacity/
+% density-of-heat tables and the electric charge/potential/resistance/capacitance/inductance/
+% conductance/current tables. Specific energy is energy PER MASS [energy / mass] — distinct from plain
+% ENERGY, the joule (no mass), and from SPECIFIC HEAT CAPACITY, J/(kg·K) (energy per mass PER
+% TEMPERATURE): do NOT confuse them. (An absorbed radiation dose, the gray, is ALSO joules per
+% kilogram, but is a distinct quantity kept in the separate absorbed-dose table.) A value given in
+% cal/g must be put into SI first, then reasoned over (write-once-use-many). Why a `table` and not
+% hand-written `relate` clauses: this is exactly the shape reference data comes in — a published table,
+% not prose. The citable artifact IS the NIST conversion-factors table at the `locator` below; each
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9, defended by one provenance
+% envelope. Each `row` lowers to a ground relation `specific_energy_to_joule_per_kilogram(unit, v)`, so
+% the exact lookups above are the ordinary SLD binding query — the engine returns the factor WITH this
+% table's citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factors get rows): NIST SP 811 B.9
+% prints both specific-energy factors below in BOLDFACE, its convention for factors that are EXACT by
+% definition, transcribed here as the plain decimal number of joules per kilogram each names:
+%
+%     calorieIT per gram (calIT/g)   4.1868 E+03  →  4186.8
+%     calorieth per gram (calth/g)   4.184  E+03  →  4184
+%
+% Both are EXACT and terminate; nothing here is a rounded measurement. They are exact because each
+% underlying thermal unit is DEFINED exactly — the International-Table calorie is exactly 4.1868 J and
+% the thermochemical calorie is exactly 4.184 J — and gram→kilogram is an exact ×1000, so calIT/g =
+% 4.1868 × 1000 = 4186.8 J/kg and calth/g = 4.184 × 1000 = 4184 J/kg, exactly. (These are the SAME two
+% numbers the specific-heat-capacity table carries, because a per-gram calorie and a per-gram-per-degree
+% calorie share the same calorie factor and the ×1000 gram scaling; they are nonetheless a DIFFERENT
+% quantity — energy per mass, not energy per mass per temperature — and get their own table.) This
+% table is SPECIFIC to specific energy: a unit of a DIFFERENT quantity — e.g. the "pound", which NIST
+% SP 811 B.9 lists separately as a MASS unit converting to the kilogram, NOT to J/kg — therefore gets no
+% row here, and a `? specific_energy_to_joule_per_kilogram(pound, $v)` ABSTAINS rather than
+% mis-converting a mass unit as if it were a specific-energy unit. The only claim this table makes is
+% "these are the exact factors NIST SP 811 B.9 prints for the calorieIT-per-gram's and
+% calorieth-per-gram's conversions to the joule per kilogram" — which is exactly what a byte-check
+% against the cited table verifies. `trust authoritative` — a primary, re-fetchable standards
+% reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — each factor is a verbatim cell
+% of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table specific_energy_to_joule_per_kilogram {
+    columns unit, joule_per_kilogram
+
+    row (calorie_it_per_gram, 4186.8)
+    row (calorie_th_per_gram, 4184)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

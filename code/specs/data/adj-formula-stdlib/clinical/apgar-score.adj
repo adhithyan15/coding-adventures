@@ -1,0 +1,100 @@
+% ============================================================================
+% apgar-score.adj — the definition of the Apgar score
+% (Apgar = appearance + pulse + grimace + activity + respiration) in the ADJ standard library.
+% ============================================================================
+% The Apgar-score entry of the *clinical* track — a neonatology bedside index scored at 1 and 5
+% minutes after birth, a sum sibling of the shipped glasgow-coma-scale.adj (which sums three component
+% scores). The Apgar score is the SUM of five clinical signs — Appearance (colour), Pulse (heart
+% rate), Grimace (reflex irritability), Activity (muscle tone), and Respiration — EACH scored 0, 1, or
+% 2, giving a total from 0 to 10: THE FIVE COMPONENTS ARE ADDED TO GIVE THE SCORE. It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with exact rearrangements that
+% recover a component from the total and the other four. As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the five component scores from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero
+% math is performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the definition's citation.
+%
+%     import "apgar-score.adj"
+%     observe appearance(2)     % "…pink all over → 2…"     (span cited by the model)
+%     observe pulse(2)          % "…HR > 100 → 2…"           (span cited by the model)
+%     observe grimace(2)        % "…cries on stimulation → 2…"
+%     observe activity(1)       % "…some flexion → 1…"
+%     observe respiration(1)    % "…slow, irregular → 1…"
+%     ? apgar_score(appearance, pulse, grimace, activity, respiration)
+%                                % engine → 8, carrying the Apgar sum
+%
+% Every formula is EXACT over its parameters (sums and differences of the component scores), so every
+% value the engine returns is exact. They COMPOSE and invert cleanly around the worked case appearance
+% = 2, pulse = 2, grimace = 2, activity = 1, respiration = 1 (Apgar = 2 + 2 + 2 + 1 + 1 = 8): the
+% `apgar_score` a consumer computes from the five signs is exactly the total each component formula
+% subtracts the other four from to recover its own sign. The SAME clause sanctions solving for ANY of
+% the five components; this library ships the total plus two representative inversions (the pattern is
+% identical for the rest).
+%
+%   apgar_score(appearance, pulse, grimace, activity, respiration)
+%       = appearance + pulse + grimace + activity + respiration       % Apgar = A + P + G + A + R  (definition)
+%   activity(apgar_score, appearance, pulse, grimace, respiration)
+%       = apgar_score - appearance - pulse - grimace - respiration     % Activity = Apgar − the other four
+%   appearance(apgar_score, pulse, grimace, activity, respiration)
+%       = apgar_score - pulse - grimace - activity - respiration       % Appearance = Apgar − the other four
+%
+% NOTE: each component is an integer 0, 1, or 2 and the total is the integer 0–10; the score is
+% dimensionless (it is a count of points, not a physical quantity). The engine computes the exact sum
+% over whatever consistent integer inputs it is given.
+%
+% All formulas are defended by the SAME definitional clause — "Each category is weighted evenly and
+% assigned a 0, 1, or 2 value. The components are then added to give a score recorded 1 and 5 minutes
+% after birth." — because that one definition (the score IS the sum of the five 0-to-2 component
+% values) sanctions the relation read every way (the total from the five signs, or any one sign from
+% the total and the other four). The quote is transcribed verbatim from the StatPearls "APGAR Score"
+% article on the NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored —
+% the definitional clause is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable Apgar component score the definition ranges over, and
+% each result is a derived quantity. Each of the five components and the `apgar_score` appears BOTH as
+% a derived result and as an input (of the other formulas), so each is a single dictionary term used
+% in both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term;
+% the trailing comment records the intended range.
+% ----------------------------------------------------------------------------
+dictionary apgar_score_vocab {
+    define appearance  : finding  surface "appearance", "colour", "color", "skin colour"          % 0, 1, or 2 (A of APGAR)
+    define pulse       : finding  surface "pulse", "heart rate"                                    % 0, 1, or 2 (P of APGAR)
+    define grimace     : finding  surface "grimace", "reflex irritability"                         % 0, 1, or 2 (G of APGAR)
+    define activity    : finding  surface "activity", "muscle tone", "tone"                        % 0, 1, or 2 (A of APGAR)
+    define respiration : finding  surface "respiration", "respiratory effort", "breathing"         % 0, 1, or 2 (R of APGAR)
+    define apgar_score : finding  surface "Apgar score", "APGAR", "Apgar"                           % 0 to 10 (sum of the five)
+}
+
+% ----------------------------------------------------------------------------
+% The definition and two representative inversions. Each is a named, importable, reusable formula over
+% its formal parameters, bound at apply time, and each carries the definitional clause from the
+% StatPearls "APGAR Score" article on the NCBI Bookshelf (a quote is required on a shipped formula).
+% Each is an exact sum or difference of the component scores, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook apgar_score_laws {
+    use apgar_score_vocab
+
+    % Apgar score — the sum of the five component signs (appearance, pulse, grimace, activity,
+    % respiration), each 0–2.
+    formula apgar_score(appearance, pulse, grimace, activity, respiration) = appearance + pulse + grimace + activity + respiration
+        source "Each category is weighted evenly and assigned a 0, 1, or 2 value. The components are then added to give a score recorded 1 and 5 minutes after birth."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470569/"
+        trust authoritative
+
+    % Activity — the same definition solved for the activity (muscle-tone) sign: the total minus the
+    % other four. Defended by the SAME clause.
+    formula activity(apgar_score, appearance, pulse, grimace, respiration) = apgar_score - appearance - pulse - grimace - respiration
+        source "Each category is weighted evenly and assigned a 0, 1, or 2 value. The components are then added to give a score recorded 1 and 5 minutes after birth."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470569/"
+        trust authoritative
+
+    % Appearance — the same definition solved for the appearance (colour) sign: the total minus the
+    % other four. The SAME clause, read another way.
+    formula appearance(apgar_score, pulse, grimace, activity, respiration) = apgar_score - pulse - grimace - activity - respiration
+        source "Each category is weighted evenly and assigned a 0, 1, or 2 value. The components are then added to give a score recorded 1 and 5 minutes after birth."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470569/"
+        trust authoritative
+}

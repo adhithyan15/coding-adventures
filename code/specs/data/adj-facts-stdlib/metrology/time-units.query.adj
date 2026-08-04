@@ -1,0 +1,22 @@
+% ============================================================================
+% time-units.query.adj — a worked recall over the metrology time-units library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many seconds in an
+% hour?": it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `time_unit_seconds` rows and returns the length in seconds + the table's
+% source/locator/trust. Note the reverse query below: because `seconds` is an
+% ordinary column, you can bind the UNIT from a known length (which unit is 86400
+% seconds long? → day). A word that is not one of these units abstains honestly —
+% the engine never invents a length.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli time-units.query.adj
+% ============================================================================
+
+import "time-units.adj"
+
+? time_unit_seconds(hour, $S)          % expect 3600  (1 h = 3600 s)
+? time_unit_seconds(day, $S)           % expect 86400 (1 d = 86400 s)
+? time_unit_seconds($Unit, 86400)      % expect day   (reverse: which unit is 86400 s?)
+? time_unit_seconds(fortnight, $S)     % expect abstain — "fortnight" is not in this table

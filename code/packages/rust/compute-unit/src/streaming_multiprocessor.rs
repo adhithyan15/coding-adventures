@@ -1,3 +1,6 @@
+// Builds config by mutating a `Default::default()` base for readability across
+// several optional fields; identical to a struct literal.
+#![allow(clippy::field_reassign_with_default)]
 //! StreamingMultiprocessor -- NVIDIA SM simulator.
 //!
 //! # What is a Streaming Multiprocessor?
@@ -445,6 +448,8 @@ impl StreamingMultiprocessor {
     /// 1. **Register pressure**: Each warp needs `registers_per_thread * 32` registers.
     /// 2. **Shared memory**: Each block needs `shared_mem_per_block` bytes.
     /// 3. **Hardware limit**: The SM simply can't hold more than `max_warps` warps.
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn compute_occupancy(
         &self,
         registers_per_thread: usize,
@@ -452,7 +457,7 @@ impl StreamingMultiprocessor {
         threads_per_block: usize,
     ) -> f64 {
         let warp_w = self.config.warp_width;
-        let warps_per_block = (threads_per_block + warp_w - 1) / warp_w;
+        let warps_per_block = threads_per_block.div_ceil(warp_w);
 
         // Limit 1: register file
         let regs_per_warp = registers_per_thread * self.config.warp_width;
@@ -503,7 +508,7 @@ impl ComputeUnit for StreamingMultiprocessor {
 
     fn dispatch(&mut self, work: WorkItem) -> Result<(), ResourceError> {
         // Calculate resource requirements.
-        let num_warps = (work.thread_count + self.config.warp_width - 1) / self.config.warp_width;
+        let num_warps = work.thread_count.div_ceil(self.config.warp_width);
         let regs_needed = work.registers_per_thread * self.config.warp_width * num_warps;
         let smem_needed = work.shared_mem_bytes;
 

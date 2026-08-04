@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.DartmouthBasicLexer.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.DartmouthBasicLexer.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Grammar-driven lexer for the original 1964 Dartmouth BASIC language</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="DartmouthBasicLexer.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../../../grammars/dartmouth_basic/dartmouth_basic.tokens" LogicalName="dartmouth_basic.tokens" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../grammar-tools/CodingAdventures.GrammarTools.fsproj" />
+    <ProjectReference Include="../lexer/CodingAdventures.Lexer.fsproj" />
+  </ItemGroup>
+</Project>

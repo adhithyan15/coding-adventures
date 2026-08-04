@@ -33,7 +33,9 @@
 use std::collections::HashMap;
 
 use coding_adventures_sql_backend::{Backend, Cursor, Row, RowIterator, SqlValue};
-use coding_adventures_sql_codegen::{AggFn, BinaryOp, CompiledSortKey, Instruction, Program, UnaryOp};
+use coding_adventures_sql_codegen::{
+    AggFn, BinaryOp, CastType, CompiledSortKey, Instruction, Program, UnaryOp,
+};
 
 // ===========================================================================
 // Public API types
@@ -263,8 +265,20 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     // deterministic (matches the scan order, i.e. the order of first
     // occurrence of each distinct group value in the table).
     let mut group_mode = false;
-    // Canonical string key → (original SqlValue list for the key columns, accumulators)
-    let mut group_data: HashMap<String, (Vec<SqlValue>, Vec<AggAccumulator>)> = HashMap::new();
+    // Canonical string key → (key-column values, accumulators, representative row).
+    //
+    // The representative row is the FIRST source row of the group, captured when
+    // the group is created. It lets a BARE non-key column (one that is neither a
+    // GROUP BY key nor inside an aggregate — e.g. `SELECT c FROM t GROUP BY x`)
+    // report a value instead of NULL, matching SQLite, which reports such a
+    // column from the group's first row. (The min/max-follows refinement — where
+    // bare columns track the row holding a min()/max() — needs an aggregate
+    // present, which the current projection path does not yet combine with bare
+    // columns; that is a separate ledgered gap.)
+    let mut group_data: HashMap<String, (Vec<SqlValue>, Vec<AggAccumulator>, Row)> = HashMap::new();
+    // Cumulative bytes of all stored representative rows, for the memory guard
+    // below (the group-COUNT cap alone doesn't bound bytes on a wide table).
+    let mut repr_bytes_total: usize = 0;
     let mut group_key_order: Vec<String> = Vec::new(); // insertion-order of distinct keys
     let mut current_group_key: String = String::new(); // set by SaveGroupKey each row
     // Names of the group-by columns (set by first SaveGroupKey call).
@@ -286,6 +300,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     let mut post_sort: Option<Vec<CompiledSortKey>> = None;
     let mut post_limit: Option<(Option<i64>, Option<i64>)> = None;
     let mut post_distinct = false;
+    let mut post_distinct_colls: Vec<Option<String>> = Vec::new();
     // TruncateOutputColumns: strip hidden sort-key columns after SortResult.
     let mut post_truncate: Option<usize> = None;
     // DML counter.
@@ -295,6 +310,11 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     let mut columns_locked = false;
     // Transaction handle (used by CommitTransaction / RollbackTransaction).
     let mut tx_handle: Option<u64> = None;
+    // Outer-join match flag: set true when an inner row satisfies the ON
+    // condition for the current outer row, so LEFT/RIGHT JOIN can decide whether
+    // to emit a NULL-padded row after the inner loop. See ClearMatch/SetMatch/
+    // JumpIfMatched.
+    let mut join_matched = false;
 
     // ── Phase 2: main execution loop ──────────────────────────────────────────
     //
@@ -349,25 +369,74 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 stack.push(SqlValue::Bool(!matches!(v, SqlValue::Null)));
             }
 
-            // ─────────────── LIKE ──────────────────────────────────────────
-            Instruction::Like => {
+            // ─────────────── LIKE / NOT LIKE ────────────────────────────────
+            Instruction::Like(negated) => {
                 // Stack (top → bottom): pattern, value
                 let pat = pop(&mut stack)?;
                 let val = pop(&mut stack)?;
                 let result = match (&val, &pat) {
+                    // A NULL operand makes the whole predicate NULL, and `NOT`
+                    // leaves NULL unchanged (NULL is neither true nor false).
                     (SqlValue::Null, _) | (_, SqlValue::Null) => SqlValue::Null,
-                    _ => SqlValue::Bool(like_match(&sql_to_str(&val), &sql_to_str(&pat))),
+                    _ => {
+                        let matched = like_match(&sql_to_str(&val), &sql_to_str(&pat));
+                        SqlValue::Bool(matched ^ negated)
+                    }
                 };
                 stack.push(result);
             }
 
+            // ─────────────── LIKE / NOT LIKE … ESCAPE ───────────────────────
+            Instruction::LikeEscape(negated) => {
+                // Stack (top → bottom): escape, pattern, value
+                let esc = pop(&mut stack)?;
+                let pat = pop(&mut stack)?;
+                let val = pop(&mut stack)?;
+                let result = match (&val, &pat, &esc) {
+                    // Any NULL operand — including a NULL escape — yields NULL,
+                    // which `NOT` leaves unchanged.
+                    (SqlValue::Null, _, _) | (_, SqlValue::Null, _) | (_, _, SqlValue::Null) => {
+                        SqlValue::Null
+                    }
+                    _ => {
+                        // SQLite requires the ESCAPE string to be exactly one
+                        // character; anything else is a runtime error.
+                        let esc_str = sql_to_str(&esc);
+                        let mut chars = esc_str.chars();
+                        match (chars.next(), chars.next()) {
+                            (Some(e), None) => {
+                                let matched = like_match_escape(
+                                    &sql_to_str(&val),
+                                    &sql_to_str(&pat),
+                                    e,
+                                );
+                                SqlValue::Bool(matched ^ negated)
+                            }
+                            _ => {
+                                return Err(VmError::TypeMismatch(
+                                    "ESCAPE expression must be a single character".to_string(),
+                                ))
+                            }
+                        }
+                    }
+                };
+                stack.push(result);
+            }
+
+            Instruction::Cast(ty) => {
+                let val = pop(&mut stack)?;
+                stack.push(apply_cast(&val, &ty));
+            }
+
             // ─────────────── BETWEEN ───────────────────────────────────────
-            Instruction::Between(inclusive) => {
-                // Stack (top → bottom): high, low, value
+            Instruction::Between(plain) => {
+                // Stack (top → bottom): high, low, value.
+                // `plain` is codegen's `!negated`: true for `BETWEEN`, false for
+                // `NOT BETWEEN` (see eval_between).
                 let hi = pop(&mut stack)?;
                 let lo = pop(&mut stack)?;
                 let val = pop(&mut stack)?;
-                stack.push(eval_between(&val, &lo, &hi, inclusive)?);
+                stack.push(eval_between(&val, &lo, &hi, plain)?);
             }
 
             // ─────────────── IN list ───────────────────────────────────────
@@ -389,9 +458,37 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     .map(|_| pop(&mut stack))
                     .collect::<Result<_, _>>()?;
                 let val = pop(&mut stack)?;
+                // SQLite IN is three-valued and uses the same equality as `=`:
+                //   • test value NULL            → NULL
+                //   • any element `=` the value  → 1 (true), even if NULLs present
+                //   • else if any element is NULL → NULL (the value *might* equal
+                //     the unknown), matching `1 IN (NULL,2)` → NULL
+                //   • else                        → 0 (false)
+                // `sql_eq` compares by storage class, so `1 IN (1.0)` is true
+                // (Int/Float compare numerically) while `'1' IN (1)` is false
+                // (text vs integer). This supersedes the old derived-`PartialEq`
+                // membership, which missed both numeric equality and NULL logic.
                 let result = match val {
                     SqlValue::Null => SqlValue::Null,
-                    v => SqlValue::Bool(items.contains(&v)),
+                    v => {
+                        let mut saw_null = false;
+                        let mut matched = false;
+                        for item in &items {
+                            if matches!(item, SqlValue::Null) {
+                                saw_null = true;
+                            } else if sql_eq(&v, item) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        if matched {
+                            SqlValue::Bool(true)
+                        } else if saw_null {
+                            SqlValue::Null
+                        } else {
+                            SqlValue::Bool(false)
+                        }
+                    }
                 };
                 stack.push(result);
             }
@@ -465,12 +562,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     group_mode = false; // disable so FinalizeAgg/LoadColumn run normally
                     // Load first group's data.
                     let key_str = group_key_order[0].clone();
-                    if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                    if let Some((key_vals, group_accs, repr_row)) = group_data.get(&key_str) {
                         agg_accs = group_accs.clone();
-                        let mut fake_row: Row = Row::default();
-                        for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
-                            fake_row.insert(col_name.clone(), val.clone());
-                        }
+                        let fake_row = build_group_fake_row(repr_row, &group_col_names, key_vals);
                         current_row.insert(alias, fake_row);
                     }
                 }
@@ -503,13 +597,11 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                         // Load the next group's data so that LoadColumn /
                         // FinalizeAgg operate on the correct group.
                         let key_str = group_key_order[group_iter_idx].clone();
-                        if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                        if let Some((key_vals, group_accs, repr_row)) = group_data.get(&key_str) {
                             agg_accs = group_accs.clone();
-                            // Repopulate current_row[None] with this group's key values.
-                            let mut fake_row: Row = Row::default();
-                            for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
-                                fake_row.insert(col_name.clone(), val.clone());
-                            }
+                            // Repopulate current_row[None] with this group's key
+                            // values over its representative row.
+                            let fake_row = build_group_fake_row(repr_row, &group_col_names, key_vals);
                             // Use None as the cursor alias (no-alias scans store under None).
                             current_row.insert(None, fake_row);
                         }
@@ -579,7 +671,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::UpdateAgg(idx, fn_tag) => {
                 if group_mode {
                     // GROUP BY mode: update the accumulator for the current group.
-                    let (_, group_accs) = group_data
+                    let (_, group_accs, _) = group_data
                         .get_mut(&current_group_key)
                         .ok_or(VmError::AggIndexOutOfRange(idx))?;
                     if fn_tag == AggFn::CountStar {
@@ -616,7 +708,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             // "val0\x1Fval1\x1F..." using ASCII unit-separator as delimiter).
             // On the first invocation we record the column names; subsequent
             // invocations must use the same columns.
-            Instruction::SaveGroupKey(cols) => {
+            Instruction::SaveGroupKey(cols, colls) => {
                 // Activate group mode on first SaveGroupKey.
                 if !group_mode {
                     group_mode = true;
@@ -633,10 +725,35 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                         .unwrap_or(SqlValue::Null)
                 }).collect();
                 // Compute a canonical key string: "type:value\x1Ftype:value..."
-                let key_str: String = key_vals.iter().map(|v| match v {
+                // Each key column may carry a collation (from a declared
+                // `COLLATE` on the column). It folds ONLY this key string — the
+                // original `key_vals` are what get emitted — so `GROUP BY c` on a
+                // NOCASE column groups 'A' with 'a' while still reporting the
+                // first row's original text. Collation applies to TEXT only;
+                // numbers, blobs and NULL have no collating sequence in SQLite.
+                let key_str: String = key_vals.iter().zip(colls.iter().chain(std::iter::repeat(&None)))
+                    .map(|(v, coll)| match v {
                     SqlValue::Int(n)   => format!("i:{}", n),
                     SqlValue::Float(f) => format!("f:{}", f),
-                    SqlValue::Text(s)  => format!("t:{}", s),
+                    // TEXT is LENGTH-PREFIXED (`t:<byte-len>:<text>`). It is the
+                    // only segment that can hold arbitrary bytes, so without the
+                    // length a value containing the `\x1F` separator followed by a
+                    // type tag could forge a segment boundary and make two
+                    // DIFFERENT key tuples serialise identically — merging them
+                    // into one group and reporting the first tuple's values for
+                    // both. With the byte length up front the reader cannot be
+                    // fooled: the separator inside the counted region is data.
+                    // (`('x\x1Ft:y','z')` and `('x','y\x1Ft:z')` are two groups,
+                    // as in SQLite.) The other segments are self-delimiting —
+                    // numbers and bools have a fixed alphabet and a blob renders
+                    // as hex — so they need no prefix.
+                    SqlValue::Text(s)  => match coll {
+                        Some(c) => {
+                            let folded = collate_text(s, c);
+                            format!("t:{}:{}", folded.len(), folded)
+                        }
+                        None => format!("t:{}:{}", s.len(), s),
+                    },
                     SqlValue::Bool(b)  => format!("b:{}", b),
                     SqlValue::Null     => "null".to_string(),
                     SqlValue::Blob(bytes) => {
@@ -661,7 +778,33 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     let fresh_accs = (0..num_agg_slots)
                         .map(|_| AggAccumulator { acc: None, count: 0, distinct_vals: None })
                         .collect();
-                    group_data.insert(key_str, (key_vals, fresh_accs));
+                    // Snapshot the group's FIRST row (the un-aliased cursor row)
+                    // as its representative, for bare non-key column projection —
+                    // but ONLY when the query has no aggregate columns. Bare
+                    // columns are projected solely on the no-aggregate GROUP BY
+                    // path; an aggregate query emits only keys + aggregates and
+                    // never reads a bare column from the fake row, so cloning full
+                    // rows there would be pure memory overhead.
+                    let repr_row = if num_agg_slots == 0 {
+                        let r = current_row.get(&None).cloned().unwrap_or_default();
+                        // DoS guard: `MAX_GROUP_KEYS` caps the NUMBER of groups but
+                        // not the BYTES retained. A wide table (many/large TEXT or
+                        // BLOB columns) with a high-cardinality key could hold far
+                        // more than the count implies. Cap cumulative representative
+                        // bytes at SQLite's default `SQLITE_MAX_LENGTH` order (~1 GB).
+                        const MAX_REPR_BYTES: usize = 1_000_000_000;
+                        repr_bytes_total = repr_bytes_total.saturating_add(row_bytes(&r));
+                        if repr_bytes_total > MAX_REPR_BYTES {
+                            return Err(VmError::ResourceLimit(format!(
+                                "GROUP BY representative rows exceeded maximum size ({} bytes)",
+                                MAX_REPR_BYTES
+                            )));
+                        }
+                        r
+                    } else {
+                        Row::default()
+                    };
+                    group_data.insert(key_str, (key_vals, fresh_accs, repr_row));
                 }
             }
 
@@ -683,6 +826,23 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 }
             }
 
+            // ── Outer-join match flag (no stack effect) ────────────────────
+            Instruction::ClearMatch => {
+                join_matched = false;
+            }
+
+            Instruction::SetMatch => {
+                join_matched = true;
+            }
+
+            Instruction::JumpIfMatched(label) => {
+                if join_matched {
+                    pc = *label_index
+                        .get(&label)
+                        .ok_or_else(|| VmError::LabelNotFound(label.clone()))?;
+                }
+            }
+
             Instruction::JumpIfFalse(label) => {
                 let v = pop(&mut stack)?;
                 if !is_truthy(&v) {
@@ -695,12 +855,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                         if group_iter_idx < group_key_order.len() {
                             // Load the next group's data.
                             let key_str = group_key_order[group_iter_idx].clone();
-                            if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                            if let Some((key_vals, group_accs, repr_row)) = group_data.get(&key_str) {
                                 agg_accs = group_accs.clone();
-                                let mut fake_row: Row = Row::default();
-                                for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
-                                    fake_row.insert(col_name.clone(), val.clone());
-                                }
+                                let fake_row = build_group_fake_row(repr_row, &group_col_names, key_vals);
                                 current_row.insert(None, fake_row);
                             }
                             // Clear row_buffer so that pre-BeginRow EmitColumn accumulations
@@ -773,7 +930,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 // Build the assignments Row: { column_name → new_value }.
                 let assignments_row: Row = col_names
                     .iter()
-                    .zip(values.into_iter())
+                    .zip(values)
                     .map(|(c, v)| (c.clone(), v))
                     .collect();
 
@@ -874,8 +1031,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 post_sort = Some(keys);
             }
 
-            Instruction::DistinctResult => {
+            Instruction::DistinctResult(colls) => {
                 post_distinct = true;
+                post_distinct_colls = colls;
             }
 
             Instruction::LimitResult(count, offset) => {
@@ -901,8 +1059,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::SortResult(keys) => {
                 post_sort = Some(keys);
             }
-            Instruction::DistinctResult => {
+            Instruction::DistinctResult(colls) => {
                 post_distinct = true;
+                post_distinct_colls = colls;
             }
             Instruction::LimitResult(count, offset) => {
                 post_limit = Some((count, offset));
@@ -917,21 +1076,32 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
 
     // ── Phase 3: post-processing ──────────────────────────────────────────────
 
+    // SQL logical order applies DISTINCT to the projected SELECT-list rows BEFORE
+    // ORDER BY: a deduped group keeps its FIRST row in SCAN order (matching
+    // SQLite), and ORDER BY then sorts the survivors. Running the sort first (the
+    // previous order) instead kept whichever row sorted first — observable when a
+    // collation folds rows with different original text
+    // (`SELECT DISTINCT x COLLATE NOCASE … ORDER BY x` kept the byte-sort-first
+    // 'A' rather than SQLite's scan-first 'a').
+    //
+    // Hidden `__sort_N__` columns (appended for an ORDER BY key that is not itself
+    // an output column) must survive until the sort can read them, so DISTINCT
+    // dedups on only the first `visible_cols` = SELECT-list columns, and the
+    // truncation that strips the hidden columns runs AFTER the sort. When there
+    // are no hidden columns `post_truncate` is `None` and every column is visible.
+    let visible_cols = post_truncate.unwrap_or(output_columns.len());
+    if post_distinct {
+        apply_distinct(&mut output_rows, &post_distinct_colls, visible_cols);
+    }
     if let Some(keys) = post_sort {
         apply_sort(&mut output_rows, &keys, &output_columns);
     }
-    // Strip hidden sort-key columns that were appended during compilation so
-    // that SortResult could find them by name.  This truncation must happen
-    // AFTER sorting and BEFORE distinct/limit so that only the SELECT-list
-    // columns remain in the output.
+    // Strip the hidden sort-key columns so only the SELECT-list columns remain.
     if let Some(n) = post_truncate {
         for row in &mut output_rows {
             row.truncate(n);
         }
         output_columns.truncate(n);
-    }
-    if post_distinct {
-        apply_distinct(&mut output_rows);
     }
     if let Some((count, offset)) = post_limit {
         apply_limit(&mut output_rows, count, offset);
@@ -940,21 +1110,35 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     // ── Phase 4: materialize ──────────────────────────────────────────────────
     //
     // Each row in `output_rows` is a `Vec<(String, SqlValue)>` in emission
-    // order.  Project it onto `output_columns` to produce `Vec<SqlValue>`.
+    // order.  Strip the names and keep the values — the row is already POSITIONAL
+    // and parallel to `output_columns`, because both are produced by the same
+    // `EmitColumn` sequence (the codegen emits one `EmitColumn` per output column,
+    // in order; `output_columns` was locked from the first row's buffer; and any
+    // hidden sort-key columns are truncated off BOTH the rows and `output_columns`
+    // together in Phase 3).  So position `i` of every row is column `i`.
+    //
+    // We deliberately do NOT rebuild a `name → value` map here.  Two output
+    // columns can legitimately share a name — e.g. `SELECT UPPER(x), LENGTH(x)`
+    // yields two columns both defaulting to the name `?`, and `SELECT id, id`
+    // yields two `id` columns.  Collapsing `(name, value)` pairs into a `HashMap`
+    // would drop all but the last value for each repeated name, so both `UPPER(x)`
+    // and `LENGTH(x)` would come back as `LENGTH(x)`'s value.  Positional
+    // projection is both correct and cheaper.
+    let ncols = output_columns.len();
     let rows: Vec<Vec<SqlValue>> = output_rows
         .into_iter()
         .map(|row| {
-            if output_columns.is_empty() {
-                // No named columns (e.g. SELECT without EmitColumn) — return raw values.
-                row.into_iter().map(|(_, v)| v).collect()
-            } else {
-                // Build a name→value map and project onto the locked column order.
-                let map: HashMap<String, SqlValue> = row.into_iter().collect();
-                output_columns
-                    .iter()
-                    .map(|col| map.get(col).cloned().unwrap_or(SqlValue::Null))
-                    .collect()
+            let mut vals: Vec<SqlValue> = row.into_iter().map(|(_, v)| v).collect();
+            // When column names were locked (the normal SELECT path), keep exactly
+            // one value per column so `columns.len() == row.len()`.  `is_empty()`
+            // means no `EmitColumn` ran (raw-value path) — return the values as-is.
+            if ncols != 0 {
+                vals.truncate(ncols);
+                while vals.len() < ncols {
+                    vals.push(SqlValue::Null);
+                }
             }
+            vals
         })
         .collect();
 
@@ -1001,28 +1185,245 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 ///
 /// | Name     | Args | Semantics                                             |
 /// |----------|------|-------------------------------------------------------|
-/// | LENGTH   |  1   | Byte-length of a string (returns Integer or NULL)     |
+/// | LENGTH   |  1   | Character count of a string (returns Integer or NULL) |
+/// | OCTET_LENGTH | 1 | Byte count of text/blob/integer (Integer or NULL)    |
 /// | UPPER    |  1   | ASCII-uppercase the string                            |
 /// | LOWER    |  1   | ASCII-lowercase the string                            |
-/// | TRIM     |  1   | Strip leading and trailing ASCII whitespace           |
-/// | LTRIM    |  1   | Strip leading ASCII whitespace                        |
-/// | RTRIM    |  1   | Strip trailing ASCII whitespace                       |
-/// | SUBSTR   | 2–3  | 1-indexed substring extraction                        |
+/// | TRIM     | 1–2  | Strip whitespace, or a given character set, from both ends |
+/// | LTRIM    | 1–2  | Strip whitespace, or a given character set, from the left  |
+/// | RTRIM    | 1–2  | Strip whitespace, or a given character set, from the right |
+/// | SUBSTR   | 2–3  | 1-indexed substring extraction (alias: SUBSTRING)     |
+/// | CONCAT   | ≥1   | Concatenate all arguments (NULL → empty string)       |
+/// | CONCAT_WS| ≥2   | Join value arguments with a separator (NULLs skipped) |
+/// | UNHEX    | 1–2  | Decode hex digit pairs into a blob (inverse of HEX)   |
+/// | LIKELY / UNLIKELY | 1 | Planner hint; returns the argument unchanged     |
+/// | LIKELIHOOD | 2  | Planner hint with a probability; returns arg 1        |
+/// | GLOB     |  2   | Case-sensitive wildcard match: GLOB(pattern, subject) |
+/// | PRINTF / FORMAT | ≥1 | C-style string formatting (integer/string specifiers) |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
+/// Coerce a value to the text form TRIM operates on, matching SQLite's
+/// implicit cast: text is itself; an integer or boolean becomes its decimal
+/// digits (`trim(12321, '1')` → `"232"`). A NULL argument returns `Ok(None)`,
+/// the caller's signal to propagate NULL. Floats and blobs are declined — as
+/// with HEX/QUOTE above, their exact SQLite text form is subtle enough that we
+/// don't guess here.
+fn trim_coerce(name: &str, v: &SqlValue) -> Result<Option<String>, VmError> {
+    match v {
+        SqlValue::Null => Ok(None),
+        SqlValue::Text(s) => Ok(Some(s.clone())),
+        SqlValue::Int(i) => Ok(Some(i.to_string())),
+        SqlValue::Bool(b) => Ok(Some((*b as i64).to_string())),
+        other => Err(VmError::TypeMismatch(format!("{name} expects TEXT, got {other:?}"))),
+    }
+}
+
+/// The shared body of `TRIM` / `LTRIM` / `RTRIM`, parameterised by which end(s)
+/// to strip (`left`, `right`).
+///
+/// **One argument** keeps the historical behaviour — remove whitespace from the
+/// chosen end(s).
+///
+/// **Two arguments** switch to SQLite's *character-set* trim: the second
+/// argument is read as a bag of characters, and any leading (`left`) or
+/// trailing (`right`) character that appears in that bag is removed — repeated
+/// until a character outside the bag is reached. The bag is a *set of
+/// characters*, not a substring: order and repetition inside it don't matter.
+///
+/// ```text
+///   trim('xxhixx', 'x')    -> 'hi'      set = {x}
+///   trim('abcHIcba', 'abc') -> 'HI'     set = {a, b, c}
+///   ltrim('xyxhi', 'xy')   -> 'hi'      only the left end
+///   rtrim('hixyx', 'xy')   -> 'hi'      only the right end
+///   trim('héllo', 'h')     -> 'éllo'    operates on Unicode chars, not bytes
+///   trim('xhix', '')       -> 'xhix'    empty set removes nothing
+///   trim('xxhixx', NULL)   -> NULL      NULL in either argument propagates
+/// ```
+fn trim_builtin(name: &str, args: &[SqlValue], left: bool, right: bool) -> Result<SqlValue, VmError> {
+    // Validate arity *before* indexing. The grammar makes a call's argument list
+    // optional, so `TRIM()` parses and reaches here with an empty `args`; without
+    // this guard `args[0]` would panic (index out of bounds) — a reachable DoS on
+    // any untrusted SQL. Every sibling builtin checks arity first; we match that.
+    if args.is_empty() || args.len() > 2 {
+        return Err(VmError::TypeMismatch(format!("{name} expects 1 or 2 args, got {}", args.len())));
+    }
+
+    // Resolve the subject string, short-circuiting on a NULL argument.
+    let subject = match trim_coerce(name, &args[0])? {
+        None => return Ok(SqlValue::Null),
+        Some(s) => s,
+    };
+
+    if args.len() == 1 {
+        let trimmed = match (left, right) {
+            (true, true) => subject.trim(),
+            (true, false) => subject.trim_start(),
+            (false, true) => subject.trim_end(),
+            (false, false) => subject.as_str(),
+        };
+        return Ok(SqlValue::Text(trimmed.to_string()));
+    }
+
+    // Two-argument (character-set) form.
+    let set = match trim_coerce(name, &args[1])? {
+        None => return Ok(SqlValue::Null),
+        Some(s) => s,
+    };
+    // An empty trim-set matches nothing, so the subject is returned verbatim —
+    // no need to scan every character against the set.
+    if set.is_empty() {
+        return Ok(SqlValue::Text(subject));
+    }
+    // Materialise the set into a `HashSet` for O(1) membership. `str::contains`
+    // would be a linear scan of the set per subject character, making the whole
+    // trim O(N·M) in the subject/set lengths — a quadratic CPU vector an attacker
+    // controls (a long subject of set-members against a long set). The set is
+    // O(M) to build once, so overall cost drops to O(N + M).
+    let set_chars: std::collections::HashSet<char> = set.chars().collect();
+    let in_set = |c: char| set_chars.contains(&c);
+    let mut slice: &str = &subject;
+    if left {
+        slice = slice.trim_start_matches(in_set);
+    }
+    if right {
+        slice = slice.trim_end_matches(in_set);
+    }
+    Ok(SqlValue::Text(slice.to_string()))
+}
+
 fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
     match name {
         "LENGTH" => {
+            // LENGTH(X) counts *characters* for text and *bytes* for a blob,
+            // matching SQLite: `length('héllo')` = 5 (5 chars, though 6 bytes)
+            // but `length(x'0102ff')` = 3 (raw bytes, NOT text-converted). A
+            // number is measured as the character count of its decimal-text form
+            // (`length(12345)` = 5, `length(-7)` = 2). NULL → NULL. Floats are
+            // declined — their SQLite text form (`3.0` vs Rust's `3`, exponent
+            // notation, …) is subtle enough that we don't guess here (same stance
+            // as OCTET_LENGTH / HEX / QUOTE).
             if args.len() != 1 {
                 return Err(VmError::TypeMismatch(format!("LENGTH expects 1 arg, got {}", args.len())));
             }
             match &args[0] {
                 SqlValue::Null => Ok(SqlValue::Null),
                 SqlValue::Text(s) => Ok(SqlValue::Int(s.chars().count() as i64)),
-                other => Err(VmError::TypeMismatch(format!("LENGTH expects TEXT, got {:?}", other))),
+                SqlValue::Blob(b) => Ok(SqlValue::Int(b.len() as i64)),
+                SqlValue::Int(i) => Ok(SqlValue::Int(i.to_string().chars().count() as i64)),
+                SqlValue::Bool(b) => Ok(SqlValue::Int((*b as i64).to_string().chars().count() as i64)),
+                other => Err(VmError::TypeMismatch(format!("LENGTH expects TEXT/BLOB/INTEGER, got {:?}", other))),
             }
         }
+
+        "OCTET_LENGTH" => {
+            // OCTET_LENGTH(x): the number of *bytes*, in contrast to LENGTH's
+            // count of characters. Text is measured as its UTF-8 bytes
+            // (`octet_length('héllo')` = 6, five characters but `é` is two
+            // bytes); a blob as its raw byte count; an integer/boolean as its
+            // decimal-text bytes (`octet_length(123)` = 3). NULL → NULL. Floats
+            // are declined — their byte length depends on SQLite's exact float
+            // text form, which is subtle (see HEX/QUOTE).
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Int(s.len() as i64)),
+                SqlValue::Blob(b) => Ok(SqlValue::Int(b.len() as i64)),
+                SqlValue::Int(i) => Ok(SqlValue::Int(i.to_string().len() as i64)),
+                SqlValue::Bool(b) => Ok(SqlValue::Int((*b as i64).to_string().len() as i64)),
+                other => Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects TEXT/BLOB/INTEGER, got {:?}", other))),
+            }
+        }
+
+        "LIKELY" | "UNLIKELY" => {
+            // Query-planner hints: `likely(x)` / `unlikely(x)` tell SQLite's
+            // optimizer that `x` is probably true / probably false, biasing its
+            // row-count estimates. They have no effect on the result — they are
+            // the *identity* function, returning the argument unchanged (any
+            // type, including NULL).
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("{name} expects 1 arg, got {}", args.len())));
+            }
+            Ok(args.into_iter().next().unwrap())
+        }
+
+        "LIKELIHOOD" => {
+            // `likelihood(x, p)` is `likely`/`unlikely` with an explicit
+            // probability `p` (the fraction of rows for which `x` is expected to
+            // be true). It returns `x` unchanged; `p` only hints the planner.
+            // SQLite requires `p` to be a constant number in [0.0, 1.0] — we
+            // validate the value's range and reject anything else.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("LIKELIHOOD expects 2 args, got {}", args.len())));
+            }
+            let p = match &args[1] {
+                SqlValue::Float(f) => *f,
+                SqlValue::Int(i) => *i as f64,
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "LIKELIHOOD probability must be a number in [0,1], got {other:?}"
+                    )))
+                }
+            };
+            if !(0.0..=1.0).contains(&p) {
+                return Err(VmError::TypeMismatch(format!(
+                    "LIKELIHOOD probability {p} is out of range [0,1]"
+                )));
+            }
+            Ok(args.into_iter().next().unwrap())
+        }
+
+        "GLOB" => {
+            // GLOB(pattern, subject) is the function form of `subject GLOB
+            // pattern`: a case-sensitive wildcard match returning 1 or 0. NULL in
+            // either argument yields NULL. (The infix `GLOB` operator is a
+            // separate, grammar-level feature; this is the callable function.)
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("GLOB expects 2 args, got {}", args.len())));
+            }
+            if matches!(args[0], SqlValue::Null) || matches!(args[1], SqlValue::Null) {
+                return Ok(SqlValue::Null);
+            }
+            let pattern = sql_to_str(&args[0]);
+            let subject = sql_to_str(&args[1]);
+            Ok(SqlValue::Int(glob_match(&subject, &pattern) as i64))
+        }
+
+        "PRINTF" | "FORMAT" => {
+            // PRINTF(format, ...) / FORMAT(format, ...): C-style string
+            // formatting. The first argument is the format string; the rest are
+            // consumed by its conversions. A NULL format yields NULL. See
+            // `sql_printf` for the supported conversions and the DoS caps.
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch(format!("{name} expects at least 1 arg")));
+            }
+            let format = match &args[0] {
+                SqlValue::Null => return Ok(SqlValue::Null),
+                SqlValue::Text(s) => s.clone(),
+                SqlValue::Int(i) => i.to_string(),
+                SqlValue::Bool(b) => (*b as i64).to_string(),
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "{name} format must be text, got {other:?}"
+                    )))
+                }
+            };
+            Ok(SqlValue::Text(sql_printf(name, &format, &args[1..])?))
+        }
+
+        // Date/time functions. Each takes an optional time-value argument (a
+        // Julian-day number, an ISO-8601 string, or `'now'`; absent = `'now'`)
+        // and converts through an integer-millisecond Julian Day. See the
+        // date/time subsystem section for the conversion. Modifier arguments are
+        // deferred to a later phase (declined, not ignored).
+        "DATE" => Ok(datetime_render(DateFmt::Date, &args)),
+        "TIME" => Ok(datetime_render(DateFmt::Time, &args)),
+        "DATETIME" => Ok(datetime_render(DateFmt::DateTime, &args)),
+        "JULIANDAY" => Ok(julianday_func(&args)),
+        "UNIXEPOCH" => Ok(unixepoch_func(&args)),
+        "STRFTIME" => Ok(strftime_func(&args)),
 
         "UPPER" => {
             if args.len() != 1 {
@@ -1030,7 +1431,10 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             }
             match &args[0] {
                 SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_uppercase())),
+                // SQLite's built-in UPPER only case-folds ASCII `a`–`z`; every
+                // other byte (accented letters, non-Latin scripts) is left as-is.
+                // Rust's `to_uppercase` is full-Unicode, so use the ASCII variant.
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_ascii_uppercase())),
                 other => Err(VmError::TypeMismatch(format!("UPPER expects TEXT, got {:?}", other))),
             }
         }
@@ -1041,45 +1445,90 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             }
             match &args[0] {
                 SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_lowercase())),
+                // ASCII-only, mirroring SQLite's built-in LOWER (see UPPER above).
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_ascii_lowercase())),
                 other => Err(VmError::TypeMismatch(format!("LOWER expects TEXT, got {:?}", other))),
             }
         }
 
-        "TRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("TRIM expects 1 arg, got {}", args.len())));
+        // Internal collation canonicaliser (not user-facing SQL — the planner
+        // emits it to lower `x <op> y COLLATE C` onto `canon_C(x) <op> canon_C(y)`).
+        // A text value is transformed by the collation (NOCASE → ASCII-lowercase,
+        // RTRIM → strip trailing spaces); NULL and every non-text value pass
+        // through UNCHANGED, so a numeric comparison keeps its own semantics
+        // (`5 = '5' COLLATE NOCASE` stays 0). Reuses `collate_text`.
+        "__COLLATE" => {
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!(
+                    "__collate expects 2 args, got {}",
+                    args.len()
+                )));
             }
+            let collation = match &args[1] {
+                SqlValue::Text(s) => s.clone(),
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "__collate expects a text collation name, got {other:?}"
+                    )))
+                }
+            };
             match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim().to_string())),
-                other => Err(VmError::TypeMismatch(format!("TRIM expects TEXT, got {:?}", other))),
+                SqlValue::Text(s) => Ok(SqlValue::Text(collate_text(s, &collation))),
+                other => Ok(other.clone()),
             }
         }
 
-        "LTRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("LTRIM expects 1 arg, got {}", args.len())));
+        "TRIM" => trim_builtin("TRIM", &args, true, true),
+
+        "LTRIM" => trim_builtin("LTRIM", &args, true, false),
+
+        "RTRIM" => trim_builtin("RTRIM", &args, false, true),
+
+        "CONCAT" => {
+            // CONCAT(x, y, …): concatenate every argument's text. A NULL argument
+            // contributes the empty string (it does NOT make the result NULL), so
+            // `concat('a', NULL, 'c')` = 'ac'. The result is always text; at least
+            // one argument is required. `trim_coerce` supplies the Int/Bool→text
+            // rule and declines Float/Blob (their SQLite text form is subtle).
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch("CONCAT expects at least 1 arg".into()));
             }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_start().to_string())),
-                other => Err(VmError::TypeMismatch(format!("LTRIM expects TEXT, got {:?}", other))),
+            let mut out = String::new();
+            for a in &args {
+                if let Some(s) = trim_coerce("CONCAT", a)? {
+                    out.push_str(&s);
+                }
             }
+            Ok(SqlValue::Text(out))
         }
 
-        "RTRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("RTRIM expects 1 arg, got {}", args.len())));
+        "CONCAT_WS" => {
+            // CONCAT_WS(sep, x, y, …): join the value arguments with `sep`. Unlike
+            // CONCAT, a NULL value argument is SKIPPED entirely (not joined as
+            // empty), so `concat_ws('-', 'a', NULL, 'c')` = 'a-c'. A NULL separator
+            // makes the whole result NULL. At least two arguments are required
+            // (the separator plus one value).
+            if args.len() < 2 {
+                return Err(VmError::TypeMismatch(format!(
+                    "CONCAT_WS expects at least 2 args, got {}",
+                    args.len()
+                )));
             }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_end().to_string())),
-                other => Err(VmError::TypeMismatch(format!("RTRIM expects TEXT, got {:?}", other))),
+            let sep = match trim_coerce("CONCAT_WS", &args[0])? {
+                None => return Ok(SqlValue::Null),
+                Some(s) => s,
+            };
+            let mut parts: Vec<String> = Vec::new();
+            for a in &args[1..] {
+                if let Some(s) = trim_coerce("CONCAT_WS", a)? {
+                    parts.push(s);
+                }
             }
+            Ok(SqlValue::Text(parts.join(&sep)))
         }
 
-        "SUBSTR" => {
+        // `SUBSTRING` is a spelling of `SUBSTR` — identical semantics.
+        "SUBSTR" | "SUBSTRING" => {
             if args.len() < 2 || args.len() > 3 {
                 return Err(VmError::TypeMismatch(format!("SUBSTR expects 2 or 3 args, got {}", args.len())));
             }
@@ -1095,27 +1544,30 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 SqlValue::Int(n) => *n,
                 other => return Err(VmError::TypeMismatch(format!("SUBSTR arg2 expects INTEGER, got {:?}", other))),
             };
-            // SQLite SUBSTR is 1-indexed.  pos=1 means the first character.
-            // Negative pos counts from the end.
+            // SQLite SUBSTR is 1-indexed and counts *characters*. The index
+            // arithmetic below reproduces SQLite's `substrFunc` exactly, so the
+            // fiddly edge cases match: `pos = 0` (a virtual slot before the
+            // first character), a negative `pos` counting from the right, and a
+            // negative length that returns the |Z| characters *preceding* the
+            // start. See the truth table in `sqlite_substr`.
             let chars: Vec<char> = s.chars().collect();
-            let len = chars.len() as i64;
-            let start = if pos >= 1 {
-                (pos - 1).min(len) as usize
+            let len_arg = if args.len() == 3 {
+                if matches!(args[2], SqlValue::Null) {
+                    return Ok(SqlValue::Null);
+                }
+                match &args[2] {
+                    SqlValue::Int(n) => Some(*n),
+                    other => {
+                        return Err(VmError::TypeMismatch(format!(
+                            "SUBSTR arg3 expects INTEGER, got {:?}",
+                            other
+                        )))
+                    }
+                }
             } else {
-                (len + pos).max(0) as usize
+                None
             };
-            let result_chars = if args.len() == 3 {
-                if matches!(args[2], SqlValue::Null) { return Ok(SqlValue::Null); }
-                let take = match &args[2] {
-                    SqlValue::Int(n) => *n,
-                    other => return Err(VmError::TypeMismatch(format!("SUBSTR arg3 expects INTEGER, got {:?}", other))),
-                };
-                let take = take.max(0) as usize;
-                &chars[start..start.saturating_add(take).min(chars.len())]
-            } else {
-                &chars[start..]
-            };
-            Ok(SqlValue::Text(result_chars.iter().collect()))
+            Ok(SqlValue::Text(sqlite_substr(&chars, pos, len_arg)))
         }
 
         "REPLACE" => {
@@ -1130,6 +1582,14 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 (SqlValue::Text(a), SqlValue::Text(b), SqlValue::Text(c)) => (a, b, c),
                 _ => return Err(VmError::TypeMismatch("REPLACE expects TEXT, TEXT, TEXT".to_string())),
             };
+            // An empty search string returns the subject UNCHANGED, matching
+            // SQLite. Rust's `str::replace("", to)` would instead splice `to`
+            // between every character (and at both ends) — `replace('abc','','X')`
+            // → `'XaXbXcX'` — which is wrong; SQLite short-circuits empty search to
+            // avoid that (and the unbounded expansion it implies).
+            if from.is_empty() {
+                return Ok(SqlValue::Text(s.clone()));
+            }
             Ok(SqlValue::Text(s.replace(from.as_str(), to.as_str())))
         }
 
@@ -1182,10 +1642,338 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             } else {
                 0
             };
+            // SQLite treats a NEGATIVE digit count as zero — it never rounds to
+            // tens/hundreds. `round(2.567, -1)` is `round(2.567, 0)` = `3.0`, not
+            // `0.0`. Clamp the low end here (leaving large positive counts alone,
+            // where the value is already unchanged within f64 precision).
+            let digits = digits.max(0);
             // Round half away from zero (SQLite semantics), to `digits` decimal places.
             let factor = 10_f64.powi(digits);
             let rounded = (x * factor).round() / factor;
+            // Normalize negative zero to positive zero: Rust's `f64::round` yields
+            // `-0.0` for a value that rounds to zero from below (`round(-0.4)` →
+            // `-0.0`), but SQLite's `round()` always reports a zero result as
+            // `0.0`. `-0.0 == 0.0` is true, so this maps `-0.0` → `+0.0` and leaves
+            // every non-zero result untouched. (A bare `-0.0` literal elsewhere in
+            // the engine still keeps its sign — this is round()-specific.)
+            let rounded = if rounded == 0.0 { 0.0 } else { rounded };
             Ok(SqlValue::Float(rounded))
+        }
+
+        "IFNULL" => {
+            // IFNULL(a, b): the two-argument COALESCE — `a` unless it is NULL,
+            // in which case `b`.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("IFNULL expects 2 args, got {}", args.len())));
+            }
+            let mut it = args.into_iter();
+            let a = it.next().unwrap();
+            let b = it.next().unwrap();
+            Ok(if matches!(a, SqlValue::Null) { b } else { a })
+        }
+
+        "NULLIF" => {
+            // NULLIF(a, b): NULL when the two arguments are equal, else `a`.
+            // Equivalent to `CASE WHEN a = b THEN NULL ELSE a END`, so a NULL
+            // first argument still yields NULL.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("NULLIF expects 2 args, got {}", args.len())));
+            }
+            if sql_eq(&args[0], &args[1]) {
+                Ok(SqlValue::Null)
+            } else {
+                Ok(args.into_iter().next().unwrap())
+            }
+        }
+
+        "TYPEOF" => {
+            // TYPEOF(x): SQLite's storage-class name for the value.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("TYPEOF expects 1 arg, got {}", args.len())));
+            }
+            let t = match &args[0] {
+                SqlValue::Null => "null",
+                // SQLite has no boolean storage class — booleans are integers.
+                SqlValue::Bool(_) | SqlValue::Int(_) => "integer",
+                SqlValue::Float(_) => "real",
+                SqlValue::Text(_) => "text",
+                SqlValue::Blob(_) => "blob",
+            };
+            Ok(SqlValue::Text(t.to_string()))
+        }
+
+        "INSTR" => {
+            // INSTR(haystack, needle): 1-based character index of the first
+            // occurrence of `needle` in `haystack`, 0 if absent, NULL if either
+            // argument is NULL. `instr(x, '')` is 1, matching SQLite. (SQLite
+            // also accepts blobs; text covers every current caller, and the
+            // engine's other string builtins are likewise text-only.)
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("INSTR expects 2 args, got {}", args.len())));
+            }
+            if matches!(args[0], SqlValue::Null) || matches!(args[1], SqlValue::Null) {
+                return Ok(SqlValue::Null);
+            }
+            let hay = match &args[0] {
+                SqlValue::Text(s) => s,
+                other => return Err(VmError::TypeMismatch(format!("INSTR arg1 expects TEXT, got {:?}", other))),
+            };
+            let needle = match &args[1] {
+                SqlValue::Text(s) => s,
+                other => return Err(VmError::TypeMismatch(format!("INSTR arg2 expects TEXT, got {:?}", other))),
+            };
+            let pos = if needle.is_empty() {
+                1
+            } else {
+                match hay.find(needle.as_str()) {
+                    // Byte offset → 1-based character offset.
+                    Some(byte_idx) => hay[..byte_idx].chars().count() as i64 + 1,
+                    None => 0,
+                }
+            };
+            Ok(SqlValue::Int(pos))
+        }
+
+        "HEX" => {
+            // HEX(x): uppercase hexadecimal of the argument's bytes. SQLite reads
+            // the argument as a blob — text uses its UTF-8 bytes, a blob its raw
+            // bytes, and an integer its decimal-text bytes (`hex(255)` → "323535").
+            // NULL casts to an *empty blob*, so `hex(NULL)` is the empty string
+            // `''` (a text value), NOT NULL. Floats are declined: their SQLite
+            // text form (`2.0`, not Rust's `2`) is subtle enough that we don't
+            // guess here.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("HEX expects 1 arg, got {}", args.len())));
+            }
+            let bytes: Vec<u8> = match &args[0] {
+                SqlValue::Null => return Ok(SqlValue::Text(String::new())),
+                SqlValue::Text(s) => s.as_bytes().to_vec(),
+                SqlValue::Blob(b) => b.clone(),
+                SqlValue::Int(i) => i.to_string().into_bytes(),
+                SqlValue::Bool(b) => (*b as i64).to_string().into_bytes(),
+                other => return Err(VmError::TypeMismatch(format!("HEX expects TEXT/BLOB/INTEGER, got {:?}", other))),
+            };
+            let mut out = String::with_capacity(bytes.len() * 2);
+            for byte in bytes {
+                out.push_str(&format!("{byte:02X}"));
+            }
+            Ok(SqlValue::Text(out))
+        }
+
+        "UNHEX" => {
+            // UNHEX(x) / UNHEX(x, ignore): the inverse of HEX — decode a string of
+            // hexadecimal digit pairs into a blob. Case-insensitive.
+            //
+            //   unhex('414243')  -> x'414243'  ("ABC")
+            //   unhex('')        -> x''          (empty blob)
+            //   unhex('abc')     -> NULL         (odd number of digits)
+            //   unhex('4g')      -> NULL         (non-hex character)
+            //   unhex(12)        -> x'12'        (integer coerces to its digits)
+            //
+            // The optional second argument is a *set of ignorable characters*.
+            // An ignorable character may appear only at a byte boundary — never
+            // splitting a hex pair — matching SQLite exactly:
+            //
+            //   unhex('41.42', '.')   -> x'4142'   ('.' sits between pairs)
+            //   unhex('4-1-4-2', '-') -> NULL      ('-' splits the pair '4'…'1')
+            //
+            // NULL in either argument yields NULL. Integer/boolean `x` coerces to
+            // its decimal text (via `trim_coerce`); Float/Blob are declined, as
+            // with HEX/QUOTE.
+            if args.is_empty() || args.len() > 2 {
+                return Err(VmError::TypeMismatch(format!("UNHEX expects 1 or 2 args, got {}", args.len())));
+            }
+            let x = match trim_coerce("UNHEX", &args[0])? {
+                None => return Ok(SqlValue::Null),
+                Some(s) => s,
+            };
+            let ignore: std::collections::HashSet<char> = if args.len() == 2 {
+                match trim_coerce("UNHEX", &args[1])? {
+                    None => return Ok(SqlValue::Null),
+                    Some(s) => s.chars().collect(),
+                }
+            } else {
+                std::collections::HashSet::new()
+            };
+            // Output is at most half the input length — bounded by the argument,
+            // so no unbounded allocation.
+            let mut out: Vec<u8> = Vec::with_capacity(x.len() / 2);
+            let mut high: Option<u8> = None;
+            for c in x.chars() {
+                if let Some(v) = c.to_digit(16) {
+                    match high {
+                        None => high = Some(v as u8),
+                        Some(h) => {
+                            out.push(h * 16 + v as u8);
+                            high = None;
+                        }
+                    }
+                } else if ignore.contains(&c) {
+                    // Only allowed at a byte boundary, never mid-pair.
+                    if high.is_some() {
+                        return Ok(SqlValue::Null);
+                    }
+                } else {
+                    // Any other character invalidates the whole string.
+                    return Ok(SqlValue::Null);
+                }
+            }
+            if high.is_some() {
+                return Ok(SqlValue::Null); // a trailing, unpaired hex digit
+            }
+            Ok(SqlValue::Blob(out))
+        }
+
+        "SIGN" => {
+            // SIGN(x): -1, 0, or +1 for a negative, zero, or positive number;
+            // NULL for NULL or a non-numeric argument.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("SIGN expects 1 arg, got {}", args.len())));
+            }
+            let s = match &args[0] {
+                SqlValue::Int(i) => (*i).signum(),
+                SqlValue::Float(f) => {
+                    if *f > 0.0 {
+                        1
+                    } else if *f < 0.0 {
+                        -1
+                    } else {
+                        0
+                    }
+                }
+                _ => return Ok(SqlValue::Null),
+            };
+            Ok(SqlValue::Int(s))
+        }
+
+        "UNICODE" => {
+            // UNICODE(s): the code point of the first character of `s`; NULL for a
+            // NULL or empty string.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("UNICODE expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Text(s) => match s.chars().next() {
+                    Some(c) => Ok(SqlValue::Int(c as i64)),
+                    None => Ok(SqlValue::Null),
+                },
+                SqlValue::Null => Ok(SqlValue::Null),
+                other => Err(VmError::TypeMismatch(format!("UNICODE expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "CHAR" => {
+            // CHAR(x1, x2, …): a string built from the characters whose code
+            // points are the integer arguments. Non-integer or out-of-range code
+            // points contribute nothing (SQLite is lax here); no args → "".
+            let mut out = String::with_capacity(args.len());
+            for a in &args {
+                if let SqlValue::Int(cp) = a {
+                    if let Some(c) = u32::try_from(*cp).ok().and_then(char::from_u32) {
+                        out.push(c);
+                    }
+                }
+            }
+            Ok(SqlValue::Text(out))
+        }
+
+        "ZEROBLOB" => {
+            // ZEROBLOB(n): a BLOB of `n` zero bytes (n < 0 → empty). NULL → NULL.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("ZEROBLOB expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Int(n) => {
+                    let len = (*n).max(0) as usize;
+                    // Cap the eager allocation. `n` is any i64 the query names, so
+                    // `zeroblob(9999999999)` would otherwise request ~10 GB and
+                    // OOM/abort the process. Real SQLite likewise errors past its
+                    // SQLITE_MAX_LENGTH; we reuse the engine's 1e6 guard (as with
+                    // GROUP BY / COUNT(DISTINCT)) and surface ResourceLimit.
+                    const MAX_BLOB_LEN: usize = 1_000_000;
+                    if len > MAX_BLOB_LEN {
+                        return Err(VmError::ResourceLimit(format!(
+                            "ZEROBLOB length {len} exceeds limit {MAX_BLOB_LEN}"
+                        )));
+                    }
+                    Ok(SqlValue::Blob(vec![0u8; len]))
+                }
+                other => Err(VmError::TypeMismatch(format!("ZEROBLOB expects INTEGER, got {:?}", other))),
+            }
+        }
+
+        "QUOTE" => {
+            // QUOTE(x): the value as an SQL literal — NULL as `NULL`, text
+            // single-quoted with doubled inner quotes, a blob as `X'…'` hex, and
+            // an integer as its digits. (Floats are declined; their exact SQLite
+            // text form is subtle, like HEX above.)
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("QUOTE expects 1 arg, got {}", args.len())));
+            }
+            let lit = match &args[0] {
+                SqlValue::Null => "NULL".to_string(),
+                SqlValue::Int(i) => i.to_string(),
+                SqlValue::Bool(b) => (*b as i64).to_string(),
+                SqlValue::Text(s) => format!("'{}'", s.replace('\'', "''")),
+                SqlValue::Blob(b) => {
+                    let mut h = String::with_capacity(b.len() * 2 + 3);
+                    h.push_str("X'");
+                    for byte in b {
+                        h.push_str(&format!("{byte:02X}"));
+                    }
+                    h.push('\'');
+                    h
+                }
+                other => return Err(VmError::TypeMismatch(format!("QUOTE does not support {:?}", other))),
+            };
+            Ok(SqlValue::Text(lit))
+        }
+
+        "MAX" | "MIN" => {
+            // The SCALAR forms of MAX/MIN — two-or-more arguments — return the
+            // largest / smallest argument, or NULL if ANY argument is NULL
+            // (SQLite semantics). The single-argument forms are the AGGREGATE
+            // max/min and are compiled to `FinalizeAgg`, never reaching here; the
+            // planner routes only the 2+-argument calls to `call_builtin`.
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch(format!("{name} expects at least 1 arg")));
+            }
+            if args.iter().any(|a| matches!(a, SqlValue::Null)) {
+                return Ok(SqlValue::Null);
+            }
+            let want_max = name == "MAX";
+            let mut best = args[0].clone();
+            for a in &args[1..] {
+                let ord = sql_cmp(a, &best);
+                let take = if want_max {
+                    ord == std::cmp::Ordering::Greater
+                } else {
+                    ord == std::cmp::Ordering::Less
+                };
+                if take {
+                    best = a.clone();
+                }
+            }
+            Ok(best)
+        }
+
+        "IIF" => {
+            // IIF(x, y, z) — SQLite's function-form conditional, equivalent to
+            // `CASE WHEN x THEN y ELSE z END`: `y` when `x` is truthy (SQL
+            // three-valued logic — a NULL or falsy `x` picks `z`). Arguments are
+            // already evaluated here; since this engine's expressions have no
+            // side effects, eagerly evaluating both branches is observationally
+            // identical to CASE's short-circuit.
+            if args.len() != 3 {
+                return Err(VmError::TypeMismatch(format!("IIF expects 3 args, got {}", args.len())));
+            }
+            let pick_then = is_truthy(&args[0]);
+            let mut it = args.into_iter();
+            let _cond = it.next();
+            let y = it.next().unwrap();
+            let z = it.next().unwrap();
+            Ok(if pick_then { y } else { z })
         }
 
         other => {
@@ -1213,14 +2001,19 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | Int(n ≠ 0)  | true      |
 /// | Float(0.0)  | false     |
 /// | Float(f≠0)  | true      |
-/// | Text / Blob | true      |
+/// | Text / Blob | numeric affinity ≠ 0 (`'5'`→true, `'abc'`/`'0'`/`''`→false) |
 fn is_truthy(v: &SqlValue) -> bool {
     match v {
         SqlValue::Null => false,
         SqlValue::Bool(b) => *b,
         SqlValue::Int(n) => *n != 0,
         SqlValue::Float(f) => *f != 0.0,
-        SqlValue::Text(_) | SqlValue::Blob(_) => true,
+        // A text/blob in a boolean context takes NUMERIC AFFINITY first, exactly
+        // like SQLite: `WHERE 'abc'` is false (`'abc'`→0), `WHERE '5'` is true,
+        // `NOT 'abc'` = 1, `NOT '5'` = 0. Previously every non-NULL text/blob was
+        // truthy, which wrongly kept `WHERE <text-column>` rows and inverted
+        // `NOT`. `cast_to_f64` takes the leading numeric prefix (0 for non-numeric).
+        SqlValue::Text(_) | SqlValue::Blob(_) => cast_to_f64(v) != 0.0,
     }
 }
 
@@ -1290,21 +2083,35 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
     match op {
         // ── Arithmetic ────────────────────────────────────────────────────────
         //
-        // Integer arithmetic uses checked variants so that overflow produces a
-        // VmError rather than panicking in debug builds or silently wrapping in
-        // release builds.  Float arithmetic wraps naturally (IEEE 754 semantics).
-        BinaryOp::Add => checked_int_binop(l, r, i64::checked_add, |a, b| a + b, "addition"),
-        BinaryOp::Sub => checked_int_binop(l, r, i64::checked_sub, |a, b| a - b, "subtraction"),
-        BinaryOp::Mul => checked_int_binop(l, r, i64::checked_mul, |a, b| a * b, "multiplication"),
+        // Integer arithmetic uses checked variants so overflow is detected rather
+        // than panicking (debug) or silently wrapping (release). For `+`/`-`/`*`
+        // and `/` an overflow PROMOTES the operation to REAL (see
+        // `checked_int_binop` and the `Div` arm), matching SQLite; the only i64
+        // overflow `%` can hit is `i64::MIN % -1`, whose remainder is 0. Float
+        // arithmetic wraps naturally (IEEE 754 semantics).
+        BinaryOp::Add => checked_int_binop(l, r, i64::checked_add, |a, b| a + b),
+        BinaryOp::Sub => checked_int_binop(l, r, i64::checked_sub, |a, b| a - b),
+        BinaryOp::Mul => checked_int_binop(l, r, i64::checked_mul, |a, b| a * b),
         BinaryOp::Div => {
-            // Division by zero → VmError.
+            // SQLite returns NULL for division by zero (integer OR float) — e.g.
+            // `SELECT 5/0`, `5.0/0`, and `0/0` all yield NULL, never an error.
+            // NULL operands were already short-circuited above, so a zero divisor
+            // here is a genuine value. `*f == 0.0` also matches `-0.0`.
+            // Numeric affinity applies first, so `5 / '0'` is NULL and `5 / '2'`
+            // is 2, matching SQLite.
+            let (l, r) = (coerce_arith(l), coerce_arith(r));
             match (&l, &r) {
-                (_, SqlValue::Int(0)) => Err(VmError::DivisionByZero),
-                (_, SqlValue::Float(f)) if *f == 0.0 => Err(VmError::DivisionByZero),
+                (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
+                (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
                 (SqlValue::Int(a), SqlValue::Int(b)) => {
-                    a.checked_div(*b).map(SqlValue::Int).ok_or_else(|| {
-                        VmError::TypeMismatch("integer overflow in division".to_string())
-                    })
+                    // `checked_div` is `None` only for `i64::MIN / -1` (the zero
+                    // divisor was handled above), which overflows i64. SQLite
+                    // PROMOTES that to REAL — `-9223372036854775808 / -1` is
+                    // `9223372036854775808.0` — mirroring the +/-/* overflow
+                    // promotion, so fall back to the widened float quotient.
+                    Ok(a.checked_div(*b)
+                        .map(SqlValue::Int)
+                        .unwrap_or_else(|| SqlValue::Float(*a as f64 / *b as f64)))
                 }
                 (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(a / b)),
                 (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(*a as f64 / b)),
@@ -1315,20 +2122,45 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
                 ))),
             }
         }
-        BinaryOp::Mod => match (&l, &r) {
-            (_, SqlValue::Int(0)) => Err(VmError::DivisionByZero),
-            (SqlValue::Int(a), SqlValue::Int(b)) => {
-                a.checked_rem(*b).map(SqlValue::Int).ok_or_else(|| {
-                    VmError::TypeMismatch("integer overflow in modulo".to_string())
-                })
+        BinaryOp::Mod => {
+          // SQLite's `%` is fundamentally an INTEGER operation, unlike `/`: both
+          // operands are first converted to 64-bit integers (numeric affinity,
+          // then truncation TOWARD ZERO — `7.5`→7, `-7.5`→-7 — with out-of-range
+          // reals clamped to the i64 bounds, exactly what Rust's `as i64` float
+          // cast does), the integer remainder is taken, and the RESULT is REAL
+          // when either operand was REAL and INTEGER otherwise. So `7.5 % 2` is
+          // `1.0` (7 % 2 = 1, rendered real), NOT `1.5` (which is what `fmod`
+          // would give). Modulo by zero is NULL — including a real divisor that
+          // truncates to zero, e.g. `5 % 0.9` — never an error.
+          let (l, r) = (coerce_arith(l), coerce_arith(r));
+          // `coerce_arith` leaves only Int/Float for numeric operands; map each to
+          // an i64 (truncating floats), remembering whether either side was REAL.
+          let to_i64 = |v: &SqlValue| -> Option<i64> {
+              match v {
+                  SqlValue::Int(n) => Some(*n),
+                  SqlValue::Float(f) => Some(*f as i64),
+                  _ => None,
+              }
+          };
+          match (to_i64(&l), to_i64(&r)) {
+            (Some(_), Some(0)) => Ok(SqlValue::Null),
+            (Some(a), Some(b)) => {
+                // `checked_rem` is `None` only for `i64::MIN % -1` (the zero
+                // divisor is handled above); the true remainder there is 0, since
+                // -1 divides evenly. So the fallback is 0, never an error.
+                let m = a.checked_rem(b).unwrap_or(0);
+                // REAL if either operand carried REAL affinity, else INTEGER.
+                if matches!(l, SqlValue::Float(_)) || matches!(r, SqlValue::Float(_)) {
+                    Ok(SqlValue::Float(m as f64))
+                } else {
+                    Ok(SqlValue::Int(m))
+                }
             }
-            (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(a % b)),
-            (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(*a as f64 % b)),
-            (SqlValue::Float(a), SqlValue::Int(b)) => Ok(SqlValue::Float(a % *b as f64)),
             _ => Err(VmError::TypeMismatch(format!(
                 "cannot mod {:?} by {:?}", l.type_name(), r.type_name()
             ))),
-        },
+          }
+        }
 
         // ── Comparison ────────────────────────────────────────────────────────
         BinaryOp::Eq => Ok(SqlValue::Bool(sql_eq(&l, &r))),
@@ -1345,9 +2177,28 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             if matches!(l, SqlValue::Null) || matches!(r, SqlValue::Null) {
                 return Ok(SqlValue::Null);
             }
-            let ls = sql_to_str(&l);
-            let rs = sql_to_str(&r);
+            // `||` yields TEXT. A BLOB operand contributes its RAW bytes (as
+            // text), NOT the `x'…'` hex-literal spelling `sql_to_str` uses for
+            // display: SQLite evaluates `X'41' || 'B'` to `'AB'` (0x41 = 'A'),
+            // not `"x'41'B"`. Other types stringify as usual.
+            let ls = concat_operand_to_str(&l);
+            let rs = concat_operand_to_str(&r);
             Ok(SqlValue::Text(ls + &rs))
+        }
+
+        // ── Bitwise ───────────────────────────────────────────────────────────
+        //
+        // Both operands are coerced to integer (SQLite integer affinity: reals
+        // truncate toward zero, text prefix-parses). NULL was already handled
+        // above, so these never see NULL. `&`/`|` are plain i64 bit ops; shifts
+        // follow SQLite's saturate-and-negate rules in `sql_shift`.
+        BinaryOp::BitAnd => Ok(SqlValue::Int(cast_to_i64(&l) & cast_to_i64(&r))),
+        BinaryOp::BitOr => Ok(SqlValue::Int(cast_to_i64(&l) | cast_to_i64(&r))),
+        BinaryOp::ShiftLeft => {
+            Ok(SqlValue::Int(sql_shift(cast_to_i64(&l), cast_to_i64(&r), true)))
+        }
+        BinaryOp::ShiftRight => {
+            Ok(SqlValue::Int(sql_shift(cast_to_i64(&l), cast_to_i64(&r), false)))
         }
 
         // AND/OR already handled above.
@@ -1355,23 +2206,94 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
     }
 }
 
+/// SQLite's bit-shift semantics for `value << count` / `value >> count`.
+///
+/// Rust's own `<<`/`>>` are Undefined Behaviour (they panic in debug) once the
+/// shift amount reaches the type width, so we cannot use them directly on
+/// attacker-controlled counts. SQLite instead defines every count precisely
+/// (verified against the C library):
+///
+/// | input        | result | why                                        |
+/// |--------------|--------|--------------------------------------------|
+/// | `1 << 64`    | 0      | count ≥ 64 on a left shift → 0             |
+/// | `8 >> 100`   | 0      | count ≥ 64, value ≥ 0 → 0                  |
+/// | `-1 >> 1`    | -1     | right shift is arithmetic (sign-extending) |
+/// | `-4 >> 100`  | -1     | count ≥ 64, value < 0 → -1                 |
+/// | `1 << -1`    | 0      | negative count flips direction: `1 >> 1`   |
+///
+/// The rules: a negative count shifts the *other* direction by its magnitude; a
+/// count ≥ 64 saturates (left → 0; right → 0 for a non-negative value, −1 for a
+/// negative one because the sign bit fills); otherwise a normal shift, using an
+/// unsigned left shift so it can never overflow and an `i64` (arithmetic) right
+/// shift so negatives sign-extend — exactly matching SQLite's implementation.
+fn sql_shift(value: i64, count: i64, left: bool) -> i64 {
+    let mut do_left = left;
+    // Magnitude of the shift; a negative count means shift the other way.
+    // `i64::MIN.unsigned_abs()` is 2^63, well past 64, so it saturates below.
+    let amount: u64 = if count < 0 {
+        do_left = !do_left;
+        count.unsigned_abs()
+    } else {
+        count as u64
+    };
+
+    if amount >= 64 {
+        // Saturated: a left shift (or any shift of a non-negative value) yields
+        // 0; a right shift of a negative value fills with sign bits → -1.
+        return if value >= 0 || do_left { 0 } else { -1 };
+    }
+    let amount = amount as u32;
+    if do_left {
+        // Unsigned shift cannot be UB and matches SQLite's `(i64)((u64)iA<<iB)`.
+        (value as u64).wrapping_shl(amount) as i64
+    } else {
+        // i64 `>>` is arithmetic in Rust, sign-extending like SQLite.
+        value >> amount
+    }
+}
+
 /// Helper for symmetric int/float arithmetic with checked integer operations.
 ///
 /// `int_op` is a checked variant (returns `Option<i64>`); `float_op` is unchecked
 /// (IEEE 754 overflow saturates to ±∞ which is the standard SQL behaviour).
+/// Apply SQLite numeric affinity to an arithmetic operand. Text/blob take their
+/// leading numeric prefix (`'5'`→5, `'5.5'`→5.5, `'12abc'`→12, `'abc'`→0) via
+/// [`text_to_numeric_operand`], which keeps the type the *syntax* implies — so
+/// `'3.0'` stays the real `3.0` and `'9.0' / 2` is `4.5`. (Note this is the operand
+/// rule, **not** [`text_to_numeric`]'s `CAST(… AS NUMERIC)` rule, which would
+/// collapse `'3.0'` to the integer `3`.) A bool is its integer value; INTEGER/REAL
+/// pass through. NULL never reaches here — `eval_binary` short-circuits NULL
+/// operands before dispatching to arithmetic. Scoped to arithmetic only: comparison
+/// and bitwise operators apply their own (different) coercion rules.
+fn coerce_arith(v: SqlValue) -> SqlValue {
+    match v {
+        SqlValue::Int(_) | SqlValue::Float(_) => v,
+        SqlValue::Bool(b) => SqlValue::Int(b as i64),
+        SqlValue::Text(s) => text_to_numeric_operand(&s),
+        SqlValue::Blob(b) => text_to_numeric_operand(&String::from_utf8_lossy(&b)),
+        SqlValue::Null => SqlValue::Null,
+    }
+}
+
 fn checked_int_binop(
     l: SqlValue,
     r: SqlValue,
     int_op: impl Fn(i64, i64) -> Option<i64>,
     float_op: impl Fn(f64, f64) -> f64,
-    op_name: &'static str,
 ) -> Result<SqlValue, VmError> {
+    // SQLite applies numeric affinity to arithmetic operands: `'5' + 0` = 5.
+    let (l, r) = (coerce_arith(l), coerce_arith(r));
     match (l, r) {
-        (SqlValue::Int(a), SqlValue::Int(b)) => {
-            int_op(a, b).map(SqlValue::Int).ok_or_else(|| {
-                VmError::TypeMismatch(format!("integer overflow in {op_name}"))
-            })
-        }
+        // Two integers: return the exact i64 result when it fits. On overflow
+        // SQLite does NOT error or wrap — it PROMOTES the operation to floating
+        // point and yields a REAL. `9223372036854775807 + 1` = 9.2233720369e18
+        // (real), `min_i64 - 1` and `max_i64 * 2` likewise. We recompute with
+        // `float_op` on the f64-widened operands (the same float path the
+        // mixed-operand arms use), so the result carries REAL affinity.
+        (SqlValue::Int(a), SqlValue::Int(b)) => Ok(match int_op(a, b) {
+            Some(v) => SqlValue::Int(v),
+            None => SqlValue::Float(float_op(a as f64, b as f64)),
+        }),
         (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(float_op(a, b))),
         (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(float_op(a as f64, b))),
         (SqlValue::Float(a), SqlValue::Int(b)) => Ok(SqlValue::Float(float_op(a, b as f64))),
@@ -1423,20 +2345,44 @@ fn eval_unary(op: &UnaryOp, v: SqlValue) -> Result<SqlValue, VmError> {
     match v {
         SqlValue::Null => Ok(SqlValue::Null),
         _ => match op {
-            UnaryOp::Neg => match v {
-                SqlValue::Int(n) => {
-                    // -i64::MIN overflows; use checked_neg to return an error
-                    // instead of panicking (debug) or wrapping (release).
-                    n.checked_neg()
-                        .map(SqlValue::Int)
-                        .ok_or_else(|| VmError::TypeMismatch(
-                            "integer overflow in unary negation (value is i64::MIN)".to_string()
-                        ))
+            UnaryOp::Neg => {
+                // SQLite applies numeric affinity to the operand *before*
+                // negating, so `-` on text/blob coerces first:
+                //   `-'5'`   = -5      `-'12abc'` = -12    `-'abc'` = 0
+                //   `-'3.5'` = -3.5    `-'  7'`   = -7     `-TRUE`  = -1
+                // A leading numeric prefix is taken (whitespace-trimmed) and the
+                // rest ignored; text with no numeric prefix is 0.
+                // [`text_to_numeric_operand`] is the shared operand-affinity helper:
+                // it keeps the type the *syntax* implies, so real-form text stays
+                // REAL — `-'3.0'` = -3.0 and `-'3e2'` = -300.0, matching SQLite.
+                let num = match v {
+                    SqlValue::Int(_) | SqlValue::Float(_) => v,
+                    SqlValue::Bool(b) => SqlValue::Int(b as i64),
+                    SqlValue::Text(s) => text_to_numeric_operand(&s),
+                    SqlValue::Blob(b) => {
+                        text_to_numeric_operand(&String::from_utf8_lossy(&b))
+                    }
+                    SqlValue::Null => unreachable!("NULL handled by the outer match"),
+                };
+                match num {
+                    // `-n` fits in i64 for every value except i64::MIN, whose
+                    // negation overflows. SQLite PROMOTES that one case to REAL
+                    // (`-(-9223372036854775808)` = 9.2233720369e18) rather than
+                    // erroring/wrapping — mirroring the binary-overflow promotion
+                    // in `checked_int_binop`. `checked_neg` isolates the overflow
+                    // without ever panicking (debug) or wrapping (release).
+                    SqlValue::Int(n) => Ok(match n.checked_neg() {
+                        Some(v) => SqlValue::Int(v),
+                        None => SqlValue::Float(-(n as f64)),
+                    }),
+                    SqlValue::Float(f) => Ok(SqlValue::Float(-f)),
+                    _ => unreachable!("text_to_numeric_operand returns Int or Float"),
                 }
-                SqlValue::Float(f) => Ok(SqlValue::Float(-f)),
-                other => Ok(other), // non-numeric: leave unchanged
-            },
+            }
             UnaryOp::Not => Ok(SqlValue::Bool(!is_truthy(&v))),
+            // `~x` — coerce to integer (SQLite integer affinity) then complement.
+            // `~0` = -1, `~-1` = 0. NULL was handled above.
+            UnaryOp::BitNot => Ok(SqlValue::Int(!cast_to_i64(&v))),
         },
     }
 }
@@ -1451,23 +2397,28 @@ fn eval_between(
     val: &SqlValue,
     lo: &SqlValue,
     hi: &SqlValue,
-    inclusive: bool,
+    plain: bool,
 ) -> Result<SqlValue, VmError> {
-    // NULL propagation: any NULL → NULL.
+    // NULL propagation: any NULL → NULL (three-valued logic).
     if matches!(val, SqlValue::Null) || matches!(lo, SqlValue::Null) || matches!(hi, SqlValue::Null) {
         return Ok(SqlValue::Null);
     }
-    let ge = if inclusive {
-        matches!(sql_cmp(val, lo), std::cmp::Ordering::Greater | std::cmp::Ordering::Equal)
-    } else {
-        sql_cmp(val, lo) == std::cmp::Ordering::Greater
-    };
-    let le = if inclusive {
-        matches!(sql_cmp(val, hi), std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
-    } else {
-        sql_cmp(val, hi) == std::cmp::Ordering::Less
-    };
-    Ok(SqlValue::Bool(ge && le))
+    // The BETWEEN range test is *inclusive*: `val >= lo AND val <= hi`.
+    //
+    //   x   BETWEEN a AND c  ≡  a <= x <= c
+    //   x NOT BETWEEN a AND c ≡  NOT(a <= x <= c)  ≡  x < a OR x > c
+    //
+    // `plain` is codegen's `!negated` (the ONLY producer of `Between(false)` is
+    // `NOT BETWEEN`). `NOT BETWEEN` is the LOGICAL NEGATION of the inclusive
+    // range — it must NOT be computed as a strict/exclusive-bounds range
+    // (`val > lo AND val < hi`). The earlier code did exactly that, which
+    // inverted the answer for interior values: `5 NOT BETWEEN 1 AND 10` wrongly
+    // returned true (5 is *in* [1,10], so `NOT BETWEEN` is false), and
+    // `15 NOT BETWEEN 1 AND 10` wrongly returned false. NULL already returned
+    // above, so the negation is a plain boolean flip.
+    let in_range = matches!(sql_cmp(val, lo), std::cmp::Ordering::Greater | std::cmp::Ordering::Equal)
+        && matches!(sql_cmp(val, hi), std::cmp::Ordering::Less | std::cmp::Ordering::Equal);
+    Ok(SqlValue::Bool(if plain { in_range } else { !in_range }))
 }
 
 // ===========================================================================
@@ -1534,6 +2485,1122 @@ fn like_match(text: &str, pattern: &str) -> bool {
     pi == p.len()
 }
 
+/// `LIKE` matching with an `ESCAPE` character, per SQLite. Identical to
+/// [`like_match`] except that `escape` immediately before a `%`, `_`, or the
+/// escape character itself makes that character a **literal** (matched
+/// case-insensitively) rather than a wildcard — so `'100%' LIKE '100\%'
+/// ESCAPE '\'` is true and matches only a trailing percent sign.
+fn like_match_escape(text: &str, pattern: &str, escape: char) -> bool {
+    let t: Vec<char> = text.chars().collect();
+    let p: Vec<char> = pattern.chars().collect();
+
+    let (mut ti, mut pi) = (0usize, 0usize);
+    let (mut star_pi, mut star_ti) = (usize::MAX, 0usize);
+
+    // `chars_eq` folds ASCII/Unicode case exactly as the wildcard-free path does.
+    let chars_eq = |a: char, b: char| a.to_lowercase().next() == b.to_lowercase().next();
+
+    while ti < t.len() {
+        if pi + 1 < p.len() && p[pi] == escape {
+            // Escaped literal: the character after `escape` must match verbatim.
+            if chars_eq(p[pi + 1], t[ti]) {
+                ti += 1;
+                pi += 2;
+            } else if star_pi != usize::MAX {
+                star_ti += 1;
+                ti = star_ti;
+                pi = star_pi + 1;
+            } else {
+                return false;
+            }
+        } else if pi < p.len() && p[pi] == '%' {
+            // `%` matches zero or more; record the backtrack point.
+            star_pi = pi;
+            pi += 1;
+            star_ti = ti;
+        } else if pi < p.len() && (p[pi] == '_' || chars_eq(p[pi], t[ti])) {
+            ti += 1;
+            pi += 1;
+        } else if star_pi != usize::MAX {
+            star_ti += 1;
+            ti = star_ti;
+            pi = star_pi + 1;
+        } else {
+            return false;
+        }
+    }
+
+    // Only trailing `%` can match the empty suffix; an escaped literal or `_`
+    // still demands a character, so the pattern fails to consume fully.
+    while pi < p.len() && p[pi] == '%' {
+        pi += 1;
+    }
+
+    pi == p.len()
+}
+
+/// Try to match a GLOB character class `[...]` in `p` starting at `p[start]`
+/// (which must be `'['`) against `ch`. Returns `Some((matched, after))` where
+/// `after` is the pattern index just past the closing `']'`; or `None` if there
+/// is no closing `']'`, in which case the caller treats `'['` as a literal.
+///
+/// A leading `^` negates the class. A `]` immediately after `[` (or `[^`) is a
+/// literal member, not the closer. `a-c` is an inclusive range.
+fn glob_class_match(p: &[char], start: usize, ch: char) -> Option<(bool, usize)> {
+    let mut i = start + 1;
+    let negate = i < p.len() && p[i] == '^';
+    if negate {
+        i += 1;
+    }
+    let first = i; // a `]` here is a literal member, not the class close
+    let mut matched = false;
+    while i < p.len() {
+        if p[i] == ']' && i != first {
+            let result = if negate { !matched } else { matched };
+            return Some((result, i + 1));
+        }
+        // `x-y` range (but not when `-` is the class's closing-adjacent char).
+        if i + 2 < p.len() && p[i + 1] == '-' && p[i + 2] != ']' {
+            if p[i] <= ch && ch <= p[i + 2] {
+                matched = true;
+            }
+            i += 3;
+        } else {
+            if p[i] == ch {
+                matched = true;
+            }
+            i += 1;
+        }
+    }
+    None // unterminated class
+}
+
+/// Whether the single GLOB pattern element at `p[pi]` (a literal, `?`, or a
+/// `[...]` class) matches `ch`. Returns the pattern index after the element on a
+/// match, or `None` on no match. Does not handle `*` (the caller does).
+fn glob_single(p: &[char], pi: usize, ch: char) -> Option<usize> {
+    match p[pi] {
+        '?' => Some(pi + 1),
+        '[' => match glob_class_match(p, pi, ch) {
+            Some((true, after)) => Some(after),
+            Some((false, _)) => None,
+            None => (ch == '[').then_some(pi + 1), // literal '['
+        },
+        c => (c == ch).then_some(pi + 1),
+    }
+}
+
+/// Coerce a value to the integer a `printf` `%d`/`%x`/… conversion expects.
+/// Matches SQLite: an integer is itself; a float truncates toward zero; text
+/// contributes its leading integer (`'12ab'` → 12, `'abc'` → 0); NULL and other
+/// types are 0.
+fn printf_int(v: &SqlValue) -> i64 {
+    match v {
+        SqlValue::Int(i) => *i,
+        SqlValue::Bool(b) => *b as i64,
+        SqlValue::Float(f) => *f as i64,
+        SqlValue::Text(s) => {
+            // Parse an optional sign followed by ASCII digits, stopping at the
+            // first non-digit — exactly what SQLite's implicit text→int cast does.
+            let t = s.trim_start();
+            let mut chars = t.chars().peekable();
+            let mut neg = false;
+            match chars.peek() {
+                Some('-') => {
+                    neg = true;
+                    chars.next();
+                }
+                Some('+') => {
+                    chars.next();
+                }
+                _ => {}
+            }
+            let mut n: i64 = 0;
+            for c in chars {
+                if let Some(d) = c.to_digit(10) {
+                    n = n.saturating_mul(10).saturating_add(d as i64);
+                } else {
+                    break;
+                }
+            }
+            if neg {
+                -n
+            } else {
+                n
+            }
+        }
+        _ => 0,
+    }
+}
+
+/// Coerce a value to the string a `printf` `%s`/`%q`/`%c` conversion expects.
+/// Text is itself; an integer/boolean becomes its decimal text; NULL becomes the
+/// empty string. Floats and blobs are declined (their exact SQLite text form is
+/// subtle — same convention as HEX/QUOTE).
+fn printf_str(name: &str, v: &SqlValue) -> Result<String, VmError> {
+    match v {
+        SqlValue::Null => Ok(String::new()),
+        SqlValue::Text(s) => Ok(s.clone()),
+        SqlValue::Int(i) => Ok(i.to_string()),
+        SqlValue::Bool(b) => Ok((*b as i64).to_string()),
+        other => Err(VmError::TypeMismatch(format!(
+            "{name}: %s/%q of {other:?} is unsupported"
+        ))),
+    }
+}
+
+/// Coerce a value to the `f64` a `printf` float conversion (`%e`/`%f`/`%g`)
+/// expects. Matches SQLite's numeric affinity: an integer/boolean is its value;
+/// a float is itself; text contributes its leading real (`'3.14abc'` → 3.14,
+/// `'abc'` → 0.0, same rule as `CAST(... AS REAL)`); NULL and blobs are 0.0.
+fn printf_float(v: &SqlValue) -> f64 {
+    match v {
+        SqlValue::Float(f) => *f,
+        SqlValue::Int(i) => *i as f64,
+        SqlValue::Bool(b) => *b as i64 as f64,
+        SqlValue::Text(s) => parse_real_prefix(s),
+        _ => 0.0,
+    }
+}
+
+/// Rewrite Rust's `{:e}` exponent to C `printf` form: Rust emits `1.5e0` /
+/// `1.23e-4` (bare, sign only when negative, no leading zero); C emits
+/// `1.5e+00` / `1.23e-04` (always a sign, at least two exponent digits). `upper`
+/// selects `E` for the `%E`/`%G` conversions.
+fn fix_exp(s: &str, upper: bool) -> String {
+    let Some((mant, exp)) = s.split_once(['e', 'E']) else {
+        return s.to_string();
+    };
+    let e: i32 = exp.parse().unwrap_or(0);
+    let ec = if upper { 'E' } else { 'e' };
+    let sign = if e < 0 { '-' } else { '+' };
+    format!("{mant}{ec}{sign}{:02}", e.unsigned_abs())
+}
+
+/// `%g` fixed-form cleanup: strip trailing zeros and any now-trailing decimal
+/// point (`"100.000"` → `"100"`, `"1.50000"` → `"1.5"`). Only touches strings
+/// that contain a `.`, so an integer-form body is returned untouched.
+fn strip_g_fixed(s: &str) -> String {
+    if s.contains('.') {
+        s.trim_end_matches('0').trim_end_matches('.').to_string()
+    } else {
+        s.to_string()
+    }
+}
+
+/// `%g` scientific-form cleanup: strip trailing zeros from the mantissa (the
+/// part before `e`/`E`) only — `"1.00000e+20"` → `"1e+20"`, `"1.23457e+06"`
+/// unchanged. The exponent is left intact.
+fn strip_g_sci(s: &str) -> String {
+    match s.find(['e', 'E']) {
+        Some(i) => {
+            let (mant, exp) = s.split_at(i);
+            let m = if mant.contains('.') {
+                mant.trim_end_matches('0').trim_end_matches('.')
+            } else {
+                mant
+            };
+            format!("{m}{exp}")
+        }
+        None => s.to_string(),
+    }
+}
+
+/// Format the (non-negative) MAGNITUDE of a float per a C `printf` float
+/// conversion, matching SQLite. `spec` is one of `e E f F g G`; `precision` is
+/// the explicit `.N` or `None` (defaulting to 6). The sign is handled by the
+/// caller so this composes with the `0`/width padding machinery.
+///
+/// - `%f` — fixed: `precision` fractional digits (`1.5` → `1.500000`).
+/// - `%e` — scientific: one leading digit, `precision` fractional digits, a
+///   C-form exponent (`1.5` → `1.500000e+00`).
+/// - `%g` — the shorter of `%e`/`%f` at `precision` SIGNIFICANT digits, then
+///   trailing zeros trimmed. Uses `%e` when the decimal exponent is `< -4` or
+///   `>= precision`, else `%f`; `precision` 0 is treated as 1 (C rule).
+fn printf_float_body(spec: char, mag: f64, precision: Option<usize>) -> String {
+    let upper = spec.is_ascii_uppercase();
+    // Non-finite values: C prints `inf`/`nan` (upper for the capital specs).
+    if !mag.is_finite() {
+        let s = if mag.is_nan() { "nan" } else { "inf" };
+        return if upper { s.to_uppercase() } else { s.to_string() };
+    }
+    match spec.to_ascii_lowercase() {
+        'f' => format!("{:.*}", precision.unwrap_or(6), mag),
+        'e' => fix_exp(&format!("{:.*e}", precision.unwrap_or(6), mag), upper),
+        _ => {
+            // `%g`: precision is a SIGNIFICANT-digit count (default 6, min 1).
+            let mut p = precision.unwrap_or(6);
+            if p == 0 {
+                p = 1;
+            }
+            if mag == 0.0 {
+                return "0".to_string();
+            }
+            // Round to `p` significant digits in scientific form to learn the
+            // decimal exponent AFTER rounding (a 9.99→10.0 carry can bump it).
+            let sci = format!("{:.*e}", p - 1, mag);
+            let exp: i32 = sci
+                .split(['e', 'E'])
+                .nth(1)
+                .and_then(|e| e.parse().ok())
+                .unwrap_or(0);
+            if exp >= -4 && (exp as i64) < p as i64 {
+                let fprec = (p as i32 - 1 - exp).max(0) as usize;
+                strip_g_fixed(&format!("{:.*}", fprec, mag))
+            } else {
+                strip_g_sci(&fix_exp(&sci, upper))
+            }
+        }
+    }
+}
+
+/// A minimal, DoS-bounded implementation of SQLite's `printf`/`format`.
+///
+/// Supports the conversions `%d`/`%i`, `%s` (with `.precision` truncation),
+/// `%x`/`%X`, `%o`, `%c` (the first character of the argument's text), the
+/// SQL-quoting family `%q` / `%Q` / `%w`, the float conversions `%e`/`%E`,
+/// `%f`/`%F`, `%g`/`%G`, and `%%`; with the flags `-` (left-justify), `0`
+/// (zero-pad numbers), `+` and space (sign on positives), and a field width.
+///
+/// The quoting family follows SQLite's `etSQLESCAPE` semantics: `%q` doubles
+/// single quotes (for a bare string inside a `'...'` literal); `%Q` does the
+/// same AND wraps the result in single quotes; `%w` doubles double quotes (for
+/// a `"..."` identifier). A NULL argument renders as `(NULL)` for `%q`/`%w` and
+/// as the bare keyword `NULL` for `%Q` — matching SQLite exactly. `%q`/`%Q`/`%w`
+/// of a REAL or BLOB argument is declined (its exact SQLite text form is the
+/// same dtoa subtlety HEX/QUOTE avoid); text/integer arguments are supported.
+///
+/// The float conversions coerce their argument with numeric affinity (see
+/// [`printf_float`]) and format it per the C standard (see
+/// [`printf_float_body`]): `%f` fixed, `%e` scientific with a C-form exponent,
+/// `%g` the shorter form at N significant digits with trailing zeros trimmed.
+/// Default precision is 6.
+///
+/// Missing arguments default to `0` (numeric) or `""` (string), and extra
+/// arguments are ignored — matching SQLite. Width and precision are capped, and
+/// the running output is capped, so a hostile format like `printf('%9999999999d')`
+/// cannot drive an unbounded allocation.
+fn sql_printf(name: &str, format: &str, args: &[SqlValue]) -> Result<String, VmError> {
+    const MAX_FIELD: usize = 1_000_000; // per-field width/precision cap
+    const MAX_OUTPUT: usize = 10_000_000; // total output cap
+
+    let fmt: Vec<char> = format.chars().collect();
+    let mut out = String::new();
+    let mut argi = 0usize;
+    let mut i = 0usize;
+
+    let take_field = |i: &mut usize| -> Result<usize, VmError> {
+        let mut n = 0usize;
+        while *i < fmt.len() && fmt[*i].is_ascii_digit() {
+            n = n
+                .saturating_mul(10)
+                .saturating_add((fmt[*i] as u8 - b'0') as usize);
+            *i += 1;
+        }
+        if n > MAX_FIELD {
+            return Err(VmError::ResourceLimit(format!(
+                "{name}: field size {n} exceeds limit {MAX_FIELD}"
+            )));
+        }
+        Ok(n)
+    };
+
+    while i < fmt.len() {
+        if fmt[i] != '%' {
+            out.push(fmt[i]);
+            i += 1;
+            continue;
+        }
+        i += 1; // consume '%'
+        // Flags.
+        let (mut left, mut zero, mut plus, mut space) = (false, false, false, false);
+        while i < fmt.len() {
+            match fmt[i] {
+                '-' => left = true,
+                '0' => zero = true,
+                '+' => plus = true,
+                ' ' => space = true,
+                '#' => {} // alternate form — accepted and ignored
+                _ => break,
+            }
+            i += 1;
+        }
+        let width = take_field(&mut i)?;
+        let precision = if i < fmt.len() && fmt[i] == '.' {
+            i += 1;
+            Some(take_field(&mut i)?)
+        } else {
+            None
+        };
+        let Some(&spec) = fmt.get(i) else {
+            // A trailing, incomplete conversion: emit a literal '%'.
+            out.push('%');
+            break;
+        };
+        i += 1;
+
+        if spec == '%' {
+            out.push('%');
+            continue;
+        }
+
+        // Build the converted body and note whether it is a signed number (so a
+        // `0` flag pads between the sign and the digits). Arms that `continue`
+        // or `return` diverge, so the match is still a `String` expression.
+        let mut sign = String::new();
+        let body: String = match spec {
+            'd' | 'i' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                if n < 0 {
+                    sign.push('-');
+                } else if plus {
+                    sign.push('+');
+                } else if space {
+                    sign.push(' ');
+                }
+                n.unsigned_abs().to_string()
+            }
+            'x' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                format!("{:x}", n as u64)
+            }
+            'X' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                format!("{:X}", n as u64)
+            }
+            'o' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                format!("{:o}", n as u64)
+            }
+            's' => {
+                let mut s = printf_str(name, args.get(argi).unwrap_or(&SqlValue::Null))?;
+                argi += 1;
+                if let Some(p) = precision {
+                    s = s.chars().take(p).collect();
+                }
+                s
+            }
+            'c' => {
+                let s = printf_str(name, args.get(argi).unwrap_or(&SqlValue::Null))?;
+                argi += 1;
+                s.chars().next().map(|c| c.to_string()).unwrap_or_default()
+            }
+            'q' => {
+                // Escape single quotes by doubling; a NULL argument renders as
+                // the SQLite sentinel `(NULL)`. No surrounding quotes.
+                let v = args.get(argi).unwrap_or(&SqlValue::Null);
+                argi += 1;
+                match v {
+                    SqlValue::Null => "(NULL)".to_string(),
+                    _ => printf_str(name, v)?.replace('\'', "''"),
+                }
+            }
+            'Q' => {
+                // Like %q, but ALSO wrap the escaped text in single quotes so the
+                // result is a complete SQL string literal. A NULL argument
+                // renders as the bare keyword `NULL` (no quotes).
+                let v = args.get(argi).unwrap_or(&SqlValue::Null);
+                argi += 1;
+                match v {
+                    SqlValue::Null => "NULL".to_string(),
+                    _ => format!("'{}'", printf_str(name, v)?.replace('\'', "''")),
+                }
+            }
+            'w' => {
+                // Escape double quotes by doubling, for embedding in a "..."
+                // identifier. A NULL argument renders as `(NULL)`.
+                let v = args.get(argi).unwrap_or(&SqlValue::Null);
+                argi += 1;
+                match v {
+                    SqlValue::Null => "(NULL)".to_string(),
+                    _ => printf_str(name, v)?.replace('"', "\"\""),
+                }
+            }
+            'e' | 'E' | 'f' | 'F' | 'g' | 'G' => {
+                // Float conversions: coerce via numeric affinity, split off the
+                // sign (so the `0`/width padding composes as for %d), then format
+                // the magnitude per the C standard.
+                let val = printf_float(args.get(argi).unwrap_or(&SqlValue::Null));
+                argi += 1;
+                if val.is_sign_negative() && !val.is_nan() {
+                    sign.push('-');
+                } else if plus {
+                    sign.push('+');
+                } else if space {
+                    sign.push(' ');
+                }
+                printf_float_body(spec, val.abs(), precision)
+            }
+            other => {
+                return Err(VmError::TypeMismatch(format!(
+                    "{name}: unsupported conversion %{other}"
+                )));
+            }
+        };
+
+        // Assemble sign + body + width padding.
+        let content_len = sign.chars().count() + body.chars().count();
+        let pad = width.saturating_sub(content_len);
+        if left {
+            out.push_str(&sign);
+            out.push_str(&body);
+            out.extend(std::iter::repeat_n(' ', pad));
+        } else if zero
+            && matches!(
+                spec,
+                'd' | 'i' | 'x' | 'X' | 'o' | 'e' | 'E' | 'f' | 'F' | 'g' | 'G'
+            )
+        {
+            out.push_str(&sign);
+            out.extend(std::iter::repeat_n('0', pad));
+            out.push_str(&body);
+        } else {
+            out.extend(std::iter::repeat_n(' ', pad));
+            out.push_str(&sign);
+            out.push_str(&body);
+        }
+
+        if out.len() > MAX_OUTPUT {
+            return Err(VmError::ResourceLimit(format!(
+                "{name}: output exceeds limit {MAX_OUTPUT}"
+            )));
+        }
+    }
+
+    Ok(out)
+}
+
+/// GLOB pattern match: case-sensitive, `*` = any run, `?` = any single char,
+/// `[...]` = character class (`[^...]` negated, `a-c` ranges). Unlike LIKE, a
+/// backslash is a literal character (GLOB has no escape). Uses the same
+/// iterative two-pointer backtracking as [`like_match`], so it is `O(text ×
+/// pattern)` — no exponential blow-up on adversarial `*`-heavy patterns.
+fn glob_match(text: &str, pattern: &str) -> bool {
+    let t: Vec<char> = text.chars().collect();
+    let p: Vec<char> = pattern.chars().collect();
+
+    let (mut ti, mut pi) = (0usize, 0usize);
+    // Backtrack point: pattern index just after the last `*`, and the text index
+    // it started matching from.
+    let (mut star_pi, mut star_ti): (Option<usize>, usize) = (None, 0);
+
+    while ti < t.len() {
+        if pi < p.len() && p[pi] == '*' {
+            star_pi = Some(pi);
+            star_ti = ti;
+            pi += 1;
+        } else if let Some(next_pi) = p.get(pi).and_then(|_| glob_single(&p, pi, t[ti])) {
+            pi = next_pi;
+            ti += 1;
+        } else if let Some(sp) = star_pi {
+            // The last `*` consumes one more text character.
+            star_ti += 1;
+            ti = star_ti;
+            pi = sp + 1;
+        } else {
+            return false;
+        }
+    }
+
+    // Any trailing `*` wildcards match the empty suffix.
+    while pi < p.len() && p[pi] == '*' {
+        pi += 1;
+    }
+    pi == p.len()
+}
+
+// ===========================================================================
+// Date/time subsystem — `date` / `time` / `datetime` / `julianday` / `unixepoch`
+// ===========================================================================
+//
+// SQLite has no dedicated date type: a moment in time is a REAL/INT Julian day,
+// or an ISO-8601 string, and every date function converts to a canonical
+// **integer count of milliseconds of Julian Day** (`iJD`) and back. We port that
+// exactly — the arithmetic below mirrors SQLite's `computeJD`, `computeYMD` and
+// `computeHMS` — so results (including quirks like normalization) match bit-for-
+// bit.
+//
+// ## Julian Day, briefly
+//
+// The Julian Day (JD) is a continuous day count with its zero at noon on 24 Nov
+// 4714 BC (proleptic Gregorian). Noon — not midnight — so a whole JD lands at
+// noon and midnight falls on the `.5`. `iJD = JD × 86_400_000` (whole
+// milliseconds) lets all arithmetic stay in exact integers:
+//
+// ```text
+//   iJD (ms)  ──/86_400_000──▶  JD (real)     julianday(X)
+//   iJD (ms)  ──(−epoch)/1000─▶ unix seconds  unixepoch(X)
+//   iJD (ms)  ◀─calendar mathֶ─▶ Y-M-D H:M:S   date/time/datetime(X)
+// ```
+//
+// The Unix epoch 1970-01-01 00:00 is JD 2440587.5, i.e. `iJD = 210_866_760_000_000`.
+//
+// ## Why the calendar formula normalizes
+//
+// `computeJD` turns Y-M-D into a day number with an *arithmetic* formula that
+// never consults the length of a month, so an out-of-range day simply lands on
+// the following month: `date('2026-02-30')` → `2026-03-02`, exactly as SQLite
+// does. Only the coarse field ranges are checked up front (month 1–12, day 1–31,
+// hour 0–24, minute/second < 60); everything else the round-trip normalizes.
+
+/// The Unix epoch (1970-01-01 00:00:00 UTC) expressed as `iJD` milliseconds.
+/// `julianday` of this instant is 2440587.5, and 2440587.5 × 86_400_000 =
+/// 210_866_760_000_000.
+const UNIX_EPOCH_IJD_MS: i64 = 210_866_760_000_000;
+
+/// Upper bound (exclusive) on a numeric Julian-day argument, matching SQLite:
+/// `date(5373484.5)` and above is out of range (year > 9999) and yields NULL.
+const MAX_JULIAN_DAY: f64 = 5_373_484.5;
+
+/// Convert a validated `(Y, M, D, h, m, s)` to `iJD` milliseconds — a direct
+/// port of SQLite's `computeJD`. The month/day need not be in-range for their
+/// month; the Gregorian formula normalizes (`Feb 30` → `Mar 2`). Integer `/`
+/// truncates toward zero here exactly as C does.
+fn ymd_hms_to_ijd(y: i64, m: i64, d: i64, h: i64, min: i64, sec: f64) -> i64 {
+    let (mut yy, mut mm) = (y, m);
+    if mm <= 2 {
+        yy -= 1;
+        mm += 12;
+    }
+    let a = yy / 100;
+    let b = 2 - a + a / 4;
+    let x1 = (36525 * (yy + 4716)) / 100;
+    let x2 = (306001 * (mm + 1)) / 10000;
+    // (X1 + X2 + D + B − 1524.5) is exact and half-integral, so ×86_400_000 is a
+    // whole number that `as i64` represents exactly (magnitude ≪ 2^52).
+    let date_ms = ((x1 + x2 + d + b) as f64 - 1524.5) * 86_400_000.0;
+    let mut ijd = date_ms as i64;
+    ijd += h * 3_600_000 + min * 60_000 + (sec * 1000.0 + 0.5) as i64;
+    ijd
+}
+
+/// Recover the calendar date `(Y, M, D)` from `iJD` — a port of SQLite's
+/// `computeYMD`. Valid for every `iJD ≥ 0` this module produces.
+fn ijd_to_ymd(ijd: i64) -> (i64, i64, i64) {
+    let z = (ijd + 43_200_000) / 86_400_000;
+    let mut a = ((z as f64 - 1_867_216.25) / 36_524.25) as i64;
+    a = z + 1 + a - (a / 4);
+    let b = a + 1524;
+    let c = ((b as f64 - 122.1) / 365.25) as i64;
+    let d = (365.25 * c as f64) as i64;
+    let e = ((b - d) as f64 / 30.6001) as i64;
+    let x1 = (30.6001 * e as f64) as i64;
+    let day = b - d - x1;
+    let month = if e < 14 { e - 1 } else { e - 13 };
+    let year = if month > 2 { c - 4716 } else { c - 4715 };
+    (year, month, day)
+}
+
+/// Recover the clock time `(h, m, s)` (whole seconds; the fractional part is
+/// dropped, matching the default `time`/`datetime` output) from `iJD` — a port
+/// of SQLite's `computeHMS`.
+fn ijd_to_hms(ijd: i64) -> (i64, i64, i64) {
+    let mut s = (ijd + 43_200_000).rem_euclid(86_400_000) / 1000; // whole seconds in day
+    let h = s / 3600;
+    s -= h * 3600;
+    let m = s / 60;
+    let sec = s - m * 60;
+    (h, m, sec)
+}
+
+/// Parse the `SS` or `SS.fff` seconds field. SQLite requires two leading digits;
+/// a fractional part is optional but, if the `.` is present, must have digits.
+fn parse_seconds_field(s: &str) -> Option<f64> {
+    let b = s.as_bytes();
+    if b.len() < 2 || !b[0].is_ascii_digit() || !b[1].is_ascii_digit() {
+        return None;
+    }
+    if b.len() == 2 {
+        return s.parse::<f64>().ok();
+    }
+    if b[2] != b'.' || b.len() == 3 || !b[3..].iter().all(u8::is_ascii_digit) {
+        return None;
+    }
+    s.parse::<f64>().ok()
+}
+
+/// Parse an `HH:MM`, `HH:MM:SS`, or `HH:MM:SS.fff` clock time, with an optional
+/// trailing `Z` (UTC designator, accepted and ignored). Enforces SQLite's field
+/// ranges: hour 0–24, minute < 60, second < 60.
+fn parse_time_field(s: &str) -> Option<(i64, i64, f64)> {
+    let s = s.strip_suffix('Z').unwrap_or(s);
+    let b = s.as_bytes();
+    if s.len() < 5
+        || b[2] != b':'
+        || !b[0..2].iter().all(u8::is_ascii_digit)
+        || !b[3..5].iter().all(u8::is_ascii_digit)
+    {
+        return None;
+    }
+    let h: i64 = s[0..2].parse().ok()?;
+    let min: i64 = s[3..5].parse().ok()?;
+    let sec = if s.len() == 5 {
+        0.0
+    } else if b[5] == b':' {
+        parse_seconds_field(&s[6..])?
+    } else {
+        return None;
+    };
+    if h > 24 || min >= 60 || sec >= 60.0 {
+        return None;
+    }
+    Some((h, min, sec))
+}
+
+/// Parse an ISO-8601 date/datetime/time string to `iJD` milliseconds. Accepts
+/// `YYYY-MM-DD`, optionally followed by a `' '` or `'T'` separator and a clock
+/// time; or a bare `HH:MM[:SS[.fff]]` (which defaults the date to 2000-01-01, as
+/// SQLite does). No surrounding whitespace is tolerated. Returns `None` if the
+/// text is not a well-formed date/time in range.
+fn parse_iso_datetime(s: &str) -> Option<i64> {
+    let b = s.as_bytes();
+    let looks_like_date = s.len() >= 10
+        && b[4] == b'-'
+        && b[7] == b'-'
+        && b[0..4].iter().all(u8::is_ascii_digit)
+        && b[5..7].iter().all(u8::is_ascii_digit)
+        && b[8..10].iter().all(u8::is_ascii_digit);
+    if looks_like_date {
+        let y: i64 = s[0..4].parse().ok()?;
+        let m: i64 = s[5..7].parse().ok()?;
+        let d: i64 = s[8..10].parse().ok()?;
+        if !(1..=12).contains(&m) || !(1..=31).contains(&d) {
+            return None;
+        }
+        let (h, min, sec) = if s.len() == 10 {
+            (0, 0, 0.0)
+        } else {
+            let sep = b[10];
+            if sep != b' ' && sep != b'T' {
+                return None;
+            }
+            parse_time_field(&s[11..])?
+        };
+        return Some(ymd_hms_to_ijd(y, m, d, h, min, sec));
+    }
+    // Time-only: SQLite anchors it to 2000-01-01.
+    let (h, min, sec) = parse_time_field(s)?;
+    Some(ymd_hms_to_ijd(2000, 1, 1, h, min, sec))
+}
+
+/// Validate and convert a numeric Julian-day argument to `iJD` milliseconds.
+/// Out-of-range values (negative, or ≥ year 10000) are rejected as SQLite does.
+fn julian_number_to_ijd(r: f64) -> Option<i64> {
+    if (0.0..MAX_JULIAN_DAY).contains(&r) {
+        Some((r * 86_400_000.0 + 0.5) as i64)
+    } else {
+        None
+    }
+}
+
+/// The current instant as `iJD` milliseconds, for the `'now'` time value and the
+/// zero-argument forms (`date()` etc.). Non-deterministic by nature, so the
+/// differential oracle checks only the RESULT TYPE of `'now'`, never its value.
+fn now_ijd() -> Option<i64> {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let ms = SystemTime::now().duration_since(UNIX_EPOCH).ok()?.as_millis() as i64;
+    Some(UNIX_EPOCH_IJD_MS + ms)
+}
+
+/// Resolve a date-function time-value argument to `iJD` milliseconds. Numeric
+/// arguments are Julian days; text is an ISO string, `'now'`, or (failing those)
+/// a numeric Julian-day string. `None` means "produce SQL NULL" (a NULL/blob
+/// argument, or unparsable text).
+fn time_value_to_ijd(v: &SqlValue) -> Option<i64> {
+    match v {
+        SqlValue::Int(i) => julian_number_to_ijd(*i as f64),
+        SqlValue::Bool(b) => julian_number_to_ijd(*b as i64 as f64),
+        SqlValue::Float(f) => julian_number_to_ijd(*f),
+        SqlValue::Text(s) => {
+            if s.eq_ignore_ascii_case("now") {
+                return now_ijd();
+            }
+            parse_iso_datetime(s).or_else(|| s.parse::<f64>().ok().and_then(julian_number_to_ijd))
+        }
+        _ => None,
+    }
+}
+
+/// Which text rendering a date function emits.
+enum DateFmt {
+    Date,
+    Time,
+    DateTime,
+}
+
+/// Format `iJD` milliseconds per `fmt`. Years are `%04d` (so year 1 → `0001`;
+/// pre-epoch Julian days can yield a negative year such as `-4713`).
+fn format_ijd(ijd: i64, fmt: &DateFmt) -> String {
+    let date = || {
+        let (y, m, d) = ijd_to_ymd(ijd);
+        format!("{y:04}-{m:02}-{d:02}")
+    };
+    let time = || {
+        let (h, m, s) = ijd_to_hms(ijd);
+        format!("{h:02}:{m:02}:{s:02}")
+    };
+    match fmt {
+        DateFmt::Date => date(),
+        DateFmt::Time => time(),
+        DateFmt::DateTime => format!("{} {}", date(), time()),
+    }
+}
+
+/// Apply one date/time modifier to an `iJD`, returning the adjusted value, or
+/// `None` if the modifier is unrecognized/invalid (which makes the whole call
+/// NULL, as in SQLite). Modifiers are matched case-insensitively. SQLite spacing
+/// is strict: no leading or trailing spaces, and at least one space between an
+/// offset's number and its unit (`'+1 day'` is valid; `' +1 day'`, `'+1 day '`
+/// and `'+1day'` are not).
+///
+/// Supported (phase 2): the offsets `±N[.f] days|hours|minutes|seconds` (exact
+/// millisecond math) and `±N months|years` (calendar math, day preserved and
+/// re-normalized — `2026-01-31` `+1 month` → `2026-03-03`); `start of
+/// day|month|year`; and `weekday N` (0=Sunday … 6=Saturday: advance to the next
+/// such day, staying put if already there, preserving the time of day). The
+/// interpretation modifiers (`unixepoch`, `julianday`, `localtime`, `utc`, `auto`)
+/// are a later phase and fall through to `None`.
+fn apply_modifier(ijd: i64, m: &str) -> Option<i64> {
+    match m.as_bytes().first()?.to_ascii_lowercase() {
+        b's' => modifier_start_of(ijd, m),
+        b'w' => modifier_weekday(ijd, m),
+        b'+' | b'-' | b'0'..=b'9' => modifier_offset(ijd, m),
+        _ => None,
+    }
+}
+
+/// `start of day|month|year` — zero the finer fields.
+fn modifier_start_of(ijd: i64, m: &str) -> Option<i64> {
+    let (y, mo, d) = ijd_to_ymd(ijd);
+    match m.to_ascii_lowercase().as_str() {
+        "start of day" => Some(ymd_hms_to_ijd(y, mo, d, 0, 0, 0.0)),
+        "start of month" => Some(ymd_hms_to_ijd(y, mo, 1, 0, 0, 0.0)),
+        "start of year" => Some(ymd_hms_to_ijd(y, 1, 1, 0, 0, 0.0)),
+        _ => None,
+    }
+}
+
+/// `weekday N` (N = 0..6, Sunday..Saturday) — advance to the next day whose day
+/// of week is N, or stay put if already N. Whole days are added, so the time of
+/// day is preserved. The `+129_600_000` (1.5 day) offset aligns the modulo so
+/// that 0 lands on Sunday, matching SQLite.
+fn modifier_weekday(ijd: i64, m: &str) -> Option<i64> {
+    let rest = m.to_ascii_lowercase();
+    let rest = rest.strip_prefix("weekday")?.strip_prefix(' ')?;
+    let n: i64 = rest.trim_start_matches(' ').parse().ok()?;
+    if !(0..=6).contains(&n) {
+        return None;
+    }
+    // Checked arithmetic: a preceding offset modifier may have left `ijd` near
+    // `i64::MAX` (it is only range-checked once, after the whole modifier chain),
+    // so a naive add here could overflow on crafted input. Overflow → None → NULL.
+    let dow = ijd.checked_add(129_600_000)?.rem_euclid(604_800_000) / 86_400_000;
+    ijd.checked_add((n - dow).rem_euclid(7) * 86_400_000)
+}
+
+/// `±N[.f] <unit>` — a signed, possibly fractional amount of a time unit.
+/// days/hours/minutes/seconds are exact millisecond offsets; months/years are
+/// calendar arithmetic (integer part; the day is preserved and re-normalized by
+/// the Julian-day round-trip, and the time of day is carried across exactly).
+fn modifier_offset(ijd: i64, m: &str) -> Option<i64> {
+    let b = m.as_bytes();
+    let mut i = 0;
+    let neg = match b[0] {
+        b'-' => {
+            i = 1;
+            true
+        }
+        b'+' => {
+            i = 1;
+            false
+        }
+        _ => false,
+    };
+    let num_start = i;
+    while i < b.len() && b[i].is_ascii_digit() {
+        i += 1;
+    }
+    if i < b.len() && b[i] == b'.' {
+        i += 1;
+        while i < b.len() && b[i].is_ascii_digit() {
+            i += 1;
+        }
+    }
+    if i == num_start {
+        return None; // no digits
+    }
+    let mag: f64 = m[num_start..i].parse().ok()?;
+    let num = if neg { -mag } else { mag };
+    // Exactly one-or-more spaces separate the number from the unit.
+    if b.get(i) != Some(&b' ') {
+        return None;
+    }
+    while i < b.len() && b[i] == b' ' {
+        i += 1;
+    }
+    let unit = m[i..].to_ascii_lowercase();
+    match unit.as_str() {
+        "day" | "days" => offset_ms(ijd, num, 86_400_000.0),
+        "hour" | "hours" => offset_ms(ijd, num, 3_600_000.0),
+        "minute" | "minutes" => offset_ms(ijd, num, 60_000.0),
+        "second" | "seconds" => offset_ms(ijd, num, 1000.0),
+        "month" | "months" => offset_calendar(ijd, num.trunc() as i64),
+        // `* 12` is checked: `num.trunc() as i64` saturates a huge float to
+        // i64::MAX/MIN, and a naive `* 12` would then overflow. Overflow → NULL.
+        "year" | "years" => offset_calendar(ijd, (num.trunc() as i64).checked_mul(12)?),
+        _ => None,
+    }
+}
+
+/// Add `num * ms_per_unit` milliseconds (rounded to the nearest ms), guarding
+/// against `i64` overflow on an extreme amount.
+fn offset_ms(ijd: i64, num: f64, ms_per_unit: f64) -> Option<i64> {
+    let delta = (num * ms_per_unit).round();
+    if !delta.is_finite() {
+        return None;
+    }
+    ijd.checked_add(delta as i64)
+}
+
+/// Add `months` calendar months (a year modifier passes `12 × years`). The day
+/// and time of day are preserved; an out-of-range day (e.g. `Feb 31`) is
+/// normalized by the Julian-day round-trip exactly as SQLite does.
+fn offset_calendar(ijd: i64, months: i64) -> Option<i64> {
+    let (y, mo, d) = ijd_to_ymd(ijd);
+    let tod = ijd - ymd_hms_to_ijd(y, mo, d, 0, 0, 0.0); // ms since midnight, preserved exactly
+    let total = y.checked_mul(12)?.checked_add(mo - 1)?.checked_add(months)?;
+    let ny = total.div_euclid(12);
+    let nmo = total.rem_euclid(12) + 1;
+    ymd_hms_to_ijd(ny, nmo, d, 0, 0, 0.0).checked_add(tod)
+}
+
+/// Extract a plain number from a time-value argument, for the interpretation
+/// modifiers (`unixepoch`/`julianday`/`auto`), which reinterpret the RAW value
+/// rather than parsing it as a date. Integers/reals/booleans are their value;
+/// a numeric string parses; anything else (an ISO date string, NULL, blob) has
+/// no numeric reading, so the modified call is NULL — matching SQLite.
+fn numeric_time_value(v: &SqlValue) -> Option<f64> {
+    match v {
+        SqlValue::Int(i) => Some(*i as f64),
+        SqlValue::Bool(b) => Some(*b as i64 as f64),
+        SqlValue::Float(f) => Some(*f),
+        SqlValue::Text(s) => s.parse::<f64>().ok(),
+        _ => None,
+    }
+}
+
+/// Convert Unix epoch seconds to `iJD` milliseconds (for the `unixepoch`
+/// modifier). Fractional seconds are kept to the millisecond; overflow → None.
+fn unix_seconds_to_ijd(secs: f64) -> Option<i64> {
+    if !secs.is_finite() {
+        return None;
+    }
+    let ms = (secs * 1000.0).round();
+    if !ms.is_finite() {
+        return None;
+    }
+    UNIX_EPOCH_IJD_MS.checked_add(ms as i64)
+}
+
+/// Apply a leading INTERPRETATION modifier (`unixepoch` / `julianday` / `auto`)
+/// to the raw time value, returning the resulting `iJD`. These reinterpret a
+/// NUMBER: `unixepoch` reads it as Unix seconds; `julianday` as a Julian day;
+/// `auto` picks Julian when the number is in the Julian-day range, else Unix
+/// (matching SQLite). Returns `None` for a non-numeric value. Not one of these
+/// keywords → `Ok(None)` sentinel via the outer match (handled by the caller).
+fn interpret_time_value(kind: &str, v: &SqlValue) -> Option<i64> {
+    let n = numeric_time_value(v)?;
+    match kind {
+        "unixepoch" => unix_seconds_to_ijd(n),
+        "julianday" => julian_number_to_ijd(n),
+        // `auto`: a value inside the Julian-day window is a Julian day; anything
+        // else (e.g. a large Unix timestamp) is Unix epoch seconds.
+        "auto" => {
+            if (0.0..MAX_JULIAN_DAY).contains(&n) {
+                julian_number_to_ijd(n)
+            } else {
+                unix_seconds_to_ijd(n)
+            }
+        }
+        _ => None,
+    }
+}
+
+/// Shared front-end for `date`/`time`/`datetime`/`julianday`/`unixepoch`: resolve
+/// the first (time-value) argument to `iJD`, then fold in any trailing modifier
+/// arguments left-to-right. Returns `None` (→ SQL NULL) if the time value or any
+/// modifier is invalid, or if a modifier pushes the result outside the
+/// representable Julian-day range. The zero-argument form means `'now'`.
+///
+/// A leading `unixepoch`/`julianday`/`auto` modifier is special: it reinterprets
+/// the raw time value (see [`interpret_time_value`]) instead of the default
+/// Julian-day/ISO parse, so `datetime(1234567890, 'unixepoch')` works. Elsewhere
+/// those keywords are not recognized (→ NULL), as are `localtime`/`utc` (which
+/// would need a timezone database).
+fn datetime_base_ijd(args: &[SqlValue]) -> Option<i64> {
+    let (first, mods) = match args.split_first() {
+        None => return finish_datetime_ijd(now_ijd()?, &[]),
+        Some((first, rest)) => (first, rest),
+    };
+    // A leading interpretation modifier changes how the raw value is read.
+    let (mut ijd, rest) = match mods.first() {
+        Some(SqlValue::Text(m0))
+            if matches!(m0.to_ascii_lowercase().as_str(), "unixepoch" | "julianday" | "auto") =>
+        {
+            (interpret_time_value(&m0.to_ascii_lowercase(), first)?, &mods[1..])
+        }
+        _ => (time_value_to_ijd(first)?, mods),
+    };
+    for m in rest {
+        let text = match m {
+            SqlValue::Text(s) => s,
+            _ => return None, // NULL or non-text modifier → NULL
+        };
+        ijd = apply_modifier(ijd, text)?;
+    }
+    finish_datetime_ijd(ijd, &[])
+}
+
+/// Final validity gate shared by both entry paths: an out-of-range `iJD` (a
+/// modifier walked it past year 9999 or before year 0) is NULL. The `_unused`
+/// slice keeps the signature symmetric with the fold above.
+fn finish_datetime_ijd(ijd: i64, _unused: &[SqlValue]) -> Option<i64> {
+    // A modifier may have walked the value out of the valid Julian-day window.
+    if !(0.0..MAX_JULIAN_DAY).contains(&(ijd as f64 / 86_400_000.0)) {
+        return None;
+    }
+    Some(ijd)
+}
+
+/// `date(X, …)` / `time(X, …)` / `datetime(X, …)` — render the (modified) time
+/// value as text, or NULL.
+fn datetime_render(fmt: DateFmt, args: &[SqlValue]) -> SqlValue {
+    match datetime_base_ijd(args) {
+        Some(ijd) => SqlValue::Text(format_ijd(ijd, &fmt)),
+        None => SqlValue::Null,
+    }
+}
+
+/// `julianday(X, …)` — the Julian day as a REAL, or NULL.
+fn julianday_func(args: &[SqlValue]) -> SqlValue {
+    match datetime_base_ijd(args) {
+        Some(ijd) => SqlValue::Float(ijd as f64 / 86_400_000.0),
+        None => SqlValue::Null,
+    }
+}
+
+/// `unixepoch(X, …)` — whole seconds since the Unix epoch as an INTEGER, or NULL.
+fn unixepoch_func(args: &[SqlValue]) -> SqlValue {
+    match datetime_base_ijd(args) {
+        Some(ijd) => SqlValue::Int((ijd - UNIX_EPOCH_IJD_MS).div_euclid(1000)),
+        None => SqlValue::Null,
+    }
+}
+
+/// Day of week for `iJD`, 0 = Sunday … 6 = Saturday (as SQLite's `%w`). The
+/// `+129_600_000` (1.5 day) offset aligns the modulo so 0 lands on Sunday.
+fn ijd_dow_sunday0(ijd: i64) -> i64 {
+    (ijd + 129_600_000).rem_euclid(604_800_000) / 86_400_000
+}
+
+/// Day of the year for `iJD`, 1 = Jan 1 … 365/366 = Dec 31.
+fn ijd_day_of_year(ijd: i64, year: i64) -> i64 {
+    let (_, mo, d) = ijd_to_ymd(ijd);
+    let this = ymd_hms_to_ijd(year, mo, d, 0, 0, 0.0);
+    let jan1 = ymd_hms_to_ijd(year, 1, 1, 0, 0, 0.0);
+    (this - jan1) / 86_400_000 + 1
+}
+
+/// `strftime(FORMAT, X, …)` — render the (modified) time value through a
+/// `printf`-style format of `%` codes, matching SQLite. An unrecognized `%`
+/// code makes the WHOLE result NULL (as in SQLite), so `format_strftime` returns
+/// `Option`. Supported codes:
+///
+/// | code | meaning                              | code | meaning                     |
+/// |------|--------------------------------------|------|-----------------------------|
+/// | `%Y` | year, ≥4 digits                      | `%M` | minute, `00`–`59`           |
+/// | `%m` | month, `01`–`12`                     | `%S` | second, `00`–`59`           |
+/// | `%d` | day of month, `01`–`31`              | `%f` | seconds with millis, `SS.SSS` |
+/// | `%e` | day of month, space-padded ` 1`–`31` | `%j` | day of year, `001`–`366`    |
+/// | `%H` | hour, `00`–`23`                      | `%w` | day of week, `0`–`6` (Sun=0)|
+/// | `%k` | hour, space-padded ` 0`–`23`         | `%u` | day of week, `1`–`7` (Mon=1)|
+/// | `%I` | hour, `01`–`12`                      | `%s` | Unix seconds                |
+/// | `%l` | hour, space-padded ` 1`–`12`         | `%J` | Julian day (REAL rendered)  |
+/// | `%p` | `AM`/`PM`                            | `%F` | `%Y-%m-%d`                  |
+/// | `%P` | `am`/`pm`                            | `%T` | `%H:%M:%S`                  |
+/// | `%R` | `%H:%M`                              | `%%` | a literal `%`               |
+///
+/// (`%W`/`%G`/`%g`/`%c`/`%V` and the interpretation of week/ISO-year fields are a
+/// later phase — those codes fall through to NULL, matching SQLite's treatment
+/// of any code it does not know.)
+fn format_strftime(fmt: &str, ijd: i64) -> Option<String> {
+    let (y, mo, d) = ijd_to_ymd(ijd);
+    let (h, mi, s) = ijd_to_hms(ijd);
+    let mut out = String::new();
+    let mut it = fmt.chars();
+    while let Some(c) = it.next() {
+        if c != '%' {
+            out.push(c);
+            continue;
+        }
+        match it.next()? {
+            '%' => out.push('%'),
+            'Y' => out.push_str(&format!("{y:04}")),
+            'm' => out.push_str(&format!("{mo:02}")),
+            'd' => out.push_str(&format!("{d:02}")),
+            'e' => out.push_str(&format!("{d:2}")),
+            'H' => out.push_str(&format!("{h:02}")),
+            'k' => out.push_str(&format!("{h:2}")),
+            'I' => out.push_str(&format!("{:02}", (h + 11) % 12 + 1)),
+            'l' => out.push_str(&format!("{:2}", (h + 11) % 12 + 1)),
+            'p' => out.push_str(if h < 12 { "AM" } else { "PM" }),
+            'P' => out.push_str(if h < 12 { "am" } else { "pm" }),
+            'M' => out.push_str(&format!("{mi:02}")),
+            'S' => out.push_str(&format!("{s:02}")),
+            'f' => {
+                // Seconds with millisecond precision: "SS.SSS".
+                let frac = (ijd + 43_200_000).rem_euclid(60_000) as f64 / 1000.0;
+                out.push_str(&format!("{frac:06.3}"));
+            }
+            'j' => out.push_str(&format!("{:03}", ijd_day_of_year(ijd, y))),
+            'w' => out.push_str(&ijd_dow_sunday0(ijd).to_string()),
+            'u' => {
+                let dow = ijd_dow_sunday0(ijd);
+                out.push_str(&(if dow == 0 { 7 } else { dow }).to_string());
+            }
+            's' => out.push_str(&(ijd - UNIX_EPOCH_IJD_MS).div_euclid(1000).to_string()),
+            // SQLite renders the Julian day with `%.16g` (16 significant digits).
+            'J' => out.push_str(&printf_float_body('g', ijd as f64 / 86_400_000.0, Some(16))),
+            'F' => out.push_str(&format!("{y:04}-{mo:02}-{d:02}")),
+            'T' => out.push_str(&format!("{h:02}:{mi:02}:{s:02}")),
+            'R' => out.push_str(&format!("{h:02}:{mi:02}")),
+            _ => return None, // unknown code → NULL (matches SQLite)
+        }
+    }
+    Some(out)
+}
+
+/// `strftime(FORMAT, X, …)` — SQLite's general date/time formatter. The first
+/// argument is the format; the rest are the usual time value + modifiers (absent
+/// = `'now'`). A NULL format, an invalid time value/modifier, or an unrecognized
+/// `%` code yields NULL.
+fn strftime_func(args: &[SqlValue]) -> SqlValue {
+    let fmt = match args.first() {
+        Some(SqlValue::Text(s)) => s.clone(),
+        Some(SqlValue::Int(i)) => i.to_string(),
+        Some(SqlValue::Bool(b)) => (*b as i64).to_string(),
+        _ => return SqlValue::Null, // NULL/REAL/BLOB format, or no args
+    };
+    match datetime_base_ijd(&args[1..]).and_then(|ijd| format_strftime(&fmt, ijd)) {
+        Some(s) => SqlValue::Text(s),
+        None => SqlValue::Null,
+    }
+}
+
 // ===========================================================================
 // Helper: sql_to_str
 // ===========================================================================
@@ -1556,9 +3623,446 @@ fn sql_to_str(v: &SqlValue) -> String {
     }
 }
 
+/// Stringify an operand of the `||` (concatenate) operator.
+///
+/// Identical to [`sql_to_str`] EXCEPT for blobs: `||` treats a blob as its raw
+/// byte sequence interpreted as text, so `X'41' || 'B'` is `'AB'` (0x41 = 'A'),
+/// whereas [`sql_to_str`] renders the reversible display form `x'41'`. Invalid
+/// UTF-8 bytes become the replacement character (U+FFFD) — a rare edge for
+/// non-textual blobs; the common ASCII/UTF-8 case round-trips exactly. NULL is
+/// handled by the caller (it propagates through `||`).
+fn concat_operand_to_str(v: &SqlValue) -> String {
+    match v {
+        SqlValue::Blob(b) => String::from_utf8_lossy(b).into_owned(),
+        other => sql_to_str(other),
+    }
+}
+
+/// Apply a `CAST(value AS type)` conversion, following SQLite's documented
+/// rules for the three supported target types. NULL always casts to NULL.
+///
+/// - **INTEGER**: reals truncate toward zero; text yields the longest leading
+///   *integer* prefix (`'3.9'` → 3 because it stops at the `.`, `'12abc'` → 12,
+///   `'abc'` → 0), leading whitespace ignored.
+/// - **REAL**: text yields the longest leading *real* prefix (`'1e3'` → 1000.0,
+///   `'12.5abc'` → 12.5, `'abc'` → 0.0).
+/// - **TEXT**: the value's text representation (integers become their decimal
+///   string; a boolean — which SQLite has no type for — renders as `1`/`0`).
+fn apply_cast(val: &SqlValue, ty: &CastType) -> SqlValue {
+    if matches!(val, SqlValue::Null) {
+        return SqlValue::Null;
+    }
+    match ty {
+        CastType::Integer => SqlValue::Int(cast_to_i64(val)),
+        CastType::Real => SqlValue::Float(cast_to_f64(val)),
+        CastType::Text => SqlValue::Text(match val {
+            // SQLite has no boolean type; a stored bool casts like the integer
+            // 1/0 it stands in for, not the words "true"/"false".
+            SqlValue::Bool(b) => (*b as i64).to_string(),
+            _ => sql_to_str(val),
+        }),
+        CastType::Numeric => cast_to_numeric(val),
+    }
+}
+
+/// Value → INTEGER or REAL for `CAST(… AS NUMERIC)` (SQLite's NUMERIC affinity).
+///
+/// A number is left unchanged — an INTEGER stays INTEGER and a REAL stays REAL,
+/// so `CAST(3.0 AS NUMERIC)` is `3.0`, not `3`. Text and blob are parsed to a
+/// number, preferring INTEGER when the value is integral and fits `i64`,
+/// otherwise REAL (see [`text_to_numeric`]). NULL was already handled by the
+/// caller.
+fn cast_to_numeric(val: &SqlValue) -> SqlValue {
+    match val {
+        SqlValue::Int(i) => SqlValue::Int(*i),
+        // A stored bool stands in for the integer 1/0.
+        SqlValue::Bool(b) => SqlValue::Int(*b as i64),
+        SqlValue::Float(f) => SqlValue::Float(*f),
+        SqlValue::Text(s) => text_to_numeric(s),
+        SqlValue::Blob(b) => text_to_numeric(&String::from_utf8_lossy(b)),
+        SqlValue::Null => SqlValue::Null,
+    }
+}
+
+/// Parse text to a NUMERIC value, matching SQLite's `sqlite3VdbeMemNumerify`:
+/// prefer INTEGER when the leading numeric prefix denotes an integer that fits
+/// `i64`, otherwise REAL. Non-numeric text yields `0` (integer), like the other
+/// numeric casts.
+///
+/// | input        | result      | why                                    |
+/// |--------------|-------------|----------------------------------------|
+/// | `'42'`       | `Int(42)`   | pure integer prefix                    |
+/// | `'42abc'`    | `Int(42)`   | integer prefix, trailing junk ignored  |
+/// | `'3.0'`      | `Int(3)`    | real syntax, but value is integral     |
+/// | `'1e3'`      | `Int(1000)` | exponent, but value is integral        |
+/// | `'3.5'`      | `Float(3.5)`| non-integral                           |
+/// | `'9e99'`     | `Float(..)` | integral but overflows i64 → real      |
+/// | `'abc'`      | `Int(0)`    | no numeric prefix                       |
+fn text_to_numeric(s: &str) -> SqlValue {
+    let t = s.trim_start();
+    let bytes = t.as_bytes();
+    let mut i = 0;
+    if i < bytes.len() && (bytes[i] == b'+' || bytes[i] == b'-') {
+        i += 1;
+    }
+    let digit_start = i;
+    while i < bytes.len() && bytes[i].is_ascii_digit() {
+        i += 1;
+    }
+    let has_int_digits = i > digit_start;
+    // A `.`/`e`/`E` immediately after the integer digits means the prefix is a
+    // real literal, not a plain integer.
+    let real_syntax =
+        i < bytes.len() && matches!(bytes[i], b'.' | b'e' | b'E');
+
+    if has_int_digits && !real_syntax {
+        // Pure integer prefix (e.g. `42`, `-7`, `42abc`). Parse it exactly so an
+        // i64 overflow falls through to the real value rather than saturating.
+        if let Ok(n) = t[..i].parse::<i64>() {
+            return SqlValue::Int(n);
+        }
+        return SqlValue::Float(parse_real_prefix(s));
+    }
+
+    // Real-syntax or digit-less prefix: take the real value, then collapse it to
+    // an integer when it is integral and fits i64 (`3.0`→3, `1e3`→1000), else
+    // keep it real (`3.5`, overflow). `parse_real_prefix` returns 0.0 for
+    // non-numeric text, so `'abc'`→`Int(0)`.
+    let r = parse_real_prefix(s);
+    // 2^63 as f64; the half-open range keeps `r as i64` exact (no saturation).
+    const I64_LIMIT: f64 = 9_223_372_036_854_775_808.0;
+    if r.is_finite() && r.fract() == 0.0 && (-I64_LIMIT..I64_LIMIT).contains(&r) {
+        SqlValue::Int(r as i64)
+    } else {
+        SqlValue::Float(r)
+    }
+}
+
+/// Parse text to a number for an **arithmetic operand**, matching SQLite's
+/// `applyNumericAffinity`. This is a *different* rule from [`text_to_numeric`]
+/// (`CAST(… AS NUMERIC)`), and the difference is the whole point:
+///
+/// - `CAST` **collapses** an integral real to an integer — `CAST('3.0' AS NUMERIC)`
+///   is the integer `3`.
+/// - An arithmetic operand **keeps the type its syntax implies** — `'3.0' + 0` is
+///   the *real* `3.0`, so `'9.0' / 2` is `4.5`, not `4`.
+///
+/// So the result type is decided by how the text is *written*, never by whether the
+/// value happens to be integral:
+///
+/// | input        | result        | why                                          |
+/// |--------------|---------------|----------------------------------------------|
+/// | `'3'`        | `Int(3)`      | integer syntax                               |
+/// | `'3abc'`     | `Int(3)`      | integer prefix, trailing junk ignored        |
+/// | `'3.0'`      | `Float(3.0)`  | a `.` makes it real — even though 3.0 is integral |
+/// | `'3.'`       | `Float(3.0)`  | a trailing `.` still counts as real syntax   |
+/// | `'.5'`       | `Float(0.5)`  | leading `.`, no integer digits               |
+/// | `'1e3'`      | `Float(1000.0)` | a *complete* exponent makes it real        |
+/// | `'3e2x'`     | `Float(300.0)`| complete exponent, trailing junk ignored     |
+/// | `'3e'`       | `Int(3)`      | incomplete exponent is NOT consumed → the prefix is just `3` |
+/// | `'3e+'`      | `Int(3)`      | likewise — no exponent digits                |
+/// | `'  3.0  '`  | `Float(3.0)`  | leading whitespace trimmed                   |
+/// | `'abc'`, `'.'`, `'-'`, `''` | `Int(0)` | no digits at all → integer zero |
+/// | `'99999999999999999999'` | `Float(1e20)` | integer syntax that overflows `i64` → real |
+///
+/// Every row above was verified against the real `sqlite3` binary.
+fn text_to_numeric_operand(s: &str) -> SqlValue {
+    let t = s.trim_start();
+    let b = t.as_bytes();
+    let mut i = 0;
+    if i < b.len() && (b[i] == b'+' || b[i] == b'-') {
+        i += 1;
+    }
+
+    // Mantissa: digits, then optionally `.` and more digits. A `.` anywhere in the
+    // mantissa makes the literal real regardless of the value.
+    let int_start = i;
+    while i < b.len() && b[i].is_ascii_digit() {
+        i += 1;
+    }
+    let mut digits = i - int_start;
+    let mut is_real = false;
+    if i < b.len() && b[i] == b'.' {
+        is_real = true;
+        i += 1;
+        let frac_start = i;
+        while i < b.len() && b[i].is_ascii_digit() {
+            i += 1;
+        }
+        digits += i - frac_start;
+    }
+
+    // No digits anywhere in the mantissa (`'abc'`, `'.'`, `'-'`, `''`) — SQLite reads
+    // that as the integer zero, not as a real.
+    if digits == 0 {
+        return SqlValue::Int(0);
+    }
+
+    // Exponent, but ONLY when it is complete (`[eE][+-]?digit+`). A dangling `'3e'`
+    // or `'3e+'` leaves the `e` unconsumed, so the prefix stays the integer `3` —
+    // this is why we scan ahead with `j` and only commit on success.
+    if i < b.len() && (b[i] == b'e' || b[i] == b'E') {
+        let mut j = i + 1;
+        if j < b.len() && (b[j] == b'+' || b[j] == b'-') {
+            j += 1;
+        }
+        let exp_start = j;
+        while j < b.len() && b[j].is_ascii_digit() {
+            j += 1;
+        }
+        if j > exp_start {
+            is_real = true;
+            i = j;
+        }
+    }
+
+    let prefix = &t[..i];
+    if is_real {
+        // Rust's `f64` parser accepts exactly this shape (including `'3.'`, `'.5'`
+        // and a leading `+`), and yields ±inf on overflow just as SQLite does
+        // (`'1e999'` → `Inf`). `parse_real_prefix` is the belt-and-braces fallback.
+        SqlValue::Float(prefix.parse::<f64>().unwrap_or_else(|_| parse_real_prefix(s)))
+    } else {
+        // Integer syntax. Parse exactly so an `i64` overflow becomes the real value
+        // (SQLite promotes rather than saturating) instead of clamping.
+        match prefix.parse::<i64>() {
+            Ok(n) => SqlValue::Int(n),
+            Err(_) => SqlValue::Float(parse_real_prefix(s)),
+        }
+    }
+}
+
+/// Value → i64 for `CAST(… AS INTEGER)`. Float truncates toward zero (and
+/// saturates on overflow, matching Rust's `as i64`); text parses a leading
+/// integer prefix.
+fn cast_to_i64(val: &SqlValue) -> i64 {
+    match val {
+        SqlValue::Int(i) => *i,
+        SqlValue::Bool(b) => *b as i64,
+        SqlValue::Float(f) => *f as i64,
+        SqlValue::Text(s) => parse_int_prefix(s),
+        SqlValue::Blob(b) => parse_int_prefix(&String::from_utf8_lossy(b)),
+        SqlValue::Null => 0,
+    }
+}
+
+/// Value → f64 for `CAST(… AS REAL)`. Text parses a leading real prefix.
+fn cast_to_f64(val: &SqlValue) -> f64 {
+    match val {
+        SqlValue::Int(i) => *i as f64,
+        SqlValue::Bool(b) => *b as i64 as f64,
+        SqlValue::Float(f) => *f,
+        SqlValue::Text(s) => parse_real_prefix(s),
+        SqlValue::Blob(b) => parse_real_prefix(&String::from_utf8_lossy(b)),
+        SqlValue::Null => 0.0,
+    }
+}
+
+/// SQLite's `substr(X, Y, Z)` window over `chars`, returning the selected text.
+/// `pos` is `Y` (1-indexed); `len_arg` is `Some(Z)` for the 3-arg form or `None`
+/// for the 2-arg form (which runs to the end of the string). This mirrors
+/// SQLite's `substrFunc` index arithmetic byte-for-byte, so every edge case
+/// agrees:
+///
+/// | call                    | result   | rule                                    |
+/// |-------------------------|----------|-----------------------------------------|
+/// | `substr('hello',2,3)`   | `'ell'`  | ordinary 1-indexed slice                |
+/// | `substr('hello',-2)`    | `'lo'`   | negative Y counts from the right        |
+/// | `substr('hello',0)`     | `'hello'`| Y=0 is a slot before char 1 (2-arg)     |
+/// | `substr('hello',0,2)`   | `'h'`    | Y=0 with length consumes one from Z     |
+/// | `substr('hello',2,-1)`  | `'h'`    | negative Z: the |Z| chars *before* Y    |
+/// | `substr('hello',5,-2)`  | `'ll'`   | negative Z reads leftward               |
+fn sqlite_substr(chars: &[char], pos: i64, len_arg: Option<i64>) -> String {
+    let len = chars.len() as i64;
+    let mut p1 = pos;
+
+    // All arithmetic is saturating: `pos`/`len_arg` are attacker-controlled i64
+    // values, so `i64::MIN`/`i64::MAX` must never overflow (debug builds panic
+    // on overflow). Saturation only affects out-of-range inputs, which the final
+    // `clamp(0, len)` collapses to an empty or full window anyway.
+    let (start, end) = match len_arg {
+        Some(mut z) => {
+            if p1 < 0 {
+                // Negative start counts from the right; if it lands before the
+                // string, the shortfall eats into the length.
+                p1 = p1.saturating_add(len);
+                if p1 < 0 {
+                    z = z.saturating_add(p1);
+                    if z < 0 {
+                        z = 0;
+                    }
+                    p1 = 0;
+                }
+            } else if p1 > 0 {
+                p1 -= 1; // 1-indexed → 0-indexed
+            } else if z > 0 {
+                // p1 == 0: the virtual slot before char 1 costs one of Z.
+                z -= 1;
+            }
+            if z < 0 {
+                // Negative length: return the |Z| characters preceding `p1`.
+                p1 = p1.saturating_add(z);
+                z = z.saturating_neg(); // `i64::MIN` → `i64::MAX`, no overflow
+                if p1 < 0 {
+                    z = z.saturating_add(p1);
+                    p1 = 0;
+                }
+            }
+            let start = p1.clamp(0, len);
+            let end = p1.saturating_add(z.max(0)).clamp(0, len);
+            (start, end.max(start))
+        }
+        None => {
+            // 2-arg form: from `p1` to the end of the string.
+            if p1 < 0 {
+                p1 = p1.saturating_add(len).max(0);
+            } else if p1 > 0 {
+                p1 -= 1;
+            }
+            (p1.clamp(0, len), len)
+        }
+    };
+
+    chars[start as usize..end as usize].iter().collect()
+}
+
+/// The longest leading substring of `s` that is a well-formed integer
+/// (optional sign + digits, after skipping leading whitespace), parsed to
+/// i64. No such prefix → 0; digit overflow saturates to i64::MIN/MAX.
+fn parse_int_prefix(s: &str) -> i64 {
+    let t = s.trim_start();
+    let bytes = t.as_bytes();
+    let mut i = 0;
+    let mut neg = false;
+    if i < bytes.len() && (bytes[i] == b'+' || bytes[i] == b'-') {
+        neg = bytes[i] == b'-';
+        i += 1;
+    }
+    let start = i;
+    while i < bytes.len() && bytes[i].is_ascii_digit() {
+        i += 1;
+    }
+    if i == start {
+        return 0;
+    }
+    match t[start..i].parse::<i64>() {
+        Ok(n) => {
+            if neg {
+                -n
+            } else {
+                n
+            }
+        }
+        Err(_) => {
+            if neg {
+                i64::MIN
+            } else {
+                i64::MAX
+            }
+        }
+    }
+}
+
+/// The longest leading substring of `s` that is a well-formed real number
+/// (optional sign, digits, fractional part, and exponent — after skipping
+/// leading whitespace), parsed to f64. No such prefix → 0.0.
+fn parse_real_prefix(s: &str) -> f64 {
+    let t = s.trim_start();
+    let bytes = t.as_bytes();
+    let mut i = 0;
+    if i < bytes.len() && (bytes[i] == b'+' || bytes[i] == b'-') {
+        i += 1;
+    }
+    let mut saw_digit = false;
+    while i < bytes.len() && bytes[i].is_ascii_digit() {
+        i += 1;
+        saw_digit = true;
+    }
+    if i < bytes.len() && bytes[i] == b'.' {
+        i += 1;
+        while i < bytes.len() && bytes[i].is_ascii_digit() {
+            i += 1;
+            saw_digit = true;
+        }
+    }
+    if !saw_digit {
+        return 0.0;
+    }
+    // Optional exponent — only consumed if it actually has digits.
+    if i < bytes.len() && (bytes[i] == b'e' || bytes[i] == b'E') {
+        let mut j = i + 1;
+        if j < bytes.len() && (bytes[j] == b'+' || bytes[j] == b'-') {
+            j += 1;
+        }
+        let exp_start = j;
+        while j < bytes.len() && bytes[j].is_ascii_digit() {
+            j += 1;
+        }
+        if j > exp_start {
+            i = j;
+        }
+    }
+    t[..i].parse::<f64>().unwrap_or(0.0)
+}
+
+/// Approximate retained size of a `SqlValue`, in bytes, for the GROUP BY
+/// representative-row memory guard. Fixed-size scalars are counted at their
+/// storage width; TEXT/BLOB at their payload length (the dominant term).
+fn sql_value_bytes(v: &SqlValue) -> usize {
+    match v {
+        SqlValue::Null | SqlValue::Bool(_) => 1,
+        SqlValue::Int(_) | SqlValue::Float(_) => 8,
+        SqlValue::Text(s) => s.len(),
+        SqlValue::Blob(b) => b.len(),
+    }
+}
+
+/// Approximate retained size of a `Row` (column names + values), in bytes.
+fn row_bytes(row: &Row) -> usize {
+    row.iter().map(|(k, v)| k.len() + sql_value_bytes(v)).sum()
+}
+
+/// Build the "fake row" that Phase-2 GROUP BY emission reads columns from for one
+/// group. It starts from the group's representative (first) row — so a BARE
+/// non-key column (`SELECT c FROM t GROUP BY x`) resolves to a value rather than
+/// NULL, matching SQLite — then overlays the canonical key-column values on top.
+///
+/// The overlay matters for a collated key: the group is keyed case-insensitively
+/// but must REPORT its original text, and `key_vals` already holds the first
+/// row's original text for the key column (the representative row's value for that
+/// same column is identical here, so the overlay is a no-op for a plain key, but
+/// it keeps the two paths consistent and self-documenting).
+fn build_group_fake_row(repr_row: &Row, group_col_names: &[String], key_vals: &[SqlValue]) -> Row {
+    let mut fake_row = repr_row.clone();
+    for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
+        fake_row.insert(col_name.clone(), val.clone());
+    }
+    fake_row
+}
+
 // ===========================================================================
 // Helper: aggregate accumulator update / finalize
 // ===========================================================================
+
+/// A canonical, type-tagged string key for a value, used to deduplicate in
+/// `COUNT(DISTINCT …)` and `GROUP_CONCAT(DISTINCT …)`. The leading tag keeps
+/// values of different storage classes distinct (`1` the integer vs `'1'` the
+/// text), matching how SQLite treats them as separate distinct values. NULL is
+/// filtered by callers before this is reached; it maps to a stable key anyway so
+/// this helper never panics.
+fn distinct_key(v: &SqlValue) -> String {
+    match v {
+        SqlValue::Int(n) => format!("i:{}", n),
+        SqlValue::Float(f) => format!("f:{}", f),
+        SqlValue::Text(s) => format!("t:{}", s),
+        SqlValue::Bool(b) => format!("b:{}", b),
+        SqlValue::Blob(bytes) => {
+            let hex: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
+            format!("x:{}", hex)
+        }
+        SqlValue::Null => "n:".to_string(),
+    }
+}
 
 /// Feed one value into an accumulator.
 ///
@@ -1566,7 +4070,7 @@ fn sql_to_str(v: &SqlValue) -> String {
 /// - All other functions skip NULLs.
 ///
 /// Returns `Err(VmError::ResourceLimit)` if a hard per-accumulator memory cap
-/// is reached (currently only for `CountDistinct`).
+/// is reached (`CountDistinct` and `GROUP_CONCAT`).
 fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> Result<(), VmError> {
     match fn_tag {
         AggFn::CountStar => {
@@ -1578,7 +4082,9 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> 
                 acc.count += 1;
             }
         }
-        AggFn::Sum => {
+        AggFn::Sum | AggFn::Total => {
+            // TOTAL accumulates exactly like SUM (skip NULLs, add the rest); the
+            // only difference is at finalize time (always REAL, `0.0` default).
             if !matches!(v, SqlValue::Null) {
                 acc.acc = Some(match &acc.acc {
                     None => v,
@@ -1623,6 +4129,65 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> 
                 });
             }
         }
+        AggFn::GroupConcat { sep, distinct } => {
+            // Skip NULLs; render each non-NULL value to text and append it,
+            // joined by the constant separator. The running string lives in
+            // `acc.acc` as Text. `sql_to_str` gives each value SQLite's text form
+            // (numbers → their decimal string, text unchanged).
+            //
+            // `DISTINCT` deduplicates values before joining: we track a canonical
+            // key per already-emitted value in `acc.distinct_vals` (the same set
+            // COUNT(DISTINCT) uses) and skip a value whose key was already seen.
+            //
+            // DoS guard: an unbounded concat over a huge table could exhaust
+            // memory. Cap the accumulated length at SQLite's default
+            // SQLITE_MAX_LENGTH (1e9); beyond that SQLite itself raises "string
+            // or blob too big", which we mirror as a ResourceLimit error. The
+            // distinct set is separately capped at 1M entries.
+            const MAX_GROUP_CONCAT_LEN: usize = 1_000_000_000;
+            const MAX_DISTINCT_VALS: usize = 1_000_000;
+            if !matches!(v, SqlValue::Null) {
+                if *distinct {
+                    let key = distinct_key(&v);
+                    let set = acc.distinct_vals.get_or_insert_with(std::collections::HashSet::new);
+                    if set.contains(&key) {
+                        return Ok(()); // already concatenated this value
+                    }
+                    if set.len() >= MAX_DISTINCT_VALS {
+                        return Err(VmError::ResourceLimit(format!(
+                            "GROUP_CONCAT(DISTINCT) exceeded maximum distinct values ({})",
+                            MAX_DISTINCT_VALS
+                        )));
+                    }
+                    set.insert(key);
+                }
+                let piece = sql_to_str(&v);
+                match &mut acc.acc {
+                    // Append IN PLACE (amortised O(total length), not the
+                    // O(n²) that rebuilding the whole string with `format!`
+                    // every row would cost) and without a second full copy.
+                    Some(SqlValue::Text(existing)) => {
+                        if existing.len() + sep.len() + piece.len() > MAX_GROUP_CONCAT_LEN {
+                            return Err(VmError::ResourceLimit(
+                                "GROUP_CONCAT result exceeded maximum length (1e9)".to_string(),
+                            ));
+                        }
+                        existing.push_str(sep);
+                        existing.push_str(&piece);
+                    }
+                    // First non-NULL value (or a slot never populated as Text).
+                    // Cap it too so a single oversized value can't skip the guard.
+                    _ => {
+                        if piece.len() > MAX_GROUP_CONCAT_LEN {
+                            return Err(VmError::ResourceLimit(
+                                "GROUP_CONCAT result exceeded maximum length (1e9)".to_string(),
+                            ));
+                        }
+                        acc.acc = Some(SqlValue::Text(piece));
+                    }
+                }
+            }
+        }
         AggFn::CountDistinct => {
             // Skip NULLs; insert a canonical string representation of non-NULL
             // values into the distinct set.  The set is lazily initialised here
@@ -1633,17 +4198,7 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> 
             // of hex strings per entry; cap at 1 000 000 distinct values.
             const MAX_DISTINCT_VALS: usize = 1_000_000;
             if !matches!(v, SqlValue::Null) {
-                let key = match &v {
-                    SqlValue::Int(n)   => format!("i:{}", n),
-                    SqlValue::Float(f) => format!("f:{}", f),
-                    SqlValue::Text(s)  => format!("t:{}", s),
-                    SqlValue::Bool(b)  => format!("b:{}", b),
-                    SqlValue::Blob(bytes) => {
-                        let hex: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
-                        format!("x:{}", hex)
-                    }
-                    SqlValue::Null => unreachable!(),
-                };
+                let key = distinct_key(&v);
                 let set = acc.distinct_vals.get_or_insert_with(std::collections::HashSet::new);
                 if set.len() >= MAX_DISTINCT_VALS && !set.contains(&key) {
                     return Err(VmError::ResourceLimit(format!(
@@ -1667,8 +4222,22 @@ fn finalize_accumulator(acc: &AggAccumulator, fn_tag: &AggFn) -> SqlValue {
         AggFn::CountStar => SqlValue::Int(acc.count),
         AggFn::Count => SqlValue::Int(acc.count),
         AggFn::Sum => acc.acc.clone().unwrap_or(SqlValue::Null),
+        // TOTAL always returns a REAL and yields 0.0 (never NULL) for an empty or
+        // all-NULL group — SQLite's NULL-free companion to SUM. The running sum is
+        // kept in `acc.acc` exactly as SUM does (i64 while all inputs are
+        // integers, saturating at i64::MAX) and converted to f64 here; SQLite
+        // accumulates in a double throughout, so the two agree for every sum
+        // within i64 range and diverge only past i64::MAX (~9.22e18) — an
+        // astronomical edge we accept.
+        AggFn::Total => SqlValue::Float(match &acc.acc {
+            Some(v) => to_f64(v),
+            None => 0.0,
+        }),
         AggFn::Min => acc.acc.clone().unwrap_or(SqlValue::Null),
         AggFn::Max => acc.acc.clone().unwrap_or(SqlValue::Null),
+        // The accumulated Text, or NULL when no non-NULL value was seen (an
+        // empty group or an all-NULL column) — matching SQLite.
+        AggFn::GroupConcat { .. } => acc.acc.clone().unwrap_or(SqlValue::Null),
         AggFn::Avg => match &acc.acc {
             None => SqlValue::Null,
             Some(sum) => {
@@ -1749,7 +4318,7 @@ fn build_insert_row(
 /// For each key, we look up the column's position in `output_columns` by name
 /// and extract the value from the row's parallel `(name, value)` list.
 fn apply_sort(
-    rows: &mut Vec<Vec<(String, SqlValue)>>,
+    rows: &mut [Vec<(String, SqlValue)>],
     keys: &[CompiledSortKey],
     output_columns: &[String],
 ) {
@@ -1759,13 +4328,75 @@ fn apply_sort(
             let idx = output_columns.iter().position(|c| c == &key.column);
             let va = idx.and_then(|i| a.get(i)).map(|(_, v)| v).unwrap_or(&SqlValue::Null);
             let vb = idx.and_then(|i| b.get(i)).map(|(_, v)| v).unwrap_or(&SqlValue::Null);
-            let cmp = sql_cmp(va, vb);
+
+            // NULL placement is handled explicitly so it can be controlled by a
+            // `NULLS FIRST`/`NULLS LAST` clause independently of ASC/DESC. The
+            // default (no clause) is SQLite's: NULLs first for ASC, last for
+            // DESC — i.e. `nulls_first` defaults to `ascending`. Null placement
+            // is absolute and is NOT flipped by the ascending/descending
+            // reversal below (which only applies to non-NULL comparisons).
+            let a_null = matches!(va, SqlValue::Null);
+            let b_null = matches!(vb, SqlValue::Null);
+            if a_null || b_null {
+                if a_null && b_null {
+                    continue; // equal on this key; fall through to the next
+                }
+                let nulls_first = key.nulls_first.unwrap_or(key.ascending);
+                // The NULL operand sorts first iff `nulls_first`.
+                return if a_null == nulls_first {
+                    std::cmp::Ordering::Less
+                } else {
+                    std::cmp::Ordering::Greater
+                };
+            }
+
+            let cmp = sql_cmp_collated(va, vb, key.collation.as_deref());
             if cmp != std::cmp::Ordering::Equal {
                 return if key.ascending { cmp } else { cmp.reverse() };
             }
         }
         std::cmp::Ordering::Equal
     });
+}
+
+/// Compare two values honouring an optional `COLLATE` sequence.
+///
+/// Collation only affects **text-vs-text** comparisons; for every other type
+/// pairing SQLite's normal type-ordering (`sql_cmp`) applies unchanged. The two
+/// built-in text collations we transform:
+///
+/// | Collation | Transform before byte comparison        | Example equal pair |
+/// |-----------|------------------------------------------|--------------------|
+/// | `NOCASE`  | ASCII-lowercase both operands            | `'Apple'` = `'apple'` |
+/// | `RTRIM`   | strip trailing spaces from both operands | `'a  '` = `'a'`       |
+///
+/// `None` or `BINARY` (folded to `None` in the planner) keeps raw byte order.
+/// The transform is applied to *copies*; the underlying values are untouched, so
+/// the sort is a pure reordering. NOCASE is ASCII-only, matching SQLite's
+/// built-in NOCASE (it lowercases A–Z exclusively, leaving non-ASCII bytes as
+/// is) — we mirror that with `to_ascii_lowercase` rather than Unicode folding.
+fn sql_cmp_collated(
+    a: &SqlValue,
+    b: &SqlValue,
+    collation: Option<&str>,
+) -> std::cmp::Ordering {
+    if let (Some(coll), SqlValue::Text(sa), SqlValue::Text(sb)) = (collation, a, b) {
+        let ta = collate_text(sa, coll);
+        let tb = collate_text(sb, coll);
+        return ta.cmp(&tb);
+    }
+    sql_cmp(a, b)
+}
+
+/// Produce the collation-normalised form of a text value for comparison.
+/// Unknown collation names fall through to the raw string (defensive — the
+/// planner already rejects anything other than NOCASE/RTRIM/BINARY).
+fn collate_text(s: &str, collation: &str) -> String {
+    match collation {
+        "NOCASE" => s.to_ascii_lowercase(),
+        "RTRIM" => s.trim_end_matches(' ').to_string(),
+        _ => s.to_string(),
+    }
 }
 
 /// Remove duplicate rows from `rows` (preserving first occurrence).
@@ -1775,14 +4406,51 @@ fn apply_sort(
 /// average serialised row width — far better than the previous O(n²) Vec scan.
 /// The Debug output is deterministic for all `SqlValue` variants, so collisions
 /// can only happen between rows that are genuinely equal.
-fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>) {
+fn apply_distinct(
+    rows: &mut Vec<Vec<(String, SqlValue)>>,
+    collations: &[Option<String>],
+    visible_cols: usize,
+) {
+    // Dedup on the first `visible_cols` columns only — the SELECT-list output.
+    // Rows may carry trailing hidden `__sort_N__` columns (appended for an ORDER
+    // BY key that is not itself an output column and stripped after the sort);
+    // SQLite dedups on the visible select-list, NOT those, so they must be
+    // excluded from the key — otherwise two rows equal in the select list but
+    // differing in a hidden sort key would both survive.
+    //
+    // The collation slice is indexed by output-column POSITION and describes
+    // exactly those visible columns. If its width disagrees, the planner's view
+    // of the output columns and what was actually emitted have diverged (e.g. an
+    // unexpanded `SELECT DISTINCT *`), and applying it would put a collation on
+    // the WRONG column — silently folding values that must stay distinct. Fall
+    // back to BINARY, which dedupes strictly and can never merge rows that differ.
+    let widths_agree =
+        collations.len() == visible_cols && rows.iter().all(|r| r.len() >= visible_cols);
+    let collations: &[Option<String>] = if widths_agree { collations } else { &[] };
+
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     rows.retain(|row| {
         // Build a canonical string key: "col1=<val1>,col2=<val2>,..."
         // Column names are included so that (A=1,B=2) ≠ (A=2,B=1).
+        //
+        // `collations[i]` is the collating sequence of output column `i` (rows are
+        // positional and parallel to the output columns — see the Phase-4 note),
+        // so a column declared `COLLATE NOCASE` folds 'A' and 'a' to one key.
+        // Only the KEY is folded: `retain` keeps the FIRST matching row, so the
+        // surviving row still carries its ORIGINAL text, matching SQLite.
+        // Collation applies to TEXT only — no other storage class has one.
+        // A short `collations` (or none at all) leaves the remaining columns at
+        // BINARY, which is the stricter, fail-safe direction.
         let key: String = row
             .iter()
-            .map(|(col, val)| format!("{}={:?}", col, val))
+            .take(visible_cols)
+            .enumerate()
+            .map(|(i, (col, val))| match (val, collations.get(i).and_then(|c| c.as_ref())) {
+                (SqlValue::Text(s), Some(coll)) => {
+                    format!("{}={:?}", col, SqlValue::Text(collate_text(s, coll)))
+                }
+                _ => format!("{}={:?}", col, val),
+            })
             .collect::<Vec<_>>()
             .join(",");
         // `insert` returns true if the key was NOT already present → keep row.
@@ -1935,6 +4603,159 @@ mod tests {
     }
 
     #[test]
+    fn test_arith_text_numeric_affinity() {
+        // Binary arithmetic coerces text/blob operands via numeric affinity,
+        // matching SQLite: `'5' + 0` = 5, `'abc' + 1` = 1, `'10' - '3'` = 7.
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let t = |s: &str| SqlValue::Text(s.to_string());
+        assert_eq!(bin(BinaryOp::Add, t("5"), int(0)), int(5));
+        assert_eq!(bin(BinaryOp::Add, t("5.5"), int(0)), SqlValue::Float(5.5));
+        assert_eq!(bin(BinaryOp::Add, t("abc"), int(1)), int(1)); // no prefix → 0
+        assert_eq!(bin(BinaryOp::Mul, t("5"), int(2)), int(10));
+        assert_eq!(bin(BinaryOp::Sub, t("10"), t("3")), int(7));
+        // Division/modulo coerce too; `5 / '0'` → NULL (affinity → integer 0).
+        assert_eq!(bin(BinaryOp::Div, int(5), t("2")), int(2));
+        assert_eq!(bin(BinaryOp::Div, int(5), t("0")), null());
+        assert_eq!(bin(BinaryOp::Mod, t("7"), int(3)), int(1));
+        // NULL still short-circuits to NULL (handled before coercion).
+        assert_eq!(bin(BinaryOp::Add, t("5"), null()), null());
+    }
+
+    /// An arithmetic operand keeps the type its **syntax** implies, never collapsing
+    /// an integral real to an integer. This is the rule that makes `'9.0' / 2` =
+    /// `4.5` rather than `4`. Every expectation was verified against real `sqlite3`.
+    #[test]
+    fn test_text_to_numeric_operand_keeps_syntax_type() {
+        let f = |x: f64| SqlValue::Float(x);
+        // Integer syntax → INTEGER (trailing junk ignored).
+        assert_eq!(text_to_numeric_operand("3"), int(3));
+        assert_eq!(text_to_numeric_operand("3abc"), int(3));
+        assert_eq!(text_to_numeric_operand("-7"), int(-7));
+        // A `.` makes it REAL even when the value is integral — the headline fix.
+        assert_eq!(text_to_numeric_operand("3.0"), f(3.0));
+        assert_eq!(text_to_numeric_operand("9.0"), f(9.0));
+        assert_eq!(text_to_numeric_operand("0.0"), f(0.0));
+        assert_eq!(text_to_numeric_operand("3."), f(3.0)); // trailing dot still real
+        assert_eq!(text_to_numeric_operand(".5"), f(0.5)); // no integer digits
+        assert_eq!(text_to_numeric_operand("-.5"), f(-0.5));
+        assert_eq!(text_to_numeric_operand("+3.0"), f(3.0));
+        assert_eq!(text_to_numeric_operand("  3.0  "), f(3.0)); // leading ws trimmed
+        assert_eq!(text_to_numeric_operand("3.5"), f(3.5));
+        // A *complete* exponent makes it REAL (even when integral).
+        assert_eq!(text_to_numeric_operand("1e3"), f(1000.0));
+        assert_eq!(text_to_numeric_operand("3e2x"), f(300.0)); // junk after exponent
+        // An *incomplete* exponent is not consumed → the prefix is just the integer.
+        assert_eq!(text_to_numeric_operand("3e"), int(3));
+        assert_eq!(text_to_numeric_operand("3e+"), int(3));
+        // No digits anywhere → integer zero (not a real).
+        assert_eq!(text_to_numeric_operand("abc"), int(0));
+        assert_eq!(text_to_numeric_operand("."), int(0));
+        assert_eq!(text_to_numeric_operand("-"), int(0));
+        assert_eq!(text_to_numeric_operand(""), int(0));
+        // Integer syntax that overflows i64 promotes to REAL rather than saturating.
+        assert_eq!(text_to_numeric_operand("99999999999999999999"), f(1e20));
+        assert_eq!(text_to_numeric_operand("9223372036854775807"), int(i64::MAX));
+        // Exponent overflow → ±inf, as SQLite reports for `'1e999' + 0`.
+        match text_to_numeric_operand("1e999") {
+            SqlValue::Float(v) => assert!(v.is_infinite() && v > 0.0),
+            other => panic!("expected +inf real, got {other:?}"),
+        }
+    }
+
+    /// The prefix scan walks *bytes* and then slices `&t[..i]`, so multi-byte UTF-8
+    /// must never split a character (which would panic). It cannot: the scan only
+    /// advances over ASCII sign/digit/`.`/`e` bytes, and every byte of a multi-byte
+    /// UTF-8 sequence is `>= 0x80`, so the scan always stops on a char boundary.
+    #[test]
+    fn test_text_to_numeric_operand_utf8_never_panics() {
+        assert_eq!(text_to_numeric_operand("3.0日本"), SqlValue::Float(3.0));
+        assert_eq!(text_to_numeric_operand("42日本"), int(42));
+        assert_eq!(text_to_numeric_operand("日本"), int(0));
+        assert_eq!(text_to_numeric_operand("3e日本"), int(3)); // exponent incomplete
+        assert_eq!(text_to_numeric_operand("  ✓3.5"), int(0)); // non-numeric lead
+        assert_eq!(text_to_numeric_operand("−5"), int(0)); // U+2212 minus, not ASCII
+        // Emoji / 4-byte sequences right after a numeric prefix.
+        assert_eq!(text_to_numeric_operand("7.25🎉"), SqlValue::Float(7.25));
+    }
+
+    /// `CAST(… AS NUMERIC)` keeps its own, *different* rule: it DOES collapse an
+    /// integral real to an integer. Guards against anyone "unifying" the two helpers.
+    #[test]
+    fn test_cast_numeric_still_collapses_unlike_operand_rule() {
+        // CAST collapses …
+        assert_eq!(text_to_numeric("3.0"), int(3));
+        assert_eq!(text_to_numeric("1e3"), int(1000));
+        // … while the operand rule keeps the real.
+        assert_eq!(text_to_numeric_operand("3.0"), SqlValue::Float(3.0));
+        assert_eq!(text_to_numeric_operand("1e3"), SqlValue::Float(1000.0));
+        // Both agree when the value is genuinely non-integral.
+        assert_eq!(text_to_numeric("3.5"), SqlValue::Float(3.5));
+        assert_eq!(text_to_numeric_operand("3.5"), SqlValue::Float(3.5));
+    }
+
+    /// The end-to-end payoff through real arithmetic: division, and the other
+    /// operators, now return REAL for real-syntax text operands.
+    #[test]
+    fn test_arith_real_syntax_text_yields_real() {
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let t = |s: &str| SqlValue::Text(s.to_string());
+        // The headline: `'9.0' / 2` = 4.5 (was 4 when the real collapsed to an int).
+        assert_eq!(bin(BinaryOp::Div, t("9.0"), int(2)), SqlValue::Float(4.5));
+        // Integer-syntax text still does integer division: `'9' / 2` = 4.
+        assert_eq!(bin(BinaryOp::Div, t("9"), int(2)), int(4));
+        assert_eq!(bin(BinaryOp::Add, t("3.0"), int(0)), SqlValue::Float(3.0));
+        assert_eq!(bin(BinaryOp::Mul, t("9.0"), int(2)), SqlValue::Float(18.0));
+        assert_eq!(bin(BinaryOp::Add, t("1e2"), int(0)), SqlValue::Float(100.0));
+        // Unary minus follows the same operand rule.
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, t("9.0")).unwrap(),
+            SqlValue::Float(-9.0)
+        );
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, t("3e2")).unwrap(),
+            SqlValue::Float(-300.0)
+        );
+        assert_eq!(eval_unary(&UnaryOp::Neg, t("9")).unwrap(), int(-9));
+    }
+
+    #[test]
+    fn test_div_mod_i64_min_overflow() {
+        // `i64::MIN / -1` overflows i64 → SQLite promotes to REAL. `i64::MIN % -1`
+        // overflows Rust's `%` but its true remainder is 0 (integer).
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        assert_eq!(
+            bin(BinaryOp::Div, int(i64::MIN), int(-1)),
+            SqlValue::Float(9223372036854775808.0)
+        );
+        assert_eq!(bin(BinaryOp::Mod, int(i64::MIN), int(-1)), int(0));
+        // Non-overflowing div/mod are unchanged.
+        assert_eq!(bin(BinaryOp::Div, int(7), int(2)), int(3));
+        assert_eq!(bin(BinaryOp::Mod, int(7), int(3)), int(1));
+        assert_eq!(bin(BinaryOp::Div, int(-7), int(2)), int(-3));
+    }
+
+    #[test]
+    fn test_modulo_integer_truncation() {
+        // SQLite's `%` truncates both operands to i64 (toward zero) before taking
+        // the remainder; the result is REAL iff an operand was REAL. So `7.5 % 2`
+        // is `1.0` (7 % 2), NOT `1.5` (fmod).
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let f = SqlValue::Float;
+        assert_eq!(bin(BinaryOp::Mod, f(7.5), int(2)), f(1.0)); // 7 % 2 = 1
+        assert_eq!(bin(BinaryOp::Mod, f(10.9), f(3.9)), f(1.0)); // 10 % 3 = 1
+        assert_eq!(bin(BinaryOp::Mod, f(-7.5), int(2)), f(-1.0)); // -7 % 2 = -1
+        assert_eq!(bin(BinaryOp::Mod, int(7), f(2.5)), f(1.0)); // 7 % 2 = 1, real
+        assert_eq!(bin(BinaryOp::Mod, int(7), int(2)), int(1)); // pure int stays int
+        // A real divisor that truncates to zero is NULL, like an integer zero.
+        assert_eq!(bin(BinaryOp::Mod, int(5), f(0.9)), null());
+        // Out-of-range real dividend clamps to i64::MAX before the remainder
+        // (matching SQLite's `doubleToInt64`): 9223372036854775807 % 2 = 1.
+        assert_eq!(bin(BinaryOp::Mod, f(1e19), int(2)), f(1.0));
+        // Division, by contrast, stays true real division.
+        assert_eq!(bin(BinaryOp::Div, f(7.5), int(2)), f(3.75));
+    }
+
+    #[test]
     fn test_sub_ints() {
         let mut b = InMemoryBackend::new();
         let r = execute(&prog(vec![
@@ -1980,15 +4801,32 @@ mod tests {
     }
 
     #[test]
-    fn test_div_by_zero_returns_error() {
+    fn test_div_and_mod_by_zero_return_null() {
+        // SQLite yields NULL (not an error) for `x / 0` and `x % 0`, for both
+        // integer and float zero divisors.
         let mut b = InMemoryBackend::new();
-        let err = execute(&prog(vec![
-            Instruction::LoadConst(int(1)),
-            Instruction::LoadConst(int(0)),
-            Instruction::BinaryOpInstr(BinaryOp::Div),
-            Instruction::Halt,
-        ]), &mut b);
-        assert!(matches!(err, Err(VmError::DivisionByZero)));
+        for op in [BinaryOp::Div, BinaryOp::Mod] {
+            for divisor in [int(0), SqlValue::Float(0.0)] {
+                let r = execute(
+                    &prog(vec![
+                        Instruction::BeginRow,
+                        Instruction::LoadConst(int(5)),
+                        Instruction::LoadConst(divisor.clone()),
+                        Instruction::BinaryOpInstr(op.clone()),
+                        Instruction::EmitColumn("r".to_string()),
+                        Instruction::EmitRow,
+                        Instruction::Halt,
+                    ]),
+                    &mut b,
+                )
+                .unwrap();
+                assert_eq!(
+                    r.rows,
+                    vec![vec![SqlValue::Null]],
+                    "{op:?} by {divisor:?} should be NULL"
+                );
+            }
+        }
     }
 
     #[test]
@@ -2004,6 +4842,97 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)]]);
+    }
+
+    #[test]
+    fn test_cast_numeric_affinity() {
+        let num = |v: SqlValue| apply_cast(&v, &CastType::Numeric);
+
+        // Text → INTEGER when integral & fits i64; else REAL.
+        assert_eq!(num(SqlValue::Text("42".into())), SqlValue::Int(42));
+        assert_eq!(num(SqlValue::Text("3.0".into())), SqlValue::Int(3));
+        assert_eq!(num(SqlValue::Text("1e3".into())), SqlValue::Int(1000));
+        assert_eq!(num(SqlValue::Text("42abc".into())), SqlValue::Int(42));
+        assert_eq!(num(SqlValue::Text("abc".into())), SqlValue::Int(0));
+        assert_eq!(num(SqlValue::Text("3.5".into())), SqlValue::Float(3.5));
+        // i64-overflowing integer text → REAL.
+        match num(SqlValue::Text("99999999999999999999".into())) {
+            SqlValue::Float(f) => assert!((f - 1e20).abs() < 1e6),
+            other => panic!("expected REAL, got {other:?}"),
+        }
+        // i64::MAX parses exactly as INTEGER (no f64-rounding surprise).
+        assert_eq!(
+            num(SqlValue::Text("9223372036854775807".into())),
+            SqlValue::Int(i64::MAX)
+        );
+        // Numbers are a no-op: INTEGER stays INTEGER, REAL stays REAL (even 3.0).
+        assert_eq!(num(SqlValue::Int(42)), SqlValue::Int(42));
+        assert_eq!(num(SqlValue::Float(3.0)), SqlValue::Float(3.0));
+        assert_eq!(num(SqlValue::Float(3.5)), SqlValue::Float(3.5));
+        // NULL stays NULL.
+        assert_eq!(num(SqlValue::Null), SqlValue::Null);
+    }
+
+    #[test]
+    fn test_sqlite_substr_edge_cases() {
+        let chars: Vec<char> = "hello".chars().collect();
+        let s = |pos, z| sqlite_substr(&chars, pos, z);
+        // Ordinary and negative start.
+        assert_eq!(s(2, Some(3)), "ell");
+        assert_eq!(s(-2, None), "lo");
+        assert_eq!(s(-3, Some(2)), "ll");
+        // Y = 0 (virtual slot before the first char).
+        assert_eq!(s(0, None), "hello");
+        assert_eq!(s(0, Some(3)), "he");
+        assert_eq!(s(0, Some(1)), "");
+        assert_eq!(s(0, Some(2)), "h");
+        // Negative length reads the |Z| chars preceding Y.
+        assert_eq!(s(2, Some(-1)), "h");
+        assert_eq!(s(3, Some(-2)), "he");
+        assert_eq!(s(1, Some(-1)), "");
+        assert_eq!(s(5, Some(-2)), "ll");
+        assert_eq!(s(-2, Some(-1)), "l");
+        // Out-of-range windows clamp to empty / the string bounds.
+        assert_eq!(s(6, Some(2)), "");
+        assert_eq!(s(3, Some(0)), "");
+        assert_eq!(s(3, Some(10)), "llo");
+        assert_eq!(s(-10, None), "hello");
+        // Character-based for multibyte text.
+        let accented: Vec<char> = "héllo".chars().collect();
+        assert_eq!(sqlite_substr(&accented, 2, Some(2)), "él");
+
+        // Extreme i64 arguments must not overflow-panic (attacker-controlled —
+        // these are the exact breakers the security review found). We only
+        // require a safe, bounded result: saturating arithmetic keeps the window
+        // in range, so the output is always some slice of the input. Bug-for-bug
+        // parity with SQLite's C integer wrapping on these pathological inputs is
+        // out of scope (no real query passes i64::MIN as an offset/length).
+        for &pos in &[i64::MIN, i64::MAX, -6, -1, 0, 1] {
+            for &z in &[Some(i64::MIN), Some(i64::MAX), Some(0), None] {
+                let out = sqlite_substr(&chars, pos, z);
+                assert!(
+                    out.chars().count() <= chars.len(),
+                    "substr({pos},{z:?}) escaped bounds: {out:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn test_like_match_escape() {
+        // Escaped `%`/`_` become literals; unescaped ones stay wildcards.
+        assert!(like_match_escape("a%b", "a#%b", '#'));
+        assert!(!like_match_escape("100x", "100#%", '#'));
+        assert!(like_match_escape("a_b", "a#_b", '#'));
+        assert!(!like_match_escape("axb", "a#_b", '#'));
+        // Literal escape then a real wildcard.
+        assert!(like_match_escape("50%off", "50#%%", '#'));
+        // The escape character escaping itself.
+        assert!(like_match_escape("a/b", "a//b", '/'));
+        // Plain wildcards still work with an escape char defined.
+        assert!(like_match_escape("anything", "%", '#'));
+        // Case-insensitive literal match, like the wildcard-free path.
+        assert!(like_match_escape("A%C", "a#%c", '#'));
     }
 
     #[test]
@@ -2189,6 +5118,27 @@ mod tests {
     }
 
     #[test]
+    fn test_unary_neg_text_numeric_affinity() {
+        // Unary minus coerces a text operand through numeric affinity, then
+        // negates — matching SQLite.
+        let neg = |s: &str| eval_unary(&UnaryOp::Neg, SqlValue::Text(s.to_string())).unwrap();
+        assert_eq!(neg("5"), SqlValue::Int(-5));
+        assert_eq!(neg("12abc"), SqlValue::Int(-12));
+        assert_eq!(neg("abc"), SqlValue::Int(0)); // no numeric prefix → 0
+        assert_eq!(neg("3.5"), SqlValue::Float(-3.5));
+        assert_eq!(neg("  7"), SqlValue::Int(-7)); // leading whitespace tolerated
+        // Blob operand coerces via its UTF-8 bytes; NULL stays NULL.
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, SqlValue::Blob(b"9".to_vec())).unwrap(),
+            SqlValue::Int(-9)
+        );
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, SqlValue::Null).unwrap(),
+            SqlValue::Null
+        );
+    }
+
+    #[test]
     fn test_unary_not_true() {
         let mut b = InMemoryBackend::new();
         let r = execute(&prog(vec![
@@ -2214,6 +5164,23 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![null()]]);
+    }
+
+    #[test]
+    fn test_is_truthy_text_numeric_affinity() {
+        // Text/blob truthiness takes numeric affinity, matching SQLite.
+        assert!(!is_truthy(&SqlValue::Text("abc".into()))); // → 0 → false
+        assert!(is_truthy(&SqlValue::Text("5".into()))); // → 5 → true
+        assert!(!is_truthy(&SqlValue::Text("0".into())));
+        assert!(!is_truthy(&SqlValue::Text("".into())));
+        assert!(is_truthy(&SqlValue::Text("5.5".into())));
+        assert!(is_truthy(&SqlValue::Text("12abc".into()))); // leading 12 → true
+        assert!(!is_truthy(&SqlValue::Blob(b"abc".to_vec())));
+        assert!(is_truthy(&SqlValue::Blob(b"9".to_vec())));
+        // Numeric/NULL/bool arms unchanged.
+        assert!(!is_truthy(&SqlValue::Int(0)));
+        assert!(is_truthy(&SqlValue::Int(3)));
+        assert!(!is_truthy(&SqlValue::Null));
     }
 
     // ── 7. LIKE ───────────────────────────────────────────────────────────────
@@ -2253,7 +5220,7 @@ mod tests {
             Instruction::BeginRow,
             Instruction::LoadConst(null()),
             Instruction::LoadConst(text("%")),
-            Instruction::Like,
+            Instruction::Like(false),
             Instruction::EmitColumn("r".to_string()),
             Instruction::EmitRow,
             Instruction::Halt,
@@ -2377,6 +5344,53 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![null()]]);
+    }
+
+    #[test]
+    fn test_in_list_numeric_equality() {
+        // `1 IN (1.0)` is TRUE — IN uses `=` equality, which compares INTEGER and
+        // REAL numerically (not by same-variant identity).
+        let run = |val: SqlValue, items: Vec<SqlValue>| {
+            let mut b = InMemoryBackend::new();
+            let n = items.len();
+            let mut prog_v = vec![Instruction::BeginRow, Instruction::LoadConst(val)];
+            for it in items {
+                prog_v.push(Instruction::LoadConst(it));
+            }
+            prog_v.push(Instruction::InList(n));
+            prog_v.push(Instruction::EmitColumn("r".to_string()));
+            prog_v.push(Instruction::EmitRow);
+            prog_v.push(Instruction::Halt);
+            execute(&prog(prog_v), &mut b).unwrap().rows[0][0].clone()
+        };
+        assert_eq!(run(int(1), vec![float(1.0)]), bool_val(true));
+        assert_eq!(run(float(1.0), vec![int(1)]), bool_val(true));
+        assert_eq!(run(int(1), vec![int(2), float(1.0), int(3)]), bool_val(true));
+        // Text vs integer do NOT match (no affinity in IN).
+        assert_eq!(run(SqlValue::Text("1".into()), vec![int(1)]), bool_val(false));
+    }
+
+    #[test]
+    fn test_in_list_null_three_valued() {
+        let run = |val: SqlValue, items: Vec<SqlValue>| {
+            let mut b = InMemoryBackend::new();
+            let n = items.len();
+            let mut prog_v = vec![Instruction::BeginRow, Instruction::LoadConst(val)];
+            for it in items {
+                prog_v.push(Instruction::LoadConst(it));
+            }
+            prog_v.push(Instruction::InList(n));
+            prog_v.push(Instruction::EmitColumn("r".to_string()));
+            prog_v.push(Instruction::EmitRow);
+            prog_v.push(Instruction::Halt);
+            execute(&prog(prog_v), &mut b).unwrap().rows[0][0].clone()
+        };
+        // No match but a NULL element present → NULL.
+        assert_eq!(run(int(5), vec![null(), int(2)]), null());
+        // A real match wins even with a NULL element present → true.
+        assert_eq!(run(int(1), vec![null(), int(1)]), bool_val(true));
+        // No match, no NULL element → false.
+        assert_eq!(run(int(5), vec![int(1), int(2)]), bool_val(false));
     }
 
     // ── 10. Scan / LoadColumn ─────────────────────────────────────────────────
@@ -2706,7 +5720,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
     }
@@ -2729,7 +5743,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false, nulls_first: None, collation: None, output_index: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(3)], vec![int(2)], vec![int(1)]]);
     }
@@ -2760,8 +5774,8 @@ mod tests {
             Instruction::CloseScan(None),
             Instruction::Halt,
             Instruction::SortResult(vec![
-                CompiledSortKey { column: "a".to_string(), ascending: true },
-                CompiledSortKey { column: "b".to_string(), ascending: true },
+                CompiledSortKey { column: "a".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None },
+                CompiledSortKey { column: "b".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None },
             ]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows[0], vec![int(1), int(1)]);
@@ -2866,7 +5880,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::DistinctResult,
+            Instruction::DistinctResult(vec![]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows.len(), 3);
         assert!(r.rows.contains(&vec![int(1)]));
@@ -3104,6 +6118,32 @@ mod tests {
         assert_eq!(r.rows, vec![vec![text("Hello World")]]);
     }
 
+    #[test]
+    fn test_concat_blob_uses_raw_bytes() {
+        // `||` concatenates a blob as its RAW bytes (as text), not the `x'…'`
+        // display form: `X'41' || 'B'` = 'AB'. Result is TEXT; NULL propagates.
+        let cat = |l: SqlValue, r: SqlValue| eval_binary(&BinaryOp::Concat, l, r).unwrap();
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x41]), SqlValue::Text("B".into())),
+            SqlValue::Text("AB".into())
+        );
+        assert_eq!(
+            cat(SqlValue::Text("A".into()), SqlValue::Blob(vec![0x42])),
+            SqlValue::Text("AB".into())
+        );
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x48]), SqlValue::Blob(vec![0x69])),
+            SqlValue::Text("Hi".into())
+        );
+        // `sql_to_str` (the display form) still renders the hex literal — the
+        // concat path must NOT regress that helper's behavior.
+        assert_eq!(sql_to_str(&SqlValue::Blob(vec![0x41])), "x'41'");
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x41]), SqlValue::Null),
+            SqlValue::Null
+        );
+    }
+
     // ── 20. Label / Jump / JumpIfTrue ─────────────────────────────────────────
 
     #[test]
@@ -3266,7 +6306,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None }]),
             Instruction::LimitResult(Some(3), None),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
@@ -3293,9 +6333,690 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true }]),
-            Instruction::DistinctResult,
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None }]),
+            Instruction::DistinctResult(vec![]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
+    }
+
+    #[test]
+    fn builtin_ifnull_and_nullif() {
+        // IFNULL passes through a non-NULL, substitutes on NULL.
+        assert_eq!(
+            call_builtin("IFNULL", vec![SqlValue::Int(5), SqlValue::Int(-1)]).unwrap(),
+            SqlValue::Int(5)
+        );
+        assert_eq!(
+            call_builtin("IFNULL", vec![SqlValue::Null, SqlValue::Int(-1)]).unwrap(),
+            SqlValue::Int(-1)
+        );
+        // NULLIF collapses equal args to NULL, else returns the first.
+        assert_eq!(
+            call_builtin("NULLIF", vec![SqlValue::Int(2), SqlValue::Int(2)]).unwrap(),
+            SqlValue::Null
+        );
+        assert_eq!(
+            call_builtin("NULLIF", vec![SqlValue::Int(1), SqlValue::Int(2)]).unwrap(),
+            SqlValue::Int(1)
+        );
+    }
+
+    #[test]
+    fn builtin_typeof_names_each_storage_class() {
+        let t = |v: SqlValue| match call_builtin("TYPEOF", vec![v]).unwrap() {
+            SqlValue::Text(s) => s,
+            other => panic!("expected text, got {other:?}"),
+        };
+        assert_eq!(t(SqlValue::Null), "null");
+        assert_eq!(t(SqlValue::Int(3)), "integer");
+        assert_eq!(t(SqlValue::Float(1.5)), "real");
+        assert_eq!(t(SqlValue::Text("x".into())), "text");
+        assert_eq!(t(SqlValue::Blob(vec![1])), "blob");
+    }
+
+    #[test]
+    fn builtin_instr_char_positions_and_nulls() {
+        let i = |h: &str, n: &str| {
+            call_builtin("INSTR", vec![SqlValue::Text(h.into()), SqlValue::Text(n.into())]).unwrap()
+        };
+        assert_eq!(i("abc", "b"), SqlValue::Int(2));
+        assert_eq!(i("abc", "x"), SqlValue::Int(0));
+        assert_eq!(i("abc", ""), SqlValue::Int(1)); // instr(x, '') == 1
+        // Multi-byte prefix: 'é' is one character, so the match is at char 2.
+        assert_eq!(i("éb", "b"), SqlValue::Int(2));
+        // NULL in either argument propagates.
+        assert_eq!(
+            call_builtin("INSTR", vec![SqlValue::Null, SqlValue::Text("b".into())]).unwrap(),
+            SqlValue::Null
+        );
+    }
+
+    #[test]
+    fn builtin_hex_encodes_bytes_uppercase() {
+        let h = |v: SqlValue| match call_builtin("HEX", vec![v]).unwrap() {
+            SqlValue::Text(s) => s,
+            other => panic!("expected text, got {other:?}"),
+        };
+        assert_eq!(h(SqlValue::Text("abc".into())), "616263");
+        assert_eq!(h(SqlValue::Blob(vec![0xde, 0xad, 0xbe, 0xef])), "DEADBEEF");
+        assert_eq!(h(SqlValue::Int(255)), "323535"); // hex of the text "255"
+        // NULL casts to an empty blob, so HEX(NULL) is the empty string, NOT NULL.
+        assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Text(String::new()));
+    }
+
+    #[test]
+    fn builtin_sign_and_unicode() {
+        let sign = |v: SqlValue| call_builtin("SIGN", vec![v]).unwrap();
+        assert_eq!(sign(SqlValue::Int(-7)), SqlValue::Int(-1));
+        assert_eq!(sign(SqlValue::Int(0)), SqlValue::Int(0));
+        assert_eq!(sign(SqlValue::Float(3.5)), SqlValue::Int(1));
+        assert_eq!(sign(SqlValue::Text("x".into())), SqlValue::Null); // non-numeric
+        assert_eq!(sign(SqlValue::Null), SqlValue::Null);
+
+        let uni = |s: &str| call_builtin("UNICODE", vec![SqlValue::Text(s.into())]).unwrap();
+        assert_eq!(uni("abc"), SqlValue::Int(97));
+        assert_eq!(uni("Z"), SqlValue::Int(90));
+        assert_eq!(uni(""), SqlValue::Null); // empty → NULL
+        assert_eq!(call_builtin("UNICODE", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_char_and_zeroblob() {
+        assert_eq!(
+            call_builtin("CHAR", vec![SqlValue::Int(72), SqlValue::Int(105), SqlValue::Int(33)]).unwrap(),
+            SqlValue::Text("Hi!".into())
+        );
+        // No args → empty string.
+        assert_eq!(call_builtin("CHAR", vec![]).unwrap(), SqlValue::Text(String::new()));
+
+        assert_eq!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(3)]).unwrap(),
+            SqlValue::Blob(vec![0, 0, 0])
+        );
+        assert_eq!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(-1)]).unwrap(),
+            SqlValue::Blob(vec![]) // negative length → empty
+        );
+        assert_eq!(call_builtin("ZEROBLOB", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        // Adversarial: a huge length is rejected, not eagerly allocated (DoS guard).
+        assert!(matches!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(9_999_999_999)]),
+            Err(VmError::ResourceLimit(_))
+        ));
+    }
+
+    #[test]
+    fn builtin_quote_renders_sql_literals() {
+        let q = |v: SqlValue| match call_builtin("QUOTE", vec![v]).unwrap() {
+            SqlValue::Text(s) => s,
+            other => panic!("expected text, got {other:?}"),
+        };
+        assert_eq!(q(SqlValue::Null), "NULL");
+        assert_eq!(q(SqlValue::Int(-7)), "-7");
+        assert_eq!(q(SqlValue::Text("it's".into())), "'it''s'"); // inner quote doubled
+        assert_eq!(q(SqlValue::Blob(vec![0xde, 0xad])), "X'DEAD'");
+    }
+
+    #[test]
+    fn builtin_scalar_max_min() {
+        let mx = |vs: Vec<SqlValue>| call_builtin("MAX", vs).unwrap();
+        let mn = |vs: Vec<SqlValue>| call_builtin("MIN", vs).unwrap();
+        assert_eq!(mx(vec![SqlValue::Int(3), SqlValue::Int(9), SqlValue::Int(5)]), SqlValue::Int(9));
+        assert_eq!(mn(vec![SqlValue::Int(3), SqlValue::Int(9), SqlValue::Int(5)]), SqlValue::Int(3));
+        // Any NULL argument → NULL.
+        assert_eq!(mx(vec![SqlValue::Int(1), SqlValue::Null, SqlValue::Int(3)]), SqlValue::Null);
+        // Text ordering.
+        assert_eq!(
+            mn(vec![SqlValue::Text("b".into()), SqlValue::Text("a".into()), SqlValue::Text("c".into())]),
+            SqlValue::Text("a".into())
+        );
+    }
+
+    #[test]
+    fn builtin_iif_selects_by_truthiness() {
+        let iif = |x: SqlValue| {
+            call_builtin("IIF", vec![x, SqlValue::Text("yes".into()), SqlValue::Text("no".into())]).unwrap()
+        };
+        assert_eq!(iif(SqlValue::Int(1)), SqlValue::Text("yes".into()));
+        assert_eq!(iif(SqlValue::Int(0)), SqlValue::Text("no".into()));
+        assert_eq!(iif(SqlValue::Null), SqlValue::Text("no".into())); // NULL → falsy
+        assert_eq!(iif(SqlValue::Bool(true)), SqlValue::Text("yes".into()));
+        // Wrong arity is a type error, not a panic.
+        assert!(call_builtin("IIF", vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
+    }
+
+    #[test]
+    fn builtin_trim_one_arg_strips_whitespace() {
+        // The single-argument form keeps its historical whitespace behaviour.
+        let t = |name: &str, s: &str| call_builtin(name, vec![SqlValue::Text(s.into())]).unwrap();
+        assert_eq!(t("TRIM", "  hi  "), SqlValue::Text("hi".into()));
+        assert_eq!(t("LTRIM", "  hi  "), SqlValue::Text("hi  ".into()));
+        assert_eq!(t("RTRIM", "  hi  "), SqlValue::Text("  hi".into()));
+        // NULL propagates; a NULL string trims to NULL.
+        assert_eq!(call_builtin("TRIM", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_trim_two_arg_strips_character_set() {
+        let t = |name: &str, s: &str, set: &str| {
+            call_builtin(name, vec![SqlValue::Text(s.into()), SqlValue::Text(set.into())]).unwrap()
+        };
+        // The second argument is a *set* of characters, matched at each end.
+        assert_eq!(t("TRIM", "xxhixx", "x"), SqlValue::Text("hi".into()));
+        assert_eq!(t("TRIM", "abcHIcba", "abc"), SqlValue::Text("HI".into()));
+        assert_eq!(t("LTRIM", "xyxhi", "xy"), SqlValue::Text("hi".into()));
+        assert_eq!(t("RTRIM", "hixyx", "xy"), SqlValue::Text("hi".into()));
+        // Operates on Unicode characters, not bytes.
+        assert_eq!(t("TRIM", "héllo", "h"), SqlValue::Text("éllo".into()));
+        assert_eq!(t("TRIM", " oé oé", "é "), SqlValue::Text("oé o".into()));
+        // Stripping everything yields the empty string.
+        assert_eq!(t("TRIM", "aaa", "a"), SqlValue::Text("".into()));
+        // An empty trim-set removes nothing.
+        assert_eq!(t("TRIM", "xhix", ""), SqlValue::Text("xhix".into()));
+    }
+
+    #[test]
+    fn builtin_trim_two_arg_null_and_coercion() {
+        // NULL in either argument propagates.
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Text("xxhixx".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Null, SqlValue::Text("x".into())]).unwrap(),
+            SqlValue::Null
+        );
+        // Numeric arguments coerce to their decimal text, like real SQLite:
+        //   trim(12321, '1') -> '232',  trim('5xx', 5) -> 'xx'
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Int(12321), SqlValue::Text("1".into())]).unwrap(),
+            SqlValue::Text("232".into())
+        );
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Text("5xx".into()), SqlValue::Int(5)]).unwrap(),
+            SqlValue::Text("xx".into())
+        );
+        // Three arguments is an arity error, not a panic.
+        assert!(call_builtin(
+            "TRIM",
+            vec![SqlValue::Text("a".into()), SqlValue::Text("b".into()), SqlValue::Text("c".into())]
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn builtin_trim_zero_args_is_error_not_panic() {
+        // The grammar lets `TRIM()` parse (the argument list is optional), so an
+        // empty `args` must be a clean error — never an out-of-bounds panic.
+        for name in ["TRIM", "LTRIM", "RTRIM"] {
+            assert!(call_builtin(name, vec![]).is_err(), "{name}() should error, not panic");
+        }
+    }
+
+    #[test]
+    fn builtin_concat_joins_all_arguments() {
+        let c = |vs: Vec<SqlValue>| call_builtin("CONCAT", vs).unwrap();
+        assert_eq!(
+            c(vec![SqlValue::Text("a".into()), SqlValue::Text("b".into()), SqlValue::Text("c".into())]),
+            SqlValue::Text("abc".into())
+        );
+        // A NULL argument contributes the empty string (does not nullify).
+        assert_eq!(
+            c(vec![SqlValue::Text("a".into()), SqlValue::Null, SqlValue::Text("c".into())]),
+            SqlValue::Text("ac".into())
+        );
+        // Integers/booleans coerce to their decimal text.
+        assert_eq!(
+            c(vec![SqlValue::Int(12), SqlValue::Text("x".into())]),
+            SqlValue::Text("12x".into())
+        );
+        // All-NULL concatenation is the empty string, not NULL.
+        assert_eq!(c(vec![SqlValue::Null]), SqlValue::Text("".into()));
+        // Zero arguments is an arity error.
+        assert!(call_builtin("CONCAT", vec![]).is_err());
+        // Floats are declined (their SQLite text form is subtle), like HEX/QUOTE.
+        assert!(call_builtin("CONCAT", vec![SqlValue::Float(2.5)]).is_err());
+    }
+
+    #[test]
+    fn builtin_concat_ws_joins_with_separator() {
+        let c = |vs: Vec<SqlValue>| call_builtin("CONCAT_WS", vs).unwrap();
+        assert_eq!(
+            c(vec![
+                SqlValue::Text("-".into()),
+                SqlValue::Text("a".into()),
+                SqlValue::Text("b".into()),
+                SqlValue::Text("c".into()),
+            ]),
+            SqlValue::Text("a-b-c".into())
+        );
+        // NULL value arguments are SKIPPED entirely (not joined as empty).
+        assert_eq!(
+            c(vec![
+                SqlValue::Text("-".into()),
+                SqlValue::Text("a".into()),
+                SqlValue::Null,
+                SqlValue::Text("c".into()),
+            ]),
+            SqlValue::Text("a-c".into())
+        );
+        // All-NULL values → empty string (separator never appears).
+        assert_eq!(
+            c(vec![SqlValue::Text("-".into()), SqlValue::Null, SqlValue::Null]),
+            SqlValue::Text("".into())
+        );
+        // A NULL separator makes the whole result NULL.
+        assert_eq!(
+            c(vec![SqlValue::Null, SqlValue::Text("a".into()), SqlValue::Text("b".into())]),
+            SqlValue::Null
+        );
+        // Fewer than two arguments is an arity error.
+        assert!(call_builtin("CONCAT_WS", vec![SqlValue::Text("-".into())]).is_err());
+    }
+
+    #[test]
+    fn builtin_substring_is_an_alias_of_substr() {
+        // SUBSTRING must behave identically to SUBSTR for every arity.
+        for args in [
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(2)],
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(2), SqlValue::Int(3)],
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(-2), SqlValue::Int(1)],
+        ] {
+            assert_eq!(
+                call_builtin("SUBSTRING", args.clone()).unwrap(),
+                call_builtin("SUBSTR", args).unwrap(),
+            );
+        }
+    }
+
+    #[test]
+    fn builtin_printf_formats_integers_and_strings() {
+        let txt = |s: &str| SqlValue::Text(s.into());
+        let pf = |fmt: &str, extra: Vec<SqlValue>| {
+            let mut a = vec![txt(fmt)];
+            a.extend(extra);
+            call_builtin("PRINTF", a).unwrap()
+        };
+        assert_eq!(pf("%d-%s", vec![SqlValue::Int(5), txt("x")]), txt("5-x"));
+        // Width, left-justify, zero-pad, sign.
+        assert_eq!(pf("%5d", vec![SqlValue::Int(42)]), txt("   42"));
+        assert_eq!(pf("%-5d|", vec![SqlValue::Int(42)]), txt("42   |"));
+        assert_eq!(pf("%05d", vec![SqlValue::Int(42)]), txt("00042"));
+        assert_eq!(pf("%+d", vec![SqlValue::Int(5)]), txt("+5"));
+        assert_eq!(pf("%05d", vec![SqlValue::Int(-7)]), txt("-0007")); // zero-pad after sign
+        // Hex / octal / precision / literal percent.
+        assert_eq!(pf("%x", vec![SqlValue::Int(255)]), txt("ff"));
+        assert_eq!(pf("%X", vec![SqlValue::Int(255)]), txt("FF"));
+        assert_eq!(pf("%o", vec![SqlValue::Int(8)]), txt("10"));
+        assert_eq!(pf("%.3s", vec![txt("hello")]), txt("hel"));
+        assert_eq!(pf("100%%", vec![]), txt("100%"));
+        // Coercion + missing/extra args (SQLite's defaults).
+        assert_eq!(pf("%d", vec![txt("abc")]), txt("0")); // non-numeric text → 0
+        assert_eq!(pf("%d", vec![SqlValue::Null]), txt("0")); // NULL → 0
+        assert_eq!(pf("%s", vec![SqlValue::Null]), txt("")); // NULL → ""
+        assert_eq!(pf("%d %d", vec![SqlValue::Int(1)]), txt("1 0")); // missing → 0
+        assert_eq!(pf("%d", vec![SqlValue::Int(1), SqlValue::Int(2)]), txt("1")); // extra ignored
+        // SQL-quoting family (SQLite etSQLESCAPE semantics).
+        assert_eq!(pf("%q", vec![txt("a'b")]), txt("a''b")); // double single quotes
+        assert_eq!(pf("%q", vec![SqlValue::Null]), txt("(NULL)")); // NULL sentinel
+        assert_eq!(pf("%Q", vec![txt("a'b")]), txt("'a''b'")); // escape AND wrap
+        assert_eq!(pf("%Q", vec![SqlValue::Null]), txt("NULL")); // bare keyword
+        assert_eq!(pf("%Q", vec![SqlValue::Int(42)]), txt("'42'"));
+        assert_eq!(pf("%w", vec![txt("a\"b")]), txt("a\"\"b")); // double double quotes
+        assert_eq!(pf("%w", vec![SqlValue::Null]), txt("(NULL)"));
+        // Float conversions: %f fixed, %e scientific (C-form exponent), %g
+        // shortest-at-N-significant-digits with trailing zeros trimmed.
+        assert_eq!(pf("%f", vec![SqlValue::Float(1.5)]), txt("1.500000"));
+        assert_eq!(pf("%.2f", vec![SqlValue::Float(3.14159)]), txt("3.14"));
+        assert_eq!(pf("%f", vec![SqlValue::Null]), txt("0.000000")); // NULL → 0.0
+        assert_eq!(pf("%f", vec![txt("3.14abc")]), txt("3.140000")); // leading real
+        assert_eq!(pf("%e", vec![SqlValue::Float(1.5)]), txt("1.500000e+00"));
+        assert_eq!(pf("%E", vec![SqlValue::Float(1.5)]), txt("1.500000E+00"));
+        assert_eq!(pf("%.2e", vec![SqlValue::Float(1234.5)]), txt("1.23e+03"));
+        assert_eq!(pf("%e", vec![SqlValue::Float(-0.000123)]), txt("-1.230000e-04"));
+        assert_eq!(pf("[%012.2e]", vec![SqlValue::Float(3.14159)]), txt("[00003.14e+00]"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(1.5)]), txt("1.5"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(100.0)]), txt("100"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(0.0)]), txt("0"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(1234567.0)]), txt("1.23457e+06"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(0.00001)]), txt("1e-05"));
+        assert_eq!(pf("%.3g", vec![SqlValue::Float(1234.5)]), txt("1.23e+03"));
+        assert_eq!(pf("%G", vec![SqlValue::Float(1e20)]), txt("1E+20"));
+        // FORMAT is an alias.
+        assert_eq!(call_builtin("FORMAT", vec![txt("%d"), SqlValue::Int(7)]).unwrap(), txt("7"));
+        // A NULL format → NULL; an unknown conversion is declined; no format errors.
+        assert_eq!(call_builtin("PRINTF", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert!(call_builtin("PRINTF", vec![txt("%y"), SqlValue::Int(1)]).is_err());
+        // %q/%Q/%w of a REAL are declined (dtoa subtlety), matching %s of a REAL.
+        assert!(call_builtin("PRINTF", vec![txt("%Q"), SqlValue::Float(1.5)]).is_err());
+        assert!(call_builtin("PRINTF", vec![]).is_err());
+        // A hostile field width is rejected, not allocated (DoS guard). The same
+        // cap covers float precision, so a giant `.N` on %f/%e/%g cannot drive an
+        // unbounded fractional expansion.
+        assert!(call_builtin("PRINTF", vec![txt("%9999999999d"), SqlValue::Int(1)]).is_err());
+        assert!(call_builtin("PRINTF", vec![txt("%.9999999999f"), SqlValue::Float(1.5)]).is_err());
+    }
+
+    #[test]
+    fn builtin_datetime_functions_match_sqlite() {
+        let txt = |s: &str| SqlValue::Text(s.into());
+        let call = |name: &str, args: Vec<SqlValue>| call_builtin(name, args).unwrap();
+
+        // date/time/datetime render an ISO string; a `T` or space separator and a
+        // trailing `Z` are accepted; missing seconds default to `:00`.
+        assert_eq!(call("DATE", vec![txt("2026-07-30")]), txt("2026-07-30"));
+        assert_eq!(call("DATE", vec![txt("2026-07-30T14:30:15")]), txt("2026-07-30"));
+        assert_eq!(call("TIME", vec![txt("2026-07-30 14:30:15")]), txt("14:30:15"));
+        assert_eq!(call("DATETIME", vec![txt("2026-07-30 14:30")]), txt("2026-07-30 14:30:00"));
+        assert_eq!(call("DATETIME", vec![txt("2026-07-30T14:30:00Z")]), txt("2026-07-30 14:30:00"));
+        assert_eq!(call("TIME", vec![txt("14:30:15")]), txt("14:30:15")); // time-only
+
+        // The Gregorian formula normalizes out-of-range days; bad month/day/
+        // partial/garbage strings are NULL.
+        assert_eq!(call("DATE", vec![txt("2026-02-30")]), txt("2026-03-02"));
+        assert_eq!(call("DATE", vec![txt("2023-02-29")]), txt("2023-03-01")); // non-leap
+        assert_eq!(call("DATE", vec![txt("2024-02-29")]), txt("2024-02-29")); // leap OK
+        for bad in ["2026-13-01", "2026-07-32", "2026-07-00", "2026-07", "hello", ""] {
+            assert_eq!(call("DATE", vec![txt(bad)]), SqlValue::Null, "date({bad:?})");
+        }
+
+        // julianday: noon is a whole number, midnight is `.5`.
+        assert_eq!(call("JULIANDAY", vec![txt("2000-01-01 12:00:00")]), SqlValue::Float(2451545.0));
+        assert_eq!(call("JULIANDAY", vec![txt("2026-07-30")]), SqlValue::Float(2461251.5));
+        // unixepoch: whole seconds since 1970-01-01 (an INTEGER).
+        assert_eq!(call("UNIXEPOCH", vec![txt("1970-01-01 00:00:00")]), SqlValue::Int(0));
+        assert_eq!(call("UNIXEPOCH", vec![txt("2026-07-30")]), SqlValue::Int(1785369600));
+
+        // A numeric argument (int, real, or numeric string) is a Julian day.
+        assert_eq!(call("DATE", vec![SqlValue::Float(2451545.0)]), txt("2000-01-01"));
+        assert_eq!(call("DATE", vec![SqlValue::Int(2451545)]), txt("2000-01-01"));
+        assert_eq!(call("DATE", vec![txt("2451545.0")]), txt("2000-01-01"));
+        assert_eq!(call("TIME", vec![SqlValue::Float(2451545.75)]), txt("06:00:00"));
+        assert_eq!(call("DATETIME", vec![txt("0.0")]), txt("-4713-11-24 12:00:00")); // JD 0
+        // Julian day out of range [0, 5373484.5) → NULL.
+        assert_eq!(call("DATE", vec![SqlValue::Float(-1_000_000.0)]), SqlValue::Null);
+        assert_eq!(call("DATE", vec![SqlValue::Float(1e18)]), SqlValue::Null);
+
+        // A NULL argument propagates to NULL; 'now' yields a text date.
+        assert_eq!(call("DATE", vec![SqlValue::Null]), SqlValue::Null);
+        assert!(matches!(call("DATE", vec![]), SqlValue::Text(_))); // date() == date('now')
+        assert!(matches!(call("DATE", vec![txt("now")]), SqlValue::Text(_)));
+
+        // Modifiers (phase 2) apply left-to-right after the time value.
+        let m = |v: &str, mods: &[&str]| {
+            let mut a = vec![txt(v)];
+            a.extend(mods.iter().map(|s| txt(s)));
+            call_builtin("DATE", a).unwrap()
+        };
+        let dtm = |v: &str, mods: &[&str]| {
+            let mut a = vec![txt(v)];
+            a.extend(mods.iter().map(|s| txt(s)));
+            call_builtin("DATETIME", a).unwrap()
+        };
+        // Exact-millisecond offsets (fractional OK).
+        assert_eq!(dtm("2026-07-30 12:00:00", &["+1 day"]), txt("2026-07-31 12:00:00"));
+        assert_eq!(dtm("2026-07-30 12:00:00", &["-2 hours"]), txt("2026-07-30 10:00:00"));
+        assert_eq!(dtm("2026-07-30 12:00:00", &["+90 minutes"]), txt("2026-07-30 13:30:00"));
+        assert_eq!(dtm("2026-07-30 00:00:00", &["+0.5 days"]), txt("2026-07-30 12:00:00"));
+        // Calendar month/year shifts preserve the day (re-normalized) and time.
+        assert_eq!(m("2026-07-30", &["+1 month"]), txt("2026-08-30"));
+        assert_eq!(m("2026-01-31", &["+1 month"]), txt("2026-03-03")); // Feb 31 → Mar 3
+        assert_eq!(m("2024-02-29", &["+1 year"]), txt("2025-03-01")); // non-leap
+        assert_eq!(m("2026-01-15", &["-3 months"]), txt("2025-10-15")); // crosses year
+        // start-of and weekday (0=Sunday; whole days added, time preserved).
+        assert_eq!(dtm("2026-07-30 14:30:00", &["start of month"]), txt("2026-07-01 00:00:00"));
+        assert_eq!(m("2026-07-30", &["weekday 0"]), txt("2026-08-02")); // Thu → next Sun
+        assert_eq!(m("2026-07-30", &["weekday 4"]), txt("2026-07-30")); // already Thu
+        assert_eq!(dtm("2026-07-30 14:30:00", &["weekday 0"]), txt("2026-08-02 14:30:00"));
+        // Chaining, plural/uppercase/multi-space, and the no-sign form.
+        assert_eq!(dtm("2026-07-30 14:30:00", &["start of month", "+1 month", "-1 day"]), txt("2026-07-31 00:00:00"));
+        assert_eq!(m("2026-07-30", &["+2 day"]), txt("2026-08-01"));
+        assert_eq!(m("2026-07-30", &["+1 DAY"]), txt("2026-07-31"));
+        assert_eq!(m("2026-07-30", &["+1  day"]), txt("2026-07-31"));
+        assert_eq!(m("2026-07-30", &["1 day"]), txt("2026-07-31"));
+        // Invalid modifiers → NULL (strict spacing, bad weekday, unknown keyword,
+        // out-of-range result, non-text/NULL modifier).
+        for bad in [" +1 day", "+1 day ", "+1day", "weekday 7", "bogus", "+100000000 days"] {
+            assert_eq!(m("2026-07-30", &[bad]), SqlValue::Null, "modifier {bad:?}");
+        }
+        assert_eq!(
+            call_builtin("DATE", vec![txt("2026-07-30"), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        // Extreme amounts must NULL out via checked arithmetic, never panic — a
+        // year that overflows the `×12`, and a huge day offset that leaves an
+        // intermediate iJD near i64::MAX for a following `weekday` modifier.
+        assert_eq!(m("2026-07-30", &["+1000000000000000000 years"]), SqlValue::Null);
+        assert_eq!(m("2026-07-30", &["+9999999999999999999 days"]), SqlValue::Null);
+        assert_eq!(m("2026-07-30", &["+106749529914.55 days", "weekday 0"]), SqlValue::Null);
+
+        // Interpretation modifiers reinterpret the RAW numeric value.
+        let dt = |args: Vec<SqlValue>| call_builtin("DATETIME", args).unwrap();
+        // unixepoch: number OR numeric string → Unix seconds; further mods apply.
+        assert_eq!(dt(vec![SqlValue::Int(1234567890), txt("unixepoch")]), txt("2009-02-13 23:31:30"));
+        assert_eq!(dt(vec![txt("1234567890"), txt("unixepoch")]), txt("2009-02-13 23:31:30"));
+        assert_eq!(
+            dt(vec![SqlValue::Int(1234567890), txt("unixepoch"), txt("+1 day")]),
+            txt("2009-02-14 23:31:30")
+        );
+        assert_eq!(dt(vec![SqlValue::Float(1234567890.5), txt("unixepoch")]), txt("2009-02-13 23:31:30"));
+        // A non-numeric value with 'unixepoch' is NULL (nothing to reinterpret).
+        assert_eq!(dt(vec![txt("2026-07-30"), txt("unixepoch")]), SqlValue::Null);
+        // julianday forces the default numeric (Julian) reading; auto chooses.
+        assert_eq!(dt(vec![SqlValue::Float(2451545.0), txt("julianday")]), txt("2000-01-01 12:00:00"));
+        assert_eq!(dt(vec![SqlValue::Float(2451545.0), txt("auto")]), txt("2000-01-01 12:00:00"));
+        assert_eq!(dt(vec![SqlValue::Int(1234567890), txt("auto")]), txt("2009-02-13 23:31:30"));
+        // Extreme / non-finite Unix seconds must NULL out (checked_add + is_finite
+        // guards), never panic or land out of the representable range.
+        assert_eq!(dt(vec![SqlValue::Float(1e300), txt("unixepoch")]), SqlValue::Null);
+        assert_eq!(dt(vec![txt("1e400"), txt("unixepoch")]), SqlValue::Null); // parses to +inf
+        assert_eq!(dt(vec![SqlValue::Int(i64::MAX), txt("unixepoch")]), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_strftime_formats_match_sqlite() {
+        let txt = |s: &str| SqlValue::Text(s.into());
+        let sf = |fmt: &str, v: &str| call_builtin("STRFTIME", vec![txt(fmt), txt(v)]).unwrap();
+
+        // Core fields and composites.
+        assert_eq!(sf("%Y-%m-%d %H:%M:%S", "2026-07-30 14:05:09"), txt("2026-07-30 14:05:09"));
+        assert_eq!(sf("%F %T", "2026-07-30 14:05:09"), txt("2026-07-30 14:05:09"));
+        assert_eq!(sf("%R", "2026-07-30 14:05:09"), txt("14:05"));
+        assert_eq!(sf("100%% [%Y]", "2026-07-30"), txt("100% [2026]"));
+        // Derived fields.
+        assert_eq!(sf("%j", "2026-07-30"), txt("211")); // day of year
+        assert_eq!(sf("%w", "2026-07-30"), txt("4")); // Thursday, Sunday=0
+        assert_eq!(sf("%u", "2026-07-30"), txt("4")); // Thursday, Monday=1
+        assert_eq!(sf("%s", "2026-07-30 14:05:09"), txt("1785420309")); // unix seconds
+        assert_eq!(sf("%f", "2026-07-30 14:05:09.250"), txt("09.250")); // SS.SSS
+        assert_eq!(sf("%J", "2026-07-30"), txt("2461251.5")); // Julian day
+        // 12-hour clock and space-padded fields.
+        assert_eq!(sf("%I %p", "2026-07-30 14:05:09"), txt("02 PM"));
+        assert_eq!(sf("%I", "2026-07-30 00:30:00"), txt("12")); // midnight → 12 AM
+        assert_eq!(sf("%p", "2026-07-30 09:00:00"), txt("AM"));
+        assert_eq!(sf("[%e][%k][%l]", "2026-07-05 04:09:00"), txt("[ 5][ 4][ 4]"));
+        // NULL/invalid: unknown code, NULL format, invalid time → NULL. A modifier
+        // after the time value is honored.
+        assert_eq!(sf("%Z", "2026-07-30"), SqlValue::Null); // unknown code
+        assert_eq!(sf("%Y", "not-a-date"), SqlValue::Null); // invalid time
+        assert_eq!(
+            call_builtin("STRFTIME", vec![SqlValue::Null, txt("2026-07-30")]).unwrap(),
+            SqlValue::Null
+        );
+        assert_eq!(
+            call_builtin("STRFTIME", vec![txt("%Y-%m-%d"), txt("2026-07-30"), txt("+1 month")]).unwrap(),
+            txt("2026-08-30")
+        );
+    }
+
+    #[test]
+    fn builtin_glob_matches_case_sensitively() {
+        let g = |pat: &str, subj: &str| {
+            call_builtin("GLOB", vec![SqlValue::Text(pat.into()), SqlValue::Text(subj.into())]).unwrap()
+        };
+        let t = SqlValue::Int(1);
+        let f = SqlValue::Int(0);
+        // `*` and `?` wildcards; GLOB is case-sensitive.
+        assert_eq!(g("a*", "abc"), t);
+        assert_eq!(g("A*", "abc"), f); // case-sensitive
+        assert_eq!(g("*c", "abc"), t);
+        assert_eq!(g("a?c", "abc"), t);
+        assert_eq!(g("a?c", "ac"), f);
+        assert_eq!(g("h*o", "hello"), t);
+        // Character classes, ranges, and negation.
+        assert_eq!(g("[a-c]x", "bx"), t);
+        assert_eq!(g("[a-c]x", "dx"), f);
+        assert_eq!(g("[^a]", "b"), t);
+        assert_eq!(g("[0-9]*", "7up"), t);
+        // Empty pattern / subject; `*` matches empty.
+        assert_eq!(g("", ""), t);
+        assert_eq!(g("*", ""), t);
+        // Backslash is a LITERAL in GLOB (no escape).
+        assert_eq!(g("a\\*b", "a*b"), f);
+        // Unicode is matched by character.
+        assert_eq!(g("日*", "日本"), t);
+        // NULL in either argument → NULL; wrong arity errors, not panics.
+        assert_eq!(
+            call_builtin("GLOB", vec![SqlValue::Text("a*".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        assert!(call_builtin("GLOB", vec![SqlValue::Text("a".into())]).is_err());
+    }
+
+    #[test]
+    fn builtin_likely_family_is_identity() {
+        // likely / unlikely return their single argument unchanged, any type.
+        for name in ["LIKELY", "UNLIKELY"] {
+            assert_eq!(call_builtin(name, vec![SqlValue::Int(5)]).unwrap(), SqlValue::Int(5));
+            assert_eq!(
+                call_builtin(name, vec![SqlValue::Text("abc".into())]).unwrap(),
+                SqlValue::Text("abc".into())
+            );
+            assert_eq!(call_builtin(name, vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+            assert_eq!(call_builtin(name, vec![SqlValue::Float(2.5)]).unwrap(), SqlValue::Float(2.5));
+            // Wrong arity is an error, not a panic.
+            assert!(call_builtin(name, vec![]).is_err());
+            assert!(call_builtin(name, vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
+        }
+        // likelihood(x, p) returns x when p is a probability in [0, 1].
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Int(7), SqlValue::Float(0.0625)]).unwrap(),
+            SqlValue::Int(7)
+        );
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Null, SqlValue::Float(0.5)]).unwrap(),
+            SqlValue::Null
+        );
+        // A probability outside [0, 1], a non-numeric probability, or wrong arity
+        // are all errors.
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Float(1.5)]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Text("x".into())]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1)]).is_err());
+    }
+
+    #[test]
+    fn builtin_length_blob_and_number() {
+        let len = |v: SqlValue| call_builtin("LENGTH", vec![v]).unwrap();
+        // Text → character count; a blob → raw byte count (contrast the text
+        // char count); a number → its decimal-text length. NULL propagates.
+        assert_eq!(len(SqlValue::Text("héllo".into())), SqlValue::Int(5)); // 5 chars
+        assert_eq!(len(SqlValue::Blob(vec![0x01, 0x02, 0xff])), SqlValue::Int(3));
+        assert_eq!(len(SqlValue::Blob(vec![])), SqlValue::Int(0));
+        assert_eq!(len(SqlValue::Int(12345)), SqlValue::Int(5));
+        assert_eq!(len(SqlValue::Int(-7)), SqlValue::Int(2));
+        assert_eq!(len(SqlValue::Bool(true)), SqlValue::Int(1));
+        assert_eq!(len(SqlValue::Null), SqlValue::Null);
+        // Floats are declined (text-form length is subtle); wrong arity errors.
+        assert!(call_builtin("LENGTH", vec![SqlValue::Float(3.14)]).is_err());
+        assert!(call_builtin("LENGTH", vec![]).is_err());
+    }
+
+    #[test]
+    fn builtin_octet_length_counts_bytes() {
+        let ol = |v: SqlValue| call_builtin("OCTET_LENGTH", vec![v]).unwrap();
+        // Text is measured in UTF-8 bytes, not characters (contrast LENGTH).
+        assert_eq!(ol(SqlValue::Text("héllo".into())), SqlValue::Int(6)); // 5 chars, 6 bytes
+        assert_eq!(
+            call_builtin("LENGTH", vec![SqlValue::Text("héllo".into())]).unwrap(),
+            SqlValue::Int(5)
+        );
+        assert_eq!(ol(SqlValue::Text("abc".into())), SqlValue::Int(3));
+        assert_eq!(ol(SqlValue::Text("".into())), SqlValue::Int(0));
+        assert_eq!(ol(SqlValue::Text("日本".into())), SqlValue::Int(6)); // 2 chars × 3 bytes
+        // Blobs measure raw bytes; integers their decimal digits.
+        assert_eq!(ol(SqlValue::Blob(vec![0x00, 0xff])), SqlValue::Int(2));
+        assert_eq!(ol(SqlValue::Int(123)), SqlValue::Int(3));
+        // NULL propagates; wrong arity errors, not panics.
+        assert_eq!(ol(SqlValue::Null), SqlValue::Null);
+        assert!(call_builtin("OCTET_LENGTH", vec![]).is_err());
+    }
+
+    #[test]
+    fn builtin_unhex_decodes_hex_pairs() {
+        let u1 = |s: &str| call_builtin("UNHEX", vec![SqlValue::Text(s.into())]).unwrap();
+        // Even-length hex → blob; case-insensitive.
+        assert_eq!(u1("414243"), SqlValue::Blob(vec![0x41, 0x42, 0x43]));
+        assert_eq!(u1("abcdef"), SqlValue::Blob(vec![0xab, 0xcd, 0xef]));
+        assert_eq!(u1("ABCDEF"), SqlValue::Blob(vec![0xab, 0xcd, 0xef]));
+        assert_eq!(u1(""), SqlValue::Blob(vec![])); // empty → empty blob
+        // Odd length or a non-hex character → NULL.
+        assert_eq!(u1("abc"), SqlValue::Null);
+        assert_eq!(u1("4g"), SqlValue::Null);
+        assert_eq!(u1("41 42"), SqlValue::Null);
+        // NULL propagates; an integer coerces to its decimal digits.
+        assert_eq!(call_builtin("UNHEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert_eq!(
+            call_builtin("UNHEX", vec![SqlValue::Int(12)]).unwrap(),
+            SqlValue::Blob(vec![0x12])
+        );
+        // Result is a blob.
+        assert!(matches!(u1("41"), SqlValue::Blob(_)));
+    }
+
+    #[test]
+    fn builtin_unhex_ignore_set_only_at_byte_boundaries() {
+        let u2 = |s: &str, ig: &str| {
+            call_builtin("UNHEX", vec![SqlValue::Text(s.into()), SqlValue::Text(ig.into())]).unwrap()
+        };
+        // An ignorable char between pairs is fine.
+        assert_eq!(u2("41.42", "."), SqlValue::Blob(vec![0x41, 0x42]));
+        assert_eq!(u2("41", "x"), SqlValue::Blob(vec![0x41])); // ignore char absent
+        // An ignorable char that splits a pair invalidates the string.
+        assert_eq!(u2("4-1-4-2", "-"), SqlValue::Null);
+        // A NULL ignore set yields NULL.
+        assert_eq!(
+            call_builtin("UNHEX", vec![SqlValue::Text("41".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        // Zero args is an arity error, not a panic.
+        assert!(call_builtin("UNHEX", vec![]).is_err());
+    }
+
+    #[test]
+    fn builtin_round_clamps_negative_digits_to_zero() {
+        let round = |x: f64, d: Option<i64>| {
+            let mut args = vec![SqlValue::Float(x)];
+            if let Some(d) = d {
+                args.push(SqlValue::Int(d));
+            }
+            call_builtin("ROUND", args).unwrap()
+        };
+        // Positive / zero digit counts are unchanged.
+        assert_eq!(round(2.567, None), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(0)), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(2)), SqlValue::Float(2.57));
+        // Round half away from zero.
+        assert_eq!(round(2.5, None), SqlValue::Float(3.0));
+        assert_eq!(round(-2.5, None), SqlValue::Float(-3.0));
+        // A NEGATIVE digit count behaves as 0 — NOT tens/hundreds rounding.
+        assert_eq!(round(2.567, Some(-1)), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(-5)), SqlValue::Float(3.0));
+        assert_eq!(round(12.5, Some(-1)), SqlValue::Float(13.0));
+        // NULL propagation on either argument.
+        assert_eq!(call_builtin("ROUND", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert_eq!(
+            call_builtin("ROUND", vec![SqlValue::Float(2.5), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
     }
 }

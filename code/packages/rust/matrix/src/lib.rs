@@ -1,3 +1,6 @@
+// The index loop indexes parallel row/column data and uses the index in the
+// linear-algebra arithmetic; the range form mirrors the matrix math.
+#![allow(clippy::needless_range_loop)]
 /// # Matrix — A Pure Rust Matrix Library
 ///
 /// This module provides a 2D matrix type with arithmetic, reductions,

@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "4c2c57d6ebfb86b13fbdfb1cf9334e1c64561d58",
+  "body_sha256": "3bbc7631adf0a2bd8339fc820bbc09e3e60ba7213d7a9a830c69d26f5f34d9b7",
+  "body_size": 941,
+  "captured_at": "2026-08-03T20:00:00Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-formula-stdlib/arithmetic/proportion-zero-third.query.adj"
+}

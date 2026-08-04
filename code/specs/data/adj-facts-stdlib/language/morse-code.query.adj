@@ -1,0 +1,22 @@
+% ============================================================================
+% morse-code.query.adj — a worked recall over the Morse-code library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how is this letter keyed in
+% Morse?" — it states no fact of its own — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the `morse_code`
+% rows and returns the pattern (or the letter, on a reverse query) + the ITU
+% standard's source/locator/trust. Anything that is not one of the 26 letters —
+% a digit, a symbol — abstains honestly: the engine never invents a pattern it
+% cannot cite.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli morse-code.query.adj
+% ============================================================================
+
+import "morse-code.adj"
+
+? morse_code(s, $P)        % expect dot_dot_dot    (· · ·  — the S in SOS)
+? morse_code(o, $P)        % expect dash_dash_dash (— — —  — the O in SOS)
+? morse_code(e, $P)        % expect dot            (·      — the shortest code)
+? morse_code($L, dash)     % expect t              (reverse: which letter is a single dash?)
+? morse_code(5, $P)        % expect abstain — 5 is a digit, not one of the 26 letter rows

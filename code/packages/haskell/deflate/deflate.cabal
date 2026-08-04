@@ -1,0 +1,36 @@
+cabal-version: 3.0
+name:          deflate
+version:       0.1.0
+synopsis:      Pure CMP05 LZSS and canonical Huffman compression
+description:   Self-describing educational DEFLATE composition with strict decoding.
+category:      Compression
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Deflate
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , containers >=0.6 && <0.8
+                    , huffman-tree >=0.1 && <0.2
+                    , lzss >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    DeflateSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , deflate
+                    , hspec == 2.*
+    ghc-options:      -Wall
+    default-language: Haskell2010

@@ -31,7 +31,6 @@
 use point2d::{Point, Rect};
 
 // We use trig::sqrt for bounding box computation (discriminant square root).
-use trig;
 
 // ============================================================================
 // Quadratic Bezier

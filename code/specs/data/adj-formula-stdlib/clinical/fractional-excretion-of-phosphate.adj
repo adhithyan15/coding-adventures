@@ -1,0 +1,99 @@
+% ============================================================================
+% fractional-excretion-of-phosphate.adj — the fractional excretion of phosphate
+% (FEPO4 = (urine PO4 × serum Cr × 100) / (serum PO4 × urine Cr)) in the ADJ standard library.
+% ============================================================================
+% The fractional-excretion-of-phosphate entry of the *clinical* track — the fraction of the phosphate
+% filtered by the glomerulus that ends up excreted in the urine, read off a single paired spot urine and
+% serum sample. As with the sodium and potassium fractional excretions, creatinine (freely filtered and
+% essentially not reabsorbed) stands in for the glomerular filtration, so the urine-to-serum creatinine
+% ratio corrects the urine-to-serum phosphate ratio for how concentrated the urine is. FEPO4 completes the
+% renal-tubular-handling trio alongside fractional-excretion-of-sodium.adj and
+% fractional-excretion-of-potassium.adj: in a hypophosphataemic patient a HIGH FEPO4 says the kidney is
+% inappropriately WASTING phosphate (a renal phosphate leak — e.g. an FGF23-driven process such as tumour
+% induced osteomalacia or X-linked hypophosphataemia, or a proximal tubulopathy), whereas a LOW FEPO4 says
+% the kidney is appropriately conserving phosphate (the deficit is from redistribution or gastrointestinal
+% loss). THE FRACTIONAL EXCRETION OF PHOSPHATE IS THE URINE PHOSPHATE TIMES THE SERUM CREATININE TIMES 100,
+% DIVIDED BY THE SERUM PHOSPHATE TIMES THE URINE CREATININE — i.e. (urine PO4 × serum Cr × 100) /
+% (serum PO4 × urine Cr). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together
+% with two exact rearrangements (the urine phosphate a given FEPO4 implies, and the serum phosphate a given
+% FEPO4 implies). As with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the four laboratory values from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited formula on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "fractional-excretion-of-phosphate.adj"
+%     observe urine_phosphate(30)     % "…urine phosphate 30…"    (span cited by the model)
+%     observe serum_phosphate(4)      % "…serum phosphate 4…"     (span cited by the model)
+%     observe urine_creatinine(50)    % "…urine creatinine 50…"   (span cited by the model)
+%     observe serum_creatinine(1)     % "…serum creatinine 1…"    (span cited by the model)
+%     ? fep(urine_phosphate, serum_phosphate, urine_creatinine, serum_creatinine)   % engine → 15 (%)
+%
+% This is the phosphate member of the fractional-excretion family: the same creatinine-corrected structure
+% as the sodium and potassium versions, a different measured analyte (phosphate), and a different clinical
+% question (renal phosphate wasting rather than pre-renal AKI or hypokalaemia). The × 100 turns the
+% dimensionless ratio into a percentage; the formula is otherwise an exact expression over the four
+% measured values, so every value the engine returns is exact. The three formulas COMPOSE and invert
+% cleanly around the worked case urine PO4 = 30, serum PO4 = 4, urine Cr = 50, serum Cr = 1
+% (FEPO4 = (30 × 1 × 100) / (4 × 50) = 3000 / 200 = 15%): the `fep` a consumer computes is exactly the
+% value each inverse formula back-solves to recover its own measured input (30, 4).
+%
+%   fep(urine_phosphate, serum_phosphate, urine_creatinine, serum_creatinine) = urine_phosphate * serum_creatinine * 100 / (serum_phosphate * urine_creatinine)
+%   urine_phosphate(fep, serum_phosphate, urine_creatinine, serum_creatinine) = fep * serum_phosphate * urine_creatinine / (100 * serum_creatinine)
+%   serum_phosphate(fep, urine_phosphate, urine_creatinine, serum_creatinine) = urine_phosphate * serum_creatinine * 100 / (fep * urine_creatinine)
+%
+% NOTE ON UNITS AND MODELLING: the phosphate concentrations share a unit (e.g. mg/dL) and the creatinines
+% share a unit (e.g. mg/dL); because FEPO4 is a ratio the units cancel, so only the numeric magnitudes
+% matter as long as the two phosphates share a unit and the two creatinines share a unit. FEPO4 is a plain
+% percentage number (e.g. 15 for 15%, NOT 0.15). This library only COMPUTES the percentage; the
+% interpretation (a high value pointing to renal phosphate wasting, a low value to appropriate conservation)
+% is stated by the cited source but is applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted FEPO4 equation — because that one
+% equation ((urine PO4 × serum Cr × 100) / (serum PO4 × urine Cr)) sanctions the relation read every way.
+% The quote is transcribed verbatim from the StatPearls "Hypophosphatemia" article on the NCBI Bookshelf
+% (a current, non-archived article), so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the
+% formula is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `urine_phosphate`, `serum_phosphate`, `urine_creatinine`, `serum_creatinine` and `fep` each
+% appear BOTH as a derived result and as an input (of the other formulas), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical
+% term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary fractional_excretion_of_phosphate_vocab {
+    define urine_phosphate   : finding  surface "urine phosphate", "urine PO4", "urinary phosphate", "UPO4"     % mg/dL
+    define serum_phosphate   : finding  surface "serum phosphate", "plasma phosphate", "PPO4"                   % mg/dL
+    define urine_creatinine  : finding  surface "urine creatinine", "urinary creatinine", "UCr"                 % mg/dL
+    define serum_creatinine  : finding  surface "serum creatinine", "plasma creatinine", "PCr"                  % mg/dL
+    define fep               : finding  surface "fractional excretion of phosphate", "FEPO4", "FE phosphate"    % percent
+}
+
+% ----------------------------------------------------------------------------
+% The fractional excretion of phosphate, three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the FEPO4 equation from the StatPearls
+% "Hypophosphatemia" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact expression in the measured laboratory values, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fractional_excretion_of_phosphate_laws {
+    use fractional_excretion_of_phosphate_vocab
+
+    % FEPO4 — urine phosphate times serum creatinine times 100, over serum phosphate times urine creatinine.
+    formula fep(urine_phosphate, serum_phosphate, urine_creatinine, serum_creatinine) = urine_phosphate * serum_creatinine * 100 / (serum_phosphate * urine_creatinine)
+        source "FEPO4 = (UPO4 x PCr x 100) / (PPO4 x UCr)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493172/"
+        trust authoritative
+
+    % Urine phosphate — the same equation solved for the urine phosphate. Defended by the SAME equation.
+    formula urine_phosphate(fep, serum_phosphate, urine_creatinine, serum_creatinine) = fep * serum_phosphate * urine_creatinine / (100 * serum_creatinine)
+        source "FEPO4 = (UPO4 x PCr x 100) / (PPO4 x UCr)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493172/"
+        trust authoritative
+
+    % Serum phosphate — the same equation solved for the serum phosphate, the third reading of the one ratio.
+    formula serum_phosphate(fep, urine_phosphate, urine_creatinine, serum_creatinine) = urine_phosphate * serum_creatinine * 100 / (fep * urine_creatinine)
+        source "FEPO4 = (UPO4 x PCr x 100) / (PPO4 x UCr)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493172/"
+        trust authoritative
+}

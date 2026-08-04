@@ -2,6 +2,13 @@
 
 Simple harmonic wave model: y(t) = A sin(2*pi*f*t + phi). PHY01.
 
+`init(validatingAmplitude:frequency:phase:)` and `evaluateChecked(at:)` expose
+lane-native throwing validation for non-finite inputs and angular-frequency
+overflow. The original initializer and `evaluate(at:)` remain source-compatible
+precondition wrappers. Evaluation reduces time and phase through the local
+first-principles `Trig` dependency and remains amplitude-bounded at binary64
+extremes.
+
 ## Usage
 
 ```swift

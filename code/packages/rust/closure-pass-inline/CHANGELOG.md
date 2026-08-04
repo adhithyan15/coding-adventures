@@ -2,6 +2,110 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.30.1] - 2026-07-19
+
+### Changed — test goldens updated for `closure-emitter` 0.55.0
+
+`closure-emitter` 0.55.0 stopped emitting a redundant `;` after a top-level
+function declaration that is not the last program item. This pass's emit-shape
+test goldens (which run source through the real emitter) were regenerated to the
+new, byte-identical-to-Closure output (e.g. `function f(x){return x*2}a(f(1));`
+instead of `function f(x){return x*2};a(f(1));`). No behaviour change in this
+crate — inlining logic is unchanged; only the expected emitted strings moved.
+
+## [0.30.0] - 2026-07-14
+
+### Changed — decline to inline functions with a default parameter — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. Both inline-candidate builders (return-expression and void-statement) now
+reject a function whose parameter list contains a `FunctionParam::AssignmentPattern`: positional argument
+binding can’t reproduce a default’s undefined-triggered semantics (`function f(a = 5); f(undefined)` must
+yield `a = 5`, not `a = undefined`). The function is left intact for the other passes. A rest parameter
+remains inlinable — it binds a name with no default expression.
+
+Additionally, the two body-rewriters that descend into *nested* function/arrow/method values inside an
+inlined body — `substitute` (param→arg) and `rename_in_expr` (void-splice alpha-rename) — now rewrite those
+nested values' parameter defaults with the same shadow-stripped map as the body, and `collect_binding_idents_expr`
+collects a nested default's identifiers into the avoid-set. Without this a nested default that reads a
+substituted outer parameter or a renamed outer local was left dangling (a miscompile; found in security review).
+
+## [0.29.0] - 2026-07-14
+
+### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0. Handles the new `FunctionParam::RestElement` variant via
+`binding_identifier()`, so a rest parameter (`...name`) is walked as an ordinary single-name binding
+(counted / looked up / renamed) rather than being unrepresentable. Additive; MINOR.
+
+## [0.28.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration walk arms are no-ops and the splice predicates report nothing spliced
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+walk arms are no-ops and the splice predicates report nothing spliced. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.27.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant across
+the walk and splice paths: an import has no inlinable body, so the walk arms are
+no-ops and the void/valued-call splice predicates report nothing spliced.
+
+## [0.26.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+New `TaggedStatement::WithStatement` arms in every statement walk (decl-name
+count, use tally, expression inlining, void/valued splice, and used-ident
+collection) descend into the `with` object and body. Picks up javascript-ast
+0.38.0.
+
+## [0.25.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms at all 13 sites. SOUNDNESS-critical: tally/inline/mutated-params/used-idents recurse the block's statements (a candidate use runs at class-def time — counted before inlining); substitute/rename use the class-inner map; `expr_node_count` weighs one unit per statement; `splice_void`/`splice_valued` splice into the block (its body IS a `Vec<Statement>`, unlike a field value).
+
+## [0.25.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`, making every exhaustive
+`ClassMember` match and every `let ClassMember::Method(m) = member` binding
+non-exhaustive / refutable. Added `Field` handling at all 13 sites:
+
+- **Soundness-critical** — `tally_decl`/`tally_expr` count candidate uses inside a
+  field initializer and computed key; `inline_in_decl`/`inline_in_expr` substitute
+  there in lockstep; `expr_collect_mutated_params` and `collect_used_idents_decl`
+  over-collect from the initializer. Missing any would let the pass inline a callee
+  still used at class construction.
+- **Scope-aware** — `substitute`/`rename_in_expr` recurse the initializer and
+  computed key with the class-inner map (the class's own name in scope, no method
+  params).
+- **Correctly skipped** — `count_decl_names_decl` (a field binds no
+  statement-scope name) and `splice_void_in_decl`/`splice_valued_in_decl` (a field
+  initializer is an expression, not a `Vec<Statement>`).
+
+Reachable once the CLOC12.175 PR2 bridge produces the node.
+
+## [0.25.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at every exhaustive `Declaration` match site: `count_decl_names_decl`
+(class name + method params + bodies), `tally_decl` and `inline_in_decl` (recurse
+the heritage operand + method bodies, kept in lockstep so a candidate use inside
+a class is never missed then wrongly inlined), `collect_top_level_decl_names`
+(a top-level `class C` binds `C`), `splice_void_in_decl` / `splice_valued_in_decl`
+(splice into each method body), and `collect_used_idents_decl`. All mirror the
+existing `Expression::ClassExpression` handling. Reachable once the CLOC12.174
+PR2 bridge produces the node.
+
 ## [0.25.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

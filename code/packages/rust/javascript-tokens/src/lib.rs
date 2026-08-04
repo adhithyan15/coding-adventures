@@ -423,6 +423,9 @@ mod tests {
         assert_ne!(a, c);
     }
 
+    // The `assert!(!EMPTY)` intentionally asserts a compile-time constant to
+    // document the const-construction invariant; that is the point of the test.
+    #[allow(clippy::assertions_on_constants)]
     #[test]
     fn span_supports_const_construction() {
         // `new`, `len`, `is_empty` are all `const fn`, so a Span can live

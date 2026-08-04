@@ -1,0 +1,4 @@
+--js
+tests/diff/while-to-for/input/a.js
+--compilation_level
+SIMPLE

@@ -1,0 +1,411 @@
+{
+  "schema_version": 1,
+  "id": "backward-optimizer-lowering",
+  "title": "Scalar backward and SGD lowering",
+  "question": "How do saved forward values become a backward schedule, a stable gradient reduction, and a separate optimizer update?",
+  "absolute_tolerance": 1e-8,
+  "finite_difference_epsilon": 1e-5,
+  "training_graph": {
+    "equation": "prediction = w * x",
+    "loss": "half_squared_error",
+    "parameter_id": "w",
+    "input_id": "x",
+    "target_id": "target",
+    "gradient_reduction": "stable_row_sum_then_explicit_divisor",
+    "optimizer": "sgd",
+    "optimizer_step_zeroes_gradient": false
+  },
+  "expected_ir": {
+    "backward": {
+      "magic": "CANB",
+      "version": 0,
+      "instructions": [
+        {
+          "id": "b0",
+          "op": "SEED_LOSS_GRAD",
+          "output": "d_loss",
+          "inputs": [],
+          "attributes": { "value": 1 },
+          "source_nodes": ["loss"],
+          "source_edges": [],
+          "source_instructions": []
+        },
+        {
+          "id": "b1",
+          "op": "HALF_SQUARED_ERROR_GRAD",
+          "output": "d_residual",
+          "inputs": ["residual", "d_loss"],
+          "attributes": {},
+          "source_nodes": ["loss", "residual"],
+          "source_edges": [],
+          "source_instructions": []
+        },
+        {
+          "id": "b2",
+          "op": "PROPAGATE_GRAD",
+          "output": "d_prediction",
+          "inputs": ["d_residual"],
+          "attributes": { "through": "subtract_prediction" },
+          "source_nodes": ["residual", "prediction"],
+          "source_edges": [],
+          "source_instructions": []
+        },
+        {
+          "id": "b3",
+          "op": "PARAMETER_LOCAL_GRAD",
+          "output": "local_d_w",
+          "inputs": ["x", "d_prediction"],
+          "attributes": { "parameter_id": "w" },
+          "source_nodes": ["prediction"],
+          "source_edges": ["w"],
+          "source_instructions": []
+        },
+        {
+          "id": "b4",
+          "op": "ACCUMULATE_GRAD",
+          "output": "grad_w",
+          "inputs": ["grad_w", "local_d_w"],
+          "attributes": { "parameter_id": "w", "order": "row_ascending" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": []
+        },
+        {
+          "id": "b5",
+          "op": "INPUT_GRAD",
+          "output": "d_x",
+          "inputs": ["w", "d_prediction"],
+          "attributes": { "input_id": "x" },
+          "source_nodes": ["x", "prediction"],
+          "source_edges": ["w"],
+          "source_instructions": []
+        }
+      ]
+    },
+    "optimizer": {
+      "magic": "CANO",
+      "version": 0,
+      "instructions": [
+        {
+          "id": "o0",
+          "op": "READ_GRAD_BUFFER",
+          "output": "total_d_w",
+          "inputs": ["grad_w"],
+          "attributes": { "parameter_id": "w" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": []
+        },
+        {
+          "id": "o1",
+          "op": "DIVIDE_GRAD",
+          "output": "applied_d_w",
+          "inputs": ["total_d_w"],
+          "attributes": { "divisor_source": "scenario.divisor" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["o0"]
+        },
+        {
+          "id": "o2",
+          "op": "SGD_UPDATE",
+          "output": "w_next",
+          "inputs": ["w", "applied_d_w"],
+          "attributes": { "learning_rate_source": "scenario.learning_rate" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["o1"]
+        },
+        {
+          "id": "o3",
+          "op": "KEEP_GRAD_BUFFER",
+          "output": "grad_w_after_step",
+          "inputs": ["grad_w"],
+          "attributes": { "optimizer_step_zeroes_gradient": false },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["o2"]
+        }
+      ]
+    },
+    "matrix_training": {
+      "magic": "CANM-TRAIN",
+      "version": 0,
+      "instructions": [
+        {
+          "id": "t0",
+          "op": "LOAD_SAVED_COLUMN",
+          "output": "x_col",
+          "inputs": ["x"],
+          "attributes": { "saved_value": "x" },
+          "source_nodes": ["x"],
+          "source_edges": [],
+          "source_instructions": []
+        },
+        {
+          "id": "t1",
+          "op": "LOAD_SAVED_COLUMN",
+          "output": "residual_col",
+          "inputs": ["residual"],
+          "attributes": { "saved_value": "residual" },
+          "source_nodes": ["residual"],
+          "source_edges": [],
+          "source_instructions": []
+        },
+        {
+          "id": "t2",
+          "op": "LOSS_GRAD_COLUMN",
+          "output": "d_prediction_col",
+          "inputs": ["residual_col"],
+          "attributes": { "loss": "half_squared_error" },
+          "source_nodes": ["loss", "prediction"],
+          "source_edges": [],
+          "source_instructions": ["b0", "b1", "b2"]
+        },
+        {
+          "id": "t3",
+          "op": "PARAMETER_LOCAL_GRAD_COLUMN",
+          "output": "local_d_w_col",
+          "inputs": ["x_col", "d_prediction_col"],
+          "attributes": { "parameter_id": "w" },
+          "source_nodes": ["prediction"],
+          "source_edges": ["w"],
+          "source_instructions": ["b3"]
+        },
+        {
+          "id": "t4",
+          "op": "INPUT_GRAD_COLUMN",
+          "output": "d_x_col",
+          "inputs": ["d_prediction_col"],
+          "attributes": { "input_id": "x", "parameter_id": "w" },
+          "source_nodes": ["x", "prediction"],
+          "source_edges": ["w"],
+          "source_instructions": ["b5"]
+        },
+        {
+          "id": "t5",
+          "op": "REDUCE_SUM_GRAD",
+          "output": "batch_d_w",
+          "inputs": ["local_d_w_col"],
+          "attributes": { "order": "row_ascending", "parameter_id": "w" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["b4"]
+        },
+        {
+          "id": "t6",
+          "op": "ACCUMULATE_GRAD_BUFFER",
+          "output": "grad_w",
+          "inputs": ["grad_w", "batch_d_w"],
+          "attributes": { "parameter_id": "w" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["b4"]
+        },
+        {
+          "id": "t7",
+          "op": "DIVIDE_GRAD",
+          "output": "applied_d_w",
+          "inputs": ["grad_w"],
+          "attributes": { "divisor_source": "scenario.divisor" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["o0", "o1"]
+        },
+        {
+          "id": "t8",
+          "op": "SGD_UPDATE_SCALAR",
+          "output": "w_next",
+          "inputs": ["w", "applied_d_w"],
+          "attributes": { "learning_rate_source": "scenario.learning_rate" },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["o2"]
+        },
+        {
+          "id": "t9",
+          "op": "KEEP_GRAD_BUFFER",
+          "output": "grad_w_after_step",
+          "inputs": ["grad_w"],
+          "attributes": { "optimizer_step_zeroes_gradient": false },
+          "source_nodes": [],
+          "source_edges": ["w"],
+          "source_instructions": ["o3"]
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "one_row_by_hand",
+      "title": "One row by hand",
+      "initial_parameter": 0.5,
+      "learning_rate": 0.1,
+      "inputs": [2],
+      "targets": [0],
+      "gradient_buffer_before": 0,
+      "divisor": 1,
+      "expected": {
+        "saved_values": {
+          "x": [2],
+          "target": [0],
+          "prediction": [1],
+          "residual": [1],
+          "loss": [0.5]
+        },
+        "backward": {
+          "d_loss": [1],
+          "d_residual": [1],
+          "d_prediction": [1],
+          "local_d_w": [2],
+          "d_x": [0.5],
+          "gradient_buffer_before": 0,
+          "batch_gradient": 2,
+          "grad_w": 2
+        },
+        "optimizer": {
+          "parameter_before": 0.5,
+          "applied_gradient": 2,
+          "parameter_delta": -0.2,
+          "parameter_after": 0.3,
+          "gradient_buffer_after_step": 2
+        },
+        "matrix_training": {
+          "columns": {
+            "x": [2],
+            "residual": [1],
+            "d_prediction": [1],
+            "local_d_w": [2],
+            "d_x": [0.5]
+          },
+          "gradient_buffer_before": 0,
+          "batch_gradient": 2,
+          "grad_w": 2,
+          "applied_gradient": 2,
+          "parameter_after": 0.3,
+          "gradient_buffer_after_step": 2
+        },
+        "gradient_audit": {
+          "analytical": 2,
+          "numerical": 2,
+          "absolute_error": 0
+        },
+        "max_path_error": 0
+      }
+    },
+    {
+      "id": "two_row_mean",
+      "title": "The same plan, two-row mean",
+      "initial_parameter": 1,
+      "learning_rate": 0.1,
+      "inputs": [2, -1],
+      "targets": [1, 1],
+      "gradient_buffer_before": 0,
+      "divisor": 2,
+      "expected": {
+        "saved_values": {
+          "x": [2, -1],
+          "target": [1, 1],
+          "prediction": [2, -1],
+          "residual": [1, -2],
+          "loss": [0.5, 2]
+        },
+        "backward": {
+          "d_loss": [1, 1],
+          "d_residual": [1, -2],
+          "d_prediction": [1, -2],
+          "local_d_w": [2, 2],
+          "d_x": [1, -2],
+          "gradient_buffer_before": 0,
+          "batch_gradient": 4,
+          "grad_w": 4
+        },
+        "optimizer": {
+          "parameter_before": 1,
+          "applied_gradient": 2,
+          "parameter_delta": -0.2,
+          "parameter_after": 0.8,
+          "gradient_buffer_after_step": 4
+        },
+        "matrix_training": {
+          "columns": {
+            "x": [2, -1],
+            "residual": [1, -2],
+            "d_prediction": [1, -2],
+            "local_d_w": [2, 2],
+            "d_x": [1, -2]
+          },
+          "gradient_buffer_before": 0,
+          "batch_gradient": 4,
+          "grad_w": 4,
+          "applied_gradient": 2,
+          "parameter_after": 0.8,
+          "gradient_buffer_after_step": 4
+        },
+        "gradient_audit": {
+          "analytical": 4,
+          "numerical": 4,
+          "absolute_error": 0
+        },
+        "max_path_error": 0
+      }
+    },
+    {
+      "id": "persistent_buffer",
+      "title": "Continue a persistent buffer",
+      "initial_parameter": 0.5,
+      "learning_rate": 0.1,
+      "inputs": [2],
+      "targets": [0],
+      "gradient_buffer_before": 3,
+      "divisor": 1,
+      "expected": {
+        "saved_values": {
+          "x": [2],
+          "target": [0],
+          "prediction": [1],
+          "residual": [1],
+          "loss": [0.5]
+        },
+        "backward": {
+          "d_loss": [1],
+          "d_residual": [1],
+          "d_prediction": [1],
+          "local_d_w": [2],
+          "d_x": [0.5],
+          "gradient_buffer_before": 3,
+          "batch_gradient": 2,
+          "grad_w": 5
+        },
+        "optimizer": {
+          "parameter_before": 0.5,
+          "applied_gradient": 5,
+          "parameter_delta": -0.5,
+          "parameter_after": 0,
+          "gradient_buffer_after_step": 5
+        },
+        "matrix_training": {
+          "columns": {
+            "x": [2],
+            "residual": [1],
+            "d_prediction": [1],
+            "local_d_w": [2],
+            "d_x": [0.5]
+          },
+          "gradient_buffer_before": 3,
+          "batch_gradient": 2,
+          "grad_w": 5,
+          "applied_gradient": 5,
+          "parameter_after": 0,
+          "gradient_buffer_after_step": 5
+        },
+        "gradient_audit": {
+          "analytical": 2,
+          "numerical": 2,
+          "absolute_error": 0
+        },
+        "max_path_error": 0
+      }
+    }
+  ]
+}

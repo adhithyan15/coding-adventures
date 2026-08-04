@@ -176,6 +176,23 @@ turning runtime into a Hue integration or process manager:
   path using local fake runners, without opening sockets or moving the Chief
   bridge boundary.
 
+## Current Durable Discovery Service Slice
+
+This slice gives the supervised mDNS pass an actor-owned lifecycle and durable
+restart boundary:
+
+- `smart-home-discovery-service` owns the D23 runtime, mDNS executor,
+  report adapter, and repository-owned `StorageBackend` inside one actor state.
+- Typed tick messages drive due runs sequentially, and the runtime still emits
+  exactly the selected-interface IPv4/IPv6 requests through the injectable
+  executor boundary.
+- Every tick persists worker cadence and retry pressure, a compact run journal,
+  and service health. Reopening against the same backend restores that state
+  before another network request can run.
+- Local-folder restart tests prove successful cadence, named-interface binding,
+  failed-run backoff, service counters, and durable run audits survive process
+  replacement.
+
 ## Current Discovery Observability Slice
 
 This slice makes supervised discovery runs inspectable through the existing
@@ -233,49 +250,971 @@ network I/O into the Chief bridge:
   HTTP response, simulated Vault handoff, runtime session completion, and an
   assertion that raw Hue credentials are absent from audit metadata.
 
+## Current Hue Pairing Service Slice
+
+This slice runs the physical-presence registration exchange through production
+host boundaries and durable secret storage:
+
+- `smart-home-hue-pairing-service` owns the D23 runtime, an injectable Hue
+  registration transport, and the repository's sealed Vault store inside one
+  actor state.
+- The production transport executes bounded HTTP/1 over LAN TCP or the shared
+  TLS platform. HTTPS remains certificate-verifying and accepts caller-supplied
+  Hue trust roots instead of silently disabling verification.
+- A pending D23 session drives the canonical `/api` registration request,
+  successful application and client keys are encrypted at rest, and D23
+  receives only a random `VaultRef`.
+- If runtime completion fails after the Vault write, the service attempts a
+  revision-bound rollback so an unusable credential is not left behind.
+- Real loopback-network and local-folder restart tests prove the request reaches
+  LAN I/O, credentials survive a Vault restart, and raw secrets never enter
+  runtime state, event metadata, actor snapshots, or pairing reports.
+
+## Current Hue LAN Integration Slice
+
+This slice turns the transport-neutral Hue client into the production D23
+bridge worker path:
+
+- `hue-integration` executes bounded CLIP v2 HTTP/1 over LAN TCP or the shared
+  TLS platform, preserving certificate verification and caller-supplied trust
+  roots.
+- Full resource snapshots project Hue devices, lights, motion sensors, buttons,
+  scenes, and bridge health into the existing D23 runtime.
+- Authorized D23 light commands route through the native Hue resource endpoint;
+  rejected commands cannot reach Vault reads or LAN I/O, and accepted commands
+  always publish a final bridge result.
+- Bounded Hue Server-Sent Event reads use the incremental parser and project
+  native light updates into normalized D23 device events and state.
+- Paired application/client keys are decrypted only inside the worker. Actor
+  messages, reports, errors, runtime state, and debug output contain no raw
+  credentials.
+- A real loopback bridge test proves snapshot refresh, authorized command
+  dispatch, event-stream ingestion, and normalized state update through the
+  production socket transport.
+
 ## Chief Of Staff Remaining Work
+
+The Chief host-profile slice now provides JSON orchestrator profiles, isolated
+host tool ownership, privilege ceilings, capability coverage checks, catalog
+completeness gates, and executable routing. The Weather Agent uses three host
+profiles for fetch, classify, and write instead of wiring an unrestricted tool
+runtime directly.
+
+The supervised-host slice now connects those profiles to the repo-owned stdio
+process pool and generic job protocol. Activation requires exactly one process
+specification per declared host; RPC follows profile tool ownership; process
+snapshots expose live-worker and shutdown state; and bounded restart is proven
+by a host that crashes one in-flight call and services the next call after
+restart.
+
+The signed-package gate now hashes sealed agent contents in deterministic,
+length-framed path order, verifies raw Ed25519 signatures with the repo-owned
+crypto crates, rejects symlinks and byte tampering, resolves `PUBKEY_ID` through
+a typed trusted keyring, and enforces signer privilege ceilings before a
+supervised process can launch. Developer keys are capped at Tier 1.
+
+The deny-all Deno slice now re-verifies the sealed package at activation, derives
+literal no-prompt and deny flags in Rust, launches the signed
+`code/agent_runtime.ts`, and carries the existing host RPC envelope over stdio.
+The executable worker proves environment, filesystem read/write, subprocess,
+and network access are denied; post-signing entrypoint tampering prevents launch.
+
+The host-capability slice now makes the signed `launch.sh` and runtime process
+arguments come from one canonical deny-all launch plan. Launch-time verification
+rejects any script drift. Subprocess-originated RPC is parsed into the canonical
+D18D invocation contract and executed only by the Rust host's profile-gated,
+capability-checked handler catalog; unknown tools never reach a handler.
+
+The bidirectional transport slice now runs a signed deny-all Deno agent while
+the active Rust host services agent-originated `host.*` requests over the
+versioned stdio envelope. The host re-verifies the package and signer tier,
+requires envelope and call ids to agree, routes allowed calls through the real
+D18D handler catalog, and returns typed rejection frames for denied tools. A
+real-Deno test proves one allowed call reaches Rust and one undeclared call does
+not reach a handler.
+
+The first reusable Chief job slice now takes the existing Weather Agent through
+the in-process D18C job plan and executor, isolated host tool runtime, centralized
+write-approval policy, D18D execution journal, artifact write, validated
+`JobRunReceipt`, and compact user-visible umbrella report. The approved path
+records one granted write and three completed calls; the unapproved path stops
+at the policy gate and never writes the recommendation.
+
+That job now persists each canonical payload-free D18D audit row through
+`chief-of-staff-tool-audit-store` and the D18A local-folder backend before
+returning actor failures. A fresh store instance reloads the rows and emits a
+compact summary keyed to job, run, host profile, session, and user. Executable
+tests prove both the successful three-call run and the approval-blocked write
+survive a runtime restart without storing arguments, outputs, or credentials.
+
+The Tier2 approval slice now gives D18D a canonical user-visible challenge and
+explicit-consent, biometric, and hardware-key assurance levels. Host policy can
+require approval at a privilege threshold; Tier2 grants must be biometric and
+bound to the active call challenge before a handler runs, while Tier3 requires
+a hardware key. The scheduled Weather Agent job proves pending, weak-denied,
+and biometric-approved paths through the real host runtime, execution journal,
+user report, and restarted durable audit reader.
+
+The vault-leasing slice adds a reusable Chief host runtime over the zeroizing
+`vault-leases` manager. `vault.request_lease` now requires a challenge-bound
+Tier2 approval and returns only a random `VaultRef`; the scheduled Weather Agent
+passes that handle to its fetch host, which atomically consumes the lease and
+keeps the raw credential out of model-visible values, reports, and durable
+audit rows. Executable tests cover approved and approval-denied jobs plus
+one-shot, revoked, malformed, and unknown lease behavior.
 
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Load D18D tool catalogs into a host/orchestrator profile instead of only
-  using in-memory tests.
-- Run a Chief job end to end through scheduler or job framework, tool runtime,
-  approval checks, result journal, and final user-visible report.
-- Add approval UX and policy wiring for Tier2 or stronger actions such as
-  bridge pairing, locks, cameras, alarms, and safety devices.
-- Wire vault leasing so tools receive opaque `VaultRef` handles and never raw
-  smart-home secrets.
-- Persist tool execution journals and expose compact audit summaries for jobs,
-  hosts, sessions, and user review.
-- Package at least one reusable Chief job such as "home status brief",
-  "goodnight check", or "device health triage".
+- No remaining items within the D18 Chief architecture completion boundary.
+
+## Current Durable Runtime Persistence Slice
+
+This slice makes normalized D23 runtime data restart-safe without moving
+process-local worker or subscription ownership into storage:
+
+- `smart-home-core` exposes serde support for the normalized protocol-neutral
+  model, and `smart-home-runtime` can produce and restore a versioned durable
+  snapshot through its existing validated registry and desired-state paths.
+- The snapshot retains bridge, device, entity, scene, state, device-event,
+  authorization, capability-grant, runtime-event, command-result, pairing,
+  optimistic-state, and desired-state data.
+- `smart-home-runtime-store` persists that snapshot through any D18A
+  `StorageBackend`, uses compare-and-swap revisions, and keeps validated opaque
+  automation definitions beside runtime data for the future rules engine.
+- A local-folder restart test closes and reopens the durable backend before
+  proving topology, state, event and command history, pairing, desired state,
+  and automation definitions are queryable again.
+- Live discovery workers and event subscriptions remain process-local and are
+  rebuilt by their owners instead of restoring stale network work or consumers.
+
+## Current Durable Local API Slice
+
+This slice closes the local API boundary with a runnable restart-safe
+controller instead of another fixture wrapper:
+
+- `smart-home-platform-http` already exposes Home Assistant-compatible and
+  native routes for dashboard, mobile, CLI, and Chief clients over the
+  normalized runtime, including authorized service and desired-state writes.
+- Its runtime adapter now accepts a live clock and a durable mutation callback.
+  Every accepted service or desired-state mutation is saved synchronously; a
+  failed save restores the exact pre-request runtime and returns HTTP 503.
+- The `smart-home-local-controller` binary restores
+  `smart-home-runtime-store` from a D18A local folder, installs and persists
+  its local API capability grant, and serves the existing browser/API surface
+  through the repository HTTP stack.
+- Executable tests prove an HTTP desired-state mutation is queryable after a
+  fresh store instance and prove failed persistence leaves no in-memory
+  mutation behind.
+
+## Current Automation Runtime Slice
+
+This slice turns the previously opaque automation storage boundary into an
+executable, restart-safe rules runtime:
+
+- `smart-home-automation-runtime` owns typed schedule and normalized device
+  event triggers, state-equality conditions, direct commands, scene expansion,
+  stable per-occurrence idempotency keys, dry-run plans, and bounded audit.
+- Every automation mutation delegates to the existing authorized D23 command
+  tool. Definitions, consumed trigger occurrences, and automation audit records
+  persist atomically beside the normalized runtime snapshot.
+- The native local API can create and inspect definitions, preview or execute
+  schedule and event evaluations, and read automation audit records.
+- The production local controller restores the engine, runs schedule
+  evaluation on a local worker, and synchronously persists definition and
+  execution mutations with rollback when storage fails.
+- Executable tests cover scene planning, conditions, event matching,
+  idempotency across snapshot restore, durable state validation, and the full
+  create-preview-execute-audit HTTP lifecycle.
+
+## Current Z-Wave Runtime Integration Slice
+
+This slice connects the repository's Z-Wave protocol stack to the normalized
+D23 runtime instead of adding another protocol-only layer:
+
+- `smart-home-zwave-integration` installs a Serial API controller and
+  interviewed nodes as normalized bridges, devices, entities, capabilities,
+  and Z-Wave protocol identifiers.
+- Application Command Handler reports flow through `zwave-command-classes`
+  into normalized device events and runtime state; report-specific sensor
+  capabilities such as temperature are added when first observed.
+- Outbound light and lock commands must pass D23 authorization before the
+  adapter builds reliable Serial API SendData frames.
+- SendData response, callback, failure, and timeout states stay correlated to
+  the accepted D23 command.
+- Executable tests cover switches, dimmers, locks, battery and multilevel
+  sensor reports, rejected commands, successful callbacks, and timeouts.
+- Serial port ownership, inclusion, and S2 security remain production host
+  concerns above the completed typed runtime adapter boundary.
+
+## Current Z-Wave Serial Host Slice
+
+This slice moves the completed adapter across a real serial byte-stream
+boundary:
+
+- `smart-home-zwave-host` opens an OS serial port with bounded timeouts and
+  owns Serial API SOF framing, ACK/NAK/CAN handling, retries, checksum
+  rejection, and a bounded unsolicited-message queue.
+- The host runs the typed version, memory-id, controller-capability, and
+  init-data bootstrap, rejects end-device APIs, and installs the discovered
+  controller identity into D23.
+- Authorized commands cross the real wire boundary, synchronous SendData
+  responses and asynchronous callbacks remain correlated, and terminal
+  success, failure, and timeout results are published through the runtime.
+- Application Command Handler frames can be pumped through the same session
+  into normalized runtime state without dropping frames received while another
+  request is awaiting its response.
+- A runnable one-shot host binary bootstraps a configured serial controller,
+  while scripted byte-stream tests prove retries, ACK/NAK behavior, malformed
+  frame rejection, queued unsolicited frames, bootstrap, command completion,
+  and timeout publication.
+- Node inclusion and S2 remain explicit follow-on host state machines.
+
+## Current MQTT Runtime Integration Slice
+
+This slice adds a production broker boundary and turns the existing MQTT
+topic/event primitives into normalized D23 devices:
+
+- `smart-home-mqtt-integration` owns a real MQTT 3.1.1 connection, bounded
+  polling, reconnect health, QoS subscriptions, retained deliveries, and
+  broker-native cursors through `rumqttc`.
+- Home Assistant MQTT discovery records dynamically install lights, switches,
+  binary sensors, numeric sensors, and thermostats as normalized bridges,
+  devices, entities, capabilities, and protocol identifiers.
+- Discovered state and availability topics flow into normalized state, health,
+  event history, and stream checkpoints, including scalar JSON value-template
+  extraction for common sensor payloads.
+- Light, switch, and thermostat commands must pass D23 authorization before
+  MQTT publication; accepted commands carry command/correlation metadata and
+  broker queue failures publish terminal command audit.
+- Broker credentials remain ephemeral host values while durable bridge records
+  retain only an opaque `VaultRef`.
+- A runnable bounded host binary and a scripted TCP broker test prove real
+  CONNECT, SUBSCRIBE/SUBACK, retained discovery, dynamic state subscriptions,
+  normalized state, authorization, command publication planning, delivery
+  cursors, and transport failure audit.
+
+## Current Zigbee Runtime Integration Slice
+
+This slice connects the repository's Zigbee application protocol stack to the
+normalized runtime without pretending to own a coordinator transport:
+
+- `smart-home-zigbee-integration` installs a serial coordinator with an opaque
+  radio-network-key reference and projects ZDO-interviewed Home Automation
+  endpoints into normalized devices, entities, and ZCL-derived capabilities.
+- Inbound APS bytes are validated against the interviewed source endpoint,
+  profile, and cluster before ZCL attribute reports become confirmed runtime
+  state events.
+- Outbound light commands pass through D23 authorization, idempotency, and
+  command audit before the adapter emits round-trippable APS/ZCL bytes.
+- Coordinator radio ownership, joining, network-key leasing, APS security,
+  delivery retries, and acknowledgements remain an explicit production host
+  boundary.
+
+## Current Matter Runtime Integration Slice
+
+This slice connects the repository's typed Matter application model to D23
+while keeping the absent commissioning and secure-session host explicit:
+
+- `smart-home-matter-integration` installs an opaque fabric/controller
+  boundary and projects externally commissioned node endpoint clusters into
+  normalized devices, entities, identifiers, and capabilities.
+- Typed Matter attribute reports are checked against installed endpoint
+  clusters before becoming confirmed runtime state events.
+- Light and lock commands pass authorization and command audit before the
+  adapter creates a typed Matter invocation for a secure-session host.
+- Durable topology retains only a `VaultRef`; PASE/CASE, certificate
+  validation, fabric key storage, Interaction Model encoding, subscriptions,
+  and network I/O remain production host work.
+
+## Current Home Assistant Migration Slice
+
+This slice creates an executable, review-first boundary for retiring Home
+Assistant without silently changing behavior:
+
+- `smart-home-home-assistant-migration` accepts a versioned export of areas,
+  devices, entities, current state, scenes, and a bounded automation subset.
+- The planner assigns deterministic source-prefixed identifiers, preserves
+  Home Assistant registry identifiers and metadata, maps known domains to D23
+  capabilities, and retains unknown domains as observe-only entities.
+- Area, device, entity, scene, condition, and action references are validated
+  before apply. Unsupported or unresolved automation behavior is a blocking
+  diagnostic instead of a partial import.
+- Apply upserts topology, state, scenes, and durable automation definitions
+  through the existing D23 runtime and automation APIs. Stable source
+  fingerprints and receipts make reruns idempotent and auditable.
+- The CLI emits either a dry-run plan or an applied runtime/automation snapshot
+  through an atomic file replacement. Unit and process-level tests prove dry
+  runs, scene and automation mapping, blocking diagnostics, repeat apply, and
+  artifact round trips.
+
+## Current Home Assistant Live Export Slice
+
+This slice connects a running Home Assistant instance to the review-first
+migration boundary:
+
+- `smart-home-home-assistant-export` opens Home Assistant's WebSocket API,
+  performs the `auth_required` / token / `auth_ok` handshake, and keeps the
+  long-lived access token out of arguments, artifacts, and error output.
+- The collector requests the area, device, and entity registries plus all
+  current states, then projects the responses into the versioned migration
+  export contract in deterministic identifier order.
+- State records absent from the entity registry receive explicit synthetic
+  entity records instead of being silently discarded. Duplicate identifiers,
+  failed commands, malformed payloads, and premature disconnects fail the
+  collection.
+- The CLI performs atomic output replacement. Protocol tests use a real local
+  WebSocket server to prove authentication, command ordering, normalization,
+  failed authorization, and token redaction.
+- Scene and automation definitions are not inferred from
+  registry/current-state payloads; their live collection is delegated to the
+  reviewed definition-enrichment stage below.
+
+## Current Home Assistant Historical State Slice
+
+This slice carries source history into D23's durable replay log instead of
+leaving it as a detached archive:
+
+- `smart-home-home-assistant-history` authenticates to Home Assistant's
+  WebSocket API and requests `history/history_during_period` in bounded entity
+  batches derived from the reviewed topology migration plan.
+- The collector validates returned entity identities and RFC3339 timestamps,
+  keeps full source state and attributes, and sorts records deterministically.
+- The planner maps historical states to topology-backed D23 capabilities,
+  preserves source payload details as event metadata, emits diagnostics for
+  lossy values, and creates stable content-derived event identifiers.
+- Apply routes chronological events through `SmartHomeRuntime`, skips
+  identical events on repeat apply, restores the topology export's newer
+  current state after replay, and emits a durable snapshot containing registry
+  and runtime event history.
+- Dry-run and applied CLI artifacts are written atomically. Real WebSocket and
+  process tests prove batched collection, durable replay, repeat idempotency,
+  current-state preservation, and token redaction.
+
+## Current Home Assistant Definition Collection Slice
+
+This slice retrieves executable source definitions without approximating
+unsupported Home Assistant behavior:
+
+- `smart-home-home-assistant-definitions` consumes the reviewed topology
+  export, authenticates as an administrator, and requests each automation's
+  raw configuration through `automation/config` over the WebSocket API.
+- Editable Home Assistant scenes are retrieved from
+  `/api/config/scene/config/{config-id}` over bounded HTTP or HTTPS using the
+  entity registry's stable configuration identifier.
+- The collector accepts only the importer's executable subset: state and
+  simple time-pattern triggers, state conditions, and bounded scene, light,
+  switch, lock, and thermostat actions. Templates, delays, multi-trigger
+  semantics, device/area targets, unsupported services, and non-editable scene
+  platforms are skipped with durable diagnostics instead of being guessed.
+- The enriched artifact keeps definitions and a source-fingerprinted
+  collection report in deterministic order. Its extra report field is
+  backward-compatible with the existing migration reader, so the same file
+  can be planned and applied without a conversion step.
+- Real local WebSocket, HTTP, chunked-response, and CLI process tests prove
+  authenticated collection, migration compatibility, deterministic reruns,
+  partial-definition diagnostics, atomic output, and token redaction.
+
+## Current Home Assistant Dashboard Migration Slice
+
+This slice migrates concrete Lovelace definitions without executing custom
+frontend code or guessing at unsupported behavior:
+
+- `smart-home-home-assistant-dashboard-migration` authenticates to Home
+  Assistant and uses `lovelace/dashboards/list`, `lovelace/config`, and
+  `lovelace/resources/list` over the WebSocket API.
+- Standard entity, light, thermostat, sensor, tile, button, entities, glance,
+  and history cards become a deterministic native dashboard manifest. Layout
+  stacks, grids, and section views are flattened in source order.
+- Entity references are accepted only when they are enabled in the reviewed
+  topology export and use the same `ha:<entity-id>` identifiers as the
+  executable runtime migration.
+- Custom cards and resources, unsupported actions, malformed rows, and unknown
+  entities produce durable review diagnostics instead of approximations. A
+  listed dashboard whose configuration cannot be fetched blocks applied
+  migration while remaining inspectable in dry-run output.
+- Real local WebSocket and CLI process tests prove authenticated multi-dashboard
+  collection, resource capture, deterministic source fingerprints, blocked
+  apply behavior, atomic output, and token redaction.
+
+## Current Operational Dashboard Slice
+
+This slice turns the durable local API and migrated dashboard artifacts into a
+complete browser-operated control surface:
+
+- `smart-home-dashboard-core` owns and validates the native dashboard manifest
+  shared by Home Assistant migration and the local controller.
+- The durable controller loads a raw manifest or applied migration artifact
+  before binding and exposes it through
+  `/api/smart_home/dashboard_manifest`.
+- The embedded dashboard consumes native manifest views to scope entities and
+  provides direct sections for health, rooms, devices, current state,
+  automations and audit, pairing sessions, state history, runtime events,
+  command results, authorization decisions, and capability grants.
+- Pairing list/detail routes expose session state and opaque vault references
+  without disclosing credential material.
+- Rust route tests plus desktop and mobile browser verification prove the
+  manifest, automation, pairing, and audit workflows over the fixture runtime.
+
+## Current ONVIF Camera Integration Slice
+
+This slice adds the first executable production camera path without placing
+privacy-sensitive media endpoints in durable D23 state:
+
+- `smart-home-onvif-integration` sends bounded ONVIF WS-Discovery probes over
+  UDP, parses namespace-aware ProbeMatch responses, and emits normalized D23
+  discovery records.
+- Authenticated ONVIF SOAP calls use WS-Security UsernameToken password digests
+  over bounded HTTP/1.1 or certificate-verifying HTTPS to collect device
+  information, media profiles, snapshot endpoints, and RTSP stream endpoints.
+- ONVIF cameras project to first-class normalized `Camera` entities and the
+  `Onvif` protocol family. Runtime state contains profile metadata but no media
+  URI, password, nonce, or credential material.
+- `smart-home-camera-media` keeps endpoints process-local. Short-lived,
+  principal-bound, single-use leases backed by active Human Approval grants for
+  `camera.snapshot` or `camera.stream` authorize one trusted-host delivery; the
+  lease holder never receives the snapshot or stream endpoint URI.
+- Real loopback UDP and TCP tests prove discovery, five authenticated SOAP
+  exchanges, runtime installation, capability authorization, media redemption,
+  and redaction boundaries over actual host transports.
+
+## Current Shelly Gen2/Gen3 Integration Slice
+
+This slice adds a production broader-device path for local relays, lights,
+inputs, sensors, and energy monitors:
+
+- `_shelly._tcp.local` mDNS advertisements become verified D23 discovery
+  records using the official generation TXT marker.
+- Bounded HTTP/1.1 requests inspect `/shelly` and `Shelly.GetStatus`, then
+  project supported components into normalized devices, entities,
+  capabilities, and confirmed state.
+- D23 authorization gates `Switch.Set` and `Light.Set` RPC mutations, including
+  brightness control, before the host sends a device request.
+- Authentication-enabled devices fail closed with an explicit pairing boundary;
+  credentials are not accepted or persisted by this first host slice.
+- Real loopback TCP tests prove inspection, runtime installation, authorization,
+  and command transfer over the production transport.
+
+## Current WLED Integration Slice
+
+This slice adds a production broader-device path for local addressable-light
+controllers:
+
+- `_wled._tcp.local` mDNS advertisements become verified, no-pairing D23
+  discovery records using WLED's advertised MAC when present.
+- Bounded HTTP/1.1 requests inspect the documented `/json/si` state and device
+  information endpoint, then project a master light plus capability-aware
+  segment lights into normalized devices, entities, and confirmed state.
+- WLED color capability bits determine whether each segment exposes RGB and
+  color-temperature commands; effect identifiers remain observed state rather
+  than an unsupported generic command.
+- D23 authorization gates power, brightness, RGB, and mirek-to-Kelvin color
+  temperature mutations before the host posts to `/json/state`.
+- Real loopback TCP tests prove inspection, runtime installation, authorization,
+  and command transfer over the production transport. This first host uses
+  polling and does not claim WebSocket push support.
+
+## Current Camera Media Security Hardening Slice
+
+The camera-media broker is a portable policy boundary, not a transport host:
+
+- An access request carries target, media kind, purpose, and bounded TTL only.
+  The trusted host supplies the authenticated principal, monotonic current time,
+  and collision-resistant nonce source; callers cannot backdate or impersonate
+  those fields through the request DTO.
+- A lease records the endpoint generation it authorized. Registering or rotating
+  an endpoint advances that generation, invalidating every older lease before
+  transport execution.
+- Redemption rechecks the current D23 Human Approval grant at trusted current
+  time, atomically consumes the lease, and lends the endpoint only to a trusted
+  media executor. Snapshot bytes are bounded before release. The executor yields
+  an owned stream resource; the service mints the public session ID and retains
+  the resource through explicit close or trusted-time expiry. Failed teardown
+  remains owned, reported, and retryable rather than disappearing from state.
+- Endpoint, active-lease, per-principal lease, stream, and audit tables are bounded
+  by policy. URL userinfo and fragments fail closed. Plaintext schemes are denied
+  by default and require an explicit loopback-fixture opt-in; secure query tokens
+  remain confined to the trusted executor. Audit rows contain no bearer ID.
+- Clock, authenticated identity, nonce generation, and media I/O are installed
+  once in the host-owned service and cannot be substituted per request. The
+  deterministic policy core therefore declares an explicit empty package
+  capability profile; the later native ONVIF host owns and must obtain approval
+  for its nonempty authority.
+
+## Current Govee LAN Integration Slice
+
+This slice adds a production local-UDP path for LAN-enabled Govee lights:
+
+- Govee multicast scans on `239.255.255.250:4001` collect bounded replies on
+  UDP 4002, validate each response against its source address, and emit
+  verified, no-pairing D23 discovery records.
+- Bounded `devStatus` requests inspect fixed device endpoints on UDP 4003 and
+  project power, brightness, RGB, and color-temperature state into normalized
+  light entities.
+- D23 authorization gates `turn`, `brightness`, and `colorwc` mutations before
+  native transfer, and a post-command status query verifies and records the
+  confirmed device state.
+- Real loopback UDP tests prove discovery, inspection, runtime installation,
+  authorization, command transfer, and post-command verification over the
+  production transport. LAN Control must be enabled on the device; this path
+  does not accept Govee cloud credentials.
+
+## Current LIFX LAN Integration Slice
+
+This slice adds a production local-UDP path for LIFX lights:
+
+- Binary `GetService` probes use IPv4 UDP broadcast on port 56700, collect
+  bounded replies, validate packet size, protocol flags, source correlation,
+  service type, and device serial, and emit verified no-pairing D23 records.
+- Direct `GetColor` inspection correlates source, sequence, target, and packet
+  type before projecting power, brightness, RGB, and color-temperature state
+  into normalized light entities.
+- D23 authorization gates `SetLightPower` and `SetColor` mutations. Power,
+  brightness, RGB, and color-temperature commands are followed by a fresh
+  `GetColor` query that verifies and records the confirmed device state.
+- Real loopback UDP tests prove binary packet handling, discovery, inspection,
+  runtime installation, authorization, native transfer, and post-command
+  verification over the production transport. This path does not accept LIFX
+  cloud credentials.
+
+## Current TP-Link Kasa Legacy LAN Integration Slice
+
+This slice adds a production local-UDP path for credential-free legacy Kasa
+plugs, switches, and lights:
+
+- XOR-obfuscated `get_sysinfo` probes use bounded IPv4 UDP broadcast on port
+  9999, validate response JSON and stable device identity, and emit verified,
+  no-pairing D23 discovery records.
+- Direct device inspection distinguishes relay devices from bulbs and projects
+  model-aware power, brightness, RGB, and color-temperature state and
+  capabilities into normalized entities.
+- D23 authorization gates native relay and bulb transition mutations before
+  wire transfer. Every accepted command is followed by a fresh `get_sysinfo`
+  query that verifies and records confirmed state.
+- Real loopback UDP tests prove obfuscation, discovery, inspection, runtime
+  installation, authorization, command transfer, and post-command verification
+  over the production transport. This path accepts no cloud credentials and
+  does not claim newer authenticated KLAP/Tapo devices.
+
+## Current HEOS Change Event Slice
+
+This slice upgrades the existing read-only HEOS inspection path to local push
+without inventing a media command model prematurely:
+
+- A dedicated bounded TCP connection registers through the documented
+  `system/register_for_change_events` command before collecting unsolicited
+  HEOS JSON frames.
+- Player state, volume, mute, progress, repeat, shuffle, queue, topology, and
+  playback-error events become normalized D23 device events with stable player
+  identity and refresh-required metadata where the protocol sends no payload.
+- D23 subscribe authorization is checked before the event socket opens.
+  Account usernames are excluded from event metadata.
+- A real loopback TCP test proves registration, event framing, parsing, and D23
+  runtime application over the production transport.
+
+## Current HEOS Media Control Slice
+
+This slice turns the credential-free HEOS player path into an authorized local
+control surface without borrowing command semantics from unrelated domains:
+
+- D23 now has typed media playback, volume, grouping, and queue operations in
+  the canonical device-command envelope, with explicit capability mappings and
+  low-risk policy tiers.
+- HEOS player entities advertise commandable playback, volume, grouping, and
+  queue capabilities alongside their detailed observed player state.
+- The production TCP host supports play/pause/stop, next/previous, volume,
+  mute, group membership, queue clearing, queue playback, removal, and
+  reordering with exact command-response correlation.
+- Grouping authorizes every affected installed player entity before opening a
+  socket. Invalid player references and malformed queue identifiers fail before
+  transport I/O.
+- A real loopback TCP test proves all ten native command transfers, while a
+  denial test proves unauthorized media commands never reach the transport.
+
+## Current AirGradient Local Control Slice
+
+This slice extends the verified local telemetry path through the monitor's
+documented `/config` contract without hiding cloud ownership conflicts:
+
+- D23 now has reusable indicator-mode, indicator-brightness,
+  display-brightness, and sensor-calibration command types with canonical
+  capability mappings. Calibration requires human-approval policy.
+- AirGradient inspection reads the current configuration and installs an
+  indicator/display control entity plus a calibration capability on the CO2
+  sensor.
+- Authorized local commands support LED-bar mode, LED-bar brightness, display
+  brightness, and the 400 ppm CO2 calibration trigger. Persistent settings are
+  read back and verified after each PUT.
+- `configurationControl=cloud` fails with an explicit local-control conflict;
+  `both` succeeds with an explicit warning that a later cloud update can
+  overwrite the value.
+- A real loopback HTTP test proves all four native controls, while denial and
+  cloud-conflict tests prove no unauthorized or cloud-rejected PUT reaches the
+  monitor.
+
+## Current AirGradient Typed Settings Slice
+
+This slice extends the same authorized `/config` host with documented,
+non-credential settings while keeping configuration values strongly typed:
+
+- D23 now exposes a reusable `device.configuration` capability for temperature
+  unit, PM display standard, automatic CO2 baseline days, gas learning offsets,
+  compensated display, indicator self-test, and correction-profile commands.
+- AirGradient installs a dedicated configuration entity and accepts only the
+  documented `c`/`f`, `ugm3`/`us-aqi`, 0-200 day, and 0-720 hour value ranges.
+- Correction commands validate sensor-specific algorithms and require complete,
+  finite, positive-scale SLR profiles where the native contract requires them.
+- Every persistent setting is read back into confirmed runtime state; LED
+  self-test remains a non-persistent trigger. Cloud-only ownership still stops
+  before command submission or PUT.
+- A real loopback HTTP test proves all seven native setting transfers and
+  readbacks, while malformed correction-profile tests stop before transport.
+
+## Current Reolink Recording Control Slice
+
+This slice extends the authenticated Reolink CGI inspection host with one
+bounded camera/NVR control that the current transport can verify:
+
+- D23 exposes a reusable boolean `camera.recording` capability and typed
+  recording command with a human-approval policy tier.
+- Online channels probe `GetRecV20`; only channels that return native recording
+  state advertise the commandable capability.
+- Authorized `SetRecV20` changes use the existing login-token lifecycle and are
+  followed by an exact `GetRecV20` readback before runtime state is confirmed.
+- Malformed, unsupported, and unauthorized commands fail before credentials or
+  transport I/O. Recording changes remain non-optimistic until device readback.
+- A real loopback HTTP test proves inspection, capability detection, denial,
+  native recording control, readback verification, logout, and D23 state update.
+
+## Current Reolink PTZ Control Slice
+
+This slice adds bounded physical camera movement without claiming position
+state that the portable CGI contract cannot read back:
+
+- D23 exposes a reusable `camera.ptz` capability plus distinct preset-recall
+  and bounded-movement commands at the human-approval policy tier.
+- Online channels probe `GetPtzPreset`; only channels with a successful native
+  response advertise PTZ or accept its commands, and disabled presets are not
+  valid recall targets.
+- Preset recall validates a probed preset ID and a 1-64 speed before using the
+  existing authenticated `PtzCtrl` host.
+- Directional movement accepts only left/right/up/down, a 1-64 speed, and a
+  duration of at most five seconds, then emits an explicit native `Stop` in the
+  same login-token session.
+- Invalid, unsupported, and unauthorized requests stop before credentials or
+  transport I/O. The runtime does not invent optimistic orientation state.
+- A real loopback HTTP test proves probing, preset filtering, denial, recall,
+  bounded start/stop movement, logout, and exact native request shapes.
+
+## Current Axis VAPIX Inspection Slice
+
+This slice adds a second vendor-specific camera/NVR runtime using Axis's
+documented local discovery and authenticated JSON APIs:
+
+- The shared production mDNS scanner targets `_axis-video._tcp.local` and
+  `_axis-nvr._tcp.local`, preserving advertisements as credential-required
+  candidates until authenticated identity verifies them.
+- Production configuration requires a credential-free HTTPS origin and a
+  `VaultRef`; Basic credentials are materialized only inside the bounded TLS
+  transport. Plain HTTP is restricted to loopback transport tests.
+- The host calls `basicdeviceinfo.cgi` and `apidiscovery.cgi`, rejects VAPIX
+  errors, bounds response sizes, and normalizes product identity, firmware, and
+  the device's sorted public API inventory.
+- D23 authorizes the read before credentials or network transport are touched,
+  then installs one confirmed camera entity and a paired Axis bridge without
+  exposing secrets in request plans, runtime metadata, or debug output.
+- A real loopback HTTP test proves both JSON requests, Basic-auth materialization,
+  response parsing, runtime installation, and denial before transport.
+
+## Current Axis VAPIX PTZ Control Slice
+
+This slice extends the authenticated Axis host with capability-probed physical
+camera control while preserving the device's native arbitration boundary:
+
+- Devices advertising `ptz-control` are inspected through documented `info=1`,
+  `query=position`, `query=presetposall`, and `CtlQueueing` requests for VAPIX
+  camera 1. Confirmed pan, tilt, zoom, and enabled server presets become runtime
+  state without implying broader channel coverage.
+- `camera.ptz` is installed only when native speed control plus continuous
+  pan/tilt or at least one server preset are proven. Unknown queue settings fail
+  closed instead of silently bypassing device arbitration.
+- Preset recall accepts only probed IDs and a 1-100 native speed. Directional
+  movement accepts left/right/up/down, a 1-100 speed, and at most five seconds,
+  then emits an explicit `continuouspantiltmove=0,0` stop.
+- D23 applies the existing human-approval command tier before credentials or
+  transport I/O. Commands acquire and release `ptzqueue.cgi` control when
+  required, while the queue cookie exists only inside the bounded transport.
+- Commands do not invent optimistic orientation after movement. A real loopback
+  test proves probing, denial and argument rejection before I/O, queue-cookie
+  isolation, preset recall, bounded start/stop movement, and queue release.
+
+## Current Blue Iris Inspection and Control Slice
+
+This slice adds an authenticated local NVR host and the bounded camera controls
+that its documented JSON interface can verify:
+
+- Explicit local HTTPS configuration and Vault-backed credentials feed Blue
+  Iris's `/json` challenge-response login. Credentials, hashes, sessions, and
+  the returned license value remain transport-private, and each operation uses
+  a fresh session with explicit logout.
+- Authorized `camlist` inspection installs confirmed camera health, activity,
+  recording, and PTZ-support state. Plain HTTP remains loopback-test-only.
+- A session granting `clipcreate` exposes the existing typed
+  `camera.recording` command. Manual recording changes remain unconfirmed until
+  exact `camlist.isManRec` readback matches the request.
+- A session granting `ptz` plus a PTZ-capable camera exposes preset recall for
+  IDs 1-20 and left/right/up/down movement with 1-100 speed and at most five
+  seconds of duration. Movement ends with native Stop, including a best-effort
+  stop after an ambiguous start response.
+- D23 human approval occurs before control transport I/O. Runtime and real
+  loopback tests prove denied and malformed requests stop before transport,
+  recording readback, preset recall, bounded movement, Stop, and logout.
+
+## Current Frigate Inspection Slice
+
+This slice adds a first-party authenticated local Frigate NVR health host while
+keeping session and media boundaries explicit:
+
+- Explicit local HTTPS configuration and Vault-backed credentials feed the
+  documented `/api/login` flow. The JWT cookie exists only inside zeroizing
+  transport memory, never enters request plans or normalized state, and each
+  successful inspection ends at `/api/logout`.
+- D23 authorizes `smart_home.read` before credentials or network I/O. The host
+  then reads only `/api/version` and role-filtered `/api/stats`; it deliberately
+  avoids the broader configuration response even though Frigate redacts known
+  credential fields there.
+- Confirmed camera entities expose processing and detection FPS, detection
+  enablement, native connection quality, expected FPS, and recent reconnect and
+  stall counts. Native unusable/stopped processing maps offline, while poor or
+  recently unstable connections map degraded.
+- Production requires Frigate's authenticated HTTPS origin. Plain HTTP remains
+  loopback-test-only, and an exact protocol test proves login-body isolation,
+  cookie-only authenticated reads, bounded parsing, and redirecting logout.
+
+## Current Synology Surveillance Station Inspection Slice
+
+This slice adds a first-party authenticated local Synology NVR health host while
+preserving the device's advertised Web API boundary:
+
+- Explicit local HTTPS configuration and Vault-backed credentials first query
+  `SYNO.API.Info`. Advertised paths are constrained to the same `/webapi`
+  origin, and authentication, package-info, and camera APIs must expose the
+  versions needed by this host before any login begins.
+- D23 authorizes `smart_home.read` before credentials or transport I/O. The host
+  opens an isolated SID-format `SurveillanceStation` session with SynoToken
+  support, reads only package information and a bounded, privilege-filtered
+  camera list, and explicitly logs out.
+- Credentials, login bodies, SID values, and SynoToken values stay in zeroizing
+  transport memory and never enter request plans, normalized state, metadata,
+  or debug output. OTP and remembered-device flows are intentionally outside
+  this non-interactive username/password slice.
+- Confirmed camera entities expose the documented native status, channel,
+  vendor, and model. Normal and ready states map online, transitional states
+  map degraded, and connection, authorization, stream, storage, disabled, or
+  missing-video states map offline.
+- Production requires an authenticated HTTPS origin. Plain HTTP remains
+  loopback-test-only, and an exact protocol test proves API discovery, login
+  payload isolation, role-filtered reads, session-token confinement, and
+  logout.
+
+## Current UniFi Network Inspection Slice
+
+This slice promotes the cataloged UniFi Network integration to a first-party
+local health host over Ubiquiti's official integration API:
+
+- Explicit local UniFi OS HTTPS configuration and a Vault-backed API key target
+  the fixed /proxy/network/integration/v1 boundary. Plain HTTP is accepted only
+  for loopback protocol tests.
+- D23 authorizes smart_home.read before transport I/O. The host reads only
+  application information, bounded paginated local sites, and bounded paginated
+  adopted-device summaries.
+- The API key remains in zeroizing transport memory and is materialized as
+  X-API-Key only while encoding each request. Request plans retain only the
+  Vault reference and normalized state never contains the key.
+- Confirmed network-diagnostic entities expose the documented site, device,
+  model, MAC, IP, features, and native state. Online maps online; update,
+  readiness, and adoption states map degraded; offline, interrupted, isolated,
+  and deleting states map offline.
+- A real loopback test proves the exact application, site, and per-site device
+  requests, bounded pagination, API-key header materialization, and the absence
+  of Vault references from wire traffic.
+
+## Current Enphase IQ Gateway Inspection Slice
+
+This slice promotes the cataloged Enphase Envoy entry to an authenticated local
+energy-telemetry host using Enphase's documented IQ Gateway API:
+
+- Explicit local HTTPS configuration, a known gateway serial, and a Vault-backed
+  pre-generated access token target only `/ivp/meters` and
+  `/ivp/meters/readings`. Plain HTTP remains loopback-test-only.
+- D23 authorizes `smart_home.read` before credentials or network I/O. The
+  bearer token remains in zeroizing transport memory and is materialized only
+  while encoding the `Authorization` header.
+- Meter inventory and readings are bounded, duplicate native EIDs are rejected,
+  and every reading must match exactly one advertised meter before runtime
+  state can change.
+- Confirmed sensor entities expose aggregate delivered and received energy,
+  demand, active/apparent/reactive power, power factor, voltage, current,
+  frequency, phase shape, and native meter health. Disabled meters map offline;
+  non-normal status or status flags map degraded.
+- Production TLS remains certificate-verifying and supports caller-supplied
+  trust roots for gateway certificates. A real loopback test proves both exact
+  bearer-authenticated requests and that Vault references never reach the wire.
+
+## Current ZoneMinder Inspection Slice
+
+This slice adds a first-party authenticated local ZoneMinder NVR host using the
+documented API 2.0 contract:
+
+- Explicit local HTTPS origin or path-prefix configuration and Vault-backed
+  username/password credentials target only `/api/host/login.json`,
+  `/api/host/getVersion.json`, and `/api/monitors.json`. Plain HTTP remains
+  loopback-test-only.
+- D23 authorizes `smart_home.read` before credentials or network I/O. Login is
+  form encoded, API version 2.0 is required, and the short-lived access JWT is
+  kept in zeroizing transport memory while token-bearing GET targets are built.
+  Refresh tokens and token-bearing URLs do not enter request plans, normalized
+  state, or debug output.
+- Monitor arrays are bounded, native IDs must be positive and unique, and only
+  documented monitor configuration and `Monitor_Status` health fields are
+  normalized.
+- Confirmed camera entities expose enablement, capture, analysis, recording,
+  native status, capture/analysis FPS, and capture bandwidth. Disabled,
+  non-capturing, stopped, or no-signal monitors map offline; unknown or
+  zero-capture states map degraded.
+- Production TLS remains certificate-verifying. A real loopback test proves the
+  exact path-prefixed login, version, and monitor requests plus transport-private
+  credential and JWT handling.
+
+## Current Axis HTTP Digest Authentication Slice
+
+This slice closes the reusable HTTP Digest prerequisite and wires it into the
+existing Axis VAPIX production transport:
+
+- `http-digest-auth` parses bounded RFC 7616 challenges and builds zeroizing
+  MD5, MD5-sess, SHA-256, and SHA-256-sess authorization values for `qop=auth`
+  or the legacy no-`qop` form.
+- Duplicate, oversized, malformed, unsupported-algorithm, `auth-int`-only,
+  unsupported-charset, `userhash=true`, and header-injection inputs fail closed.
+- The Axis transport now follows the documented unauthenticated-request then
+  `401 WWW-Authenticate` flow, prefers supported SHA-256 Digest over MD5 and
+  Basic, and keeps the selected challenge and nonce count only in transport
+  memory.
+- Digest client nonces come from the OS CSPRNG. Credentials, A1 material,
+  derived responses, Basic values, Digest values, and encoded request bytes are
+  zeroized and never enter request plans, debug output, or normalized state.
+- Authentication is retried at most once per request. A real loopback exchange
+  proves the exact unauthenticated probe, authenticated retry, preemptive nonce
+  count, and `stale=true` nonce refresh while production TLS remains
+  certificate-verifying.
 
 ## Smart Home Remaining Work
 
-These items move toward retiring an existing Home Assistant install:
+The remaining backlog is ordered by the strongest executable production path
+and then by prerequisite readiness:
 
-- Connect the supervised mDNS runtime pass to an actor or process that manages
-  lifecycle, OS interface binding, and persistence for schedules, results, and
-  runtime state across restarts. Retry/backoff policy now exists in the runtime
-  scheduler, but an external actor still needs to drive durable process
-  lifecycle.
-- Finish production Hue pairing by connecting the local HTTP registration plan
-  to the worker that presses through real LAN I/O and durable Vault writes. The
-  typed request/response/VaultRef handoff and runtime no-secret audit trail now
-  exist.
-- Add real Hue local HTTP command/read workers and Hue event-stream workers
-  behind the existing runtime surfaces.
-- Persist registry, state cache, event history, command history, pairing
-  sessions, desired state, and automation definitions.
-- Add a local API surface for dashboard, mobile, CLI, and Chief of Staff jobs.
-- Add an automation/rules engine with schedules, triggers, conditions, scenes,
-  idempotency, dry-run planning, and audit.
-- Add platform integrations beyond Hue: MQTT, Matter/Thread, Zigbee, Z-Wave,
-  cameras, locks, thermostats, and sensors.
-- Build Home Assistant migration tools for devices, rooms, scenes,
-  automations, dashboards, and historical state export where feasible.
-- Provide a dashboard that can inspect devices, rooms, state, health,
-  automations, event history, pairing, and command audit.
+1. Add AirGradient country and cloud-upload controls only after privacy,
+   telemetry-egress, and operator-consent policy are concrete.
+2. Add AirGradient MQTT broker and custom HTTP routing settings only after
+   credential-bearing values use Vault leasing and destination validation.
+3. Add authenticated HEOS source browsing and queue insertion only after the
+   account/session and Vault-leasing prerequisites are concrete.
+4. Automate Enphase access-token acquisition or renewal only after Enphase
+   account authentication, cloud-session handling, operator consent, and
+   Vault-leased credential policy are concrete; the current host accepts a
+   pre-generated token.
+5. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
+   stable LAN advertisement; the current production path uses explicit local
+   HTTPS endpoint and gateway-serial configuration.
+6. Add Enphase per-inverter production inspection only after device-identifier
+   privacy, purpose, and retention policy are concrete because the native
+   response exposes every microinverter serial number.
+7. Add Enphase live battery, relay, generator, grid, and system-topology state
+   only after the normalized energy topology and retention semantics are
+   concrete.
+8. Add Enphase relay, grid-services, or configuration controls only with
+   operation-specific D23 contracts, explicit safety approval, bounded native
+   semantics, and readable postcondition verification.
+9. Add expiration-aware ZoneMinder access-token reuse and refresh only after a
+   supervised session lifecycle and Vault policy for refresh-token residency are
+   concrete; the current isolated inspection drops both tokens after each read.
+10. Add ZoneMinder event push only after a concrete authenticated event host and
+    supervised subscription lifecycle exist.
+11. Add ZoneMinder snapshots, streams, recordings, export, and playback only
+    through the camera-media lease and a concrete media executor.
+12. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
+    mutations only with operation-specific D23 contracts, least-privilege user
+    checks, bounded semantics, and readable postcondition verification.
+13. Add UniFi Network connected-client inspection only after privacy, presence,
+   identifier-retention, and operator-purpose policy are concrete.
+14. Add UniFi Network latest device statistics only after metrics schema,
+   retention, and bounded polling-load policy are concrete.
+15. Add remote UniFi Site Manager inspection only after telemetry-egress,
+   destination, and operator-consent policy are concrete; keep the current host
+   local-only.
+16. Add UniFi Network push or change events only after a concrete authenticated
+   event host and supervised subscription lifecycle exist.
+17. Add UniFi adoption, guest authorization, port actions, or configuration
+   mutations only with operation-specific D23 contracts, least-privilege API
+   keys, bounded semantics, and readable postcondition verification.
+18. Add Synology Surveillance Station OTP and remembered-device authentication
+   only after an interactive challenge lifecycle and Vault-leased device-token
+   policy are concrete.
+19. Add Synology Surveillance Station events only after a concrete authenticated
+   event host and supervised subscription lifecycle exist.
+20. Add Synology Surveillance Station snapshots, recordings, export, and
+   playback only through the camera-media lease and a concrete executor.
+21. Add Synology Surveillance Station PTZ, external recording, or configuration
+   mutations only with operation-specific D23 contracts, least-privilege API
+   checks, bounded semantics, and readable postcondition verification.
+22. Add Frigate event and review push only after a concrete authenticated event
+   or WebSocket host and supervised subscription lifecycle exist.
+23. Add Frigate snapshots, recordings, export, and playback only through the
+   camera-media lease and a concrete executor.
+24. Add Frigate commands or configuration mutations only with operation-specific
+   D23 contracts, least-privilege role checks, and readable postcondition
+   verification.
+25. Add Blue Iris snapshots, alert/clip search, export, and playback only through
+   the camera-media lease and a concrete media executor.
+26. Add broader Blue Iris `camconfig` or administrative mutations only with
+   operation-specific D23 contracts, least-privilege permissions, and readable
+   postcondition verification; do not persist the license value returned at
+   login.
+27. Add automatic Blue Iris discovery only if the server exposes a documented,
+   stable LAN advertisement; the current production path is explicit local
+   HTTPS endpoint configuration.
+28. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
+   controls only when each operation has a specific native capability probe,
+   bounded semantics, and readable verification where the device exposes it.
+29. Add Axis event streaming only after the existing WebSocket protocol core has
+   a concrete authenticated host using the completed Digest primitive or a
+   short-lived session token, plus subscription supervision.
+30. Add Axis snapshots and media transfer only through the camera-media lease and
+   a concrete media executor.
+31. Enumerate Axis video sources/channels before extending PTZ beyond the current
+   capability-probed VAPIX camera 1 boundary.
+32. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+   only when each operation has a specific capability probe and readable state.
+33. Add Reolink snapshot, recording search/download, and playback operations only
+   through the existing camera-media lease and a concrete media executor.
+34. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+   each operation has a capability-specific probe and the firmware exposes the
+   native state needed to avoid invented orientation claims.
+35. Add Reolink push events only after a concrete webhook or event-stream host
+   and subscription lifecycle exist.
+36. Add authenticated KLAP/Tapo devices and other broader-device families only
+   after their authentication and session prerequisites are concrete.
+37. Add ONVIF PullPoint events once a concrete event host and subscription
+   lifecycle exist.
+38. Add RTSP media transfer and recording once concrete media transfer and
+   recorder host primitives exist.
+39. Add a production Matter commissioning, secure-session, and network host only
+   after certificate, fabric, Interaction Model encoding, subscription, and
+   transport prerequisites exist.
+40. Add a Thread border-router host only after an actual host transport exists.
+41. Add a production Zigbee coordinator, join, and security host only after
+   concrete coordinator transport and security primitives exist.
+42. Add production Z-Wave inclusion and S2 only after concrete host transport
+   and security primitives exist.
 
 ## End-To-End Definition
 

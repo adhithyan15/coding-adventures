@@ -286,6 +286,153 @@ func _sir_as_string(v Value) string {
 	panic("no implicit conversion of " + _sir_ruby_class_name(v) + " into String")
 }
 
+// ── polymorphic `<<` (Ruby's shift operator) ───────────────────
+//
+// `<<` -- Ruby's shift operator, polymorphic like `+`:
+//   Array   -- push each RHS operand IN PLACE, returns the (mutated)
+//              receiver. Chains left-to-right: `a << 1 << 2` pushes both
+//              (the frontend lowers a `<<` chain to ONE variadic call, the
+//              same convention `_sir_plus` already folds over).
+//   Integer -- bitwise shift; see `_sir_shift_left_i64` below, PORTED from
+//              the C backend's `_sir_shift_left_i64` for identical
+//              overflow/negative-amount semantics (no bignum growth --
+//              saturates at MaxInt64/MinInt64 rather than wrapping).
+//   String  -- concatenates and returns a NEW string, via `_sir_as_string`
+//              -- matching THIS backend's own `+` String-receiver
+//              convention (a non-string RHS panics; Ruby raises TypeError
+//              for `<<` on an incompatible operand too, so this is not a
+//              new divergence from `+`).
+func _sir_shift_left(args []Value) Value {
+	if len(args) == 0 {
+		return int64(0)
+	}
+	switch first := args[0].(type) {
+	case *Seq:
+		first.Items = append(first.Items, args[1:]...)
+		return first
+	case string:
+		out := first
+		for _, a := range args[1:] {
+			out += _sir_as_string(a)
+		}
+		return out
+	}
+	acc := _sir_as_int(args[0])
+	for _, a := range args[1:] {
+		acc = _sir_shift_left_i64(acc, _sir_shift_amount_arg(a))
+	}
+	return acc
+}
+
+// Extracts a shift-amount argument as a plain int64 -- an Integer passes
+// through, a Float truncates toward zero via the saturating helper below
+// (never Go's bare `int64(f)`, which is implementation-specific for a
+// non-finite/out-of-range float); anything else contributes a 0 shift.
+func _sir_shift_amount_arg(v Value) int64 {
+	switch n := v.(type) {
+	case int64:
+		return n
+	case float64:
+		return _sir_f64_to_i64_saturating(n)
+	}
+	return 0
+}
+
+// Truncates a float64 toward zero into an int64, saturating at
+// MaxInt64/MinInt64 on overflow and mapping NaN to 0 -- Go's plain
+// `int64(f)` conversion is implementation-specific once `f` is
+// non-finite or outside the int64 range (the same UB-avoidance
+// discipline the C backend's `_sir_f64_to_i64_saturating` follows). The
+// boundary compares against 2^63 (not `math.MaxInt64`, which is one less
+// and not exactly representable as a float64 near this magnitude).
+func _sir_f64_to_i64_saturating(f float64) int64 {
+	const twoPow63 = 9223372036854775808.0
+	if math.IsNaN(f) {
+		return 0
+	}
+	if f >= twoPow63 {
+		return math.MaxInt64
+	}
+	if f < -twoPow63 {
+		return math.MinInt64
+	}
+	return int64(f)
+}
+
+// Safe magnitude of an int64 as a uint64 -- handles `math.MinInt64` (whose
+// naive negation overflows back to itself in two's complement) via a
+// uint64-wraparound trick, the same one the C backend's `_sir_i64_abs_u`
+// uses.
+func _sir_i64_abs_u(n int64) uint64 {
+	if n >= 0 {
+		return uint64(n)
+	}
+	return uint64(-(n + 1)) + 1
+}
+
+// Bitwise-shifts `n` by `amount`, matching real Ruby's rules (ported from
+// the C backend's `_sir_shift_left_i64` -- see that function's comment for
+// the full rationale):
+//   - `amount == 0` or `n == 0`: identity.
+//   - `amount < 0`: REVERSES direction -- a right shift by `|amount|`
+//     (`5 << -1 == 5 >> 1 == 2`). Go requires a non-negative, in-range
+//     shift count for `>>`/`<<` (a signed negative or >=64 count panics at
+//     runtime), so both branches are computed manually rather than handed
+//     straight to Go's shift operators.
+//   - `amount > 0`: LEFT shift, SATURATES at MaxInt64/MinInt64 rather than
+//     wrapping once the true mathematical result would not fit (no bignum
+//     growth, unlike real Ruby's `1 << 63`).
+//   - A shift amount whose magnitude is >= 64 drains every bit: saturates
+//     to 0/-1 (right) or MaxInt64/MinInt64 (left, `n != 0`).
+func _sir_shift_left_i64(n int64, amount int64) int64 {
+	if amount == 0 || n == 0 {
+		return n
+	}
+	if amount < 0 {
+		k := _sir_i64_abs_u(amount)
+		if k >= 64 {
+			if n < 0 {
+				return -1
+			}
+			return 0
+		}
+		return n >> uint(k)
+	}
+	k := uint64(amount)
+	neg := n < 0
+	if k >= 64 {
+		if neg {
+			return math.MinInt64
+		}
+		return math.MaxInt64
+	}
+	mag := _sir_i64_abs_u(n)
+	if (mag >> (64 - k)) != 0 {
+		if neg {
+			return math.MinInt64
+		}
+		return math.MaxInt64
+	}
+	shifted := mag << k
+	limit := uint64(math.MaxInt64)
+	if neg {
+		limit++
+	}
+	if shifted > limit {
+		if neg {
+			return math.MinInt64
+		}
+		return math.MaxInt64
+	}
+	if neg {
+		if shifted == limit {
+			return math.MinInt64
+		}
+		return -int64(shifted)
+	}
+	return int64(shifted)
+}
+
 func _sir_minus(args []Value) Value {
 	if len(args) == 0 {
 		return int64(0)
@@ -395,6 +542,21 @@ func _sir_times(args []Value) Value {
 	return acc
 }
 
+// _sir_neg implements Ruby unary minus (`-x`), which the frontend lowers to
+// `BuiltinCall("neg", [x])`.  It was UNIMPLEMENTED, so any negative literal
+// panicked with "unknown builtin: neg" (the JS/Python runtimes already had it).
+// Negate tag-preservingly: a float64 stays a float64; anything else negates as
+// an int64 (the coercion the rest of the arithmetic helpers use).
+func _sir_neg(args []Value) Value {
+	if len(args) == 0 {
+		return int64(0)
+	}
+	if f, ok := args[0].(float64); ok {
+		return -f
+	}
+	return -_sir_as_int(args[0])
+}
+
 func _sir_divide(args []Value) Value {
 	if len(args) == 0 {
 		return int64(0)
@@ -424,7 +586,19 @@ func _sir_divide(args []Value) Value {
 		if d == 0 {
 			panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
 		}
-		acc /= d
+		// Ruby `Integer#/` FLOORS toward −∞ (`-7 / 2 == -4`), unlike Go's `/`
+		// which truncates toward zero (`-3`). The floored quotient is the
+		// truncated one minus one exactly when the remainder is non-zero and
+		// its sign differs from the divisor's — when a real division would land
+		// between two integers on the negative side. Matches the SIR21 §E3
+		// oracle `DivOp::Floor` on every sign combination. (Float operands take
+		// the `_sir_any_float` branch above, which true-divides — Ruby `Float#/`.)
+		q := acc / d
+		r := acc % d
+		if r != 0 && (r < 0) != (d < 0) {
+			q--
+		}
+		acc = q
 	}
 	return acc
 }
@@ -588,13 +762,46 @@ func _sir_is_number_val(v Value) bool {
 	return false
 }
 
+// Ordered comparison, shared by `<`/`>`/`<=`/`>=`.  Returns the sign of
+// `a <=> b`: -1, 0, or +1.  Two strings compare LEXICOGRAPHICALLY (so
+// `"a" < "b"`, matching Ruby and the C/Rust/Python backends); otherwise both
+// operands are coerced to float64 (an int/int pair stays exact via the
+// caller's fast path).  Previously the string case fell through to
+// `_sir_as_float`, which PANICS on a string — so `"a" < "b"` crashed rather
+// than ordering.  The deep-uncomparable case (nil/pair vs number) still
+// panics in `_sir_as_float`, exactly as it did before; a total order there is
+// a separate refinement (Ruby raises `ArgumentError`).
+func _sir_cmp(a Value, b Value) int {
+	if as, aok := a.(string); aok {
+		if bs, bok := b.(string); bok {
+			switch {
+			case as < bs:
+				return -1
+			case as > bs:
+				return 1
+			default:
+				return 0
+			}
+		}
+	}
+	af, bf := _sir_as_float(a), _sir_as_float(b)
+	switch {
+	case af < bf:
+		return -1
+	case af > bf:
+		return 1
+	default:
+		return 0
+	}
+}
+
 func _sir_lt(args []Value) Value {
 	if ai, aok := args[0].(int64); aok {
 		if bi, bok := args[1].(int64); bok {
 			return ai < bi
 		}
 	}
-	return _sir_as_float(args[0]) < _sir_as_float(args[1])
+	return _sir_cmp(args[0], args[1]) < 0
 }
 
 func _sir_gt(args []Value) Value {
@@ -603,7 +810,34 @@ func _sir_gt(args []Value) Value {
 			return ai > bi
 		}
 	}
-	return _sir_as_float(args[0]) > _sir_as_float(args[1])
+	return _sir_cmp(args[0], args[1]) > 0
+}
+
+// `!=`, `<=`, `>=` — the operator spellings the Ruby frontend lowers a
+// comparison chain to (`lower_comparison_chain`).  `_sir_ne` is the exact
+// negation of `_sir_eq` (so `==` and `!=` never disagree).  `_sir_le`/
+// `_sir_ge` share `_sir_cmp` with `_sir_lt`/`_sir_gt`, so all four order
+// strings lexicographically and numbers by value (`1 <= 1.0` holds).
+func _sir_ne(args []Value) Value {
+	return !_sir_value_eq(args[0], args[1])
+}
+
+func _sir_le(args []Value) Value {
+	if ai, aok := args[0].(int64); aok {
+		if bi, bok := args[1].(int64); bok {
+			return ai <= bi
+		}
+	}
+	return _sir_cmp(args[0], args[1]) <= 0
+}
+
+func _sir_ge(args []Value) Value {
+	if ai, aok := args[0].(int64); aok {
+		if bi, bok := args[1].(int64); bok {
+			return ai >= bi
+		}
+	}
+	return _sir_cmp(args[0], args[1]) >= 0
 }
 
 func _sir_cons(args []Value) Value {
@@ -1120,20 +1354,30 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 	switch name {
 	case "+":
 		return _sir_plus(args)
+	case "<<":
+		return _sir_shift_left(args)
 	case "-":
 		return _sir_minus(args)
 	case "*":
 		return _sir_times(args)
 	case "/":
 		return _sir_divide(args)
-	case "=":
+	case "neg":
+		return _sir_neg(args)
+	case "=", "==":
 		return _sir_eq(args)
+	case "!=":
+		return _sir_ne(args)
 	case "case_eq":
 		return _sir_case_eq(args)
 	case "<":
 		return _sir_lt(args)
 	case ">":
 		return _sir_gt(args)
+	case "<=":
+		return _sir_le(args)
+	case ">=":
+		return _sir_ge(args)
 	case "cons":
 		return _sir_cons(args)
 	case "car":
@@ -1360,6 +1604,14 @@ func _sir_ruby_class_name(v Value) string {
 	if inst, ok := v.(*SirInstance); ok {
 		return inst.Class
 	}
+	// A raised/caught exception is a *SirError, NOT a *SirInstance — it carries
+	// its class tag the same way.  Without this it fell to the "Object" default,
+	// so `rescue => e; e.class` said "Object" and `e.is_a?(StandardError)` was
+	// FALSE for every exception — silently skipping a handler guarded that way,
+	// even though `_sir_ancestry` holds the whole exception hierarchy.
+	if se, ok := v.(*SirError); ok {
+		return se.Class
+	}
 	switch t := v.(type) {
 	case bool:
 		if t {
@@ -1387,12 +1639,52 @@ func _sir_object_method(recv Value, name string, args []Value) (Value, bool) {
 	switch name {
 	case "nil?":
 		return recv == nil, true
+	// Guard `args[0]`: a zero-argument `x.==()` would otherwise index an empty
+	// slice and PANIC, killing the program.  Ruby raises ArgumentError; the
+	// never-crash floor here is to compare against nil.
 	case "==":
+		if len(args) == 0 {
+			return recv == nil, true
+		}
 		return _sir_value_eq(recv, args[0]), true
 	case "!=":
+		if len(args) == 0 {
+			return recv != nil, true
+		}
 		return !_sir_value_eq(recv, args[0]), true
 	case "class":
 		return _sir_ruby_class_name(recv), true
+	// `Exception#message` — the text a `raise Foo, "msg"` carried.  Answered
+	// only by an exception; any other receiver falls through to its own
+	// catalog (and ultimately NoMethodError).  Without this, `rescue => e;
+	// puts e.message` — everyday Ruby — raised NoMethodError.
+	case "message":
+		if se, ok := recv.(*SirError); ok {
+			// A bare `raise Foo` carries no message; Ruby's default
+			// `exception.message` is then the CLASS NAME (matching the
+			// Python/Rust/JS backends, which already do this).
+			if se.Msg == nil {
+				return se.Class, true
+			}
+			return se.Msg, true
+		}
+		return nil, false
+	// `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT class
+	// match.  These were listed in `_sir_responds_to` but never IMPLEMENTED,
+	// so `respond_to?(:is_a?)` answered true while an actual call fell through
+	// to `NoMethodError` and killed the program.  The class argument arrives
+	// as a NAME (the frontend lifts a `Const` to a `StrLit`), so no
+	// constant-reference support is needed here.
+	case "is_a?", "kind_of?", "instance_of?":
+		if len(args) == 0 {
+			return false, true
+		}
+		target := _sir_method_name(args[0])
+		actual := _sir_ruby_class_name(recv)
+		if name == "instance_of?" {
+			return actual == target, true
+		}
+		return _sir_value_is_a(recv, actual, target), true
 	case "to_s":
 		return _sir_ruby_to_s(recv), true
 	case "inspect":
@@ -1594,6 +1886,15 @@ func _sir_responds_to(recv Value, name string) bool {
 	switch name {
 	case "is_a?", "kind_of?", "instance_of?", "class":
 		return true
+	case "message":
+		// An EXCEPTION answers `message`.  Do NOT early-return false
+		// otherwise: a user class may define its own `message`, which
+		// `_sir_call_method` dispatches from the instance table below — an
+		// early `false` here would DENY a method that actually works, the
+		// same dishonest-respond_to? shape this change fixes elsewhere.
+		if _, isExc := recv.(*SirError); isExc {
+			return true
+		}
 	}
 	// Universal Object + M6 metaprogramming methods (every receiver).
 	if _sir_object_responds(name) {
@@ -1659,7 +1960,8 @@ func _sir_string_responds(name string) bool {
 		"strip", "lstrip", "rstrip", "chomp", "empty?", "include?",
 		"start_with?", "end_with?", "split", "chars", "bytes", "index",
 		"replace", "sub", "gsub", "to_i", "to_f", "to_sym",
-		"ljust", "rjust", "center", "swapcase":
+		"ljust", "rjust", "center", "swapcase",
+		"tr", "count", "delete", "squeeze":
 		return true
 	}
 	return false
@@ -1682,7 +1984,8 @@ func _sir_numeric_responds(name string) bool {
 	// `_sir_numeric_method` switch above).
 	case "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?",
 		"positive?", "negative?", "succ", "next", "pred",
-		"floor", "ceil", "round", "gcd", "pow", "**", "digits":
+		"floor", "ceil", "round", "divmod", "fdiv", "clamp", "between?",
+		"gcd", "pow", "**", "digits":
 		return true
 	}
 	return false
@@ -1693,15 +1996,16 @@ func _sir_array_responds(name string) bool {
 	// Non-block Array methods.
 	case "length", "size", "count", "first", "last", "empty?", "include?",
 		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
-		"min", "max", "sum", "uniq", "flatten", "compact", "zip", "rotate",
+		"min", "max", "minmax", "sum", "uniq", "flatten", "compact", "zip", "rotate",
 		"to_h", "tally", "take", "drop", "values_at",
-		"join", "fetch", "to_a":
+		"join", "fetch", "to_a", "each_slice", "each_cons":
 		return true
 	// Block-taking Array/Enumerable methods.
 	case "each", "each_with_index", "map", "collect", "select", "filter",
 		"reject", "reduce", "inject", "find", "detect", "any?", "all?", "none?",
 		"sort_by", "min_by", "max_by", "group_by", "partition", "flat_map",
-		"collect_concat", "take_while", "drop_while", "each_with_object":
+		"collect_concat", "take_while", "drop_while", "each_with_object",
+		"chunk_while", "slice_when", "cycle":
 		return true
 	}
 	return false
@@ -1711,10 +2015,16 @@ func _sir_hash_responds(name string) bool {
 	switch name {
 	// Non-block Hash methods.
 	case "keys", "values", "has_key?", "key?", "include?", "member?",
-		"has_value?", "value?", "size", "length", "empty?", "fetch":
+		"has_value?", "value?", "size", "length", "empty?", "fetch", "to_h":
 		return true
 	// Block-taking Hash methods.
-	case "each", "each_pair", "map", "select", "filter", "reject":
+	case "each", "each_pair", "each_key", "each_value", "map",
+		"select", "filter", "reject", "transform_values", "transform_keys",
+		"find", "detect", "any?", "all?", "none?", "count",
+		"sort_by", "min_by", "max_by",
+		"group_by", "partition", "flat_map", "collect_concat",
+		"reduce", "inject", "sum",
+		"each_with_index", "each_with_object":
 		return true
 	}
 	return false
@@ -1869,6 +2179,25 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 			}
 		}
 		return best, true
+	case "minmax":
+		// Ruby `Array#minmax` (no block): the two-element array `[min, max]` in
+		// one pass, via `<` (modelled by `_sir_value_lt`).  An empty array ⇒
+		// `[nil, nil]` (no smallest/largest element), matching the Python
+		// reference's `[None, None]`.
+		if len(recv.Items) == 0 {
+			return &Seq{Items: []Value{nil, nil}}, true
+		}
+		lo := recv.Items[0]
+		hi := recv.Items[0]
+		for _, x := range recv.Items[1:] {
+			if _sir_value_lt(x, lo) {
+				lo = x
+			}
+			if _sir_value_lt(hi, x) {
+				hi = x
+			}
+		}
+		return &Seq{Items: []Value{lo, hi}}, true
 	case "sum":
 		// Ruby `Array#sum`: fold with polymorphic `+` over an initial value
 		// (default 0, or the supplied `sum(init)` argument), preserving
@@ -2042,6 +2371,46 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 		return &Seq{Items: out}, true
 	case "to_a":
 		return recv, true
+	case "each_slice":
+		// `each_slice(n)` -> consecutive sub-arrays of at most n elements (the
+		// last may be shorter).  `[1,2,3,4,5].each_slice(2)` -> [[1,2],[3,4],[5]].
+		// Ruby raises ArgumentError for n <= 0; the never-panic floor yields [].
+		n := int64(0)
+		if len(args) > 0 {
+			n = _sir_as_int_trunc(args[0])
+		}
+		if n <= 0 {
+			return &Seq{Items: []Value{}}, true
+		}
+		out := []Value{}
+		for i := int64(0); i < int64(len(recv.Items)); i += n {
+			end := i + n
+			if end > int64(len(recv.Items)) {
+				end = int64(len(recv.Items))
+			}
+			slice := make([]Value, end-i)
+			copy(slice, recv.Items[i:end])
+			out = append(out, &Seq{Items: slice})
+		}
+		return &Seq{Items: out}, true
+	case "each_cons":
+		// `each_cons(n)` -> every consecutive n-element sliding window.
+		// `[1,2,3,4].each_cons(2)` -> [[1,2],[2,3],[3,4]].  A window larger than
+		// the array (or n <= 0) yields [].
+		n := int64(0)
+		if len(args) > 0 {
+			n = _sir_as_int_trunc(args[0])
+		}
+		out := []Value{}
+		if n <= 0 {
+			return &Seq{Items: out}, true
+		}
+		for i := int64(0); i+n <= int64(len(recv.Items)); i++ {
+			win := make([]Value, n)
+			copy(win, recv.Items[i:i+n])
+			out = append(out, &Seq{Items: win})
+		}
+		return &Seq{Items: out}, true
 	}
 	return nil, false
 }
@@ -2268,6 +2637,84 @@ func _sir_array_block_method(recv *Seq, name string, args []Value, block *Closur
 			_sir_apply(block, []Value{x, obj})
 		}
 		return obj, true
+	case "chunk_while":
+		// `chunk_while { |prev, cur| pred }` -> runs of consecutive elements: the
+		// block is called on each ADJACENT pair; while it is truthy the run
+		// continues, and a falsy result starts a new run.
+		// `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` -> [[1,2],[4,5],[7]].
+		// An empty array yields []; a single element yields [[x]].
+		if len(recv.Items) == 0 {
+			return &Seq{Items: []Value{}}, true
+		}
+		cur := &Seq{Items: []Value{recv.Items[0]}}
+		chunks := []Value{cur}
+		for i := 1; i < len(recv.Items); i++ {
+			prev := recv.Items[i-1]
+			item := recv.Items[i]
+			if _sir_truthy(_sir_apply(block, []Value{prev, item})) {
+				cur.Items = append(cur.Items, item)
+			} else {
+				cur = &Seq{Items: []Value{item}}
+				chunks = append(chunks, cur)
+			}
+		}
+		return &Seq{Items: chunks}, true
+	case "slice_when":
+		// `slice_when { |prev, cur| pred }` -> the INVERSE of chunk_while: runs of
+		// consecutive elements, starting a NEW run BETWEEN an adjacent pair
+		// exactly WHERE the block is truthy (chunk_while starts a new run where
+		// the block is FALSY).
+		// `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` -> [[1,2],[4],[9,10,11,12]].
+		// An empty array yields []; a single element yields [[x]].
+		if len(recv.Items) == 0 {
+			return &Seq{Items: []Value{}}, true
+		}
+		cur := &Seq{Items: []Value{recv.Items[0]}}
+		slices := []Value{cur}
+		for i := 1; i < len(recv.Items); i++ {
+			prev := recv.Items[i-1]
+			item := recv.Items[i]
+			if _sir_truthy(_sir_apply(block, []Value{prev, item})) {
+				cur = &Seq{Items: []Value{item}}
+				slices = append(slices, cur)
+			} else {
+				cur.Items = append(cur.Items, item)
+			}
+		}
+		return &Seq{Items: slices}, true
+	case "cycle":
+		// `cycle(n) { |x| ... }` -> iterate the array n full passes in order,
+		// yielding each element on every pass; always returns nil.
+		//
+		//   [1,2,3].cycle(2) { |x| out << x }  ->  out == [1,2,3,1,2,3]
+		//   [1,2,3].cycle(0) { ... }           ->  no yields, returns nil
+		//   [].cycle(5) { ... }                ->  no yields (empty run body)
+		//
+		// n <= 0, a negative count, an empty receiver, or a nil / non-integer
+		// count (Ruby's block-less Enumerator and infinite no-`n` forms) yields
+		// nothing rather than hanging, so emitted programs can never spin forever.
+		// A boolean count is not an int64/int in Go, so it falls through to nil.
+		var n int64
+		if len(args) > 0 {
+			if iv, ok := args[0].(int64); ok {
+				n = iv
+			} else if iv, ok := args[0].(int); ok {
+				n = int64(iv)
+			} else {
+				return nil, true
+			}
+		} else {
+			return nil, true
+		}
+		if n <= 0 {
+			return nil, true
+		}
+		for p := int64(0); p < n; p++ {
+			for _, item := range recv.Items {
+				_sir_apply(block, []Value{item})
+			}
+		}
+		return nil, true
 	}
 	return nil, false
 }
@@ -2358,6 +2805,18 @@ func _sir_hash_method(recv *Map, name string, args []Value) (Value, bool) {
 			out[i] = &Seq{Items: []Value{e.Key, e.Val}}
 		}
 		return &Seq{Items: out}, true
+	case "to_h":
+		// Ruby `Hash#to_h` with NO block → a shallow copy of the hash (Ruby
+		// returns `self`; a fresh `*Map` matches the value semantics without
+		// aliasing the receiver's entries).  The block form (which re-maps each
+		// pair to a new `[k, v]`) lives in `_sir_hash_block_method`.
+		keys := make([]Value, len(recv.Entries))
+		vals := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			keys[i] = e.Key
+			vals[i] = e.Val
+		}
+		return _sir_map_lit(keys, vals), true
 	case "dig":
 		// Ruby `Hash#dig(k, …)` — a NESTED lookup that walks one key per
 		// argument, returning nil the moment a level is missing (never
@@ -2541,6 +3000,232 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 			}
 		}
 		return m, true
+	case "transform_values":
+		// Ruby `Hash#transform_values` yields ONE argument (the value) per
+		// entry and builds a NEW hash whose keys are untouched and whose
+		// values are the block results. Because the keys are copied verbatim
+		// and stay distinct, no collision can occur — a straight append keeps
+		// the original insertion order.
+		m := &Map{Entries: make([]MapEntry, 0, len(recv.Entries))}
+		for _, e := range recv.Entries {
+			m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: _sir_apply(block, []Value{e.Val})})
+		}
+		return m, true
+	case "transform_keys":
+		// Ruby `Hash#transform_keys` yields ONE argument (the key) per entry
+		// and builds a NEW hash whose values are untouched and whose keys are
+		// the block results. Two source keys can map to the SAME new key; Ruby
+		// keeps the LAST such entry's value, so we route every write through
+		// `_sir_map_put`, which overwrites an existing key in place.
+		m := &Map{Entries: make([]MapEntry, 0, len(recv.Entries))}
+		for _, e := range recv.Entries {
+			_sir_map_put(m, _sir_apply(block, []Value{e.Key}), e.Val)
+		}
+		return m, true
+	// ── Enumerable aggregates (Hash includes Enumerable) ───────────
+	//
+	// Ruby's Hash mixes in Enumerable, so these iterate the hash as a
+	// sequence of [key, value] pairs: the block is yielded (key, value)
+	// (two arguments, matching `each`), and the "element" an aggregate
+	// returns is the two-element [key, value] Array (`&Seq{key, value}`).
+	case "find", "detect":
+		// First [k, v] pair whose block result is truthy; nil if none.
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return &Seq{Items: []Value{e.Key, e.Val}}, true
+			}
+		}
+		return nil, true
+	case "any?":
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return true, true
+			}
+		}
+		return false, true
+	case "all?":
+		for _, e := range recv.Entries {
+			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return false, true
+			}
+		}
+		return true, true
+	case "none?":
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return false, true
+			}
+		}
+		return true, true
+	case "count":
+		// count { |k, v| pred } — number of pairs with a truthy block result.
+		n := int64(0)
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				n++
+			}
+		}
+		return n, true
+	case "sort_by":
+		// A NEW Array of [k, v] pairs sorted by the block key, stable on ties.
+		// Keys are computed once (Schwartzian); `_sir_value_lt` never panics.
+		type sbKV struct {
+			key  Value
+			pair Value
+		}
+		keyed := make([]sbKV, len(recv.Entries))
+		for i, e := range recv.Entries {
+			keyed[i] = sbKV{_sir_apply(block, []Value{e.Key, e.Val}), &Seq{Items: []Value{e.Key, e.Val}}}
+		}
+		sort.SliceStable(keyed, func(i, j int) bool {
+			return _sir_value_lt(keyed[i].key, keyed[j].key)
+		})
+		out := make([]Value, len(keyed))
+		for i := range keyed {
+			out[i] = keyed[i].pair
+		}
+		return &Seq{Items: out}, true
+	case "min_by", "max_by":
+		// The [k, v] pair with the extremal block key (first-on-tie; nil on
+		// an empty hash).
+		if len(recv.Entries) == 0 {
+			return nil, true
+		}
+		wantMin := name == "min_by"
+		best := recv.Entries[0]
+		bestKey := _sir_apply(block, []Value{best.Key, best.Val})
+		for _, e := range recv.Entries[1:] {
+			k := _sir_apply(block, []Value{e.Key, e.Val})
+			take := false
+			if wantMin {
+				take = _sir_value_lt(k, bestKey)
+			} else {
+				take = _sir_value_lt(bestKey, k)
+			}
+			if take {
+				best = e
+				bestKey = k
+			}
+		}
+		return &Seq{Items: []Value{best.Key, best.Val}}, true
+	// ── Enumerable breadth (grouping / folding / flattening) ───────
+	//
+	// The block is yielded (key, value) two args (except `reduce`/`inject`,
+	// which follow Ruby's memo convention and yield (memo, [key, value]) — the
+	// pair as ONE second argument).  Every "element" a result carries is the
+	// two-element [key, value] Array (`&Seq{key, value}`).
+	case "group_by":
+		// A Hash of block key → Array of [k, v] pairs, in first-seen key order.
+		acc := _sir_map_lit([]Value{}, []Value{})
+		for _, e := range recv.Entries {
+			k := _sir_apply(block, []Value{e.Key, e.Val})
+			pair := &Seq{Items: []Value{e.Key, e.Val}}
+			if seq, ok := _sir_map_get(acc, k).(*Seq); ok && seq != nil {
+				seq.Items = append(seq.Items, pair)
+			} else {
+				_sir_map_set(acc, k, &Seq{Items: []Value{pair}})
+			}
+		}
+		return acc, true
+	case "partition":
+		// `[matching pairs, non-matching pairs]`, order preserved.
+		yes := []Value{}
+		no := []Value{}
+		for _, e := range recv.Entries {
+			pair := &Seq{Items: []Value{e.Key, e.Val}}
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				yes = append(yes, pair)
+			} else {
+				no = append(no, pair)
+			}
+		}
+		return &Seq{Items: []Value{&Seq{Items: yes}, &Seq{Items: no}}}, true
+	case "flat_map", "collect_concat":
+		// Map each pair through the block, splicing one level: an Array result
+		// contributes its elements, a scalar is appended as-is.
+		out := []Value{}
+		for _, e := range recv.Entries {
+			r := _sir_apply(block, []Value{e.Key, e.Val})
+			if s, ok := r.(*Seq); ok {
+				out = append(out, s.Items...)
+			} else {
+				out = append(out, r)
+			}
+		}
+		return &Seq{Items: out}, true
+	case "reduce", "inject":
+		// `reduce(init) { |memo, (k, v)| … }` folds the pairs; a seedless
+		// `reduce` starts from the first pair.  The block yields the pair as ONE
+		// second argument.  Empty seedless reduce ⇒ nil.
+		pairs := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			pairs[i] = &Seq{Items: []Value{e.Key, e.Val}}
+		}
+		var acc Value
+		var rest []Value
+		if len(args) > 0 {
+			acc = args[0]
+			rest = pairs
+		} else if len(pairs) > 0 {
+			acc = pairs[0]
+			rest = pairs[1:]
+		} else {
+			return nil, true
+		}
+		for _, pair := range rest {
+			acc = _sir_apply(block, []Value{acc, pair})
+		}
+		return acc, true
+	case "sum":
+		// `sum(init = 0) { |k, v| … }` — `init` plus the polymorphic-`+` sum of
+		// the block results (Hash#sum requires a block).
+		var acc Value = int64(0)
+		if len(args) > 0 {
+			acc = args[0]
+		}
+		for _, e := range recv.Entries {
+			acc = _sir_plus([]Value{acc, _sir_apply(block, []Value{e.Key, e.Val})})
+		}
+		return acc, true
+	case "to_h":
+		// `Hash#to_h { |k, v| [new_k, new_v] }` — a NEW hash from the `[k, v]`
+		// pairs the block returns.  The block is yielded the two args `(k, v)`
+		// (matching `each`) and must return a 2-element `*Seq`; a non-pair result
+		// is skipped (the never-raise floor — Ruby raises TypeError, deferred to
+		// the typed-error cascade), and a later pair with a duplicate key wins
+		// (Ruby's rule, and how `_sir_map_set` already behaves).
+		acc := _sir_map_lit([]Value{}, []Value{})
+		for _, e := range recv.Entries {
+			r := _sir_apply(block, []Value{e.Key, e.Val})
+			if pair, ok := r.(*Seq); ok && len(pair.Items) == 2 {
+				_sir_map_set(acc, pair.Items[0], pair.Items[1])
+			}
+		}
+		return acc, true
+	case "each_with_index":
+		// `each_with_index { |(k, v), i| … }` — yields each `[k, v]` pair with
+		// its 0-based index and returns the receiver.  Unlike the two-arg
+		// `(k, v)` yield of `each`, the element arrives as a single `[k, v]`
+		// `*Seq` (the second block param is the index), matching Ruby's
+		// Enumerable convention.
+		for i, e := range recv.Entries {
+			_sir_apply(block, []Value{&Seq{Items: []Value{e.Key, e.Val}}, int64(i)})
+		}
+		return recv, true
+	case "each_with_object":
+		// `each_with_object(memo) { |(k, v), memo| … }` — yields each `[k, v]`
+		// pair with the memo object and returns the (mutated) memo.  Like
+		// `each_with_index`, the element is the single `[k, v]` pair (the second
+		// block param is the memo).  With no memo argument the receiver is
+		// returned unchanged.
+		if len(args) == 0 {
+			return recv, true
+		}
+		memo := args[0]
+		for _, e := range recv.Entries {
+			_sir_apply(block, []Value{&Seq{Items: []Value{e.Key, e.Val}}, memo})
+		}
+		return memo, true
 	}
 	return nil, false
 }
@@ -2747,6 +3432,109 @@ func _sir_string_method(recv string, name string, args []Value) (Value, bool) {
 			}
 		}
 		return string(r), true
+	case "tr":
+		// Ruby String#tr(from, to): position-wise rune translation.  A shorter
+		// `to` repeats its last rune; an empty `to` deletes matching runes; a
+		// repeated rune in `from` keeps the last mapping.  Literal only — the
+		// range (`"a-z"`) and negation (`"^abc"`) forms are a follow-up, matching
+		// the literal-only sub/gsub precedent here.
+		if len(args) < 2 {
+			return recv, true
+		}
+		from, fok := args[0].(string)
+		to, tok := args[1].(string)
+		if !fok || !tok {
+			return recv, true
+		}
+		toR := []rune(to)
+		table := make(map[rune]rune)
+		del := make(map[rune]bool)
+		for i, c := range []rune(from) {
+			if len(toR) == 0 {
+				del[c] = true
+				delete(table, c)
+			} else if i < len(toR) {
+				table[c] = toR[i]
+				delete(del, c)
+			} else {
+				table[c] = toR[len(toR)-1]
+				delete(del, c)
+			}
+		}
+		out := make([]rune, 0, len(recv))
+		for _, c := range recv {
+			if del[c] {
+				continue
+			}
+			if r, ok := table[c]; ok {
+				out = append(out, r)
+			} else {
+				out = append(out, c)
+			}
+		}
+		return string(out), true
+	case "count", "delete", "squeeze":
+		// Char-set methods.  Each `set` argument is treated LITERALLY — the runes
+		// it contains (ranges/negation are a follow-up).  `count` tallies runes of
+		// `recv` in the set; `delete` removes them; `squeeze` collapses consecutive
+		// runs (of set runes, or of ALL runes when no set is given).  Multiple set
+		// args intersect (Ruby's rule).
+		sets := make([]map[rune]bool, 0, len(args))
+		for _, a := range args {
+			if s, ok := a.(string); ok {
+				m := make(map[rune]bool)
+				for _, c := range s {
+					m[c] = true
+				}
+				sets = append(sets, m)
+			}
+		}
+		inAll := func(c rune) bool {
+			if len(sets) == 0 {
+				return false
+			}
+			for _, m := range sets {
+				if !m[c] {
+					return false
+				}
+			}
+			return true
+		}
+		if name == "squeeze" && len(sets) == 0 {
+			out := make([]rune, 0, len(recv))
+			for _, c := range recv {
+				if len(out) == 0 || out[len(out)-1] != c {
+					out = append(out, c)
+				}
+			}
+			return string(out), true
+		}
+		if name == "count" {
+			n := int64(0)
+			for _, c := range recv {
+				if inAll(c) {
+					n++
+				}
+			}
+			return n, true
+		}
+		if name == "delete" {
+			out := make([]rune, 0, len(recv))
+			for _, c := range recv {
+				if !inAll(c) {
+					out = append(out, c)
+				}
+			}
+			return string(out), true
+		}
+		out := make([]rune, 0, len(recv))
+		for _, c := range recv {
+			if len(out) > 0 && out[len(out)-1] == c && inAll(c) {
+				continue
+			}
+			out = append(out, c)
+		}
+		return string(out), true
 	}
 	return nil, false
 }
@@ -2990,19 +3778,111 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 		}
 		return int64(math.Ceil(f)), true
 	case "round":
-		// Ruby `Float#round` (no digits) rounds half AWAY from zero — unlike
-		// Go's `math.Round` which also rounds half away, but we route through
-		// the explicit helper to stay in lockstep with the Python/TS
-		// `_ruby_round` (`2.5.round == 3`, `(-2.5).round == -3`).  An integer
-		// receiver is the identity; a non-finite float degrades to 0.
+		// Ruby `round` / `round(ndigits)` — half AWAY from zero (unlike Go's
+		// `math.Round`, routed through `_sir_ruby_round` to stay in lockstep
+		// with the Python/TS reference: `2.5.round == 3`, `(-2.5).round == -3`).
+		// With no argument (or `ndigits >= 0` on an Integer) the result is an
+		// integer; a positive `ndigits` on a Float rounds to that many decimals;
+		// `ndigits <= 0` rounds to a power of ten.  A non-finite float degrades
+		// to the receiver/0.  Go's int64/float64 are FIXED width (no bignum), so
+		// the only guard needed is against `10^k` overflowing int64: a place
+		// count past int64's ~18 decimal digits dwarfs the value ⇒ 0 (Ruby
+		// `1234.round(-30) == 0`), and a large positive `ndigits` past float
+		// precision returns the value unchanged.
+		ndigits := int64(0)
+		if len(args) > 0 {
+			ndigits = _sir_as_int_trunc(args[0])
+		}
 		if isInt {
-			return _sir_as_int(recv), true
+			iv := _sir_as_int(recv)
+			if ndigits >= 0 {
+				return iv, true
+			}
+			if -ndigits > 18 {
+				return int64(0), true
+			}
+			factor := _sir_pow10(-ndigits)
+			return _sir_round_int_to_multiple(iv, factor), true
 		}
 		f := _sir_as_float(recv)
 		if math.IsNaN(f) || math.IsInf(f, 0) {
 			return int64(0), true
 		}
-		return _sir_ruby_round(f), true
+		if ndigits <= 0 {
+			if -ndigits > 18 {
+				return int64(0), true
+			}
+			factor := _sir_pow10(-ndigits)
+			return _sir_round_int_to_multiple(_sir_ruby_round(f), factor), true
+		}
+		if ndigits > 17 {
+			return f, true // already at full Float precision
+		}
+		scale := math.Pow(10, float64(ndigits))
+		scaled := f * scale
+		if math.IsInf(scaled, 0) {
+			return f, true // overflow guard: no fractional part left to round
+		}
+		return float64(_sir_ruby_round(scaled)) / scale, true
+	case "divmod":
+		// Ruby `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
+		// the divisor-signed remainder.  Division by zero raises a typed
+		// `ZeroDivisionError` (so a translated `rescue` matches).  Int/int uses
+		// exact integer math; a float operand promotes to float64 (Go float
+		// division of a nonzero-divided-by-nonzero never panics).
+		if len(args) < 1 {
+			return nil, false
+		}
+		divIsInt := _sir_is_int(args[0])
+		if isInt && divIsInt {
+			d := _sir_as_int(args[0])
+			if d == 0 {
+				panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+			}
+			n := _sir_as_int(recv)
+			q := _sir_floor_div(n, d)
+			r := n - q*d
+			return &Seq{Items: []Value{q, r}}, true
+		}
+		df := _sir_as_float(args[0])
+		if df == 0 {
+			panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+		}
+		nf := _sir_as_float(recv)
+		q := math.Floor(nf / df)
+		r := nf - q*df
+		return &Seq{Items: []Value{q, r}}, true
+	case "fdiv":
+		// Ruby `fdiv(n)`: floating-point division that NEVER raises — dividing
+		// by zero yields ±Infinity/NaN (Go float division already produces these
+		// rather than panicking), honouring the never-raise floor.
+		if len(args) < 1 {
+			return nil, false
+		}
+		return _sir_as_float(recv) / _sir_as_float(args[0]), true
+	case "clamp":
+		// Ruby `Comparable#clamp(min, max)`: `min` if recv < min, `max` if
+		// recv > max, else recv.  Compared numerically (float view) so mixed
+		// int/float bounds behave; the original receiver value is returned
+		// unchanged when in range.  (The Range form is deferred.)
+		if len(args) < 2 {
+			return nil, false
+		}
+		rv := _sir_as_float(recv)
+		if rv < _sir_as_float(args[0]) {
+			return args[0], true
+		}
+		if rv > _sir_as_float(args[1]) {
+			return args[1], true
+		}
+		return recv, true
+	case "between?":
+		// Ruby `Comparable#between?(min, max)`: `min <= recv <= max`.
+		if len(args) < 2 {
+			return nil, false
+		}
+		rv := _sir_as_float(recv)
+		return rv >= _sir_as_float(args[0]) && rv <= _sir_as_float(args[1]), true
 	case "gcd":
 		// `a.gcd(b)` is the (non-negative) greatest common divisor, via
 		// Euclid on the truncated magnitudes (matching Python `math.gcd` and
@@ -3057,6 +3937,67 @@ func _sir_ruby_round(x float64) int64 {
 		return int64(math.Floor(x + 0.5))
 	}
 	return int64(math.Ceil(x - 0.5))
+}
+
+// _sir_is_int reports whether a runtime Value is an integer (not a float).
+func _sir_is_int(v Value) bool {
+	_, ok := _sir_int_val(v)
+	return ok
+}
+
+// _sir_floor_div is Ruby's integer division: the quotient FLOORED toward −∞
+// (`-7 / 2 == -4`), unlike Go's truncating `/`.  Callers guarantee `b != 0`.
+func _sir_floor_div(a, b int64) int64 {
+	q := a / b
+	if (a%b != 0) && ((a < 0) != (b < 0)) {
+		q--
+	}
+	return q
+}
+
+// _sir_pow10 returns 10**n for a small non-negative n.  Callers bound n ≤ 18
+// (int64 holds ≤ ~9.2e18), so the result never overflows int64.
+func _sir_pow10(n int64) int64 {
+	result := int64(1)
+	for i := int64(0); i < n; i++ {
+		result *= 10
+	}
+	return result
+}
+
+// _sir_round_int_to_multiple rounds `v` to the nearest multiple of `factor`
+// half-AWAY-from-zero using all-integer arithmetic (`Integer#round(-n)` /
+// `Float#round(<=0)` parity).  `factor >= 1`.  Ruby's result is a bignum that
+// may not fit int64; rather than return a two's-complement-wrapped (sign-
+// flipped) garbage value, we DEGRADE to the un-rounded receiver when the
+// rounded multiple would overflow int64 (the closest representable answer),
+// holding the never-surprise floor.  `math.MinInt64` cannot be negated, so it
+// takes the same degrade path.
+func _sir_round_int_to_multiple(v, factor int64) int64 {
+	if v == math.MinInt64 {
+		return v
+	}
+	neg := v < 0
+	if neg {
+		v = -v
+	}
+	q := v / factor
+	rem := v - q*factor
+	if rem*2 >= factor {
+		q++
+	}
+	// Guard `q*factor` against int64 overflow (q, factor both non-negative).
+	if factor != 0 && q > math.MaxInt64/factor {
+		if neg {
+			return -v
+		}
+		return v
+	}
+	magnitude := q * factor
+	if neg {
+		return -magnitude
+	}
+	return magnitude
 }
 
 func _sir_gcd(a, b int64) int64 {
@@ -3312,6 +4253,68 @@ func _sir_class_of_thrown(r any) string {
 		return se.Class
 	}
 	return "StandardError"
+}
+
+// Ruby `is_a?`: the receiver's own class, a BUILT-IN ancestor (`Integer` and
+// `Float` are `Numeric` and `Comparable`; `String` is `Comparable`), the
+// universal `Object`/`BasicObject`, or — for a user instance — its superclass
+// chain plus any module mixed in along it.
+func _sir_value_is_a(recv Value, actual string, target string) bool {
+	if actual == target || target == "Object" || target == "BasicObject" {
+		return true
+	}
+	switch actual {
+	case "Integer", "Float":
+		if target == "Numeric" || target == "Comparable" {
+			return true
+		}
+	case "String":
+		if target == "Comparable" {
+			return true
+		}
+	}
+	// A user instance — or an exception, which is a *SirError carrying the same
+	// kind of class tag — also matches its superclass chain and any module
+	// mixed in along it.  Exceptions matter here: `_sir_ancestry` holds the
+	// built-in hierarchy, so `e.is_a?(StandardError)` resolves through it.
+	switch recv.(type) {
+	case *SirInstance, *SirError:
+		return _sir_is_ancestor_or_self(actual, target) ||
+			_sir_includes_module_transitively(actual, target)
+	}
+	return false
+}
+
+// Does `owner` reach `target` through the modules mixed into it or into any of
+// its ancestors?  Ruby's MRO is TRANSITIVE — `class C; include M; end` where
+// `module M; include N; end` makes `c.is_a?(N)` true.
+//
+// Deliberately ITERATIVE (an explicit worklist, not recursion): include-graph
+// depth is shaped by the source, so a recursive walk could exhaust the stack on
+// a long chain.  `seen` expands each module at most once and `chain` guards a
+// cyclic ancestry edge, so any graph terminates.
+func _sir_includes_module_transitively(owner string, target string) bool {
+	seen := make(map[string]bool)
+	work := []string{owner}
+	for len(work) > 0 {
+		cur := work[len(work)-1]
+		work = work[:len(work)-1]
+		chain := make(map[string]bool)
+		for cur != "" && !chain[cur] {
+			chain[cur] = true
+			for _, m := range _sir_included_modules[cur] {
+				if m == target {
+					return true
+				}
+				if !seen[m] {
+					seen[m] = true
+					work = append(work, m)
+				}
+			}
+			cur = _sir_ancestry[cur]
+		}
+	}
+	return false
 }
 
 // True iff `actual` is `target` or descends from it via `_sir_ancestry`.
@@ -3772,6 +4775,24 @@ mod tests {
         // that covers seqs and maps.
         assert!(RUNTIME.contains("func _sir_value_eq"));
         assert!(RUNTIME.contains("_sir_eq"));
+    }
+
+    #[test]
+    fn runtime_declares_the_comparison_family() {
+        // `!=`/`<=`/`>=` complete the operator-spelling comparison family the
+        // Ruby frontend lowers to; without their helpers `puts(1 == 1)`
+        // panicked `unknown builtin: ==`.
+        assert!(RUNTIME.contains("func _sir_ne"));
+        assert!(RUNTIME.contains("func _sir_le"));
+        assert!(RUNTIME.contains("func _sir_ge"));
+        // Ordered comparison shares `_sir_cmp`, which orders strings
+        // lexicographically (fixing a prior `_sir_as_float` panic on strings).
+        assert!(RUNTIME.contains("func _sir_cmp"));
+        // And they are wired into the by-name dispatch (for `:==` symbols).
+        assert!(RUNTIME.contains("case \"=\", \"==\":"));
+        assert!(RUNTIME.contains("case \"!=\":"));
+        assert!(RUNTIME.contains("case \"<=\":"));
+        assert!(RUNTIME.contains("case \">=\":"));
     }
 
     #[test]

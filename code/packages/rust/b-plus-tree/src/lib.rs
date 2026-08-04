@@ -89,6 +89,11 @@ use std::ptr;
 /// ```
 struct BPlusInternal<K, V> {
     keys: Vec<K>,
+    // Each child is boxed so its heap address is stable: the leaf linked list
+    // walks nodes through raw `*const BPlusLeaf` pointers, which would dangle if
+    // nodes lived inline in the Vec and were moved on growth. The boxing is
+    // therefore intentional, not the redundant heap-in-heap `vec_box` flags.
+    #[allow(clippy::vec_box)]
     children: Vec<Box<BPlusNode<K, V>>>,
 }
 
@@ -577,6 +582,10 @@ impl<K: Ord + Clone, V: Clone> BPlusTree<K, V> {
         }
     }
 
+    // Takes `&Box<..>` deliberately: children/root are stored boxed for address
+    // stability (see `BPlusInternal::children`); accepting `&BPlusNode` here just
+    // moves the deref to every caller without removing the boxing.
+    #[allow(clippy::borrowed_box)]
     fn leftmost_key(node: &Box<BPlusNode<K, V>>) -> Option<K> {
         match node.as_ref() {
             BPlusNode::Leaf(l) => l.keys.first().cloned(),
@@ -750,7 +759,7 @@ impl<K: Ord + Clone, V: Clone> BPlusTree<K, V> {
     ///
     /// This is O(n) and requires no tree traversal beyond the first leaf,
     /// making it ideal for full table scans.
-    pub fn full_scan<'a>(&'a self) -> Vec<(&'a K, &'a V)> {
+    pub fn full_scan(&self) -> Vec<(&K, &V)> {
         let mut out = Vec::new();
         let mut cur: *const BPlusLeaf<K, V> = self.first_leaf;
         loop {
@@ -794,6 +803,7 @@ impl<K: Ord + Clone, V: Clone> BPlusTree<K, V> {
         Self::rightmost_key(&self.root)
     }
 
+    #[allow(clippy::borrowed_box)] // boxed for address stability; see leftmost_key
     fn rightmost_key(node: &Box<BPlusNode<K, V>>) -> Option<&K> {
         match node.as_ref() {
             BPlusNode::Leaf(l) => l.keys.last(),
@@ -816,6 +826,7 @@ impl<K: Ord + Clone, V: Clone> BPlusTree<K, V> {
         Self::node_height(&self.root)
     }
 
+    #[allow(clippy::borrowed_box)] // boxed for address stability; see leftmost_key
     fn node_height(node: &Box<BPlusNode<K, V>>) -> usize {
         match node.as_ref() {
             BPlusNode::Leaf(_) => 0,
@@ -872,6 +883,7 @@ impl<K: Ord + Clone, V: Clone> BPlusTree<K, V> {
         list_count == self.size
     }
 
+    #[allow(clippy::borrowed_box)] // boxed for address stability; see leftmost_key
     fn validate_node(
         node: &Box<BPlusNode<K, V>>,
         t: usize,

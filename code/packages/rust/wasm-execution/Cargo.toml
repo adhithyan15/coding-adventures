@@ -1,12 +1,13 @@
 [package]
 name = "wasm-execution"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 description = "WebAssembly 1.0 wasm-execution"
 
 [dependencies]
-wasm-leb128 = { path = "../wasm-leb128" }
-wasm-types = { path = "../wasm-types" }
-wasm-opcodes = { path = "../wasm-opcodes" }
-wasm-module-parser = { path = "../wasm-module-parser" }
-virtual-machine = { path = "../virtual-machine" }
+gc-core             = { path = "../gc-core" }
+wasm-leb128         = { path = "../wasm-leb128" }
+wasm-types          = { path = "../wasm-types" }
+wasm-opcodes        = { path = "../wasm-opcodes" }
+wasm-module-parser  = { path = "../wasm-module-parser" }
+virtual-machine     = { path = "../virtual-machine" }

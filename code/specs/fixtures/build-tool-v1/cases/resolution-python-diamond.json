@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "resolution/python-diamond",
+  "domain": "resolution",
+  "summary": "Python project metadata resolves the canonical four-node diamond.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/pkg-a/BUILD",
+        "content_utf8": "echo \"building pkg-a\"\n"
+      },
+      {
+        "path": "code/packages/python/pkg-a/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-pkg-a\"\nversion = \"0.1.0\"\ndependencies = [\"coding-adventures-pkg-b\", \"coding-adventures-pkg-c\"]\n"
+      },
+      {
+        "path": "code/packages/python/pkg-b/BUILD",
+        "content_utf8": "echo \"building pkg-b\"\n"
+      },
+      {
+        "path": "code/packages/python/pkg-b/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-pkg-b\"\nversion = \"0.1.0\"\ndependencies = [\"coding-adventures-pkg-d\"]\n"
+      },
+      {
+        "path": "code/packages/python/pkg-c/BUILD",
+        "content_utf8": "echo \"building pkg-c\"\n"
+      },
+      {
+        "path": "code/packages/python/pkg-c/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-pkg-c\"\nversion = \"0.1.0\"\ndependencies = [\"coding-adventures-pkg-d\"]\n"
+      },
+      {
+        "path": "code/packages/python/pkg-d/BUILD",
+        "content_utf8": "echo \"building pkg-d\"\n"
+      },
+      {
+        "path": "code/packages/python/pkg-d/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-pkg-d\"\nversion = \"0.1.0\"\ndependencies = []\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "python"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/python-diamond",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "python/pkg-b",
+          "python/pkg-a"
+        ],
+        [
+          "python/pkg-c",
+          "python/pkg-a"
+        ],
+        [
+          "python/pkg-d",
+          "python/pkg-b"
+        ],
+        [
+          "python/pkg-d",
+          "python/pkg-c"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

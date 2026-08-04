@@ -1,0 +1,174 @@
+# Reduce Token Grammar
+# ============================================================================
+#
+# Tokenizes the R-1-scoped subset of REDUCE (Anthony C. Hearn,
+# Stanford/Rand Corporation, 1968; open-sourced 2008; still actively
+# maintained) — one of the two oldest CAS ever built (alongside Macsyma,
+# both 1968). REDUCE's "algebraic mode" (the only mode this subset covers;
+# see code/specs/MA08-reduce-language.md §1) reads like an ordinary Algol/
+# Pascal-family imperative language at the *statement* level (`:=`
+# assignment, `if`/`then`/`else`, `<< ... >>` statement grouping) but every
+# *expression* is built from ordinary infix operators and `f(args)`-shaped
+# calls — exactly the same `IRNode::Apply { head, args }` shape Macsyma/
+# Wolfram/Derive already lower to.
+#
+# REDUCE is CASE-SENSITIVE, but unlike Derive (whose boolean keywords
+# `AND`/`OR`/`NOT` are UPPERCASE, matching Derive's own conventionally-
+# uppercase built-in names), REDUCE's real surface spells its word
+# operators and statement keywords in LOWERCASE (`and`, `or`, `not`, `neq`,
+# `if`, `then`, `else` — manual §2.7/§5.3) — so the `keywords:` block below
+# lists the lowercase spellings, and `AND`/`IF`/etc. in uppercase lex as
+# ordinary NAMEs here, the mirror image of derive.tokens's case rule.
+#
+# Statement separation is `;` or `$` (manual §5.1), never a significant
+# newline — REDUCE has no numbered-worksheet-prompt convention the way
+# Derive's `#n:` does, so (unlike derive.tokens/wolfram.tokens) this file
+# has no NEWLINE token and needs no bracket-interior-newline post-tokenize
+# hook; every newline is ordinary whitespace, mirroring macsyma.tokens's
+# identical `;`/`$`-terminated statement model exactly (see its SECTION 5
+# comment: "MACSYMA newlines are NOT significant").
+#
+# @version 1
+
+# Strings and comments are out of this subset's scope entirely (no STRING
+# token, no comment skip pattern) — MA08 §4 explicitly excludes both:
+# "This subset's programs are a flat sequence of expression statements,
+# assignments, and simple operator/procedure definitions."
+escapes: none
+
+# ============================================================================
+# SECTION 1: Multi-character operators
+#
+# Longest-match-first: every multi-character operator is listed before any
+# shorter operator it begins with, so `:=` wins over there being no bare
+# `:` at all in this subset (same defensive convention derive.tokens uses
+# for its own `:=`), `<=`/`<<` and `>=`/`>>` win over bare `<`/`>`, and `**`
+# wins over bare `*`.
+# ============================================================================
+
+# REDUCE's one assignment operator (manual §5.1) — a statement, never a
+# value-producing expression the way `=` (SECTION 2) is.
+ASSIGN      = ":="
+
+LE          = "<="
+GE          = ">="
+
+# `**` and `^` (SECTION 2) are literally the same power operator — manual
+# §2.7's own precedence table lists them as one tier. Both are kept as
+# distinct token types (rather than collapsed into one), mirroring how
+# macsyma.tokens keeps `;`/`$` as distinct SEMI/DOLLAR tokens even though
+# "[REDUCE's] parser treats them identically" — the *parser* (R-3), not
+# this lexer, is where the two spellings collapse onto one production.
+POW         = "**"
+
+# `<< ... >>` group-statement delimiters (manual §5.2) — REDUCE's spelling
+# of what Wolfram calls `CompoundExpression[...]` and Algol calls
+# `begin ... end`.
+GROUP_OPEN  = "<<"
+GROUP_CLOSE = ">>"
+
+# ============================================================================
+# SECTION 2: Single-character operators and delimiters
+# ============================================================================
+
+PLUS        = "+"
+MINUS       = "-"
+TIMES       = "*"
+SLASH       = "/"
+CARET       = "^"
+
+# `=` is REDUCE's equation operator (Boolean-valued, e.g. usable as an
+# `if` condition) — NEVER assignment; manual §3.4 confirms `=` never
+# assigns, only `on evallhseqp` even evaluates its left side. Mirrors
+# Derive's and Macsyma's identical `=`-is-equation / `:=`-is-assignment
+# split.
+EQ          = "="
+LESS        = "<"
+GREATER     = ">"
+
+LPAREN      = "("
+RPAREN      = ")"
+
+# List literals use CURLY braces (`{a, b, c}`, manual §4.1) — NOT square
+# brackets the way Derive's `[a,b,c]` vector literal or APL/J/MATLAB array
+# syntax do. This is the one bracket pair this subset needs; REDUCE's
+# array-declaration syntax (`array a(10,10)`) is out of scope (MA08 §4),
+# so `a(5)` lexes through the ordinary LPAREN/RPAREN call syntax below,
+# never through a bracket.
+LBRACE      = "{"
+RBRACE      = "}"
+
+COMMA       = ","
+
+# The ONLY use of `;` in this subset is a statement separator (manual
+# §5.1), interchangeable with `$` below — REDUCE has no matrix-row-
+# separator use of `;` the way Derive's vector/matrix literal does, since
+# matrices are out of scope here (MA08 §4).
+SEMI        = ";"
+
+# REDUCE's other statement separator (manual §5.1) — like Macsyma's `$`,
+# distinguished from `;` only by convention (result-suppression, an
+# interactive-session concern out of scope for a compiled subset); the
+# parser (R-3) treats both as the same statement-terminator production,
+# exactly mirroring macsyma.tokens's SEMI/DOLLAR split.
+DOLLAR      = "$"
+
+# The cons operator (`a . {b, c}`, manual §4.1) — prepends `a` onto list
+# `{b,c}`. Never ambiguous with a decimal point: NUMBER (SECTION 3) always
+# requires at least one leading digit, so a bare `.` at any position where
+# NUMBER could instead have matched a full `3.14`-shaped literal is not
+# reachable — the two patterns only compete when a digit is already
+# consumed, at which point NUMBER's own optional-dot clause has already
+# claimed it.
+DOT         = "."
+
+# ============================================================================
+# SECTION 3: Literal value tokens
+#
+# NUMBER requires a leading digit, so a bare `.5` is not a number (matches
+# every sibling symbolic-family lexer's convention — derive.tokens,
+# macsyma.tokens, wolfram.tokens). NAME is a case-sensitive identifier;
+# operator/procedure names (`df`, `log`, `first`, `list`, ...) are ordinary
+# NAMEs resolved later by the runtime (R-4), exactly like Derive's SIN/DIF
+# and Macsyma's built-in function names — so, aside from the `keywords:`
+# block below, there is no reserved-word list here.
+# ============================================================================
+
+NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
+NAME   = /[a-zA-Z][a-zA-Z0-9]*/
+
+# ============================================================================
+# SECTION 4: Skip patterns
+#
+# REDUCE newlines are NOT significant — statements end with `;` or `$`
+# (manual §5.1), exactly mirroring macsyma.tokens's identical rationale —
+# so newlines are just whitespace here, and (unlike derive.tokens/
+# wolfram.tokens) this file declares no NEWLINE token and needs no
+# bracket-interior-newline post-tokenize hook in reduce-lexer.
+# ============================================================================
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+
+# ============================================================================
+# SECTION 5: Keywords
+#
+# These words are NAMEs at the lexer level but are reclassified to their
+# own KEYWORD token by the grammar-driven lexer, matched by EXACT
+# lowercase spelling — `AND`/`IF`/etc. in uppercase lex as ordinary NAMEs,
+# the mirror image of derive.tokens's case rule (whose keywords ARE
+# uppercase). `neq` (manual §2.7) is REDUCE's word-spelled "not equal"
+# relational operator, alongside the symbolic `=`/`<`/`>`/`<=`/`>=`
+# (SECTION 1/2) — grouped here with `and`/`or`/`not` since all four are
+# word tokens, not symbols. `if`/`then`/`else` are the R-3 parser's
+# conditional-statement keywords (manual §5.3).
+# ============================================================================
+
+keywords:
+  and
+  or
+  not
+  neq
+  if
+  then
+  else

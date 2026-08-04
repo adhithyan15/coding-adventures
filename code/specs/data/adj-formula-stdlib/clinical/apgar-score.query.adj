@@ -1,0 +1,30 @@
+% ============================================================================
+% apgar-score.query.adj — worked applications of the Apgar-score definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a delivery-room vignette into the five observed
+% Apgar signs: it `import`s the grounded formulabook, `observe`s appearance, pulse, grimace, activity
+% and respiration, and asks the engine to APPLY the cited definition. No arithmetic is stated by the
+% consumer; the engine computes each value EXACTLY (over exact rationals) and carries the article's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (appearance = 2, pulse = 2, grimace = 2, activity = 1, respiration = 1): Apgar = 2 + 2 +
+% 2 + 1 + 1 = 8. Each query below fixes five of the six quantities and asks the engine to recover the
+% sixth; every answer is exact and the inversions COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli apgar-score.query.adj
+% ============================================================================
+
+import "apgar-score.adj"
+
+% --- Definition: the Apgar the five signs imply (expect 8). -----------------------------------
+observe appearance(2)
+observe pulse(2)
+observe grimace(2)
+observe activity(1)
+observe respiration(1)
+? apgar_score(appearance, pulse, grimace, activity, respiration)   % expect 8
+
+% --- Inverse: the activity sign an Apgar of 8 implies given the other four (expect 1). --------
+observe apgar_score(8)
+? activity(apgar_score, appearance, pulse, grimace, respiration)   % expect 1

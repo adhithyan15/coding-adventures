@@ -1,0 +1,97 @@
+% ============================================================================
+% morse-code — each Latin letter's International Morse code pattern
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Morse code encodes each letter as a short sequence of DOTS (·, "dits") and
+% DASHES (—, "dahs"). It is the code behind the telegraph, the distress call SOS
+% (· · · — — — · · ·), and amateur radio: a letter is not a shape here but a
+% RHYTHM. This tiny library records that letter → pattern mapping so an ADJ
+% program can ASK how a letter is keyed, and get a cited answer. Because a `.adj`
+% atom must lex as an identifier (no raw "·—"), each pattern is written as an
+% ASCII word-atom joining its symbols with underscores — `dot_dash`, `dot_dot_dot`,
+% `dash_dash_dash` — so it round-trips cleanly through parse → store → query.
+% Recall is a binding query:
+%
+%     ? morse_code(s, $P)        % dot_dot_dot   (· · ·, three dits)
+%     ? morse_code(o, $P)        % dash_dash_dash (— — —, three dahs)
+%     ? morse_code(e, $P)        % dot           (·, the shortest code)
+%
+% A reverse query binds the other column, turning a pattern back into its letter:
+%
+%     ? morse_code($L, dash)     % t   (which letter is a single dash?)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `morse_code(letter, pattern)` carrying the table's citation, so every
+% lookup above is the ordinary SLD binding query — the engine returns the pattern
+% (or the letter, on a reverse query) WITH its source, on the CPU, with zero model
+% calls, and ABSTAINS on anything that is not one of the 26 letters (a digit, a
+% symbol) rather than guessing.
+%
+% The 26 letters, as a truth table (· = dot, — = dash):
+%
+%     letter  code   pattern            letter  code   pattern
+%     ------  -----  -----------------  ------  -----  -----------------
+%     a       ·—     dot_dash           n       —·     dash_dot
+%     b       —···   dash_dot_dot_dot   o       ———    dash_dash_dash
+%     c       —·—·   dash_dot_dash_dot  p       ·——·   dot_dash_dash_dot
+%     d       —··    dash_dot_dot       q       ——·—   dash_dash_dot_dash
+%     e       ·      dot                r       ·—·    dot_dash_dot
+%     f       ··—·   dot_dot_dash_dot   s       ···    dot_dot_dot
+%     g       ——·    dash_dash_dot      t       —      dash
+%     h       ····   dot_dot_dot_dot    u       ··—    dot_dot_dash
+%     i       ··     dot_dot            v       ···—   dot_dot_dot_dash
+%     j       ·———   dot_dash_dash_dash w       ·——    dot_dash_dash
+%     k       —·—    dash_dot_dash      x       —··—   dash_dot_dot_dash
+%     l       ·—··   dot_dash_dot_dot   y       —·——   dash_dot_dash_dash
+%     m       ——     dash_dash          z       ——··   dash_dash_dot_dot
+%
+% Only the 26 letter rows are shipped — nothing else. A digit such as `5` has NO
+% row here (Morse numerals are a separate set), so a query like `? morse_code(5, $P)`
+% ABSTAINS rather than inventing a pattern: the table only ever asserts the codes
+% it can cite, and stays silent on everything else.
+%
+% Provenance — nothing here is from memory. The letter → dot/dash codes are the
+% International Morse code as reproduced in the Wikipedia "Morse code" article,
+% which states verbatim (see `source`) that the code is specified in the current
+% international standard, ITU-R Recommendation M.1677-1 (the "International Morse
+% Code Recommendation") — the authoritative document that fixes every letter's
+% dot/dash sequence. Each row below reads a letter's code off that standard chart
+% at the `locator`. `trust consensus` — an encyclopedia reproducing the ITU chart
+% is a secondary reference, not the primary ITU document itself. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table morse_code {
+    columns letter, pattern
+
+    row (a, dot_dash)
+    row (b, dash_dot_dot_dot)
+    row (c, dash_dot_dash_dot)
+    row (d, dash_dot_dot)
+    row (e, dot)
+    row (f, dot_dot_dash_dot)
+    row (g, dash_dash_dot)
+    row (h, dot_dot_dot_dot)
+    row (i, dot_dot)
+    row (j, dot_dash_dash_dash)
+    row (k, dash_dot_dash)
+    row (l, dot_dash_dot_dot)
+    row (m, dash_dash)
+    row (n, dash_dot)
+    row (o, dash_dash_dash)
+    row (p, dot_dash_dash_dot)
+    row (q, dash_dash_dot_dash)
+    row (r, dot_dash_dot)
+    row (s, dot_dot_dot)
+    row (t, dash)
+    row (u, dot_dot_dash)
+    row (v, dot_dot_dot_dash)
+    row (w, dot_dash_dash)
+    row (x, dash_dot_dot_dash)
+    row (y, dash_dot_dash_dash)
+    row (z, dash_dash_dot_dot)
+
+    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1, was derived from a much-improved proposal by Friedrich Gerke in 1848."
+    locator "https://en.wikipedia.org/wiki/Morse_code"
+    trust consensus
+}

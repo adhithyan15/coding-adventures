@@ -1187,7 +1187,7 @@ mod tests {
         assert_eq!(m.types.len(), 1);
         assert_eq!(m.struct_types.len(), 1);
         // The struct type index in the type section is types.len() + 0 = 1.
-        assert_eq!(m.types.len() + 0, 1);
+        assert_eq!(m.types.len(), 1);
     }
 
     // Test 24: StructRef(idx) encodes correctly
@@ -1229,10 +1229,10 @@ mod tests {
     #[test]
     fn value_type_is_clone() {
         let a = ValueType::I32;
-        let b = a.clone();
+        let b = a;
         assert_eq!(a, b);
         let c = ValueType::StructRef(42);
-        let d = c.clone();
+        let d = c;
         assert_eq!(c, d);
     }
 

@@ -2,6 +2,174 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.8.2] - 2026-08-03
+
+### Fixed — a string literal matching an operator lexeme crashed the parser
+
+The actual bug lived in the shared `parser` crate (0.4.3): its
+`GrammarElement::Literal` matcher compared only a token's `value`, never
+its `type_`, so a `String`-typed token whose CONTENT happened to equal an
+operator lexeme satisfied a `Literal` match just as readily as a real
+operator token. This grammar's `call_arg = NAME COLON expression |
+[ "*" | "**" | "&" ] expression` has exactly that shape: a Ruby program
+like `foo(1, "*")` had its `"*"` STRING ARGUMENT silently swallowed by the
+splat-marker alternative, leaving `expression` with nothing to consume —
+a confusing parse failure, and in a panic-on-parse-error caller (this
+crate's own `compile_source`, and `ruby-to-semantic-ir`'s), a hard crash
+for a perfectly ordinary program. Also affected padding-character
+arguments like `"hello".ljust(8, "*")`.
+
+New `test_string_argument_matching_an_operator_lexeme_parses_correctly`
+proves the concrete Ruby-level fix; see `parser`'s own changelog for the
+engine-level fix and its regression test.
+
+`coding-adventures-ruby-parser` 0.8.1 -> 0.8.2.
+
+## [0.8.1] - 2026-08-03
+
+### Widened — bracket-index WRITE (`recv[expr] = value`) to a dotted/chained receiver
+
+`index_assignment` was v0-scoped to a bare-`NAME`, single-bracket receiver
+only (`a[i] = v`, `h[k] = v`) — a dotted receiver (`obj.data[i] = v`) or
+nested brackets (`a[i][j] = v`) fell through to a clean parse error.
+Widened via a new `index_write_receiver_postfix = dot_call |
+scope_resolution | index_suffix` rule, reused in a repetition:
+`index_assignment = NAME { index_write_receiver_postfix
+&index_write_receiver_postfix } index_suffix EQUALS expression`.
+
+The interesting part: telling apart brackets that belong to the RECEIVER
+from the FINAL bracket that's the actual write target. For `a[i][j] = v`,
+a plain greedy `{ dot_call | scope_resolution | index_suffix }`
+repetition (this parser has no backtracking once a repetition commits)
+would swallow BOTH brackets, leaving nothing for the required trailing
+`index_suffix` and failing the whole rule. Fixed with a POSITIVE
+LOOKAHEAD: each repetition iteration only commits to consuming a postfix
+element if ANOTHER one is confirmed to follow (checked without
+consuming) — so `[i]` in `a[i][j]` is consumed (`[j]` follows) but `[j]`
+is not (nothing follows — next is `=`), correctly leaving it for the
+mandatory trailing `index_suffix`. Verified with a standalone probe
+grammar before touching `ruby.grammar` (no prior usage of a
+lookahead-over-a-grouped-alternation existed anywhere in this repo's
+~130 grammar files, so this was unverified territory for the shared
+`parser` engine). The original single-bracket case parses identically to
+before (the lookahead fails on the very first iteration, contributing
+zero repetition elements).
+
+New tests: `test_bracket_index_write_with_chained_brackets`,
+`test_bracket_index_write_with_dotted_receiver`,
+`test_bracket_index_write_single_bracket_still_has_no_receiver_postfix`
+(the backward-compatibility regression check).
+
+`coding-adventures-ruby-parser` 0.8.0 -> 0.8.1.
+
+## [0.8.0] - 2026-08-03
+
+### Added — `<<` as a binary operator
+
+New `shift` grammar rule, inserted between `comparison` and `sum`:
+`comparison = shift {CMP shift}; shift = sum {"<<" sum}; sum = term {...}`.
+Matches real Ruby's precedence — `<<` binds LOOSER than `+`/`-` (additive)
+and TIGHTER than comparison, so `1 + 2 << 3` parses as `(1 + 2) << 3` and
+`a << 1 == b` parses as `(a << 1) == b`.
+
+`<<` has no dedicated lexer `TokenType` (the same catch-all-`Name`
+treatment `<`/`<=`/`&&` already get), so `shift` matches it by VALUE, the
+same technique `comparison` uses. The lexer already fuses `<<` into one
+token (needed pre-existingly for heredoc-vs-operator disambiguation —
+`is_heredoc_open` only treats `<<` as a heredoc opener in expression-START
+position; after a value, e.g. `3 << 1`, it's already a plain operator
+token), so this required no lexer changes.
+
+`method_call_no_paren`'s negative-lookahead guard list (the fix for a bare
+comparison/logical statement mis-parsing as a paren-less call, e.g. `x > 2`
+swallowing `>` as a call argument) gained `!"<<"` — without it, a bare
+`a << 1` would reproduce the exact same mis-parse the guard exists to
+prevent, since `<<` is now a real operator lexeme reachable at that
+position.
+
+Two tests previously pinned `<<` as an intentionally-unsupported bitwise
+operator (`test_unsupported_bitwise_operators_still_split_unchanged`,
+mirrored by comparison-precedence tests that counted `sum` children of
+`comparison` directly) — updated: `<<` removed from the "unsupported"
+list (kept for `**`/`>>`/`^`/`&`/`|`, which remain unimplemented), and new
+tests added for the `shift` precedence level itself.
+
+`coding-adventures-ruby-parser` 0.7.0 -> 0.8.0.
+
+## [0.7.0] - 2026-08-03
+
+### Fixed — bracket-index (`a[i]` / `a[i] = v`) had no grammar rule at all
+
+Reads only "worked" by accident, and only as a bare assignment RHS: `x =
+g[1]` silently split into TWO statements (`x = g`, then a dangling,
+unparsed `[1]`) instead of being one statement that reads element `1` of
+`g`. An earlier probe wrongly concluded this "worked" by checking whether
+the generated C source *contained* the string `_sir_seq_index` — that
+helper is emitted as boilerplate runtime in every generated file regardless
+of whether it's actually called, so the check always passed. Dumping the
+actual AST showed the true (broken) parse shape. Writes failed to parse at
+all: `a[0] = 9` raised "Unexpected token: =", since no rule existed for
+`[...]` on an assignment's left-hand side.
+
+Fixed by adding two new grammar rules:
+
+- `index_suffix = LBRACKET expression RBRACKET` — a new postfix repetition
+  alternative in `factor` (alongside `dot_call`/`scope_resolution`), so
+  `recv[expr]` parses anywhere a postfix chain can appear, including
+  chained reads like `a[i][j]`.
+- `index_assignment = NAME index_suffix EQUALS expression` — a new
+  top-level `statement` alternative (checked before the ordinary
+  `assignment` rule), covering `name[expr] = value`.
+
+v0 scope: `index_assignment`'s left-hand side is a bare `NAME` receiver
+only — no dotted (`obj.arr[i] = v`) or chained (`a[i][j] = v`) receivers.
+Reads have no such limit (`index_suffix` composes through `factor`'s
+existing postfix repetition).
+
+### Added
+
+- `test_bracket_index_read_parses_as_one_statement`,
+  `test_bracket_index_read_in_call_argument_position`,
+  `test_bracket_index_chains`, `test_bracket_index_write_parses`,
+  `test_bracket_index_write_is_not_confused_with_plain_assignment` — parse-
+  shape regression tests for the fix above.
+
+## [0.6.0] - 2026-08-03
+
+### Fixed — bare comparison/logical statement mis-parsed as a paren-less call
+
+`<`, `>`, `<=`, `>=`, `!=`, `&&`, `||` have no dedicated lexer token type
+(`classify_op_token` in `ruby-lexer` deliberately leaves every operator
+lexeme without one on `TokenType::Name` — "the parser dispatches by
+value"). `factor`'s bare `NAME` alternative doesn't check a Name token's
+VALUE, so `method_call_no_paren = ( NAME | ... ) expression { ... }` — the
+paren-less "command call" production (`puts "hi"`) — could match a bare
+statement like `x > 2` as `x` (callee) applied to `>` itself, swallowed
+whole as an ordinary name-shaped argument, leaving `2` behind as an
+unrelated second statement. Lowering the malformed "argument" then emitted
+a call to whatever that bare name resolved to, which downstream validation
+correctly rejected. Found while writing block-predicate tests for the SIR
+Collections cascade (`[1,2,3].select { |x| x > 2 }` failed identically —
+every backend consumes this same grammar, so the bug wasn't C-specific).
+
+Fixed with a negative lookahead in `method_call_no_paren` (`ruby.grammar`)
+for these seven operators, so the rule fails to match on them and
+`expression_stmt` (`comparison`/`logical_and`/`logical_or`) parses the
+whole expression correctly instead. `==` was accidentally already immune
+(`classify_op_token` gives it its own dedicated `EqualsEquals` type).
+`**`/bitwise `<<`/`>>`/`^`/`&`/`|` are deliberately NOT included: this
+grammar has no binary-operator rule for them at all, so there is no
+correct fallback parse to preserve — pinned by a regression test that they
+remain unchanged.
+
+### Added
+
+- `src/bin/regen_grammars.rs` — a `cargo run -p coding-adventures-ruby-parser
+  --bin regen_grammars` binary that regenerates `src/_grammar.rs` from
+  `ruby.grammar` (mirrors `adj-lang`'s binary of the same name). Previously
+  this crate had no committed regeneration tool despite `_grammar.rs`'s own
+  header directing readers to one.
+
 ## [0.5.0] - 2026-07-01
 
 (Cargo manifest minor bump 0.4.0 → 0.5.0.  Note: the older CHANGELOG headers

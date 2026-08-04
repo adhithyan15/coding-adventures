@@ -1,6 +1,13 @@
 // Lua's C API conventionally uses uppercase `L` for the lua_State pointer,
 // and non-snake-case names like `luaL_Reg`. Allow these to match C API docs.
 #![allow(non_snake_case, non_camel_case_types)]
+// These `unsafe fn`s replicate Lua C-API macros/functions; every one shares the
+// single, standard Lua contract: `L` must be a valid `lua_State` pointer with
+// enough stack slots for the operation, and any index/pointer arguments must be
+// valid for that state. That contract is the same one documented by the Lua
+// reference manual and summarized in the module docs, so a per-fn `# Safety`
+// section on each thin wrapper would be redundant.
+#![allow(clippy::missing_safety_doc)]
 
 //! # lua-bridge — Zero-dependency Rust wrapper for Lua 5.4 C API
 //!

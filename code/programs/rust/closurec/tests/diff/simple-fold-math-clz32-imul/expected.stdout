@@ -1,0 +1,1 @@
+var a=31,b=32,c=0,d=12,e=-5,f=0,g=Math.clz32(x),h=m.imul(2,3);report(a,b,c,d,e,f,g,h);

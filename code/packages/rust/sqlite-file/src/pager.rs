@@ -82,6 +82,8 @@ impl<'a> Pager<'a> {
 
     /// How many whole pages the file actually holds (from its length). This can
     /// be cross-checked against the header's `page_count`.
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn page_count(&self) -> usize {
         if self.page_size == 0 {
             0

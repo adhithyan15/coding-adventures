@@ -1,0 +1,485 @@
+{
+  "version": 1,
+  "language": "german",
+  "path": [
+    {
+      "id": "GE-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "GE-C01-hallo"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-002",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GE-C01-gut"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-003",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "GE-C01-der-die-das"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-004",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "GE-C01-nacht"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-005",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "GE-C01-gute-nacht"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-006",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "GE-C01-tag",
+        "GE-C01-abend",
+        "GE-C01-guten-tag",
+        "GE-C01-guten-abend",
+        "GE-C01-morgen",
+        "GE-C01-guten-morgen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GE-C02-ich",
+        "GE-C02-du-sie",
+        "GE-C02-heissen",
+        "GE-C02-ich-heisse",
+        "GE-C02-freut-mich"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-007-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GE-C02-wie"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-009",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GE-C02-wie-heissen-sie"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-010",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "GE-C03-danke",
+        "GE-C03-bitte"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-011",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GE-C03-gehen",
+        "GE-C03-wie-geht-es",
+        "GE-C03-es-geht"
+      ],
+      "before": [
+        "GE-EXT-011-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-012",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "GE-C04-auf-wiedersehen",
+        "GE-C04-tschuss",
+        "GE-C04-bis-bald",
+        "GE-C04-bis-morgen",
+        "GE-C04-bis-spater"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-013",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "GE-C05-wohnen",
+        "GE-C05-machen",
+        "GE-C06-zahlen-1-5",
+        "GE-C06-zahlen-6-10"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-014",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "GE-C08-uhr",
+        "GE-C09-monate",
+        "GE-C09-jahreszeiten",
+        "GE-C10-eltern",
+        "GE-C10-geschwister",
+        "GE-C11-brot",
+        "GE-C11-wasser-wein"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-015",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "GE-C12-elf-zwoelf",
+        "GE-C12-zahlen-13-20",
+        "GE-C13-schwarz-weiss",
+        "GE-C13-rot-blau",
+        "GE-C14-haben",
+        "GE-C14-alter"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-016",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GE-C17-kopf",
+        "GE-C17-kopf-haupt",
+        "GE-C17-hand"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-016-LANGUAGE-SPECIFIC",
+        "GE-EXT-016-ETYMOLOGY"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-017",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "GE-C18-ja",
+        "GE-C18-nein"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-018",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "GE-C19-bitte-requests",
+        "GE-C20-entschuldigung"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-019",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "GE-C21-das-wetter"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-020",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "GE-C22-hund-katze",
+        "GE-C23-gruen-gelb"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "GE-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "GE-PATH-010"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "GE-PATH-017"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "GE-PATH-007",
+        "GE-PATH-009"
+      ],
+      "omits": [
+        "QUESTION-WHAT",
+        "PRONOUN-ME",
+        "PRONOUN-MY",
+        "WORD-NAME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "GE-PATH-002",
+        "GE-PATH-008",
+        "GE-PATH-011",
+        "GE-PATH-016"
+      ],
+      "omits": [
+        "WORD-WELL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "GE-PATH-014",
+        "GE-PATH-018"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "GE-PATH-005",
+        "GE-PATH-012"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "GE-PATH-004",
+        "GE-PATH-006",
+        "GE-PATH-013",
+        "GE-PATH-015",
+        "GE-PATH-019"
+      ],
+      "omits": [
+        "TIME-AFTERNOON",
+        "GREETING-AFTERNOON"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "GE-PATH-003",
+        "GE-PATH-020"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "GE-EXT-007-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C02-heissen"
+      ]
+    },
+    {
+      "id": "GE-EXT-011-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C03-gehen"
+      ]
+    },
+    {
+      "id": "GE-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C05-wohnen",
+        "GE-C05-machen",
+        "GE-C06-zahlen-1-5",
+        "GE-C06-zahlen-6-10"
+      ]
+    },
+    {
+      "id": "GE-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C08-uhr",
+        "GE-C09-monate",
+        "GE-C09-jahreszeiten",
+        "GE-C10-eltern",
+        "GE-C10-geschwister",
+        "GE-C11-brot",
+        "GE-C11-wasser-wein"
+      ]
+    },
+    {
+      "id": "GE-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C12-elf-zwoelf",
+        "GE-C12-zahlen-13-20",
+        "GE-C13-schwarz-weiss",
+        "GE-C13-rot-blau",
+        "GE-C14-haben",
+        "GE-C14-alter"
+      ]
+    },
+    {
+      "id": "GE-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C17-kopf",
+        "GE-C17-hand"
+      ]
+    },
+    {
+      "id": "GE-EXT-016-ETYMOLOGY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this German word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C17-kopf-haupt"
+      ]
+    },
+    {
+      "id": "GE-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C21-das-wetter"
+      ]
+    },
+    {
+      "id": "GE-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C22-hund-katze",
+        "GE-C23-gruen-gelb"
+      ]
+    }
+  ]
+}

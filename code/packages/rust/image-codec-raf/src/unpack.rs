@@ -115,9 +115,8 @@ pub fn pack_12bit_be(pixels: &[u16]) -> Vec<u8> {
     let mut out = Vec::with_capacity(packed_byte_count(pixels.len()));
     let mut iter = pixels.iter();
 
-    loop {
-        // Take up to two pixels per iteration.
-        let Some(&p0) = iter.next() else { break };
+    // Take up to two pixels per iteration.
+    while let Some(&p0) = iter.next() {
         let p0 = p0 & 0x0FFF; // clamp to 12 bits
 
         match iter.next() {

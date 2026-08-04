@@ -65,10 +65,10 @@ use crate::trace::GPUCoreTrace;
 ///
 /// - `description`: Human-readable summary, e.g. "R3 = R1 * R2 = 6.0"
 /// - `next_pc_offset`: How to advance the program counter.
-///    +1 for most instructions (next instruction).
-///    Other values for branches/jumps.
+///   +1 for most instructions (next instruction).
+///   Other values for branches/jumps.
 /// - `absolute_jump`: If true, `next_pc_offset` is an absolute address,
-///    not a relative offset.
+///   not a relative offset.
 /// - `registers_changed`: Map of register name to new float value.
 /// - `memory_changed`: Map of memory address to new float value.
 /// - `halted`: True if this instruction stops execution.

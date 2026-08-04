@@ -1,0 +1,22 @@
+% ============================================================================
+% absorbed-dose-conversions.query.adj — worked lookup over the absorbed-dose table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to convert an absorbed dose given in
+% the traditional CGS unit (the rad) into the SI coherent unit (the gray, one joule per
+% kilogram): it states NO arithmetic — it `import`s the grounded table and asks the exact
+% lookup. The engine answers by ordinary SLD binding against the table's rows, returning the
+% factor WITH the table's NIST citation as its proof, on the CPU, with zero model calls.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli absorbed-dose-conversions.query.adj
+% ============================================================================
+
+import "absorbed-dose-conversions.adj"
+
+% The exact defined factor: one rad IS exactly 10⁻² gray (0.01 Gy).
+? absorbed_dose_to_gray(rad, $gy)          % expect 0.01  (NIST SP 811 B.9, EXACT by definition)
+
+% A traditional absorbed-dose unit NIST SP 811 B.9 does NOT tabulate (the historical "rep",
+% roentgen equivalent physical): no row, so the engine ABSTAINS rather than inventing a
+% factor.
+? absorbed_dose_to_gray(rep, $gy)          % expect abstention (no such row)

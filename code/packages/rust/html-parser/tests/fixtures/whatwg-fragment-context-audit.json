@@ -1,5 +1,5 @@
 {
-  "case_count": 192,
+  "case_count": 196,
   "cases": [
     {
       "axis": "fragment-basic-context",
@@ -1344,12 +1344,40 @@
       "id": "tests-innerhtml-1-dat-76",
       "reason": "fragment parser context in select, option, and optgroup insertion modes",
       "source": "tests_innerHTML_1.dat:76"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg path",
+      "id": "plain-text-unsafe-dat-38",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "plain-text-unsafe.dat:38"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg title",
+      "id": "plain-text-unsafe-dat-39",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "plain-text-unsafe.dat:39"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math ms",
+      "id": "plain-text-unsafe-dat-40",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "plain-text-unsafe.dat:40"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math annotation-xml",
+      "id": "plain-text-unsafe-dat-41",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "plain-text-unsafe.dat:41"
     }
   ],
   "counts_by_axis": {
     "fragment-basic-context": 3,
     "fragment-block-context": 5,
-    "fragment-foreign-context": 66,
+    "fragment-foreign-context": 70,
     "fragment-select-context": 5,
     "fragment-shell-context": 15,
     "fragment-table-context": 91,

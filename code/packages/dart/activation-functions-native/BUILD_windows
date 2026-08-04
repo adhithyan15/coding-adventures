@@ -1,0 +1,1 @@
+echo "activation-functions-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for activation_functions_native.dll)"

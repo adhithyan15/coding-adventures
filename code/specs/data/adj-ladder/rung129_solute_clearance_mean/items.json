@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 129 \u2014 solute-clearance windowed mean from four stated quantities (a NEW panel: solute clearance, and the SUBTRACT twin of rung-128's add-a-quotient numerator). From a net load (a gross load MINUS a per-unit bound_charge/bound_spread quotient) averaged over the clearance windows, compute the windowed clearance ((gross_load-bound_charge/bound_spread)/clearance_windows), the net load (gross_load-bound_charge/bound_spread), or the per-spread bound component (bound_charge/bound_spread). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a SUBTRACT-A-QUOTIENT THREE-TERM NUMERATOR OVER A LONE DENOMINATOR (a-b/c)/d (divide the bound charge by the bound spread, subtract that from the gross load, then divide that whole net-load numerator by the clearance windows, so (a-b/c)/d = ((a-(b/c))/d); the minus twin of rung-128's (a+b/c)/d, mirroring how rung-127's a/(b-c/d) mirrors rung-126's a/(b+c/d) one level down the bar). The precedence-and-grouping slips ride alongside as distractors. The harness matches the scalar to the printed options. The windowed clearance is a mean (net load averaged per window), framed as a MEAN so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via - and / \u2014 no constant leaks, and neither the net load, the per-spread quotient, nor the windowed clearance ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so the clearance windows divide only the per-spread quotient (a-b/c/d, evaluating a-(b/c)/d = a-b/(c*d), a wrong grouping) and subtracting before forming the quotient ((a-b)/c/d = (a-b)/(c*d), breaking the b/c-binds-first precedence, a wrong grouping). The core confusion tested is that (a-b/c)/d is ((a-(b/c))/d), not a-b/c/d and not (a-b)/c/d. This rung SUBTRACTS a quotient inside the numerator so positivity is NOT automatic; each table guards gross_load - bound_charge >= 2 (keeping the misgrouped numerator a-b, the net load a-b/c, and the crossed slip a-b/(c*d) all positive), keeping the five family values pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r129wca-01",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 14 minus a bound charge of 6 over a bound spread of 3, all averaged over a clearance-window count of 4. What is the windowed clearance (the net load averaged over the clearance windows)?",
+      "program": "observe gross_load(14)\nobserve bound_charge(6)\nobserve bound_spread(3)\nobserve clearance_windows(4)\nlet answer = (gross_load - bound_charge / bound_spread) / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r129wca-02",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 14 minus a bound charge of 6 over a bound spread of 3, all averaged over a clearance-window count of 4. What is the the net load (the gross load minus the per-spread bound component, the numerator that is averaged over the clearance windows)?",
+      "program": "observe gross_load(14)\nobserve bound_charge(6)\nobserve bound_spread(3)\nobserve clearance_windows(4)\nlet answer = gross_load - bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r129wca-03",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 14 minus a bound charge of 6 over a bound spread of 3, all averaged over a clearance-window count of 4. What is the the per-spread bound component (the bound charge spread over the bound spread, before it is subtracted from the gross load)?",
+      "program": "observe gross_load(14)\nobserve bound_charge(6)\nobserve bound_spread(3)\nobserve clearance_windows(4)\nlet answer = bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r129wca-04",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 18 minus a bound charge of 5 over a bound spread of 2, all averaged over a clearance-window count of 3. What is the windowed clearance (the net load averaged over the clearance windows)?",
+      "program": "observe gross_load(18)\nobserve bound_charge(5)\nobserve bound_spread(2)\nobserve clearance_windows(3)\nlet answer = (gross_load - bound_charge / bound_spread) / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.166666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.166666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r129wca-05",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 18 minus a bound charge of 5 over a bound spread of 2, all averaged over a clearance-window count of 3. What is the the net load (the gross load minus the per-spread bound component, the numerator that is averaged over the clearance windows)?",
+      "program": "observe gross_load(18)\nobserve bound_charge(5)\nobserve bound_spread(2)\nobserve clearance_windows(3)\nlet answer = gross_load - bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.166666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.166666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r129wca-06",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 18 minus a bound charge of 5 over a bound spread of 2, all averaged over a clearance-window count of 3. What is the the per-spread bound component (the bound charge spread over the bound spread, before it is subtracted from the gross load)?",
+      "program": "observe gross_load(18)\nobserve bound_charge(5)\nobserve bound_spread(2)\nobserve clearance_windows(3)\nlet answer = bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.166666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 17.166666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r129wca-07",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 20 minus a bound charge of 9 over a bound spread of 3, all averaged over a clearance-window count of 2. What is the windowed clearance (the net load averaged over the clearance windows)?",
+      "program": "observe gross_load(20)\nobserve bound_charge(9)\nobserve bound_spread(3)\nobserve clearance_windows(2)\nlet answer = (gross_load - bound_charge / bound_spread) / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r129wca-08",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 20 minus a bound charge of 9 over a bound spread of 3, all averaged over a clearance-window count of 2. What is the the net load (the gross load minus the per-spread bound component, the numerator that is averaged over the clearance windows)?",
+      "program": "observe gross_load(20)\nobserve bound_charge(9)\nobserve bound_spread(3)\nobserve clearance_windows(2)\nlet answer = gross_load - bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r129wca-09",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 20 minus a bound charge of 9 over a bound spread of 3, all averaged over a clearance-window count of 2. What is the the per-spread bound component (the bound charge spread over the bound spread, before it is subtracted from the gross load)?",
+      "program": "observe gross_load(20)\nobserve bound_charge(9)\nobserve bound_spread(3)\nobserve clearance_windows(2)\nlet answer = bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r129wca-10",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 12 minus a bound charge of 3 over a bound spread of 2, all averaged over a clearance-window count of 5. What is the windowed clearance (the net load averaged over the clearance windows)?",
+      "program": "observe gross_load(12)\nobserve bound_charge(3)\nobserve bound_spread(2)\nobserve clearance_windows(5)\nlet answer = (gross_load - bound_charge / bound_spread) / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.9,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r129wca-11",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 12 minus a bound charge of 3 over a bound spread of 2, all averaged over a clearance-window count of 5. What is the the net load (the gross load minus the per-spread bound component, the numerator that is averaged over the clearance windows)?",
+      "program": "observe gross_load(12)\nobserve bound_charge(3)\nobserve bound_spread(2)\nobserve clearance_windows(5)\nlet answer = gross_load - bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.1,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r129wca-12",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 12 minus a bound charge of 3 over a bound spread of 2, all averaged over a clearance-window count of 5. What is the the per-spread bound component (the bound charge spread over the bound spread, before it is subtracted from the gross load)?",
+      "program": "observe gross_load(12)\nobserve bound_charge(3)\nobserve bound_spread(2)\nobserve clearance_windows(5)\nlet answer = bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.1,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r129wca-13",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 19 minus a bound charge of 8 over a bound spread of 2, all averaged over a clearance-window count of 4. What is the windowed clearance (the net load averaged over the clearance windows)?",
+      "program": "observe gross_load(19)\nobserve bound_charge(8)\nobserve bound_spread(2)\nobserve clearance_windows(4)\nlet answer = (gross_load - bound_charge / bound_spread) / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r129wca-14",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 19 minus a bound charge of 8 over a bound spread of 2, all averaged over a clearance-window count of 4. What is the the net load (the gross load minus the per-spread bound component, the numerator that is averaged over the clearance windows)?",
+      "program": "observe gross_load(19)\nobserve bound_charge(8)\nobserve bound_spread(2)\nobserve clearance_windows(4)\nlet answer = gross_load - bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r129wca-15",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 19 minus a bound charge of 8 over a bound spread of 2, all averaged over a clearance-window count of 4. What is the the per-spread bound component (the bound charge spread over the bound spread, before it is subtracted from the gross load)?",
+      "program": "observe gross_load(19)\nobserve bound_charge(8)\nobserve bound_spread(2)\nobserve clearance_windows(4)\nlet answer = bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r129wca-16",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 24 minus a bound charge of 7 over a bound spread of 2, all averaged over a clearance-window count of 3. What is the windowed clearance (the net load averaged over the clearance windows)?",
+      "program": "observe gross_load(24)\nobserve bound_charge(7)\nobserve bound_spread(2)\nobserve clearance_windows(3)\nlet answer = (gross_load - bound_charge / bound_spread) / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.833333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.833333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.8333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r129wca-17",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 24 minus a bound charge of 7 over a bound spread of 2, all averaged over a clearance-window count of 3. What is the the net load (the gross load minus the per-spread bound component, the numerator that is averaged over the clearance windows)?",
+      "program": "observe gross_load(24)\nobserve bound_charge(7)\nobserve bound_spread(2)\nobserve clearance_windows(3)\nlet answer = gross_load - bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.833333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.833333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.8333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r129wca-18",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 24 minus a bound charge of 7 over a bound spread of 2, all averaged over a clearance-window count of 3. What is the the per-spread bound component (the bound charge spread over the bound spread, before it is subtracted from the gross load)?",
+      "program": "observe gross_load(24)\nobserve bound_charge(7)\nobserve bound_spread(2)\nobserve clearance_windows(3)\nlet answer = bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.833333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.833333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.8333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r129wca-19",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 31 minus a bound charge of 10 over a bound spread of 2, all averaged over a clearance-window count of 5. What is the windowed clearance (the net load averaged over the clearance windows)?",
+      "program": "observe gross_load(31)\nobserve bound_charge(10)\nobserve bound_spread(2)\nobserve clearance_windows(5)\nlet answer = (gross_load - bound_charge / bound_spread) / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r129wca-20",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 31 minus a bound charge of 10 over a bound spread of 2, all averaged over a clearance-window count of 5. What is the the net load (the gross load minus the per-spread bound component, the numerator that is averaged over the clearance windows)?",
+      "program": "observe gross_load(31)\nobserve bound_charge(10)\nobserve bound_spread(2)\nobserve clearance_windows(5)\nlet answer = gross_load - bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r129wca-21",
+      "qtype": "windowed_clearance",
+      "stem": "A solute-clearance study records a gross load of 31 minus a bound charge of 10 over a bound spread of 2, all averaged over a clearance-window count of 5. What is the the per-spread bound component (the bound charge spread over the bound spread, before it is subtracted from the gross load)?",
+      "program": "observe gross_load(31)\nobserve bound_charge(10)\nobserve bound_spread(2)\nobserve clearance_windows(5)\nlet answer = bound_charge / bound_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

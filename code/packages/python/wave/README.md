@@ -24,6 +24,12 @@ This package focuses on the time-domain behavior of a sinusoidal wave, which
 is the building block for sound, light, radio, and many other physical
 phenomena.
 
+The complete PHY01 contract rejects non-finite parameters,
+angular-frequency overflow, and non-finite time. Evaluation preserves exact
+zero amplitude, reduces time and phase before the local first-principles trig
+call, and remains finite and amplitude-bounded for every accepted binary64
+input, including positive subnormal frequencies with infinite periods.
+
 ## API
 
 ```python

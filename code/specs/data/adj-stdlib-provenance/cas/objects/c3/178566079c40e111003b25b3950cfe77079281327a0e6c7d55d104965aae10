@@ -1,0 +1,100 @@
+{
+  "contract": "adj-lang/formula_derivation/v1",
+  "export": {
+    "body": {
+      "end": 3883,
+      "sha256": "3e38c50cc5612db418cfd6daa304e35a9110268e97b338b1520f2e127bba153e",
+      "start": 3860
+    },
+    "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+    "claim_id": "adj.math.arithmetic.sum",
+    "declaration": {
+      "end": 4154,
+      "sha256": "ead93e0301ed7abffbd8b43b8acd82700082a37050f9ffc07afe8713a151952b",
+      "start": 3822
+    },
+    "formula": "sum",
+    "formulabook": "elementary_arithmetic",
+    "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+    "parameters": [
+      "addend_one",
+      "addend_two"
+    ],
+    "snapshot_sha256": "a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86",
+    "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+    "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+  },
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 3883,
+        "sha256": "3e38c50cc5612db418cfd6daa304e35a9110268e97b338b1520f2e127bba153e",
+        "start": 3860
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.sum",
+      "declaration": {
+        "end": 4154,
+        "sha256": "ead93e0301ed7abffbd8b43b8acd82700082a37050f9ffc07afe8713a151952b",
+        "start": 3822
+      },
+      "formula": "sum",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "addend_one",
+        "addend_two"
+      ],
+      "snapshot_sha256": "a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    }
+  ],
+  "imports": [
+    {
+      "claim_id": "adj.import.arithmetic.primitives",
+      "declaration": {
+        "end": 89,
+        "sha256": "6e2baf610eafda5b9940e63c4e957c8e99366137d3789bc1cf51e73cb3e3a894",
+        "start": 66
+      },
+      "imported_bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "imported_source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0",
+      "importer_source_ir_sha256": "ce607d67a95e800d8d19100eb7e4e47f2884b07d3f1d98c2b9804cc8e9bc1efe",
+      "importer_source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde",
+      "literal": "arithmetic.adj"
+    }
+  ],
+  "kind": "formula_derivation",
+  "plan": {
+    "expression": {
+      "kind": "binary",
+      "left": {
+        "kind": "reference",
+        "name": "addend_one"
+      },
+      "operator": "+",
+      "right": {
+        "kind": "reference",
+        "name": "addend_two"
+      }
+    },
+    "is_query_answer": true,
+    "scope": {
+      "derived_limit": 0,
+      "fact_limit": 2
+    }
+  },
+  "question": {
+    "claim_id": "adj.question.arithmetic.sum",
+    "declaration": {
+      "end": 689,
+      "sha256": "8600816633abfde2976e4763b3bfc00587cfbb27d952a682c9da1744abcfa63f",
+      "start": 660
+    },
+    "name": "sum",
+    "source_ir_sha256": "ce607d67a95e800d8d19100eb7e4e47f2884b07d3f1d98c2b9804cc8e9bc1efe",
+    "source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde"
+  },
+  "schema_version": 1
+}

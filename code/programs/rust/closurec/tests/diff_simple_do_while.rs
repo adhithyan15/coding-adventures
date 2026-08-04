@@ -12,10 +12,11 @@
 //!        ──passes──▶ optimized Program ──emit──▶ JS text
 //! ```
 //!
-//! Specifically: `log(1)` is inlined to `report(1)`, the foldable
-//! arithmetic inside the do-while body (`1 + 2`) collapses, the loop is
-//! preserved verbatim, and the `foo()` after the loop stays reachable (a
-//! do-while is not a terminator).
+//! Specifically: the foldable arithmetic inside the do-while body (`1 + 2`)
+//! collapses to `3`, the loop is preserved verbatim, and the `foo()` after
+//! the loop stays reachable (a do-while is not a terminator). `function log`
+//! is KEPT and `log(1)` stays a call — SIMPLE is open-world and never inlines
+//! or deletes an observable top-level name; that inline runs only at ADVANCED.
 
 use std::process::Command;
 
@@ -58,10 +59,12 @@ fn simple_do_while_fixture_matches_expected_stdout() {
 /// Regression guard: the output must NOT be the WHITESPACE_ONLY fallback.
 /// If `do`-`while` ever stops being representable in the typed AST, the
 /// fixture above would still "pass" against a regenerated expected file, so
-/// we additionally assert that an optimization that can ONLY come from the
-/// typed pipeline (the `log` -> `report` inline) is present, the original
-/// `function log` declaration is gone, AND the statement after the loop
-/// (`foo()`) survives — proving a do-while is treated as non-terminating.
+/// we additionally assert an optimization that can ONLY come from the typed
+/// pipeline: the `1 + 2` inside the loop body is constant-folded to `3`
+/// (WHITESPACE_ONLY leaves it verbatim). We also assert the statement after
+/// the loop (`foo()`) survives — proving a do-while is treated as
+/// non-terminating — and that `function log` is KEPT, since open-world SIMPLE
+/// must not inline or delete an observable top-level name.
 #[test]
 fn simple_do_while_did_not_fall_back_to_whitespace_only() {
     let out = Command::new(BINARY)
@@ -71,18 +74,23 @@ fn simple_do_while_did_not_fall_back_to_whitespace_only() {
     let actual = String::from_utf8_lossy(&out.stdout);
 
     assert!(
-        actual.contains("report(1)"),
-        "expected the single-use `log` to be inlined into `report(1)` \
+        actual.contains("x=3"),
+        "expected `1 + 2` in the loop body to be constant-folded to `3` \
          (proving the typed pipeline ran, not the whitespace fallback); \
          got:\n{actual}",
     );
     assert!(
-        !actual.contains("function log"),
-        "expected the inlined `log` declaration to be removed; got:\n{actual}",
+        !actual.contains("1 + 2") && !actual.contains("1+2"),
+        "expected `1 + 2` to have been folded away; got:\n{actual}",
     );
     assert!(
         actual.contains("foo()"),
         "expected the statement after the do-while loop to remain reachable; \
          got:\n{actual}",
+    );
+    assert!(
+        actual.contains("function log"),
+        "expected the top-level `log` declaration to be KEPT at open-world \
+         SIMPLE (never inlined/deleted); got:\n{actual}",
     );
 }

@@ -1,1 +1,1 @@
-var a=[["a",1],["b",2]];var b=[["x","hi"]];var c=[];var d=Object.entries({1:"x"});var e=Object.entries({__proto__:1});var f=o.entries({a:1});report(a,b,c,d,e,f);
+var a=[["a",1],["b",2]],b=[["x","hi"]],c=[],d=Object.entries({1:"x"}),e=Object.entries({__proto__:1}),f=o.entries({a:1});report(a,b,c,d,e,f);

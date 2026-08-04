@@ -1,0 +1,13 @@
+[package]
+name = "maxima-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Maxima source -> narrow-waist Semantic IR, a direct re-export of macsyma-to-semantic-ir (same algebraic surface, zero shim)"
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+macsyma-to-semantic-ir = { path = "../macsyma-to-semantic-ir" }
+
+[dev-dependencies]
+# Used only by the compile()/compile_source() symmetry test.
+coding-adventures-macsyma-parser = { path = "../macsyma-parser" }

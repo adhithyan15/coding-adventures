@@ -280,6 +280,13 @@ fn merge_tristate_conservative(
         (False, _) | (_, False) => False,
         (True, True) => True,
         // (True, False) and (False, True) handled above by the False arms.
+        // NOTE: given the arms above, `(True, _)` is in fact unreachable (every
+        // True/{True,False,Unknown} pair is already matched), so the Strict-policy
+        // disagreement error below never actually fires — see the test
+        // `attribute_strict_errors_on_non_unknown_disagreement`, which documents
+        // this as intentional v1 behavior. Kept as a placeholder for a future
+        // policy that would make True/True-style disagreements reachable.
+        #[allow(unreachable_patterns)]
         (True, _) => {
             if policy == MergePolicy::Strict {
                 return Err(MergeError {
@@ -423,10 +430,14 @@ mod tests {
 
     #[test]
     fn attribute_conservative_merge() {
-        let mut attrs_a = Attributes::default();
-        attrs_a.pure = TriState::True;
-        let mut attrs_b = Attributes::default();
-        attrs_b.pure = TriState::False;
+        let attrs_a = Attributes {
+            pure: TriState::True,
+            ..Default::default()
+        };
+        let attrs_b = Attributes {
+            pure: TriState::False,
+            ..Default::default()
+        };
         let r_a = record("a.1", None, "jsdoc", attrs_a);
         let r_b = record("a.1", None, "tsc", attrs_b);
         let out = merge(
@@ -441,10 +452,14 @@ mod tests {
 
     #[test]
     fn attribute_unknown_yields_to_claim() {
-        let mut attrs_a = Attributes::default();
-        attrs_a.pure = TriState::Unknown;
-        let mut attrs_b = Attributes::default();
-        attrs_b.pure = TriState::True;
+        let attrs_a = Attributes {
+            pure: TriState::Unknown,
+            ..Default::default()
+        };
+        let attrs_b = Attributes {
+            pure: TriState::True,
+            ..Default::default()
+        };
         let r_a = record("a.1", None, "jsdoc", attrs_a);
         let r_b = record("a.1", None, "tsc", attrs_b);
         let out = merge(
@@ -460,10 +475,14 @@ mod tests {
 
     #[test]
     fn attribute_strict_errors_on_non_unknown_disagreement() {
-        let mut attrs_a = Attributes::default();
-        attrs_a.pure = TriState::True;
-        let mut attrs_b = Attributes::default();
-        attrs_b.pure = TriState::False;
+        let attrs_a = Attributes {
+            pure: TriState::True,
+            ..Default::default()
+        };
+        let attrs_b = Attributes {
+            pure: TriState::False,
+            ..Default::default()
+        };
         let r_a = record("a.1", None, "jsdoc", attrs_a);
         let r_b = record("a.1", None, "tsc", attrs_b);
         let err = merge(
@@ -490,10 +509,14 @@ mod tests {
 
     #[test]
     fn deprecated_messages_join() {
-        let mut attrs_a = Attributes::default();
-        attrs_a.deprecated = Some("use foo instead".into());
-        let mut attrs_b = Attributes::default();
-        attrs_b.deprecated = Some("removed in v2".into());
+        let attrs_a = Attributes {
+            deprecated: Some("use foo instead".into()),
+            ..Default::default()
+        };
+        let attrs_b = Attributes {
+            deprecated: Some("removed in v2".into()),
+            ..Default::default()
+        };
         let r_a = record("a.1", None, "jsdoc", attrs_a);
         let r_b = record("a.1", None, "tsc", attrs_b);
         let out = merge(
@@ -515,8 +538,10 @@ mod tests {
 
     #[test]
     fn deprecated_single_side_passes_through() {
-        let mut attrs_a = Attributes::default();
-        attrs_a.deprecated = Some("use foo instead".into());
+        let attrs_a = Attributes {
+            deprecated: Some("use foo instead".into()),
+            ..Default::default()
+        };
         let attrs_b = Attributes::default();
         let r_a = record("a.1", None, "jsdoc", attrs_a);
         let r_b = record("a.1", None, "tsc", attrs_b);

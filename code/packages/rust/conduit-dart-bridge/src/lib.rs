@@ -148,6 +148,12 @@ fn dispatch(ctx: *mut c_void, slot_type: i32, req_ptr: *const c_void, current_re
     ensure_map();
 
     let slot_id = NEXT_SLOT_ID.fetch_add(1, Ordering::SeqCst);
+    // The payload holds a raw `*mut c_void` (hence !Send + !Sync), but the Arc is
+    // deliberately shared between the calling thread and the Dart callback thread,
+    // which coordinate ownership of that pointer via the Mutex + Condvar. The
+    // pointer is only ever dereferenced under the lock, so this cross-thread Arc
+    // is intentional rather than the mistake this lint targets.
+    #[allow(clippy::arc_with_non_send_sync)]
     let arc = Arc::new((Mutex::new(None::<*mut c_void>), Condvar::new()));
 
     {

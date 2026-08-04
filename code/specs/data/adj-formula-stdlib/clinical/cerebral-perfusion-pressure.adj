@@ -1,0 +1,109 @@
+% ============================================================================
+% cerebral-perfusion-pressure.adj — the definition of cerebral perfusion pressure
+% (CPP = mean arterial pressure − intracranial pressure) in the ADJ standard library.
+% ============================================================================
+% The cerebral perfusion pressure entry of the *clinical* track, a neuro/critical-care
+% sibling of the hemodynamics libraries (`mean-arterial-pressure.adj`, `pulse-pressure.adj`,
+% `stroke-volume.adj`) and the respiratory `alveolar-arterial-gradient.adj`. Where
+% `alveolar-arterial-gradient.adj` grounds an oxygen-tension difference and `pulse-pressure.adj`
+% a blood-pressure difference, this grounds the CEREBRAL PERFUSION PRESSURE as the difference
+% of two pressures: CEREBRAL PERFUSION PRESSURE IS THE MEAN ARTERIAL PRESSURE MINUS THE
+% INTRACRANIAL PRESSURE — the net pressure gradient that drives blood (and thus oxygen) into
+% the brain, the bedside quantity a neurocritical-care team defends after head injury (a CPP
+% too low starves the brain of perfusion; too high risks oedema and haemorrhage). It ships as
+% an importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the mean arterial pressure a CPP implies for a given intracranial pressure,
+% and the intracranial pressure the other two imply). As with every compute library, a
+% consumer states NO arithmetic: it `import`s this file, binds the measured pressures from its
+% own byte-provenance decomposition, and asks the engine to APPLY the cited definition on the
+% CPU. Zero math is performed by the model; the engine computes each value EXACTLY, carrying
+% the definition's citation.
+%
+%     import "cerebral-perfusion-pressure.adj"
+%     observe mean_arterial_pressure(90)      % "…MAP 90 mmHg…"  (span cited by the model)
+%     observe intracranial_pressure(10)       % "…ICP 10 mmHg…"  (span cited by the model)
+%     ? cerebral_perfusion_pressure(mean_arterial_pressure, intracranial_pressure)
+%                                                % engine → 80, carrying CPP = MAP − ICP
+%
+% All three formulas are EXACT over their parameters (a difference and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert
+% cleanly around the worked case MAP = 90 mmHg, ICP = 10 mmHg (CPP = 90 − 10 = 80 mmHg, a
+% normal cerebral perfusion pressure): the `cerebral_perfusion_pressure` a consumer computes
+% from the two pressures is exactly the `cerebral_perfusion_pressure` the
+% `mean_arterial_pressure` formula adds the intracranial pressure back to, to recover the
+% 90 mmHg mean arterial pressure, and exactly the `cerebral_perfusion_pressure` the
+% `intracranial_pressure` formula subtracts from the mean arterial pressure to recover the
+% 10 mmHg intracranial pressure.
+%
+%   cerebral_perfusion_pressure(mean_arterial_pressure, intracranial_pressure)
+%       = mean_arterial_pressure - intracranial_pressure   % CPP = MAP − ICP   (definition)
+%   mean_arterial_pressure(cerebral_perfusion_pressure, intracranial_pressure)
+%       = cerebral_perfusion_pressure + intracranial_pressure   % MAP = CPP + ICP   (same def, solved for MAP)
+%   intracranial_pressure(mean_arterial_pressure, cerebral_perfusion_pressure)
+%       = mean_arterial_pressure - cerebral_perfusion_pressure   % ICP = MAP − CPP   (same def, solved for ICP)
+%
+% NOTE ON UNITS: the two pressures must be in the SAME unit (both millimetres of mercury, as
+% in the worked case), and the cerebral perfusion pressure comes out in that same unit; this
+% library computes the exact value over whatever consistent unit it is given. (The mean
+% arterial pressure is itself usually derived from systolic and diastolic pressures — see
+% `mean-arterial-pressure.adj`; this library takes it as a given input and grounds only the
+% perfusion-pressure definition that stands on top of it.)
+%
+% All three formulas are defended by the SAME definitional sentence — "CPP is the net pressure
+% gradient that drives oxygen delivery to cerebral tissue. It is the difference between the
+% mean arterial pressure (MAP) and the intracranial pressure (ICP)." — because that one
+% definition (the cerebral perfusion pressure IS the mean arterial minus the intracranial
+% pressure) sanctions the relation read every way (the CPP from the two pressures, the MAP
+% from the CPP and ICP, or the ICP from the MAP and CPP). The quote is transcribed verbatim
+% from the StatPearls "Cerebral Perfusion Pressure" article on the NCBI Bookshelf, so each
+% `formula` carries the provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one. (See feedback_nothing_human_authored — the definitional sentence
+% is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable pressure the definition ranges over, and each
+% result is a derived quantity. `cerebral_perfusion_pressure`, `mean_arterial_pressure` and
+% `intracranial_pressure` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are
+% the everyday names a decomposer maps onto the canonical term; the trailing comment records
+% the intended unit.
+% ----------------------------------------------------------------------------
+dictionary cerebral_perfusion_pressure_vocab {
+    define mean_arterial_pressure      : finding  surface "mean arterial pressure", "MAP"                 % millimetres of mercury (mmHg)
+    define intracranial_pressure       : finding  surface "intracranial pressure", "ICP"                 % millimetres of mercury (mmHg)
+    define cerebral_perfusion_pressure : finding  surface "cerebral perfusion pressure", "CPP"           % millimetres of mercury (mmHg)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the definitional sentence from
+% StatPearls on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact difference/sum of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook cerebral_perfusion_pressure_laws {
+    use cerebral_perfusion_pressure_vocab
+
+    % Cerebral perfusion pressure — the mean arterial pressure less the intracranial pressure,
+    % i.e. CPP = MAP − ICP.
+    formula cerebral_perfusion_pressure(mean_arterial_pressure, intracranial_pressure) = mean_arterial_pressure - intracranial_pressure
+        source "CPP is the net pressure gradient that drives oxygen delivery to cerebral tissue. It is the difference between the mean arterial pressure (MAP) and the intracranial pressure (ICP)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537271/"
+        trust authoritative
+
+    % Mean arterial pressure — the same definition solved for the mean arterial pressure a
+    % cerebral perfusion pressure implies for an intracranial pressure (MAP = CPP + ICP).
+    % Defended by the SAME definitional sentence, read the other way.
+    formula mean_arterial_pressure(cerebral_perfusion_pressure, intracranial_pressure) = cerebral_perfusion_pressure + intracranial_pressure
+        source "CPP is the net pressure gradient that drives oxygen delivery to cerebral tissue. It is the difference between the mean arterial pressure (MAP) and the intracranial pressure (ICP)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537271/"
+        trust authoritative
+
+    % Intracranial pressure — the same definition solved for the intracranial pressure the
+    % other two imply (ICP = MAP − CPP). Again the SAME definitional sentence, read the third
+    % way.
+    formula intracranial_pressure(mean_arterial_pressure, cerebral_perfusion_pressure) = mean_arterial_pressure - cerebral_perfusion_pressure
+        source "CPP is the net pressure gradient that drives oxygen delivery to cerebral tissue. It is the difference between the mean arterial pressure (MAP) and the intracranial pressure (ICP)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537271/"
+        trust authoritative
+}

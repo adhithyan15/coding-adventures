@@ -2,6 +2,69 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.4.3] - 2026-08-03
+
+### Fixed — `GrammarElement::Literal` matched a `String` token by its content, not just an operator lexeme
+
+`GrammarParser::parse_element`'s `Literal` arm compared ONLY `token.value`
+against the literal text, ignoring `token.type_` entirely:
+`if self.current().value == *value`. A `Literal` element exists to match
+an operator/keyword LEXEME by its spelling — the "the parser dispatches by
+value" trick many downstream grammars (Ruby's comparison/logical
+operators, among others) use for tokens the lexer leaves on a catch-all
+type rather than giving a dedicated `TokenType`. But `TokenType::String`
+carries arbitrary user-supplied string-LITERAL CONTENT, not a lexeme — a
+Ruby program containing a string literal whose content happened to equal
+an operator spelling (`foo(1, "*")`, `x = "&&"`, `"hello".ljust(8, "*")`)
+had that STRING TOKEN silently swallowed by an unrelated `Literal`
+element (in Ruby's case, `call_arg`'s `[ "*" | "**" | "&" ] expression`
+splat-marker alternative), leaving the rest of that grammar rule with
+nothing to match — a confusing parse failure (or a hard panic in a
+panic-on-parse-error caller) for a perfectly ordinary program.
+
+Fixed by excluding `TokenType::String` from `Literal` matching. This is a
+pure narrowing of what `Literal` can match — no grammar's `Literal`
+element is ever intended to match arbitrary string-literal content, so
+the fix can only correct previously-wrong matches, never reject a
+previously-correct one. Verified against the full downstream consumer set
+(~130 crates depend on this `parser` crate transitively) via
+`cargo test --workspace` (excluding pre-existing, unrelated
+platform-gated build failures on this host) with zero new test failures.
+
+`parser` 0.4.2 -> 0.4.3.
+
+## [0.4.2] - 2026-07-13
+
+### Fixed — packrat memo / left-recursion-guard hot path no longer allocates a `String` per lookup
+
+`GrammarParser::parse_rule_inner` looked up and inserted into its packrat
+`memo` cache and its `in_progress` left-recursion guard via a
+`format!("{},{}", rule_idx, pos)`-allocated `String` key — on *every* rule
+attempted at *every* token position, for every grammar built on this crate
+(flagged as follow-up work in `wolfram-parser`'s own `MAX_RULE_DEPTH` doc
+comment, since Wolfram's dense rule-chain grammar makes the hot-path cost
+most visible there, but the cost applied to all ~130 downstream consumers
+equally). Changed both `memo: HashMap<String, MemoEntry>` and
+`in_progress: HashSet<String>` to key on a plain `(usize, usize)` tuple
+instead — no allocation, and hashing/equality on two `usize`s rather than a
+formatted string.
+
+Also fixed `record_failure`'s furthest-expected-position tracking, which
+allocated `expected.to_string()` on *every* call just to check
+`!v.contains(&expected.to_string())` — including the overwhelmingly common
+case where the expectation was already recorded and nothing new needed to
+be pushed. Changed to `!v.iter().any(|s| s.as_str() == expected)`, which
+compares against the existing `&str`s directly and only allocates once a
+push is actually needed. Added `test_furthest_failure_expectations_are_deduplicated`
+to lock in that the dedup behavior itself (not just its allocation cost)
+stayed exactly the same.
+
+Purely an internal-state change — `memo`, `in_progress`, and
+`record_failure` are all private; no public API changed, and every
+existing test (this crate's own 41, plus a downstream sample across
+`wolfram-parser`/`macsyma-parser`/`apl-parser`/`j-parser`/`matlab-parser`/
+`ruby-parser`/`python-parser`, ~400 tests total) passes unchanged.
+
 ## [0.4.1] - 2026-06-30
 
 ### Fixed — recursion-depth guard is now OPT-IN (default is unlimited)

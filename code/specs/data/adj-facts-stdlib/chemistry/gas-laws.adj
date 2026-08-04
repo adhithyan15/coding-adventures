@@ -1,0 +1,104 @@
+% ============================================================================
+% gas-laws — the four named simple gas laws and the pair of quantities each one
+% relates, holding the rest fixed (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% The simple gas laws are the first rung a CHEMISTRY agent climbs on its way to
+% the ideal gas law PV = nRT: each named law isolates TWO of the four state
+% variables (pressure, volume, temperature, amount) and states how they move
+% together while the OTHER two are held constant. "Boyle's law relates pressure
+% and volume; Charles's law relates volume and temperature; Gay-Lussac's law
+% relates pressure and temperature; Avogadro's law relates volume and the number
+% of moles." Before you can combine them into PV = nRT you must first know WHICH
+% two quantities each named law ties together. Recall is a binding query:
+%
+%     ? gas_law_relates(boyle, $Pair)      % pressure_volume
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `gas_law_relates(law, pair)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the pair
+% WITH its source, on the CPU, with zero model calls, and abstains on a name that
+% is not one of these four gas laws (it never invents a relation).
+%
+% Each named gas law and the pair of quantities the source states it relates,
+% as a little truth table (the two variables NOT named are the ones held fixed):
+%
+%     gas law      quantities it relates      held constant   how they move
+%     ----------   ------------------------   -------------   -------------------
+%     boyle        pressure_volume            temp, moles     inversely
+%     charles      volume_temperature         pressure, moles directly
+%     gay_lussac   pressure_temperature       volume, moles   directly
+%     avogadro     volume_moles               temp, pressure  directly (proportional)
+%
+% The query also runs BACKWARD — bind a pair and recall which law names it:
+%
+%     ? gas_law_relates($Law, pressure_temperature)   % gay_lussac
+%
+% A name that is NOT one of these four simple gas laws — `newton`, `hooke`,
+% `dalton` — is deliberately NOT a row, so a gas-law recall ABSTAINS on it rather
+% than inventing a relation. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the law→pair mappings it
+% can ground, and only those.
+%
+% The `pair` value of every row is a SINGLE snake_case atom naming the two
+% quantities the source EXPLICITLY relates for that law — never one the source
+% does not support. The atom uses the source's own quantity words (pressure,
+% volume, temperature, moles), so every value stays literally checkable against
+% the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every law→pair mapping below
+% was read out of a fetched Chemistry LibreTexts (CK-12) page, and any law whose
+% relation could not be verified there would have been dropped). Each mapping,
+% with the primary source it was copied from and the verbatim span that states
+% it:
+%
+%   boyle → pressure_volume
+%     https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14%3A_The_Behavior_of_Gases/14.03%3A_Boyle's_Law
+%     (Chemistry LibreTexts — Introductory Chemistry (CK-12))
+%     "Boyle's law states that the volume of a given mass of gas varies
+%      inversely with the pressure when the temperature is kept constant."
+%
+%   charles → volume_temperature
+%     https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14%3A_The_Behavior_of_Gases/14.04%3A_Charles's_Law
+%     (Chemistry LibreTexts — Introductory Chemistry (CK-12))
+%     "Charles's Law states that the volume of a given mass of gas varies
+%      directly with the absolute temperature of the gas when pressure is kept
+%      constant."
+%
+%   gay_lussac → pressure_temperature
+%     https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14%3A_The_Behavior_of_Gases/14.05%3A_Gay-Lussac's_Law
+%     (Chemistry LibreTexts — Introductory Chemistry (CK-12))
+%     "Gay-Lussac's Law states that the pressure of a given mass of gas varies
+%      directly with the absolute temperature of the gas, when the volume is
+%      kept constant."
+%
+%   avogadro → volume_moles
+%     https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14%3A_The_Behavior_of_Gases/14.07%3A_Avogadro's_Law
+%     (Chemistry LibreTexts — Introductory Chemistry (CK-12))
+%     "Avogadro's Law states that the volume of a gas is directly proportional
+%      to the number of moles of gas, when the temperature and pressure are held
+%      constant."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the LibreTexts statement that
+% fixes the first row (boyle → pressure_volume). Every OTHER row's per-fact
+% source and verbatim span is listed above, so each mapping remains
+% independently checkable. All sources are Chemistry LibreTexts (CK-12), an
+% open teaching resource that summarizes the community-standard definitions, so
+% `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table gas_law_relates {
+    columns law, pair
+
+    row (boyle, pressure_volume)
+    row (charles, volume_temperature)
+    row (gay_lussac, pressure_temperature)
+    row (avogadro, volume_moles)
+
+    source "Boyle's law states that the volume of a given mass of gas varies inversely with the pressure when the temperature is kept constant."
+    locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14%3A_The_Behavior_of_Gases/14.03%3A_Boyle's_Law"
+    trust consensus
+}

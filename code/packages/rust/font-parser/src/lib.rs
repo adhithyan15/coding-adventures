@@ -1,3 +1,6 @@
+// The doc blocks use intentional ASCII alignment (glyph/value tables); allow the
+// overindented-list-item lint rather than disturb that layout.
+#![allow(clippy::doc_overindented_list_items)]
 //! # font-parser
 //!
 //! A metrics-only OpenType/TrueType font parser.
@@ -709,10 +712,7 @@ pub fn kerning(font: &FontFile, left: u16, right: u16) -> i16 {
 
                 match key.cmp(&target) {
                     std::cmp::Ordering::Equal => {
-                        return match read_i16(buf, pair_off + 4) {
-                            Ok(v) => v,
-                            Err(_) => 0,
-                        };
+                        return read_i16(buf, pair_off + 4).unwrap_or_default();
                     }
                     std::cmp::Ordering::Less    => lo = mid + 1,
                     std::cmp::Ordering::Greater => hi = mid,

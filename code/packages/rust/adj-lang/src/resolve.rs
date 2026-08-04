@@ -34,6 +34,7 @@
 use std::collections::HashSet;
 
 use crate::ast::{Program, Statement};
+use crate::{BindingOrigin, BindingSource};
 
 /// Resolves a literal import string (relative to the file doing the importing)
 /// to a *canonical, stable id*, and loads source text for a canonical id. The
@@ -111,9 +112,23 @@ pub fn resolve_imports(
     provider: &dyn ImportProvider,
     limits: ImportLimits,
 ) -> Result<Program, ImportError> {
+    Ok(resolve_imports_with_binding_origins(root_id, provider, limits)?.program)
+}
+
+pub(crate) struct ResolvedProgram {
+    pub program: Program,
+    pub binding_origins: Vec<BindingOrigin>,
+}
+
+pub(crate) fn resolve_imports_with_binding_origins(
+    root_id: &str,
+    provider: &dyn ImportProvider,
+    limits: ImportLimits,
+) -> Result<ResolvedProgram, ImportError> {
     let mut visited: HashSet<String> = HashSet::new();
     let mut stack: Vec<String> = Vec::new();
     let mut statements: Vec<Statement> = Vec::new();
+    let mut binding_origins = Vec::new();
     visit(
         root_id,
         0,
@@ -122,8 +137,45 @@ pub fn resolve_imports(
         &mut visited,
         &mut stack,
         &mut statements,
+        &mut binding_origins,
     )?;
-    Ok(Program { statements })
+    Ok(ResolvedProgram {
+        program: Program { statements },
+        binding_origins,
+    })
+}
+
+fn append_binding_origins(
+    statement: &Statement,
+    canonical: &str,
+    bindings: &mut impl Iterator<Item = BindingSource>,
+    output: &mut Vec<BindingOrigin>,
+) -> Result<(), ImportError> {
+    match statement {
+        Statement::Let { name, expr } => {
+            let binding = bindings.next().ok_or_else(|| ImportError::Parse {
+                canonical: canonical.to_string(),
+                detail: format!("source map omitted let binding {name}"),
+            })?;
+            if binding.name != *name || binding.expression != *expr {
+                return Err(ImportError::Parse {
+                    canonical: canonical.to_string(),
+                    detail: format!("source map disagrees with let binding {name}"),
+                });
+            }
+            output.push(BindingOrigin {
+                source_id: canonical.to_string(),
+                binding,
+            });
+        }
+        Statement::Rulebook { statements, .. } => {
+            for nested in statements {
+                append_binding_origins(nested, canonical, bindings, output)?;
+            }
+        }
+        _ => {}
+    }
+    Ok(())
 }
 
 /// Depth-first visit of one file. Appends the file's resolved declarations to
@@ -141,6 +193,7 @@ fn visit(
     visited: &mut HashSet<String>,
     stack: &mut Vec<String>,
     out: &mut Vec<Statement>,
+    binding_origins: &mut Vec<BindingOrigin>,
 ) -> Result<(), ImportError> {
     if depth > limits.max_depth {
         return Err(ImportError::DepthExceeded {
@@ -174,6 +227,11 @@ fn visit(
         canonical: canonical.to_string(),
         detail: format!("{e:?}"),
     })?;
+    let source_map = crate::program_source_map(&src).map_err(|error| ImportError::Parse {
+        canonical: canonical.to_string(),
+        detail: format!("{error:?}"),
+    })?;
+    let mut bindings = source_map.bindings.into_iter();
 
     stack.push(canonical.to_string());
     for stmt in program.statements {
@@ -188,10 +246,31 @@ fn visit(
                 })?;
                 // Post-order: the imported file's declarations are spliced in
                 // *before* the rest of this file's statements.
-                visit(&child, depth + 1, provider, limits, visited, stack, out)?;
+                visit(
+                    &child,
+                    depth + 1,
+                    provider,
+                    limits,
+                    visited,
+                    stack,
+                    out,
+                    binding_origins,
+                )?;
             }
-            other => out.push(other),
+            other => {
+                append_binding_origins(&other, canonical, &mut bindings, binding_origins)?;
+                out.push(other);
+            }
         }
+    }
+    if let Some(binding) = bindings.next() {
+        return Err(ImportError::Parse {
+            canonical: canonical.to_string(),
+            detail: format!(
+                "source map retained unmatched let binding {}",
+                binding.name
+            ),
+        });
     }
     stack.pop();
     Ok(())

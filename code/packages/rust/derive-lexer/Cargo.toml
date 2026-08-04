@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-derive-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the Derive symbolic-CAS frontend (D-2)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

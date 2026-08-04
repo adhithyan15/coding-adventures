@@ -52,8 +52,8 @@ use logic_gates::gates::{not_gate, xor_gate};
 /// ```
 pub fn int_to_bits8(value: u8) -> [u8; 8] {
     let mut bits = [0u8; 8];
-    for i in 0..8 {
-        bits[i] = (value >> i) & 1;
+    for (i, b) in bits.iter_mut().enumerate() {
+        *b = (value >> i) & 1;
     }
     bits
 }
@@ -68,8 +68,8 @@ pub fn int_to_bits8(value: u8) -> [u8; 8] {
 /// ```
 pub fn int_to_bits16(value: u16) -> [u8; 16] {
     let mut bits = [0u8; 16];
-    for i in 0..16 {
-        bits[i] = ((value >> i) & 1) as u8;
+    for (i, b) in bits.iter_mut().enumerate() {
+        *b = ((value >> i) & 1) as u8;
     }
     bits
 }
@@ -83,8 +83,8 @@ pub fn int_to_bits16(value: u16) -> [u8; 16] {
 /// ```
 pub fn bits_to_u8(bits: &[u8; 8]) -> u8 {
     let mut val = 0u8;
-    for i in 0..8 {
-        val |= bits[i] << i;
+    for (i, &b) in bits.iter().enumerate() {
+        val |= b << i;
     }
     val
 }
@@ -92,8 +92,8 @@ pub fn bits_to_u8(bits: &[u8; 8]) -> u8 {
 /// Convert an LSB-first 16-element bit vector back to a `u16`.
 pub fn bits_to_u16(bits: &[u8; 16]) -> u16 {
     let mut val = 0u16;
-    for i in 0..16 {
-        val |= (bits[i] as u16) << i;
+    for (i, &b) in bits.iter().enumerate() {
+        val |= (b as u16) << i;
     }
     val
 }

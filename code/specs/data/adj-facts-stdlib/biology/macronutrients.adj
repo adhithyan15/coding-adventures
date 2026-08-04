@@ -1,0 +1,93 @@
+% ============================================================================
+% macronutrients — each energy-yielding macronutrient and how many kilocalories
+% one gram of it supplies (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the first quantitative facts of human nutrition, and a rung a MEDICINE
+% or DIETETICS agent reasons UP from: the food you eat carries energy, and that
+% energy comes from a small set of macronutrients — carbohydrate, protein, fat,
+% and (when present) alcohol — each of which releases a fixed number of Calories
+% per gram when the body burns it. "A gram of fat gives 9 Calories; a gram of
+% carbohydrate or protein gives 4; a gram of alcohol gives 7." These four
+% Atwater-style factors are what turn a food's gram breakdown into its Calorie
+% count, so before you can reason about a diet, a label, or an energy balance you
+% must first know the per-gram energy of each macronutrient. Recall is a binding
+% query:
+%
+%     ? kcal_per_gram(fat, $Kcal)        % 9
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `kcal_per_gram(nutrient, kcal)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the number
+% WITH its source, on the CPU, with zero model calls, and abstains on a word that
+% is not one of these macronutrients (it never invents an energy value).
+%
+% Each macronutrient and its energy per gram, as a little truth table:
+%
+%     macronutrient   kcal per gram   a beginner's cue
+%     -------------   -------------   ------------------------------------------
+%     carbohydrate    4               sugars & starches — 4 Calories per gram
+%     protein         4               same energy density as carbohydrate — 4
+%     fat             9               the richest — more than 2x carb/protein — 9
+%     alcohol         7               not a nutrient, but yields 7 Calories/gram
+%
+% (Here "Calorie" is the food/dietary Calorie = one kilocalorie, kcal — the unit
+% every U.S. nutrition source and food label uses. The value is a plain integer
+% so a recalled factor flows straight into arithmetic: grams x kcal_per_gram =
+% Calories, the bridge from recall to compute.)
+%
+% The query also runs BACKWARD — bind an energy value and recall the
+% macronutrient(s) that supply it:
+%
+%     ? kcal_per_gram($Nutrient, 4)   % carbohydrate ; protein
+%
+% A word that is NOT one of these macronutrients — `water`, `vitamin`, `fiber`,
+% `rock` — is deliberately NOT a row, so an energy recall ABSTAINS on it rather
+% than inventing a number. (Water and most vitamins supply no Calories at all;
+% dietary fiber is a carbohydrate the body does not fully burn — none of them is
+% one of the four energy-yielding macronutrients, so none is a row.) That
+% honest-abstention property is what makes the table safe to build a reasoner on:
+% it answers exactly the macronutrient->energy pairs it can ground, and only
+% those.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every macronutrient->energy
+% pair below was read out of a fetched U.S. government / NIH page, and any pair
+% whose value could not be verified there would have been dropped). Each pair,
+% with the primary source it was copied from and the verbatim span that states
+% it:
+%
+%   fat -> 9, carbohydrate -> 4, protein -> 4
+%     https://medlineplus.gov/ency/patientinstructions/000104.htm
+%       (NIH / NLM, MedlinePlus — "Dietary fats explained")
+%     "Fat has 9 calories per gram, more than 2 times the number of calories in
+%      carbohydrates and protein, which each have 4 calories per gram."
+%
+%   alcohol -> 7  (and carbohydrate -> 4, protein -> 4 again, independently)
+%     https://medlineplus.gov/ency/patientinstructions/000889.htm
+%       (NIH / NLM, MedlinePlus — "Weight loss and alcohol")
+%     "This means it has calories (7 per gram versus 4 per gram for carbohydrate
+%      and protein) but no nutrients."
+%
+% Both sources are primary U.S. government / NIH (NLM MedlinePlus) references, so
+% `trust authoritative`. An ADJ `table` carries ONE provenance envelope, so the
+% `source`/`locator`/`trust` below hold the single cleanest span: the MedlinePlus
+% "Dietary fats explained" statement, which fixes three of the four rows (fat 9,
+% carbohydrate 4, protein 4) in one sentence. The alcohol row's per-fact source
+% and verbatim span is listed above, so its value remains independently
+% checkable.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table kcal_per_gram {
+    columns nutrient, kcal
+
+    row (carbohydrate, 4)
+    row (protein, 4)
+    row (fat, 9)
+    row (alcohol, 7)
+
+    source "Fat has 9 calories per gram, more than 2 times the number of calories in carbohydrates and protein, which each have 4 calories per gram."
+    locator "https://medlineplus.gov/ency/patientinstructions/000104.htm"
+    trust authoritative
+}

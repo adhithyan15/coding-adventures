@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "java/md5-native",
+  "capabilities": ["ffi:call"],
+  "justification": "ffi:call — loads the md5_native_jni cdylib via System.loadLibrary and calls its JNI methods to compute MD5 in Rust. No network, filesystem, or process access."
+}

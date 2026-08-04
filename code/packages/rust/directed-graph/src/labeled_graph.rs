@@ -170,7 +170,7 @@ impl LabeledDirectedGraph {
         let key = (from.to_string(), to.to_string());
         self.labels
             .entry(key)
-            .or_insert_with(HashSet::new)
+            .or_default()
             .insert(label.to_string());
 
         Ok(())
@@ -291,7 +291,7 @@ impl LabeledDirectedGraph {
                 let key = (node.to_string(), succ.clone());
                 self.labels
                     .get(&key)
-                    .map_or(false, |ls| ls.contains(label))
+                    .is_some_and(|ls| ls.contains(label))
             })
             .collect();
         result.sort();
@@ -320,7 +320,7 @@ impl LabeledDirectedGraph {
                 let key = (pred.clone(), node.to_string());
                 self.labels
                     .get(&key)
-                    .map_or(false, |ls| ls.contains(label))
+                    .is_some_and(|ls| ls.contains(label))
             })
             .collect();
         result.sort();

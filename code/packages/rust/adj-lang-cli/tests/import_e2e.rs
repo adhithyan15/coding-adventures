@@ -6,7 +6,7 @@
 //! rejects path-traversal / absolute / cyclic imports cleanly (no panic, no
 //! infinite loop, no reading outside the program's directory).
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
 /// A fresh, uniquely-named temp directory under the system temp dir. (Avoids a
@@ -19,7 +19,7 @@ fn scratch(tag: &str) -> PathBuf {
     dir
 }
 
-fn write(dir: &PathBuf, name: &str, src: &str) {
+fn write(dir: &Path, name: &str, src: &str) {
     let p = dir.join(name);
     if let Some(parent) = p.parent() {
         std::fs::create_dir_all(parent).unwrap();
@@ -27,7 +27,7 @@ fn write(dir: &PathBuf, name: &str, src: &str) {
     std::fs::write(p, src).unwrap();
 }
 
-fn run(program: &PathBuf) -> (bool, String) {
+fn run(program: &Path) -> (bool, String) {
     let out = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
         .arg(program)
         .output()

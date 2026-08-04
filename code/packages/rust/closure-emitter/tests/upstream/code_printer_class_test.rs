@@ -171,7 +171,7 @@ fn assert_emits(expr: Expression, expected: &str) {
     let code = emit_default(expr);
     assert_eq!(
         code, expected,
-        "class emit output did not match\n  actual:   {:?}\n  expected: {:?}",
+        "class emit output did not match\n  actual:   {:?}\n  expected: {:?};",
         code, expected
     );
 }

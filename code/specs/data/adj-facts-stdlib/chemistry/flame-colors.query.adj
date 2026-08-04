@@ -1,0 +1,26 @@
+% ============================================================================
+% flame-colors.query.adj — a worked recall over the chemistry flame-colors library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what color does sodium give
+% in a flame test?": it states no chemistry fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `flame_color` rows and returns the color + the table's source/locator/trust.
+% The fourth query runs the relation BACKWARD from a color (bind `red`, recall
+% BOTH metals the source gives that color — strontium and lithium, since a flame
+% color is not unique to one element). The fifth runs it backward from another
+% color (bind `violet`, recall the metal — potassium). A `copper` flame color is
+% NOT stated on this source page, so a recall on it abstains honestly — the
+% engine never invents a color.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli flame-colors.query.adj
+% ============================================================================
+
+import "flame-colors.adj"
+
+? flame_color(sodium, $Color)      % expect orange
+? flame_color(potassium, $Color)   % expect violet
+? flame_color(calcium, $Color)     % expect red_orange
+? flame_color($Metal, red)         % expect strontium ; lithium — one-to-many reverse
+? flame_color($Metal, violet)      % expect potassium — reverse recall
+? flame_color(copper, $Color)      % expect abstain — this source states no copper color

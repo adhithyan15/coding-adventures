@@ -1,0 +1,148 @@
+{
+  "script": "tamil",
+  "name": "Tamil",
+  "font": "_fonts/NotoSansTamil-Static.ttf",
+  "direction": "ltr",
+  "system": "abugida",
+  "signature": "Curvy and loopy with flat top-bars on many letters, repeated arches, and no continuous head-line.",
+  "complete": false,
+  "combination": "A consonant carries an inherent 'a' (க = ka). A vowel sign replaces that vowel (க + ா → கா = kā). The puḷḷi ் — a DOT above the letter — removes the vowel entirely (க் = k). Unlike Devanagari, Tamil does NOT fuse the bare consonant into a conjunct: the dot stays visible and both letters keep their full shape. (A handful of Sanskrit-borrowed ligatures are the exception — க்ஷ kṣa and ஸ்ரீ śrī.)",
+  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ண/ன, ந, ற).",
+  "letters": [
+    {
+      "glyph": "அ",
+      "sound": "a",
+      "role": "independent-vowel",
+      "components": ["a curl at the upper left", "a long horizontal stroke", "a straight vertical on the right"],
+      "strokeOrder": ["upper-left curl", "horizontal", "right vertical"],
+      "strokeOrderNote": "conventional",
+      "notes": "The first letter of the Tamil alphabet, and the vowel every consonant already contains."
+    },
+    {
+      "glyph": "ஆ",
+      "sound": "ā",
+      "role": "independent-vowel",
+      "components": ["the whole of அ", "a tail added on the right"],
+      "strokeOrder": ["write அ", "add the right-hand tail"],
+      "strokeOrderNote": "conventional",
+      "notes": "Long ā is short அ plus a tail — the same lengthening idea that appears as the ா sign on consonants."
+    },
+    {
+      "glyph": "இ",
+      "sound": "i",
+      "role": "independent-vowel",
+      "components": ["a crossing spiral on the left", "a tall straight vertical on the right"],
+      "strokeOrder": ["spiral", "right vertical"],
+      "strokeOrderNote": "conventional"
+    },
+    {
+      "glyph": "க",
+      "sound": "ka",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a straight horizontal top bar", "a bowl hanging from its left end", "a short right stroke that hooks left below"],
+      "strokeOrder": ["top bar", "left bowl", "right stroke and hook"],
+      "strokeOrderNote": "conventional",
+      "notes": "Tamil does not write separate letters for k / g / h — க covers them all, and position in the word decides which you say."
+    },
+    {
+      "glyph": "ம",
+      "sound": "ma",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a straight vertical stroke on the LEFT", "a horizontal along the bottom", "a rounded arch closing it on the RIGHT"],
+      "strokeOrder": ["left vertical", "bottom horizontal", "right arch"],
+      "strokeOrderNote": "conventional",
+      "notes": "The upright is on the left and the curve on the right — the reverse of what a learner coming from Devanagari tends to assume."
+    },
+    {
+      "glyph": "வ",
+      "sound": "va",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a near-closed loop on the left", "a full-height arm across the top ending in a descender on the right"],
+      "strokeOrder": ["left loop", "top arm and descender"],
+      "strokeOrderNote": "conventional",
+      "notes": "One of the plainer shapes, and a reasonable first letter to draw."
+    },
+    {
+      "glyph": "ண",
+      "sound": "ṇa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a straight top bar", "a loop on the left", "TWO arches", "a straight vertical on the right, down to the baseline"],
+      "strokeOrder": ["top bar", "left loop", "first arch", "second arch", "right vertical"],
+      "strokeOrderNote": "conventional",
+      "notes": "The RETROFLEX n — tongue curled back to the roof of the mouth. Learn it beside ன: ண is ன WITH ONE EXTRA ARCH. Both letters end in the same straight vertical; the extra arch is inserted before it. Tamil writes three n-sounds with three letters (ந, ன, ண)."
+    },
+    {
+      "glyph": "ந",
+      "sound": "na",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a straight top bar", "a vertical on the left", "a second vertical in the middle", "a right stroke that curls below the baseline and sweeps left into a descender"],
+      "strokeOrder": ["top bar", "left vertical", "middle vertical", "right stroke, curl and sweep"],
+      "strokeOrderNote": "conventional",
+      "notes": "The dental n, tongue against the teeth. Contrast ன (alveolar) and ண (retroflex)."
+    },
+    {
+      "glyph": "ன",
+      "sound": "ṉa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a straight top bar", "a loop on the left", "ONE arch", "a straight vertical on the right, down to the baseline"],
+      "strokeOrder": ["top bar", "left loop", "arch", "right vertical"],
+      "strokeOrderNote": "conventional",
+      "notes": "The alveolar n — and visibly ண MINUS ONE ARCH. ண has two arches between the loop and the final vertical; ன has one. Both end in the same straight vertical."
+    },
+    {
+      "glyph": "ல",
+      "sound": "la",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a curl that turns back on itself", "a stroke rising to the right"],
+      "strokeOrder": ["curl", "rising stroke"],
+      "strokeOrderNote": "conventional"
+    },
+    {
+      "glyph": "ற",
+      "sound": "ṟa",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["two arches side by side, giving three legs down to the baseline", "the right leg continues BELOW the baseline, sweeps left, and drops into a long descender"],
+      "strokeOrder": ["first arch", "second arch", "right leg", "the sweep left below the baseline and the descender"],
+      "strokeOrderNote": "conventional",
+      "notes": "The hard/trilled r, distinct from ர. In நன்றி the pair ன் + ற is said as a single cluster."
+    }
+  ],
+  "marks": [
+    {
+      "mark": "்",
+      "sound": "(vowel killer)",
+      "role": "virama",
+      "attachesAs": "a DOT written above the letter, removing the inherent vowel; unlike Devanagari's virama it does not trigger a conjunct — both letters keep their full shape and the dot stays visible",
+      "example": { "base": "க", "combined": "க்", "sound": "k" }
+    },
+    {
+      "mark": "ா",
+      "sound": "ā",
+      "role": "vowel-sign",
+      "attachesAs": "a vertical stroke with a small top hook, written after the consonant",
+      "example": { "base": "ம", "combined": "மா", "sound": "mā" }
+    },
+    {
+      "mark": "ி",
+      "sound": "i",
+      "role": "vowel-sign",
+      "attachesAs": "a hook written above and to the right of the consonant",
+      "example": { "base": "ற", "combined": "றி", "sound": "ṟi" }
+    },
+    {
+      "mark": "ை",
+      "sound": "ai",
+      "role": "vowel-sign",
+      "attachesAs": "a double hook written BEFORE (to the left of) the consonant, though pronounced after it",
+      "example": { "base": "ல", "combined": "லை", "sound": "lai" }
+    }
+  ]
+}

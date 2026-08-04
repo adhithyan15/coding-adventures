@@ -1,0 +1,110 @@
+% ============================================================================
+% mean-arterial-pressure.adj — the definition of mean arterial pressure
+% (MAP = diastolic + (systolic − diastolic)/3) in the ADJ standard library.
+% ============================================================================
+% The mean-arterial-pressure entry of the *clinical* track, a hemodynamics
+% sibling of `cardiac-output.adj` and `bmi.adj`: the foundational blood-pressure
+% definition a first course states as MEAN ARTERIAL PRESSURE IS THE DIASTOLIC
+% PRESSURE PLUS ONE-THIRD OF THE PULSE PRESSURE (the pulse pressure being the
+% systolic minus the diastolic) — the average driving pressure of blood into the
+% tissues over a cardiac cycle — as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with its two exact rearrangements (the systolic a MAP implies
+% for a diastolic, and the diastolic a MAP implies for a systolic). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds
+% the measured pressures from its own byte-provenance decomposition, and asks the
+% engine to APPLY the cited definition on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "mean-arterial-pressure.adj"
+%     observe systolic_pressure(110)    % "…110 mmHg systolic…"  (span cited by the model)
+%     observe diastolic_pressure(80)    % "…80 mmHg diastolic…"  (span cited by the model)
+%     ? mean_arterial_pressure(systolic_pressure, diastolic_pressure)
+%                                          % engine → 90, carrying MAP = DBP + (SBP−DBP)/3
+%
+% The one-third weighting is NOT a separately grounded physiological constant — it
+% is part of the definition itself ("adding the diastolic pressure to one-third of
+% the pulse pressure"), so the sole citation below defends it along with the
+% relation. All three formulas are EXACT over their parameters (the engine works in
+% exact rationals), and the three COMPOSE and invert cleanly around the worked case
+% SBP = 110 mmHg, DBP = 80 mmHg (pulse pressure 30 mmHg, MAP = 80 + 30/3 = 90 mmHg):
+% the `mean_arterial_pressure` a consumer computes from a systolic and diastolic is
+% exactly the MAP the `systolic_pressure` formula uses to recover that systolic, and
+% exactly the MAP the `diastolic_pressure` formula uses to recover that diastolic.
+%
+%   mean_arterial_pressure(systolic, diastolic) = diastolic + (systolic − diastolic)/3   % MAP = DBP + (SBP−DBP)/3  (definition)
+%   systolic_pressure(map, diastolic)           = 3*map − 2*diastolic                     % solve MAP = (SBP + 2·DBP)/3 for SBP
+%   diastolic_pressure(map, systolic)           = (3*map − systolic)/2                    % solve MAP = (SBP + 2·DBP)/3 for DBP
+%
+% The two inversions are algebra on the SAME definition: writing MAP = DBP + (SBP−DBP)/3
+% over a common denominator gives MAP = (SBP + 2·DBP)/3, i.e. 3·MAP = SBP + 2·DBP;
+% solving that for SBP gives SBP = 3·MAP − 2·DBP, and solving it for DBP gives
+% DBP = (3·MAP − SBP)/2. Around the worked case: 3·90 − 2·80 = 270 − 160 = 110 recovers
+% the systolic, and (3·90 − 110)/2 = 160/2 = 80 recovers the diastolic.
+%
+% NOTE: all three pressures must be in the same unit (millimetres of mercury, mmHg,
+% by clinical convention); the MAP then comes out in that same unit. This library
+% computes the exact value over whatever consistent unit it is given.
+%
+% All three formulas are defended by the SAME definitional sentence — "Although
+% complicated to measure directly and complicated to calculate, MAP can be
+% approximated by adding the diastolic pressure to one-third of the pulse pressure
+% or systolic pressure minus the diastolic pressure:" — because that one definition
+% (MAP is the diastolic plus one-third of the systolic-minus-diastolic pulse
+% pressure) sanctions the relation read every way (MAP from SBP and DBP, SBP from
+% MAP and DBP, or DBP from MAP and SBP). The quote is transcribed verbatim from the
+% OpenStax Anatomy and Physiology 2e "Blood Flow, Blood Pressure, and Resistance"
+% chapter on Medicine LibreTexts (a university-hosted open physiology text — the
+% same primary reference family the other clinical libraries draw on), so each
+% `formula` carries the provenance envelope every shipped grounded clause carries;
+% the linter rejects an unsourced one. (See feedback_nothing_human_authored — the
+% definitional sentence is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable hemodynamic quantity the definition
+% ranges over, and each result is the derived quantity. `systolic_pressure`,
+% `diastolic_pressure` and `mean_arterial_pressure` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer
+% maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary mean_arterial_pressure_vocab {
+    define systolic_pressure       : finding  surface "systolic pressure", "systolic BP", "SBP"   % millimetres of mercury (mmHg)
+    define diastolic_pressure      : finding  surface "diastolic pressure", "diastolic BP", "DBP"  % millimetres of mercury (mmHg)
+    define mean_arterial_pressure  : finding  surface "mean arterial pressure", "MAP"              % millimetres of mercury (mmHg)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over
+% its formal parameters, bound at apply time, and each carries the definitional
+% quote from OpenStax A&P on LibreTexts (a quote is required on a shipped formula).
+% The engine works in exact rationals, so each value is returned EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook mean_arterial_pressure_laws {
+    use mean_arterial_pressure_vocab
+
+    % Mean arterial pressure — the diastolic pressure plus one-third of the pulse
+    % pressure (systolic minus diastolic). OpenStax defines MAP as the diastolic
+    % plus one-third of the systolic-minus-diastolic pulse pressure.
+    formula mean_arterial_pressure(systolic_pressure, diastolic_pressure) = diastolic_pressure + (systolic_pressure - diastolic_pressure) / 3
+        source "Although complicated to measure directly and complicated to calculate, MAP can be approximated by adding the diastolic pressure to one-third of the pulse pressure or systolic pressure minus the diastolic pressure:"
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/20:_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.03:_Blood_Flow_Blood_Pressure_and_Resistance"
+        trust authoritative
+
+    % Systolic pressure — the same definition solved for the systolic a MAP implies
+    % for a diastolic (SBP = 3·MAP − 2·DBP). Defended by the SAME definitional
+    % sentence, read the other way.
+    formula systolic_pressure(mean_arterial_pressure, diastolic_pressure) = 3 * mean_arterial_pressure - 2 * diastolic_pressure
+        source "Although complicated to measure directly and complicated to calculate, MAP can be approximated by adding the diastolic pressure to one-third of the pulse pressure or systolic pressure minus the diastolic pressure:"
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/20:_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.03:_Blood_Flow_Blood_Pressure_and_Resistance"
+        trust authoritative
+
+    % Diastolic pressure — the same definition solved for the diastolic a MAP
+    % implies for a systolic (DBP = (3·MAP − SBP)/2). Again the SAME definitional
+    % sentence, read the third way.
+    formula diastolic_pressure(mean_arterial_pressure, systolic_pressure) = (3 * mean_arterial_pressure - systolic_pressure) / 2
+        source "Although complicated to measure directly and complicated to calculate, MAP can be approximated by adding the diastolic pressure to one-third of the pulse pressure or systolic pressure minus the diastolic pressure:"
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/20:_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.03:_Blood_Flow_Blood_Pressure_and_Resistance"
+        trust authoritative
+}

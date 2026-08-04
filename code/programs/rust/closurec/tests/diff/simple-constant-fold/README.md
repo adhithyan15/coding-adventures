@@ -6,7 +6,7 @@ End-to-end oracle for `--compilation_level SIMPLE` (CLOC12.155, PR-1).
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | Three `var` declarations with constant arithmetic initializers |
-| `expected.stdout` | The folded output: `var sum=3;var product=12;var nested=14;` |
+| `expected.stdout` | The folded output: `var sum=3,product=12,nested=14;` |
 
 The SIMPLE level runs the typed-AST optimization pipeline (currently
 just the `constant-fold` pass), so `1 + 2` ⇒ `3`, `3 * 4` ⇒ `12`, and

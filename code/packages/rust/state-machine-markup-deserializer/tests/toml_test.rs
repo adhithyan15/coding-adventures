@@ -122,7 +122,15 @@ fn lexer_profile_html1_toml_parses_into_typed_definition() {
             .iter()
             .map(|token| token.name.as_str())
             .collect::<Vec<_>>(),
-        vec!["Text", "StartTag", "EndTag", "Comment", "Doctype", "EOF"]
+        vec![
+            "Text",
+            "StartTag",
+            "EndTag",
+            "Comment",
+            "ProcessingInstruction",
+            "Doctype",
+            "EOF",
+        ]
     );
     assert!(definition
         .registers
@@ -136,6 +144,10 @@ fn lexer_profile_html1_toml_parses_into_typed_definition() {
         .actions
         .iter()
         .any(|action| action == "create_doctype")));
+    assert!(definition.transitions.iter().any(|transition| transition
+        .actions
+        .iter()
+        .any(|action| action == "finalize_processing_instruction_target")));
     assert!(definition.states.iter().any(|state| state.id == "rcdata"));
     assert!(definition.transitions.iter().any(|transition| transition
         .actions

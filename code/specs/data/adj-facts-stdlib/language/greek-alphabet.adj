@@ -1,0 +1,94 @@
+% ============================================================================
+% greek-alphabet — each Greek letter's position in the Greek alphabet
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% The Greek alphabet is the ordered sequence every student of mathematics and
+% science eventually leans on: alpha comes first (1), beta next (2), … all the way
+% to omega, the twenty-fourth and last (24). Unlike a set, it is a SEQUENCE — and
+% knowing a letter's NUMBER is what lets you say WHICH letter is meant by "the
+% third variable" (gamma) or read an ordered list of angles α, β, γ in the right
+% order. The names double as the symbols mathematicians reach for constantly (π,
+% Σ, Δ, θ, λ, μ), so the ordering is not trivia — it is the index into that
+% shared notation. This tiny library records that name → position mapping so an
+% ADJ program can ASK where a Greek letter sits, and get a cited answer. Recall is
+% a binding query:
+%
+%     ? greek_letter_position(alpha, $N)   % 1  (alpha is the first letter)
+%     ? greek_letter_position(omega, $N)   % 24 (omega is the last letter)
+%
+% Because the value is a NUMBER, the answer composes into arithmetic — how many
+% letters lie between gamma and pi? 16 − 3 − 1 = 12. A reverse query binds the
+% other column, turning a number back into its letter:
+%
+%     ? greek_letter_position($L, 3)       % gamma  (which letter is third?)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `greek_letter_position(letter, position)` carrying the table's citation,
+% so every lookup above is the ordinary SLD binding query — the engine returns the
+% position (or the letter, on a reverse query) WITH its source, on the CPU, with
+% zero model calls, and ABSTAINS on anything that is not one of the 24 Greek
+% letters (a Latin letter, a digit, a symbol) rather than guessing.
+%
+% The 24 letters, as an ordered truth table:
+%
+%     letter    position    letter     position    letter      position
+%     -------   --------    --------   --------    ---------   --------
+%     alpha     1           iota       9           rho         17
+%     beta      2           kappa      10          sigma       18
+%     gamma     3           lambda     11          tau         19
+%     delta     4           mu         12          upsilon     20
+%     epsilon   5           nu         13          phi         21
+%     zeta      6           xi         14          chi         22
+%     eta       7           omicron    15          psi         23
+%     theta     8           pi         16          omega       24
+%
+% Only the 24 letter rows are shipped — nothing else. A Latin letter such as `b`
+% has NO row (it belongs to a different alphabet), so a query like
+% `? greek_letter_position(b, $N)` ABSTAINS rather than inventing a position: the
+% table's honest-abstention property means it only ever asserts the ordering it
+% can cite, and stays silent on everything else.
+%
+% Provenance — nothing here is from memory. The 24-letter alpha→omega ordering is
+% the standard Euclidean order recorded in the Wikipedia "Greek alphabet" article,
+% which states verbatim (see `source`) that the 24-letter alphabet is "ordered from
+% alpha to omega," and whose letters table enumerates the names IN that order:
+% Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omicron
+% Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega. Each row below assigns a letter its
+% 1-based position in that stated sequence. The citable artifact is that article's
+% letters table at the `locator`. `trust consensus` — an encyclopedia is a
+% secondary reference, not a primary standards body. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table greek_letter_position {
+    columns letter, position
+
+    row (alpha, 1)
+    row (beta, 2)
+    row (gamma, 3)
+    row (delta, 4)
+    row (epsilon, 5)
+    row (zeta, 6)
+    row (eta, 7)
+    row (theta, 8)
+    row (iota, 9)
+    row (kappa, 10)
+    row (lambda, 11)
+    row (mu, 12)
+    row (nu, 13)
+    row (xi, 14)
+    row (omicron, 15)
+    row (pi, 16)
+    row (rho, 17)
+    row (sigma, 18)
+    row (tau, 19)
+    row (upsilon, 20)
+    row (phi, 21)
+    row (chi, 22)
+    row (psi, 23)
+    row (omega, 24)
+
+    source "by the end of the 4th century BC, the Ionic-based Euclidean alphabet, with 24 letters, ordered from alpha to omega, had become standard"
+    locator "https://en.wikipedia.org/wiki/Greek_alphabet"
+    trust consensus
+}

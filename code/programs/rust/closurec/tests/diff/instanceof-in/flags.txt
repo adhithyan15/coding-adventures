@@ -1,0 +1,4 @@
+--js
+tests/diff/instanceof-in/input/a.js
+--compilation_level
+SIMPLE

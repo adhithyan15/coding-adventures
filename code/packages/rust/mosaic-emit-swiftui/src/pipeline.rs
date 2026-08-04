@@ -101,7 +101,7 @@ use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
-use mosstyle_compiler::{StyleDef, StyleProp};
+use mosstyle_compiler::{StyleDef, StyleProp, StyleTransition};
 
 // =====================================================================
 // Public API
@@ -388,11 +388,11 @@ fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
-    let root_view = build_root_view_initializer(component_name, slots, "host.props");
+    let root_view = build_root_view_initializer(component_name, slots, "host.props", "host");
     let mut out = String::new();
     write!(
         out,
-        "{BANNER_SWIFT}import Combine\nimport Foundation\nimport SwiftUI\n\n"
+        "{BANNER_SWIFT}import Combine\nimport Foundation\nimport SwiftUI\n#if os(macOS)\nimport AppKit\n#elseif os(iOS)\nimport UIKit\n#endif\n\n"
     )
     .unwrap();
     writeln!(out, "@main").unwrap();
@@ -402,6 +402,9 @@ fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     writeln!(out, "  var body: some Scene {{").unwrap();
     writeln!(out, "    WindowGroup(\"{component_name}\") {{").unwrap();
     writeln!(out, "      {root_view}").unwrap();
+    writeln!(out, "      .onAppear {{").unwrap();
+    writeln!(out, "        host.runInteractionAcceptanceIfRequested()").unwrap();
+    writeln!(out, "      }}").unwrap();
     writeln!(out, "    }}").unwrap();
     writeln!(out, "  }}").unwrap();
     writeln!(out, "}}").unwrap();
@@ -414,11 +417,12 @@ fn build_root_view_initializer(
     component_name: &str,
     slots: &[SlotDecl],
     props_expr: &str,
+    host_expr: &str,
 ) -> String {
     let mut out = format!("{component_name}View(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = host_value_for_slot(slot, props_expr);
+        let value = host_value_for_slot(slot, props_expr, host_expr);
         writeln!(out, "        {field}: {value},").unwrap();
     }
     out.push_str("        dispatch: { event in\n");
@@ -428,7 +432,7 @@ fn build_root_view_initializer(
     out
 }
 
-fn host_value_for_slot(slot: &SlotDecl, props_expr: &str) -> String {
+fn host_value_for_slot(slot: &SlotDecl, props_expr: &str, host_expr: &str) -> String {
     let key = escape_swift_string(&slot.name);
     let fallback = sample_value_for_slot(slot);
     match &slot.r#type {
@@ -453,14 +457,25 @@ fn host_value_for_slot(slot: &SlotDecl, props_expr: &str) -> String {
             }
             ListInnerType::Node | ListInnerType::Component(_) | ListInnerType::List(_) => fallback,
         },
-        SlotType::Node | SlotType::Component(_) => fallback,
+        SlotType::Node | SlotType::Component(_) => {
+            format!("{host_expr}.node(named: \"{key}\")")
+        }
     }
 }
 
 fn build_mosaic_host_state(component_name: &str) -> String {
-    format!(
-        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n}}\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
-    )
+    let state = format!(
+        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    bridge?.setPropsChangedHandler? {{ [weak self] in\n      DispatchQueue.main.async {{\n        self?.refreshProps()\n      }}\n    }}\n    refreshProps()\n  }}\n\n  func node(named name: String) -> AnyView {{\n    guard let object = bridge?.node?(named: name as NSString) else {{\n      return AnyView(EmptyView())\n    }}\n#if os(macOS)\n    guard let view = object as? NSView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#elseif os(iOS)\n    guard let view = object as? UIView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#else\n    return AnyView(EmptyView())\n#endif\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func refreshProps() {{\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n  @objc optional func node(named name: NSString) -> NSObject?\n  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}}\n\n#if os(macOS)\nprivate struct MosaicHostPlatformView: NSViewRepresentable {{\n  let view: NSView\n  func makeNSView(context: Context) -> NSView {{ view }}\n  func updateNSView(_ nsView: NSView, context: Context) {{}}\n}}\n#elseif os(iOS)\nprivate struct MosaicHostPlatformView: UIViewRepresentable {{\n  let view: UIView\n  func makeUIView(context: Context) -> UIView {{ view }}\n  func updateUIView(_ uiView: UIView, context: Context) {{}}\n}}\n#endif\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
+    );
+    state
+        .replace(
+            "  private func refreshProps() {",
+            "  func runInteractionAcceptanceIfRequested() {\n    bridge?.runInteractionAcceptance?()\n  }\n\n  private func refreshProps() {",
+        )
+        .replace(
+            "  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}",
+            "  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n  @objc optional func runInteractionAcceptance()\n}",
+        )
 }
 
 fn sample_value_for_slot(slot: &SlotDecl) -> String {
@@ -549,7 +564,66 @@ fn build_swiftui_readme(component_name: &str) -> String {
 ///
 /// Empty when the `.msl` declares no parts — every lookup returns
 /// `None` and emission proceeds unchanged.
-type PartStyleMap = HashMap<String, Vec<StyleProp>>;
+#[derive(Debug)]
+struct PartStyleEntry {
+    props: Vec<StyleProp>,
+    transitions: Vec<StyleTransition>,
+}
+
+type PartStyleMap = HashMap<String, PartStyleEntry>;
+
+const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState<Content: View>: View {
+    @State private var isHovered = false
+    private let content: (Bool) -> Content
+
+    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+        self.content = content
+    }
+
+    @ViewBuilder
+    var body: some View {
+#if os(macOS)
+        content(isHovered)
+            .onHover { isHovered = $0 }
+#else
+        content(false)
+#endif
+    }
+}
+"#;
+
+const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState<Content: View>: View {
+    @FocusState private var isFocused: Bool
+    private let content: (Bool) -> Content
+
+    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        content(isFocused)
+            .focused($isFocused)
+    }
+}
+"#;
+
+const PRESS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicPressState<Content: View>: View {
+    @GestureState private var isPressed = false
+    private let content: (Bool) -> Content
+
+    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        content(isPressed)
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .updating($isPressed) { _, state, _ in state = true }
+            )
+    }
+}
+"#;
 
 // =====================================================================
 // HostTable column-widths threading — TableContext
@@ -646,28 +720,30 @@ fn extract_table_context(host_table: &LayoutNode) -> TableContext {
     }
 }
 
-/// Build a `part_name → props` map from a [`StyleDef`].
+/// Build a `part_name → style entry` map from a [`StyleDef`].
 ///
 /// Mirrors `mosaic_emit_react::pipeline::build_part_style_map` in shape
-/// but keeps the props as `Vec<StyleProp>` (not a pre-rendered string)
-/// because SwiftUI modifier chains are indent-sensitive — we render
-/// per-call-site with the right `pad`, the React backend can splice a
-/// flat `style={{ ... }}` fragment at any indent.
+/// but keeps props and structured transitions rather than a pre-rendered
+/// string. SwiftUI modifier chains are indent-sensitive, and transitions
+/// need the matching state predicate at each call site.
 ///
 /// Two key shapes populate the map:
-///   * Bare part name (`cell`) → that part's `base` props.
+///   * Bare part name (`cell`) → that part's base props and transitions.
 ///   * Composite `{part}:{state}` (`cell:selected`) → that state
-///     block's overriding props.  Looked up by [`collect_state_layers`]
-///     when a node carries a matching `state-when-<state>` prop.
+///     block's overriding props and entry transitions.
 ///
-/// Empty `base` / `state` blocks are skipped so callers can rely on
-/// `map.get(key).is_some()` as "the author wrote SOMETHING under this
-/// key".
+/// Entries with neither props nor transitions are skipped.
 fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     let mut out = PartStyleMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        if !part.base.is_empty() {
-            out.insert(part.name.clone(), part.base.clone());
+        if !part.base.is_empty() || !part.transitions.is_empty() {
+            out.insert(
+                part.name.clone(),
+                PartStyleEntry {
+                    props: part.base.clone(),
+                    transitions: part.transitions.clone(),
+                },
+            );
         }
         // State blocks (`state selected { ... }`) are surfaced under a
         // composite key `{part}:{state}` so [`collect_state_layers`]
@@ -675,13 +751,95 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         // walk `style.parts` again.  Matches the React emitter's
         // shape (`build_part_style_map` in `mosaic-emit-react`).
         for state in &part.states {
-            if !state.props.is_empty() {
+            if !state.props.is_empty() || !state.transitions.is_empty() {
                 let key = format!("{}:{}", part.name, state.state);
-                out.insert(key, state.props.clone());
+                out.insert(
+                    key,
+                    PartStyleEntry {
+                        props: state.props.clone(),
+                        transitions: state.transitions.clone(),
+                    },
+                );
             }
         }
     }
     out
+}
+
+fn has_explicit_state_when(node: &LayoutNode, state_name: &str) -> bool {
+    let prop_name = format!("state-when-{state_name}");
+    node.props.iter().any(|prop| prop.name == prop_name)
+}
+
+fn automatic_hover_style<'a>(
+    node: &LayoutNode,
+    part_styles: &'a PartStyleMap,
+) -> Option<&'a PartStyleEntry> {
+    let part_name = node.part_name.as_deref()?;
+    if has_explicit_state_when(node, "hover") {
+        return None;
+    }
+    part_styles.get(&format!("{part_name}:hover"))
+}
+
+fn layout_uses_automatic_hover(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    automatic_hover_style(node, part_styles).is_some()
+        || node
+            .children
+            .iter()
+            .any(|child| layout_uses_automatic_hover(child, part_styles))
+}
+
+fn primitive_supports_automatic_focus(tag: &str) -> bool {
+    matches!(
+        tag,
+        "HostInput" | "HostNumberInput" | "HostButton" | "HostCheckbox" | "HostRadio" | "HostLink"
+    )
+}
+
+fn automatic_focus_style<'a>(
+    node: &LayoutNode,
+    part_styles: &'a PartStyleMap,
+) -> Option<&'a PartStyleEntry> {
+    let part_name = node.part_name.as_deref()?;
+    if !primitive_supports_automatic_focus(&node.tag) || has_explicit_state_when(node, "focused") {
+        return None;
+    }
+    part_styles.get(&format!("{part_name}:focused"))
+}
+
+fn layout_uses_automatic_focus(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    automatic_focus_style(node, part_styles).is_some()
+        || node
+            .children
+            .iter()
+            .any(|child| layout_uses_automatic_focus(child, part_styles))
+}
+
+fn primitive_supports_automatic_press(tag: &str) -> bool {
+    matches!(
+        tag,
+        "HostButton" | "HostCheckbox" | "HostRadio" | "HostLink"
+    )
+}
+
+fn automatic_press_style<'a>(
+    node: &LayoutNode,
+    part_styles: &'a PartStyleMap,
+) -> Option<&'a PartStyleEntry> {
+    let part_name = node.part_name.as_deref()?;
+    if !primitive_supports_automatic_press(&node.tag) || has_explicit_state_when(node, "pressed") {
+        return None;
+    }
+    part_styles.get(&format!("{part_name}:pressed"))
+}
+
+fn layout_uses_automatic_press(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    automatic_press_style(node, part_styles).is_some()
+        || node
+            .children
+            .iter()
+            .any(|child| layout_uses_automatic_press(child, part_styles))
 }
 
 /// One state layer collected from a node's `state-when-<X>: ( expr )` props.
@@ -701,6 +859,8 @@ struct StateLayer<'a> {
     cond_expr: String,
     /// The state block's overriding properties.
     props: &'a [StyleProp],
+    /// Transitions used while entering this state.
+    transitions: &'a [StyleTransition],
 }
 
 /// Walk a layout node's props for `state-when-<X>: ( expr )` entries
@@ -738,14 +898,11 @@ fn collect_state_layers<'a>(
             continue;
         };
         let state_key = format!("{part_name}:{state_name}");
-        let Some(state_props) = part_styles.get(&state_key) else {
+        let Some(state_style) = part_styles.get(&state_key) else {
             // `state-when-X` declared without a matching `state X { }`
             // block — silently skip (matches React's posture).
             continue;
         };
-        if state_props.is_empty() {
-            continue;
-        }
         let cond_expr = match &prop.value {
             LayoutPropValue::Expr(t) => t.clone(),
             LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
@@ -757,9 +914,50 @@ fn collect_state_layers<'a>(
         };
         layers.push(StateLayer {
             cond_expr,
-            props: state_props.as_slice(),
+            props: state_style.props.as_slice(),
+            transitions: state_style.transitions.as_slice(),
         });
     }
+    layers
+}
+
+fn collect_state_layers_for_emission<'a>(
+    node: &LayoutNode,
+    part_name: &str,
+    part_styles: &'a PartStyleMap,
+    uses_automatic_hover: bool,
+    uses_automatic_focus: bool,
+    uses_automatic_press: bool,
+) -> Vec<StateLayer<'a>> {
+    let mut layers = Vec::new();
+    if uses_automatic_hover {
+        if let Some(hover_style) = part_styles.get(&format!("{part_name}:hover")) {
+            layers.push(StateLayer {
+                cond_expr: "__mosaicHoverActive".to_string(),
+                props: hover_style.props.as_slice(),
+                transitions: hover_style.transitions.as_slice(),
+            });
+        }
+    }
+    if uses_automatic_focus {
+        if let Some(focus_style) = part_styles.get(&format!("{part_name}:focused")) {
+            layers.push(StateLayer {
+                cond_expr: "__mosaicFocusActive".to_string(),
+                props: focus_style.props.as_slice(),
+                transitions: focus_style.transitions.as_slice(),
+            });
+        }
+    }
+    if uses_automatic_press {
+        if let Some(press_style) = part_styles.get(&format!("{part_name}:pressed")) {
+            layers.push(StateLayer {
+                cond_expr: "__mosaicPressActive".to_string(),
+                props: press_style.props.as_slice(),
+                transitions: press_style.transitions.as_slice(),
+            });
+        }
+    }
+    layers.extend(collect_state_layers(node, part_name, part_styles));
     layers
 }
 
@@ -849,6 +1047,120 @@ fn round3(x: f64) -> f64 {
     (x * 1000.0).round() / 1000.0
 }
 
+/// Convert a resolved MSL duration to deterministic Swift seconds.
+fn swiftui_duration_seconds(duration: &str) -> Option<String> {
+    let duration = duration.trim();
+    let seconds = if let Some(milliseconds) = duration.strip_suffix("ms") {
+        milliseconds.trim().parse::<f64>().ok()? / 1000.0
+    } else {
+        let seconds = duration.strip_suffix('s')?;
+        seconds.trim().parse::<f64>().ok()?
+    };
+    if !seconds.is_finite() || seconds < 0.0 {
+        return None;
+    }
+    let mut rendered = format!("{seconds:.6}");
+    while rendered.contains('.') && rendered.ends_with('0') {
+        rendered.pop();
+    }
+    if rendered.ends_with('.') {
+        rendered.push('0');
+    }
+    Some(rendered)
+}
+
+/// Lower one resolved MSL easing curve to a SwiftUI `Animation`.
+fn swiftui_animation(transition: &StyleTransition) -> Option<String> {
+    let duration = swiftui_duration_seconds(&transition.duration)?;
+    let easing = transition.easing.trim();
+    let constructor = match easing {
+        "linear" => format!("Animation.linear(duration: {duration})"),
+        "ease" | "ease-in-out" => {
+            format!("Animation.easeInOut(duration: {duration})")
+        }
+        "ease-in" => format!("Animation.easeIn(duration: {duration})"),
+        "ease-out" => format!("Animation.easeOut(duration: {duration})"),
+        _ => {
+            let values = easing
+                .strip_prefix("cubic-bezier(")?
+                .strip_suffix(')')?
+                .split(',')
+                .map(str::trim)
+                .map(str::parse::<f64>)
+                .collect::<Result<Vec<_>, _>>()
+                .ok()?;
+            if values.len() != 4 || values.iter().any(|value| !value.is_finite()) {
+                return None;
+            }
+            format!(
+                "Animation.timingCurve({}, {}, {}, {}, duration: {duration})",
+                values[0], values[1], values[2], values[3]
+            )
+        }
+    };
+    Some(constructor)
+}
+
+/// Resolve the effective animation for one style property.
+///
+/// Base transitions are the fallback for every state change. A transition
+/// declared inside a state replaces that fallback only while entering that
+/// state. Leaving the state therefore uses the base transition, or no
+/// animation when the part has no base transition.
+fn swiftui_animation_for_property(
+    property: &str,
+    base_transitions: &[StyleTransition],
+    state_layers: &[StateLayer],
+) -> Option<String> {
+    let mut animation = base_transitions
+        .iter()
+        .rev()
+        .find(|transition| transition.property == property)
+        .and_then(swiftui_animation);
+
+    for layer in state_layers {
+        let Some(state_animation) = layer
+            .transitions
+            .iter()
+            .rev()
+            .find(|transition| transition.property == property)
+            .and_then(swiftui_animation)
+        else {
+            continue;
+        };
+        animation = Some(match animation {
+            Some(fallback) => format!(
+                "(({}) ? {} : {})",
+                layer.cond_expr, state_animation, fallback
+            ),
+            None => format!("(({}) ? {} : nil)", layer.cond_expr, state_animation),
+        });
+    }
+    animation
+}
+
+/// Attach property-scoped implicit animation to the current modifier.
+///
+/// Observing the final lowered property expression instead of the raw state
+/// predicate means SwiftUI only starts the animation when that property's
+/// value actually changes.
+fn push_swiftui_animation(
+    out: &mut String,
+    pad: &str,
+    property: &str,
+    value_expr: &str,
+    base_transitions: &[StyleTransition],
+    state_layers: &[StateLayer],
+) {
+    if let Some(animation) =
+        swiftui_animation_for_property(property, base_transitions, state_layers)
+    {
+        out.push_str(&format!(
+            "\n{pad}.animation({animation}, value: {value_expr})"
+        ));
+    }
+}
+
 /// Build a SwiftUI view-modifier chain from a slice of [`StyleProp`].
 ///
 /// Each modifier renders on its own line, prefixed by `\n` + an indent of
@@ -874,6 +1186,7 @@ fn round3(x: f64) -> f64 {
 /// | `font-weight: semibold` / `SemiBold` / `600`   | `.fontWeight(.semibold)`                                         |
 /// | `font-weight: medium` / `500`                  | `.fontWeight(.medium)`                                           |
 /// | `border-width: Npx` (+ optional `border-color`)| `.border(<color or Color.gray>, width: N)`                       |
+/// | `opacity: N`                                   | `.opacity(N)`                                                    |
 /// | `text-align: left`/`center`/`right` (base only)| `alignment:` arg of `.frame(...)` (`.leading`/`.center`/`.trailing`) |
 /// | anything else                                  | silently skipped (React emitter does the same for v1)            |
 ///
@@ -885,9 +1198,9 @@ fn round3(x: f64) -> f64 {
 ///
 /// Emitted top-to-bottom: `.foregroundColor` → `.font` → `.fontWeight`
 /// → `.padding` → `.frame(width:,height:,alignment:)` → `.background`
-/// → `.border`.  Content styling and sizing come BEFORE paint so the
-/// background fills, and the border strokes, the full frame rather than
-/// a text-sized box.  See the inline comment in the emission body.
+/// → `.border` → `.opacity`. Content styling and sizing come BEFORE paint
+/// so the background fills, and the border strokes, the full frame rather
+/// than a text-sized box. See the inline comment in the emission body.
 ///
 /// ## `injected_width`
 ///
@@ -897,8 +1210,19 @@ fn round3(x: f64) -> f64 {
 /// is how the HostTable column-width thread injects the cell width INTO
 /// the chain at the correct position (before background/border) instead
 /// of appending a trailing `.frame(width:)` that paints too late.
+#[cfg(test)]
 fn swiftui_modifier_chain(
     base_props: &[StyleProp],
+    state_layers: &[StateLayer],
+    indent: usize,
+    injected_width: Option<&str>,
+) -> String {
+    swiftui_modifier_chain_with_transitions(base_props, &[], state_layers, indent, injected_width)
+}
+
+fn swiftui_modifier_chain_with_transitions(
+    base_props: &[StyleProp],
+    base_transitions: &[StyleTransition],
     state_layers: &[StateLayer],
     indent: usize,
     injected_width: Option<&str>,
@@ -961,6 +1285,7 @@ fn swiftui_modifier_chain(
     let mut font_weight = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — we deliberately do NOT
     // layer it per state (a per-state alignment flip is never needed for
@@ -1024,16 +1349,20 @@ fn swiftui_modifier_chain(
                 }
             }
             "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
-            "text-align" => {
+            "opacity" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut opacity, v);
+                }
+            }
+            "text-align"
                 // Base-only by design (see the `text_align` binding's
                 // doc comment).  A state layer that sets `text-align` is
                 // intentionally ignored — only `layer_idx == None` wins.
-                if layer_idx.is_none() {
+                if layer_idx.is_none() => {
                     if let Some(a) = text_align_swift(&p.value) {
                         text_align = Some(a);
                     }
                 }
-            }
             // border-style, border-collapse, outline, etc. — silently
             // skipped.  Matches the React emitter's v1 posture.
             _ => {}
@@ -1077,6 +1406,14 @@ fn swiftui_modifier_chain(
     if !foreground.empty() {
         let expr = layer_value(&foreground, state_layers, "Color.primary");
         out.push_str(&format!("\n{pad}.foregroundColor({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "color",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     // 2. + 3. .font — combine size + monospaced family into one call
@@ -1090,10 +1427,26 @@ fn swiftui_modifier_chain(
             out.push_str(&format!(
                 "\n{pad}.font(.system(size: {sz}, design: .monospaced))"
             ));
+            push_swiftui_animation(
+                &mut out,
+                &pad,
+                "font-size",
+                &sz,
+                base_transitions,
+                state_layers,
+            );
         }
         (true, false) => {
             let sz = layer_value(&font_size, state_layers, "0");
             out.push_str(&format!("\n{pad}.font(.system(size: {sz}))"));
+            push_swiftui_animation(
+                &mut out,
+                &pad,
+                "font-size",
+                &sz,
+                base_transitions,
+                state_layers,
+            );
         }
         (false, true) => out.push_str(&format!(
             "\n{pad}.font(.system(.body, design: .monospaced))"
@@ -1111,6 +1464,14 @@ fn swiftui_modifier_chain(
     if !padding.empty() {
         let expr = layer_value(&padding, state_layers, "0");
         out.push_str(&format!("\n{pad}.padding({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "padding",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     // 5. .frame(width:, height:, alignment:) — the cell's box.
@@ -1137,6 +1498,8 @@ fn swiftui_modifier_chain(
     } else {
         None
     };
+    let animated_width = frame_width.clone();
+    let animated_height = frame_height.clone();
     match (frame_width, frame_height) {
         (Some(w), Some(h)) => {
             let a = align_arg.as_deref().unwrap_or("");
@@ -1166,6 +1529,26 @@ fn swiftui_modifier_chain(
             }
         }
     }
+    if let Some(value) = animated_width {
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "width",
+            &value,
+            base_transitions,
+            state_layers,
+        );
+    }
+    if let Some(value) = animated_height {
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "height",
+            &value,
+            base_transitions,
+            state_layers,
+        );
+    }
 
     // 6. .background — fills the frame (now full cell size).  A state
     // that overrides background where there's NO base value gets
@@ -1174,6 +1557,22 @@ fn swiftui_modifier_chain(
     if !background.empty() {
         let expr = layer_value(&background, state_layers, "Color.clear");
         out.push_str(&format!("\n{pad}.background({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "background",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "background-color",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     // 7. .border — strokes the frame edge.  Needs at least the width.
@@ -1188,6 +1587,36 @@ fn swiftui_modifier_chain(
             layer_value(&border_color, state_layers, "Color.gray")
         };
         out.push_str(&format!("\n{pad}.border({c_expr}, width: {w_expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "border-color",
+            &c_expr,
+            base_transitions,
+            state_layers,
+        );
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "border-width",
+            &w_expr,
+            base_transitions,
+            state_layers,
+        );
+    }
+
+    // 8. .opacity — compositing applies to the fully styled part.
+    if !opacity.empty() {
+        let expr = layer_value(&opacity, state_layers, "1");
+        out.push_str(&format!("\n{pad}.opacity({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "opacity",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     out
@@ -1315,6 +1744,19 @@ pub fn from_pipeline(
     .unwrap();
     writeln!(out, "import SwiftUI").unwrap();
     writeln!(out).unwrap();
+
+    if layout_uses_automatic_hover(&layout.root, &part_styles) {
+        out.push_str(HOVER_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
+    if layout_uses_automatic_focus(&layout.root, &part_styles) {
+        out.push_str(FOCUS_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
+    if layout_uses_automatic_press(&layout.root, &part_styles) {
+        out.push_str(PRESS_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
 
     // 3. Event enum (analog of UI24 §3.1 event union).
     out.push_str(&emit_event_union(name, &interface.emits)?);
@@ -1607,6 +2049,13 @@ fn emit_view_tree(
     // width-thread path for where `Some(...)` originates.
     injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
+    let uses_automatic_hover = automatic_hover_style(node, part_styles).is_some();
+    let uses_automatic_focus = automatic_focus_style(node, part_styles).is_some();
+    let uses_automatic_press = automatic_press_style(node, part_styles).is_some();
+    let automatic_wrapper_count = usize::from(uses_automatic_hover)
+        + usize::from(uses_automatic_focus)
+        + usize::from(uses_automatic_press);
+    let indent = indent + automatic_wrapper_count * 4;
     let pad = " ".repeat(indent);
 
     let mut inner = match node.tag.as_str() {
@@ -1709,6 +2158,7 @@ fn emit_view_tree(
         // the per-function doc comments below for the full mapping.
         "HostInput" => emit_host_input(node, indent)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
+        "HostSurface" => emit_host_surface(node, indent),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` both lower to
         // SwiftUI `Toggle` with the platform's default toggle style.
@@ -1813,13 +2263,31 @@ fn emit_view_tree(
     // rather than being appended as a trailing `.frame(width:)`.
     let mut consumed_injected = false;
     if let Some(part) = &node.part_name {
-        let base_props = part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
-        let state_layers = collect_state_layers(node, part, part_styles);
+        let base_style = part_styles.get(part);
+        let base_props = base_style
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
+        let base_transitions = base_style
+            .map(|style| style.transitions.as_slice())
+            .unwrap_or(&[]);
+        let state_layers = collect_state_layers_for_emission(
+            node,
+            part,
+            part_styles,
+            uses_automatic_hover,
+            uses_automatic_focus,
+            uses_automatic_press,
+        );
         // When a width is injected we MUST run the chain even if the part
         // carries no styles, so the frame still emits.
         if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
-            let chain =
-                swiftui_modifier_chain(base_props, &state_layers, indent + 4, injected_width);
+            let chain = swiftui_modifier_chain_with_transitions(
+                base_props,
+                base_transitions,
+                &state_layers,
+                indent + 4,
+                injected_width,
+            );
             if injected_width.is_some() {
                 consumed_injected = true;
             }
@@ -1847,6 +2315,29 @@ fn emit_view_tree(
             spliced.push('\n');
             inner = spliced;
         }
+    }
+
+    let mut wrapper_indent = indent;
+    if uses_automatic_press {
+        wrapper_indent -= 4;
+        let wrapper_pad = " ".repeat(wrapper_indent);
+        inner = format!(
+            "{wrapper_pad}_MosaicPressState {{ __mosaicPressActive in\n{inner}{wrapper_pad}}}\n"
+        );
+    }
+    if uses_automatic_focus {
+        wrapper_indent -= 4;
+        let wrapper_pad = " ".repeat(wrapper_indent);
+        inner = format!(
+            "{wrapper_pad}_MosaicFocusState {{ __mosaicFocusActive in\n{inner}{wrapper_pad}}}\n"
+        );
+    }
+    if uses_automatic_hover {
+        wrapper_indent -= 4;
+        let outer_pad = " ".repeat(wrapper_indent);
+        inner = format!(
+            "{outer_pad}_MosaicHoverState {{ __mosaicHoverActive in\n{inner}{outer_pad}}}\n"
+        );
     }
 
     Ok(inner)
@@ -2202,6 +2693,16 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     // The opening `TextField` expression.
     let mut line = format!("{pad}TextField({placeholder_lit}, text: {text_binding})");
 
+    // Keep the author-owned MLL part identity on the native control. This is
+    // the stable cross-platform handle for accessibility and interaction
+    // acceptance; hosts do not need to invent a parallel AppKit control tree.
+    if let Some(part_name) = &node.part_name {
+        line.push_str(&format!(
+            ".accessibilityIdentifier(\"{}\")",
+            escape_swift_string(part_name)
+        ));
+    }
+
     // Modifier chain. We deliberately keep each modifier on the same
     // line — Swift accepts chained modifiers without line breaks, and
     // the generated source stays compact and grep-friendly.
@@ -2364,6 +2865,12 @@ fn emit_host_button(
     // Closing brace, then any trailing modifiers on the same line so the
     // generated source stays compact.
     let mut closing = format!("{pad}}}");
+    if let Some(part_name) = &node.part_name {
+        closing.push_str(&format!(
+            ".accessibilityIdentifier(\"{}\")",
+            escape_swift_string(part_name)
+        ));
+    }
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2588,7 +3095,7 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     // readers while keeping the line-comment scope intact.
     fn escape_for_line_comment(s: &str) -> String {
         let escaped = escape_swift_string(s);
-        escaped.replace('\r', " ").replace('\n', " ")
+        escaped.replace(['\r', '\n'], " ")
     }
     if let Some(g) = find_string_prop(node, "group") {
         writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();
@@ -3277,6 +3784,9 @@ fn emit_host_dialog(
 /// Non-`Row` children of a section are passed through the regular walker
 /// so the file still compiles if an author puts (say) a `Divider` between
 /// rows; an explicit comment is emitted documenting the unusual nesting.
+// Threads the full row-lowering context through the section walk; splitting
+// would obscure the flow.
+#[allow(clippy::too_many_arguments)]
 fn emit_table_section_rows(
     out: &mut String,
     section: &LayoutNode,
@@ -3737,6 +4247,17 @@ fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a s
     })
 }
 
+/// Lower a host-owned native surface to the typed `AnyView` node supplied by
+/// the component host. A missing binding remains an empty native view so
+/// generated preview/project shells stay buildable before a host is attached.
+fn emit_host_surface(node: &LayoutNode, indent: usize) -> String {
+    let pad = " ".repeat(indent);
+    let expression = find_slot_ref_prop(node, "content")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "AnyView(EmptyView())".to_string());
+    format!("{pad}{expression}\n")
+}
+
 /// Find a prop on `node` whose value is an `EmitRef`. Returns the emit's
 /// camelCased name (e.g. `onTap`), or `None`.
 fn find_emit_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
@@ -3864,10 +4385,13 @@ fn is_safe_swift_identifier(s: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    // Tests build `EmitOptions::default()` then set one field; the sequential
+    // form reads clearly and is behavior-identical to an initializer.
+    #![allow(clippy::field_reassign_with_default)]
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::EmitParam;
-    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp};
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
     // ---------------------------------------------------------------------
     // Test helpers — keep tests short by hiding the construction noise.
@@ -4463,6 +4987,28 @@ mod tests {
         );
     }
 
+    #[test]
+    fn host_input_part_name_becomes_accessibility_identifier() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("address-input".to_string()),
+            props: vec![prop_string("placeholder", "Enter a URL")],
+            children: vec![],
+        };
+        let layout = layout_with("Form", container_node("Box", vec![input]));
+        let out = from_pipeline(
+            &component("Form", vec![], vec![]),
+            &layout,
+            &empty_style("Form"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".accessibilityIdentifier(\"address-input\")"),
+            "expected the MLL part name on the native TextField, got:\n{out}"
+        );
+    }
+
     // ---------------------------------------------------------------------
     // Test 16b — a `HostInput` with BOTH a `value` slot and an `onChange`
     // handler is EDITABLE: it lowers to a writable `Binding(get:set:)` whose
@@ -4740,6 +5286,28 @@ mod tests {
         assert!(
             out.contains("Text(caption)"),
             "expected label closure with Text(caption), got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_part_name_becomes_accessibility_identifier() {
+        let button = LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: Some("go-button".to_string()),
+            props: vec![prop_string("label", "Go")],
+            children: vec![],
+        };
+        let layout = layout_with("Bar", container_node("Box", vec![button]));
+        let out = from_pipeline(
+            &component("Bar", vec![], vec![]),
+            &layout,
+            &empty_style("Bar"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".accessibilityIdentifier(\"go-button\")"),
+            "expected the MLL part name on the native Button, got:\n{out}"
         );
     }
 
@@ -6933,6 +7501,12 @@ mod tests {
             proj.app_swift.contains("host.dispatch(event)"),
             "App.swift should dispatch the Mosaic wire envelope through the host"
         );
+        assert!(proj
+            .app_swift
+            .contains("host.runInteractionAcceptanceIfRequested()"));
+        assert!(proj
+            .app_swift
+            .contains("@objc optional func runInteractionAcceptance()"));
     }
 
     #[test]
@@ -6991,6 +7565,16 @@ mod tests {
         assert!(proj
             .app_swift
             .contains("applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary"));
+        assert!(proj
+            .app_swift
+            .contains("bridge?.setPropsChangedHandler? { [weak self] in"));
+        assert!(proj.app_swift.contains("DispatchQueue.main.async"));
+        assert!(proj.app_swift.contains(
+            "@objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)"
+        ));
+        assert!(proj
+            .app_swift
+            .contains("applyHostResponse(bridge?.applyProps() as? [String: Any])"));
     }
 
     #[test]
@@ -7101,6 +7685,14 @@ mod tests {
         }
     }
 
+    fn transition(property: &str, duration: &str, easing: &str) -> StyleTransition {
+        StyleTransition {
+            property: property.to_string(),
+            duration: duration.to_string(),
+            easing: easing.to_string(),
+        }
+    }
+
     /// Build a `StyleDef` with a single `part name { base props }`.
     fn style_with_part(component: &str, part_name: &str, props: Vec<StyleProp>) -> StyleDef {
         StyleDef {
@@ -7108,6 +7700,7 @@ mod tests {
             parts: vec![PartStyle {
                 name: part_name.to_string(),
                 base: props,
+                transitions: vec![],
                 states: Vec::new(),
             }],
         }
@@ -7138,11 +7731,13 @@ mod tests {
                 PartStyle {
                     name: "cell".to_string(),
                     base: vec![sp("padding", "2px")],
+                    transitions: vec![],
                     states: Vec::new(),
                 },
                 PartStyle {
                     name: "header".to_string(),
                     base: vec![sp("font-weight", "bold")],
+                    transitions: vec![],
                     states: Vec::new(),
                 },
             ],
@@ -7608,10 +8203,12 @@ mod tests {
             parts: vec![PartStyle {
                 name: part_name.to_string(),
                 base,
+                transitions: vec![],
                 states: states
                     .into_iter()
                     .map(|(name, props)| StateStyle {
                         state: name.to_string(),
+                        transitions: vec![],
                         props,
                     })
                     .collect(),
@@ -7714,7 +8311,10 @@ mod tests {
                 "( r == selectedRow && c == selectedCol )",
             )],
         );
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // Modifier wraps the bucket value in `(...)`; the bucket value
@@ -7778,7 +8378,10 @@ mod tests {
                 prop_expr("state-when-editing", "( edit )"),
             ],
         );
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // editing wraps selected; selected wraps base.  The modifier
@@ -7865,7 +8468,10 @@ mod tests {
         let map = build_part_style_map(&s);
         let node =
             box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // .background stays at the base value — no ternary.
@@ -7901,7 +8507,10 @@ mod tests {
         let map = build_part_style_map(&s);
         let node =
             box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // Only `.padding(4)` — no ternary, no `( sel )`, no extra parens.
@@ -7927,7 +8536,10 @@ mod tests {
             box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
         let layers = collect_state_layers(&node, "cell", &map);
         assert!(layers.is_empty());
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // No ternary, just the base background.
         assert!(
@@ -7997,6 +8609,574 @@ mod tests {
                 ".foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color(red: 0.8, green: 0.8, blue: 0.8)))"
             ),
             "out = {out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T24 — MSL transition durations and easing curves lower to native
+    //       SwiftUI Animation constructors.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn transition_values_lower_to_swiftui_animations() {
+        assert_eq!(swiftui_duration_seconds("80ms").as_deref(), Some("0.08"));
+        assert_eq!(swiftui_duration_seconds("1s").as_deref(), Some("1.0"));
+        assert_eq!(
+            swiftui_animation(&transition("opacity", "150ms", "ease-out")).as_deref(),
+            Some("Animation.easeOut(duration: 0.15)")
+        );
+        assert_eq!(
+            swiftui_animation(&transition(
+                "opacity",
+                "300ms",
+                "cubic-bezier(0.34, 1.56, 0.64, 1)"
+            ))
+            .as_deref(),
+            Some("Animation.timingCurve(0.34, 1.56, 0.64, 1, duration: 0.3)")
+        );
+        assert!(swiftui_duration_seconds("fast").is_none());
+    }
+
+    // ---------------------------------------------------------------------
+    // T25 — A part-level transition watches the final lowered property
+    //       expression, so unrelated state changes do not start it.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn base_transition_emits_property_scoped_animation() {
+        let s = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![sp("background", "#1e1e1e")],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![sp("background", "#264f78")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let map = build_part_style_map(&s);
+        let node =
+            box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
+        let base = map.get("cell").expect("base style");
+        let layers = collect_state_layers(&node, "cell", &map);
+        let chain = swiftui_modifier_chain_with_transitions(
+            &base.props,
+            &base.transitions,
+            &layers,
+            0,
+            None,
+        );
+        let property_value = "((( sel )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color(red: 0.118, green: 0.118, blue: 0.118))";
+        assert!(
+            chain.contains(&format!(
+                ".animation(Animation.easeOut(duration: 0.08), value: {property_value})"
+            )),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T26 — State-local transitions replace the base curve while entering
+    //       that state; leaving falls back to the part-level curve.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_local_transition_overrides_only_while_entering_state() {
+        let s = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![transition("opacity", "150ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![sp("opacity", "0.4")],
+                    transitions: vec![transition("opacity", "300ms", "linear")],
+                }],
+            }],
+        };
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "root",
+            vec![prop_expr("state-when-disabled", "( disabled )")],
+        );
+        let base = map.get("root").expect("base style");
+        let layers = collect_state_layers(&node, "root", &map);
+        let chain = swiftui_modifier_chain_with_transitions(
+            &base.props,
+            &base.transitions,
+            &layers,
+            0,
+            None,
+        );
+        assert!(
+            chain.contains(".opacity(((( disabled )) ? 0.4 : 1))"),
+            "chain = {chain}"
+        );
+        assert!(
+            chain.contains(
+                ".animation(((( disabled )) ? Animation.linear(duration: 0.3) : Animation.easeOut(duration: 0.15)), value: ((( disabled )) ? 0.4 : 1))"
+            ),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T27 — A transition-only state remains addressable and disables
+    //       animation on exit when no base transition exists.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn transition_only_state_is_collected_with_nil_exit_animation() {
+        let s = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![sp("opacity", "0.4")],
+                    transitions: vec![transition("opacity", "300ms", "ease-in")],
+                }],
+            }],
+        };
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "root",
+            vec![prop_expr("state-when-disabled", "( disabled )")],
+        );
+        let base = map.get("root").expect("base style");
+        let layers = collect_state_layers(&node, "root", &map);
+        assert_eq!(layers.len(), 1);
+        let chain = swiftui_modifier_chain_with_transitions(
+            &base.props,
+            &base.transitions,
+            &layers,
+            0,
+            None,
+        );
+        assert!(
+            chain.contains(
+                ".animation(((( disabled )) ? Animation.easeIn(duration: 0.3) : nil), value: ((( disabled )) ? 0.4 : 1))"
+            ),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T28 — End-to-end pipeline output consumes transitions from StyleDef.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn transition_end_to_end_from_pipeline_emits_swiftui_animation() {
+        let m = component("Fade", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Fade".to_string(),
+            root: box_node_with_part_and_props(
+                "root",
+                vec![prop_expr("state-when-disabled", "( disabled )")],
+            ),
+        };
+        let s = StyleDef {
+            component_name: "Fade".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![transition("opacity", "150ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![sp("opacity", "0.4")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains(
+                ".animation(Animation.easeOut(duration: 0.15), value: ((( disabled )) ? 0.4 : 1))"
+            ),
+            "out = {out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T29 — UI15's built-in hover state is activated without requiring a
+    //       redundant state-when-hover layout predicate.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn built_in_hover_state_emits_row_local_wrapper_and_animation() {
+        let m = component("HoverCard", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "HoverCard".to_string(),
+            root: box_node_with_part_and_props("card", vec![]),
+        };
+        let s = StyleDef {
+            component_name: "HoverCard".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![sp("background", "#ffffff")],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![sp("background", "#e8f0ff")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains("private struct _MosaicHoverState<Content: View>: View"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("_MosaicHoverState { __mosaicHoverActive in"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(
+                ".background(((__mosaicHoverActive) ? Color(red: 0.91, green: 0.941, blue: 1) : Color(red: 1, green: 1, blue: 1)))"
+            ),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(
+                ".animation(Animation.easeOut(duration: 0.08), value: ((__mosaicHoverActive) ? Color(red: 0.91, green: 0.941, blue: 1) : Color(red: 1, green: 1, blue: 1)))"
+            ),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn built_in_hover_state_is_local_to_each_for_iteration() {
+        let m = component(
+            "HoverRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut row = box_node_with_part_and_props("row", vec![]);
+        row.children.push(node_with_props(
+            "Text",
+            vec![prop_keyword("value", "row")],
+            vec![],
+        ));
+        let l = LayoutDef {
+            component_name: "HoverRows".to_string(),
+            root: node_with_props(
+                "For",
+                vec![prop_slot_ref("each", "rows"), prop_keyword("as", "row")],
+                vec![row],
+            ),
+        };
+        let s = style_with_part_and_states(
+            "HoverRows",
+            "row",
+            vec![sp("opacity", "0.8")],
+            vec![("hover", vec![sp("opacity", "1")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        let for_pos = out
+            .find("ForEach(rows, id: \\.self) { row in")
+            .expect("ForEach");
+        let hover_pos = out[for_pos..]
+            .find("_MosaicHoverState { __mosaicHoverActive in")
+            .expect("row-local hover wrapper");
+        assert!(hover_pos > 0, "out = {out}");
+        assert!(
+            out[for_pos..].contains(".opacity(((__mosaicHoverActive) ? 1 : 0.8))"),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn explicit_hover_predicate_remains_author_controlled() {
+        let m = component("ManualHover", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "ManualHover".to_string(),
+            root: box_node_with_part_and_props(
+                "root",
+                vec![prop_expr("state-when-hover", "( forceHover )")],
+            ),
+        };
+        let s = style_with_part_and_states(
+            "ManualHover",
+            "root",
+            vec![sp("opacity", "0.8")],
+            vec![("hover", vec![sp("opacity", "1")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicHoverState"),
+            "explicit predicate should not install native hover tracking:\n{out}"
+        );
+        assert!(
+            out.contains(".opacity(((( forceHover )) ? 1 : 0.8))"),
+            "out = {out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T30 — UI15's built-in pressed state is activated by row-local native
+    //       SwiftUI gesture state for pressable host controls.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn built_in_pressed_state_emits_native_press_wrapper_and_animation() {
+        let m = component("PressedButton", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "PressedButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![prop_string("label", "Save")],
+                children: vec![],
+            },
+        };
+        let s = StyleDef {
+            component_name: "PressedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![transition("opacity", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "pressed".to_string(),
+                    props: vec![sp("opacity", "0.7")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains("private struct _MosaicPressState<Content: View>: View"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("@GestureState private var isPressed = false"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("_MosaicPressState { __mosaicPressActive in"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("DragGesture(minimumDistance: 0)"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(".opacity(((__mosaicPressActive) ? 0.7 : 1))"),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn explicit_pressed_predicate_remains_author_controlled() {
+        let m = component("ManualPress", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "ManualPress".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![
+                    prop_string("label", "Save"),
+                    prop_expr("state-when-pressed", "( forcePress )"),
+                ],
+                children: vec![],
+            },
+        };
+        let s = style_with_part_and_states(
+            "ManualPress",
+            "button",
+            vec![sp("opacity", "1")],
+            vec![("pressed", vec![sp("opacity", "0.7")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicPressState"),
+            "explicit predicate should not install native press tracking:\n{out}"
+        );
+        assert!(out.contains("forcePress"), "out = {out}");
+    }
+
+    #[test]
+    fn non_pressable_layout_node_does_not_install_press_tracking() {
+        let m = component("DecorativePress", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "DecorativePress".to_string(),
+            root: box_node_with_part_and_props("panel", vec![]),
+        };
+        let s = style_with_part_and_states(
+            "DecorativePress",
+            "panel",
+            vec![sp("opacity", "1")],
+            vec![("pressed", vec![sp("opacity", "0.7")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicPressState"),
+            "non-pressable layout nodes must not gain native press tracking:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T31 — UI15's built-in focused state is activated by native SwiftUI
+    //       focus for focus-capable host controls.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn built_in_focused_state_emits_native_focus_wrapper_and_animation() {
+        let m = component("FocusField", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "FocusField".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: vec![prop_string("placeholder", "Search")],
+                children: vec![],
+            },
+        };
+        let s = StyleDef {
+            component_name: "FocusField".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: vec![sp("border-width", "1"), sp("border-color", "#d0d0d0")],
+                transitions: vec![transition("border-color", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![sp("border-color", "#e0942a")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains("private struct _MosaicFocusState<Content: View>: View"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("@FocusState private var isFocused: Bool"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("_MosaicFocusState { __mosaicFocusActive in"),
+            "out = {out}"
+        );
+        assert!(out.contains(".focused($isFocused)"), "out = {out}");
+        assert!(
+            out.contains("__mosaicFocusActive")
+                && out.contains("Animation.easeOut(duration: 0.08)"),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn built_in_focused_state_is_local_to_each_for_iteration() {
+        let m = component(
+            "FocusRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let field = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("field".to_string()),
+            props: vec![
+                prop_expr("value", "( row )"),
+                prop_string("placeholder", "Edit"),
+            ],
+            children: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "FocusRows".to_string(),
+            root: node_with_props(
+                "For",
+                vec![prop_slot_ref("each", "rows"), prop_keyword("as", "row")],
+                vec![field],
+            ),
+        };
+        let s = style_with_part_and_states(
+            "FocusRows",
+            "field",
+            vec![sp("border-color", "#d0d0d0")],
+            vec![("focused", vec![sp("border-color", "#e0942a")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        let for_pos = out
+            .find("ForEach(rows, id: \\.self) { row in")
+            .expect("ForEach");
+        let focus_pos = out[for_pos..]
+            .find("_MosaicFocusState { __mosaicFocusActive in")
+            .expect("row-local focus wrapper");
+        assert!(focus_pos > 0, "out = {out}");
+        assert!(out[for_pos..].contains("TextField(\"Edit\""), "out = {out}");
+    }
+
+    #[test]
+    fn explicit_focused_predicate_remains_author_controlled() {
+        let m = component("ManualFocus", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "ManualFocus".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: vec![
+                    prop_string("placeholder", "Search"),
+                    prop_expr("state-when-focused", "( forceFocus )"),
+                ],
+                children: vec![],
+            },
+        };
+        let s = style_with_part_and_states(
+            "ManualFocus",
+            "field",
+            vec![sp("border-width", "1"), sp("border-color", "#d0d0d0")],
+            vec![("focused", vec![sp("border-color", "#e0942a")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicFocusState"),
+            "explicit predicate should not install native focus tracking:\n{out}"
+        );
+        assert!(out.contains("forceFocus"), "out = {out}");
+    }
+
+    #[test]
+    fn non_focusable_layout_node_does_not_install_focus_tracking() {
+        let m = component("DecorativeFocus", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "DecorativeFocus".to_string(),
+            root: box_node_with_part_and_props("panel", vec![]),
+        };
+        let s = style_with_part_and_states(
+            "DecorativeFocus",
+            "panel",
+            vec![sp("border-color", "#d0d0d0")],
+            vec![("focused", vec![sp("border-color", "#e0942a")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicFocusState"),
+            "non-focusable layout nodes must not gain native focus:\n{out}"
         );
     }
 

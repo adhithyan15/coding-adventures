@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "hashing-cache/matching-record-hit",
+  "domain": "hashing_cache",
+  "summary": "A successful cache record with the exact combined digest is a hit with no invalidations.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "hashing_cache"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/src/data.bin",
+        "content_utf8": "abc"
+      }
+    ]
+  },
+  "input": {
+    "operation": "hashing_cache",
+    "options": {
+      "algorithm": "sha256-v1",
+      "package": "python/demo",
+      "include_paths": [
+        "code/packages/python/demo/src/data.bin"
+      ],
+      "dependency_digests": [],
+      "dependents": [
+        "python/app"
+      ],
+      "prior_cache": {
+        "state": "record",
+        "combined_digest": "3486546e6dbe30f8130f24b760b4bfd7dc7e7729e0f04b46056bb07a4b39fa8a",
+        "status": "success"
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "hashing-cache/matching-record-hit",
+    "domain": "hashing_cache",
+    "outcome": "ok",
+    "result": {
+      "package_digest": "6a2dc6b1e5428211f6f19387deb1c84836e61384745e7e0e5986fe49b17ff24f",
+      "dependencies_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "combined_digest": "3486546e6dbe30f8130f24b760b4bfd7dc7e7729e0f04b46056bb07a4b39fa8a",
+      "cache_status": "hit",
+      "invalidated_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

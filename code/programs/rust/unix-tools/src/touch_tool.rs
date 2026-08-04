@@ -46,6 +46,9 @@ pub fn touch_file(path: &str, no_create: bool) -> Result<bool, String> {
         // Create the file by opening it in create mode.
         OpenOptions::new()
             .create(true)
+            // `touch` must never clobber an existing file's contents, so be
+            // explicit that we do not truncate.
+            .truncate(false)
             .write(true)
             .open(file_path)
             .map_err(|e| format!("touch: cannot touch '{}': {}", path, e))?;
@@ -91,7 +94,7 @@ mod tests {
         let _ = fs::remove_file(&path);
         let result = touch_file(&path, false);
         assert!(result.is_ok());
-        assert_eq!(result.unwrap(), true);
+        assert!(result.unwrap());
         assert!(Path::new(&path).exists());
         fs::remove_file(&path).ok();
     }
@@ -102,7 +105,7 @@ mod tests {
         fs::write(&path, "data").unwrap();
         let result = touch_file(&path, false);
         assert!(result.is_ok());
-        assert_eq!(result.unwrap(), true);
+        assert!(result.unwrap());
         fs::remove_file(&path).ok();
     }
 
@@ -112,7 +115,7 @@ mod tests {
         let _ = fs::remove_file(&path);
         let result = touch_file(&path, true);
         assert!(result.is_ok());
-        assert_eq!(result.unwrap(), false);
+        assert!(!result.unwrap());
         assert!(!Path::new(&path).exists());
     }
 

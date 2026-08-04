@@ -1,0 +1,86 @@
+% ============================================================================
+% momentum.adj — the definition of linear momentum in the ADJ standard library.
+% ============================================================================
+% The momentum entry of the *physics* track, a sibling of `density.adj`,
+% `pressure.adj` and `electricity.adj`: the foundational mechanics definition a
+% first course states as LINEAR MOMENTUM IS THE PRODUCT OF MASS AND VELOCITY, as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the velocity a momentum implies for a mass, and the mass it
+% implies for a velocity). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the physical quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited definition
+% on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY, carrying the definition's citation.
+%
+%     import "momentum.adj"
+%     observe mass(2)                % "…2 kg…"     (span cited by the model)
+%     observe velocity(5)            % "…at 5 m/s…" (span cited by the model)
+%     ? momentum(mass, velocity)     % engine → 10, carrying the def p = m·v
+%
+% All three formulas are EXACT over their parameters — one a product, two quotients
+% of measured quantities. There is no *separately grounded* physical constant here,
+% so every value the engine returns is exact. The three COMPOSE and invert cleanly:
+% the `momentum` a consumer computes from a mass moving at a velocity is exactly the
+% `momentum` the `velocity` formula divides by that mass to recover the velocity,
+% and exactly the `momentum` the `mass` formula divides by that velocity to recover
+% the mass.
+%
+%   momentum(mass, velocity)     = mass * velocity        %  p = m·v   (definition of momentum)
+%   velocity(momentum, mass)     = momentum / mass         %  v = p/m   (the same definition, solved for v)
+%   mass(momentum, velocity)     = momentum / velocity     %  m = p/v   (the same definition, solved for m)
+%
+% All three formulas are defended by the SAME definitional sentence — "The momentum
+% of a particle is defined as the product of its mass times its velocity." — because
+% that one definition sanctions the relation read every way (p from m and v, v from
+% p and m, or m from p and v). The quote is transcribed verbatim from Georgia State
+% University's HyperPhysics (a university .edu physics reference — the same primary
+% source `density.adj`, `pressure.adj` and `electricity.adj` cite), so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one. (See feedback_nothing_human_authored — the definitional
+% sentence is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable physical quantity the definition
+% ranges over, and each result is the derived quantity. `momentum`, `mass` and
+% `velocity` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended SI unit.
+% ----------------------------------------------------------------------------
+dictionary momentum_vocab {
+    define mass     : finding  surface "mass", "m"                  % mass, e.g. kg
+    define velocity : finding  surface "velocity", "speed", "v"    % velocity, e.g. m/s
+    define momentum : finding  surface "momentum", "p"             % momentum, e.g. kg·m/s
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over
+% its formal parameters, bound at apply time, and each carries the definitional
+% quote from HyperPhysics (a quote is required on a shipped formula). One is a
+% product and two are quotients, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook momentum_laws {
+    use momentum_vocab
+
+    % Momentum — the product of mass and velocity. HyperPhysics defines the momentum
+    % of a particle as its mass multiplied by its velocity, i.e. p = m·v.
+    formula momentum(mass, velocity) = mass * velocity
+        source "The momentum of a particle is defined as the product of its mass times its velocity."
+        locator "https://hyperphysics.gsu.edu/hbase/mom.html"
+        trust authoritative
+
+    % Velocity — the same definition solved for the velocity a momentum implies for a
+    % mass (v = p/m). Defended by the SAME definitional sentence, read the other way.
+    formula velocity(momentum, mass) = momentum / mass
+        source "The momentum of a particle is defined as the product of its mass times its velocity."
+        locator "https://hyperphysics.gsu.edu/hbase/mom.html"
+        trust authoritative
+
+    % Mass — the same definition solved for the mass a momentum implies for a
+    % velocity (m = p/v). Again the SAME definitional sentence, read the third way.
+    formula mass(momentum, velocity) = momentum / velocity
+        source "The momentum of a particle is defined as the product of its mass times its velocity."
+        locator "https://hyperphysics.gsu.edu/hbase/mom.html"
+        trust authoritative
+}

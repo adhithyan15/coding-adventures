@@ -120,10 +120,10 @@ pub fn conv1d(
     let mut out = Vec::with_capacity(n);
     for i in 0..n {
         let mut acc = 0.0f32;
-        for j in 0..k {
+        for (j, &tap) in kernel.iter().enumerate() {
             let src_index = (i as isize) + centre - (j as isize);
             let v = sample(signal, src_index, mode);
-            acc += kernel[j] * v;
+            acc += tap * v;
         }
         out.push(acc);
     }

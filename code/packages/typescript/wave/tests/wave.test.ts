@@ -256,6 +256,37 @@ describe("Wave validation", () => {
   test("negative frequency throws", () => {
     expect(() => new Wave(1.0, -5.0)).toThrow("Frequency must be positive");
   });
+
+  test.each([
+    [Number.NaN, 1.0, 0.0],
+    [Number.POSITIVE_INFINITY, 1.0, 0.0],
+    [1.0, Number.NaN, 0.0],
+    [1.0, Number.POSITIVE_INFINITY, 0.0],
+    [1.0, Number.MAX_VALUE, 0.0],
+    [1.0, 1.0, Number.NaN],
+    [1.0, 1.0, Number.POSITIVE_INFINITY],
+  ])("rejects invalid parameters", (amplitude, frequency, phase) => {
+    expect(() => new Wave(amplitude, frequency, phase)).toThrow();
+  });
+
+  test.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
+    "rejects non-finite time",
+    (time) => {
+      const wave = new Wave(0.0, 1.0);
+      expect(() => wave.evaluate(time)).toThrow("Time must be finite");
+    }
+  );
+
+  test("extreme inputs stay finite and bounded", () => {
+    const zero = new Wave(0.0, Number.MIN_VALUE, Number.MAX_VALUE);
+    expect(zero.period()).toBe(Number.POSITIVE_INFINITY);
+    expect(Object.is(zero.evaluate(Number.MAX_VALUE), 0.0)).toBe(true);
+
+    const wave = new Wave(Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE);
+    const result = wave.evaluate(Number.MAX_VALUE);
+    expect(Number.isFinite(result)).toBe(true);
+    expect(Math.abs(result)).toBeLessThanOrEqual(Number.MAX_VALUE);
+  });
 });
 
 // ============================================================================

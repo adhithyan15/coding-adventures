@@ -1,5 +1,26 @@
 # Changelog — iir-to-beam
 
+## [0.7.0] — 2026-07-30 — ASCII runtime string ordering
+
+Add `str_cmp` for validated printable-ASCII character lists. The lowering uses
+native `is_eq_exact` and `is_lt` term tests to materialize `-1`, `0`, or `1`,
+which preserves lexical order and the shorter-prefix rule without an imported
+runtime helper. A real `erl` test now executes an ALGOL procedure result copied
+to a local, lexically compares it, prints it, and returns 42.
+
+## [0.6.0] — 2026-07-30 — ASCII runtime strings
+
+Add a deliberately narrow, executable string subset using proper Erlang
+character lists: `str_const`, `str_concat` via `erlang:'++'/2`, `str_eq` via
+exact term equality, and `print_str` via `io:put_chars/1`. String values can
+therefore cross ordinary calls and returns. Imported concat/output calls now
+participate in the existing Y-register liveness preservation.
+
+`str_const` accepts printable ASCII plus tab/newline/carriage return only;
+Unicode-aware strings and richer operations remain rejected. A real `erl` test
+executes an ALGOL procedure result copied to a local, compared, printed, and
+returned.
+
 ## [0.5.0] — 2026-06-10 — McCarthy predicates: ATOM / EQ / COND (W10, F3–F5)
 
 Lower the McCarthy predicate `call_builtin`s to native Erlang type/equality

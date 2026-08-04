@@ -1,0 +1,248 @@
+# Build every Human Languages LaTeX book in one job. Relevant pull requests
+# retain one complete publication bundle as a build artifact; main-branch
+# builds publish that same bundle as a stable download catalog on GitHub Pages.
+# Every pull request receives one stable gate result, while unrelated changes
+# skip the expensive all-books build after a small change-detection job.
+#
+# Each language track under code/learning/human-languages/<lang>/book/
+# contains a self-contained XeLaTeX book (see HL00 spec). This workflow
+# discovers every such book/ directory dynamically, installs TeX once, and
+# compiles the books sequentially so adding a new track needs zero changes here.
+
+name: Human Languages Books
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/learning/human-languages/**"
+      - "code/packages/typescript/human-language-data/**"
+      - "code/scripts/build_human_language_book_catalog.py"
+      - ".github/workflows/human-languages-books.yml"
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: human-languages-books-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    name: Detect human-language book changes
+    runs-on: ubuntu-latest
+    outputs:
+      books: ${{ steps.changes.outputs.books }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect relevant paths
+        id: changes
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "books=true" >> "$GITHUB_OUTPUT"
+            echo "A non-pull-request run always builds the publication bundle."
+            exit 0
+          fi
+
+          if [[ ! "$PR_BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || \
+             [[ ! "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Pull-request base or head SHA is invalid."
+            exit 1
+          fi
+
+          set +e
+          git diff --quiet "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
+            code/learning/human-languages \
+            code/packages/typescript/human-language-data \
+            code/scripts/build_human_language_book_catalog.py \
+            .github/workflows/human-languages-books.yml
+          diff_status=$?
+          set -e
+
+          case "$diff_status" in
+            0)
+              echo "books=false" >> "$GITHUB_OUTPUT"
+              echo "No human-language book inputs changed; the all-books build will be skipped."
+              ;;
+            1)
+              echo "books=true" >> "$GITHUB_OUTPUT"
+              echo "Human-language book inputs changed; the all-books build is required."
+              ;;
+            *)
+              echo "::error::git diff failed with status $diff_status."
+              exit "$diff_status"
+              ;;
+          esac
+
+  build-and-publish:
+    name: Build and publish all human-language books
+    needs: detect
+    if: ${{ needs.detect.outputs.books == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build curriculum gap report
+        working-directory: code/packages/typescript/human-language-data
+        run: |
+          npm ci
+          npm run build
+          npm run check:books
+          mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
+          npm run --silent report -- --format json \
+            > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"
+          npm run --silent report -- --format text \
+            > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.txt"
+          cat "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.txt"
+
+      # Keep one shared XeLaTeX toolchain for the one all-books job, but avoid
+      # installing TeX Live's unrelated documentation, music, science, CJK,
+      # and publishing collections. texlive-xetex pulls the LaTeX base,
+      # recommended, and extra layers used by every preamble. The Arabic
+      # collection supplies bidi.sty for Arabic, Persian, and Urdu; every
+      # non-Latin book font is vendored under human-languages/_fonts. The
+      # recommended font collection supplies Hyperref's Zapf Dingbats metric.
+      - name: Install focused TeX toolchain
+        run: |
+          setup_started_at=$(date +%s)
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            fontconfig latexmk lmodern texlive-fonts-recommended \
+            texlive-lang-arabic texlive-xetex
+
+          setup_seconds=$(($(date +%s) - setup_started_at))
+          echo "TeX toolchain setup completed in ${setup_seconds}s"
+          echo "TeX toolchain setup: ${setup_seconds}s" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify focused TeX toolchain
+        run: |
+          set -euo pipefail
+
+          for executable in xelatex latexmk kpsewhich fc-match; do
+            command -v "$executable"
+          done
+
+          for tex_asset in \
+            book.cls fontspec.sty newunicodechar.sty xcolor.sty \
+            tcolorbox.sty booktabs.sty longtable.sty tabularx.sty array.sty \
+            hyperref.sty titlesec.sty polyglossia.sty bidi.sty pzdr.tfm; do
+            asset_path=$(kpsewhich "$tex_asset")
+            test -n "$asset_path"
+            echo "$tex_asset -> $asset_path"
+          done
+
+          latin_modern_path=$(fc-match -f '%{file}\n' 'Latin Modern Roman' | head -n 1)
+          test -f "$latin_modern_path"
+          echo "Latin Modern Roman -> $latin_modern_path"
+
+      - name: Build every book
+        run: |
+          set -euo pipefail
+          output_dir="dist/human-languages/books"
+          mkdir -p "$output_dir"
+          book_count=0
+
+          while IFS= read -r book_dir; do
+            language=$(basename "$(dirname "$book_dir")")
+            echo "::group::Build $language"
+            (
+              cd "$book_dir"
+              latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+            )
+            cp "$book_dir/book.pdf" "$output_dir/$language.pdf"
+            echo "::endgroup::"
+            book_count=$((book_count + 1))
+          done < <(
+            find code/learning/human-languages \
+              -mindepth 2 -maxdepth 2 -type d -name book | sort
+          )
+
+          test "$book_count" -gt 0
+          echo "Built $book_count human-language books"
+
+      - name: Build download catalog
+        run: |
+          python code/scripts/build_human_language_book_catalog.py \
+            --pdf-dir dist/human-languages/books \
+            --registry code/learning/human-languages/core/languages.json \
+            --output-dir dist/human-languages/books
+
+      - name: Verify publication bundle
+        run: |
+          test -s dist/human-languages/books/index.html
+          test -s dist/human-languages/books/catalog.json
+          test -s dist/human-languages/books/curriculum-gaps.json
+          test -s dist/human-languages/books/curriculum-gaps.txt
+          python -m json.tool dist/human-languages/books/curriculum-gaps.json >/dev/null
+          test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
+
+      - name: Upload complete publication bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: human-language-books
+          path: dist/human-languages/books
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish books to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist/human-languages/books
+          destination_dir: human-languages/books
+          keep_files: true
+
+  books-gate:
+    # Keep the required pull-request context distinct from the push context.
+    # Otherwise a faster main/branch push can satisfy protection while the
+    # pull-request all-books build is still running.
+    name: ${{ github.event_name == 'pull_request' && 'Human Languages Books gate' || 'Human Languages Books push gate' }}
+    needs: [detect, build-and-publish]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify the required book work succeeded
+        shell: bash
+        env:
+          DETECT_RESULT: ${{ needs.detect.result }}
+          BOOKS_RELEVANT: ${{ needs.detect.outputs.books }}
+          BUILD_RESULT: ${{ needs['build-and-publish'].result }}
+        run: |
+          set -euo pipefail
+          echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+
+          if [ "$DETECT_RESULT" != "success" ]; then
+            echo "::error::Human-language book change detection did not succeed."
+            exit 1
+          fi
+
+          case "$BOOKS_RELEVANT:$BUILD_RESULT" in
+            true:success)
+              echo "The required all-books build passed."
+              ;;
+            false:skipped)
+              echo "No book inputs changed; the all-books build was legitimately skipped."
+              ;;
+            *)
+              echo "::error::Unexpected books gate state: relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+              exit 1
+              ;;
+          esac

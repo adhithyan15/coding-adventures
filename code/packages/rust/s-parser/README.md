@@ -58,7 +58,7 @@ Use `try_parse_s` for a `Result` instead of a panic.
 ## Regenerating the embedded grammar
 
 `src/_grammar.rs` is generated from `code/grammars/s.grammar` via
-`scripts/generate-compiled-grammars.sh` (or
+`code/scripts/generate-compiled-grammars.sh` (or
 `grammar-tools compile-grammar code/grammars/s.grammar -o src/_grammar.rs`).
 
 ## Testing

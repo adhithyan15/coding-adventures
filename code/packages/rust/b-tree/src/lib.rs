@@ -77,6 +77,12 @@
 struct BTreeNode<K, V> {
     keys: Vec<K>,
     values: Vec<V>,
+    // Children are boxed as a deliberate, conventional representation of the
+    // recursive node: node ownership moves between parents during split/merge/
+    // borrow (e.g. `children.remove(..)`, `Box::new(..)`), and boxing keeps those
+    // moves cheap and the deref sites explicit. Not the redundant boxing this
+    // lint targets, so it is allowed here.
+    #[allow(clippy::vec_box)]
     children: Vec<Box<BTreeNode<K, V>>>,
     is_leaf: bool,
 }

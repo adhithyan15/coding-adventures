@@ -41,7 +41,6 @@
 // - `trig` (PHY00) for sin, cos, tan in rotation and skew factories
 // - `point2d` (G2D00) for Point as input/output type
 
-use trig;
 use point2d::Point;
 
 // ============================================================================

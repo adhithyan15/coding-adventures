@@ -1,0 +1,24 @@
+% ============================================================================
+% plate-boundaries.query.adj — a worked recall over the earth-science
+% plate-boundaries library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how do the plates move at
+% a divergent boundary?": it states no geology fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `boundary_motion` rows and returns the motion + the
+% table's source/locator/trust. The fourth query runs the relation BACKWARD
+% (bind the motion `slide_past`, recall its boundary type — transform). A word
+% that is not one of the three boundary types abstains honestly — the engine
+% never invents a motion.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli plate-boundaries.query.adj
+% ============================================================================
+
+import "plate-boundaries.adj"
+
+? boundary_motion(divergent, $Motion)    % expect rip_apart
+? boundary_motion(convergent, $Motion)   % expect subducts
+? boundary_motion(transform, $Motion)    % expect slide_past
+? boundary_motion($Boundary, slide_past) % reverse bind — expect transform
+? boundary_motion(equator, $Motion)      % expect abstain — the equator is a line of latitude, not a plate boundary type

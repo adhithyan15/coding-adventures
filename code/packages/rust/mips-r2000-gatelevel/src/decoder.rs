@@ -187,9 +187,7 @@ fn sign_extend_imm16(bits: &[u8; 32]) -> i32 {
     let sign_bit = bits[15]; // bit 15 is the sign of the 16-bit immediate
     let mut extended = [0u8; 32];
     extended[..16].copy_from_slice(&bits[0..16]);
-    for i in 16..32 {
-        extended[i] = sign_bit;
-    }
+    extended[16..].fill(sign_bit);
     // Convert to signed: if sign_bit=1, the unsigned value >= 0x8000_0000
     let unsigned_val = bits_to_u32(extended);
     unsigned_val as i32

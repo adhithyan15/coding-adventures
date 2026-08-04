@@ -68,18 +68,21 @@ use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
     TemplateElement, TemplateLiteral,
     BooleanLiteral,
-    BreakStatement, CallExpression, CatchClause, ClassExpression, ClassMember, ConditionalExpression, ContinueStatement,
+    BreakStatement, CallExpression, ClassExpression, ClassMember, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
-    MethodDefinition, MethodKind,
+    MethodDefinition, MethodKind, PropertyDefinition,
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
-    FunctionDeclaration, FunctionExpression,
-    FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
+    ClassDeclaration, FunctionDeclaration, FunctionExpression,
+    ExportAllDeclaration, ExportDefaultDeclaration, ExportDefaultKind, ExportNamedDeclaration,
+    ExportSpecifier,
+    FunctionParam, Identifier, IfStatement, ImportDeclaration, ImportSpecifier, LabeledStatement,
+    LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
     ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     RegExpLiteral,
-    UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
+    UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
     Super, NewTarget, ImportMeta, ImportExpression,
     ChainExpression, OptionalCallExpression, OptionalMemberExpression,
@@ -228,6 +231,20 @@ struct Emitter<'a> {
     /// units). Ignored entirely when `opts.pretty == false`.
     indent: u32,
     source_map: SourceMapBuilder,
+    /// While emitting an `ExpressionStatement`, the output length at the
+    /// statement's start — the byte offset the statement's **first token** will
+    /// land at. An object literal emitted at exactly this offset is the leading
+    /// token of the statement, where a bare `{` mis-parses as a *block*, so
+    /// [`emit_object`](Self::emit_object) wraps just that object in parens
+    /// (`({}).f`, not the whole statement `({}.f)`).
+    ///
+    /// Using the *position* rather than a boolean is precedence-correct for
+    /// free: if an intervening spine node is precedence-wrapped, its `(` is
+    /// written before the object, so `out.len()` has already advanced past this
+    /// mark and the object is (correctly) not treated as leading — e.g.
+    /// `({}+1).x` prints `({}+1).x`, the object protected by the binary's own
+    /// paren, with no double wrap. `None` outside an expression statement.
+    expr_stmt_start: Option<usize>,
 }
 
 impl<'a> Emitter<'a> {
@@ -239,6 +256,7 @@ impl<'a> Emitter<'a> {
             col: 0,
             indent: 0,
             source_map: SourceMapBuilder::new(),
+            expr_stmt_start: None,
         }
     }
 
@@ -299,12 +317,79 @@ impl<'a> Emitter<'a> {
 
     // ---- Program & top-level -------------------------------------
 
+    /// Maximum output line length, in UTF-16 code units, before the emitter wraps
+    /// at a top-level statement boundary.
+    ///
+    /// Oracle-verified against `closure-compiler-v20260712.jar` by emitting N
+    /// uniform-width statements and measuring the resulting line lengths. Using
+    /// call statements (`sink0000();`), which -- unlike consecutive `var`
+    /// declarations -- are not merged into a single statement:
+    ///
+    /// ```text
+    ///   stmt width | line 1 | previous stmt ended at
+    ///   -----------+--------+------------------------
+    ///        10    |   510  |  500
+    ///        11    |   506  |  495
+    ///        12    |   504  |  492
+    /// ```
+    ///
+    /// In each row the line is cut at the FIRST length exceeding 500, and the
+    /// preceding length is <= 500. So the rule is: emit the statement, then if the
+    /// line is now over budget, break AFTER it. The break lands after the statement
+    /// that crosses the budget, not before it -- lines therefore routinely run a
+    /// little over 500.
+    ///
+    /// # Why `var` runs look different, and why that does not apply here
+    ///
+    /// A run of separate `var v00=1;` statements wraps at 500/495/492 instead --
+    /// i.e. BEFORE the crossing statement. That is a different mechanism (upstream
+    /// notes a preferred break point ahead of certain constructs). It does not
+    /// affect this code path: consecutive `var` declarations are COLLAPSED into one
+    /// statement at SIMPLE/ADVANCED (`var v00=1,v01=1,...`, oracle-confirmed), and
+    /// WHITESPACE_ONLY does not route through this emitter at all -- it uses
+    /// closurec's separate `whitespace_only` minifier. So the levels this function
+    /// governs only ever see the break-after rule above.
+    ///
+    /// # What this does NOT cover
+    ///
+    /// A single statement whose own minified form exceeds the budget. The reference
+    /// compiler breaks INSIDE such a statement at safe token boundaries (after a
+    /// binary operator, after an argument comma). That needs line tracking threaded
+    /// through every emit method plus a notion of which boundaries are ASI-safe,
+    /// and is tracked as its own task.
+    const LINE_LENGTH_BUDGET: u32 = 500;
+
     fn emit_program(&mut self, p: &Program) {
         for (i, item) in p.body.iter().enumerate() {
             if i > 0 && self.opts.pretty {
                 self.newline();
             }
             self.emit_program_item(item);
+
+            // Output line wrapping (compact only). The break goes AFTER the
+            // statement that pushes the line past the budget -- see
+            // `LINE_LENGTH_BUDGET` for the oracle table. Skipped on the final item
+            // so the output does not gain a trailing blank line.
+            if !self.opts.pretty
+                && self.col > Self::LINE_LENGTH_BUDGET
+                && i + 1 < p.body.len()
+            {
+                self.newline();
+            }
+        }
+        // Trailing normalization (compact only): when a program's LAST item is a
+        // function/class *declaration*, the reference compiler appends a `;`
+        // (`function f(){};` / `class C{};` at EOF). A declaration mid-program
+        // prints bare — see [`Self::emit_function_declaration`] — so this final
+        // `;` is added here exactly once, only for the last item. Pretty mode
+        // keeps the unparenthesized shape.
+        if !self.opts.pretty {
+            if let Some(ProgramItem::Declaration(
+                Declaration::FunctionDeclaration(_) | Declaration::ClassDeclaration(_),
+            )) = p.body.last()
+            {
+                self.write_str(";");
+            }
         }
     }
 
@@ -354,6 +439,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::TryStatement(t) => self.emit_try(t),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
             TaggedStatement::DebuggerStatement(d) => self.emit_debugger(d),
+            TaggedStatement::WithStatement(w) => self.emit_with(w),
         }
     }
 
@@ -394,29 +480,39 @@ impl<'a> Emitter<'a> {
         // precedence-aware emit at parent_prec = 0, which means no
         // wrapping unless an inner expression has a lower-precedence
         // child that requires it.
-        // A leading `{` parses as a block and a leading `function`
-        // parses as a function *declaration* — both mis-parse a bare
-        // expression statement, so wrap them. A leading `class` is the
-        // same hazard: it parses as a class *declaration*, so a class
-        // *expression* in statement position must be wrapped too. (The
-        // general "leftmost token" problem — e.g. a call whose callee is a
-        // function expression — is handled by each child's own precedence
-        // wrap; this covers the direct cases.)
+        // A leading `function` parses as a function *declaration* and a leading
+        // `class` as a class *declaration* — both mis-parse a bare expression
+        // statement, so a `function`/`class` *expression* in statement position
+        // must be wrapped. Only the *direct*-expression check is needed: deeper
+        // on the emit spine (a call callee, a member object) the printer already
+        // wraps them via its own precedence rules, so wrapping here too would
+        // double-wrap (`(function(){})()`).
         let needs_paren = matches!(
             es.expression,
-            Expression::ObjectExpression(_)
-                | Expression::FunctionExpression(_)
-                | Expression::ClassExpression(_)
+            Expression::FunctionExpression(_) | Expression::ClassExpression(_)
         );
+        // An object literal is different: a leading `{` mis-parses as a *block*,
+        // but the object is valid mid-expression (`a = {}.f`) so it is NOT
+        // precedence-wrapped, and it may sit deep on the leftmost spine
+        // (`({}).f`, `({}).x++`, `({}).a = 1`, `({}?.x)`). Rather than wrap the
+        // whole statement — which prints `({}.f)`, not the reference `({}).f` —
+        // we record where the statement's first token will land; the FIRST
+        // object emitted at exactly that offset (`emit_object`) wraps just
+        // itself. Anything that shifts `out.len()` first — a precedence `(`, an
+        // assignment target, an operator — moves the object out of leading
+        // position, so it prints bare. (Direct case `({a:1})` flows through the
+        // same path.)
         self.maybe_map(&es.cv);
         if needs_paren {
             self.write_str("(");
         }
+        let prev_start = self.expr_stmt_start.replace(self.out.len());
         // Statement position is the loosest binding context — every
         // expression's own precedence is >= 0, so the precedence
         // wrapper won't insert outer parens here. Inner precedence
         // requirements still propagate through child calls.
         self.emit_expression_inner(&es.expression, 0);
+        self.expr_stmt_start = prev_start;
         if needs_paren {
             self.write_str(")");
         }
@@ -513,6 +609,20 @@ impl<'a> Emitter<'a> {
         self.pretty_ws();
         self.write_str("(");
         self.emit_expression(&w.test);
+        self.write_str(")");
+        self.pretty_ws();
+        self.emit_statement(&w.body);
+    }
+
+    /// `with (object) body` (CLOC12.187). Byte-identical in shape to a `while`
+    /// head — `with(` self-delimits from the object expression — so the body
+    /// emits like any single-statement body.
+    fn emit_with(&mut self, w: &WithStatement) {
+        self.maybe_map(&w.cv);
+        self.write_str("with");
+        self.pretty_ws();
+        self.write_str("(");
+        self.emit_expression(&w.object);
         self.write_str(")");
         self.pretty_ws();
         self.emit_statement(&w.body);
@@ -632,7 +742,12 @@ impl<'a> Emitter<'a> {
         self.maybe_map(&r.cv);
         self.write_str("return");
         if let Some(arg) = &r.argument {
-            self.required_ws();
+            // Separate `return` from its argument only when they would fuse —
+            // `return{a:1}` / `return"x"` / `return[1]` need no space, matching
+            // the reference compiler. See [`keyword_needs_space_before`].
+            if keyword_needs_space_before(arg) {
+                self.required_ws();
+            }
             self.emit_expression(arg);
         }
         self.write_str(";");
@@ -688,15 +803,19 @@ impl<'a> Emitter<'a> {
         self.emit_statement(&l.body);
     }
 
-    /// `throw expr;` — keyword + REQUIRED whitespace + expression +
-    /// `;`. The space is mandatory: without it `throw1` parses as an
-    /// identifier in V8's relaxed mode and is ambiguous in others.
-    /// Per ECMAScript §13.14, `throw` has no no-argument form, so we
-    /// always emit the argument.
+    /// `throw expr;` — keyword + expression + `;`. A separating space is
+    /// emitted only when the argument would otherwise *fuse* with the keyword
+    /// (`throw x`, `throw 5`, `throw new C`). When the argument begins with
+    /// punctuation (`throw{a:1}`, `throw[1]`, `throw"x"`, `throw!0`) no space is
+    /// needed and the reference compiler omits it — see
+    /// [`keyword_needs_space_before`]. Per ECMAScript §13.14 `throw` has no
+    /// no-argument form, so the argument is always emitted.
     fn emit_throw(&mut self, t: &ThrowStatement) {
         self.maybe_map(&t.cv);
         self.write_str("throw");
-        self.required_ws();
+        if keyword_needs_space_before(&t.argument) {
+            self.required_ws();
+        }
         self.emit_expression(&t.argument);
         self.write_str(";");
     }
@@ -783,7 +902,221 @@ impl<'a> Emitter<'a> {
                 self.emit_variable_declaration(v, /*top_level=*/ true);
             }
             Declaration::FunctionDeclaration(f) => self.emit_function_declaration(f),
+            Declaration::ClassDeclaration(c) => self.emit_class_declaration(c),
+            Declaration::ImportDeclaration(i) => self.emit_import(i),
+            Declaration::ExportNamedDeclaration(e) => self.emit_export_named(e),
+            Declaration::ExportDefaultDeclaration(e) => self.emit_export_default(e),
+            Declaration::ExportAllDeclaration(e) => self.emit_export_all(e),
         }
+    }
+
+    /// Emit an ES-module import declaration (CLOC12.188).
+    ///
+    /// Minified forms (no optional whitespace; the only spaces are the ones
+    /// the tokenizer *requires* between two identifier-like tokens):
+    ///
+    /// | source                          | emitted                 |
+    /// |---------------------------------|-------------------------|
+    /// | `import "y";`                   | `import"y";`            |
+    /// | `import x from "y";`            | `import x from"y";`    |
+    /// | `import * as ns from "y";`      | `import*as ns from"y";`|
+    /// | `import {a, b as c} from "y";`  | `import{a,b as c}from"y";`|
+    /// | `import x, {a} from "y";`       | `import x,{a}from"y";` |
+    ///
+    /// A bare keyword abuts punctuation with no space (`import{`, `}from`,
+    /// `import"`); an identifier next to a keyword/identifier needs one
+    /// (`x from`, `as ns`).
+    fn emit_import(&mut self, imp: &ImportDeclaration) {
+        self.maybe_map(&imp.cv);
+        self.write_str("import");
+
+        // Partition specifiers by kind. ESTree order is
+        // `[ default?, (namespace | named)? ]`; we honour it and, when the AST
+        // holds an unusual mix, emit default → namespace → named so commas land
+        // in a valid place.
+        let mut default_id: Option<&Identifier> = None;
+        let mut namespace_id: Option<&Identifier> = None;
+        let mut named: Vec<(&Identifier, &Identifier)> = Vec::new();
+        for s in &imp.specifiers {
+            match s {
+                ImportSpecifier::Default(id) => default_id = Some(id),
+                ImportSpecifier::Namespace(id) => namespace_id = Some(id),
+                ImportSpecifier::Named { imported, local } => named.push((imported, local)),
+            }
+        }
+
+        // `wrote` tracks whether an earlier clause element was emitted (so the
+        // next one needs a `,` separator). `ends_with_brace` records whether the
+        // clause ended with a named group's `}` — which abuts `from` with no
+        // space, unlike a trailing identifier.
+        let has_clause = default_id.is_some() || namespace_id.is_some() || !named.is_empty();
+        let mut wrote = false;
+        let mut ends_with_brace = false;
+
+        if let Some(id) = default_id {
+            self.required_ws();
+            self.emit_identifier(id);
+            wrote = true;
+        }
+        if let Some(id) = namespace_id {
+            // `*` is a punctuator, so it abuts `import` with no space
+            // (`import*as ns`). Only a preceding default clause needs a `,`.
+            if wrote {
+                self.write_str(",");
+            }
+            self.write_str("*as");
+            self.required_ws();
+            self.emit_identifier(id);
+            wrote = true;
+        }
+        if !named.is_empty() {
+            if wrote {
+                self.write_str(",");
+            }
+            self.write_str("{");
+            for (i, (imported, local)) in named.iter().enumerate() {
+                if i > 0 {
+                    self.write_str(",");
+                }
+                self.emit_identifier(imported);
+                // `{a}` when imported == local; `{a as c}` when they differ.
+                if imported.name != local.name {
+                    self.required_ws();
+                    self.write_str("as");
+                    self.required_ws();
+                    self.emit_identifier(local);
+                }
+            }
+            self.write_str("}");
+            ends_with_brace = true;
+        }
+
+        // The `from` clause is present iff there was an import clause. A
+        // side-effect import (`import "y"`) has no clause and jumps straight to
+        // the source string.
+        if has_clause {
+            if !ends_with_brace {
+                // Previous token was an identifier (`x` / `ns`) — separate it
+                // from `from`.
+                self.required_ws();
+            }
+            self.write_str("from");
+        }
+        self.emit_string(&imp.source);
+        self.write_str(";");
+    }
+
+    /// Emit an ES-module named / declaration export (CLOC12.189).
+    ///
+    /// | source                          | emitted                     |
+    /// |---------------------------------|-----------------------------|
+    /// | `export { a, b as c };`         | `export{a,b as c};`         |
+    /// | `export { a } from "y";`        | `export{a}from"y";`         |
+    /// | `export const x = 1;`           | `export const x=1;`         |
+    /// | `export function f(){}`         | `export function f(){}`     |
+    /// | `export class C {}`             | `export class C{}`          |
+    ///
+    /// A declaration export prefixes `export ` (keyword→keyword needs the space)
+    /// and defers to [`Self::emit_declaration`], which owns the inner
+    /// declaration's terminator (a `VariableDeclaration` writes its own `;`; a
+    /// function/class does not). A specifier export writes the `{…}` list and,
+    /// for a re-export, the `from"y"` clause, then its own `;`.
+    fn emit_export_named(&mut self, exp: &ExportNamedDeclaration) {
+        self.maybe_map(&exp.cv);
+        self.write_str("export");
+        if let Some(inner) = &exp.declaration {
+            // `export const x=1` / `export function f(){}` / `export class C{}`.
+            // `export` is a keyword; the inner declaration also leads with a
+            // keyword (`const`/`function`/`class`), so a separating space is
+            // required. The inner declaration supplies its own terminator.
+            self.required_ws();
+            self.emit_declaration(inner);
+            return;
+        }
+        // `export { a, b as c }` — the specifier list abuts `export` (a `{`
+        // punctuator needs no space).
+        self.emit_named_export_specifiers(&exp.specifiers);
+        if let Some(source) = &exp.source {
+            // `from"y"` — `}` abuts `from`, `from` abuts the string.
+            self.write_str("from");
+            self.emit_string(source);
+        }
+        self.write_str(";");
+    }
+
+    /// Emit the `{ a, b as c }` specifier group shared by named exports.
+    /// `export { a }` → `{a}`; `export { a as c }` → `{a as c}` (the `as`
+    /// aliasing needs surrounding spaces, both sides being identifiers).
+    fn emit_named_export_specifiers(&mut self, specs: &[ExportSpecifier]) {
+        self.write_str("{");
+        for (i, s) in specs.iter().enumerate() {
+            if i > 0 {
+                self.write_str(",");
+            }
+            self.emit_identifier(&s.local);
+            // `{a}` when local == exported; `{a as c}` when the export is aliased.
+            if s.local.name != s.exported.name {
+                self.required_ws();
+                self.write_str("as");
+                self.required_ws();
+                self.emit_identifier(&s.exported);
+            }
+        }
+        self.write_str("}");
+    }
+
+    /// Emit an ES-module default export (CLOC12.189).
+    ///
+    /// | source                          | emitted                     |
+    /// |---------------------------------|-----------------------------|
+    /// | `export default 1;`             | `export default 1;`         |
+    /// | `export default function f(){}` | `export default function f(){}` |
+    /// | `export default class C {}`     | `export default class C{}`  |
+    ///
+    /// `export default` is always followed by a required space (both are
+    /// keywords, and a value like `1`/`x` would otherwise fuse onto `default`).
+    /// An expression operand takes a trailing `;`; a function/class declaration
+    /// operand does not (it is self-terminating).
+    fn emit_export_default(&mut self, exp: &ExportDefaultDeclaration) {
+        self.maybe_map(&exp.cv);
+        self.write_str("export");
+        self.required_ws();
+        self.write_str("default");
+        self.required_ws();
+        match &exp.declaration {
+            ExportDefaultKind::Expression(e) => {
+                self.emit_expression(e);
+                self.write_str(";");
+            }
+            ExportDefaultKind::FunctionDeclaration(f) => self.emit_function_declaration(f),
+            ExportDefaultKind::ClassDeclaration(c) => self.emit_class_declaration(c),
+        }
+    }
+
+    /// Emit an ES-module re-export-all (CLOC12.189).
+    ///
+    /// | source                          | emitted                     |
+    /// |---------------------------------|-----------------------------|
+    /// | `export * from "y";`            | `export*from"y";`           |
+    /// | `export * as ns from "y";`      | `export*as ns from"y";`     |
+    ///
+    /// `*` is a punctuator that abuts `export`; `*from`/`*as` also need no
+    /// space. The `as ns` namespace alias (grammar-gated today) needs spaces on
+    /// both sides. `from` abuts the source string.
+    fn emit_export_all(&mut self, exp: &ExportAllDeclaration) {
+        self.maybe_map(&exp.cv);
+        self.write_str("export");
+        self.write_str("*");
+        if let Some(ns) = &exp.exported {
+            // `*as ns` — `*` abuts `as`; `as ns` needs a separating space.
+            self.write_str("as");
+            self.required_ws();
+            self.emit_identifier(ns);
+            self.required_ws();
+        }
+        self.write_str("from");
+        self.emit_string(&exp.source);
+        self.write_str(";");
     }
 
     fn emit_variable_declaration(&mut self, v: &VariableDeclaration, with_semi: bool) {
@@ -842,23 +1175,36 @@ impl<'a> Emitter<'a> {
             }
             match p {
                 FunctionParam::Identifier(id) => self.emit_identifier(id),
+                FunctionParam::RestElement(re) => {
+                    // `...name` — the rest parameter, always last in the list.
+                    self.write_str("...");
+                    self.emit_identifier(&re.argument);
+                }
+                FunctionParam::AssignmentPattern(ap) => {
+                    // `name=expr` — a default parameter. The default is emitted
+                    // at `PREC_ASSIGNMENT` (the RHS of `=`), so a looser bare
+                    // sequence default wraps (`a=(1,2)`) while everything tighter
+                    // prints bare — exactly as an assignment RHS or class-field
+                    // value does. `pretty_ws()` gives `a = 1` in pretty mode and
+                    // `a=1` minified.
+                    self.emit_identifier(&ap.left);
+                    self.pretty_ws();
+                    self.write_str("=");
+                    self.pretty_ws();
+                    self.emit_expression_inner(&ap.right, PREC_ASSIGNMENT);
+                }
             }
         }
         self.write_str(")");
         self.pretty_ws();
         self.emit_block_statement(&f.body);
-        // gap-030 part B: emit a trailing `;` after the
-        // function-declaration's closing `}` in compact mode.
-        // Upstream Closure does this to normalise the
-        // function-declaration output shape — even at EOF it's
-        // a no-op `EmptyStatement`, but in concatenation
-        // contexts (multiple top-level declarations) it keeps
-        // the next statement unambiguously separated. Pretty
-        // mode preserves the unparenthesised shape for
-        // readability.
-        if !self.opts.pretty {
-            self.write_str(";");
-        }
+        // A function declaration is NOT an expression statement, so it needs no
+        // trailing `;` — `function f(){}g()` is valid and the reference compiler
+        // emits exactly that (no separator before `g()`). The one place it does
+        // add a `;` is after the LAST item of a program when that item is a
+        // function/class declaration (`function f(){};` at EOF) — that trailing
+        // normalization is handled once in [`Self::emit_program`], not per
+        // declaration, so a non-final or block-nested declaration prints bare.
     }
 
     /// Emit a [`FunctionExpression`] — a function in *value* position.
@@ -916,6 +1262,24 @@ impl<'a> Emitter<'a> {
             }
             match p {
                 FunctionParam::Identifier(id) => self.emit_identifier(id),
+                FunctionParam::RestElement(re) => {
+                    // `...name` — the rest parameter, always last in the list.
+                    self.write_str("...");
+                    self.emit_identifier(&re.argument);
+                }
+                FunctionParam::AssignmentPattern(ap) => {
+                    // `name=expr` — a default parameter. The default is emitted
+                    // at `PREC_ASSIGNMENT` (the RHS of `=`), so a looser bare
+                    // sequence default wraps (`a=(1,2)`) while everything tighter
+                    // prints bare — exactly as an assignment RHS or class-field
+                    // value does. `pretty_ws()` gives `a = 1` in pretty mode and
+                    // `a=1` minified.
+                    self.emit_identifier(&ap.left);
+                    self.pretty_ws();
+                    self.write_str("=");
+                    self.pretty_ws();
+                    self.emit_expression_inner(&ap.right, PREC_ASSIGNMENT);
+                }
             }
         }
         self.write_str(")");
@@ -947,7 +1311,62 @@ impl<'a> Emitter<'a> {
             self.required_ws();
             self.emit_identifier(id);
         }
-        if let Some(sup) = &c.super_class {
+        self.emit_class_tail(&c.super_class, &c.body);
+    }
+
+    /// Emit a [`ClassDeclaration`] — `class <id>[ extends S]{members}`.
+    ///
+    /// The *statement* form of a class. Byte-identical to [`Self::emit_class`]
+    /// (the expression form) for the `[ extends S]{members}` tail — both call
+    /// [`Self::emit_class_tail`] — with three deliberate differences, each the
+    /// exact mirror of the [`FunctionDeclaration`] vs `FunctionExpression`
+    /// split:
+    ///
+    /// 1. **`id` always prints.** A declaration's `id` is non-optional (a class
+    ///    written as a statement must bind a name — `class {}` in statement
+    ///    position is a syntax error), so — unlike the expression form's
+    ///    `if let Some(id)` — the name is emitted unconditionally, with a
+    ///    `required_ws()` after `class` exactly as
+    ///    [`Self::emit_function_declaration`] does after `function`.
+    /// 2. **No precedence wrap / no statement-start parenthesis.** A class
+    ///    *expression* is tagged `PREC_UNARY` and
+    ///    [`Self::emit_expression_statement`] wraps a leading one (`(class{});`)
+    ///    because a statement-position `class` would otherwise parse as a
+    ///    *declaration* — which is precisely what this node **is**. So the
+    ///    declaration form has no `expr_prec` entry and is never wrapped.
+    /// 3. **No trailing `;`.** [`Self::emit_function_declaration`] appends a
+    ///    normalising `;` after its `}` (gap-030 part B); a **class**
+    ///    declaration does not — upstream Closure terminates a class declaration
+    ///    with its `}` alone (a class body is self-delimiting and, unlike a bare
+    ///    `function(){}` value, subject to no ASI hazard). The PR3 conformance
+    ///    port validates this against `CodePrinterTest`.
+    fn emit_class_declaration(&mut self, c: &ClassDeclaration) {
+        self.maybe_map(&c.cv);
+        self.write_str("class");
+        // `id` is required for a declaration — always emit it (with the
+        // mandatory `class C` separating space).
+        self.required_ws();
+        self.emit_identifier(&c.id);
+        self.emit_class_tail(&c.super_class, &c.body);
+    }
+
+    /// Emit the shared `[ extends S]{members}` tail of a class — the part after
+    /// the `class[ id]` head that is identical for the expression
+    /// ([`Self::emit_class`]) and declaration ([`Self::emit_class_declaration`])
+    /// forms.
+    ///
+    /// The `extends` operand is emitted at `PREC_PRIMARY`: a `LeftHandSide`
+    /// superclass (identifier `extends B`, member `extends ns.B`, call
+    /// `extends mixin(B)`) stays bare, while anything looser (a conditional
+    /// `extends (a?b:c)`) is wrapped — exactly the grammar's requirement.
+    /// Members print back-to-back with no separators (each carries its own
+    /// `{…}`).
+    fn emit_class_tail(
+        &mut self,
+        super_class: &Option<Box<Expression>>,
+        body: &[ClassMember],
+    ) {
+        if let Some(sup) = super_class {
             self.required_ws();
             self.write_str("extends");
             self.required_ws();
@@ -956,12 +1375,67 @@ impl<'a> Emitter<'a> {
         // No space before the brace even in pretty mode — Closure prints
         // `class C{...}` (the members carry their own layout).
         self.write_str("{");
-        for member in &c.body {
+        for member in body {
             match member {
                 ClassMember::Method(m) => self.emit_class_member(m),
+                ClassMember::Field(f) => self.emit_class_field(f),
+                ClassMember::StaticBlock(b) => self.emit_static_block(b),
             }
         }
         self.write_str("}");
+    }
+
+    /// Emit one class **field** ([`PropertyDefinition`]):
+    /// `[static ]key[=value];` (CLOC12.175).
+    ///
+    /// ```text
+    ///   x = 1        → x=1;
+    ///   y            → y;
+    ///   static z = 2 → static z=2;
+    ///   [k] = v      → [k]=v;
+    /// ```
+    ///
+    /// Two differences from a method member ([`Self::emit_class_member`]): a
+    /// field **ends with `;`** — a method's closing `}` is self-terminating, but
+    /// a field has no brace, so the `;` separates it from the next member — and
+    /// it has no parameter-list/body tail. The `static` prefix and the
+    /// computed-key bracketing reuse the same helpers as a method; the value,
+    /// when present, is emitted at `PREC_ASSIGNMENT` (the RHS of `=`), so a
+    /// looser operand (a bare `a,b` sequence) wraps while an ordinary expression
+    /// prints bare — exactly as an assignment RHS or a default value does.
+    fn emit_class_field(&mut self, f: &PropertyDefinition) {
+        self.maybe_map(&f.cv);
+        if f.is_static {
+            self.write_str("static");
+            self.required_ws();
+        }
+        self.emit_property_key(&f.key);
+        if let Some(value) = &f.value {
+            self.pretty_ws();
+            self.write_str("=");
+            self.pretty_ws();
+            self.emit_expression_inner(value, PREC_ASSIGNMENT);
+        }
+        self.write_str(";");
+    }
+
+    /// Emit one **static initialization block** ([`ClassMember::StaticBlock`]):
+    /// `static{<statements>}` (CLOC12.176).
+    ///
+    /// ```text
+    ///   static { }        → static{}
+    ///   static { x = 1 }  → static{x=1}
+    ///   static { a();b() } → static{a();b()}
+    /// ```
+    ///
+    /// The `static` keyword abuts the `{` with **no** space (the brace is a hard
+    /// token boundary, so `static{…}` parses). The body is emitted by the shared
+    /// [`Self::emit_block_statement`], which prints the `{ … }` and the statement
+    /// list exactly as a function body does. Like a method (and unlike a field),
+    /// a static block is **brace-terminated** — it needs no trailing `;`.
+    fn emit_static_block(&mut self, b: &BlockStatement) {
+        self.write_str("static");
+        self.emit_block_statement(b);
     }
 
     /// Emit one [`MethodDefinition`]: `[static ][get|set ][*]key(params){body}`.
@@ -1043,8 +1517,10 @@ impl<'a> Emitter<'a> {
         if a.is_async {
             self.write_str("async");
         }
-        // Param list — single plain identifier drops the parens.
-        if a.params.len() == 1 {
+        // Param list — a single plain identifier drops the parens. A single
+        // *rest* param (`(...a)=>`) must keep its parens — `...a=>` is invalid
+        // JS — so it falls through to the parenthesised branch below.
+        if a.params.len() == 1 && matches!(a.params[0], FunctionParam::Identifier(_)) {
             // `async x=>` needs a separating space so `async` and the
             // param identifier don't merge into `asyncx`. The
             // parenthesised forms below begin with `(`, which
@@ -1052,8 +1528,8 @@ impl<'a> Emitter<'a> {
             if a.is_async {
                 self.required_ws();
             }
-            match &a.params[0] {
-                FunctionParam::Identifier(id) => self.emit_identifier(id),
+            if let FunctionParam::Identifier(id) = &a.params[0] {
+                self.emit_identifier(id);
             }
         } else {
             self.write_str("(");
@@ -1064,6 +1540,19 @@ impl<'a> Emitter<'a> {
                 }
                 match p {
                     FunctionParam::Identifier(id) => self.emit_identifier(id),
+                    FunctionParam::RestElement(re) => {
+                        self.write_str("...");
+                        self.emit_identifier(&re.argument);
+                    }
+                    FunctionParam::AssignmentPattern(ap) => {
+                        // `name=expr` default param — same shape as a function's,
+                        // emitted at `PREC_ASSIGNMENT` so a sequence default wraps.
+                        self.emit_identifier(&ap.left);
+                        self.pretty_ws();
+                        self.write_str("=");
+                        self.pretty_ws();
+                        self.emit_expression_inner(&ap.right, PREC_ASSIGNMENT);
+                    }
                 }
             }
             self.write_str(")");
@@ -1132,7 +1621,7 @@ impl<'a> Emitter<'a> {
     /// and `${…}` substitutions round-trip exactly as an untagged template).
     fn emit_tagged_template(&mut self, t: &TaggedTemplateExpression) {
         self.maybe_map(&t.cv);
-        self.emit_expression_inner(&t.tag, PREC_PRIMARY);
+        self.emit_plain_access_base(&t.tag);
         self.emit_template_literal(&t.quasi);
     }
 
@@ -1264,8 +1753,11 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_numeric(&mut self, n: &NumericLiteral) {
+        // Expression/value position: apply the leading-zero fraction
+        // minification (`0.5` → `.5`). Property keys go through the
+        // non-stripping path (see the `PropertyKey::NumericLiteral` arm).
         self.maybe_map(&n.cv);
-        self.write_str(&format_js_number(n.value));
+        self.write_str(&format_js_number_value(n.value));
     }
 
     fn emit_string(&mut self, s: &StringLiteral) {
@@ -1396,13 +1888,35 @@ impl<'a> Emitter<'a> {
         self.emit_expression_inner(&b.left, left_prec);
         let op = binary_op_str(b.operator);
 
-        // Word-shaped operators MUST keep a space on both sides or they fuse
-        // with their operands into a single identifier (`1 in obj`, not `1inobj`;
-        // `a instanceof b`, not `ainstanceofb`).
+        // Word-shaped operators (`in` / `instanceof`) are all letters, so a
+        // neighbour fuses with the keyword into one identifier ONLY when the
+        // touching character is itself an identifier-part char (`[A-Za-z0-9_$]`).
+        // A hard-boundary neighbour needs NO separating space, and the reference
+        // compiler drops it in compact mode:
+        //   `"k" in obj`  → `"k"in obj`   (the string's closing `"` absorbs the
+        //                                   LEFT space)
+        //   `a in {}`     → `a in{}`      (the `{` absorbs the RIGHT space)
+        //   `a in [1]`    → `a in[1]`     (the `[` absorbs the RIGHT space)
+        // while `a in b`, `1 in o` keep BOTH spaces (identifier / digit seams).
+        // Pretty mode always spaces for readability. The LEFT operand is already
+        // in `self.out`, so its last char is inspected directly; the RIGHT
+        // operand's leading char is classified by `keyword_needs_space_before`
+        // (the same helper `return` / `throw` use — those keywords also end in a
+        // letter, so the question is identical).
         if matches!(b.operator, BinaryOperator::In | BinaryOperator::InstanceOf) {
-            self.required_ws();
+            let left_needs_space = self.opts.pretty
+                || self
+                    .out
+                    .chars()
+                    .last()
+                    .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
+            if left_needs_space {
+                self.required_ws();
+            }
             self.write_str(op);
-            self.required_ws();
+            if self.opts.pretty || keyword_needs_space_before(&b.right) {
+                self.required_ws();
+            }
             self.emit_expression_inner(&b.right, right_prec);
             return;
         }
@@ -1507,6 +2021,7 @@ impl<'a> Emitter<'a> {
     ///   * A *postfix* update ends in `+`/`-`, so a following binary `+`/`-`
     ///     (`x++ + y`) would fuse; the binary emitter's left-seam check already
     ///     inspects the emitted output tail and inserts the space.
+    ///
     /// The prefix operator's own seam with its operand never fuses: `++`/`--`
     /// are already maximal-munch tokens, so `++ +x` and `+++x` tokenise
     /// identically (and an update of a non-reference operand is invalid input
@@ -1582,7 +2097,7 @@ impl<'a> Emitter<'a> {
         // became `a||b()` (`a||(b())`) and `(a=b)(c)` became `a=b(c)` — both
         // miscompiles. `PREC_PRIMARY` keeps `a.b()` / `f()()` paren-free and
         // wraps any lower-precedence callee.
-        self.emit_expression_inner(&c.callee, PREC_PRIMARY);
+        self.emit_plain_access_base(&c.callee);
         self.write_str("(");
         for (i, a) in c.arguments.iter().enumerate() {
             if i > 0 {
@@ -1601,10 +2116,17 @@ impl<'a> Emitter<'a> {
     /// Emit a `new` expression — `new Ctor(a, b)`.
     ///
     /// ```text
-    ///   new X()          →  new X()
-    ///   new a.b.c()      →  new a.b.c()      member-chain callee, no wrap
-    ///   new (f())()      →  new (f())()      call in the callee spine MUST wrap
+    ///   new X(a)         →  new X(a)
+    ///   new X()          →  new X           no-arg: the empty parens are dropped
+    ///   new a.b.c()      →  new a.b.c        member-chain callee, no wrap
+    ///   new (f())(a)     →  new (f())(a)     call in the callee spine MUST wrap
     /// ```
+    ///
+    /// A **no-argument** `new` drops its empty `()` (`new C()` → `new C`),
+    /// matching the reference Closure Compiler. That makes it a bare
+    /// `NewExpression`, which `expr_prec` tags at the looser `PREC_NEW_NO_ARGS`
+    /// so a member-object / call-callee parent re-parenthesises it
+    /// (`(new C).y`, `(new C)()`) instead of mis-emitting `new C.y`.
     ///
     /// # Two seams to get right
     ///
@@ -1630,6 +2152,12 @@ impl<'a> Emitter<'a> {
         self.maybe_map(&n.cv);
         self.write_str("new");
         if new_callee_needs_parens(&n.callee) {
+            // The reference compiler always separates `new` from a
+            // parenthesised callee with a space (`new (f())`, `new (a?.b)`),
+            // even though `new(f())` would tokenise fine. Emitting the same
+            // `required_ws()` the bare-callee branch uses keeps byte-identity
+            // for every wrapped shape (call-in-spine and optional-chain).
+            self.required_ws();
             self.write_str("(");
             self.emit_expression(&n.callee);
             self.write_str(")");
@@ -1637,6 +2165,15 @@ impl<'a> Emitter<'a> {
             // `new`↔callee is a keyword↔word boundary — always separate.
             self.required_ws();
             self.emit_expression_inner(&n.callee, PREC_PRIMARY);
+        }
+        // A no-argument `new X` drops the empty parens entirely, emitting
+        // `new X` — matching the reference Closure Compiler (`new C()` → `new C`,
+        // `new a.b.C()` → `new a.b.C`). The looser `PREC_NEW_NO_ARGS` this form
+        // carries (see `expr_prec`) makes a member-object / call-callee parent
+        // wrap it, so `(new X()).y` still prints correctly as `(new X).y`
+        // rather than the mis-parsing `new X.y`. A `new X(a)` keeps its parens.
+        if n.arguments.is_empty() {
+            return;
         }
         self.write_str("(");
         for (i, a) in n.arguments.iter().enumerate() {
@@ -1815,6 +2352,40 @@ impl<'a> Emitter<'a> {
         self.write_str("import.meta");
     }
 
+    /// Emit `base` where it is the object of a **plain (non-optional)** member
+    /// access, the callee of a plain call, or the tag of a tagged template.
+    ///
+    /// Normally that is a `PREC_PRIMARY` emit — which keeps `a.b.c` / `f().x`
+    /// paren-free while wrapping any looser base (binary, logical, unary,
+    /// conditional, assignment, sequence). But a [`ChainExpression`] base MUST
+    /// be parenthesised, and precedence alone won't do it: a ChainExpression is
+    /// the transparent optional-chain-boundary wrapper, tagged `PREC_PRIMARY`
+    /// (its inner spine is a member/call node), so the `PREC_PRIMARY` emit would
+    /// print it bare.
+    ///
+    /// Those parens are load-bearing — they ARE the chain boundary. Dropping
+    /// them makes a following **non-optional** access join the chain:
+    ///
+    /// ```text
+    ///   (a?.b).c     bare →  a?.b.c     // `.c` now short-circuits with `?.` —
+    ///                                   //   a SEMANTIC change, not cosmetic
+    ///   (a?.b)()     bare →  a?.b()     // likewise the call joins the chain
+    /// ```
+    ///
+    /// An *optional* access base (`(a?.b)?.c`) is the opposite: the chain simply
+    /// continues, so the parens are redundant (`a?.b?.c`) — hence
+    /// `emit_optional_member`/`emit_optional_call` do NOT use this and keep their
+    /// bare `PREC_PRIMARY` emit.
+    fn emit_plain_access_base(&mut self, base: &Expression) {
+        if matches!(base, Expression::ChainExpression(_)) {
+            self.write_str("(");
+            self.emit_expression(base);
+            self.write_str(")");
+        } else {
+            self.emit_expression_inner(base, PREC_PRIMARY);
+        }
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -1825,7 +2396,7 @@ impl<'a> Emitter<'a> {
         // emitting the object at `PREC_PRIMARY` keeps `a.b.c` / `f().x`
         // paren-free while wrapping anything lower (binary, logical, unary,
         // conditional, assignment, sequence).
-        self.emit_expression_inner(&m.object, PREC_PRIMARY);
+        self.emit_plain_access_base(&m.object);
         if m.computed {
             self.write_str("[");
             self.emit_expression(&m.property);
@@ -1912,7 +2483,17 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_object(&mut self, o: &ObjectExpression) {
+        // If this object is the **leading token** of an expression statement, a
+        // bare `{` would open a block — wrap it in parens. It is leading exactly
+        // when nothing has been written since the statement began, i.e. the
+        // recorded start offset still equals the current output length. Objects
+        // anywhere to the right (past any token, including a precedence `(`)
+        // don't match and print bare.
+        let wrap = self.expr_stmt_start == Some(self.out.len());
         self.maybe_map(&o.cv);
+        if wrap {
+            self.write_str("(");
+        }
         self.write_str("{");
         for (i, member) in o.properties.iter().enumerate() {
             if i > 0 {
@@ -1930,6 +2511,9 @@ impl<'a> Emitter<'a> {
             self.pretty_ws();
         }
         self.write_str("}");
+        if wrap {
+            self.write_str(")");
+        }
     }
 
     /// Emit an object-spread member `...expr` inside an object literal.
@@ -1991,6 +2575,15 @@ impl<'a> Emitter<'a> {
     fn emit_property_key(&mut self, k: &PropertyKey) {
         match k {
             PropertyKey::Identifier(i) => self.emit_identifier(i),
+            // A **private name** — `#x`. The stored `name` omits the leading
+            // `#` (mirroring `Identifier`), so we prepend it here. A private
+            // name is always a hard token boundary, so no quote/shorten logic
+            // applies (unlike a string key); it prints verbatim.
+            PropertyKey::PrivateName(p) => {
+                self.maybe_map(&p.cv);
+                self.write_str("#");
+                self.write_str(&p.name);
+            }
             PropertyKey::StringLiteral(s) => {
                 // Quote-stripping minification, matching Closure's CodePrinter:
                 // a string key whose DECODED value is a valid identifier name may
@@ -2018,7 +2611,14 @@ impl<'a> Emitter<'a> {
                     self.emit_string(s);
                 }
             }
-            PropertyKey::NumericLiteral(n) => self.emit_numeric(n),
+            PropertyKey::NumericLiteral(n) => {
+                // A numeric object key keeps its canonical form — the reference
+                // compiler does NOT drop a leading fractional zero in key
+                // position (it quotes a float key instead, a separate
+                // transform), so use the non-stripping `format_js_number`.
+                self.maybe_map(&n.cv);
+                self.write_str(&format_js_number(n.value));
+            }
             PropertyKey::Expression(e) => {
                 self.write_str("[");
                 self.emit_expression(e);
@@ -2059,7 +2659,7 @@ fn is_identifier_name(s: &str) -> bool {
 
 /// JavaScript-style number rendering — matches `String(x)` so
 /// emitted output round-trips numerically. CLOC12.12 / gap-025:
-/// for finite non-zero numbers we now compute BOTH the decimal and
+/// for finite non-zero numbers we compute BOTH the decimal and
 /// exponential forms and return whichever is shorter. Ties pick
 /// decimal (canonical).
 ///
@@ -2068,11 +2668,34 @@ fn is_identifier_name(s: &str) -> bool {
 ///   1                 →  "1"      (decimal shorter)
 ///   100               →  "100"    (tie → decimal)
 ///   1000000000        →  "1E9"    (decimal 10 chars vs expo 3)
-///   0.5               →  "0.5"    (decimal shorter)
+///   0.5               →  "0.5"    (decimal shorter; see [`format_js_number_value`]
+///                                  for the value-position `.5` minification)
 ///   1.5e-10           →  "1.5E-10" (decimal 13 chars vs expo 7)
 ///   1e21              →  "1E21"   (expo shorter)
 ///   NaN / Infinity    →  unchanged from JS String(x)
+///
+/// This is the *canonical* form used in property-key position, where the
+/// reference compiler does NOT strip a leading fractional zero.
 fn format_js_number(n: f64) -> String {
+    format_js_number_impl(n, false)
+}
+
+/// Value-position number rendering — like [`format_js_number`] but additionally
+/// drops the leading `0` of a bare fraction (`0.5` → `.5`, `-0.25` → `-.25`),
+/// the way the reference compiler minifies numbers in expression position. The
+/// strip is applied to the decimal candidate *before* the shorter-of comparison,
+/// so a stripped decimal can win a tie against the exponential form
+/// (`0.001` → `.001`, not `1E-3`). NOT used for object property keys — there the
+/// reference compiler quotes a float key (`{0.5:1}` → `{"0.5":1}`) instead, a
+/// separate transform.
+fn format_js_number_value(n: f64) -> String {
+    format_js_number_impl(n, true)
+}
+
+/// Shared body for [`format_js_number`] / [`format_js_number_value`]. When
+/// `strip_leading_zero` is set, a `0.`-prefixed decimal fraction has its leading
+/// zero removed before the decimal-vs-exponential length comparison.
+fn format_js_number_impl(n: f64, strip_leading_zero: bool) -> String {
     if n.is_nan() {
         return "NaN".to_string();
     }
@@ -2109,11 +2732,21 @@ fn format_js_number(n: f64) -> String {
     // shortest decimal that round-trips to the same `f64` (and the
     // exponential candidate below still gets a chance to be shorter).
     const I64_RANGE: f64 = 9_223_372_036_854_775_808.0; // 2^63
-    let decimal = if n.fract() == 0.0 && n.abs() < I64_RANGE {
+    let mut decimal = if n.fract() == 0.0 && n.abs() < I64_RANGE {
         format!("{}", n as i64)
     } else {
         n.to_string()
     };
+    // Value-position minification: `0.5` → `.5`, `-0.5` → `-.5`. Only a bare
+    // fraction (magnitude in (0,1)) is `0.`-prefixed here — integers took the
+    // path above and zero returned early — so this never touches `10.5` etc.
+    if strip_leading_zero {
+        if let Some(rest) = decimal.strip_prefix("0.") {
+            decimal = format!(".{rest}");
+        } else if let Some(rest) = decimal.strip_prefix("-0.") {
+            decimal = format!("-.{rest}");
+        }
+    }
     let expo = format_exponential_uppercase(n);
     if expo.len() < decimal.len() {
         expo
@@ -2178,6 +2811,15 @@ fn format_exponential_uppercase(n: f64) -> String {
 const PREC_SEQUENCE: u8 = 0;
 const PREC_CONDITIONAL: u8 = 2;
 const PREC_UNARY: u8 = 14;
+/// A `new` expression, just under `PREC_PRIMARY`. The reference Closure Compiler
+/// always parenthesises a `new` when it is the object of a member access or the
+/// callee of a call — for BOTH the argumented and no-argument forms:
+/// `new C(1).foo` → `(new C(1)).foo`, `new C().foo` → `(new C).foo`,
+/// `new C(1)()` → `(new C(1))()`. Tagging `new` below `PREC_PRIMARY` makes those
+/// member-object / call-callee parents (which emit their spine at
+/// `PREC_PRIMARY`) wrap it, while looser parents leave it bare (`typeof new C`,
+/// `new C+1`, `new C(1)` standalone). See `expr_prec` / `emit_new`.
+const PREC_NEW: u8 = 17;
 const PREC_PRIMARY: u8 = 18;
 const PREC_ASSIGNMENT: u8 = 1;
 
@@ -2226,10 +2868,79 @@ fn logical_prec(op: LogicalOperator) -> u8 {
 /// nested inside an argument list or a computed-member key (`new a[f()].g()`
 /// where `f()` is a key) are irrelevant — they are already closed off by their
 /// own brackets — so we do not descend into those.
+/// Does a preceding *word* keyword (`throw`, `return`) need a separating space
+/// before this expression? A space is required only when the expression's first
+/// emitted character is itself a word character (identifier/keyword/digit) that
+/// would fuse with the keyword into one token (`throwx`, `return5`,
+/// `throw new C`). An expression that begins with **punctuation** — `{`, `[`,
+/// `"`/`'`, `` ` ``, `/` (regex), or a `!`/`~`/`-`/`+` unary operator — tokenises
+/// cleanly against the keyword and needs no space, matching the reference
+/// compiler (`throw{a:1}`, `throw"x"`, `throw!0`).
+///
+/// This is deliberately **conservative**: it returns `true` (keep the space —
+/// always safe) for every expression whose leading character is not *provably*
+/// punctuation, so it can never drop a required separator and mis-tokenise. The
+/// punctuation-leading set is exact: the four literal forms above plus a unary
+/// with a symbol operator (`void`/`typeof`/`delete` are *word* operators and
+/// still need the space).
+fn keyword_needs_space_before(e: &Expression) -> bool {
+    match e {
+        Expression::ObjectExpression(_)
+        | Expression::ArrayExpression(_)
+        | Expression::StringLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::TemplateLiteral(_) => false,
+        Expression::UnaryExpression(u) => matches!(
+            u.operator,
+            UnaryOperator::TypeOf | UnaryOperator::Void | UnaryOperator::Delete
+        ),
+        _ => true,
+    }
+}
+
+/// Does the callee of a `new` expression need to be wrapped in parens?
+///
+/// Two independent reasons force a wrap, both of which would otherwise
+/// mis-parse or be outright invalid:
+///
+/// 1. **A call in the callee's member spine** (`new f()`, `new a.b()`,
+///    `new a().b`). The grammar makes `new X Arguments` greedy, so a bare
+///    call inside the callee (`new f()()`) reparses as `(new f())()`. We
+///    wrap the callee (`new (f())()`) to keep the inner call bound to the
+///    callee. See [`new_callee_has_call_in_spine`], which walks the
+///    left-associative member chain.
+///
+/// 2. **The callee *is* an optional chain** (`new (a?.b)`, `new (a?.[b])`,
+///    `new (a.b?.c)`, `new (a?.b())`). ECMAScript's `MemberExpression`
+///    production for `new` forbids an `OptionalChain` in the callee — a bare
+///    `new a?.b` is a *Syntax Error*, not just a mis-parse. So a
+///    [`ChainExpression`] callee is *mandatorily* parenthesised.
+///
+/// The chain check is deliberately **top-level only**: it is NOT threaded
+/// through the member-spine recursion. A chain nested as a member *object*
+/// (`new (a?.b).c`, where the top-level callee is a plain, non-optional
+/// `MemberExpression`) is already wrapped internally by
+/// [`Self::emit_plain_access_base`], which parenthesises a ChainExpression
+/// base. Recursing the chain check into `m.object` there would double-wrap
+/// it to `new ((a?.b).c)`, diverging from the reference compiler.
 fn new_callee_needs_parens(callee: &Expression) -> bool {
+    // Reason 2: a chain as the *direct* callee (`new (a?.b)`).
+    if matches!(callee, Expression::ChainExpression(_)) {
+        return true;
+    }
+    // Reason 1: a call anywhere in the callee's member spine.
+    new_callee_has_call_in_spine(callee)
+}
+
+/// Walk the left-associative member spine of a `new` callee looking for a
+/// `CallExpression`. A call in the spine forces a paren-wrap (see reason 1
+/// of [`new_callee_needs_parens`]). This intentionally does NOT match
+/// `ChainExpression` — that is handled once, at the top level, so a chain
+/// buried as a member object is left for `emit_plain_access_base` to wrap.
+fn new_callee_has_call_in_spine(callee: &Expression) -> bool {
     match callee {
         Expression::CallExpression(_) => true,
-        Expression::MemberExpression(m) => new_callee_needs_parens(&m.object),
+        Expression::MemberExpression(m) => new_callee_has_call_in_spine(&m.object),
         _ => false,
     }
 }
@@ -2296,15 +3007,15 @@ fn expr_prec(e: &Expression) -> u8 {
         // syntax error) and tight enough that a `!`/`typeof` parent does not
         // over-wrap it (`!x++`, `typeof x++` print bare, which is correct).
         Expression::UpdateExpression(_) => PREC_UNARY,
-        // `emit_new` ALWAYS prints the argument parens — a no-argument `new X`
-        // is emitted canonically as `new X()`. In that *argumented* spelling a
-        // `new` is a `MemberExpression` in the grammar and binds at member/call
-        // strength, so it tags at `PREC_PRIMARY` like a call: `new X().y` needs
-        // no extra parens (it already means `(new X()).y`), and as a call
-        // callee `new X().y()` stays paren-free. (Were we ever to drop the
-        // empty parens — a future minification — the no-arg form would need the
-        // looser bare-`NewExpression` precedence; we don't, so one tag suffices.)
-        Expression::NewExpression(_) => PREC_PRIMARY,
+        // A `new` expression tags at `PREC_NEW` (just under `PREC_PRIMARY`) so a
+        // member-object / call-callee parent always wraps it — matching Closure
+        // for both the argumented and no-argument forms (`new C(1).foo` →
+        // `(new C(1)).foo`, `new C().foo` → `(new C).foo`, `new C(1)()` →
+        // `(new C(1))()`). A looser parent leaves it bare (`new C(1)` standalone,
+        // `typeof new C`, `new C+1`). The no-argument form additionally drops its
+        // empty `()` in `emit_new`, which is what makes the wrapping load-bearing
+        // (`new C.y` would mis-parse as `new (C.y)`).
+        Expression::NewExpression(_) => PREC_NEW,
         // The comma operator binds looser than every other expression — a
         // sequence sub-operand must be wrapped in almost every context.
         Expression::SequenceExpression(_) => PREC_SEQUENCE,
@@ -2430,6 +3141,7 @@ fn update_op_lead_char(op: UpdateOperator) -> char {
 ///   * a nested unary with the same sign — `-(-a)` → inner prints `-a`;
 ///   * a negative numeric literal — `format_js_number` prints the
 ///     leading `-` (e.g. a constant-folded `-5`).
+///
 /// A `+` literal never prints a leading `+`, and a `BigIntLiteral`'s value
 /// is always non-negative (the `-` of `-5n` is a `UnaryExpression`), so
 /// only the nested-unary case matters for `+` and bigints cannot fuse.
@@ -2518,7 +3230,9 @@ fn unary_op_str(op: UnaryOperator) -> &'static str {
 /// | ContinueStatement           | terminator         | YES          |
 /// | ThrowStatement              | terminator         | YES          |
 /// | EmptyStatement              | the statement      | NO (rare; preserve so empty bodies survive) |
-/// | Declaration::*              | terminator-ish     | NO (FunctionDeclaration adds a part-B `;` we want to keep) |
+/// | Declaration::VariableDeclaration | terminator    | YES (block-final `var x=1;` → `var x=1` before `}`) |
+/// | Declaration::Function/Class | ends in `}`        | (no `;` to pop anyway) |
+/// | Declaration::Import/Export  | n/a in a block     | NO (illegal inside a block; never reached) |
 /// | IfStatement                 | body's `;` maybe   | NO  |
 /// | WhileStatement              | body's `;` maybe   | NO  |
 /// | ForStatement                | body's `;` maybe   | NO  |
@@ -2551,13 +3265,18 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
                 // closing `}` (ASI re-supplies it). The `;` is NOT a body slot.
                 | TaggedStatement::DebuggerStatement(_)
         ),
-        // Declarations are conservatively excluded. Both
-        // VariableDeclaration and FunctionDeclaration end in
-        // `;` in compact mode, but for the former the saving
-        // is a single byte and for the latter the `;` is
-        // gap-030's part-B addition that we explicitly want to
-        // keep at top-level (popping it here would undo part
-        // B's contribution).
+        // A block-final `var x = 1;` carries a real terminator `;`
+        // that the closing `}` makes redundant (ASI supplies it), so
+        // pop it: `function(){var y=h();}` → `function(){var y=h()}`,
+        // byte-identical to the reference compiler. This gate feeds
+        // ONLY the block emitter (`emit_block_statement`); the
+        // top-level part-B `;` for a trailing function/class
+        // declaration is added separately in `emit_program` and is
+        // untouched here. Function/class declarations end in `}` (no
+        // `;` to pop, so `pop_trailing_semi_if_compact` no-ops on
+        // them); import/export declarations are illegal inside a
+        // block and never reach this point.
+        Statement::Declaration(Declaration::VariableDeclaration(_)) => true,
         Statement::Declaration(_) => false,
     }
 }
@@ -2578,6 +3297,10 @@ fn assignment_op_str(op: AssignmentOperator) -> &'static str {
         BitOrEq => "|=",
         BitXorEq => "^=",
         BitAndEq => "&=",
+        // ES2021 logical assignment operators (CLOC12.183).
+        LogicalAndEq => "&&=",
+        LogicalOrEq => "||=",
+        NullishCoalescingEq => "??=",
     }
 }
 
@@ -2601,6 +3324,60 @@ fn choose_quote_and_escape(value: &str) -> (&'static str, String) {
     }
 }
 
+/// Does this code point need a control-character escape?
+///
+/// The C0 controls (`U+0000`..=`U+001F`) plus `U+007F` DELETE. Everything in
+/// this set is unprintable, so the reference compiler never emits it raw.
+fn needs_control_escape(c: char) -> bool {
+    let u = c as u32;
+    u < 0x20 || u == 0x7F
+}
+
+/// Render one control character exactly as the reference Closure Compiler does.
+///
+/// This table is oracle-verified byte-for-byte against
+/// `closure-compiler-v20260712.jar` (SIMPLE, `--language_in ECMASCRIPT_2020`,
+/// `--language_out NO_TRANSPILE`), by round-tripping `"A\uXXXXB"` for every
+/// code point in `0x00..=0x1F` plus `0x7F` and reading the output with `xxd`:
+///
+/// ```text
+///   0x00                     -> \x00          (see the NUL note below)
+///   0x08 BS                  -> \b
+///   0x09 TAB                 -> \t
+///   0x0A LF                  -> \n
+///   0x0B VT                  -> \v
+///   0x0C FF                  -> \f
+///   0x0D CR                  -> \r
+///   0x01..0x07, 0x0E..0x1F   -> \u0001 .. \u001f
+///   0x7F DEL                 -> \u007f
+/// ```
+///
+/// Two details that look like inconsistencies but are what the reference
+/// compiler actually emits, so we match them for byte-identity:
+///
+/// 1. **NUL is the ONLY code point rendered with the `\x` form.** `\x00` is two
+///    bytes shorter than `\u0000`, but Closure does *not* apply the same
+///    shortening to `\x01`..`\x1f` -- those stay `\u0001`..`\u001f`. Do not
+///    "fix" this into a general `\xXX` rule; it would diverge on every other
+///    control character.
+/// 2. **The hex digits are LOWERCASE** (`\u001b`, not `\u001B`).
+///
+/// `\x00` is unambiguous regardless of what follows: `\x` consumes exactly two
+/// hex digits, so `"\x00" + "0"` prints `\x000` and still reads back as NUL
+/// followed by `'0'`.
+fn push_control_escape(out: &mut String, c: char) {
+    match c {
+        '\u{08}' => out.push_str("\\b"),
+        '\t' => out.push_str("\\t"),
+        '\n' => out.push_str("\\n"),
+        '\u{0B}' => out.push_str("\\v"),
+        '\u{0C}' => out.push_str("\\f"),
+        '\r' => out.push_str("\\r"),
+        '\0' => out.push_str("\\x00"),
+        c => out.push_str(&format!("\\u{:04x}", c as u32)),
+    }
+}
+
 /// Like [`escape_str_dq`] but for a single-quoted string — escape
 /// `'` instead of `"`. Backslash and control char rules are
 /// identical because they're independent of which quote wraps the
@@ -2611,9 +3388,6 @@ fn escape_str_sq(s: &str) -> String {
         match ch {
             '\\' => out.push_str("\\\\"),
             '\'' => out.push_str("\\'"),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
             // U+2028 LINE SEPARATOR / U+2029 PARAGRAPH SEPARATOR: these are
             // line terminators in ECMAScript, so before ES2019 an UNESCAPED one
             // inside a string literal is a SyntaxError. They sit above 0x20, so
@@ -2621,7 +3395,7 @@ fn escape_str_sq(s: &str) -> String {
             // (See `escape_ascii_only`, which already escapes them as non-ASCII.)
             '\u{2028}' => out.push_str("\\u2028"),
             '\u{2029}' => out.push_str("\\u2029"),
-            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
+            c if needs_control_escape(c) => push_control_escape(&mut out, c),
             c => out.push(c),
         }
     }
@@ -2637,9 +3411,6 @@ fn escape_str_dq(s: &str) -> String {
         match ch {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
             // U+2028 LINE SEPARATOR / U+2029 PARAGRAPH SEPARATOR: line
             // terminators in ECMAScript, so an UNESCAPED one inside a string
             // literal is a SyntaxError before ES2019. They are above 0x20, so the
@@ -2647,7 +3418,7 @@ fn escape_str_dq(s: &str) -> String {
             // `escape_ascii_only`, which already escapes them as non-ASCII.)
             '\u{2028}' => out.push_str("\\u2028"),
             '\u{2029}' => out.push_str("\\u2029"),
-            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
+            c if needs_control_escape(c) => push_control_escape(&mut out, c),
             c => out.push(c),
         }
     }
@@ -2663,10 +3434,7 @@ fn escape_ascii_only(s: &str) -> String {
         match ch {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
-            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
+            c if needs_control_escape(c) => push_control_escape(&mut out, c),
             c if c.is_ascii() => out.push(c),
             c if (c as u32) <= 0xFFFF => out.push_str(&format!("\\u{:04X}", c as u32)),
             c => out.push_str(&format!("\\u{{{:X}}}", c as u32)),
@@ -2681,8 +3449,15 @@ fn escape_ascii_only(s: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    // Number-emission tests deliberately use literals like `3.14` as test data
+    // and `0.0 * -1.0` to construct an IEEE-754 negative zero at runtime; neither
+    // is a std-constant approximation or a stray `* -1` to be rewritten.
+    #![allow(clippy::approx_constant)]
+    #![allow(clippy::neg_multiply)]
     use super::*;
-    use coding_adventures_javascript_ast::{Program, SourceType};
+    use coding_adventures_javascript_ast::{
+        AssignmentPattern, CatchClause, PrivateName, Program, RestElement, SourceType,
+    };
     use coding_adventures_javascript_tokens::EsVersion;
 
     fn program() -> Program {
@@ -2690,6 +3465,210 @@ mod tests {
     }
     fn untraced_program() -> Program {
         Program::new_untraced(EsVersion::Es2025, SourceType::Module)
+    }
+
+
+    // =================================================================
+    // Output line wrapping (CLOC #218)
+    //
+    // Expectations are the reference Closure Compiler's ACTUAL line lengths,
+    // captured by emitting N uniform-width call statements through
+    // `closure-compiler-v20260712.jar` and measuring each output line. See
+    // `LINE_LENGTH_BUDGET` for the table and the reasoning.
+    // =================================================================
+
+    /// Emit `n` call statements of the form `sinkNNN();`, each `width` chars
+    /// wide, and return the length of every output line.
+    fn wrapped_line_lengths(n: usize, digits: usize) -> Vec<usize> {
+        let body: Vec<ProgramItem> = (0..n)
+            .map(|i| {
+                let name = format!("sink{:0width$}", i, width = digits);
+                stmt(call(ident(&name), vec![]))
+            })
+            .collect();
+        let out = emit_default(untraced_program().with_body(body));
+        out.code.lines().map(|l| l.chars().count()).collect()
+    }
+
+    #[test]
+    fn short_programs_are_never_wrapped() {
+        // Well under the budget -> a single line, no break.
+        let lens = wrapped_line_lengths(10, 3);
+        assert_eq!(lens, vec![100], "10 statements of width 10 must stay on one line");
+    }
+
+    #[test]
+    fn wraps_after_the_statement_that_crosses_the_budget() {
+        // Oracle, width 10: line 1 is 510 -- the break lands AFTER the statement
+        // that crosses 500, not before it. 50 statements would sit at exactly
+        // 500, which is allowed, so the 51st is what tips it over.
+        let lens = wrapped_line_lengths(70, 3);
+        assert_eq!(lens[0], 510, "width-10 statements: first line must be 510");
+    }
+
+    #[test]
+    fn wrap_point_tracks_statement_width() {
+        // Oracle: width 11 -> 506, width 12 -> 504. Both are the first length
+        // exceeding 500, confirming the rule is not a fixed statement count.
+        assert_eq!(wrapped_line_lengths(70, 4)[0], 506, "width-11 first line");
+        assert_eq!(wrapped_line_lengths(70, 5)[0], 504, "width-12 first line");
+    }
+
+    #[test]
+    fn wrapping_repeats_for_every_subsequent_line() {
+        // Oracle on 260 width-10 statements: 510 x5 then a 50-char remainder.
+        let lens = wrapped_line_lengths(260, 3);
+        assert_eq!(lens, vec![510, 510, 510, 510, 510, 50]);
+    }
+
+    #[test]
+    fn no_trailing_blank_line_when_the_last_statement_crosses() {
+        // The final item must never emit a wrap after itself, which would leave
+        // a stray empty line at EOF.
+        for n in [50usize, 51, 52, 100] {
+            let out = emit_default(
+                untraced_program().with_body(
+                    (0..n).map(|i| stmt(call(ident(&format!("sink{i:03}")), vec![]))).collect(),
+                ),
+            );
+            assert!(
+                !out.code.ends_with('\n'),
+                "n={n}: output must not end with a newline"
+            );
+            assert!(
+                !out.code.contains("\n\n"),
+                "n={n}: output must not contain a blank line"
+            );
+        }
+    }
+
+    #[test]
+    fn pretty_mode_is_unaffected_by_the_budget() {
+        // Pretty mode already puts one statement per line; the budget must not
+        // introduce extra breaks there.
+        let body: Vec<ProgramItem> = (0..70)
+            .map(|i| stmt(call(ident(&format!("sink{i:03}")), vec![])))
+            .collect();
+        let prog = untraced_program().with_body(body);
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let opts = EmitOptions { pretty: true, ..EmitOptions::default() };
+        let out = emit(&prog, &sidecar, &mut cv, &opts).expect("emit failed");
+        assert_eq!(
+            out.code.lines().count(),
+            70,
+            "pretty mode must emit exactly one line per statement"
+        );
+    }
+
+    // =================================================================
+    // Control-character escaping (CLOC #204)
+    //
+    // The expectations below are the reference Closure Compiler's ACTUAL
+    // output, captured by round-tripping each code point through
+    // `closure-compiler-v20260712.jar` at SIMPLE and reading the bytes with
+    // `xxd`. See `push_control_escape` for the full table and the reasoning.
+    // Nothing here is derived from what "looks consistent" -- two of these
+    // cases (NUL, and the lowercase hex) are deliberately asymmetric because
+    // that is what the reference compiler emits.
+    // =================================================================
+
+    /// Build the escaped body of a double-quoted literal, without the quotes.
+    fn esc(s: &str) -> String {
+        escape_str_dq(s)
+    }
+
+    #[test]
+    fn nul_is_the_only_x_form_escape() {
+        // Oracle: `var a = "x\u0000y";` -> `var a="x\x00y"`.
+        assert_eq!(esc("x\u{0}y"), "x\\x00y");
+        // ...and the neighbouring control chars do NOT get the `\x` treatment,
+        // even though `\x01` would be shorter than `\u0001`. Pinning this stops
+        // a future "consistency" refactor from generalising the NUL rule.
+        assert_eq!(esc("x\u{1}y"), "x\\u0001y");
+        assert_eq!(esc("x\u{7}y"), "x\\u0007y");
+    }
+
+    #[test]
+    fn short_escapes_for_bs_tab_lf_vt_ff_cr() {
+        // Oracle: 0x08..0x0D each print as their one-letter escape.
+        assert_eq!(esc("A\u{8}B"), "A\\bB");
+        assert_eq!(esc("A\tB"), "A\\tB");
+        assert_eq!(esc("A\nB"), "A\\nB");
+        assert_eq!(esc("A\u{b}B"), "A\\vB");
+        assert_eq!(esc("A\u{c}B"), "A\\fB");
+        assert_eq!(esc("A\rB"), "A\\rB");
+    }
+
+    #[test]
+    fn other_controls_use_lowercase_u_escapes() {
+        // Oracle emits LOWERCASE hex digits: `\u001b`, never `\u001B`.
+        assert_eq!(esc("A\u{e}B"), "A\\u000eB");
+        assert_eq!(esc("A\u{1b}B"), "A\\u001bB");
+        assert_eq!(esc("A\u{1f}B"), "A\\u001fB");
+        let out = esc("\u{1b}\u{1f}");
+        assert!(
+            !out.chars().any(|c| c.is_ascii_uppercase()),
+            "hex digits must be lowercase, got {out:?}"
+        );
+    }
+
+    #[test]
+    fn del_is_escaped_even_though_it_is_above_0x20() {
+        // 0x7F sits ABOVE the C0 block, so a naive `< 0x20` guard misses it and
+        // emits a raw DEL byte. Oracle: `\u007f`.
+        assert_eq!(esc("A\u{7f}B"), "A\\u007fB");
+    }
+
+    #[test]
+    fn control_rules_are_identical_for_single_quoted_strings() {
+        // The control table is independent of which quote wraps the string.
+        assert_eq!(escape_str_sq("x\u{0}y"), "x\\x00y");
+        assert_eq!(escape_str_sq("A\u{1b}B"), "A\\u001bB");
+        assert_eq!(escape_str_sq("A\u{7f}B"), "A\\u007fB");
+        assert_eq!(escape_str_sq("A\u{b}B"), "A\\vB");
+    }
+
+    #[test]
+    fn control_rules_are_identical_under_ascii_only() {
+        // `ascii_only` changes how NON-ASCII is rendered, never how control
+        // characters are.
+        assert_eq!(escape_ascii_only("x\u{0}y"), "x\\x00y");
+        assert_eq!(escape_ascii_only("A\u{1b}B"), "A\\u001bB");
+        assert_eq!(escape_ascii_only("A\u{7f}B"), "A\\u007fB");
+        assert_eq!(escape_ascii_only("A\u{c}B"), "A\\fB");
+    }
+
+    #[test]
+    fn every_c0_control_and_del_is_escaped_never_emitted_raw() {
+        // Whole-range sweep: no control byte may survive into the output.
+        // Sweep ALL THREE escapers, not just the double-quoted one -- they are
+        // behaviourally identical by construction today, but they drifted apart
+        // once before (that is how DEL went unescaped in one of them), so the
+        // guarantee is asserted independently for each.
+        // Named alias so the array type stays simple -- clippy::type_complexity
+        // rejects the inline `[(&str, fn(&str) -> String); 3]`, and CI denies
+        // clippy warnings.
+        type Escaper = fn(&str) -> String;
+        let escapers: [(&str, Escaper); 3] = [
+            ("escape_str_dq", escape_str_dq),
+            ("escape_str_sq", escape_str_sq),
+            ("escape_ascii_only", escape_ascii_only),
+        ];
+        for (name, f) in escapers {
+            for cp in (0x00u32..=0x1f).chain(std::iter::once(0x7f)) {
+                let c = char::from_u32(cp).unwrap();
+                let out = f(&format!("A{c}B"));
+                assert!(
+                    !out.chars().any(|ch| (ch as u32) < 0x20 || ch as u32 == 0x7f),
+                    "{name}: U+{cp:04X} leaked a raw control byte: {out:?}"
+                );
+                assert!(
+                    out.starts_with('A') && out.ends_with('B'),
+                    "{name}: bad shape: {out:?}"
+                );
+            }
+        }
     }
 
     fn num(v: f64) -> Expression {
@@ -3040,6 +4019,38 @@ mod tests {
     }
 
     #[test]
+    fn chain_as_plain_access_base_is_parenthesized() {
+        // A `ChainExpression` used as the object of a PLAIN (non-optional)
+        // member/call, or the tag of a tagged template, MUST be parenthesized:
+        // the parens are the optional-chain boundary, so without them a
+        // following non-optional access joins the chain — `(a?.b).c` printed
+        // bare as `a?.b.c` extends the `?.` short-circuit to `.c`, a semantic
+        // miscompile.
+        let ax = || chain(opt_member(ident("a"), "x", false));
+        // (a?.x).y — plain member on a chain
+        assert_eq!(emit_expr(member(ax(), "y", false)), "(a?.x).y;");
+        // (a?.x)() — plain call on a chain
+        assert_eq!(emit_expr(call(ax(), vec![])), "(a?.x)();");
+        // (a?.x)[0] — computed member on a chain
+        assert_eq!(emit_expr(member(ax(), "0", true)), "(a?.x)[0];");
+        // ((a?.x).y).z — chain wrapped once, the outer plain members chain bare
+        assert_eq!(
+            emit_expr(member(member(ax(), "y", false), "z", false)),
+            "(a?.x).y.z;"
+        );
+    }
+
+    #[test]
+    fn chain_not_as_plain_base_is_not_parenthesized() {
+        // A bare chain, a chain as a call ARGUMENT, and a chain as an OPTIONAL
+        // access base must all stay unwrapped — the parens are only needed to
+        // bound the chain against a *following* non-optional access.
+        let ab = || chain(opt_member(ident("a"), "b", false));
+        assert_eq!(emit_expr(ab()), "a?.b;"); // bare
+        assert_eq!(emit_expr(call(ident("f"), vec![ab()])), "f(a?.b);"); // argument
+    }
+
+    #[test]
     fn optional_call_sequence_argument_wraps() {
         // `a?.((b,c))` — a looser *sequence* argument must wrap, exactly as a
         // plain call argument does; a bare `a?.(b,c)` would be a two-argument
@@ -3081,11 +4092,38 @@ mod tests {
     #[test]
     fn word_operators_keep_their_spaces() {
         use BinaryOperator::*;
-        // `in` / `instanceof` MUST stay spaced or they fuse into one identifier.
+        // `in` / `instanceof` between two identifier-part seams MUST stay spaced
+        // or they fuse into one identifier.
         assert_eq!(emit_expr(binary(In, ident("a"), ident("b"))), "a in b;");
         assert_eq!(
             emit_expr(binary(InstanceOf, ident("a"), ident("b"))),
             "a instanceof b;"
+        );
+    }
+
+    #[test]
+    fn word_operators_drop_space_at_hard_boundaries() {
+        use BinaryOperator::*;
+        // The LEFT space is dropped after a string literal's closing quote:
+        // `"k" in obj` → `"k"in obj`.
+        assert_eq!(
+            emit_expr(binary(In, string("k"), ident("obj"))),
+            r#""k"in obj;"#
+        );
+        // The RIGHT space is dropped before a `{` (object) / `[` (array):
+        // `a in {}` → `a in{}`.
+        let empty_obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
+        assert_eq!(emit_expr(binary(In, ident("a"), empty_obj)), "a in{};");
+        let empty_arr = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![],
+        });
+        assert_eq!(
+            emit_expr(binary(InstanceOf, ident("a"), empty_arr)),
+            "a instanceof[];"
         );
     }
 
@@ -3255,9 +4293,55 @@ mod tests {
     }
 
     #[test]
-    fn number_shortest_form_small_decimals_stay_decimal() {
-        assert_eq!(emit_number_value(0.5), "0.5");
+    fn number_value_position_drops_leading_fraction_zero() {
+        // A bare fraction in value position drops its leading `0` — the
+        // reference compiler's minification (`0.5` → `.5`).
+        assert_eq!(emit_number_value(0.5), ".5");
+        assert_eq!(emit_number_value(0.25), ".25");
+        assert_eq!(emit_number_value(0.75), ".75");
+        assert_eq!(emit_number_value(-0.5), "-.5");
+        assert_eq!(emit_number_value(-0.25), "-.25");
+        // Stripping happens BEFORE the decimal-vs-exponential comparison, so the
+        // stripped decimal can win a tie: `.001` (4) ties `1E-3` (4) → decimal.
+        assert_eq!(emit_number_value(0.001), ".001");
+        // But when the exponential form is strictly shorter it still wins:
+        // `.0001` (5) vs `1E-4` (4) → exponential.
+        assert_eq!(emit_number_value(0.0001), "1E-4");
+        // A non-zero integer part is untouched (no leading `0.`).
         assert_eq!(emit_number_value(3.14), "3.14");
+        assert_eq!(emit_number_value(10.5), "10.5");
+    }
+
+    #[test]
+    fn number_key_position_keeps_leading_fraction_zero() {
+        // In OBJECT-KEY position the leading zero is NOT dropped — the reference
+        // compiler quotes a float key instead, a separate transform, so the
+        // emitter must keep the canonical `0.5` here (not `.5`).
+        let key = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![ObjectMember::Property(Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 0.5,
+                    raw: String::new(),
+                }),
+                value: Box::new(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: String::new(),
+                })),
+                computed: false,
+                shorthand: false,
+                method: false,
+            })],
+        });
+        let code = emit_default(program().with_body(vec![stmt(key)])).code;
+        assert!(
+            code.contains("0.5:"),
+            "numeric object key must keep its leading zero; got {code}"
+        );
     }
 
     #[test]
@@ -3416,6 +4500,20 @@ mod tests {
         );
         let out = emit_default(program().with_body(vec![stmt(e)]));
         assert_eq!(out.code, "a?b=1:c=2;");
+    }
+
+    #[test]
+    fn logical_assignment_operators_emit() {
+        // ES2021 `&&=` / `||=` / `??=` round-trip through the emitter (CLOC12.183).
+        for (op, s) in [
+            (AssignmentOperator::LogicalAndEq, "a&&=b;"),
+            (AssignmentOperator::LogicalOrEq, "a||=b;"),
+            (AssignmentOperator::NullishCoalescingEq, "a??=b;"),
+        ] {
+            let e = assign("a", op, ident("b"));
+            let out = emit_default(program().with_body(vec![stmt(e)]));
+            assert_eq!(out.code, s, "operator {op:?}");
+        }
     }
 
     #[test]
@@ -3609,6 +4707,435 @@ mod tests {
         // after the function-declaration's closing `}` to
         // match upstream Closure v20240317.
         assert_eq!(out.code, "function f(x){return x};");
+    }
+
+    /// A **rest parameter** emits `...name`, and keeps its place after the
+    /// leading fixed params: `function f(a, ...rest) {}` → `function f(a,...rest){}`
+    /// (CLOC12.190 PR1). Proves the emitter's new `FunctionParam::RestElement`
+    /// arm writes the `...` prefix and the gathered-name identifier.
+    #[test]
+    fn rest_parameter_minified() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![
+                FunctionParam::Identifier(Identifier { cv: None, name: "a".to_string() }),
+                FunctionParam::RestElement(RestElement {
+                    cv: None,
+                    argument: Identifier { cv: None, name: "rest".to_string() },
+                }),
+            ],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function f(a,...rest){};");
+    }
+
+    /// A lone rest parameter is still comma-free and parenthesised:
+    /// `function g(...args) {}` → `function g(...args){}`.
+    #[test]
+    fn rest_parameter_sole_minified() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "g".to_string() },
+            params: vec![FunctionParam::RestElement(RestElement {
+                cv: None,
+                argument: Identifier { cv: None, name: "args".to_string() },
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function g(...args){};");
+    }
+
+    // ---- default parameters (CLOC12.191 PR1) ----------------
+    //
+    // A default parameter prints `name=expr` (minified) — the `=` has no
+    // surrounding whitespace in compact mode. The default is a *live*
+    // expression, emitted at `PREC_ASSIGNMENT`: an ordinary literal prints
+    // bare, but a looser bare sequence default must parenthesise (`a=(1,2)`),
+    // and a plain identifier param mixed alongside a default still prints
+    // uniformly.
+
+    /// `function f(a,b=1){}` → `function f(a,b=1){}` — a fixed param followed
+    /// by a numeric-literal default. The `=` is tight in minified mode.
+    #[test]
+    fn default_parameter_minified() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![
+                FunctionParam::Identifier(Identifier { cv: None, name: "a".to_string() }),
+                FunctionParam::AssignmentPattern(AssignmentPattern {
+                    cv: None,
+                    left: Identifier { cv: None, name: "b".to_string() },
+                    right: num(1.0),
+                }),
+            ],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        assert_eq!(emit_default(prog).code, "function f(a,b=1){};");
+    }
+
+    /// A **sequence** default must parenthesise: `function f(a=(1,2)){}`. The
+    /// default is emitted at `PREC_ASSIGNMENT`, so a bare comma sequence — which
+    /// binds looser than `=` — is wrapped; without the parens `a=1,2` would parse
+    /// as two parameters `a=1` and `2` (the latter invalid).
+    #[test]
+    fn default_parameter_sequence_wraps() {
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![num(1.0), num(2.0)],
+        });
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: Identifier { cv: None, name: "a".to_string() },
+                right: seq,
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        assert_eq!(emit_default(prog).code, "function f(a=(1,2)){};");
+    }
+
+    /// Pretty mode spaces the `=`: `function f(a = 1){ }`-style. Confirms the
+    /// `pretty_ws()` bracketing around `=` mirrors a class-field initializer.
+    #[test]
+    fn default_parameter_pretty_spaces_equals() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: Identifier { cv: None, name: "a".to_string() },
+                right: num(1.0),
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_with(
+            prog,
+            EmitOptions {
+                pretty: true,
+                ..EmitOptions::default()
+            },
+        );
+        assert!(
+            out.code.contains("a = 1"),
+            "pretty mode should space the default `=`; got {}",
+            out.code
+        );
+    }
+
+    // ---- class declarations (CLOC12.174 PR1) ----------------
+    //
+    // The *statement* form of a class. Emitted at top level via
+    // `ProgramItem::Declaration` (not `emit_expr`, which is for expression
+    // position). Contrast with the ClassExpression tests above: a class
+    // *expression* in statement position is parenthesised (`(class C{});`),
+    // whereas the declaration is emitted bare with no wrap and — crucially —
+    // NO trailing `;` (unlike `function f(){};`, gap-030 part B).
+
+    /// Build a top-level `class <id>[ extends S]{members}` program and emit it
+    /// in the default (minified) mode, returning the output code.
+    fn emit_class_decl(id: &str, super_class: Option<Expression>, body: Vec<ClassMember>) -> String {
+        let d = Declaration::ClassDeclaration(ClassDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: id.to_string() },
+            super_class: super_class.map(Box::new),
+            body,
+        });
+        emit_default(program().with_body(vec![ProgramItem::Declaration(d)])).code
+    }
+
+    // ---- class fields (CLOC12.175 PR1) ----------------------
+    //
+    // A field prints `[static ]key[=value];` inside the class body — driven
+    // here through `emit_class_decl` so it exercises the shared `emit_class_tail`
+    // member loop. Contrast with a method: a field ENDS with `;` (a method's `}`
+    // is self-terminating), and it has no params/body.
+
+    /// Build a field member with an identifier key `name`, optional value, and
+    /// `static` flag.
+    fn field(name: &str, value: Option<Expression>, is_static: bool) -> ClassMember {
+        ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() }),
+            value,
+            computed: false,
+            is_static,
+        })
+    }
+
+    #[test]
+    fn field_with_initializer() {
+        // `class C{x=1;}` — an instance field with an initializer, terminated `;`.
+        assert_eq!(emit_class_decl("C", None, vec![field("x", Some(num(1.0)), false)]), "class C{x=1;};");
+    }
+
+    #[test]
+    fn bare_field_has_no_value() {
+        // `class C{y;}` — a bare field: just the key and the terminator.
+        assert_eq!(emit_class_decl("C", None, vec![field("y", None, false)]), "class C{y;};");
+    }
+
+    // ---- private-name keys (CLOC12.177) ------------------------------
+
+    /// A private **field** — `#x = 1`. The stored name omits the `#`; the
+    /// emitter prepends it.
+    fn private_field(name: &str, value: Option<Expression>, is_static: bool) -> ClassMember {
+        ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: PropertyKey::PrivateName(PrivateName { cv: None, name: name.to_string() }),
+            value,
+            computed: false,
+            is_static,
+        })
+    }
+
+    /// A private **method** — `#m(){}`.
+    fn private_method(name: &str) -> ClassMember {
+        ClassMember::Method(MethodDefinition {
+            cv: None,
+            key: PropertyKey::PrivateName(PrivateName { cv: None, name: name.to_string() }),
+            kind: MethodKind::Method,
+            value: method_fn(),
+            computed: false,
+            is_static: false,
+        })
+    }
+
+    #[test]
+    fn private_field_prints_hash() {
+        // `class C{#x=1;}` — the `#` is prepended to the stored bare name.
+        assert_eq!(
+            emit_class_decl("C", None, vec![private_field("x", Some(num(1.0)), false)]),
+            "class C{#x=1;};"
+        );
+    }
+
+    #[test]
+    fn bare_private_field() {
+        // `class C{#x;}` — a bare private field, no initializer.
+        assert_eq!(emit_class_decl("C", None, vec![private_field("x", None, false)]), "class C{#x;};");
+    }
+
+    #[test]
+    fn static_private_field() {
+        // `class C{static #x=1;}` — `static` stacks before the private key.
+        assert_eq!(
+            emit_class_decl("C", None, vec![private_field("x", Some(num(1.0)), true)]),
+            "class C{static #x=1;};"
+        );
+    }
+
+    #[test]
+    fn private_method_prints_hash() {
+        // `class C{#m(){}}` — a private method key also prints `#`.
+        assert_eq!(emit_class_decl("C", None, vec![private_method("m")]), "class C{#m(){}};");
+    }
+
+    #[test]
+    fn private_and_public_members_interleave() {
+        // `class C{#x=1;m(){}}` — a private field and a public method coexist.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![private_field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
+            ),
+            "class C{#x=1;m(){}};"
+        );
+    }
+
+    #[test]
+    fn static_field() {
+        // `class C{static z=2;}` — the `static` prefix, then `key=value;`.
+        assert_eq!(
+            emit_class_decl("C", None, vec![field("z", Some(num(2.0)), true)]),
+            "class C{static z=2;};"
+        );
+    }
+
+    #[test]
+    fn computed_key_field() {
+        // `class C{[k]=v;}` — a computed key is bracketed, then `=value;`.
+        let f = ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: PropertyKey::Expression(Box::new(ident("k"))),
+            value: Some(ident("v")),
+            computed: true,
+            is_static: false,
+        });
+        assert_eq!(emit_class_decl("C", None, vec![f]), "class C{[k]=v;};");
+    }
+
+    #[test]
+    fn field_and_method_interleaved() {
+        // `class C{x=1;m(){}}` — a field then a method: the field's `;` separates
+        // them, the method's `}` is self-terminating, no extra separators.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
+            ),
+            "class C{x=1;m(){}};"
+        );
+    }
+
+    #[test]
+    fn class_declaration_empty_is_bare_and_unterminated() {
+        // `class C {}` — bare (no wrapping paren, unlike the expression form's
+        // `(class C{});`) and NO trailing `;` (unlike `function f(){};`).
+        assert_eq!(emit_class_decl("C", None, vec![]), "class C{};");
+    }
+
+    // ---- static initialization blocks (CLOC12.176) -------------------
+
+    /// A `static { <statements> }` member.
+    fn static_block(stmts: Vec<Statement>) -> ClassMember {
+        ClassMember::StaticBlock(BlockStatement { cv: None, body: stmts })
+    }
+
+    /// An expression statement wrapping `expr`.
+    fn expr_stmt(expr: Expression) -> Statement {
+        Statement::expression_statement(ExpressionStatement { cv: None, expression: expr })
+    }
+
+    #[test]
+    fn empty_static_block() {
+        // `class C{static{}}` — the `static` keyword abuts the `{` with no space,
+        // and the empty block is brace-terminated (no trailing `;`).
+        assert_eq!(emit_class_decl("C", None, vec![static_block(vec![])]), "class C{static{}};");
+    }
+
+    #[test]
+    fn static_block_with_statement() {
+        // `class C{static{x}}` — a single statement body prints inside the block.
+        assert_eq!(
+            emit_class_decl("C", None, vec![static_block(vec![expr_stmt(ident("x"))])]),
+            "class C{static{x}};"
+        );
+    }
+
+    #[test]
+    fn static_block_with_two_statements() {
+        // `class C{static{x;y}}` — two statements are `;`-separated inside the block.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![static_block(vec![expr_stmt(ident("x")), expr_stmt(ident("y"))])],
+            ),
+            "class C{static{x;y}};"
+        );
+    }
+
+    #[test]
+    fn static_block_interleaved_with_field_and_method() {
+        // `class C{x=1;static{}m(){}}` — a field, a static block, and a method
+        // coexist in source order; the static block is brace-terminated so it
+        // abuts the following method with no separator.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![
+                    field("x", Some(num(1.0)), false),
+                    static_block(vec![]),
+                    method("m", MethodKind::Method, false),
+                ],
+            ),
+            "class C{x=1;static{}m(){}};"
+        );
+    }
+
+    #[test]
+    fn class_declaration_heritage() {
+        // `class C extends B {}` — the `extends` operand prints bare (an
+        // identifier is a LeftHandSide, tighter than the class body).
+        assert_eq!(
+            emit_class_decl("C", Some(ident("B")), vec![]),
+            "class C extends B{};"
+        );
+    }
+
+    #[test]
+    fn class_declaration_members_reuse_emit_class_member() {
+        // A method, a static method, and get/set accessors — each printed by
+        // the shared `emit_class_member` (the same helper the expression form
+        // uses), back-to-back with no separators.
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("m", MethodKind::Method, false)]),
+            "class C{m(){}};"
+        );
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("m", MethodKind::Method, true)]),
+            "class C{static m(){}};"
+        );
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("x", MethodKind::Get, false)]),
+            "class C{get x(){}};"
+        );
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("x", MethodKind::Set, false)]),
+            "class C{set x(){}};"
+        );
+    }
+
+    #[test]
+    fn class_declaration_constructor_and_computed_key() {
+        // The constructor prints with no keyword prefix (its `kind` only
+        // matters to the passes). A computed key `[k]` is bracketed.
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("constructor", MethodKind::Constructor, false)]),
+            "class C{constructor(){}};"
+        );
+        let computed = ClassMember::Method(MethodDefinition {
+            cv: None,
+            key: PropertyKey::Expression(Box::new(ident("k"))),
+            kind: MethodKind::Method,
+            value: method_fn(),
+            computed: true,
+            is_static: false,
+        });
+        assert_eq!(emit_class_decl("C", None, vec![computed]), "class C{[k](){}};");
+    }
+
+    #[test]
+    fn class_declaration_full_shape_named_heritage_and_member() {
+        // `class C extends B { m() {} }` — the whole shape in one assertion.
+        assert_eq!(
+            emit_class_decl("C", Some(ident("B")), vec![method("m", MethodKind::Method, false)]),
+            "class C extends B{m(){}};"
+        );
     }
 
     #[test]
@@ -3877,6 +5404,62 @@ mod tests {
         assert_eq!(emit_holes("ee"), "[1,1]");
         assert_eq!(emit_holes("e"), "[1]");
         assert_eq!(emit_holes(""), "[]");
+    }
+
+    #[test]
+    fn object_literal_at_statement_start_via_spine_is_parenthesized() {
+        // The leftmost EMITTED token is `{`, which a bare expression statement
+        // mis-parses as a *block* — so the whole statement must be wrapped, even
+        // when the object is reached through a member/call/assignment spine (the
+        // direct-expression check misses these). `({}).f` printed unwrapped as
+        // `{}.f` is a hard miscompile (invalid JS).
+        let obj = || Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        // ({}).f
+        assert_eq!(emit_expr(member(obj(), "f", false)), "({}).f;");
+        // ({}).f()
+        assert_eq!(emit_expr(call(member(obj(), "f", false), vec![])), "({}).f();");
+        // ({}).f().g() — deeper spine
+        assert_eq!(
+            emit_expr(call(
+                member(call(member(obj(), "f", false), vec![]), "g", false),
+                vec![]
+            )),
+            "({}).f().g();"
+        );
+        // ({}).a = 1 — object reached through an assignment's member target
+        let a = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+                cv: None,
+                object: Box::new(obj()),
+                property: Box::new(ident("a")),
+                computed: false,
+            })),
+            right: Box::new(num(1.0)),
+        });
+        assert_eq!(emit_expr(a), "({}).a=1;");
+    }
+
+    #[test]
+    fn non_object_leftmost_statement_start_is_not_wrapped() {
+        // A member/call whose leftmost token is an identifier does NOT start with
+        // `{`, so it must stay unwrapped — the spine walk must not over-wrap.
+        assert_eq!(emit_expr(member(ident("a"), "f", false)), "a.f;");
+        assert_eq!(emit_expr(call(member(ident("a"), "f", false), vec![])), "a.f();");
+    }
+
+    #[test]
+    fn object_under_precedence_wrapped_spine_is_not_double_wrapped() {
+        // `({}+1).x` — the member's object is a BinaryExpression that the printer
+        // already precedence-wraps as `({}+1)`. That `(` is written before the
+        // object literal, so the object is no longer the statement's leading
+        // token and must NOT wrap again. Regression guard: a naive
+        // "is the leftmost leaf an object?" check produces the double-wrapped
+        // `(({})+1).x`; the reference Closure prints `({}+1).x`.
+        let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        let e = member(binary(BinaryOperator::Add, obj, num(1.0)), "x", false);
+        assert_eq!(emit_expr(e), "({}+1).x;");
     }
 
     #[test]
@@ -4258,13 +5841,71 @@ mod tests {
 
     #[test]
     fn throw_string_literal_emits_throw_quoted_semicolon() {
-        // throw "oops";
+        // throw"oops"; — a string literal begins with a quote, which tokenises
+        // cleanly against `throw`, so NO separating space is emitted (matching
+        // the reference compiler). Quote-choice picks double quotes by default.
         let s = Statement::throw_statement(ThrowStatement {
             cv: None,
             argument: string("oops"),
         });
-        // quote-choice picks double quotes by default for plain strings
-        assert_eq!(emit_stmt(s), "throw \"oops\";");
+        assert_eq!(emit_stmt(s), "throw\"oops\";");
+    }
+
+    /// `throw{};` — an object literal begins with `{`, so no `throw`-space.
+    #[test]
+    fn throw_object_literal_no_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            }),
+        });
+        assert_eq!(emit_stmt(s), "throw{};");
+    }
+
+    /// `throw x;` — an identifier is a word token that would fuse with `throw`
+    /// (`throwx`), so the separating space is kept.
+    #[test]
+    fn throw_identifier_keeps_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: ident("x"),
+        });
+        assert_eq!(emit_stmt(s), "throw x;");
+    }
+
+    /// `throw!x;` — a `!` unary begins with punctuation, so no `throw`-space.
+    #[test]
+    fn throw_unary_not_no_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: unary(UnaryOperator::Not, ident("x")),
+        });
+        assert_eq!(emit_stmt(s), "throw!x;");
+    }
+
+    /// `throw void x;` — `void` is a *word* operator, so the space is kept.
+    #[test]
+    fn throw_void_keeps_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: unary(UnaryOperator::Void, ident("x")),
+        });
+        assert_eq!(emit_stmt(s), "throw void x;");
+    }
+
+    /// `return{};` — mirrors the `throw` rule for the `return` keyword.
+    #[test]
+    fn return_object_literal_no_space() {
+        let s = Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: Some(Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            })),
+        });
+        assert_eq!(emit_stmt(s), "return{};");
     }
 
     // ---- SwitchStatement (gap-014, CLOC12.33) ----------------
@@ -5246,11 +6887,12 @@ mod tests {
         })
     }
 
-    /// `new X()` — plain identifier callee, empty args. A space separates the
+    /// `new X()` — plain identifier callee, empty args. The empty `()` is
+    /// dropped (matching Closure: `new X() → new X`); a space separates the
     /// `new` keyword from the identifier so they do not fuse into `newX`.
     #[test]
     fn new_identifier_no_args() {
-        assert_eq!(emit_expr(new_expr(ident("X"), vec![])), "new X();");
+        assert_eq!(emit_expr(new_expr(ident("X"), vec![])), "new X;");
     }
 
     /// `new X(a, b)` — arguments are comma-separated, no trailing-space in the
@@ -5264,57 +6906,129 @@ mod tests {
     }
 
     /// `new a.b.c()` — a pure member-chain callee is a valid `new` target and
-    /// stays paren-free; the `new` keeps its separating space.
+    /// stays paren-free; the empty `()` is dropped (`new a.b.c`).
     #[test]
     fn new_member_chain_callee_not_wrapped() {
         let callee = member(member(ident("a"), "b", false), "c", false);
-        assert_eq!(emit_expr(new_expr(callee, vec![])), "new a.b.c();");
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new a.b.c;");
     }
 
-    /// `new (f())()` — a call in the callee spine MUST be parenthesised, or the
+    /// `new (f())` — a call in the callee spine MUST be parenthesised, or the
     /// appended `()` would bind to the inner call (`new f()()` = `(new f())()`,
-    /// a different program). The wrapping paren also removes the need for the
-    /// `new`-keyword space.
+    /// a different program). The reference compiler keeps a space between `new`
+    /// and the wrapping paren (`new (f())`), even though `new(f())` tokenises
+    /// fine — we match it byte-for-byte.
     #[test]
     fn new_call_callee_is_wrapped() {
         let callee = call(ident("f"), vec![]);
-        assert_eq!(emit_expr(new_expr(callee, vec![])), "new(f())();");
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (f());");
     }
 
-    /// `new a.b().c()` — the callee's member spine bottoms out in a call
-    /// (`a.b()`), so the whole target is wrapped: `new (a.b().c)()`.
+    /// `new (a.b().c)` — the callee's member spine bottoms out in a call
+    /// (`a.b()`), so the whole target is wrapped, with the `new` space:
+    /// `new (a.b().c)`.
     #[test]
     fn new_callee_with_call_in_member_spine_is_wrapped() {
         let callee = member(call(member(ident("a"), "b", false), vec![]), "c", false);
-        assert_eq!(emit_expr(new_expr(callee, vec![])), "new(a.b().c)();");
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a.b().c);");
     }
 
-    /// `(new X()).y` — an *argumented* `new` binds at member strength, so a
-    /// member parent needs NO extra parens (the `new X()` groups on its own):
-    /// `new X().y`.
+    /// `(new X(a)).y` — Closure parenthesises a `new` as a member object even
+    /// with arguments (`new X(a).y` would parse the same, but Closure emits the
+    /// explicit parens): `(new X(a)).y`. Driven by `new` tagging at `PREC_NEW`
+    /// (below `PREC_PRIMARY`), so the member object wraps it.
     #[test]
-    fn argumented_new_as_member_object_not_wrapped() {
+    fn argumented_new_as_member_object_is_wrapped() {
         let m = member(new_expr(ident("X"), vec![ident("a")]), "y", false);
-        assert_eq!(emit_expr(m), "new X(a).y;");
+        assert_eq!(emit_expr(m), "(new X(a)).y;");
     }
 
-    /// A no-argument `new X` is emitted canonically as `new X()` (the parens
-    /// are always printed), so it binds at member strength and as a member
-    /// object needs NO extra wrap: `new X().y`. The always-printed `()` is what
-    /// makes `new X.y` (which would reparse as `new (X.y)`) unreachable.
+    /// A no-argument `new X` drops its `()` (`new X`) and, as a member object, is
+    /// wrapped so `.y` binds to the whole `new` and not the callee: `(new X).y`
+    /// (a bare `new X.y` would reparse as `new (X.y)`).
     #[test]
-    fn no_arg_new_as_member_object_prints_argumented() {
+    fn no_arg_new_as_member_object_drops_parens_and_wraps() {
         let m = member(new_expr(ident("X"), vec![]), "y", false);
-        assert_eq!(emit_expr(m), "new X().y;");
+        assert_eq!(emit_expr(m), "(new X).y;");
     }
 
-    /// `new` nests: the inner `new X()` is a valid target (not a call), so no
-    /// wrap is forced and the outer `new` keeps its keyword space:
-    /// `new new X()()`.
+    /// `new` nests: the inner no-arg `new X` drops its `()` and, as the outer
+    /// `new`'s callee (emitted at member strength), is wrapped: `new (new X)`.
     #[test]
-    fn nested_new_inner_not_wrapped() {
+    fn nested_new_inner_wrapped() {
         let inner = new_expr(ident("X"), vec![]);
-        assert_eq!(emit_expr(new_expr(inner, vec![])), "new new X()();");
+        assert_eq!(emit_expr(new_expr(inner, vec![])), "new (new X);");
+    }
+
+    /// `new (a?.b)` — an optional chain as the `new` callee is *mandatorily*
+    /// parenthesised: a bare `new a?.b` is a Syntax Error (ECMAScript forbids an
+    /// `OptionalChain` in the `new` callee), not merely a mis-parse. Emitting it
+    /// unwrapped would be an invalid-JS miscompile.
+    #[test]
+    fn new_optional_chain_callee_is_wrapped() {
+        let callee = chain(opt_member(ident("a"), "b", false));
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.b);");
+    }
+
+    /// `new (a?.[b])` — the computed-access optional chain is wrapped for the
+    /// same reason as the dot form.
+    #[test]
+    fn new_optional_computed_chain_callee_is_wrapped() {
+        let callee = chain(opt_member(ident("a"), "b", true));
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.[b]);");
+    }
+
+    /// `new (a?.b())` — a chain whose tail is a (plain) call over an optional
+    /// member is wrapped too; the whole `?.`-bearing chain must sit inside the
+    /// parens. The call node itself is non-optional — only the `?.` member is —
+    /// which is how `a?.b()` parses.
+    #[test]
+    fn new_optional_call_chain_callee_is_wrapped() {
+        let callee = chain(call(opt_member(ident("a"), "b", false), vec![]));
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.b());");
+    }
+
+    /// `new (a?.b)(x)` — argumented form: the chain callee is still wrapped and
+    /// the arguments follow the closing paren.
+    #[test]
+    fn new_optional_chain_callee_with_args_is_wrapped() {
+        let callee = chain(opt_member(ident("a"), "b", false));
+        assert_eq!(
+            emit_expr(new_expr(callee, vec![ident("x")])),
+            "new (a?.b)(x);"
+        );
+    }
+
+    /// `new (a?.b).c` — the chain is *not* the direct callee here; the callee is
+    /// a plain (non-optional) member `(a?.b).c`, whose ChainExpression object is
+    /// wrapped internally by `emit_plain_access_base`. The outer `new` wrap must
+    /// NOT fire (that would double-wrap to `new ((a?.b).c)`), so the chain check
+    /// is top-level-only.
+    #[test]
+    fn new_member_over_chain_object_is_not_double_wrapped() {
+        let callee = member(chain(opt_member(ident("a"), "b", false)), "c", false);
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.b).c;");
+    }
+
+    /// A no-arg `new X` as a call callee is wrapped: `(new X)()` — a bare
+    /// `new X()` would reparse as the *construction* `new X()`, not a call of it.
+    #[test]
+    fn no_arg_new_as_call_callee_is_wrapped() {
+        let c = call(new_expr(ident("X"), vec![]), vec![]);
+        assert_eq!(emit_expr(c), "(new X)();");
+    }
+
+    /// A `new` under a looser parent (here a `+` binary) is NOT wrapped — its
+    /// `PREC_NEW` is above the operand precedence: `new X+1`.
+    #[test]
+    fn new_in_binary_operand_not_wrapped() {
+        let b = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(new_expr(ident("X"), vec![])),
+            right: Box::new(num(1.0)),
+        });
+        assert_eq!(emit_expr(b), "new X+1;");
     }
 
     // ---- SequenceExpression (CLOC12.160) -------------------------------
@@ -5884,5 +7598,193 @@ mod tests {
     fn import_expression_as_member_object_is_bare() {
         let e = call(member(import_expr(ident("x")), "then", false), vec![ident("f")]);
         assert_eq!(emit_expr(e), "import(x).then(f);");
+    }
+
+    // ---- ES-module import declarations (CLOC12.188) -----------
+    //
+    // Minified forms: the only spaces are the tokenizer-required ones between
+    // two identifier-like tokens (`x from`, `as ns`). Keyword↔punctuation
+    // abuts (`import{`, `}from`, `import"`).
+
+    fn id_(name: &str) -> Identifier {
+        Identifier {
+            cv: None,
+            name: name.to_string(),
+        }
+    }
+
+    fn src_(v: &str) -> StringLiteral {
+        StringLiteral {
+            cv: None,
+            value: v.to_string(),
+            raw: format!("\"{v}\""),
+        }
+    }
+
+    fn emit_import_decl(specifiers: Vec<ImportSpecifier>, source: &str) -> String {
+        let item = ProgramItem::Declaration(Declaration::import_declaration(ImportDeclaration {
+            cv: None,
+            specifiers,
+            source: src_(source),
+        }));
+        emit_default(program().with_body(vec![item])).code
+    }
+
+    #[test]
+    fn import_side_effect() {
+        assert_eq!(emit_import_decl(vec![], "y"), "import\"y\";");
+    }
+
+    #[test]
+    fn import_default() {
+        assert_eq!(
+            emit_import_decl(vec![ImportSpecifier::Default(id_("x"))], "y"),
+            "import x from\"y\";"
+        );
+    }
+
+    #[test]
+    fn import_namespace() {
+        assert_eq!(
+            emit_import_decl(vec![ImportSpecifier::Namespace(id_("ns"))], "y"),
+            "import*as ns from\"y\";"
+        );
+    }
+
+    #[test]
+    fn import_named_plain_and_aliased() {
+        assert_eq!(
+            emit_import_decl(
+                vec![
+                    ImportSpecifier::Named {
+                        imported: id_("a"),
+                        local: id_("a"),
+                    },
+                    ImportSpecifier::Named {
+                        imported: id_("b"),
+                        local: id_("c"),
+                    },
+                ],
+                "y"
+            ),
+            "import{a,b as c}from\"y\";"
+        );
+    }
+
+    #[test]
+    fn import_default_plus_named() {
+        assert_eq!(
+            emit_import_decl(
+                vec![
+                    ImportSpecifier::Default(id_("x")),
+                    ImportSpecifier::Named {
+                        imported: id_("a"),
+                        local: id_("a"),
+                    },
+                ],
+                "y"
+            ),
+            "import x,{a}from\"y\";"
+        );
+    }
+
+    // ---- ES-module export declarations (CLOC12.189) -----------
+
+    fn emit_one_decl(d: Declaration) -> String {
+        emit_default(program().with_body(vec![ProgramItem::Declaration(d)])).code
+    }
+
+    fn export_spec(local: &str, exported: &str) -> ExportSpecifier {
+        ExportSpecifier {
+            local: id_(local),
+            exported: id_(exported),
+        }
+    }
+
+    #[test]
+    fn export_named_plain_and_aliased() {
+        // `export { a, b as c };` — no source, so no `from` clause.
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers: vec![export_spec("a", "a"), export_spec("b", "c")],
+            source: None,
+        });
+        assert_eq!(emit_one_decl(d), "export{a,b as c};");
+    }
+
+    #[test]
+    fn export_named_reexport() {
+        // `export { a } from "y";` — a re-export carries the `from` clause.
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers: vec![export_spec("a", "a")],
+            source: Some(src_("y")),
+        });
+        assert_eq!(emit_one_decl(d), "export{a}from\"y\";");
+    }
+
+    #[test]
+    fn export_declaration_const() {
+        // `export const x = 1;` — the inner declaration supplies its own `;`.
+        let inner = Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(id_("x")),
+                init: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+            }],
+        });
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: Some(Box::new(inner)),
+            specifiers: vec![],
+            source: None,
+        });
+        assert_eq!(emit_one_decl(d), "export const x=1;");
+    }
+
+    #[test]
+    fn export_default_expression() {
+        // `export default 1;` — expression operand takes a trailing `;`.
+        let d = Declaration::export_default_declaration(ExportDefaultDeclaration {
+            cv: None,
+            declaration: ExportDefaultKind::Expression(Box::new(Expression::NumericLiteral(
+                NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                },
+            ))),
+        });
+        assert_eq!(emit_one_decl(d), "export default 1;");
+    }
+
+    #[test]
+    fn export_all_bare() {
+        // `export * from "y";` — `*` and `from` abut, no namespace binding.
+        let d = Declaration::export_all_declaration(ExportAllDeclaration {
+            cv: None,
+            exported: None,
+            source: src_("y"),
+        });
+        assert_eq!(emit_one_decl(d), "export*from\"y\";");
+    }
+
+    #[test]
+    fn export_all_namespace() {
+        // `export * as ns from "y";` — grammar-gated, but the emitter models it.
+        let d = Declaration::export_all_declaration(ExportAllDeclaration {
+            cv: None,
+            exported: Some(id_("ns")),
+            source: src_("y"),
+        });
+        assert_eq!(emit_one_decl(d), "export*as ns from\"y\";");
     }
 }

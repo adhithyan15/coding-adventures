@@ -1,0 +1,34 @@
+% ============================================================================
+% stroke-volume.query.adj — worked examples over the clinical stroke-volume library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a stroke-volume question:
+% it states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the quantities it decomposed from the prompt (each a byte-provenanced span,
+% elided here), and asks the engine to APPLY the cited definition. The native adj-lang
+% engine binds the parameters, computes each value EXACTLY on the CPU, and returns it with
+% the definition's source/locator/trust.
+%
+% The three questions INVERT: an end-diastolic volume of 120 mL less an end-systolic volume
+% of 50 mL gives a stroke volume of 120 − 50 = 70 mL; that 70 mL stroke volume added back to
+% the same 50 mL end-systolic volume is exactly what the end-diastolic-volume formula
+% recovers the 120 mL from, and that 70 mL stroke volume subtracted from the same 120 mL
+% end-diastolic volume is exactly what the end-systolic-volume formula recovers the 50 mL
+% from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli stroke-volume.query.adj
+% ============================================================================
+
+import "stroke-volume.adj"
+
+% EDV 120 mL, ESV 50 mL: stroke volume = 120 − 50.
+observe end_diastolic_volume(120)
+observe end_systolic_volume(50)
+? stroke_volume(end_diastolic_volume, end_systolic_volume)          % expect 70   (SV = EDV − ESV)
+
+% That 70 mL stroke volume with the same 50 mL end-systolic volume: EDV = 70 + 50.
+observe stroke_volume(70)
+? end_diastolic_volume(stroke_volume, end_systolic_volume)          % expect 120  (same def, solved for EDV = SV + ESV)
+
+% That 70 mL stroke volume with the same 120 mL end-diastolic volume: ESV = 120 − 70.
+? end_systolic_volume(end_diastolic_volume, stroke_volume)          % expect 50   (same def, solved for ESV = EDV − SV)

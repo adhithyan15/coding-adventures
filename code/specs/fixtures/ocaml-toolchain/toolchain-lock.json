@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "direct_versions": {
+    "ocaml": "5.2.1",
+    "opam": "2.5.2",
+    "dune": "3.17.2",
+    "alcotest": "1.9.0",
+    "bisect_ppx": "2.8.3",
+    "ocamlformat": "0.27.0"
+  },
+  "actions": {
+    "checkout": "11d5960a326750d5838078e36cf38b85af677262",
+    "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
+    "upload_artifact": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+  },
+  "opam_repository_commit": "ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
+  "fixture_input_sha256": "522d91e95649b0c003d8478cdf320922a543dd097220e221b731f1cc6f382131",
+  "targets": {
+    "linux-x64": {
+      "runner": "ubuntu-24.04",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "windows_compiler": null,
+      "lock_file": "linux-x64/coding-adventures-my-pkg.opam.locked",
+      "lock_sha256": "681d7eda38b5ebe77493f9b89e05c3da24252a2f7dc0376279ab653419f1edd7",
+      "receipt_file": "linux-x64/installed-packages.txt",
+      "receipt_sha256": "af05d45f4d4f354ea2456b7cca0b60c74c8b7d79940af3ba0e1f9b934b98ec3a",
+      "runner_image": {
+        "image_os": "ubuntu24",
+        "image_version": "20260720.247.2"
+      }
+    },
+    "macos-arm64": {
+      "runner": "macos-14",
+      "runner_os": "macOS",
+      "runner_arch": "ARM64",
+      "windows_compiler": null,
+      "lock_file": "macos-arm64/coding-adventures-my-pkg.opam.locked",
+      "lock_sha256": "681d7eda38b5ebe77493f9b89e05c3da24252a2f7dc0376279ab653419f1edd7",
+      "receipt_file": "macos-arm64/installed-packages.txt",
+      "receipt_sha256": "af05d45f4d4f354ea2456b7cca0b60c74c8b7d79940af3ba0e1f9b934b98ec3a",
+      "runner_image": {
+        "image_os": "macos14",
+        "image_version": "20260629.0180.1"
+      }
+    },
+    "windows-x64": {
+      "runner": "windows-2022",
+      "runner_os": "Windows",
+      "runner_arch": "X64",
+      "windows_compiler": "mingw",
+      "lock_file": "windows-x64/coding-adventures-my-pkg.opam.locked",
+      "lock_sha256": "662b3748320e6ab121dccbe394ff35b08a4726928a575591ac9b8de5192bd538",
+      "receipt_file": "windows-x64/installed-packages.txt",
+      "receipt_sha256": "cfe45bfe658ba55bd1382dc7ff1f7e699e193eb57fd0e43c15546ebbc349b4af",
+      "runner_image": {
+        "image_os": "win22",
+        "image_version": "20260728.258.1"
+      }
+    }
+  }
+}

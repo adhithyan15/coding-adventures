@@ -1,0 +1,107 @@
+% ============================================================================
+% loading-dose.adj — the loading-dose relation (Loading dose = (Cp × Vd) / F) in the ADJ standard
+% library.
+% ============================================================================
+% The loading-dose entry of the *clinical* track — the third PHARMACOKINETICS library and the
+% dosing PAYOFF of volume-of-distribution.adj: "the single most important utility of Vd is the
+% calculation of the loading dose of a drug." Where Vd and clearance are single ratios, the loading
+% dose COMPOSES three quantities — THE LOADING DOSE IS THE DESIRED PLASMA CONCENTRATION TIMES THE
+% VOLUME OF DISTRIBUTION, DIVIDED BY THE BIOAVAILABILITY — the up-front dose that fills the apparent
+% distribution volume to the target concentration at once (for an intravenous drug the
+% bioavailability F = 1, so it reduces to Cp × Vd). This is the FIRST four-quantity formulabook in
+% the clinical track: it ships as an importable, byte-provenanced, PARAMETERIZED `formula` together
+% with its three exact rearrangements (solving for the concentration, the volume of distribution,
+% and the bioavailability). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured/target quantities from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited relation on the CPU. Zero math is performed
+% by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% relation's citation.
+%
+%     import "loading-dose.adj"
+%     observe desired_plasma_concentration(5)   % "…target Cp 5 mg/L…"      (span cited by the model)
+%     observe volume_of_distribution(40)         % "…Vd 40 L…"               (span cited by the model)
+%     observe bioavailability(1)                 % "…IV, F = 1…"             (span cited by the model)
+%     ? loading_dose(desired_plasma_concentration, volume_of_distribution, bioavailability)
+%                                                % engine → 200, carrying LD = (Cp × Vd) / F
+%
+% All four formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case desired plasma concentration = 5 mg/L,
+% volume of distribution = 40 L, bioavailability = 1 (LD = (5 × 40) / 1 = 200 mg): the
+% `loading_dose` a consumer computes is exactly the value each rearrangement re-uses to recover its
+% own quantity — the concentration (200 × 1 ÷ 40 = 5), the volume of distribution (200 × 1 ÷ 5 =
+% 40), and the bioavailability (5 × 40 ÷ 200 = 1).
+%
+%   loading_dose(desired_plasma_concentration, volume_of_distribution, bioavailability)
+%       = desired_plasma_concentration * volume_of_distribution / bioavailability   % LD = (Cp × Vd) / F
+%   desired_plasma_concentration(loading_dose, volume_of_distribution, bioavailability)
+%       = loading_dose * bioavailability / volume_of_distribution                    % Cp = (LD × F) / Vd
+%   volume_of_distribution(loading_dose, desired_plasma_concentration, bioavailability)
+%       = loading_dose * bioavailability / desired_plasma_concentration              % Vd = (LD × F) / Cp
+%   bioavailability(loading_dose, desired_plasma_concentration, volume_of_distribution)
+%       = desired_plasma_concentration * volume_of_distribution / loading_dose       % F = (Cp × Vd) / LD
+%
+% NOTE ON UNITS: the desired plasma concentration is in milligrams per litre and the volume of
+% distribution is in litres, so their product is in milligrams; the bioavailability is a
+% dimensionless fraction (1 for an intravenous drug), so the loading dose comes out in milligrams,
+% and this library computes the exact value over whatever consistent inputs it is given.
+%
+% All four formulas are defended by the SAME clause — "Loading dose=(Cp×Vd)/F" — because that one
+% relation (the loading dose IS the concentration-times-volume over bioavailability) sanctions it
+% read every way. The quote is transcribed verbatim from a peer-reviewed article archived on the
+% NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped grounded clause
+% carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the clause is
+% a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable/target pharmacokinetic quantity the relation ranges
+% over, and each result is a derived quantity. `desired_plasma_concentration`,
+% `volume_of_distribution`, `bioavailability` and `loading_dose` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary loading_dose_vocab {
+    define desired_plasma_concentration : finding  surface "desired plasma concentration", "target plasma concentration", "Cp"   % milligrams per litre (mg/L)
+    define volume_of_distribution       : finding  surface "volume of distribution", "Vd"                                        % litres (L)
+    define bioavailability              : finding  surface "bioavailability", "F"                                                % dimensionless fraction (1 for IV)
+    define loading_dose                 : finding  surface "loading dose", "LD"                                                  % milligrams (mg)
+}
+
+% ----------------------------------------------------------------------------
+% The relation, all four ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the loading-dose clause from the cited article
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact product/quotient
+% of measured/target quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook loading_dose_laws {
+    use loading_dose_vocab
+
+    % Loading dose — the desired plasma concentration times the volume of distribution, divided by
+    % the bioavailability, i.e. LD = (Cp × Vd) / F.
+    formula loading_dose(desired_plasma_concentration, volume_of_distribution, bioavailability) = desired_plasma_concentration * volume_of_distribution / bioavailability
+        source "Loading dose=(Cp×Vd)/F"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545280/"
+        trust authoritative
+
+    % Desired plasma concentration — the same relation solved for the concentration a loading dose
+    % achieves (Cp = (LD × F) / Vd). Defended by the SAME clause.
+    formula desired_plasma_concentration(loading_dose, volume_of_distribution, bioavailability) = loading_dose * bioavailability / volume_of_distribution
+        source "Loading dose=(Cp×Vd)/F"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545280/"
+        trust authoritative
+
+    % Volume of distribution — the same relation solved for the volume a loading dose implies
+    % (Vd = (LD × F) / Cp). Defended by the SAME clause.
+    formula volume_of_distribution(loading_dose, desired_plasma_concentration, bioavailability) = loading_dose * bioavailability / desired_plasma_concentration
+        source "Loading dose=(Cp×Vd)/F"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545280/"
+        trust authoritative
+
+    % Bioavailability — the same relation solved for the fraction absorbed (F = (Cp × Vd) / LD): the
+    % concentration-times-volume divided by the loading dose. The SAME clause, read the fourth way.
+    formula bioavailability(loading_dose, desired_plasma_concentration, volume_of_distribution) = desired_plasma_concentration * volume_of_distribution / loading_dose
+        source "Loading dose=(Cp×Vd)/F"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545280/"
+        trust authoritative
+}

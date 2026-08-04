@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 150 \u2014 net density from FIVE stated quantities (CONTINUING the five-quantity, two-term-denominator family). rung-149 put a three-term sum over a two-term SUM (a+b+c)/(d+e); rung-150 flips the denominator operation to a subtraction \u2014 a three-term sum over a two-term DIFFERENCE (a+b+c)/(d\u2212e). From a part total (part_one + part_two + part_three) divided by a net span (span_gross \u2212 span_loss), compute the net density ((part_one+part_two+part_three)/(span_gross\u2212span_loss)), the part total (part_one+part_two+part_three), or the net span (span_gross\u2212span_loss). Each item is a compute_dimensioned program (observe the five quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a THREE-TERM SUM OVER A TWO-TERM DIFFERENCE (a+b+c)/(d\u2212e) (pool all three parts, net the span by subtracting the loss FIRST, then divide the part total by the net span). The difference denominator brings a slip the sum-denominator rung-149 could not test \u2014 the WRONG DENOMINATOR OPERATION, adding the two spans instead of subtracting ((a+b+c)/(d+e), gross-plus-loss where the net belongs) \u2014 alongside the carried-over DROPPING a numerator term ((a+b)/(d\u2212e)). The panel puts the honest net span (d\u2212e) beside the wrong-operation slip ((d+e)) so the difference is exactly 'did you SUBTRACT the loss from the span, or add it?'. The harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the five observed quantities via +, \u2212, and / \u2014 no constant leaks, and neither the part total, the net span, nor the net density ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. Because the denominator subtracts the loss, the net span carries a positivity guard (span_gross \u2212 span_loss >= 2) so every figure stays strictly positive; the part total and the summed slip are sums of positives and so are automatically positive. The five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r150nda-01",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 2, 4, and 6 spread across a gross span of 7 with a span loss of 2. What is the net density (the part total divided by the net span)?",
+      "program": "observe part_one(2)\nobserve part_two(4)\nobserve part_three(6)\nobserve span_gross(7)\nobserve span_loss(2)\nlet answer = (part_one + part_two + part_three) / (span_gross - span_loss)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r150nda-02",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 2, 4, and 6 spread across a gross span of 7 with a span loss of 2. What is the the part total (all three parts added, the numerator that is divided by the net span)?",
+      "program": "observe part_one(2)\nobserve part_two(4)\nobserve part_three(6)\nobserve span_gross(7)\nobserve span_loss(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r150nda-03",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 2, 4, and 6 spread across a gross span of 7 with a span loss of 2. What is the the net span (the gross span minus the span loss, the denominator the part total is divided by)?",
+      "program": "observe part_one(2)\nobserve part_two(4)\nobserve part_three(6)\nobserve span_gross(7)\nobserve span_loss(2)\nlet answer = span_gross - span_loss\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r150nda-04",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 3, 5, and 12 spread across a gross span of 10 with a span loss of 2. What is the net density (the part total divided by the net span)?",
+      "program": "observe part_one(3)\nobserve part_two(5)\nobserve part_three(12)\nobserve span_gross(10)\nobserve span_loss(2)\nlet answer = (part_one + part_two + part_three) / (span_gross - span_loss)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r150nda-05",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 3, 5, and 12 spread across a gross span of 10 with a span loss of 2. What is the the part total (all three parts added, the numerator that is divided by the net span)?",
+      "program": "observe part_one(3)\nobserve part_two(5)\nobserve part_three(12)\nobserve span_gross(10)\nobserve span_loss(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r150nda-06",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 3, 5, and 12 spread across a gross span of 10 with a span loss of 2. What is the the net span (the gross span minus the span loss, the denominator the part total is divided by)?",
+      "program": "observe part_one(3)\nobserve part_two(5)\nobserve part_three(12)\nobserve span_gross(10)\nobserve span_loss(2)\nlet answer = span_gross - span_loss\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r150nda-07",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 4, 6, and 20 spread across a gross span of 12 with a span loss of 2. What is the net density (the part total divided by the net span)?",
+      "program": "observe part_one(4)\nobserve part_two(6)\nobserve part_three(20)\nobserve span_gross(12)\nobserve span_loss(2)\nlet answer = (part_one + part_two + part_three) / (span_gross - span_loss)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.142857142857143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r150nda-08",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 4, 6, and 20 spread across a gross span of 12 with a span loss of 2. What is the the part total (all three parts added, the numerator that is divided by the net span)?",
+      "program": "observe part_one(4)\nobserve part_two(6)\nobserve part_three(20)\nobserve span_gross(12)\nobserve span_loss(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.142857142857143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r150nda-09",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 4, 6, and 20 spread across a gross span of 12 with a span loss of 2. What is the the net span (the gross span minus the span loss, the denominator the part total is divided by)?",
+      "program": "observe part_one(4)\nobserve part_two(6)\nobserve part_three(20)\nobserve span_gross(12)\nobserve span_loss(2)\nlet answer = span_gross - span_loss\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.142857142857143,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r150nda-10",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 3, 9, and 12 spread across a gross span of 9 with a span loss of 2. What is the net density (the part total divided by the net span)?",
+      "program": "observe part_one(3)\nobserve part_two(9)\nobserve part_three(12)\nobserve span_gross(9)\nobserve span_loss(2)\nlet answer = (part_one + part_two + part_three) / (span_gross - span_loss)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.1818181818181817,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r150nda-11",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 3, 9, and 12 spread across a gross span of 9 with a span loss of 2. What is the the part total (all three parts added, the numerator that is divided by the net span)?",
+      "program": "observe part_one(3)\nobserve part_two(9)\nobserve part_three(12)\nobserve span_gross(9)\nobserve span_loss(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.1818181818181817,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r150nda-12",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 3, 9, and 12 spread across a gross span of 9 with a span loss of 2. What is the the net span (the gross span minus the span loss, the denominator the part total is divided by)?",
+      "program": "observe part_one(3)\nobserve part_two(9)\nobserve part_three(12)\nobserve span_gross(9)\nobserve span_loss(2)\nlet answer = span_gross - span_loss\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.1818181818181817,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r150nda-13",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 5, 9, and 21 spread across a gross span of 11 with a span loss of 2. What is the net density (the part total divided by the net span)?",
+      "program": "observe part_one(5)\nobserve part_two(9)\nobserve part_three(21)\nobserve span_gross(11)\nobserve span_loss(2)\nlet answer = (part_one + part_two + part_three) / (span_gross - span_loss)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.888888888888889,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6923076923076925,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r150nda-14",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 5, 9, and 21 spread across a gross span of 11 with a span loss of 2. What is the the part total (all three parts added, the numerator that is divided by the net span)?",
+      "program": "observe part_one(5)\nobserve part_two(9)\nobserve part_three(21)\nobserve span_gross(11)\nobserve span_loss(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.888888888888889,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.6923076923076925,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r150nda-15",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 5, 9, and 21 spread across a gross span of 11 with a span loss of 2. What is the the net span (the gross span minus the span loss, the denominator the part total is divided by)?",
+      "program": "observe part_one(5)\nobserve part_two(9)\nobserve part_three(21)\nobserve span_gross(11)\nobserve span_loss(2)\nlet answer = span_gross - span_loss\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.888888888888889,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.6923076923076925,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r150nda-16",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 6, 10, and 32 spread across a gross span of 8 with a span loss of 2. What is the net density (the part total divided by the net span)?",
+      "program": "observe part_one(6)\nobserve part_two(10)\nobserve part_three(32)\nobserve span_gross(8)\nobserve span_loss(2)\nlet answer = (part_one + part_two + part_three) / (span_gross - span_loss)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r150nda-17",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 6, 10, and 32 spread across a gross span of 8 with a span loss of 2. What is the the part total (all three parts added, the numerator that is divided by the net span)?",
+      "program": "observe part_one(6)\nobserve part_two(10)\nobserve part_three(32)\nobserve span_gross(8)\nobserve span_loss(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r150nda-18",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 6, 10, and 32 spread across a gross span of 8 with a span loss of 2. What is the the net span (the gross span minus the span loss, the denominator the part total is divided by)?",
+      "program": "observe part_one(6)\nobserve part_two(10)\nobserve part_three(32)\nobserve span_gross(8)\nobserve span_loss(2)\nlet answer = span_gross - span_loss\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r150nda-19",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 7, 11, and 18 spread across a gross span of 13 with a span loss of 2. What is the net density (the part total divided by the net span)?",
+      "program": "observe part_one(7)\nobserve part_two(11)\nobserve part_three(18)\nobserve span_gross(13)\nobserve span_loss(2)\nlet answer = (part_one + part_two + part_three) / (span_gross - span_loss)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.272727272727273,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6363636363636365,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r150nda-20",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 7, 11, and 18 spread across a gross span of 13 with a span loss of 2. What is the the part total (all three parts added, the numerator that is divided by the net span)?",
+      "program": "observe part_one(7)\nobserve part_two(11)\nobserve part_three(18)\nobserve span_gross(13)\nobserve span_loss(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.272727272727273,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6363636363636365,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r150nda-21",
+      "qtype": "net_density",
+      "stem": "A coverage study records three parts of 7, 11, and 18 spread across a gross span of 13 with a span loss of 2. What is the the net span (the gross span minus the span loss, the denominator the part total is divided by)?",
+      "program": "observe part_one(7)\nobserve part_two(11)\nobserve part_three(18)\nobserve span_gross(13)\nobserve span_loss(2)\nlet answer = span_gross - span_loss\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.272727272727273,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6363636363636365,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

@@ -492,6 +492,8 @@ impl Graph {
 
         // Recursive DFS function. Returns true if a cycle is reachable
         // from the given node.
+        // Nested match kept for clarity/exhaustiveness (allow 1.97 collapsible_match).
+        #[allow(clippy::collapsible_match)]
         fn dfs<'a>(
             node: &'a str,
             forward: &'a HashMap<String, HashSet<String>>,
@@ -521,11 +523,10 @@ impl Graph {
         // might not be connected (it could have multiple disconnected components).
         let nodes = self.nodes();
         for node in &nodes {
-            if color.get(node.as_str()) == Some(&WHITE) {
-                if dfs(node.as_str(), &self.forward, &mut color) {
+            if color.get(node.as_str()) == Some(&WHITE)
+                && dfs(node.as_str(), &self.forward, &mut color) {
                     return true;
                 }
-            }
         }
 
         false

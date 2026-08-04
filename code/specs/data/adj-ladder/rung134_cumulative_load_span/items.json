@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 134 \u2014 cumulative-load span from four stated quantities (a NEW panel: cumulative load, COMPLETING the numerator trio over a rate). rung-131 put a sum over a rate (a+b)/(c/d); rung-133 put a difference over a rate (a-b)/(c/d); rung-134 puts a PRODUCT over a rate (a*b)/(c/d) \u2014 the combining op walks +, -, * over the same divide-by-a-rate skeleton. From a total load (unit_count * unit_size) divided by a flush rate (flush_units/flush_windows), compute the load span ((unit_count*unit_size)/(flush_units/flush_windows)), the total load (unit_count*unit_size), or the flush rate (flush_units/flush_windows). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a PRODUCT NUMERATOR OVER A RATE (a*b)/(c/d) (multiply out the load, form the rate, then divide the load by the rate, so (a*b)/(c/d) = (a*b*d)/c \u2014 dividing by a rate is multiplying by its reciprocal, invert the rate). The invert-and-multiply slips ride alongside as distractors. The harness matches the scalar to the printed options. The load span is a span (how much total load clears per unit of the flush rate), framed as a SPAN so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via * and / \u2014 no constant leaks, and neither the total load, the flush rate, nor the load span ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: multiplying the total load by the rate without inverting it ((a*b)*(c/d) = (a*b*c)/d, a wrong operation) and splitting the rate into two divisions so the reciprocal is lost ((a*b)/c/d = (a*b)/(c*d), a wrong operation). The core confusion tested is that (a*b)/(c/d) is (a*b*d)/c, not (a*b*c)/d and not (a*b)/(c*d). This rung uses only * and / over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r134lsa-01",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 3, flushed at a rate of 2 units per 4 windows. What is the load span (the total load divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(3)\nobserve flush_units(2)\nobserve flush_windows(4)\nlet answer = (unit_count * unit_size) / (flush_units / flush_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r134lsa-02",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 3, flushed at a rate of 2 units per 4 windows. What is the the total load (the unit count times the unit size, the numerator that is divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(3)\nobserve flush_units(2)\nobserve flush_windows(4)\nlet answer = unit_count * unit_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r134lsa-03",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 3, flushed at a rate of 2 units per 4 windows. What is the the flush rate (the flush units spread over the flush windows, the rate the total load is divided by)?",
+      "program": "observe unit_count(2)\nobserve unit_size(3)\nobserve flush_units(2)\nobserve flush_windows(4)\nlet answer = flush_units / flush_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r134lsa-04",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 4, flushed at a rate of 6 units per 2 windows. What is the load span (the total load divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(4)\nobserve flush_units(6)\nobserve flush_windows(2)\nlet answer = (unit_count * unit_size) / (flush_units / flush_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r134lsa-05",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 4, flushed at a rate of 6 units per 2 windows. What is the the total load (the unit count times the unit size, the numerator that is divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(4)\nobserve flush_units(6)\nobserve flush_windows(2)\nlet answer = unit_count * unit_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r134lsa-06",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 4, flushed at a rate of 6 units per 2 windows. What is the the flush rate (the flush units spread over the flush windows, the rate the total load is divided by)?",
+      "program": "observe unit_count(2)\nobserve unit_size(4)\nobserve flush_units(6)\nobserve flush_windows(2)\nlet answer = flush_units / flush_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r134lsa-07",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 5, flushed at a rate of 3 units per 4 windows. What is the load span (the total load divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(5)\nobserve flush_units(3)\nobserve flush_windows(4)\nlet answer = (unit_count * unit_size) / (flush_units / flush_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r134lsa-08",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 5, flushed at a rate of 3 units per 4 windows. What is the the total load (the unit count times the unit size, the numerator that is divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(5)\nobserve flush_units(3)\nobserve flush_windows(4)\nlet answer = unit_count * unit_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r134lsa-09",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 5, flushed at a rate of 3 units per 4 windows. What is the the flush rate (the flush units spread over the flush windows, the rate the total load is divided by)?",
+      "program": "observe unit_count(2)\nobserve unit_size(5)\nobserve flush_units(3)\nobserve flush_windows(4)\nlet answer = flush_units / flush_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r134lsa-10",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 3 items each of unit size 4, flushed at a rate of 8 units per 4 windows. What is the load span (the total load divided by the flush rate)?",
+      "program": "observe unit_count(3)\nobserve unit_size(4)\nobserve flush_units(8)\nobserve flush_windows(4)\nlet answer = (unit_count * unit_size) / (flush_units / flush_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r134lsa-11",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 3 items each of unit size 4, flushed at a rate of 8 units per 4 windows. What is the the total load (the unit count times the unit size, the numerator that is divided by the flush rate)?",
+      "program": "observe unit_count(3)\nobserve unit_size(4)\nobserve flush_units(8)\nobserve flush_windows(4)\nlet answer = unit_count * unit_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r134lsa-12",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 3 items each of unit size 4, flushed at a rate of 8 units per 4 windows. What is the the flush rate (the flush units spread over the flush windows, the rate the total load is divided by)?",
+      "program": "observe unit_count(3)\nobserve unit_size(4)\nobserve flush_units(8)\nobserve flush_windows(4)\nlet answer = flush_units / flush_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r134lsa-13",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 7, flushed at a rate of 8 units per 2 windows. What is the load span (the total load divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(7)\nobserve flush_units(8)\nobserve flush_windows(2)\nlet answer = (unit_count * unit_size) / (flush_units / flush_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r134lsa-14",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 7, flushed at a rate of 8 units per 2 windows. What is the the total load (the unit count times the unit size, the numerator that is divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(7)\nobserve flush_units(8)\nobserve flush_windows(2)\nlet answer = unit_count * unit_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r134lsa-15",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 7, flushed at a rate of 8 units per 2 windows. What is the the flush rate (the flush units spread over the flush windows, the rate the total load is divided by)?",
+      "program": "observe unit_count(2)\nobserve unit_size(7)\nobserve flush_units(8)\nobserve flush_windows(2)\nlet answer = flush_units / flush_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.875,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r134lsa-16",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 3 items each of unit size 3, flushed at a rate of 5 units per 2 windows. What is the load span (the total load divided by the flush rate)?",
+      "program": "observe unit_count(3)\nobserve unit_size(3)\nobserve flush_units(5)\nobserve flush_windows(2)\nlet answer = (unit_count * unit_size) / (flush_units / flush_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r134lsa-17",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 3 items each of unit size 3, flushed at a rate of 5 units per 2 windows. What is the the total load (the unit count times the unit size, the numerator that is divided by the flush rate)?",
+      "program": "observe unit_count(3)\nobserve unit_size(3)\nobserve flush_units(5)\nobserve flush_windows(2)\nlet answer = unit_count * unit_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r134lsa-18",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 3 items each of unit size 3, flushed at a rate of 5 units per 2 windows. What is the the flush rate (the flush units spread over the flush windows, the rate the total load is divided by)?",
+      "program": "observe unit_count(3)\nobserve unit_size(3)\nobserve flush_units(5)\nobserve flush_windows(2)\nlet answer = flush_units / flush_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r134lsa-19",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 8, flushed at a rate of 3 units per 2 windows. What is the load span (the total load divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(8)\nobserve flush_units(3)\nobserve flush_windows(2)\nlet answer = (unit_count * unit_size) / (flush_units / flush_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r134lsa-20",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 8, flushed at a rate of 3 units per 2 windows. What is the the total load (the unit count times the unit size, the numerator that is divided by the flush rate)?",
+      "program": "observe unit_count(2)\nobserve unit_size(8)\nobserve flush_units(3)\nobserve flush_windows(2)\nlet answer = unit_count * unit_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r134lsa-21",
+      "qtype": "load_span",
+      "stem": "A cumulative-load study records a unit count of 2 items each of unit size 8, flushed at a rate of 3 units per 2 windows. What is the the flush rate (the flush units spread over the flush windows, the rate the total load is divided by)?",
+      "program": "observe unit_count(2)\nobserve unit_size(8)\nobserve flush_units(3)\nobserve flush_windows(2)\nlet answer = flush_units / flush_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

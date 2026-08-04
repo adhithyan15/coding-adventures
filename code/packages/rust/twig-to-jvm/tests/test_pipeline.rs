@@ -386,7 +386,7 @@ fn typed_void_function_compiles_via_pipeline() {
 /// Diagnostic test - print full JVM error for fib
 #[test]
 fn diag_jvm_fib_full_error() {
-    use std::collections::HashMap;
+    
     use interpreter_ir::{IIRInstr, Operand};
     use iir_type_checker::infer_and_check;
     use twig_ir_compiler::compile_source;

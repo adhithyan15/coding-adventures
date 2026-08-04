@@ -5,6 +5,50 @@ on:
     branches: [main]
     paths:
       - "code/programs/typescript/ml-learning-visualizer/**"
+      - "code/specs/fixtures/neural-learning-v1/**"
+      - "code/specs/fixtures/optimization-learning-v1/**"
+      - "code/specs/fixtures/convolution-learning-v1/**"
+      - "code/specs/fixtures/convolution-training-v1/**"
+      - "code/specs/fixtures/tiny-image-cnn-v1/**"
+      - "code/specs/fixtures/residual-receptive-v1/**"
+      - "code/specs/fixtures/recurrent-unroll-v1/**"
+      - "code/specs/fixtures/recurrent-bptt-v1/**"
+      - "code/specs/fixtures/gated-recurrent-v1/**"
+      - "code/specs/fixtures/attention-qkv-v1/**"
+      - "code/specs/fixtures/attention-softmax-v1/**"
+      - "code/specs/fixtures/multi-head-attention-v1/**"
+      - "code/specs/fixtures/tiny-decoder-training-v1/**"
+      - "code/specs/fixtures/two-number-autoencoder-v1/**"
+      - "code/specs/fixtures/variational-autoencoder-v1/**"
+      - "code/specs/fixtures/one-dimensional-gan-v1/**"
+      - "code/specs/fixtures/one-dimensional-diffusion-v1/**"
+      - "code/specs/fixtures/hopfield-associative-memory-v1/**"
+      - "code/specs/fixtures/tiny-message-passing-v1/**"
+      - "code/specs/fixtures/graph-convolution-attention-v1/**"
+      - "code/specs/fixtures/initialization-activation-distribution-v1/**"
+      - "code/specs/fixtures/gradient-flow-v1/**"
+      - "code/specs/fixtures/training-stabilizers-v1/**"
+      - "code/specs/fixtures/tensor-broadcasting-v1/**"
+      - "code/specs/fixtures/dynamic-autograd-v1/**"
+      - "code/specs/fixtures/gradient-accumulation-v1/**"
+      - "code/specs/fixtures/forward-graph-lowering-v1/**"
+      - "code/specs/fixtures/backward-optimizer-lowering-v1/**"
+      - "code/specs/fixtures/backend-parity-v1/**"
+      - "code/specs/fixtures/precision-residency-v1/**"
+      - "code/specs/fixtures/reference-validation-v1/**"
+      - "code/specs/fixtures/cross-language-consumers-v1/**"
+      - "code/specs/fixtures/neural-learning-rust-cabi-v1/**"
+      - "code/specs/fixtures/neural-learning-implementation-coverage-v1/**"
+      - "code/scripts/validate_*_labs.py"
+      - "code/scripts/validate_reference_fixture_catalog.py"
+      - "code/scripts/validate_cross_language_fixture_consumers.py"
+      - "code/scripts/validate_neural_learning_rust_cabi.py"
+      - "code/scripts/validate_neural_learning_implementation_coverage.py"
+      - "code/programs/go/neural-fixture-consumer/**"
+      - "code/programs/ruby/neural-fixture-consumer/**"
+      - "code/programs/rust/neural-fixture-consumer/**"
+      - "code/packages/rust/neural-learning-capi/**"
+      - "code/packages/typescript/cli-builder/**"
       - "code/packages/typescript/directed-graph/**"
       - "code/packages/typescript/state-machine/**"
       - "code/packages/typescript/grammar-tools/**"
@@ -14,15 +58,59 @@ on:
       - "code/packages/typescript/lattice-parser/**"
       - "code/packages/typescript/lattice-ast-to-css/**"
       - "code/packages/typescript/lattice-transpiler/**"
+      - "code/packages/typescript/matrix/**"
+      - "code/packages/typescript/matrix-rust-napi/**"
+      - "code/packages/typescript/multi-directed-graph/**"
+      - "code/packages/typescript/neural-graph-vm/**"
+      - "code/packages/typescript/neural-network/**"
+      - "code/packages/typescript/paint-instructions/**"
+      - "code/packages/typescript/paint-vm/**"
+      - "code/packages/typescript/paint-vm-svg/**"
+      - "code/packages/typescript/pixel-container/**"
+      - "code/packages/typescript/two-layer-network/**"
       - ".github/workflows/deploy-ml-learning.yml"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build-and-deploy:
+  validate-language-consumers:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: "1.23"
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: false
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+
+      - name: Validate cross-language neural fixture consumers
+        run: python3 code/scripts/validate_cross_language_fixture_consumers.py
+
+      - name: Validate neural-learning Rust C ABI
+        run: python3 code/scripts/validate_neural_learning_rust_cabi.py
+
+      - name: Validate native and Rust-core implementation coverage
+        run: python3 code/scripts/validate_neural_learning_implementation_coverage.py
+
+  build-and-deploy:
+    needs: validate-language-consumers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,17 +120,31 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install renderer dependencies
+      - name: Validate complete neural fixture catalog
+        run: python3 code/scripts/validate_reference_fixture_catalog.py
+
+      - name: Install local source dependencies
         run: |
-          cd code/packages/typescript/directed-graph && npm install
-          cd ../state-machine && npm install
-          cd ../grammar-tools && npm install
-          cd ../lexer && npm install
-          cd ../parser && npm install
-          cd ../lattice-lexer && npm install
-          cd ../lattice-parser && npm install
-          cd ../lattice-ast-to-css && npm install
-          cd ../lattice-transpiler && npm install
+          cd code/packages/typescript/directed-graph && npm install --omit=dev --ignore-scripts
+          cd ../state-machine && npm install --omit=dev --ignore-scripts
+          cd ../cli-builder && npm install --omit=dev --ignore-scripts
+          cd ../grammar-tools && npm install --omit=dev --ignore-scripts
+          cd ../lexer && npm install --omit=dev --ignore-scripts
+          cd ../parser && npm install --omit=dev --ignore-scripts
+          cd ../lattice-lexer && npm install --omit=dev --ignore-scripts
+          cd ../lattice-parser && npm install --omit=dev --ignore-scripts
+          cd ../lattice-ast-to-css && npm install --omit=dev --ignore-scripts
+          cd ../lattice-transpiler && npm install --omit=dev --ignore-scripts
+          cd ../matrix-rust-napi && npm install --omit=dev --ignore-scripts
+          cd ../matrix && npm install --omit=dev --ignore-scripts
+          cd ../multi-directed-graph && npm install --omit=dev --ignore-scripts
+          cd ../neural-network && npm install --omit=dev --ignore-scripts
+          cd ../neural-graph-vm && npm install --omit=dev --ignore-scripts
+          cd ../pixel-container && npm install --omit=dev --ignore-scripts
+          cd ../paint-instructions && npm install --omit=dev --ignore-scripts
+          cd ../paint-vm && npm install --omit=dev --ignore-scripts
+          cd ../paint-vm-svg && npm install --omit=dev --ignore-scripts
+          cd ../two-layer-network && npm install --omit=dev --ignore-scripts
 
       - name: Install app dependencies
         run: |

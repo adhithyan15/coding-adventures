@@ -1,0 +1,96 @@
+% ============================================================================
+% skin-layers — the defining descriptor the source gives each of the three main
+% layers of human skin (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% An integumentary-anatomy fact on the way to medicine: human skin is built in
+% THREE stacked layers, and the source's opening sentence for each one hands it a
+% single defining descriptor. From the surface inward:
+%
+%     epidermis     — the OUTERMOST layer (the protective surface)
+%     dermis        — the THICKEST layer (≈90% of the skin, holds vessels/nerves)
+%     subcutaneous  — the innermost layer, which consists of FAT (the hypodermis)
+%
+% Recall is a binding query:
+%
+%     ? skin_layer_property(epidermis, $P)     % outermost
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `skin_layer_property(layer, property)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% descriptor WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the three skin layers (it never invents one).
+%
+% The three layers, as a little truth table:
+%
+%     layer          property     what the source says
+%     ------------   ----------   -----------------------------------------
+%     epidermis      outermost    "the outermost layer of the skin"
+%     dermis         thickest     "the thickest of the three layers of the skin"
+%     subcutaneous   fat          "consists of a network of fat and collagen cells"
+%
+% Why "property" and not a strict top-to-bottom position axis: the source names
+% the epidermis "outermost" and the subcutis "innermost" verbatim, but it never
+% calls the dermis the "middle" layer — so grounding the dermis to a fabricated
+% "middle" token would violate byte-provenance. Instead each layer is mapped to
+% the ONE defining descriptor its own opening sentence states verbatim
+% (outermost / thickest / fat), exactly as the sibling energy-forms table maps
+% each form to its own defining token. Every value is therefore a word the
+% source literally uses about that layer, re-checkable below.
+%
+% The query also runs BACKWARD — bind a descriptor and recall the layer:
+%
+%     ? skin_layer_property($L, fat)           % subcutaneous — reverse recall
+%
+% Something that is not one of the three skin layers — a bone, a nail, a single
+% epidermal sublayer — has no row, so a recall on it ABSTAINS rather than
+% inventing a descriptor. That honest-abstention property is what makes the
+% table safe to reason from before a dermatology or wound-care agent reasons up
+% to burn depth (which is defined precisely by WHICH of these layers is injured).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every layer→property pair
+% was read out of a fetched U.S. government / NIH page this session, and any pair
+% that could not be grounded there would have been dropped). All three pairs come
+% from the SAME primary U.S. National Cancer Institute reference, NCI SEER
+% Training "Layers of the Skin"
+% (training.seer.cancer.gov/melanoma/anatomy/layers.html), each quoted here
+% character-for-character so any reader can re-check it:
+%
+%   epidermis → outermost
+%     "The epidermis is the outermost layer of the skin, and protects the body
+%      from the environment."
+%
+%   dermis → thickest
+%     "The dermis is located beneath the epidermis and is the thickest of the
+%      three layers of the skin (1.5 to 4 mm thick), making up approximately 90
+%      percent of the thickness of the skin."
+%
+%   subcutaneous → fat
+%     "The subcutis is the innermost layer of the skin, and consists of a network
+%      of fat and collagen cells."
+%   ...the same page names this layer the subcutaneous layer:
+%     "The subcutis is also known as the hypodermis or subcutaneous layer, and
+%      functions as both an insulator, conserving the body's heat, and as a
+%      shock-absorber, protecting the inner organs."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the NCI SEER Training sentence
+% that fixes the first row (epidermis → outermost). The other rows' per-fact
+% source and verbatim span are listed above, so each pair remains independently
+% checkable. All three rows share the ONE source — NCI SEER Training, a primary
+% U.S. government / NIH reference — so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table skin_layer_property {
+    columns layer, property
+
+    row (epidermis, outermost)
+    row (dermis, thickest)
+    row (subcutaneous, fat)
+
+    source "The epidermis is the outermost layer of the skin, and protects the body from the environment."
+    locator "https://training.seer.cancer.gov/melanoma/anatomy/layers.html"
+    trust authoritative
+}

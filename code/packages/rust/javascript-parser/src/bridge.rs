@@ -49,18 +49,20 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use coding_adventures_javascript_ast::{
     declaration::{
-        BindingTarget, Declaration, FunctionDeclaration, FunctionParam, VarKind,
-        VariableDeclaration, VariableDeclarator,
+        AssignmentPattern, BindingTarget, ClassDeclaration, Declaration, ExportAllDeclaration,
+        ExportDefaultDeclaration, ExportDefaultKind, ExportNamedDeclaration, ExportSpecifier,
+        FunctionDeclaration, FunctionParam, ImportDeclaration, ImportSpecifier, RestElement,
+        VarKind, VariableDeclaration, VariableDeclarator,
     },
     expression::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
         AssignmentOperator, AssignmentTarget,
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
-        ClassExpression, ClassMember, MethodDefinition, MethodKind,
+        ClassExpression, ClassMember, MethodDefinition, MethodKind, PropertyDefinition,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         ChainExpression, ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember,
-        OptionalCallExpression, OptionalMemberExpression, Property,
+        OptionalCallExpression, OptionalMemberExpression, PrivateName, Property,
         PropertyKey, PropertyKind, RegExpLiteral, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -70,7 +72,7 @@ use coding_adventures_javascript_ast::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
         DoWhileStatement, EmptyStatement, ExpressionStatement, ForInStatement, ForInit,
         ForOfStatement, ForStatement, IfStatement, LabeledStatement, ReturnStatement, Statement,
-        SwitchCase, SwitchStatement, ThrowStatement, TryStatement, WhileStatement,
+        SwitchCase, SwitchStatement, ThrowStatement, TryStatement, WhileStatement, WithStatement,
     },
     Program, ProgramItem, SourceType,
 };
@@ -177,6 +179,25 @@ fn has_token(node: &GrammarASTNode, val: &str) -> bool {
     })
 }
 
+/// The leftmost terminal token value in a subtree, descending through Node
+/// children to the first `Token` leaf (depth-first, left to right). Returns
+/// `None` for a subtree with no tokens at all. Used to tell a bare block body
+/// `=> {…}` (leftmost `{`) from a parenthesised object body `=> ({…})`
+/// (leftmost `(`) — see [`convert_arrow_function`].
+fn leftmost_token(node: &GrammarASTNode) -> Option<&str> {
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Token(t) => return Some(t.value.as_str()),
+            ASTNodeOrToken::Node(n) => {
+                if let Some(v) = leftmost_token(n) {
+                    return Some(v);
+                }
+            }
+        }
+    }
+    None
+}
+
 /// If there is exactly one Node child, return it; else `None`.
 fn sole_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
     let nodes = node_children(node);
@@ -242,6 +263,38 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
             let decl = convert_function_declaration(child)?;
             Ok(ProgramItem::Declaration(Declaration::FunctionDeclaration(decl)))
         }
+        // A class *declaration* (`class C { … }`) — CLOC12.174 PR2. The grammar
+        // wraps it in `decorated_class_declaration` (the outer rule that would
+        // also carry `@decorator`s); the bare `class_declaration` alternative is
+        // handled too for robustness. A decorated form with actual decorators
+        // carries extra child nodes this slice does not model, so it DECLINES
+        // (safe WHITESPACE_ONLY fallback).
+        "decorated_class_declaration" => match node_children(child).as_slice() {
+            [cd] if cd.rule_name == "class_declaration" => {
+                let decl = convert_class_declaration(cd)?;
+                Ok(ProgramItem::Declaration(Declaration::ClassDeclaration(decl)))
+            }
+            _ => Err(unsupported(child)),
+        },
+        "class_declaration" => {
+            let decl = convert_class_declaration(child)?;
+            Ok(ProgramItem::Declaration(Declaration::ClassDeclaration(decl)))
+        }
+        // An ES-module `import` declaration (CLOC12.188 PR2). Recognised shapes:
+        // side-effect (`import "y"`), default (`import x from "y"`), namespace
+        // (`import * as ns from "y"`), and named (`import {a, b as c} from "y"`),
+        // plus default-plus-named (`import x, {a} from "y"`). Anything the
+        // converter does not recognise DECLINES to WHITESPACE_ONLY.
+        "import_declaration" => {
+            let decl = convert_import_declaration(child)?;
+            Ok(ProgramItem::Declaration(Declaration::ImportDeclaration(decl)))
+        }
+        // An ES-module `export` declaration (CLOC12.189 PR2). Recognised shapes:
+        // named (`export {a, b as c}`), re-export (`export {a} from "y"`),
+        // export-all (`export * from "y"`), default (`export default …`), and
+        // declaration exports (`export const/var/function/class …`). Anything
+        // unrecognised — e.g. `export * as ns from "y"` (grammar gap) — DECLINES.
+        "export_declaration" => Ok(ProgramItem::Declaration(convert_export_declaration(child)?)),
         "statement" => {
             let stmt = convert_statement(child)?;
             Ok(ProgramItem::Statement(stmt))
@@ -249,6 +302,247 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
         // variable_statement / lexical_declaration land inside statement
         _ => Err(unsupported(child)),
     }
+}
+
+/// Convert an `import_declaration` grammar node into an [`ImportDeclaration`]
+/// (CLOC12.188 PR2). Grammar shape (verified by a parse-tree probe):
+///
+/// ```text
+///   import_declaration = Token("import"),
+///                        ( module_specifier                    // side-effect
+///                        | import_clause , from_clause ),      // with bindings
+///                        Token(";") ;
+///   import_clause  = [ default_import ] , [ Token(",") ] ,
+///                    [ namespace_import | named_imports ] ;
+///   default_import   = Token(name) ;                            // `x`
+///   namespace_import = Token("*"), Token("as"), Token(name) ;   // `* as ns`
+///   named_imports    = Token("{"),
+///                      { import_specifier , [ Token(",") ] },
+///                      Token("}") ;
+///   import_specifier = Token(name) , [ Token("as"), Token(name) ] ; // `a`/`a as c`
+/// ```
+///
+/// The source string rides a `String` token inside `module_specifier` (the
+/// side-effect form) or `from_clause` (the with-bindings form); the lexer
+/// stores it *unquoted*, so we rebuild the raw `"…"` form for the
+/// [`StringLiteral`]. `import x, * as ns from "y"` is a grammar gap (the parser
+/// rejects a default+namespace combination) and never reaches here. Any shape
+/// the arms below do not recognise DECLINES via `unsupported` (a safe
+/// WHITESPACE_ONLY fallback), never a mis-bridge.
+fn convert_import_declaration(node: &GrammarASTNode) -> Result<ImportDeclaration, BridgeError> {
+    let kids = node_children(node);
+    let mut specifiers: Vec<ImportSpecifier> = Vec::new();
+    let source_node = match kids.as_slice() {
+        // Side-effect import `import "y";` — no clause; the source is the direct
+        // `module_specifier` child.
+        [ms] if ms.rule_name == "module_specifier" => ms,
+        // Import with bindings `import <clause> from "y";`.
+        [clause, from]
+            if clause.rule_name == "import_clause" && from.rule_name == "from_clause" =>
+        {
+            for part in node_children(clause) {
+                match part.rule_name.as_str() {
+                    // `x` — default binding.
+                    "default_import" => match token_vals(part).as_slice() {
+                        [name] => specifiers.push(ImportSpecifier::Default(Identifier {
+                            cv: None,
+                            name: (*name).to_string(),
+                        })),
+                        _ => return Err(unsupported(part)),
+                    },
+                    // `* as ns` — namespace binding; the local name is the last token.
+                    "namespace_import" => match token_vals(part).as_slice() {
+                        [star, as_kw, ns] if *star == "*" && *as_kw == "as" => {
+                            specifiers.push(ImportSpecifier::Namespace(Identifier {
+                                cv: None,
+                                name: (*ns).to_string(),
+                            }))
+                        }
+                        _ => return Err(unsupported(part)),
+                    },
+                    // `{a, b as c}` — zero or more named specifiers.
+                    "named_imports" => {
+                        for spec in node_children(part) {
+                            if spec.rule_name != "import_specifier" {
+                                return Err(unsupported(spec));
+                            }
+                            // `a` → imported == local == a ;
+                            // `a as c` → imported = a, local = c.
+                            let (imported, local) = match token_vals(spec).as_slice() {
+                                [a] => ((*a).to_string(), (*a).to_string()),
+                                [a, as_kw, c] if *as_kw == "as" => {
+                                    ((*a).to_string(), (*c).to_string())
+                                }
+                                _ => return Err(unsupported(spec)),
+                            };
+                            specifiers.push(ImportSpecifier::Named {
+                                imported: Identifier { cv: None, name: imported },
+                                local: Identifier { cv: None, name: local },
+                            });
+                        }
+                    }
+                    _ => return Err(unsupported(part)),
+                }
+            }
+            from
+        }
+        _ => return Err(unsupported(node)),
+    };
+    let source = import_source(source_node).ok_or_else(|| unsupported(source_node))?;
+    Ok(ImportDeclaration { cv: None, specifiers, source })
+}
+
+/// Pull the module-specifier string out of a `module_specifier` or `from_clause`
+/// node: the first `String`-typed token among the node's direct children. The
+/// lexer stores the value unquoted (`y`, not `"y"`), so we rebuild a double-
+/// quoted `raw` for the [`StringLiteral`]; the emitter re-derives the quotes
+/// from `value`, so `raw` is only kept for round-trip fidelity.
+fn import_source(node: &GrammarASTNode) -> Option<StringLiteral> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => Some(StringLiteral {
+            cv: t.cv.clone(),
+            value: t.value.clone(),
+            raw: format!("\"{}\"", t.value),
+        }),
+        _ => None,
+    })
+}
+
+/// Convert an `export_declaration` grammar node into a `Declaration` (one of the
+/// three `Export*` variants) — CLOC12.189 PR2. Grammar shape (verified by a
+/// parse-tree probe):
+///
+/// ```text
+///   export_declaration =
+///       Token("export"),
+///       ( named_exports [ , from_clause ]                    // export {a}[from"y"]
+///       | Token("*"), from_clause                            // export * from "y"
+///       | Token("default"), ( assignment_expression          // export default 1
+///                           | function_declaration            // export default fn
+///                           | decorated_class_declaration )   // export default class
+///       | lexical_declaration | variable_statement            // export const/var …
+///       | function_declaration                                // export function …
+///       | decorated_class_declaration ),                      // export class …
+///       Token(";") ? ;
+///   named_exports    = Token("{"), { export_specifier, [Token(",")] }, Token("}");
+///   export_specifier = Token(name) , [ Token("as"), Token(name) ]; // `a`/`a as c`
+/// ```
+///
+/// The inner declaration/expression is bridged by reusing the existing
+/// `convert_*` helpers, so every construct those already model works inside an
+/// `export`. `export * as ns from "y"` is a grammar gap (rejected at parse) and
+/// any unrecognised shape DECLINES via `unsupported` (safe WHITESPACE_ONLY
+/// fallback), never a mis-bridge.
+fn convert_export_declaration(node: &GrammarASTNode) -> Result<Declaration, BridgeError> {
+    let kids = node_children(node);
+
+    // `export default <expr | function | class>`.
+    if has_token(node, "default") {
+        let child = kids
+            .first()
+            .ok_or_else(|| internal(node, "export default: missing operand"))?;
+        let kind = match child.rule_name.as_str() {
+            "function_declaration" | "generator_declaration" => {
+                ExportDefaultKind::FunctionDeclaration(convert_function_declaration(child)?)
+            }
+            "decorated_class_declaration" => match node_children(child).as_slice() {
+                [cd] if cd.rule_name == "class_declaration" => {
+                    ExportDefaultKind::ClassDeclaration(convert_class_declaration(cd)?)
+                }
+                _ => return Err(unsupported(child)),
+            },
+            "class_declaration" => {
+                ExportDefaultKind::ClassDeclaration(convert_class_declaration(child)?)
+            }
+            // Anything else is an expression operand (`export default 1`,
+            // `export default foo()`); `convert_expression` dispatches on the
+            // expression rule (`assignment_expression`, …).
+            _ => ExportDefaultKind::Expression(Box::new(convert_expression(child)?)),
+        };
+        return Ok(Declaration::ExportDefaultDeclaration(ExportDefaultDeclaration {
+            cv: None,
+            declaration: kind,
+        }));
+    }
+
+    // `export * from "y"` — the `*` is a token; the sole node child is the
+    // `from_clause`. (`export * as ns from "y"` fails at parse, so a namespace
+    // binding never reaches here → `exported` is always None.)
+    if has_token(node, "*") {
+        let from = kids
+            .iter()
+            .find(|n| n.rule_name == "from_clause")
+            .ok_or_else(|| unsupported(node))?;
+        let source = import_source(from).ok_or_else(|| unsupported(from))?;
+        return Ok(Declaration::ExportAllDeclaration(ExportAllDeclaration {
+            cv: None,
+            exported: None,
+            source,
+        }));
+    }
+
+    // `export { a, b as c }` / `export { a } from "y"` — a named-specifier
+    // export, optionally re-exporting from another module.
+    if let Some(named) = kids.iter().find(|n| n.rule_name == "named_exports") {
+        let mut specifiers: Vec<ExportSpecifier> = Vec::new();
+        for spec in node_children(named) {
+            if spec.rule_name != "export_specifier" {
+                return Err(unsupported(spec));
+            }
+            // `a` → local == exported == a ; `a as c` → local = a, exported = c.
+            let (local, exported) = match token_vals(spec).as_slice() {
+                [a] => ((*a).to_string(), (*a).to_string()),
+                [a, as_kw, c] if *as_kw == "as" => ((*a).to_string(), (*c).to_string()),
+                _ => return Err(unsupported(spec)),
+            };
+            specifiers.push(ExportSpecifier {
+                local: Identifier { cv: None, name: local },
+                exported: Identifier { cv: None, name: exported },
+            });
+        }
+        let source = kids
+            .iter()
+            .find(|n| n.rule_name == "from_clause")
+            .and_then(|f| import_source(f));
+        return Ok(Declaration::ExportNamedDeclaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers,
+            source,
+        }));
+    }
+
+    // `export const/let/var …` / `export function …` / `export class …` — a
+    // declaration export: the sole node child is the inner declaration, bridged
+    // by the existing converter for its kind.
+    let inner = kids
+        .first()
+        .ok_or_else(|| internal(node, "export declaration: missing inner declaration"))?;
+    let decl = match inner.rule_name.as_str() {
+        "lexical_declaration" => {
+            Declaration::VariableDeclaration(convert_lexical_declaration(inner)?)
+        }
+        "variable_statement" => {
+            Declaration::VariableDeclaration(convert_variable_statement(inner)?)
+        }
+        "function_declaration" | "generator_declaration" => {
+            Declaration::FunctionDeclaration(convert_function_declaration(inner)?)
+        }
+        "decorated_class_declaration" => match node_children(inner).as_slice() {
+            [cd] if cd.rule_name == "class_declaration" => {
+                Declaration::ClassDeclaration(convert_class_declaration(cd)?)
+            }
+            _ => return Err(unsupported(inner)),
+        },
+        "class_declaration" => Declaration::ClassDeclaration(convert_class_declaration(inner)?),
+        _ => return Err(unsupported(inner)),
+    };
+    Ok(Declaration::ExportNamedDeclaration(ExportNamedDeclaration {
+        cv: None,
+        declaration: Some(Box::new(decl)),
+        specifiers: Vec::new(),
+        source: None,
+    }))
 }
 
 // =========================================================================
@@ -291,9 +585,15 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         // debugger_statement = "debugger" SEMICOLON — no node children, so the
         // typed node is a bare marker. (CLOC21.)
         "debugger_statement" => Ok(Statement::debugger_statement(DebuggerStatement { cv: None })),
+        // with_statement = "with" LPAREN expression RPAREN statement (CLOC12.187).
+        // The atomic node + emitter + pass traversal landed in PR1, and the
+        // renaming-soundness gate (rename passes decline when a `with` is
+        // present) landed in PR2a — so bridging it here is sound.
+        "with_statement" => convert_with_statement(child).map(Statement::with_statement),
         // Phase 2+ — not yet in the typed AST
-        "for_await_of_statement" | "with_statement" | "using_declaration"
-        | "await_using_declaration" => Err(unsupported(child)),
+        "for_await_of_statement" | "using_declaration" | "await_using_declaration" => {
+            Err(unsupported(child))
+        }
         other => Err(BridgeError::InternalError {
             msg: format!("unknown statement child rule '{other}'"),
             rule: node.rule_name.clone(),
@@ -375,6 +675,24 @@ fn convert_do_while_statement(node: &GrammarASTNode) -> Result<DoWhileStatement,
     })
 }
 
+fn convert_with_statement(node: &GrammarASTNode) -> Result<WithStatement, BridgeError> {
+    // with_statement = "with" LPAREN expression RPAREN statement (CLOC12.187).
+    // Node children: [expression, statement] — the injected object first, the
+    // body second. Structurally identical to `while_statement`; the difference
+    // is purely semantic (`with` splices the object onto the scope chain), and
+    // that semantics is handled downstream by the renaming-soundness gate
+    // (`program_contains_with_statement`) rather than here.
+    let nodes = node_children(node);
+    if nodes.len() < 2 {
+        return Err(internal(node, "with_statement needs 2 node children"));
+    }
+    Ok(WithStatement {
+        cv: None,
+        object: convert_expression(nodes[0])?,
+        body: Box::new(convert_statement(nodes[1])?),
+    })
+}
+
 // -------------------------------------------------------------------------
 // for_statement
 // -------------------------------------------------------------------------
@@ -417,12 +735,34 @@ fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeEr
         }
     }
 
-    // Phase 0: init (variable_declaration_list or expression)
+    // Phase 0: init — a `var` declaration list, a `let`/`const` binding list, or
+    // a bare expression.
     if let Some(&n) = phase_nodes[0].first() {
         match n.rule_name.as_str() {
             "variable_declaration_list" => {
                 let decl = convert_var_decl_list(n, VarKind::Var)?;
                 init = Some(ForInit::VariableDeclaration(decl));
+            }
+            // `for (let/const i = 0; …)` (CLOC12.186). The grammar inlines the
+            // lexical declaration into the for-header: the `let`/`const` keyword
+            // is a direct Token child of the `for_statement` (so `has_token`
+            // finds it), and the bindings are a bare `binding_list` node whose
+            // children are `lexical_binding` nodes — the same shape
+            // `convert_lexical_declaration` reads, so we reuse
+            // `convert_variable_declarator` on them.
+            "binding_list" => {
+                let kind = if has_token(node, "const") {
+                    VarKind::Const
+                } else {
+                    VarKind::Let
+                };
+                let declarations: Result<Vec<VariableDeclarator>, _> =
+                    node_children(n).into_iter().map(convert_variable_declarator).collect();
+                init = Some(ForInit::VariableDeclaration(VariableDeclaration {
+                    cv: None,
+                    kind,
+                    declarations: declarations?,
+                }));
             }
             _ => {
                 init = Some(ForInit::Expression(convert_expression(n)?));
@@ -694,7 +1034,7 @@ fn convert_case_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError>
 fn convert_default_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
     // default_clause = "default" COLON { statement }
     let consequent: Result<Vec<Statement>, _> =
-        node_children(node).into_iter().map(|n| convert_statement(n)).collect();
+        node_children(node).into_iter().map(convert_statement).collect();
     Ok(SwitchCase { cv: None, test: None, consequent: consequent? })
 }
 
@@ -824,7 +1164,7 @@ fn convert_var_decl_list(
     // All Node children are variable_declaration.
     let declarators: Result<Vec<VariableDeclarator>, _> = node_children(node)
         .into_iter()
-        .map(|n| convert_variable_declarator(n))
+        .map(convert_variable_declarator)
         .collect();
     Ok(VariableDeclaration { cv: None, kind, declarations: declarators? })
 }
@@ -898,7 +1238,7 @@ fn convert_lexical_declaration(node: &GrammarASTNode) -> Result<VariableDeclarat
     // binding_list node children are lexical_binding nodes.
     let declarators: Result<Vec<VariableDeclarator>, _> = node_children(list_n)
         .into_iter()
-        .map(|n| convert_variable_declarator(n))
+        .map(convert_variable_declarator)
         .collect();
     Ok(VariableDeclaration { cv: None, kind, declarations: declarators? })
 }
@@ -1099,6 +1439,72 @@ fn convert_class_expression(node: &GrammarASTNode) -> Result<ClassExpression, Br
     Ok(ClassExpression { cv: None, id, super_class, body })
 }
 
+/// Convert a `class_declaration` grammar node into a [`ClassDeclaration`] — the
+/// **statement** form (`class C { … }`), CLOC12.174 PR2.
+///
+/// The parse-tree shape (confirmed by dumping the grammar parser's output — see
+/// the throwaway probe removed with this PR) is the *same flat child list* as
+/// `class_expression`, with **one difference: the name is required**:
+///
+/// ```text
+///   class_declaration = [ Token("class"),
+///                         Token(NAME),          // REQUIRED — a declaration binds a name
+///                         Node(class_heritage)?,
+///                         Node(class_body) ]
+/// ```
+///
+/// (At the `source_element` level this node is wrapped in
+/// `decorated_class_declaration`, unwrapped by [`convert_source_element`].)
+/// Heritage and body are byte-identical to the expression form, so this reuses
+/// [`convert_class_heritage`] and [`convert_class_element`] unchanged — only the
+/// name handling differs: a missing name is not a valid declaration, so it
+/// DECLINES (safe WHITESPACE_ONLY fallback) rather than fabricating an empty id.
+fn convert_class_declaration(node: &GrammarASTNode) -> Result<ClassDeclaration, BridgeError> {
+    // Name: the required class name — the single direct-child token that is not
+    // the `class` keyword. Unlike `class_expression` (optional id), a *missing*
+    // name here DECLINES: a class declaration with no name is not valid syntax
+    // this slice represents.
+    let id = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.value != "class" => Some(t.value.clone()),
+            _ => None,
+        })
+        .map(|name| Identifier { cv: None, name })
+        .ok_or_else(|| unsupported(node))?;
+
+    // Heritage (`extends <operand>`), if present — same converter as the
+    // expression form.
+    let mut super_class: Option<Box<Expression>> = None;
+    if let Some(heritage) = node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Node(n) if n.rule_name == "class_heritage" => Some(n),
+        _ => None,
+    }) {
+        super_class = Some(Box::new(convert_class_heritage(heritage)?));
+    }
+
+    // Body: iterate `class_element` children of the `class_body` node — same
+    // converter as the expression form.
+    let body_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "class_body" => Some(n),
+            _ => None,
+        })
+        .ok_or_else(|| internal(node, "class_declaration: missing class_body"))?;
+
+    let mut body = Vec::new();
+    for el in node_children(body_node) {
+        if el.rule_name == "class_element" {
+            body.push(convert_class_element(el)?);
+        }
+    }
+
+    Ok(ClassDeclaration { cv: None, id, super_class, body })
+}
+
 /// Convert a `class_heritage` (`extends <operand>`) node into the super-class
 /// [`Expression`]. See the shape note on [`convert_class_expression`].
 fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
@@ -1126,13 +1532,18 @@ fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 /// Convert one `class_element` into a [`ClassMember`].
 ///
 /// ```text
-///   class_element = [ Token("static")? , Node(method_definition) ]
+///   class_element = [ Token("static")? , Node(method_definition) , Token(";") ]
+///                 | Node(class_field_declaration)          // CLOC12.175 PR2
+///                 | …declined shapes (async_method, private, static_block, ;)
 /// ```
 ///
-/// A leading bare `Token("static")` marks a static member; the sole
-/// `method_definition` child carries the rest. (Field and `static { … }`
-/// static-block members are a later slice; they are not produced by this
-/// grammar today, so a `class_element` always wraps exactly one method.)
+/// A *method* member is `[Token("static")?, method_definition, ";"]` — a leading
+/// bare `Token("static")` marks it static; the `method_definition` child carries
+/// the rest. A *field* member is a single `class_field_declaration` node that
+/// carries its **own** `static` token internally (the grammar does NOT hoist a
+/// field's `static` to the `class_element` level, unlike a method's), so the
+/// `is_static` scanned here stays `false` for a field and
+/// [`convert_class_field`] reads the field's own modifier.
 ///
 /// **`async` lives here, not on `method_definition`.** The grammar attaches an
 /// `async` method's `async` keyword to the *`class_element`* (`async m(){}` →
@@ -1141,6 +1552,11 @@ fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 /// does not model, so any `class_element` token other than `static` DECLINES —
 /// otherwise the `async` would be silently dropped, a semantics-changing
 /// miscompile. (Declining the member drops the whole file to WHITESPACE_ONLY.)
+///
+/// `static_block` (CLOC12.176), `private_method_definition` (CLOC12.178), and
+/// `class_field_declaration` (CLOC12.175) member nodes are modelled; an
+/// `async_method` node is a form this slice does not model — it DECLINES (safe
+/// WHITESPACE_ONLY fallback) rather than surface a mis-emit.
 fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeError> {
     // A `class_element` carries at most one *word* modifier — `static` (which
     // we model) or `async` (which we do not). It may also carry a benign
@@ -1160,20 +1576,150 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
             }
         }
     }
-    // The member itself is a *single* child node. Only a plain
-    // `method_definition` is modelled today; the grammar's `async_method` node
-    // (an `async` method) — and any future field / static-block node — is a
-    // form this slice does not represent, so it DECLINES (safe WHITESPACE_ONLY
-    // fallback) rather than surfacing an internal error. (Because `async` is a
-    // *distinct node*, not just a leading token, the node kind must be checked.)
+    // The member itself is a *single* child node. Four shapes are modelled:
+    // a plain `method_definition` (→ `ClassMember::Method`), a
+    // `class_field_declaration` (→ `ClassMember::Field`, CLOC12.175 PR2), a
+    // `static_block` (→ `ClassMember::StaticBlock`, CLOC12.176 PR2), and a
+    // `private_method_definition` (→ `ClassMember::Method` with a private key,
+    // CLOC12.178 PR1). The grammar's `async_method` node is a form this slice
+    // does not represent, so it DECLINES (safe WHITESPACE_ONLY fallback).
+    // (Because these are *distinct nodes*, not just leading tokens, the node
+    // kind must be checked.)
+    //
+    // A `static_block` — and a `private_method_definition` — carry their own
+    // leading `Token("static")` *inside* the node (not on the `class_element`),
+    // so the modifier loop above never sees it: `is_static` from `class_element`
+    // stays false and each arm reads `static` from inside the member node.
     let member = node_children(node)
         .into_iter()
         .next()
         .ok_or_else(|| internal(node, "class_element: empty"))?;
-    if member.rule_name != "method_definition" {
-        return Err(unsupported(member));
+    match member.rule_name.as_str() {
+        "method_definition" => Ok(ClassMember::Method(convert_method_definition(member, is_static)?)),
+        "class_field_declaration" => Ok(ClassMember::Field(convert_class_field(member)?)),
+        "static_block" => Ok(ClassMember::StaticBlock(convert_static_block(member)?)),
+        "private_method_definition" => {
+            Ok(ClassMember::Method(convert_private_method_definition(member)?))
+        }
+        _ => Err(unsupported(member)),
     }
-    Ok(ClassMember::Method(convert_method_definition(member, is_static)?))
+}
+
+/// Convert a `static_block` node into a [`BlockStatement`] — a class
+/// static-initialization block `static { … }` (CLOC12.176 PR2).
+///
+/// ```text
+///   static_block = [ Token("static"), Token("{"),
+///                    Node(statement)*,
+///                    Token("}") ]
+/// ```
+///
+/// The block body is exactly a statement list — the *same* shape as a plain
+/// `{ … }` [`convert_block_statement`] — so each `statement` node child is
+/// lowered by the shared [`convert_statement`], covering the full statement
+/// surface (including `let` / `const` / `var`, which map to
+/// `Statement::Declaration`). Tokens (`static`, the braces) are ignored by
+/// [`node_children`], so the leading `static` needs no special handling. An
+/// empty block (`static {}`) yields an empty `body`. Because every statement is
+/// routed through the shared converter, any unmodelled body statement makes the
+/// converter DECLINE (safe WHITESPACE_ONLY fallback) rather than mis-emit.
+fn convert_static_block(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
+    let stmts: Result<Vec<Statement>, _> =
+        node_children(node).into_iter().map(convert_statement).collect();
+    Ok(BlockStatement { cv: None, body: stmts? })
+}
+
+/// Convert a `class_field_declaration` node into a [`PropertyDefinition`] — a
+/// class field `[static] key [= initializer] ;` (CLOC12.175 PR2).
+///
+/// ```text
+///   class_field_declaration = [ Token("static")? ,
+///                               (Node(property_name) | Token(PRIVATE_NAME)) ,
+///                               [ Token("="), Node(assignment_expression) ]? ,
+///                               Token(";") ]
+/// ```
+///
+/// - **`static`** is a bare leading `Token("static")` *inside* this node (unlike
+///   a method's `static`, which sits one level up on the `class_element`).
+/// - **key** reuses [`convert_property_key`] — the *same* `property_name` node a
+///   method key uses, so identifier / string / numeric keys all work, and a
+///   computed `[expr]` key lowers to `PropertyKey::Expression` with
+///   `computed: true` (CLOC12.180).
+/// - **initializer** is the optional `assignment_expression`; a bare field
+///   (`y;`) has none and maps to `value: None`.
+///
+/// A **private** field (`#x`) is a bare `PRIVATE_NAME` token with no
+/// `property_name` node. [`private_name_key`] detects it and lowers it to a
+/// [`PropertyKey::PrivateName`] (CLOC12.177 PR2); an ordinary keyed field is
+/// unchanged. (A private *method* `#m(){}` is a separate `private_method_definition`
+/// grammar node, lowered by [`convert_private_method_definition`], CLOC12.178 PR1.)
+///
+/// If a class-member node carries a bare **private-name** token (`#x`), lower it
+/// to a [`PropertyKey::PrivateName`]; otherwise return `None`.
+///
+/// A private name lexes as a `Name` token whose `type_name` discriminant is
+/// `Some("PRIVATE_NAME")` and whose `value` **includes** the leading `#`
+/// (e.g. `"#x"`) — unlike a `property_name` node, it is a direct token child of
+/// the `class_field_declaration` / `private_method_definition` node. The stored
+/// [`PrivateName::name`] omits the `#` (mirroring [`Identifier`]), so we strip it
+/// here; the emitter re-adds it. (CLOC12.177 PR2.)
+fn private_name_key(node: &GrammarASTNode) -> Option<PropertyKey> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_name.as_deref() == Some("PRIVATE_NAME") {
+                let name = t.value.strip_prefix('#').unwrap_or(&t.value).to_string();
+                return Some(PropertyKey::PrivateName(PrivateName { cv: None, name }));
+            }
+        }
+    }
+    None
+}
+
+fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, BridgeError> {
+    // `static` — a bare NAME token before the `property_name` node.
+    let mut is_static = false;
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "property_name" => break,
+            ASTNodeOrToken::Token(t) if t.value == "static" => is_static = true,
+            _ => {}
+        }
+    }
+
+    // key — normally the `property_name` node. A **private** field (`#x`) instead
+    // carries a bare `PRIVATE_NAME` token as a direct child (no `property_name`
+    // node), so we detect that first and lower it to `PropertyKey::PrivateName`
+    // (CLOC12.177 PR2). An ordinary field falls through to `property_name`.
+    let key = if let Some(pk) = private_name_key(node) {
+        pk
+    } else {
+        let key_node = node_children(node)
+            .into_iter()
+            .find(|n| n.rule_name == "property_name")
+            .ok_or_else(|| unsupported(node))?;
+        convert_property_key(key_node)?
+    };
+
+    // initializer — the optional `assignment_expression` after `=`. A bare field
+    // has none → `value: None`.
+    let value = match node_children(node)
+        .into_iter()
+        .find(|n| n.rule_name == "assignment_expression")
+    {
+        Some(v) => Some(convert_expression(v)?),
+        None => None,
+    };
+
+    // A computed key `[expr]` bridges to `PropertyKey::Expression` (CLOC12.180),
+    // so the `computed` flag tracks exactly that variant.
+    let computed = matches!(&key, PropertyKey::Expression(_));
+    Ok(PropertyDefinition {
+        cv: None,
+        key,
+        value,
+        computed,
+        is_static,
+    })
 }
 
 /// Convert a `method_definition` node into a [`MethodDefinition`].
@@ -1188,13 +1734,14 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
 /// ```
 ///
 /// **Modifier tokens precede the `property_name` node.** `get` / `set` mark an
-/// accessor; a `*` (generator) marks a form this slice does not model yet — it
-/// DECLINES via `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback) rather than
-/// emit a plain method and silently drop the `*` (a semantics-changing
-/// miscompile). A key literally named `get` (`get(){}`) parses with the
-/// `property_name` node *first* — no leading accessor token — so it is correctly
-/// an ordinary [`MethodKind::Method`]. (An `async` method is a *separate*
-/// grammar node, `async_method`, declined one level up in
+/// accessor; a `*` marks a **generator method** (`*gen(){}`), bridged since
+/// CLOC12.181 by setting the `value`'s `generator` flag so the emitter re-prints
+/// the `*` (`yield` inside the body is already a modelled `YieldExpression`, and
+/// a generator's `FunctionExpression` value flows through every pass exactly like
+/// a top-level `function*` — CLOC12.163). A key literally named `get`
+/// (`get(){}`) parses with the `property_name` node *first* — no leading accessor
+/// token — so it is correctly an ordinary [`MethodKind::Method`]. (An `async`
+/// method is a *separate* grammar node, `async_method`, declined one level up in
 /// [`convert_class_element`], so `async` never reaches here.)
 ///
 /// **`constructor`.** A non-static, non-accessor method whose key is the plain
@@ -1226,18 +1773,18 @@ fn convert_method_definition(
         }
     }
 
-    // Generator methods carry evaluation semantics this slice does not model —
-    // DECLINE so the whole file falls back rather than mis-emit.
-    if saw_star {
-        return Err(unsupported(node));
-    }
+    // A generator method (`*gen(){}`) is bridged (CLOC12.181): `saw_star` sets
+    // the value's `generator` flag below and the emitter re-prints the `*`. No
+    // decline is needed — `yield` inside the body is a modelled `YieldExpression`
+    // and a generator `FunctionExpression` flows through every pass exactly like
+    // a top-level `function*`.
 
     let key_node = node_children(node)
         .into_iter()
         .find(|n| n.rule_name == "property_name")
         .ok_or_else(|| internal(node, "method_definition: missing property_name"))?;
-    // `convert_property_key` declines a computed `[expr]` key via
-    // `UnsupportedSyntax` (a later slice), which drops the file — sound.
+    // `convert_property_key` lowers a computed `[expr]` key to
+    // `PropertyKey::Expression` (CLOC12.180); the `computed` flag is set below.
     let key = convert_property_key(key_node)?;
 
     let kind = if saw_get {
@@ -1245,8 +1792,11 @@ fn convert_method_definition(
     } else if saw_set {
         MethodKind::Set
     } else if !is_static
+        && !saw_star
         && matches!(&key, PropertyKey::Identifier(id) if id.name == "constructor")
     {
+        // `*constructor(){}` is a SyntaxError in real JS — a generator is never a
+        // constructor, so a stray `*` guards the `constructor` classification.
         MethodKind::Constructor
     } else {
         MethodKind::Method
@@ -1269,6 +1819,9 @@ fn convert_method_definition(
         None => BlockStatement { cv: None, body: vec![] },
     };
 
+    // A computed key `[expr]` bridges to `PropertyKey::Expression` (CLOC12.180),
+    // so the `computed` flag tracks exactly that variant.
+    let computed = matches!(&key, PropertyKey::Expression(_));
     Ok(MethodDefinition {
         cv: None,
         key,
@@ -1278,11 +1831,119 @@ fn convert_method_definition(
             id: None,
             params,
             body,
-            generator: false,
+            // `*gen(){}` → a generator method; the emitter re-prints the `*`.
+            generator: saw_star,
             is_async: false,
         },
-        // Computed keys are declined above, so a bridged method is never
-        // computed today.
+        computed,
+        is_static,
+    })
+}
+
+/// Convert a `private_method_definition` node into a [`MethodDefinition`] whose
+/// key is a [`PropertyKey::PrivateName`] — a private class method `#m(){}`
+/// (CLOC12.178 PR1).
+///
+/// Grammar (es2025 `private_method_definition`):
+///
+/// ```text
+///   [ "static" ] PRIVATE_NAME LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
+/// | [ "static" ] "get" PRIVATE_NAME ...          // private getter
+/// | [ "static" ] "set" PRIVATE_NAME ...          // private setter
+/// | [ "static" ] STAR   PRIVATE_NAME ...          // private generator
+/// ```
+///
+/// This slice models the **plain** method, the **get / set accessor**, and the
+/// **generator** (`*#m(){}`) forms (each optionally `static`) — `#m(){}`,
+/// `get #x(){}`, `set #x(v){}`, `*#g(){}`. The private *generator* bridges
+/// exactly like a public one (CLOC12.182): `saw_star` sets the value's
+/// `generator` flag and the emitter reprints the `*`. Only the private *async*
+/// form (`async #m(){}`) still DECLINES via `UnsupportedSyntax` (safe
+/// WHITESPACE_ONLY fallback), never a mis-emit — `await` is not yet modelled.
+///
+/// Two shape differences from a public `method_definition`:
+/// - the key is a bare `PRIVATE_NAME` token (`#m`), lowered by
+///   [`private_name_key`] exactly as a private *field* key is — never a
+///   `property_name` node; and
+/// - the `static` modifier lives *inside* this node (the grammar's
+///   `[ "static" ]`), not on the enclosing `class_element`, so it is read here.
+///
+/// A private name can never be the `constructor` (`#constructor` is a
+/// SyntaxError), so the kind is a plain [`MethodKind::Method`] or the
+/// [`MethodKind::Get`] / [`MethodKind::Set`] accessor. Params and body reuse the
+/// shared [`convert_formal_parameters`] / [`convert_formal_parameter`] /
+/// [`convert_function_body`], mirroring [`convert_method_definition`].
+fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefinition, BridgeError> {
+    // Read `static`, the `get` / `set` accessor keyword, and the `*` generator
+    // marker (inside this node); decline only the `async` form this slice does
+    // not model. All of `static` / `get` / `set` / `*` / `async` precede the
+    // PRIVATE_NAME as direct token children (params live under
+    // `formal_parameter(s)` *nodes*, so a parameter literally named `get` cannot
+    // be confused for the modifier).
+    let mut is_static = false;
+    let mut saw_get = false;
+    let mut saw_set = false;
+    let mut saw_star = false;
+    let mut decline = false;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.value.as_str() {
+                "static" => is_static = true,
+                "get" => saw_get = true,
+                "set" => saw_set = true,
+                "*" => saw_star = true,
+                "async" => decline = true,
+                _ => {}
+            }
+        }
+    }
+    if decline {
+        return Err(unsupported(node));
+    }
+
+    let key = private_name_key(node)
+        .ok_or_else(|| internal(node, "private_method_definition: missing PRIVATE_NAME"))?;
+
+    // Params: a lone `formal_parameter` OR a `formal_parameters` wrapper.
+    let mut params = Vec::new();
+    for n in node_children(node) {
+        match n.rule_name.as_str() {
+            "formal_parameters" => params.extend(convert_formal_parameters(n)?),
+            "formal_parameter" => params.push(convert_formal_parameter(n)?),
+            _ => {}
+        }
+    }
+
+    // Body: the `function_body` node, or an empty block for `#m(){}`.
+    let body = match node_children(node).into_iter().find(|n| n.rule_name == "function_body") {
+        Some(b) => convert_function_body(b)?,
+        None => BlockStatement { cv: None, body: vec![] },
+    };
+
+    // A private name can never be the `constructor` (`#constructor` is a
+    // SyntaxError), so the only kinds are the plain method and the get/set
+    // accessors.
+    let kind = if saw_get {
+        MethodKind::Get
+    } else if saw_set {
+        MethodKind::Set
+    } else {
+        MethodKind::Method
+    };
+
+    Ok(MethodDefinition {
+        cv: None,
+        key,
+        kind,
+        value: FunctionExpression {
+            cv: None,
+            id: None,
+            params,
+            body,
+            // `*#g(){}` → a private generator method; the emitter reprints the `*`.
+            generator: saw_star,
+            is_async: false,
+        },
         computed: false,
         is_static,
     })
@@ -1362,7 +2023,10 @@ fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
 /// Async arrows (`async x => x`) parse under the separate
 /// `async_arrow_function` rule and remain declined for now — a follow-up
 /// once the async evaluation model lands.
-fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpression, BridgeError> {
+fn convert_arrow_function(
+    node: &GrammarASTNode,
+    is_async: bool,
+) -> Result<ArrowFunctionExpression, BridgeError> {
     let children = node_children(node);
 
     let mut params = Vec::new();
@@ -1376,14 +2040,39 @@ fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpressi
         }
     }
 
-    let body = body.ok_or_else(|| internal(node, "arrow_function: missing concise_body"))?;
+    let mut body = body.ok_or_else(|| internal(node, "arrow_function: missing concise_body"))?;
 
-    // Guard against the `() => {}` ambiguity described above: an
-    // object-literal concise body cannot be distinguished from an empty
-    // block body, so decline rather than risk a miscompile.
+    // The `{` after `=>` ambiguity: the grammar buckets the braces of BOTH a
+    // block body `=> {…}` and a parenthesised object body `=> ({…})` as an
+    // `object_literal`, so either reaches us as an
+    // `ArrowBody::Expression(ObjectExpression)`. Per the ES spec a `{`
+    // immediately after `=>` ALWAYS opens a **block** body — an object-literal
+    // expression body MUST be parenthesised. We disambiguate by the
+    // concise_body's leftmost token: a bare block body leads with `{`, a
+    // parenthesised object body leads with `(`.
     if let ArrowBody::Expression(e) = &body {
-        if matches!(**e, Expression::ObjectExpression(_)) {
-            return Err(unsupported(node));
+        if let Expression::ObjectExpression(obj) = &**e {
+            let leads_with_brace = children
+                .iter()
+                .find(|n| n.rule_name == "concise_body")
+                .and_then(|n| leftmost_token(n))
+                == Some("{");
+            if leads_with_brace {
+                // Bare `=> {…}` — a BLOCK body per the ES spec.
+                if obj.properties.is_empty() {
+                    // `=> {}` is an EMPTY block body (CLOC12.184).
+                    body = ArrowBody::Block(BlockStatement { cv: None, body: vec![] });
+                } else {
+                    // `=> {a:1}` — a non-empty block the grammar mis-bucketed as
+                    // an object; its contents would need re-parsing as statements,
+                    // so DECLINE (safe WHITESPACE_ONLY), never a mis-emit.
+                    return Err(unsupported(node));
+                }
+            }
+            // Otherwise the body leads with `(` — a genuine **parenthesised
+            // object expression body** `=> ({…})` (CLOC12.185). Keep `body` as an
+            // `ArrowBody::Expression(ObjectExpression)`: the emitter re-wraps the
+            // object literal in parens so it is never misread as a block.
         }
     }
 
@@ -1391,7 +2080,7 @@ fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpressi
         cv: None,
         params,
         body,
-        is_async: false,
+        is_async,
     })
 }
 
@@ -1429,7 +2118,7 @@ fn convert_arrow_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>,
 /// kept so the bridge is already correct once the grammar parses block
 /// bodies.
 fn convert_concise_body(node: &GrammarASTNode) -> Result<ArrowBody, BridgeError> {
-    for n in node_children(node) {
+    if let Some(n) = node_children(node).into_iter().next() {
         if n.rule_name == "function_body" {
             return Ok(ArrowBody::Block(convert_function_body(n)?));
         }
@@ -1512,7 +2201,7 @@ fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>
     //                  | ELLIPSIS ( NAME | binding_pattern )
     let params: Result<Vec<FunctionParam>, _> = node_children(node)
         .into_iter()
-        .map(|n| convert_formal_parameter(n))
+        .map(convert_formal_parameter)
         .collect();
     params
 }
@@ -1520,9 +2209,32 @@ fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>
 fn convert_formal_parameter(node: &GrammarASTNode) -> Result<FunctionParam, BridgeError> {
     // formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
     //                  | ELLIPSIS ( NAME | binding_pattern )
-    // In Phase 1: only simple NAME identifiers.
+    // Simple NAME identifiers and (CLOC12.190) trailing rest parameters
+    // (`...name`) are modelled; a destructuring target is declined.
     if has_token(node, "...") {
-        return Err(unsupported(node)); // rest params are Phase 3
+        // Rest parameter `...target`. A destructuring rest (`...[a,b]`, `...{x}`)
+        // reuses the Phase-3 binding-pattern machinery — decline it rather than
+        // mis-model. A simple `...name` bridges to a `FunctionParam::RestElement`.
+        for c in &node.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                if n.rule_name == "binding_pattern" {
+                    return Err(unsupported(n));
+                }
+            }
+        }
+        // The gathered name is the sole non-`...` token in the node.
+        let name = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.value != "..." => Some(t.value.clone()),
+                _ => None,
+            })
+            .ok_or_else(|| internal(node, "rest parameter: missing name"))?;
+        return Ok(FunctionParam::RestElement(RestElement {
+            cv: None,
+            argument: Identifier { cv: None, name },
+        }));
     }
     for c in &node.children {
         if let ASTNodeOrToken::Node(n) = c {
@@ -1531,12 +2243,36 @@ fn convert_formal_parameter(node: &GrammarASTNode) -> Result<FunctionParam, Brid
             }
         }
     }
-    // Has default? Not Phase 1.
+    // Default parameter `name = expr` (CLOC12.191). A destructuring target with
+    // a default (`{x} = {}`, `[a] = []`) was already declined by the
+    // `binding_pattern` guard above, so here the left is always a simple NAME.
+    // The right is the sole child *node* — the `assignment_expression` the
+    // grammar attaches after `=` — converted through the ordinary expression
+    // path so the optimizer folds / renames / inlines it as the live code it is
+    // (`function f(a = 1 + 2)` → `function f(a = 3)`).
     if has_token(node, "=") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "formal_parameter_default".to_string(),
-            location: loc(node),
-        });
+        let name = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.value != "=" => Some(t.value.clone()),
+                _ => None,
+            })
+            .ok_or_else(|| internal(node, "default parameter: missing name"))?;
+        let right_node = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) => Some(n),
+                _ => None,
+            })
+            .ok_or_else(|| internal(node, "default parameter: missing default expression"))?;
+        let right = convert_expression(right_node)?;
+        return Ok(FunctionParam::AssignmentPattern(AssignmentPattern {
+            cv: None,
+            left: Identifier { cv: None, name },
+            right,
+        }));
     }
     let name = node.children.iter().find_map(|c| match c {
         ASTNodeOrToken::Token(t) => Some(t.value.clone()),
@@ -1668,7 +2404,18 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // itself declines the ambiguous `() => {}` / object-body case and
         // (until the grammar parses them) never sees a block body.
         "arrow_function" => {
-            convert_arrow_function(node).map(Expression::ArrowFunctionExpression)
+            convert_arrow_function(node, false).map(Expression::ArrowFunctionExpression)
+        }
+
+        // Async arrow function (CLOC12.192). The grammar rule
+        // `async_arrow_function = "async" arrow_parameters ARROW concise_body`
+        // is the plain `arrow_function` shape plus a leading `async` literal, so
+        // `convert_arrow_function` handles its children unchanged (the `async`
+        // token is not a node) — we just set `is_async`. The AST and emitter
+        // already model async arrows; a body that requires `await` still
+        // declines separately (that grammar is not parseable yet).
+        "async_arrow_function" => {
+            convert_arrow_function(node, true).map(Expression::ArrowFunctionExpression)
         }
 
         // No-substitution template literal (CLOC12.155). `convert_template_literal`
@@ -1698,8 +2445,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
             convert_class_expression(node).map(Expression::ClassExpression)
         }
 
-        "async_arrow_function"
-        | "await_expression"
+        "await_expression"
         | "async_function_expression"
         | "async_generator_expression"
         | "tagged_template_expression"
@@ -1802,6 +2548,12 @@ fn parse_assignment_op(s: &str) -> Option<AssignmentOperator> {
         "|=" => Some(AssignmentOperator::BitOrEq),
         "^=" => Some(AssignmentOperator::BitXorEq),
         "&=" => Some(AssignmentOperator::BitAndEq),
+        // ES2021 logical assignment operators (CLOC12.183). These parse fine but
+        // previously fell through to `None`, mapping to an `InternalError` that
+        // dropped the whole file to WHITESPACE_ONLY.
+        "&&=" => Some(AssignmentOperator::LogicalAndEq),
+        "||=" => Some(AssignmentOperator::LogicalOrEq),
+        "??=" => Some(AssignmentOperator::NullishCoalescingEq),
         _ => None,
     }
 }
@@ -2921,13 +3673,39 @@ fn split_regex_literal(raw: &str) -> Option<(String, String)> {
 /// REGEX has `type_ = TokenType::Name` and `type_name = Some("REGEX")`.
 fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // Value-based checks first (keywords: this, true, false, null, undefined).
-    match t.value.as_str() {
-        "this" => return Ok(Expression::ThisExpression(ThisExpression { cv: t.cv.clone() })),
-        "null" => return Ok(Expression::NullLiteral(NullLiteral { cv: t.cv.clone() })),
-        "undefined" => return Ok(Expression::UndefinedLiteral(UndefinedLiteral { cv: t.cv.clone() })),
-        "true" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: t.cv.clone(), value: true })),
-        "false" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: t.cv.clone(), value: false })),
-        _ => {}
+    //
+    // These MUST be gated on the token TYPE: only an identifier-like token
+    // (`Name`/`Keyword`) may be reinterpreted as one of these keyword primaries.
+    // A `String`/`Number` *literal* token whose text happens to equal a keyword
+    // — a string whose content is `this`/`true`/`false`/`null`/`undefined`, or
+    // the value `"true"` in source — is NOT that keyword and must flow to the
+    // type-discriminant arms below (`TokenType::String` → `StringLiteral`, etc.).
+    // Without this gate `f("true")` mis-encodes to `f(true)` and `f("this")` to
+    // `f(this)` — a hard miscompile: a string argument silently becomes a
+    // boolean / the `this` value. (The reference Closure Compiler keeps the
+    // string.) Matching the documented design: "NUMBER/STRING/NAME are encoded
+    // in `t.type_`" — the value match is only for the keyword primaries.
+    if matches!(t.type_, TokenType::Name | TokenType::Keyword) {
+        match t.value.as_str() {
+            "this" => return Ok(Expression::ThisExpression(ThisExpression { cv: t.cv.clone() })),
+            "null" => return Ok(Expression::NullLiteral(NullLiteral { cv: t.cv.clone() })),
+            "undefined" => {
+                return Ok(Expression::UndefinedLiteral(UndefinedLiteral { cv: t.cv.clone() }))
+            }
+            "true" => {
+                return Ok(Expression::BooleanLiteral(BooleanLiteral {
+                    cv: t.cv.clone(),
+                    value: true,
+                }))
+            }
+            "false" => {
+                return Ok(Expression::BooleanLiteral(BooleanLiteral {
+                    cv: t.cv.clone(),
+                    value: false,
+                }))
+            }
+            _ => {}
+        }
     }
 
     // BIGINT: type_ == TokenType::Name but type_name == Some("BIGINT").
@@ -3113,38 +3891,35 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
     let nodes = node_children(node);
     let mut properties = Vec::new();
     for n in nodes {
-        match n.rule_name.as_str() {
-            "property_definition" => {
-                // A `property_definition` is either a normal member (`k: v`,
-                // shorthand `{x}`, getter/setter) or an **object spread** `...expr`
-                // (ES2018). Dumping the parse tree shows the spread form nests one
-                // level deeper than the call/array spread: the `property_definition`
-                // holds a single `object_spread_property` Node child whose own
-                // children are `[ Token("..."), Node(assignment_expression) ]`.
-                // (The call/array spread's ELLIPSIS sits directly under
-                // `spread_element` — a different rule.) So we detect the spread by
-                // that inner rule name, not `has_token` on `property_definition`.
-                // CLOC12.170 PR2, closes gap-SpreadProperty.
-                let spread = node_children(n)
-                    .into_iter()
-                    .find(|c| c.rule_name == "object_spread_property");
-                if let Some(spread_node) = spread {
-                    // `node_children` strips the ELLIPSIS token, leaving the single
-                    // `assignment_expression`. Reuse `SpreadElement` (the same node
-                    // the call/array spread uses) so it prints via `emit_object_spread`.
-                    let arg_n = node_children(spread_node).into_iter().next().ok_or_else(
-                        || internal(spread_node, "object spread: no argument expression"),
-                    )?;
-                    let argument = convert_expression(arg_n)?;
-                    properties.push(ObjectMember::Spread(SpreadElement {
-                        cv: None,
-                        argument: Box::new(argument),
-                    }));
-                } else {
-                    properties.push(ObjectMember::Property(convert_property_definition(n)?));
-                }
+        if n.rule_name.as_str() == "property_definition" {
+            // A `property_definition` is either a normal member (`k: v`,
+            // shorthand `{x}`, getter/setter) or an **object spread** `...expr`
+            // (ES2018). Dumping the parse tree shows the spread form nests one
+            // level deeper than the call/array spread: the `property_definition`
+            // holds a single `object_spread_property` Node child whose own
+            // children are `[ Token("..."), Node(assignment_expression) ]`.
+            // (The call/array spread's ELLIPSIS sits directly under
+            // `spread_element` — a different rule.) So we detect the spread by
+            // that inner rule name, not `has_token` on `property_definition`.
+            // CLOC12.170 PR2, closes gap-SpreadProperty.
+            let spread = node_children(n)
+                .into_iter()
+                .find(|c| c.rule_name == "object_spread_property");
+            if let Some(spread_node) = spread {
+                // `node_children` strips the ELLIPSIS token, leaving the single
+                // `assignment_expression`. Reuse `SpreadElement` (the same node
+                // the call/array spread uses) so it prints via `emit_object_spread`.
+                let arg_n = node_children(spread_node).into_iter().next().ok_or_else(
+                    || internal(spread_node, "object spread: no argument expression"),
+                )?;
+                let argument = convert_expression(arg_n)?;
+                properties.push(ObjectMember::Spread(SpreadElement {
+                    cv: None,
+                    argument: Box::new(argument),
+                }));
+            } else {
+                properties.push(ObjectMember::Property(convert_property_definition(n)?));
             }
-            _ => {}
         }
     }
     Ok(Expression::ObjectExpression(ObjectExpression { cv: None, properties }))
@@ -3165,13 +3940,16 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
         let val_n = nodes[1];
         let key = convert_property_key(key_n)?;
         let value = convert_expression(val_n)?;
+        // A computed key `[expr]` bridges to `PropertyKey::Expression`
+        // (CLOC12.180); the `computed` flag tracks exactly that variant.
+        let computed = matches!(&key, PropertyKey::Expression(_));
         return Ok(Property {
             cv: None,
             key,
             value: Box::new(value),
             kind: PropertyKind::Init,
             shorthand: false,
-            computed: false,
+            computed,
             method: false,
         });
     }
@@ -3220,11 +3998,19 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
     // real property name. The quote-vs-bare *emission* choice is then made
     // soundly in the emitter (`emit_property_key`), which only drops the quotes
     // when the decoded name is a valid identifier (and never for `__proto__`).
+    // A **computed** key `[expr]` — the `property_name` wraps the key expression
+    // between `[` and `]`. Convert the inner expression to
+    // `PropertyKey::Expression`; the emitter re-brackets it (CLOC12.180). The
+    // inner node is an `assignment_expression` (the same node a field
+    // initializer uses), routed through the shared `convert_expression`, so any
+    // unmodelled key expression DECLINES (safe WHITESPACE_ONLY fallback) rather
+    // than mis-emit.
     if has_token(node, "[") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "ComputedPropertyKey".to_string(),
-            location: loc(node),
-        });
+        let inner = node_children(node)
+            .into_iter()
+            .next()
+            .ok_or_else(|| internal(node, "computed key: missing key expression"))?;
+        return Ok(PropertyKey::Expression(Box::new(convert_expression(inner)?)));
     }
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
@@ -3317,7 +4103,52 @@ fn unquote_string(raw: &str) -> String {
             Some('\\') => result.push('\\'),
             Some('\'') => result.push('\''),
             Some('"') => result.push('"'),
-            Some('0') => result.push('\0'),
+            // Legacy octal escape `\NNN` (ECMAScript Annex B.1.2) — one to three
+            // octal digits denoting a code unit in `0..=255`. `\0`→NUL,
+            // `\101`→'A', `\012`→'\n'. A leading digit `0`–`3` admits up to
+            // THREE octal digits; a leading `4`–`7` admits at most TWO, so the
+            // decoded value never exceeds `0o377` (= 255) — matching the grammar
+            // productions (ZeroToThree may take two trailing octal digits,
+            // FourToSeven only one). The reference Closure Compiler decodes these
+            // to the raw character (`"\101"` → `"A"`), and closurec must
+            // round-trip the identical value; previously `\1`–`\7` fell through
+            // to the identity arm and `\NNN` survived undecoded — a miscompile
+            // (the string value was wrong, not just the spelling). Legacy octal
+            // is forbidden in strict-mode source, but sloppy string literals
+            // permit it, so the fold set must handle it.
+            Some(d @ '0'..='7') => {
+                // SAFETY of unwrap: `d` is a validated octal digit `0`–`7`.
+                let mut value = d.to_digit(8).expect("octal digit");
+                // Closure reads UP TO THREE octal digits regardless of the
+                // leading digit (value 0..=0o777=511), NOT the ECMAScript Annex
+                // B two-digit cap for a leading 4-7. Byte-identity requires we
+                // match Closure: `\401`->U+0101, `\777`->U+01FF (oracle-verified).
+                for _ in 0..2 {
+                    match chars.peek() {
+                        Some(&next @ '0'..='7') => {
+                            value = value * 8 + next.to_digit(8).expect("octal digit");
+                            chars.next();
+                        }
+                        _ => break,
+                    }
+                }
+                // `value` is at most 0o777 = 511, always a valid Unicode scalar.
+                if let Some(ch) = char::from_u32(value) {
+                    result.push(ch);
+                }
+            }
+            // NonOctalDecimalEscapeSequence (ECMAScript Annex B.1.2): `\8` and
+            // `\9` are NOT octal escapes — 8 and 9 are not octal digits, so the
+            // octal arm above (`'0'..='7'`) never matches them. In sloppy-mode
+            // string literals the backslash is simply dropped and the decimal
+            // digit is kept: `"\8"` → "8", `"\9"` → "9". The reference Closure
+            // Compiler decodes them this way (oracle-verified: `"\8\9"` → "89",
+            // `"z\8z"` → "z8z"). Previously they fell through to the generic
+            // `other` arm below, which KEEPS the backslash (`"\8"` → "\8"): a
+            // value miscompile, since the decoded string was two chars, not one.
+            // Strict mode forbids `\8`/`\9`, but sloppy string literals permit
+            // them, so the decode set must handle them.
+            Some(d @ ('8' | '9')) => result.push(d),
             Some('b') => result.push('\x08'),
             Some('f') => result.push('\x0C'),
             Some('v') => result.push('\x0B'),
@@ -3357,10 +4188,19 @@ fn unquote_string(raw: &str) -> String {
             }
             // Line continuation: backslash followed by newline.
             Some('\n') | Some('\r') => {}
-            Some(other) => {
-                result.push('\\');
-                result.push(other);
-            }
+            // Any other escape is a NonEscapeCharacter (ECMAScript IdentityEscape):
+            // the backslash is dropped and the character is kept, so `"\q"` → "q",
+            // `"\/"` → "/", `"\<"` → "<", etc. The reference Closure Compiler drops
+            // the backslash uniformly for every character that reaches this arm
+            // (oracle-verified across letters and punctuation `\/ \< \? \! \@ \: \;
+            // \, \. \| \~ \= \[ \] \(`). All the SPECIAL escapes — `n r t b f v x u`,
+            // the quotes/backslash `' " \`, the octal digits `0`–`7`, the
+            // NonOctalDecimal `8`/`9`, and the line-continuation newline — have their
+            // own arms above and never reach here. Previously this arm KEPT the
+            // backslash (`"\q"` decoded to the two-char `\q`), a value miscompile;
+            // this generalizes the `\8`/`\9` fix (0.61.0) to the full IdentityEscape
+            // set.
+            Some(other) => result.push(other),
             None => result.push('\\'),
         }
     }
@@ -3375,15 +4215,409 @@ fn unquote_string(raw: &str) -> String {
 mod tests {
     use super::*;
     use crate::{parse_javascript_typed, DEFAULT_ES_VERSION};
-    use coding_adventures_javascript_tokens::EsVersion;
 
     fn bridge(src: &str) -> Result<Program, BridgeError> {
         let node = parse_javascript_typed(src, DEFAULT_ES_VERSION).expect("parse failed");
         grammar_to_program(&node, DEFAULT_ES_VERSION)
     }
 
+    /// Pull the sole `ArrowFunctionExpression` out of `x = <arrow>;`.
+    fn arrow_of(src: &str) -> ArrowFunctionExpression {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => match &*a.right {
+                Expression::ArrowFunctionExpression(f) => f.clone(),
+                other => panic!("expected ArrowFunctionExpression RHS, got {other:?}"),
+            },
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_empty_block_body_bridges() {
+        // `() => {}` — the grammar buckets the bare `{}` as an empty
+        // object_literal, but per the ES spec `=> {}` is an EMPTY BLOCK body.
+        // CLOC12.184 reinterprets it as `ArrowBody::Block` with no statements,
+        // instead of declining to WHITESPACE_ONLY.
+        let f = arrow_of("x = () => {};");
+        assert!(f.params.is_empty());
+        match &f.body {
+            ArrowBody::Block(b) => assert!(b.body.is_empty(), "expected empty block"),
+            other => panic!("expected an empty block body, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_paren_object_body_bridges() {
+        // `() => ({})` / `() => ({a:1})` — a parenthesised object-literal
+        // EXPRESSION body (leads with `(`). Distinct from the bare block `=> {}`;
+        // bridges to `ArrowBody::Expression(ObjectExpression)` (CLOC12.185). The
+        // emitter re-wraps the object in parens so it is never misread as a block.
+        for src in ["x = () => ({});", "x = () => ({a:1});"] {
+            let f = arrow_of(src);
+            assert!(f.params.is_empty());
+            match &f.body {
+                ArrowBody::Expression(e) => assert!(
+                    matches!(&**e, Expression::ObjectExpression(_)),
+                    "expected an object-expression body for {src}"
+                ),
+                other => panic!("expected an object-expression body for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn arrow_nonempty_brace_body_still_declines() {
+        // `() => {a:1}` — a non-empty `{…}` the grammar mis-buckets as an object
+        // literal. Its contents would need re-parsing as statements, so it stays
+        // declined (a later slice), never a mis-emit.
+        assert!(matches!(
+            bridge("x = () => {a:1};"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
     fn bridge_ok(src: &str) -> Program {
         bridge(src).unwrap_or_else(|e| panic!("bridge failed for {:?}: {e}", src))
+    }
+
+    /// Pull the sole `ImportDeclaration` out of a single-item program.
+    fn import_of(src: &str) -> ImportDeclaration {
+        let p = bridge_ok(src);
+        match p.body.first() {
+            Some(ProgramItem::Declaration(Declaration::ImportDeclaration(i))) => i.clone(),
+            other => panic!("expected an ImportDeclaration for {src}, got {other:?}"),
+        }
+    }
+
+    /// Pull the sole `FunctionDeclaration` out of a single-item program.
+    fn fn_of(src: &str) -> FunctionDeclaration {
+        let p = bridge_ok(src);
+        match p.body.first() {
+            Some(ProgramItem::Declaration(Declaration::FunctionDeclaration(f))) => f.clone(),
+            other => panic!("expected a FunctionDeclaration for {src}, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rest_parameter_bridges() {
+        // `function f(...args){}` — CLOC12.190 PR2. The lone `...args` bridges to
+        // a `FunctionParam::RestElement` binding the name `args`, instead of the
+        // whole file declining to WHITESPACE_ONLY.
+        let f = fn_of("function f(...args){}");
+        assert_eq!(f.params.len(), 1);
+        match &f.params[0] {
+            FunctionParam::RestElement(re) => assert_eq!(re.argument.name, "args"),
+            other => panic!("expected a RestElement param, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fixed_then_rest_parameter_bridges() {
+        // `function f(a, ...rest){}` — the fixed `a` stays an Identifier param and
+        // the trailing `...rest` bridges to a RestElement, in order.
+        let f = fn_of("function f(a, ...rest){}");
+        assert_eq!(f.params.len(), 2);
+        match &f.params[0] {
+            FunctionParam::Identifier(id) => assert_eq!(id.name, "a"),
+            other => panic!("expected Identifier for param 0, got {other:?}"),
+        }
+        match &f.params[1] {
+            FunctionParam::RestElement(re) => assert_eq!(re.argument.name, "rest"),
+            other => panic!("expected RestElement for param 1, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rest_destructuring_param_declines_gracefully() {
+        // `function f(...[a, b]){}` — a destructuring rest target is Phase 3, so
+        // the bridge declines (the whole program falls back to WHITESPACE_ONLY)
+        // rather than mis-modelling it. A decline is an Err, never a panic.
+        assert!(
+            bridge("function f(...[a, b]){}").is_err(),
+            "destructuring rest param should decline, not bridge"
+        );
+    }
+
+    #[test]
+    fn default_parameter_bridges() {
+        // `function f(a = 1){}` — CLOC12.191 PR2. The `a = 1` bridges to a
+        // `FunctionParam::AssignmentPattern` binding `a` with a numeric-literal
+        // default, instead of the whole file declining to WHITESPACE_ONLY.
+        let f = fn_of("function f(a = 1){}");
+        assert_eq!(f.params.len(), 1);
+        match &f.params[0] {
+            FunctionParam::AssignmentPattern(ap) => {
+                assert_eq!(ap.left.name, "a");
+                match &ap.right {
+                    Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+                    other => panic!("expected a numeric-literal default, got {other:?}"),
+                }
+            }
+            other => panic!("expected an AssignmentPattern param, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fixed_then_default_parameter_bridges() {
+        // `function f(a, b = 2){}` — the fixed `a` stays an Identifier param and
+        // `b = 2` bridges to an AssignmentPattern, in order.
+        let f = fn_of("function f(a, b = 2){}");
+        assert_eq!(f.params.len(), 2);
+        match &f.params[0] {
+            FunctionParam::Identifier(id) => assert_eq!(id.name, "a"),
+            other => panic!("expected Identifier for param 0, got {other:?}"),
+        }
+        match &f.params[1] {
+            FunctionParam::AssignmentPattern(ap) => assert_eq!(ap.left.name, "b"),
+            other => panic!("expected AssignmentPattern for param 1, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn default_parameter_expression_bridges_unfolded() {
+        // `function f(a = 1 + 2){}` — the default's `right` is a full expression
+        // (a `BinaryExpression`), NOT pre-folded: the bridge only models the
+        // shape; constant-fold does the folding downstream. This is the whole
+        // point of `right` being an Expression rather than a literal.
+        let f = fn_of("function f(a = 1 + 2){}");
+        match &f.params[0] {
+            FunctionParam::AssignmentPattern(ap) => {
+                assert_eq!(ap.left.name, "a");
+                assert!(
+                    matches!(ap.right, Expression::BinaryExpression(_)),
+                    "default `1 + 2` must bridge as an (unfolded) BinaryExpression, got {:?}",
+                    ap.right
+                );
+            }
+            other => panic!("expected an AssignmentPattern param, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn destructuring_default_param_declines_gracefully() {
+        // `function f({x} = {}){}` — a destructuring target WITH a default reuses
+        // the Phase-3 binding-pattern machinery, so the bridge declines (falls
+        // back to WHITESPACE_ONLY) via the `binding_pattern` guard rather than
+        // mis-modelling it. A decline is an Err, never a panic.
+        assert!(
+            bridge("function f({x} = {}){}").is_err(),
+            "destructuring default param should decline, not bridge"
+        );
+    }
+
+    #[test]
+    fn bridge_side_effect_import() {
+        // `import "y";` — no specifiers, source "y".
+        let i = import_of("import \"y\";");
+        assert!(i.specifiers.is_empty());
+        assert_eq!(i.source.value, "y");
+    }
+
+    #[test]
+    fn bridge_default_import() {
+        // `import x from "y";` — one Default specifier.
+        let i = import_of("import x from \"y\";");
+        assert_eq!(i.source.value, "y");
+        assert_eq!(i.specifiers.len(), 1);
+        match &i.specifiers[0] {
+            ImportSpecifier::Default(id) => assert_eq!(id.name, "x"),
+            other => panic!("expected Default, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_namespace_import() {
+        // `import * as ns from "y";` — one Namespace specifier.
+        let i = import_of("import * as ns from \"y\";");
+        match &i.specifiers[..] {
+            [ImportSpecifier::Namespace(id)] => assert_eq!(id.name, "ns"),
+            other => panic!("expected [Namespace], got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_named_imports_plain_and_aliased() {
+        // `import {a, b as c} from "y";` — `a` binds a→a, `b as c` binds b→c.
+        let i = import_of("import {a, b as c} from \"y\";");
+        match &i.specifiers[..] {
+            [
+                ImportSpecifier::Named { imported: i0, local: l0 },
+                ImportSpecifier::Named { imported: i1, local: l1 },
+            ] => {
+                assert_eq!((i0.name.as_str(), l0.name.as_str()), ("a", "a"));
+                assert_eq!((i1.name.as_str(), l1.name.as_str()), ("b", "c"));
+            }
+            other => panic!("expected two Named specifiers, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_default_plus_named_import() {
+        // `import x, {a} from "y";` — Default then Named.
+        let i = import_of("import x, {a} from \"y\";");
+        match &i.specifiers[..] {
+            [
+                ImportSpecifier::Default(d),
+                ImportSpecifier::Named { imported, local },
+            ] => {
+                assert_eq!(d.name, "x");
+                assert_eq!((imported.name.as_str(), local.name.as_str()), ("a", "a"));
+            }
+            other => panic!("expected [Default, Named], got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_default_plus_namespace_import_declines() {
+        // `import x, * as ns from "y";` is a grammar gap — the parser rejects
+        // the default+namespace combination at the parse layer (before the
+        // bridge ever runs), so the whole file declines rather than
+        // mis-bridging.
+        assert!(parse_javascript_typed("import x, * as ns from \"y\";", DEFAULT_ES_VERSION).is_err());
+    }
+
+    /// Pull the sole `Declaration::Export*` out of a single-item program.
+    fn export_of(src: &str) -> Declaration {
+        let p = bridge_ok(src);
+        match p.body.first() {
+            Some(ProgramItem::Declaration(
+                d @ (Declaration::ExportNamedDeclaration(_)
+                | Declaration::ExportDefaultDeclaration(_)
+                | Declaration::ExportAllDeclaration(_)),
+            )) => d.clone(),
+            other => panic!("expected an Export* declaration for {src}, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_named_plain_and_aliased() {
+        // `export {a, b as c};` — `a` → local=exported=a, `b as c` → local=b,
+        // exported=c; no inner declaration, no source.
+        match export_of("export {a, b as c};") {
+            Declaration::ExportNamedDeclaration(e) => {
+                assert!(e.declaration.is_none());
+                assert!(e.source.is_none());
+                match &e.specifiers[..] {
+                    [s0, s1] => {
+                        assert_eq!((s0.local.name.as_str(), s0.exported.name.as_str()), ("a", "a"));
+                        assert_eq!((s1.local.name.as_str(), s1.exported.name.as_str()), ("b", "c"));
+                    }
+                    other => panic!("expected two specifiers, got {other:?}"),
+                }
+            }
+            other => panic!("expected ExportNamedDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_named_reexport() {
+        // `export {a} from "y";` — carries a re-export source.
+        match export_of("export {a} from \"y\";") {
+            Declaration::ExportNamedDeclaration(e) => {
+                assert_eq!(e.specifiers.len(), 1);
+                assert_eq!(e.source.as_ref().map(|s| s.value.as_str()), Some("y"));
+            }
+            other => panic!("expected ExportNamedDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_all() {
+        // `export * from "y";` — bare re-export-all, no namespace binding.
+        match export_of("export * from \"y\";") {
+            Declaration::ExportAllDeclaration(e) => {
+                assert!(e.exported.is_none());
+                assert_eq!(e.source.value, "y");
+            }
+            other => panic!("expected ExportAllDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_default_expression() {
+        // `export default 1;` — an expression operand.
+        match export_of("export default 1;") {
+            Declaration::ExportDefaultDeclaration(e) => assert!(matches!(
+                e.declaration,
+                ExportDefaultKind::Expression(_)
+            )),
+            other => panic!("expected ExportDefaultDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_default_function_and_class() {
+        match export_of("export default function f(){}") {
+            Declaration::ExportDefaultDeclaration(e) => assert!(matches!(
+                e.declaration,
+                ExportDefaultKind::FunctionDeclaration(_)
+            )),
+            other => panic!("expected ExportDefaultDeclaration(fn), got {other:?}"),
+        }
+        match export_of("export default class C{}") {
+            Declaration::ExportDefaultDeclaration(e) => assert!(matches!(
+                e.declaration,
+                ExportDefaultKind::ClassDeclaration(_)
+            )),
+            other => panic!("expected ExportDefaultDeclaration(class), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_declaration_const_var_function_class() {
+        // `export const x = 1;` / `export var v = 1;` / `export function f(){}` /
+        // `export class C {}` — each wraps its inner declaration.
+        for (src, want) in [
+            ("export const x = 1;", "var"),
+            ("export var v = 1;", "var"),
+            ("export function f(){}", "fn"),
+            ("export class C {}", "class"),
+        ] {
+            match export_of(src) {
+                Declaration::ExportNamedDeclaration(e) => {
+                    assert!(e.specifiers.is_empty());
+                    assert!(e.source.is_none());
+                    let got = match e.declaration.as_deref() {
+                        Some(Declaration::VariableDeclaration(_)) => "var",
+                        Some(Declaration::FunctionDeclaration(_)) => "fn",
+                        Some(Declaration::ClassDeclaration(_)) => "class",
+                        other => panic!("unexpected inner decl for {src}: {other:?}"),
+                    };
+                    assert_eq!(got, want, "for {src}");
+                }
+                other => panic!("expected ExportNamedDeclaration for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn bridge_export_star_as_namespace_declines() {
+        // `export * as ns from "y";` is a grammar gap — rejected at the parse
+        // layer, so the file declines rather than mis-bridging.
+        assert!(parse_javascript_typed("export * as ns from \"y\";", DEFAULT_ES_VERSION).is_err());
+    }
+
+    /// Pull the `AssignmentExpression` operator out of `<lhs> <op> <rhs>;`.
+    fn assign_op_of(src: &str) -> AssignmentOperator {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => a.operator,
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn logical_assignment_operators_bridge() {
+        // ES2021 `&&=` / `||=` / `??=` parse fine but previously mapped to an
+        // InternalError ("unknown assignment operator"), dropping the file to
+        // WHITESPACE_ONLY. They now bridge to their own operator variants
+        // (CLOC12.183).
+        assert_eq!(assign_op_of("a &&= b;"), AssignmentOperator::LogicalAndEq);
+        assert_eq!(assign_op_of("a ||= b;"), AssignmentOperator::LogicalOrEq);
+        assert_eq!(assign_op_of("a ??= b;"), AssignmentOperator::NullishCoalescingEq);
+        // A neighbouring bitwise `&=` must still map to its own (distinct) variant.
+        assert_eq!(assign_op_of("a &= b;"), AssignmentOperator::BitAndEq);
     }
 
     /// Pull the `RegExpLiteral` out of `x = <regex>;` so the regex tests can
@@ -3456,7 +4690,7 @@ mod tests {
     fn class_method() {
         let c = class_of("x = class { m(a,b){return a} };");
         assert_eq!(c.body.len(), 1);
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Method);
         assert!(!m.is_static);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m"));
@@ -3468,14 +4702,14 @@ mod tests {
         // A single param parses as a direct `formal_parameter` (no wrapper);
         // it must still be collected.
         let c = class_of("x = class { m(v){return v} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.value.params.len(), 1);
     }
 
     #[test]
     fn class_static_method() {
         let c = class_of("x = class { static m(){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert!(m.is_static);
         assert_eq!(m.kind, MethodKind::Method);
     }
@@ -3483,7 +4717,7 @@ mod tests {
     #[test]
     fn class_getter() {
         let c = class_of("x = class { get g(){return 1} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Get);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "g"));
     }
@@ -3491,7 +4725,7 @@ mod tests {
     #[test]
     fn class_setter() {
         let c = class_of("x = class { set s(v){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Set);
         assert_eq!(m.value.params.len(), 1);
     }
@@ -3502,7 +4736,7 @@ mod tests {
         // puts the `property_name` node first (no leading accessor token), so
         // the bridge must classify it as an ordinary method.
         let c = class_of("x = class { get(){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Method);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "get"));
     }
@@ -3510,7 +4744,7 @@ mod tests {
     #[test]
     fn class_constructor() {
         let c = class_of("x = class { constructor(a){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Constructor);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "constructor"));
     }
@@ -3521,34 +4755,509 @@ mod tests {
         // non-static `constructor` member is. (Legal JS: a static method may be
         // named `constructor`.)
         let c = class_of("x = class { static constructor(){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert!(m.is_static);
         assert_eq!(m.kind, MethodKind::Method);
     }
 
     #[test]
-    fn class_computed_key_declines() {
-        // Computed `[k]()` keys are a later slice; the bridge DECLINES (the file
-        // then falls back to WHITESPACE_ONLY — never a miscompile).
-        assert!(matches!(
-            bridge("x = class { [k](){} };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_computed_method_key() {
+        // `[k](){}` — a computed method key bridges to `PropertyKey::Expression`
+        // and sets `computed: true` (CLOC12.180).
+        let c = class_of("x = class { [k](){} };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.computed);
+        assert!(matches!(&m.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
     }
 
     #[test]
-    fn class_generator_method_declines() {
-        // `*gen(){}` carries generator semantics not modelled here — DECLINE.
-        assert!(matches!(
-            bridge("x = class { *gen(){} };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_generator_method_bridges() {
+        // `*gen(){}` — a generator method bridges (CLOC12.181): plain method
+        // `kind`, and the value's `generator` flag is set so the emitter reprints
+        // the `*`. `yield` in the body is a modelled `YieldExpression`.
+        let c = class_of("x = class { *gen(){ yield 1 } };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert_eq!(m.kind, MethodKind::Method);
+        assert!(m.value.generator);
+        assert!(!m.value.is_async);
+        assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "gen"));
+    }
+
+    #[test]
+    fn class_static_generator_method_bridges() {
+        // `static *gen(){}` — the `static` modifier lives on the enclosing
+        // `class_element`; the `*` still sets the generator flag.
+        let c = class_of("x = class { static *gen(){} };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.is_static);
+        assert!(m.value.generator);
+        assert_eq!(m.kind, MethodKind::Method);
     }
 
     #[test]
     fn class_async_method_declines() {
         assert!(matches!(
             bridge("x = class { async am(){} };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    // -----------------------------------------------------------------
+    // ClassMember::Field bridging (CLOC12.175 PR2)
+    // -----------------------------------------------------------------
+
+    /// Pull the sole `ClassMember::Field` out of `x = class { <field> };`.
+    fn field_of(src: &str) -> PropertyDefinition {
+        let c = class_of(src);
+        assert_eq!(c.body.len(), 1, "expected exactly one member");
+        match &c.body[0] {
+            ClassMember::Field(f) => f.clone(),
+            other => panic!("expected a field member, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_field_with_initializer() {
+        // `x = 1;` — an identifier key with a numeric initializer.
+        let f = field_of("y = class { x = 1; };");
+        assert!(!f.is_static);
+        assert!(!f.computed);
+        assert!(matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x"));
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_bare_field_has_no_value() {
+        // `y;` — a bare field with no initializer maps to `value: None`.
+        let f = field_of("z = class { y; };");
+        assert!(matches!(&f.key, PropertyKey::Identifier(id) if id.name == "y"));
+        assert!(f.value.is_none());
+    }
+
+    #[test]
+    fn class_static_field() {
+        // `static z = 2;` — the field's OWN `static` token (inside
+        // `class_field_declaration`, not on the `class_element`).
+        let f = field_of("w = class { static z = 2; };");
+        assert!(f.is_static);
+        assert!(matches!(&f.key, PropertyKey::Identifier(id) if id.name == "z"));
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 2.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_string_key_field() {
+        // A quoted key decodes to a `StringLiteral` key (the emitter later
+        // decides quote-vs-bare); the initializer is an identifier reference.
+        let f = field_of("w = class { \"a-b\" = q; };");
+        match &f.key {
+            PropertyKey::StringLiteral(s) => assert_eq!(s.value, "a-b"),
+            other => panic!("expected a string key, got {other:?}"),
+        }
+        assert!(matches!(&f.value, Some(Expression::Identifier(id)) if id.name == "q"));
+    }
+
+    #[test]
+    fn class_field_and_method_interleave() {
+        // A field and a method coexist in one body, in source order.
+        let c = class_of("w = class { x = 1; m(){} };");
+        assert_eq!(c.body.len(), 2);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::Method(m)
+            if matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m")));
+    }
+
+    #[test]
+    fn class_computed_field_key() {
+        // `[k] = v;` — a computed field key bridges to `PropertyKey::Expression`
+        // with `computed: true`, and the initializer is preserved (CLOC12.180).
+        let f = field_of("w = class { [k] = v; };");
+        assert!(f.computed);
+        assert!(matches!(&f.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
+        assert!(matches!(&f.value, Some(Expression::Identifier(id)) if id.name == "v"));
+    }
+
+    #[test]
+    fn object_computed_key() {
+        // `{ [k]: v }` — an object computed key also bridges to
+        // `PropertyKey::Expression` with `computed: true`.
+        let p = bridge_ok("x = { [k]: v };");
+        let Expression::AssignmentExpression(a) = first_expr(&p) else {
+            panic!("expected assignment")
+        };
+        let Expression::ObjectExpression(o) = &*a.right else { panic!("expected object") };
+        let ObjectMember::Property(prop) = &o.properties[0] else { panic!("expected property") };
+        assert!(prop.computed);
+        assert!(matches!(&prop.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
+    }
+
+    #[test]
+    fn class_private_field_with_initializer() {
+        // `#x = 1;` — a private field carries a bare `PRIVATE_NAME` token instead
+        // of a `property_name` node; the bridge lowers it to
+        // `PropertyKey::PrivateName` with the leading `#` stripped (CLOC12.177 PR2).
+        let f = field_of("w = class { #x = 1; };");
+        assert!(!f.is_static);
+        assert!(!f.computed);
+        assert!(
+            matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"),
+            "expected a private-name key `#x` (stored bare), got {:?}",
+            f.key
+        );
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_bare_private_field() {
+        // `#x;` — a bare private field, no initializer.
+        let f = field_of("z = class { #x; };");
+        assert!(matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert!(f.value.is_none());
+    }
+
+    #[test]
+    fn class_static_private_field() {
+        // `static #x = 1;` — the `static` token precedes the `#x` PRIVATE_NAME
+        // token; `is_static` is set and the key is still a private name.
+        let f = field_of("w = class { static #x = 1; };");
+        assert!(f.is_static);
+        assert!(matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_private_and_public_field_interleave() {
+        // A private field and a public field coexist in source order, each with
+        // the right key kind.
+        let c = class_of("w = class { #x = 1; y = 2; };");
+        assert_eq!(c.body.len(), 2);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "y")));
+    }
+
+    /// Pull the sole `ClassMember::Method` out of `x = class { … };`.
+    fn method_of(src: &str) -> MethodDefinition {
+        let c = class_of(src);
+        assert_eq!(c.body.len(), 1, "expected exactly one member");
+        match &c.body[0] {
+            ClassMember::Method(m) => m.clone(),
+            other => panic!("expected a method member, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_private_method() {
+        // `#m(){}` — a private method is a separate `private_method_definition`
+        // grammar node; the bridge lowers it to a `ClassMember::Method` whose key
+        // is a `PropertyKey::PrivateName` (CLOC12.178 PR1).
+        let m = method_of("w = class { #m(){} };");
+        assert!(!m.is_static);
+        assert!(!m.computed);
+        assert!(matches!(m.kind, MethodKind::Method));
+        assert!(
+            matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m"),
+            "expected a private-name key `#m` (stored bare), got {:?}",
+            m.key
+        );
+        assert!(m.value.params.is_empty());
+        assert!(m.value.body.body.is_empty());
+    }
+
+    #[test]
+    fn class_private_method_with_params_and_body() {
+        // `#add(a,b){ return a+b; }` — params and a body are collected.
+        let m = method_of("w = class { #add(a, b){ return a + b; } };");
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "add"));
+        assert_eq!(m.value.params.len(), 2);
+        assert_eq!(m.value.body.body.len(), 1);
+    }
+
+    #[test]
+    fn class_static_private_method() {
+        // `static #m(){}` — the `static` keyword lives INSIDE the
+        // `private_method_definition` node (unlike a public method's `static`,
+        // which sits on the `class_element`); `is_static` is read from there.
+        let m = method_of("w = class { static #m(){} };");
+        assert!(m.is_static);
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m"));
+    }
+
+    #[test]
+    fn class_private_method_and_field_interleave() {
+        // A private method and a private field coexist in source order.
+        let c = class_of("w = class { #x = 1; #m(){} };");
+        assert_eq!(c.body.len(), 2);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::Method(m)
+            if matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m")));
+    }
+
+    #[test]
+    fn class_private_getter() {
+        // `get #x(){}` — a private getter lowers to a `MethodKind::Get` method
+        // with a private-name key (CLOC12.179).
+        let m = method_of("w = class { get #x(){} };");
+        assert!(matches!(m.kind, MethodKind::Get));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert!(m.value.params.is_empty());
+    }
+
+    #[test]
+    fn class_private_setter() {
+        // `set #x(v){}` — a private setter lowers to a `MethodKind::Set` method
+        // with a private-name key and its single parameter.
+        let m = method_of("w = class { set #x(v){} };");
+        assert!(matches!(m.kind, MethodKind::Set));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert_eq!(m.value.params.len(), 1);
+    }
+
+    #[test]
+    fn class_static_private_getter() {
+        // `static get #x(){}` — the `static` and `get` keywords both precede the
+        // private key inside the node.
+        let m = method_of("w = class { static get #x(){} };");
+        assert!(m.is_static);
+        assert!(matches!(m.kind, MethodKind::Get));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+    }
+
+    #[test]
+    fn class_private_generator() {
+        // `*#m(){}` — a private *generator* bridges (CLOC12.182): a plain
+        // `MethodKind::Method` with a private-name key whose value's `generator`
+        // flag is set so the emitter reprints the `*`. `yield` in the body is a
+        // modelled `YieldExpression`.
+        let m = method_of("w = class { *#m(){ yield 1 } };");
+        assert!(matches!(m.kind, MethodKind::Method));
+        assert!(m.value.generator);
+        assert!(!m.value.is_async);
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m"));
+    }
+
+    #[test]
+    fn class_static_private_generator() {
+        // `static *#m(){}` — the `static` and `*` markers both precede the
+        // private key inside the node; the generator flag is still set.
+        let m = method_of("w = class { static *#m(){} };");
+        assert!(m.is_static);
+        assert!(m.value.generator);
+        assert!(matches!(m.kind, MethodKind::Method));
+    }
+
+    #[test]
+    fn class_private_async_method_declines() {
+        // `async #m(){}` — a private *async* method carries `await` semantics not
+        // yet modelled (grammar-blocked); it still DECLINES (safe WHITESPACE_ONLY),
+        // never a mis-emit.
+        assert!(matches!(
+            bridge("w = class { async #m(){} };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    // -----------------------------------------------------------------
+    // ClassMember::StaticBlock bridging (CLOC12.176 PR2)
+    // -----------------------------------------------------------------
+
+    /// Pull the sole `ClassMember::StaticBlock` body out of
+    /// `x = class { static { … } };`.
+    fn static_block_of(src: &str) -> BlockStatement {
+        let c = class_of(src);
+        assert_eq!(c.body.len(), 1, "expected exactly one member");
+        match &c.body[0] {
+            ClassMember::StaticBlock(b) => b.clone(),
+            other => panic!("expected a static-block member, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_static_block_empty() {
+        // `static {}` — an empty static block maps to an empty body. The block's
+        // OWN leading `static` token (inside `static_block`, not on the
+        // `class_element`) needs no handling.
+        let b = static_block_of("y = class { static {} };");
+        assert!(b.body.is_empty());
+    }
+
+    #[test]
+    fn class_static_block_with_statement() {
+        // `static { x = 1; }` — one expression statement in the body.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let b = static_block_of("y = class { static { x = 1; } };");
+        assert_eq!(b.body.len(), 1);
+        assert!(matches!(
+            &b.body[0],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+    }
+
+    #[test]
+    fn class_static_block_with_declaration() {
+        // `static { let z = 2; }` — a lexical declaration in a static block maps
+        // to `Statement::Declaration` via the shared statement converter, proving
+        // the full statement surface (not just expressions) is reachable.
+        let b = static_block_of("y = class { static { let z = 2; } };");
+        assert_eq!(b.body.len(), 1);
+        assert!(matches!(
+            &b.body[0],
+            Statement::Declaration(Declaration::VariableDeclaration(_))
+        ));
+    }
+
+    #[test]
+    fn class_static_block_multiple_statements() {
+        // `static { x = 1; y = 2; }` — statement order is preserved.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let b = static_block_of("y = class { static { x = 1; y = 2; } };");
+        assert_eq!(b.body.len(), 2);
+        assert!(b
+            .body
+            .iter()
+            .all(|s| matches!(s, Statement::Tagged(TaggedStatement::ExpressionStatement(_)))));
+    }
+
+    #[test]
+    fn class_static_block_and_field_interleave() {
+        // A static block and a field coexist in one body, in source order.
+        let c = class_of("w = class { x = 1; static { y = 2; } m(){} };");
+        assert_eq!(c.body.len(), 3);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::StaticBlock(b) if b.body.len() == 1));
+        assert!(matches!(&c.body[2], ClassMember::Method(m)
+            if matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m")));
+    }
+
+    #[test]
+    fn class_field_declaration_form() {
+        // The field surface works in *declaration* position too (the body
+        // conversion is shared between class expression and declaration).
+        let c = class_decl_of("class C { x = 1; }");
+        assert_eq!(c.body.len(), 1);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x")));
+    }
+
+    // -----------------------------------------------------------------
+    // ClassDeclaration bridging (CLOC12.174 PR2)
+    // -----------------------------------------------------------------
+
+    /// Pull the `ClassDeclaration` out of a top-level `class … { … }` statement.
+    fn class_decl_of(src: &str) -> ClassDeclaration {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Declaration(Declaration::ClassDeclaration(c)) => c.clone(),
+            other => panic!("expected a ClassDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_decl_empty() {
+        let c = class_decl_of("class C {}");
+        assert_eq!(c.id.name, "C");
+        assert!(c.super_class.is_none());
+        assert!(c.body.is_empty());
+    }
+
+    #[test]
+    fn class_decl_extends_identifier() {
+        let c = class_decl_of("class C extends B {}");
+        assert_eq!(c.id.name, "C");
+        match c.super_class.as_deref() {
+            Some(Expression::Identifier(id)) => assert_eq!(id.name, "B"),
+            other => panic!("expected Identifier super-class, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_decl_extends_member() {
+        // `extends ns.B` — heritage is a member expression (a node operand).
+        let c = class_decl_of("class C extends ns.B {}");
+        assert!(matches!(
+            c.super_class.as_deref(),
+            Some(Expression::MemberExpression(_))
+        ));
+    }
+
+    #[test]
+    fn class_decl_single_method() {
+        let c = class_decl_of("class C { m(){} }");
+        assert_eq!(c.body.len(), 1);
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(matches!(m.kind, MethodKind::Method));
+        assert!(!m.is_static);
+        match &m.key {
+            PropertyKey::Identifier(id) => assert_eq!(id.name, "m"),
+            other => panic!("expected identifier key, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_decl_static_method() {
+        let c = class_decl_of("class C { static m(){} }");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.is_static);
+    }
+
+    #[test]
+    fn class_decl_constructor() {
+        let c = class_decl_of("class C { constructor(){} }");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(matches!(m.kind, MethodKind::Constructor));
+    }
+
+    #[test]
+    fn class_decl_getter_setter() {
+        let g = class_decl_of("class C { get x(){} }");
+        let ClassMember::Method(gm) = &g.body[0] else { panic!("expected a method member") };
+        assert!(matches!(gm.kind, MethodKind::Get));
+        let s = class_decl_of("class C { set x(v){} }");
+        let ClassMember::Method(sm) = &s.body[0] else { panic!("expected a method member") };
+        assert!(matches!(sm.kind, MethodKind::Set));
+    }
+
+    #[test]
+    fn class_decl_full_shape() {
+        // `class C extends B { m(){} }` — name + heritage + one member together.
+        let c = class_decl_of("class C extends B { m(){} }");
+        assert_eq!(c.id.name, "C");
+        assert!(c.super_class.is_some());
+        assert_eq!(c.body.len(), 1);
+    }
+
+    #[test]
+    fn class_decl_generator_method_bridges() {
+        // `*m(){}` in a class *declaration* bridges (CLOC12.181): the value's
+        // `generator` flag is set so the emitter reprints the `*`.
+        let c = class_decl_of("class C { *m(){} }");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.value.generator);
+        assert_eq!(m.kind, MethodKind::Method);
+    }
+
+    #[test]
+    fn class_decl_async_method_declines() {
+        assert!(matches!(
+            bridge("class C { async am(){} }"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
     }
@@ -3653,6 +5362,153 @@ mod tests {
             }
             _ => panic!("expected ExpressionStatement"),
         }
+    }
+
+    /// A STRING literal whose *content* is a keyword must bridge to a
+    /// `StringLiteral`, never to the keyword primary. `convert_primary_token`
+    /// used to match `t.value` before the type discriminant, so `"true"` became
+    /// `BooleanLiteral(true)` and `"this"` became `ThisExpression` — a hard
+    /// miscompile: `f("true")` would call `f` with the boolean, `f("this")` with
+    /// the `this` value. The value match is now gated on the token *type*.
+    #[test]
+    fn string_literal_with_keyword_content_stays_a_string() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        for (src, want) in [
+            ("\"true\";", "true"),
+            ("\"false\";", "false"),
+            ("\"null\";", "null"),
+            ("\"undefined\";", "undefined"),
+            ("\"this\";", "this"),
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral({want:?}) for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn legacy_octal_string_escapes_decode() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        // `\NNN` (ECMAScript Annex B.1.2) decodes to the code unit `0..=255`.
+        // A leading digit 0-3 admits up to three octal digits; 4-7 admits two.
+        for (src, want) in [
+            (r#""\101";"#, "A"),        // 0o101 = 65 = 'A'
+            (r#""\0";"#, "\u{0}"),      // NUL — the lone-`\0` case still works
+            (r#""\012";"#, "\n"),       // 0o12 = 10 = LF
+            (r#""\7";"#, "\u{7}"),      // single octal digit
+            (r#""\77";"#, "?"),         // 0o77 = 63 = '?'
+            (r#""\377";"#, "\u{ff}"),   // the max, 0o377 = 255
+            (r#""\40";"#, " "),         // 0o40 = 32 = space
+            (r#""a\101b";"#, "aAb"),    // mid-string
+            (r#""\1010";"#, "A0"),      // 0o101='A' then a literal '0' (3-digit cap)
+            (r#""\401";"#, "\u{101}"),   // three digits even w/ leading 4-7 (Closure rule)
+            (r#""\777";"#, "\u{1ff}"),   // the max: 0o777 = 511
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn nonoctal_decimal_escapes_8_and_9_drop_backslash() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        // `\8` and `\9` (ECMAScript Annex B.1.2 NonOctalDecimalEscapeSequence)
+        // are NOT octal — the backslash is dropped and the digit kept.
+        // Oracle-verified against the reference Closure Compiler.
+        for (src, want) in [
+            (r#""\8";"#, "8"),
+            (r#""\9";"#, "9"),
+            (r#""\8\9";"#, "89"),   // the probe case: g(a,"\8\9") -> "89"
+            (r#""z\8z";"#, "z8z"),  // mid-string
+            (r#""\98";"#, "98"),    // adjacent, each drops its own backslash
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn identity_escapes_drop_backslash() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        // NonEscapeCharacter (ECMAScript IdentityEscape): a backslash before any
+        // character that is not a recognized escape is dropped and the character
+        // kept. Oracle-verified against the reference Closure Compiler.
+        for (src, want) in [
+            (r#""\q";"#, "q"),      // a letter
+            (r#""\z";"#, "z"),
+            (r#""\/";"#, "/"),      // punctuation
+            (r#""\<";"#, "<"),
+            (r#""\?";"#, "?"),
+            (r#""\!";"#, "!"),
+            (r#""\@";"#, "@"),
+            (r#""\~";"#, "~"),
+            (r#""\=";"#, "="),
+            (r#""a\qb";"#, "aqb"),  // mid-string
+            (r#""\q\z";"#, "qz"),   // adjacent
+            // The SPECIAL escapes are handled by their own arms and are NOT
+            // affected by the identity-escape catch-all:
+            (r#""\n";"#, "\n"),
+            (r#""\t";"#, "\t"),
+            (r#""\\";"#, "\\"),
+            (r#""\"";"#, "\""),
+            (r#""\101";"#, "A"),    // octal still decodes
+            (r#""\8";"#, "8"),      // NonOctalDecimal still handled
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    /// The genuine keyword primaries must still bridge to their literal nodes —
+    /// the type gate keeps `Name`/`Keyword` tokens on the value-match path.
+    #[test]
+    fn bare_keyword_primaries_still_bridge() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let expr_of = |src: &str| -> Expression {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => es.expression.clone(),
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        };
+        assert!(matches!(expr_of("this;"), Expression::ThisExpression(_)));
+        assert!(matches!(expr_of("null;"), Expression::NullLiteral(_)));
+        assert!(matches!(expr_of("undefined;"), Expression::UndefinedLiteral(_)));
+        assert!(matches!(expr_of("true;"), Expression::BooleanLiteral(b) if b.value));
+        assert!(matches!(expr_of("false;"), Expression::BooleanLiteral(b) if !b.value));
     }
 
     // -----------------------------------------------------------------------
@@ -4373,6 +6229,63 @@ mod tests {
         }
     }
 
+    /// Pull the C-style `ForStatement` out of a program whose first statement is
+    /// `for (…;…;…) …`.
+    fn bridge_for(src: &str) -> ForStatement {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ForStatement(f),
+            )) => f.clone(),
+            other => panic!("expected a ForStatement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_lexical_init_bridges() {
+        // CLOC12.186: a `let` / `const` init in a C-style `for` header. Before
+        // this the init's `binding_list` node fell through to `convert_expression`
+        // and raised an InternalError ("unknown expression rule 'binding_list'"),
+        // declining the whole file to WHITESPACE_ONLY.
+        for (src, want) in [
+            ("for (let i = 0; i < 3; i++) f();", VarKind::Let),
+            ("for (const j = 1; ; ) f();", VarKind::Const),
+        ] {
+            let f = bridge_for(src);
+            match &f.init {
+                Some(ForInit::VariableDeclaration(v)) => {
+                    assert_eq!(v.kind, want, "for {src}");
+                    assert_eq!(v.declarations.len(), 1, "for {src}");
+                    assert!(v.declarations[0].init.is_some(), "init has a value for {src}");
+                }
+                other => panic!("expected a {want:?} declaration init for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn for_lexical_init_multi_binding_bridges() {
+        // `for (let a = 1, b = 2; …)` — two declarators in the lexical init.
+        let f = bridge_for("for (let a = 1, b = 2; a < b; a++) f();");
+        match &f.init {
+            Some(ForInit::VariableDeclaration(v)) => {
+                assert_eq!(v.kind, VarKind::Let);
+                assert_eq!(v.declarations.len(), 2);
+            }
+            other => panic!("expected a let declaration init, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_var_init_still_bridges() {
+        // A `var` init (the pre-existing path) still works.
+        let f = bridge_for("for (var v = 0; v < 3; v++) f();");
+        match &f.init {
+            Some(ForInit::VariableDeclaration(v)) => assert_eq!(v.kind, VarKind::Var),
+            other => panic!("expected a var declaration init, got {other:?}"),
+        }
+    }
+
     #[test]
     fn for_in_var_bridge_shape() {
         // CLOC22: `for (var k in obj) { f(k); }` bridges to a ForInStatement
@@ -4565,7 +6478,9 @@ mod tests {
         let a = bridge_var_init_arrow("var f=x=>x+1;");
         assert!(!a.is_async);
         assert_eq!(a.params.len(), 1);
-        let FunctionParam::Identifier(p) = &a.params[0];
+        let FunctionParam::Identifier(p) = &a.params[0] else {
+            panic!("expected a plain Identifier param, got {:?}", a.params[0]);
+        };
         assert_eq!(p.name, "x");
         assert!(
             matches!(a.body, ArrowBody::Expression(_)),
@@ -4603,34 +6518,46 @@ mod tests {
     }
 
     #[test]
-    fn arrow_object_concise_body_is_declined() {
-        // `() => ({})` / `() => {}` are indistinguishable in the current
-        // grammar (both parse as an object-literal concise body), so the
-        // bridge DECLINES them (UnsupportedSyntax) rather than risk the
-        // empty-block-vs-object miscompile. A declined program surfaces as a
-        // bridge error → the CLI's whitespace-only passthrough.
+    fn arrow_paren_object_concise_body_bridges() {
+        // `() => ({a:1})` — a PARENTHESISED object-literal expression body. It is
+        // now distinguishable from the bare block `() => {}` by the concise_body's
+        // leftmost token (`(` vs `{`), so it bridges (CLOC12.185) instead of
+        // declining. (The empty-block `() => {}` became a block at CLOC12.184.)
         assert!(
             grammar_to_program(
                 &crate::parse_javascript("var f=()=>({a:1});", "es2025").expect("parse"),
                 DEFAULT_ES_VERSION,
             )
-            .is_err(),
-            "object-body arrow must decline to avoid the () => {{}} ambiguity"
+            .is_ok(),
+            "parenthesised object-body arrow should bridge"
         );
     }
 
     #[test]
-    fn async_arrow_is_still_declined() {
-        // Async arrows parse under `async_arrow_function` and remain declined
-        // (safe whitespace-only passthrough) until the async model lands.
-        assert!(
-            grammar_to_program(
-                &crate::parse_javascript("var f=async x=>x;", "es2025").expect("parse"),
-                DEFAULT_ES_VERSION,
-            )
-            .is_err(),
-            "async arrow should still decline"
-        );
+    fn async_arrow_single_param_bridges() {
+        // `async x => x` — CLOC12.192. Async arrows parse under
+        // `async_arrow_function` (the plain arrow shape plus a leading `async`
+        // literal) and now bridge to an `ArrowFunctionExpression` with `is_async`
+        // set, instead of declining to WHITESPACE_ONLY.
+        let f = arrow_of("x = async x => x;");
+        assert!(f.is_async, "async arrow must set is_async");
+        assert_eq!(f.params.len(), 1);
+    }
+
+    #[test]
+    fn async_arrow_paren_params_bridges() {
+        // `async (a, b) => a` — parenthesised params carry the same async flag.
+        let f = arrow_of("x = async (a, b) => a;");
+        assert!(f.is_async);
+        assert_eq!(f.params.len(), 2);
+    }
+
+    #[test]
+    fn plain_arrow_is_not_async() {
+        // Regression: the plain-arrow dispatch still bridges with is_async=false
+        // after the shared converter gained the `is_async` parameter.
+        let f = arrow_of("x = y => y;");
+        assert!(!f.is_async, "plain arrow must not be async");
     }
 
     /// Pull the single `ForOfStatement` out of a one-statement program.
@@ -4843,6 +6770,38 @@ mod tests {
                 coding_adventures_javascript_ast::statement::TaggedStatement::WhileStatement(_)
             ))
         ));
+    }
+
+    #[test]
+    fn with_statement_bridge() {
+        // CLOC12.187 PR2b: `with (o) { … }` now bridges to a WithStatement
+        // instead of declining the whole file to WHITESPACE_ONLY. The renaming
+        // passes decline to rename in its presence (the PR2a gate), so bridging
+        // it is sound. Structurally it mirrors `while_statement`:
+        // object = the injected expression, body = the statement.
+        let p = bridge_ok("with (o) { foo(); }");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::WithStatement(w),
+            )) => {
+                assert!(
+                    matches!(&w.object, Expression::Identifier(id) if id.name == "o"),
+                    "expected the `with` object to be the identifier `o`, got {:?}",
+                    w.object
+                );
+                assert!(
+                    matches!(
+                        &*w.body,
+                        Statement::Tagged(
+                            coding_adventures_javascript_ast::statement::TaggedStatement::BlockStatement(_)
+                        )
+                    ),
+                    "expected the `with` body to be a block statement, got {:?}",
+                    w.body
+                );
+            }
+            other => panic!("expected a WithStatement, got {other:?}"),
+        }
     }
 
     #[test]

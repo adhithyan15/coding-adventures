@@ -104,7 +104,7 @@ fn rewrites_all_uses_of_a_renamed_global() {
 fn renames_a_global_function_declaration() {
     assert_eq!(
         rename("function computeTotal() { return 1; } computeTotal();"),
-        "function a(){return 1};a();"
+        "function a(){return 1}a();"
     );
 }
 
@@ -119,7 +119,7 @@ fn does_not_rename_reserved_extern() {
             "function apiHandler() { return helper(); } function helper() { return 1; }",
             &["apiHandler"],
         ),
-        "function apiHandler(){return a()};function a(){return 1};",
+        "function apiHandler(){return a()}function a(){return 1};",
     );
 }
 
@@ -130,7 +130,7 @@ fn does_not_rename_reserved_extern() {
 fn leaves_free_undeclared_globals_untouched() {
     assert_eq!(
         rename("function greet() { console.log(window); } greet();"),
-        "function a(){console.log(window)};a();"
+        "function a(){console.log(window)}a();"
     );
 }
 
@@ -159,7 +159,7 @@ fn renames_global_used_as_computed_member_index() {
 /// shorter form available, so it is left as-is.
 #[test]
 fn does_not_rename_already_single_char_global() {
-    assert_eq!(rename("function f() { return 1; } f();"), "function f(){return 1};f();");
+    assert_eq!(rename("function f() { return 1; } f();"), "function f(){return 1}f();");
 }
 
 // ===================================================================

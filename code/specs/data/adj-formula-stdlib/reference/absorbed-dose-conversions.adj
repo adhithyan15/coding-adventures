@@ -1,0 +1,56 @@
+% ============================================================================
+% absorbed-dose-conversions — absorbed-dose-unit → gray factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `radioactivity-conversions.adj` and the other NIST-cited conversion
+% tables: a native tabular relation ingested VERBATIM from a published NIST conversion
+% table. The row states the factor converting the CGS/traditional unit of ABSORBED DOSE
+% (energy imparted by ionizing radiation per unit mass of matter) to the SI coherent unit,
+% the gray (Gy = one joule per kilogram):
+%
+%     ? absorbed_dose_to_gray(rad, $v)   % 0.01
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% illuminance/luminance/radioactivity tables: where radioactivity normalises the ACTIVITY
+% of a source (decays per second, the becquerel), this normalises the ABSORBED DOSE it
+% delivers to matter — the joules of ionizing energy deposited per kilogram, the gray. The
+% traditional unit is the rad (100 erg per gram); the SI unit is the gray, one joule per
+% kilogram. Put a dose given in rad into SI first, then reason (write-once-use-many). Why a
+% `table` and not a hand-written `relate` clause: this is exactly the shape reference data
+% comes in — a published table, not prose. The citable artifact IS the NIST conversion-
+% factors table at the `locator` below; the factor here is a CELL of NIST Special
+% Publication 811, Appendix B.9 ("Factors for units listed alphabetically"), defended by
+% one provenance envelope. Each `row` lowers to a ground relation
+% `absorbed_dose_to_gray(unit, gy)`, so the exact lookup above is the ordinary SLD binding
+% query — the engine returns the factor WITH this table's citation as its proof, on the
+% CPU, with zero model calls.
+%
+% HONESTY NOTE (like radioactivity-/luminance-conversions, only the EXACT defined factor
+% gets a row): NIST SP 811 B.9 prints the "rad" absorbed-dose factor in BOLDFACE, its
+% convention for factors that are EXACT by definition, transcribed here as the plain
+% decimal number of grays it names:
+%
+%     rad (absorbed dose) (rad)   1.0 E-02  →  0.01
+%
+% This is exact because the rad is DEFINED as exactly 10⁻² gray (one rad is 100 erg per
+% gram, i.e. 0.01 joule per kilogram, by definition — the same defining relation NIST prints
+% in boldface). It terminates; nothing here is a rounded measurement. A traditional
+% absorbed-dose unit that NIST SP 811 B.9 does NOT tabulate — e.g. the "rep" (roentgen
+% equivalent physical) — therefore gets no row here, and a
+% `? absorbed_dose_to_gray(rep, $v)` ABSTAINS rather than inventing a factor. The only claim
+% this table makes is "this is the exact factor NIST SP 811 B.9 prints for the rad" — which
+% is exactly what a byte-check against the cited table verifies. `trust authoritative` — a
+% primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — the factor is a verbatim cell of the cited table,
+% nothing asserted from memory.)
+% ============================================================================
+
+table absorbed_dose_to_gray {
+    columns unit, gray
+
+    row (rad, 0.01)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

@@ -488,6 +488,12 @@ pub struct GenericVM {
     frozen: bool,
 }
 
+impl Default for GenericVM {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GenericVM {
     /// Create a new VM with empty state and no registered handlers.
     ///
@@ -1535,6 +1541,8 @@ mod tests {
 
     // ── Value Display test ───────────────────────────────────────────────
 
+    // 3.14 is test input for `Display`, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_value_display() {
         assert_eq!(format!("{}", Value::Int(42)), "42");

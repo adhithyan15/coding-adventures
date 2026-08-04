@@ -1,0 +1,28 @@
+% ============================================================================
+% gravitation.query.adj — a worked application of Newton's law of universal
+% gravitation from the ADJ compute stdlib.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a gravitation
+% word-problem: it states NO arithmetic. It `import`s the grounded law library,
+% binds each quantity it decomposed from the input (each `observe` is a
+% byte-provenance span the model cited), and asks the engine to APPLY the
+% recalled law. The native adj-lang engine substitutes the law's body, computes
+% exactly on the CPU, and returns the value carrying the law's source/locator/
+% trust — the auditable chain.
+%
+% "What gravitational force does the Earth (5.972×10²⁴ kg) exert on the Moon
+%  (7.348×10²² kg), given a centre-to-centre distance of 3.844×10⁸ m?"
+%   → recall F = G·m₁·m₂/r², bind the three quantities, apply → ≈1.98×10²⁰ N,
+%     carrying NIST's value of G (authoritative).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli gravitation.query.adj
+% ============================================================================
+
+import "gravitation.adj"
+
+% --- Earth–Moon: the ~1.98×10²⁰ N attraction that keeps the Moon in orbit. ---
+observe mass_one(5.972e24)     % "…Earth's mass, 5.972×10²⁴ kg…"          (span cited by the model)
+observe mass_two(7.348e22)     % "…the Moon's mass, 7.348×10²² kg…"        (span cited by the model)
+observe distance(3.844e8)      % "…a centre-to-centre distance of 3.844×10⁸ m…" (span cited)
+? gravitational_force(mass_one, mass_two, distance)  % engine → ≈1.98e20 N (F = G·m₁·m₂/r², NIST, authoritative)

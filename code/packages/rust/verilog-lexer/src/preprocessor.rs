@@ -243,7 +243,7 @@ pub fn verilog_preprocess(source: &str) -> String {
 /// If the conditional stack is empty, we're at the top level — always active.
 /// Otherwise, the top of the stack determines whether we're emitting.
 fn is_active(cond_stack: &[CondState]) -> bool {
-    cond_stack.last().map_or(true, |s| s.active)
+    cond_stack.last().is_none_or(|s| s.active)
 }
 
 /// Parse a `define directive and add the macro to the table.
@@ -321,7 +321,6 @@ fn extract_directive_arg(trimmed: &str, directive: &str) -> String {
     trimmed
         .strip_prefix(directive)
         .unwrap_or("")
-        .trim()
         .split_whitespace()
         .next()
         .unwrap_or("")

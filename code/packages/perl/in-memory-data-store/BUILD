@@ -1,0 +1,1 @@
+PERL5LIB=lib:$(cd ../hyperloglog && pwd)/lib:$(cd ../in-memory-data-store-engine && pwd)/lib:$(cd ../in-memory-data-store-protocol && pwd)/lib:$(cd ../resp-protocol && pwd)/lib:${PERL5LIB:-} prove -l -v t/

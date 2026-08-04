@@ -334,9 +334,7 @@ impl SkillSourceSummary {
         }
 
         summary.unique_source_kinds = source_kinds.len();
-        summary.source_kinds = source_kinds
-            .into_iter()
-            .map(|(_, source_kind)| source_kind)
+        summary.source_kinds = source_kinds.into_values()
             .collect();
         summary
     }

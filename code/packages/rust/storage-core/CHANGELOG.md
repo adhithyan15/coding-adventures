@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Atomic `StoragePutInput::with_if_absent()` writes, including sequential and
+  concurrent shared-backend conformance coverage.
 - `StorageRecordSummary` and `StorageSummaryPage` for body-free read-side
   projections.
 - Default `StorageBackend::get_summary` and `StorageBackend::list_summaries`

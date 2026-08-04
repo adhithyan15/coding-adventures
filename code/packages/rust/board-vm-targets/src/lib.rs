@@ -1,4 +1,7 @@
 #![no_std]
+// The wide argument lists mirror the target/instruction ABI shape 1:1;
+// collapsing them into a struct would obscure that mapping.
+#![allow(clippy::too_many_arguments)]
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BoardFamily {

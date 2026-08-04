@@ -34,7 +34,7 @@ for either), and `parseInt` only folds with a missing or integer-literal radix.
 - `expected.stdout` — the byte-exact SIMPLE output:
 
   ```text
-  var a=12;var b=255;var c=31;var d=314;var e=Number.parseInt("");report(a,b,c,d,e);
+  var a=12,b=255,c=31,d=314,e=Number.parseInt("");report(a,b,c,d,e);
   ```
 
 The integration test `tests/diff_simple_fold_number_parse.rs` runs the binary

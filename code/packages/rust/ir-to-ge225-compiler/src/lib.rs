@@ -459,7 +459,7 @@ impl<'a> CodeGen<'a> {
             IrOp::AddImm => {
                 for operand in &instr.operands {
                     if let IrOperand::Immediate(v) = operand {
-                        if !matches!(v, 0 | 1 | -1) {
+                        if !matches!(v, -1..=1) {
                             self.intern_const(*v);
                         }
                     }
@@ -672,7 +672,7 @@ impl<'a> CodeGen<'a> {
         words.push(self.bru(self.code_end));
 
         // Data section: n_regs zero-initialised spill slots.
-        words.extend(std::iter::repeat(0).take(self.n_regs()));
+        words.extend(std::iter::repeat_n(0, self.n_regs()));
 
         // Constants table (in pass-0 insertion order).
         // Values are guaranteed to be in the 20-bit signed range by
@@ -680,7 +680,7 @@ impl<'a> CodeGen<'a> {
         // as 20-bit two's-complement without silent truncation.
         for &value in &self.const_order {
             debug_assert!(
-                value >= GE225_WORD_MIN && value <= GE225_WORD_MAX,
+                (GE225_WORD_MIN..=GE225_WORD_MAX).contains(&value),
                 "constant {} slipped past pre-flight validation",
                 value
             );
@@ -945,6 +945,9 @@ impl<'a> CodeGen<'a> {
     ///
     /// For `CMP_NE`, swap the skip sense (`BNZ` instead of `BZE`) and the
     /// result labels.
+    // The four `w_*` operands are distinct instruction word encodings plus the
+    // compare flags; passing them individually keeps the emit logic explicit.
+    #[allow(clippy::too_many_arguments)]
     fn emit_cmp(
         &self, instr: &IrInstruction, start_addr: usize,
         eq: bool, negate: bool,
@@ -1642,7 +1645,7 @@ mod tests {
                 break;
             }
         }
-        assert_eq!(sim.get_state().halted || sim.get_state().pc == halt, true);
+        assert!(sim.get_state().halted || sim.get_state().pc == halt);
     }
 
     #[test]

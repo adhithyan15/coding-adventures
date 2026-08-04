@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "path": [
+    {
+      "id": "PA-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "PA-C01-sat-sri-akal",
+        "PA-C01-namaste"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "PA-C01-dhanvaad",
+        "PA-C01-shukriya"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-003",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "PA-C01-han-nahin"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-004",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "PA-C02-naam",
+        "PA-C02-hai",
+        "PA-C02-ki",
+        "PA-C02-mera",
+        "PA-C02-mera-naam-hai",
+        "PA-C02-khushi",
+        "PA-C02-tu-tusi",
+        "PA-C02-tuhada-naam-ki-hai"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-005",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PA-C03-kivein"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-006",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "PA-C03-koi-gall-nahin"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "PA-C03-main"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PA-C03-thik",
+        "PA-C03-tusi-kivein-ho"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-009",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "PA-C04-milaange",
+        "PA-C04-phir",
+        "PA-C04-phir-milaange",
+        "PA-C04-rab-raakha"
+      ],
+      "before": [
+        "PA-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-010",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "PA-C05-bolna",
+        "PA-C05-main-punjabi-bolda-han",
+        "PA-C06-numbers-1-5",
+        "PA-C06-panj-convergence"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-010-LANGUAGE-SPECIFIC",
+        "PA-EXT-010-ETYMOLOGY"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "PA-PATH-001"
+      ],
+      "omits": [
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "PA-PATH-002",
+        "PA-PATH-006"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "PA-PATH-003"
+      ],
+      "omits": [
+        "RESPONSE-YES",
+        "RESPONSE-NO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "PA-PATH-004",
+        "PA-PATH-007"
+      ],
+      "omits": [
+        "PRONOUN-ME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "PA-PATH-005",
+        "PA-PATH-008"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [],
+      "omits": [
+        "COURTESY-PLEASE",
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "PA-PATH-009"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON",
+        "FAREWELL-TOMORROW",
+        "GREETING-GOODNIGHT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [],
+      "omits": [
+        "TIME-DAY",
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-DAY",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "PA-PATH-010"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "PA-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Punjabi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C04-milaange",
+        "PA-C04-phir"
+      ]
+    },
+    {
+      "id": "PA-EXT-010-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Punjabi material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C05-bolna",
+        "PA-C05-main-punjabi-bolda-han",
+        "PA-C06-numbers-1-5"
+      ]
+    },
+    {
+      "id": "PA-EXT-010-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Punjabi word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C06-panj-convergence"
+      ]
+    },
+    {
+      "id": "PA-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Punjabi script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C01-sat-sri-akal"
+      ]
+    }
+  ]
+}

@@ -1,9 +1,835 @@
 use spice_engine::{
     device_model_noise_audit_fixtures, format_corner_noise_table, format_noise_table, noise_ac,
-    noise_ac_corners, noise_ac_corners_parallel, noise_ac_default, Capacitor, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Element, Mosfet, MosfetLevel1Params, MosfetType,
-    NoiseType, Resistor, SpiceError, VoltageSource,
+    noise_ac_corners, noise_ac_corners_parallel, noise_ac_default, Bjt, Capacitor, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Jfet, Mosfet, MosfetLevel1Params,
+    MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
 };
+
+#[test]
+fn diode_series_resistance_adds_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "bias", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbias", "bias", "out", 1_000.0,
+    )));
+    let mut diode = Diode::new("D1", "out", "0");
+    diode.series_resistance = 100.0;
+    circuit.add(Element::Diode(diode));
+
+    let result = noise_ac(&circuit, "out", "Vbias", &[1_000.0], 300.0).unwrap();
+    let series_resistance = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "D1:RS")
+        .unwrap();
+
+    assert_eq!(series_resistance.noise_type, NoiseType::Thermal);
+    assert!(series_resistance.source_psd > 0.0);
+}
+
+#[test]
+fn bjt_forward_beta_rolloff_reduces_shot_noise() {
+    let source_psd = |rolloff_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc", "vcc", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vcc", "out", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.forward_beta_rolloff_current = rolloff_current;
+        circuit.add(Element::Bjt(transistor));
+        noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1")
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(1.0e-4) < source_psd(0.0));
+}
+
+#[test]
+fn bjt_base_emitter_leakage_increases_shot_noise() {
+    let source_psd = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.base_emitter_leakage_saturation_current = leakage_current;
+        transistor.base_emitter_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1")
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(1.0e-10) > source_psd(0.0));
+}
+
+#[test]
+fn bjt_base_collector_leakage_increases_shot_noise() {
+    let source_psd = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "base");
+        transistor.base_collector_leakage_saturation_current = leakage_current;
+        transistor.base_collector_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1")
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(1.0e-10) > source_psd(0.0));
+}
+
+#[test]
+fn bjt_emitter_resistance_adds_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.65,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    let mut transistor = Bjt::new("Q1", "out", "base", "0");
+    transistor.emitter_resistance = 100.0;
+    circuit.add(Element::Bjt(transistor));
+
+    let result = noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0).unwrap();
+    let emitter_resistance = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "Q1:RE")
+        .unwrap();
+
+    assert_eq!(emitter_resistance.noise_type, NoiseType::Thermal);
+    assert!(emitter_resistance.source_psd > 0.0);
+}
+
+#[test]
+fn bjt_collector_resistance_adds_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.65,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    let mut transistor = Bjt::new("Q1", "out", "base", "0");
+    transistor.collector_resistance = 100.0;
+    circuit.add(Element::Bjt(transistor));
+
+    let result = noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0).unwrap();
+    let collector_resistance = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "Q1:RC")
+        .unwrap();
+
+    assert_eq!(collector_resistance.noise_type, NoiseType::Thermal);
+    assert!(collector_resistance.source_psd > 0.0);
+}
+
+#[test]
+fn bjt_base_resistance_adds_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.65,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    let mut transistor = Bjt::new("Q1", "out", "base", "0");
+    transistor.base_resistance = 100.0;
+    circuit.add(Element::Bjt(transistor));
+
+    let result = noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0).unwrap();
+    let base_resistance = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "Q1:RB")
+        .unwrap();
+
+    assert_eq!(base_resistance.noise_type, NoiseType::Thermal);
+    assert!(base_resistance.source_psd > 0.0);
+}
+
+#[test]
+fn bjt_minimum_base_resistance_increases_high_current_thermal_noise() {
+    let source_psd = |minimum_base_resistance, base_resistance_half_current| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.base_resistance = 100.0;
+        transistor.minimum_base_resistance = minimum_base_resistance;
+        transistor.base_resistance_half_current = base_resistance_half_current;
+        circuit.add(Element::Bjt(transistor));
+
+        let result = noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0).unwrap();
+        result.points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1:RB")
+            .unwrap()
+            .source_psd
+    };
+
+    let fixed = source_psd(None, 0.0);
+    let bias_dependent = source_psd(Some(10.0), 1.0e-9);
+
+    assert!(bias_dependent > fixed);
+}
+
+#[test]
+fn bjt_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.7,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vcc", "out", 1_000.0,
+    )));
+    let mut transistor = Bjt::new("Q1", "out", "base", "0");
+    transistor.flicker_noise_coefficient = 1.0e-12;
+    circuit.add(Element::Bjt(transistor));
+
+    let result = noise_ac(&circuit, "out", "Vbase", &[10.0, 1_000.0], 300.0).unwrap();
+    let flicker_psd = |point_index: usize| {
+        result.points[point_index]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(flicker_psd(0) > 0.0);
+    assert_close(flicker_psd(0) / flicker_psd(1), 100.0, 1.0e-10);
+}
+
+#[test]
+fn diode_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "bias", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbias", "bias", "out", 1_000.0,
+    )));
+    let mut diode = Diode::new("D1", "out", "0");
+    diode.flicker_noise_coefficient = 1.0e-12;
+    circuit.add(Element::Diode(diode));
+
+    let result = noise_ac(&circuit, "out", "Vbias", &[10.0, 1_000.0], 300.0).unwrap();
+    let flicker_psd = |point_index: usize| {
+        result.points[point_index]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "D1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(flicker_psd(0) > 0.0);
+    assert_close(flicker_psd(0) / flicker_psd(1), 100.0, 1.0e-10);
+}
+
+#[test]
+fn jfet_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    let mut jfet = Jfet::with_model(
+        "J1",
+        "out",
+        "gate",
+        "0",
+        spice_engine::JfetPolarity::Njf,
+        1.0e-3,
+        -2.0,
+        0.0,
+    );
+    jfet.flicker_noise_coefficient = 1.0e-12;
+    circuit.add(Element::Jfet(jfet));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[10.0, 1_000.0], 300.0).unwrap();
+    let flicker_psd = |point_index: usize| {
+        result.points[point_index]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "J1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(flicker_psd(0) > 0.0);
+    assert_close(flicker_psd(0) / flicker_psd(1), 100.0, 1.0e-10);
+}
+
+#[test]
+fn jfet_nlev_and_gdsnoi_select_and_scale_channel_noise() {
+    let source_psd = |noise_equation_level: f64, channel_noise_coefficient: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vdrain", "out", "0", 1.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vgate", "gate", "0", 0.0,
+        )));
+        let mut jfet = Jfet::new("J1", "out", "gate", "0");
+        jfet.beta = 1.0e-3;
+        jfet.threshold_voltage = -2.0;
+        jfet.noise_equation_level = noise_equation_level;
+        jfet.channel_noise_coefficient = channel_noise_coefficient;
+        circuit.add(Element::Jfet(jfet));
+        noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "J1" && entry.noise_type == NoiseType::Thermal)
+            .unwrap()
+            .source_psd
+    };
+
+    let expected_conductance = (2.0 / 3.0) * 1.0e-3 * 2.0 * 1.75 / 1.5;
+    let expected_psd = 4.0 * BOLTZMANN * 300.0 * expected_conductance;
+    assert_close(source_psd(3.0, 1.0), expected_psd, expected_psd * 1.0e-10);
+    let legacy_psd = source_psd(1.0, 1.0);
+    assert_close(source_psd(2.0, 4.0), legacy_psd, legacy_psd * 1.0e-10);
+    let scaled_psd = 2.0 * source_psd(3.0, 1.0);
+    assert_close(source_psd(3.0, 2.0), scaled_psd, scaled_psd * 1.0e-10);
+}
+
+#[test]
+fn jfet_rejects_invalid_channel_noise_parameters() {
+    for (noise_equation_level, channel_noise_coefficient, expected_reason) in [
+        (
+            2.5,
+            1.0,
+            "noise equation level must be a finite integer greater than or equal to 1",
+        ),
+        (
+            1.0,
+            -1.0,
+            "channel noise coefficient must be finite and non-negative",
+        ),
+    ] {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vgate", "gate", "0", 0.0,
+        )));
+        let mut jfet = Jfet::new("J1", "out", "gate", "0");
+        jfet.noise_equation_level = noise_equation_level;
+        jfet.channel_noise_coefficient = channel_noise_coefficient;
+        circuit.add(Element::Jfet(jfet));
+
+        let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+        assert!(matches!(
+            error,
+            SpiceError::InvalidElement { reason, .. } if reason == expected_reason
+        ));
+    }
+}
+
+#[test]
+fn jfet_rejects_invalid_flicker_noise_coefficient() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.flicker_noise_coefficient = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "flicker-noise coefficient must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_rejects_invalid_flicker_noise_exponent() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.flicker_noise_exponent = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "flicker-noise exponent must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_rejects_invalid_junction_potential() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.junction_potential = 0.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "junction potential must be finite and positive"
+    ));
+}
+
+#[test]
+fn jfet_rejects_invalid_forward_bias_depletion_coefficient() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.forward_bias_depletion_coefficient = 1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "forward-bias depletion coefficient must be finite and in [0, 1)"
+    ));
+}
+
+#[test]
+fn jfet_rejects_invalid_gate_saturation_current() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.gate_saturation_current = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "gate saturation current must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_rejects_invalid_drain_resistance() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.drain_resistance = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "drain resistance must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_rejects_invalid_source_resistance() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.source_resistance = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "source resistance must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_drain_resistance_emits_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.drain_resistance = 250.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entry = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "J1:RD" && entry.noise_type == NoiseType::Thermal)
+        .unwrap();
+    assert_close(
+        entry.source_psd,
+        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        1.0e-30,
+    );
+}
+
+#[test]
+fn mosfet_drain_resistance_emits_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            drain_resistance: 250.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entry = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "M1:RD" && entry.noise_type == NoiseType::Thermal)
+        .unwrap();
+    assert_close(
+        entry.source_psd,
+        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        1.0e-30,
+    );
+}
+
+#[test]
+fn mosfet_source_resistance_emits_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            source_resistance: 250.0,
+            sheet_resistance: 100.0,
+            source_squares: 10.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entry = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "M1:RS" && entry.noise_type == NoiseType::Thermal)
+        .unwrap();
+    assert_close(
+        entry.source_psd,
+        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        1.0e-30,
+    );
+}
+
+#[test]
+fn mosfet_sheet_resistance_emits_both_terminal_noise_sources() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            sheet_resistance: 250.0,
+            drain_squares: 2.0,
+            source_squares: 3.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
+    for (name, resistance) in [("M1:RD", 500.0), ("M1:RS", 750.0)] {
+        let entry = result.points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == name && entry.noise_type == NoiseType::Thermal)
+            .unwrap();
+        assert_close(
+            entry.source_psd,
+            4.0 * 1.380_649e-23 * 300.0 / resistance,
+            1.0e-30,
+        );
+    }
+}
+
+#[test]
+fn jfet_source_resistance_emits_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.source_resistance = 250.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entry = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "J1:RS" && entry.noise_type == NoiseType::Thermal)
+        .unwrap();
+    assert_close(
+        entry.source_psd,
+        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        1.0e-30,
+    );
+}
+
+#[test]
+fn jfet_gate_junctions_emit_distinct_shot_noise_sources() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "out", "0", 1.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.3,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.gate_saturation_current = 1.0e-12;
+    circuit.add(Element::Jfet(jfet));
+
+    let result = noise_ac(&circuit, "gate", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entries = &result.points[0].entries;
+    for name in ["J1:IGS", "J1:IGD"] {
+        let entry = entries
+            .iter()
+            .find(|entry| entry.element_name == name && entry.noise_type == NoiseType::Shot)
+            .unwrap();
+        assert!(entry.source_psd > 0.0);
+    }
+}
+
+#[test]
+fn mosfet_bulk_junctions_emit_distinct_shot_noise_sources() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbody", "body", "0", -0.3,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "0",
+        "0",
+        "body",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            saturation_current: 1.0e-12,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "body", "Vbody", &[1_000.0], 300.0).unwrap();
+    let entries = &result.points[0].entries;
+    for name in ["M1:IBS", "M1:IBD"] {
+        let entry = entries
+            .iter()
+            .find(|entry| entry.element_name == name && entry.noise_type == NoiseType::Shot)
+            .unwrap();
+        assert!(entry.source_psd > 0.0);
+    }
+}
+
+#[test]
+fn jfet_flicker_noise_uses_af_current_exponent() {
+    let source_psd = |exponent: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vdd", "vdd", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vgate", "gate", "0", 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vdd", "out", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model(
+            "J1",
+            "out",
+            "gate",
+            "0",
+            spice_engine::JfetPolarity::Njf,
+            1.0e-3,
+            -2.0,
+            0.0,
+        );
+        jfet.flicker_noise_coefficient = 1.0e-12;
+        jfet.flicker_noise_exponent = exponent;
+        circuit.add(Element::Jfet(jfet));
+        noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "J1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(2.0) < source_psd(1.0));
+}
+
+#[test]
+fn diode_flicker_noise_uses_af_current_exponent() {
+    let source_psd = |exponent: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbias", "bias", "0", 1.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rbias", "bias", "out", 1_000.0,
+        )));
+        let mut diode = Diode::new("D1", "out", "0");
+        diode.flicker_noise_coefficient = 1.0e-12;
+        diode.flicker_noise_exponent = exponent;
+        circuit.add(Element::Diode(diode));
+        noise_ac(&circuit, "out", "Vbias", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "D1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(2.0) < source_psd(1.0));
+}
+
+#[test]
+fn bjt_flicker_noise_uses_af_base_current_exponent() {
+    let source_psd = |exponent: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc", "vcc", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.7,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vcc", "out", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.flicker_noise_coefficient = 1.0e-12;
+        transistor.flicker_noise_exponent = exponent;
+        circuit.add(Element::Bjt(transistor));
+        noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(2.0) < source_psd(1.0));
+}
 
 const BOLTZMANN: f64 = 1.380_649e-23;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
@@ -383,6 +1209,102 @@ fn noise_ac_includes_mosfet_channel_thermal_noise() {
         expected_source_psd * 1_000.0_f64.powi(2),
         1.0e-27,
     );
+}
+
+#[test]
+fn noise_ac_adds_inverse_frequency_mosfet_flicker_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            vt0: 1.0,
+            kp: 1.0e-3,
+            flicker_noise_coefficient: 2.0e-18,
+            flicker_noise_exponent: 2.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[100.0, 1_000.0], 300.0).unwrap();
+    let flicker_psds = result
+        .points
+        .iter()
+        .map(|point| {
+            point
+                .entries
+                .iter()
+                .find(|entry| entry.element_name == "M1" && entry.noise_type == NoiseType::Flicker)
+                .expect("missing MOSFET flicker-noise entry")
+                .source_psd
+        })
+        .collect::<Vec<_>>();
+
+    assert!(flicker_psds[0] > 0.0);
+    assert_close(flicker_psds[0], 10.0 * flicker_psds[1], 1.0e-30);
+    assert!(result.points[0]
+        .entries
+        .iter()
+        .any(|entry| { entry.element_name == "M1" && entry.noise_type == NoiseType::Thermal }));
+}
+
+#[test]
+fn noise_ac_rejects_invalid_mosfet_flicker_noise_coefficient() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            flicker_noise_coefficient: -1.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let error = noise_ac(&circuit, "0", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(error.to_string().contains("MOSFET KF must be non-negative"));
+}
+
+#[test]
+fn noise_ac_rejects_invalid_mosfet_flicker_noise_exponent() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            flicker_noise_exponent: -1.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let error = noise_ac(&circuit, "0", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(error.to_string().contains("MOSFET AF must be non-negative"));
 }
 
 #[test]

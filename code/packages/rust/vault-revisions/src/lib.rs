@@ -402,8 +402,8 @@ fn is_safe_id_string(s: &str) -> bool {
 
 // === Section 4. Trait =====================================================
 
-/// The contract every revision store implements. `Send + Sync`
-/// + object-safe so a single `Arc<dyn RevisionStore>` can serve
+/// The contract every revision store implements. `Send + Sync` +
+/// object-safe so a single `Arc<dyn RevisionStore>` can serve
 /// the whole stack.
 pub trait RevisionStore: Send + Sync {
     /// Archive a ciphertext. Returns the resulting [`Revision`]

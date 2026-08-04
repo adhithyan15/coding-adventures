@@ -21,18 +21,17 @@ public struct AlgolParser: Sendable {
 
     public static func loadGrammar(version: String = "algol60") throws -> ParserGrammar {
         let normalizedVersion = try normalize(version)
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
+        // The grammar is embedded at compile time in the generated
+        // `_Grammar.swift` (from code/grammars/algol/<version>.grammar); nothing
+        // is read from disk at run time.
+        guard let grammar = EmbeddedGrammar.parserGrammars[normalizedVersion] else {
+            throw NSError(
+                domain: "AlgolParser",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "No embedded grammar for ALGOL version \(normalizedVersion)."]
+            )
         }
-        let grammarURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("algol")
-            .appendingPathComponent("\(normalizedVersion).grammar")
-
-        let content = try String(contentsOf: grammarURL, encoding: .utf8)
-        return try parseParserGrammar(source: content)
+        return grammar
     }
 
     private static func normalize(_ version: String) throws -> String {

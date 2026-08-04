@@ -96,9 +96,7 @@ pub fn db(
             value: period.to_string(),
         });
     }
-    let rate = (1.0 - (salvage / cost).powf(1.0 / life))
-        .min(1.0)
-        .max(0.0);
+    let rate = (1.0 - (salvage / cost).powf(1.0 / life)).clamp(0.0, 1.0);
     // Round to 3 decimal places, matching Excel.
     let rate = (rate * 1000.0).round() / 1000.0;
     if period == 1.0 {

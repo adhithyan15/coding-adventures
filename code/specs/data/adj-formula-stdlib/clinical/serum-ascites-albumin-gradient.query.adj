@@ -1,0 +1,28 @@
+% ============================================================================
+% serum-ascites-albumin-gradient.query.adj — worked applications of the SAAG definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an ascites vignette into observed albumin
+% concentrations: it `import`s the grounded formulabook, `observe`s the serum and ascitic albumin,
+% and asks the engine to APPLY the cited definition. No arithmetic is stated by the consumer; the
+% engine computes each value EXACTLY (over exact rationals) and carries the article's citation as its
+% proof, on the CPU, with zero model calls.
+%
+% Worked case (serum albumin = 4 g/dL, ascitic albumin = 1 g/dL): SAAG = 4 − 1 = 3 g/dL — a HIGH
+% gradient (≥ 1.1 g/dL), predicting portal hypertension. Each query below fixes two of the three
+% quantities and asks the engine to recover the third; every answer is exact and the three COMPOSE
+% (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli serum-ascites-albumin-gradient.query.adj
+% ============================================================================
+
+import "serum-ascites-albumin-gradient.adj"
+
+% --- Definition: the SAAG the two albumins imply (expect 3). ----------------------------------
+observe serum_albumin(4)
+observe ascites_albumin(1)
+? saag(serum_albumin, ascites_albumin)   % expect 3
+
+% --- Inverse: the serum albumin a gradient of 3 implies at that ascitic value (expect 4). ------
+observe saag(3)
+? serum_albumin(saag, ascites_albumin)   % expect 4

@@ -140,14 +140,27 @@ rather than panicking:
   **explicitly** on `(receiver type, method name)`, ported from the
   Python/TS `sir-runtime-oop` reference for parity:
   - **Array** (`Seq`): `length`/`size`, `first`, `last`, `push`/`append`,
-    `pop`, `include?`, `reverse`, `sort`, `join`, `map`, `select`/`filter`,
-    `reject`, `find`, `reduce`/`inject`, `each`, `any?`/`all?`/`none?`.
-  - **Hash** (`Map`): `keys`, `values`, `size`, `has_key?`, `each`, `map`,
-    `select`.
+    `pop`, `include?`, `reverse`, `sort`, `min`/`max`/`minmax`/`sum`, `join`, `map`, `select`/`filter`,
+    `reject`, `find`, `reduce`/`inject`, `each`, `any?`/`all?`/`none?`,
+    `each_slice`/`each_cons`, `chunk_while`/`slice_when`, `cycle`.
+  - **Hash** (`Map`): `keys`, `values`, `size`/`length`, `empty?`, `has_key?`,
+    `fetch`, `to_a`, `merge`, `dig` (nested), `invert`, `store`/`[]=`, `delete`,
+    `clear`, `each`/`each_pair`, `each_key`, `each_value`, `map`, `select`,
+    `reject`, `transform_values`, `transform_keys`, the Enumerable
+    aggregates `find`/`detect`, `any?`/`all?`/`none?`, `count`, `sort_by`,
+    `min_by`/`max_by`, the Enumerable breadth `group_by`, `partition`,
+    `flat_map`/`collect_concat`, `reduce`/`inject`, `sum` (all yielding the
+    `[k, v]` pair — `reduce`/`inject` follow Ruby's `(memo, pair)` convention),
+    and `to_h` (block + no-block), `each_with_index`, `each_with_object` (the
+    last two yield the `[k, v]` pair as a single argument alongside the
+    index/memo).
   - **String** (`Str`): `length`, `upcase`, `downcase`, `reverse`, `strip`,
-    `include?`, `split`.
+    `include?`, `split`, char-set `tr`/`count`/`delete`/`squeeze` (literal
+    sets), and justify `ljust`/`rjust`/`center`/`swapcase` (rune-aware; `center`
+    puts any odd extra pad char on the RIGHT, Ruby's rule).
   - **Numeric** (`Int`/`Float`): `abs`, `to_i`, `to_f`, `even?`, `odd?`,
-    `zero?`, `times`; plus a universal `to_s`.
+    `zero?`, `round` (with optional `ndigits`), `divmod`, `fdiv`, `clamp`,
+    `between?`, `times`; plus a universal `to_s`.
   - Block-taking methods apply the trailing closure via `apply_closure`;
     `sym_to_proc` implements `Symbol#to_proc` (`&:sym`).
   - **Strict vs. lenient reads** — `Array#[]` / `Hash#[]` are lenient (out of

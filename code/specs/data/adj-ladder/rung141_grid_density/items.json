@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 141 \u2014 grid density from four stated quantities (a NEW panel: grid, OPENING the fourth two-part-denominator family, OVER A PRODUCT). The ladder walked the numerator-op x denominator-shape matrix (rungs 130-140) for a rate (c/d), a sum (c+d), and a difference (c-d); the fourth elementary two-part denominator is a PRODUCT (c*d), and rung-141 opens that column with a SUM numerator (a+b)/(c*d). From a combined count (north_count + south_count) divided by a grid area (grid_rows * grid_cols), compute the grid density ((north_count+south_count)/(grid_rows*grid_cols)), the combined count (north_count+south_count), or the grid area (grid_rows*grid_cols). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a SUM NUMERATOR OVER A PRODUCT (a+b)/(c*d) (add the counts, multiply out the area, then divide the count by the area \u2014 the two-part denominator is ONE area, not two divisors). A product denominator has its own slips: dividing by two factors in turn equals dividing by their product (x/c/d = x/(c*d)), so that is not a wrong distractor; the two canonical slips are used instead. The harness matches the scalar to the printed options. The grid density is a density (how much combined count sits in each cell of the grid area), framed as a DENSITY so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via +, *, and / \u2014 no constant leaks, and neither the combined count, the grid area, nor the grid density ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make with a product denominator: dividing by the SUM of the dimensions instead of their product ((a+b)/(c+d), a perimeter-style total where an area belongs, a wrong operation) and INVERTING the ratio ((c*d)/(a+b), the area over the count, the reciprocal, a wrong operation). The core confusion tested is that (a+b)/(c*d) is one sum over one area, not (a+b)/(c+d) and not (c*d)/(a+b). This rung uses only +, *, and / over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r141gda-01",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 4 combined with a south count of 2, spread over a grid of 2 rows by 5 cols. What is the grid density (the combined count divided by the grid area)?",
+      "program": "observe north_count(4)\nobserve south_count(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = (north_count + south_count) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r141gda-02",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 4 combined with a south count of 2, spread over a grid of 2 rows by 5 cols. What is the the combined count (the north count plus the south count, the numerator that is divided by the grid area)?",
+      "program": "observe north_count(4)\nobserve south_count(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = north_count + south_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r141gda-03",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 4 combined with a south count of 2, spread over a grid of 2 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the product the combined count is divided by)?",
+      "program": "observe north_count(4)\nobserve south_count(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r141gda-04",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 5 combined with a south count of 3, spread over a grid of 2 rows by 3 cols. What is the grid density (the combined count divided by the grid area)?",
+      "program": "observe north_count(5)\nobserve south_count(3)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = (north_count + south_count) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r141gda-05",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 5 combined with a south count of 3, spread over a grid of 2 rows by 3 cols. What is the the combined count (the north count plus the south count, the numerator that is divided by the grid area)?",
+      "program": "observe north_count(5)\nobserve south_count(3)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = north_count + south_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r141gda-06",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 5 combined with a south count of 3, spread over a grid of 2 rows by 3 cols. What is the the grid area (the grid rows times the grid cols, the product the combined count is divided by)?",
+      "program": "observe north_count(5)\nobserve south_count(3)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r141gda-07",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 6 combined with a south count of 4, spread over a grid of 2 rows by 4 cols. What is the grid density (the combined count divided by the grid area)?",
+      "program": "observe north_count(6)\nobserve south_count(4)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = (north_count + south_count) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r141gda-08",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 6 combined with a south count of 4, spread over a grid of 2 rows by 4 cols. What is the the combined count (the north count plus the south count, the numerator that is divided by the grid area)?",
+      "program": "observe north_count(6)\nobserve south_count(4)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = north_count + south_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r141gda-09",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 6 combined with a south count of 4, spread over a grid of 2 rows by 4 cols. What is the the grid area (the grid rows times the grid cols, the product the combined count is divided by)?",
+      "program": "observe north_count(6)\nobserve south_count(4)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r141gda-10",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 7 combined with a south count of 5, spread over a grid of 3 rows by 5 cols. What is the grid density (the combined count divided by the grid area)?",
+      "program": "observe north_count(7)\nobserve south_count(5)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = (north_count + south_count) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r141gda-11",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 7 combined with a south count of 5, spread over a grid of 3 rows by 5 cols. What is the the combined count (the north count plus the south count, the numerator that is divided by the grid area)?",
+      "program": "observe north_count(7)\nobserve south_count(5)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = north_count + south_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r141gda-12",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 7 combined with a south count of 5, spread over a grid of 3 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the product the combined count is divided by)?",
+      "program": "observe north_count(7)\nobserve south_count(5)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r141gda-13",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 9 combined with a south count of 5, spread over a grid of 4 rows by 5 cols. What is the grid density (the combined count divided by the grid area)?",
+      "program": "observe north_count(9)\nobserve south_count(5)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = (north_count + south_count) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r141gda-14",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 9 combined with a south count of 5, spread over a grid of 4 rows by 5 cols. What is the the combined count (the north count plus the south count, the numerator that is divided by the grid area)?",
+      "program": "observe north_count(9)\nobserve south_count(5)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = north_count + south_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r141gda-15",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 9 combined with a south count of 5, spread over a grid of 4 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the product the combined count is divided by)?",
+      "program": "observe north_count(9)\nobserve south_count(5)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r141gda-16",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 5 combined with a south count of 4, spread over a grid of 3 rows by 4 cols. What is the grid density (the combined count divided by the grid area)?",
+      "program": "observe north_count(5)\nobserve south_count(4)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = (north_count + south_count) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r141gda-17",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 5 combined with a south count of 4, spread over a grid of 3 rows by 4 cols. What is the the combined count (the north count plus the south count, the numerator that is divided by the grid area)?",
+      "program": "observe north_count(5)\nobserve south_count(4)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = north_count + south_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r141gda-18",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 5 combined with a south count of 4, spread over a grid of 3 rows by 4 cols. What is the the grid area (the grid rows times the grid cols, the product the combined count is divided by)?",
+      "program": "observe north_count(5)\nobserve south_count(4)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r141gda-19",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 9 combined with a south count of 7, spread over a grid of 2 rows by 7 cols. What is the grid density (the combined count divided by the grid area)?",
+      "program": "observe north_count(9)\nobserve south_count(7)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = (north_count + south_count) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.7777777777777777,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r141gda-20",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 9 combined with a south count of 7, spread over a grid of 2 rows by 7 cols. What is the the combined count (the north count plus the south count, the numerator that is divided by the grid area)?",
+      "program": "observe north_count(9)\nobserve south_count(7)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = north_count + south_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.7777777777777777,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.875,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r141gda-21",
+      "qtype": "grid_density",
+      "stem": "A grid study records a north count of 9 combined with a south count of 7, spread over a grid of 2 rows by 7 cols. What is the the grid area (the grid rows times the grid cols, the product the combined count is divided by)?",
+      "program": "observe north_count(9)\nobserve south_count(7)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7777777777777777,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

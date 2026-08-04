@@ -197,7 +197,7 @@ fn check_types<'a>(
 mod tests {
     use super::*;
     use interpreter_ir::function::IIRFunction;
-    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::instr::IIRInstr;
     use interpreter_ir::module_exports::{IIRExport, IIRImport};
 
     fn make_fn(name: &str, params: Vec<(&str, &str)>, ret: &str) -> IIRFunction {

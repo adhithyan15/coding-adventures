@@ -52,7 +52,8 @@ package CodingAdventures::Wave;
 use strict;
 use warnings;
 use Carp qw(croak);
-use POSIX qw(floor);
+use POSIX qw(floor fmod isfinite);
+use Scalar::Util qw(looks_like_number);
 use CodingAdventures::Trig qw(sin_approx cos_approx);
 
 our $VERSION = '0.01';
@@ -401,6 +402,79 @@ sub mix_waves {
         @result = add_waves(\@result, $waves_ref->[$j]);
     }
     return @result;
+}
+
+# ============================================================================
+# PHY01 Wave object — validated continuous simple-harmonic model
+# ============================================================================
+
+sub new {
+    my ($class, $amplitude, $frequency, $phase) = @_;
+    $phase //= 0.0;
+    croak "wave parameters must be numeric"
+        unless looks_like_number($amplitude)
+            && looks_like_number($frequency)
+            && looks_like_number($phase);
+
+    $amplitude = 0.0 + $amplitude;
+    $frequency = 0.0 + $frequency;
+    $phase = 0.0 + $phase;
+    croak "amplitude must be finite and non-negative"
+        unless isfinite($amplitude) && $amplitude >= 0.0;
+    croak "frequency must be finite and positive"
+        unless isfinite($frequency) && $frequency > 0.0;
+    my $angular_frequency = $TWO_PI * $frequency;
+    croak "angular frequency must be finite" unless isfinite($angular_frequency);
+    croak "phase must be finite" unless isfinite($phase);
+
+    return bless {
+        amplitude => $amplitude,
+        frequency => $frequency,
+        phase => $phase,
+    }, $class;
+}
+
+sub _validate_model {
+    my ($self) = @_;
+    croak "invalid wave state" unless ref($self)
+        && isfinite($self->{amplitude}) && $self->{amplitude} >= 0.0
+        && isfinite($self->{frequency}) && $self->{frequency} > 0.0
+        && isfinite($self->{phase})
+        && isfinite($TWO_PI * $self->{frequency});
+}
+
+sub amplitude { _validate_model($_[0]); return $_[0]->{amplitude}; }
+sub frequency { _validate_model($_[0]); return $_[0]->{frequency}; }
+sub phase { _validate_model($_[0]); return $_[0]->{phase}; }
+
+sub period {
+    my ($self) = @_;
+    _validate_model($self);
+    return 1.0 / $self->{frequency};
+}
+
+sub angular_frequency {
+    my ($self) = @_;
+    _validate_model($self);
+    return $TWO_PI * $self->{frequency};
+}
+
+sub evaluate {
+    my ($self, $time) = @_;
+    _validate_model($self);
+    croak "time must be a finite number"
+        unless looks_like_number($time) && isfinite(0.0 + $time);
+    $time = 0.0 + $time;
+    return 0.0 if $self->{amplitude} == 0.0;
+
+    my $model_period = $self->period;
+    my $reduced_time = isfinite($model_period) ? fmod($time, $model_period) : $time;
+    my $reduced_phase = fmod($self->{phase}, $TWO_PI);
+    my $angle = $TWO_PI * ($self->{frequency} * $reduced_time) + $reduced_phase;
+    my $unit = sin_approx($angle);
+    $unit = -1.0 if $unit < -1.0;
+    $unit = 1.0 if $unit > 1.0;
+    return $self->{amplitude} * $unit;
 }
 
 1;

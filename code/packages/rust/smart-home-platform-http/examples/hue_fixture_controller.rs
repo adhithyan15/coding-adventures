@@ -1,13 +1,22 @@
 use embeddable_http_server::HttpServerOptions;
+use smart_home_automation_runtime::{
+    AutomationAction, AutomationDefinition, AutomationTrigger, SmartHomeAutomationRuntime,
+};
+use smart_home_core::{AgentId, CommandType, EntityId, Value};
+use smart_home_dashboard_core::{
+    NativeDashboard, NativeDashboardCard, NativeDashboardCardKind, NativeDashboardManifest,
+    NativeDashboardView, DASHBOARD_MANIFEST_SCHEMA_VERSION,
+};
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
+use smart_home_runtime::{RuntimePairingSession, RuntimePairingSessionId};
 use smart_home_testkit::hue_lighting_runtime;
 use std::env;
 use std::error::Error;
 use std::io;
 use std::net::SocketAddr;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use web_core::WebServer;
 
 const DEFAULT_BIND_ADDR: &str = "127.0.0.1:8123";
@@ -19,11 +28,46 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!("{USAGE}");
         return Ok(());
     };
+    let mut fixture = hue_lighting_runtime();
+    let bridge = fixture
+        .registry()
+        .bridges()
+        .next()
+        .cloned()
+        .ok_or_else(|| io::Error::other("fixture has no bridge"))?;
+    fixture.start_pairing_session(RuntimePairingSession::pending(
+        RuntimePairingSessionId::trusted("pairing-fixture-1"),
+        &bridge,
+        AgentId::trusted("agent:fixture-operator"),
+        4_000,
+        15_000,
+        Vec::new(),
+    ))?;
+
+    let mut automations = SmartHomeAutomationRuntime::new();
+    automations.upsert_definition(AutomationDefinition {
+        automation_id: "fixture-nightly-off".to_string(),
+        enabled: true,
+        trigger: AutomationTrigger::Schedule {
+            every_ms: 86_400_000,
+            offset_ms: 0,
+        },
+        conditions: Vec::new(),
+        actions: vec![AutomationAction::Command {
+            entity_id: EntityId::trusted("entity-light-1"),
+            command_type: CommandType::TurnOff,
+            arguments: Value::Bool(false),
+            timeout_ms: None,
+        }],
+    })?;
+
     let runtime = SmartHomePlatformHttpRuntime::new(
-        hue_lighting_runtime(),
+        fixture,
         SmartHomePlatformHttpConfig::new("Codex Home").with_time_zone("America/Los_Angeles"),
     )
     .with_now_ms(5_000)
+    .with_automation_runtime(Arc::new(Mutex::new(automations)))
+    .with_dashboard_manifest(fixture_dashboard_manifest())
     .grant_local_full_access("hue-fixture-controller", 1_000);
     let app = Arc::new(home_assistant_runtime_web_app(runtime));
     let options = dashboard_server_options();
@@ -46,6 +90,36 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("{}", launch_guide(server.local_addr()));
     server.serve()?;
     Ok(())
+}
+
+fn fixture_dashboard_manifest() -> NativeDashboardManifest {
+    NativeDashboardManifest {
+        schema_version: DASHBOARD_MANIFEST_SCHEMA_VERSION,
+        source_instance_id: "fixture-home-assistant".to_string(),
+        generated_at_ms: 5_000,
+        dashboards: vec![NativeDashboard {
+            dashboard_id: "fixture-overview".to_string(),
+            url_path: "lovelace".to_string(),
+            title: "Fixture Overview".to_string(),
+            icon: None,
+            require_admin: false,
+            show_in_sidebar: true,
+            views: vec![NativeDashboardView {
+                view_id: "living-room".to_string(),
+                title: "Living Room".to_string(),
+                path: Some("living-room".to_string()),
+                icon: None,
+                cards: vec![NativeDashboardCard {
+                    card_id: "living-room-light".to_string(),
+                    kind: NativeDashboardCardKind::EntityControl,
+                    source_type: "light".to_string(),
+                    title: Some("Living Room Light".to_string()),
+                    entity_ids: vec!["entity-light-1".to_string()],
+                }],
+            }],
+        }],
+        source_resources: Vec::new(),
+    }
 }
 
 fn dashboard_server_options() -> HttpServerOptions {

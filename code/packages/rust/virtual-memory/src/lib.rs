@@ -438,8 +438,8 @@ impl TLB {
         let key = (pid, vpn);
 
         // Update existing entry.
-        if self.entries.contains_key(&key) {
-            self.entries.insert(key, (frame_number, pte.clone()));
+        if let std::collections::hash_map::Entry::Occupied(mut e) = self.entries.entry(key) {
+            e.insert((frame_number, pte.clone()));
             self.access_order.retain(|k| *k != key);
             self.access_order.push_back(key);
             return;
@@ -963,15 +963,13 @@ impl MMU {
         };
 
         // Walk all second-level tables and free mapped frames.
-        for maybe_table in &table.directory {
-            if let Some(pt) = maybe_table {
-                for (_, pte) in pt.entries() {
-                    if pte.present {
-                        let frame = pte.frame_number;
-                        self.replacement_policy.remove_frame(frame);
-                        self.frame_owners.remove(&frame);
-                        self.frame_allocator.decrement_refcount(frame);
-                    }
+        for pt in table.directory.iter().flatten() {
+            for pte in pt.entries().values() {
+                if pte.present {
+                    let frame = pte.frame_number;
+                    self.replacement_policy.remove_frame(frame);
+                    self.frame_owners.remove(&frame);
+                    self.frame_allocator.decrement_refcount(frame);
                 }
             }
         }
@@ -2045,8 +2043,9 @@ mod tests {
 
         // 5th mapping triggers eviction.
         mmu.map_page(1, 0x5000, PagePermissions::default()).unwrap();
-        let phys = mmu.translate(1, 0x5000, false).unwrap();
-        assert!(phys > 0 || phys == 0); // Just verify it works.
+        // Translation must succeed after eviction; `.unwrap()` is the assertion
+        // (the returned physical address is a `usize`, so `>= 0` is vacuous).
+        mmu.translate(1, 0x5000, false).unwrap();
     }
 
     #[test]
@@ -2077,9 +2076,8 @@ mod tests {
         // 4th mapping evicts 0x2000 (LRU).
         mmu.map_page(1, 0x4000, PagePermissions::default()).unwrap();
 
-        // 0x1000 should still be accessible.
-        let phys = mmu.translate(1, 0x1000, false).unwrap();
-        assert!(phys > 0 || phys == 0);
+        // 0x1000 should still be accessible; `.unwrap()` is the assertion.
+        mmu.translate(1, 0x1000, false).unwrap();
     }
 
     #[test]
@@ -2093,8 +2091,8 @@ mod tests {
 
         mmu.map_page(1, 0x4000, PagePermissions::default()).unwrap();
 
-        let phys = mmu.translate(1, 0x4000, false).unwrap();
-        assert!(phys > 0 || phys == 0);
+        // Translation must succeed; `.unwrap()` is the assertion.
+        mmu.translate(1, 0x4000, false).unwrap();
     }
 
     #[test]

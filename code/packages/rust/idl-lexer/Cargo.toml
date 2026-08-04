@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-idl-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for IDL (Interactive Data Language), the science/astronomy array frontend (MA12 MA-12b)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

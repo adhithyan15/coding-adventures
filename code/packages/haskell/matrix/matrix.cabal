@@ -1,0 +1,29 @@
+cabal-version: 3.0
+name:          matrix
+version:       0.1.0
+synopsis:      Immutable rectangular matrices from first principles
+description:   Pure matrix construction, arithmetic, reductions, element-wise math, and shape operations.
+category:      Math
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Matrix
+    build-depends:    base >=4.14 && <5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    MatrixSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , hspec == 2.*
+                    , matrix
+    default-language: Haskell2010

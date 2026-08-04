@@ -1,0 +1,97 @@
+% ============================================================================
+% plate-boundaries — the three types of tectonic plate boundary and how the
+% plates move at each one (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% One of the first big ideas of plate tectonics, and a rung an EARTH-SCIENCE
+% agent reasons UP from: the rigid outer shell of the Earth is broken into
+% plates, and everywhere two plates meet the plates are doing one of just THREE
+% things — pulling apart, coming together, or sliding side-by-side. That single
+% distinction is what predicts whether you get a mid-ocean ridge, a mountain
+% belt / volcanic arc, or a strike-slip fault. Before you can reason about a
+% rift, a subduction zone, or the San Andreas fault you must first know WHICH of
+% the three boundary types you are looking at. Recall is a binding query:
+%
+%     ? boundary_motion(divergent, $Motion)      % rip_apart
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `boundary_motion(boundary, motion)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% motion WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these three boundary types (it never invents a
+% motion).
+%
+% Each of the three plate-boundary types and how the source says the plates move
+% there, as a little truth table:
+%
+%     boundary type   how the plates move (source's word)   a beginner's cue
+%     -------------   -----------------------------------   ----------------------
+%     divergent       rip_apart                             plates move away — a rift
+%     convergent      subducts                              one plate dives beneath
+%     transform       slide_past                            plates slide side-by-side
+%
+% The query also runs BACKWARD — bind a motion and recall its boundary type:
+%
+%     ? boundary_motion($Boundary, slide_past)   % transform
+%
+% A word that is NOT one of these three boundary types — `equator`, `hotspot`,
+% `rift` — is deliberately NOT a row, so a boundary recall ABSTAINS on it rather
+% than inventing a motion. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the boundary→motion
+% pairs it can ground, and only those.
+%
+% The `motion` value of every row is a SINGLE lowercase atom, chosen to be the
+% word the source EXPLICITLY uses for the movement at that boundary — never one
+% the source does not support. (Where the everyday word differs from the
+% source's word — the source says plates "rip apart", not merely "move apart";
+% it says one plate "subducts" beneath the other rather than "collide"; it says
+% plates "slide ... past" one another — the atom uses the source's own word, so
+% every value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every boundary→motion pair
+% below was read out of a fetched U.S. National Park Service (NPS) geology page,
+% and any pair whose motion could not be verified there would have been
+% dropped). Each pair, with the primary source it was copied from and the
+% verbatim span that states it:
+%
+%   divergent → rip_apart
+%     https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm
+%     (National Park Service — U.S. Department of the Interior)
+%     "Plates rip apart at a divergent plate boundary, causing volcanic activity
+%      and shallow earthquakes."
+%
+%   convergent → subducts
+%     https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm
+%     (National Park Service — U.S. Department of the Interior)
+%     "At a convergent plate boundary, one plate dives (\"subducts\") beneath the
+%      other, resulting in a variety of earthquakes and a line of volcanoes on
+%      the overriding plate."
+%
+%   transform → slide_past
+%     https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm
+%     (National Park Service — U.S. Department of the Interior)
+%     "Transform plate boundaries are where plates slide laterally past one
+%      another, producing shallow earthquakes but little or no volcanic
+%      activity."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NPS statement that fixes the
+% first row (divergent → rip_apart). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each motion remains independently checkable.
+% All sources are the U.S. National Park Service, a primary U.S. government
+% (Department of the Interior) teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table boundary_motion {
+    columns boundary, motion
+
+    row (divergent, rip_apart)
+    row (convergent, subducts)
+    row (transform, slide_past)
+
+    source "Plates rip apart at a divergent plate boundary, causing volcanic activity and shallow earthquakes."
+    locator "https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm"
+    trust authoritative
+}

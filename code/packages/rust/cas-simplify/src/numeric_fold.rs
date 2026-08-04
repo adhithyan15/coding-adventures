@@ -97,7 +97,7 @@ fn numeric_fold_apply(node: IRApply) -> IRNode {
 /// two `i64` values together mid-fold.  The result is reduced by GCD so the
 /// denominator stays bounded.
 #[derive(Clone)]
-enum Acc {
+pub(crate) enum Acc {
     /// Exact rational `numer / denom` (always in reduced form, denom > 0).
     Rat(i128, i128),
     /// Float-contaminated: once a float is seen, the whole fold goes f64.
@@ -106,7 +106,7 @@ enum Acc {
 
 impl Acc {
     /// Identity element for addition (`0`) or multiplication (`1`).
-    fn identity(is_mul: bool) -> Self {
+    pub(crate) fn identity(is_mul: bool) -> Self {
         if is_mul {
             Acc::Rat(1, 1)
         } else {
@@ -115,7 +115,7 @@ impl Acc {
     }
 
     /// True iff this value equals the identity for the given operation.
-    fn is_identity(&self, is_mul: bool) -> bool {
+    pub(crate) fn is_identity(&self, is_mul: bool) -> bool {
         match self {
             Acc::Rat(n, d) => {
                 if is_mul {
@@ -143,7 +143,7 @@ impl Acc {
     }
 
     /// Combine `self` with `val` via addition or multiplication.
-    fn combine(self, val: Acc, is_mul: bool) -> Acc {
+    pub(crate) fn combine(self, val: Acc, is_mul: bool) -> Acc {
         match (self, val) {
             // Float contamination: either operand float → float result.
             (Acc::Flt(a), v) => {
@@ -168,7 +168,7 @@ impl Acc {
     }
 
     /// Convert to the smallest IR numeric literal.
-    fn into_irnode(self) -> IRNode {
+    pub(crate) fn into_irnode(self) -> IRNode {
         match self {
             Acc::Flt(f) => IRNode::Float(f),
             Acc::Rat(n, d) => {
@@ -224,7 +224,7 @@ fn fold_numerics(args: Vec<IRNode>, is_mul: bool) -> Vec<IRNode> {
 }
 
 /// Extract a numeric value from `node`, or return `None`.
-fn node_to_acc(node: &IRNode) -> Option<Acc> {
+pub(crate) fn node_to_acc(node: &IRNode) -> Option<Acc> {
     match node {
         IRNode::Integer(n) => Some(Acc::Rat(*n as i128, 1)),
         IRNode::Rational(n, d) => Some(Acc::Rat(*n as i128, *d as i128)),

@@ -294,6 +294,9 @@ impl Predicate {
 
     /// Build a negation, simplifying double-negation:
     /// - `Not(Not(p))` → `p`
+    // Smart constructor taking a `Predicate` by value (not `self`); it is not
+    // the unary `std::ops::Not` operator.
+    #[allow(clippy::should_implement_trait)]
     pub fn not(p: Predicate) -> Predicate {
         match p {
             Predicate::Not(inner) => *inner,

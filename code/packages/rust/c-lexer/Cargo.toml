@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-c-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Lexer for the C integer-core subset (SIR27) — tokenizes C source using the grammar-driven lexer and the c.tokens grammar file."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

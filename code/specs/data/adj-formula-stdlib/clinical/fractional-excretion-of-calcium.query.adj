@@ -1,0 +1,30 @@
+% ============================================================================
+% fractional-excretion-of-calcium.query.adj — worked applications of the fractional excretion of calcium.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hypercalcemia work-up (e.g. FHH vs primary
+% hyperparathyroidism) into a urine calcium, a serum creatinine, a serum calcium and a urine creatinine: it
+% `import`s the grounded formulabook, `observe`s the four values, and asks the engine to APPLY the cited FeCa
+% formula. No arithmetic is stated by the consumer; the engine computes each value EXACTLY (over exact
+% rationals) and carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (UCa = 1, PCr = 1, PCa = 8, UCr = 8 mg/dL): FeCa = (1 × 1) / (8 × 8) = 1/64 = 0.015625 (a low
+% fraction ≈ 1.6%, the kind that suggests familial hypocalciuric hypercalcemia). The worked FeCa is the DYADIC
+% value 1/64, so every answer is exact. Each query fixes one input and asks the engine to recover another
+% quantity; the inversions COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fractional-excretion-of-calcium.query.adj
+% ============================================================================
+
+import "fractional-excretion-of-calcium.adj"
+
+% --- FeCa: the fraction the four inputs imply (expect 0.015625). -------------------------------------
+observe urinary_calcium(1)
+observe serum_creatinine(1)
+observe serum_calcium(8)
+observe urinary_creatinine(8)
+? fractional_excretion_calcium(urinary_calcium, serum_creatinine, serum_calcium, urinary_creatinine)   % expect 0.015625
+
+% --- Inverse: the serum calcium a FeCa of 0.015625 implies at the same other three inputs (expect 8). -
+observe fractional_excretion_calcium(0.015625)
+? serum_calcium(fractional_excretion_calcium, urinary_calcium, serum_creatinine, urinary_creatinine)   % expect 8

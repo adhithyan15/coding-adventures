@@ -1,0 +1,64 @@
+% ============================================================================
+% blood-groups — each ABO blood type and the antigen(s) present on the red
+% cells (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% An immunohematology fact a medicine agent reasons from: the ABO blood group
+% is defined by which of the A and B antigens sit on the surface of a person's
+% red blood cells (RBCs). This single fact is what makes ABO the most important
+% system in transfusion medicine — transfusing ABO-incompatible blood is the
+% most common cause of a fatal transfusion reaction, because the recipient's
+% naturally-occurring anti-A / anti-B antibodies bind the mismatched antigen and
+% lyse the donor cells. So the recall "which antigen(s) does type X carry?" is a
+% load-bearing clinical primitive, not trivia. Recall is a binding query:
+%
+%     ? blood_type_antigen(a, $Antigen)     % a_antigen
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `blood_type_antigen(blood_type, antigen)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the antigen WITH its source, on the CPU, with zero model calls, and
+% abstains on anything not in the table.
+%
+% The ABO antigen table, as a truth table:
+%
+%     blood_type   antigen(s) on the RBC        atom
+%     ----------   -------------------------    -----------------
+%     a            A antigen only               a_antigen
+%     b            B antigen only               b_antigen
+%     ab           both the A and the B         a_and_b_antigens
+%     o            neither A nor B              no_antigens
+%
+% Note that `ab` maps to the compound atom `a_and_b_antigens` (both present) and
+% `o` maps to `no_antigens` (both absent). Keeping `o` an explicit row — rather
+% than letting it fall through to abstention — is deliberate: "type O carries no
+% ABO antigen" is itself a grounded, citable fact (it is *why* O red cells are
+% the universal-donor cells), so the table asserts it positively. A query for a
+% blood type that is not one of the four ABO phenotypes (e.g. an Rh label, or a
+% typo) is not in the table and ABSTAINS honestly — the engine never invents an
+% antigen. That honest-abstention property is what makes the table safe for a
+% clinical reasoner to trust.
+%
+% Provenance: the antigen assignment is copied verbatim from the NCBI Bookshelf
+% chapter "The ABO blood group" (Blood Groups and Red Cell Antigens, Laura
+% Dean), whose History section states, in one continuous passage (see `source`),
+% that the RBC expressing the A antigen "belonged to blood group A", the one
+% expressing the B antigen to "blood group B", that group O RBCs "lacked the
+% properties of A and B", and that the AB group "RBCs expressed both A and B
+% antigens." The citable artifact is that chapter at the `locator`. `trust
+% authoritative` — NCBI Bookshelf / ncbi.nlm.nih.gov is a primary U.S. National
+% Library of Medicine reference. Nothing here is asserted from memory. (See
+% ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table blood_type_antigen {
+    columns blood_type, antigen
+
+    row (a, a_antigen)
+    row (b, b_antigen)
+    row (ab, a_and_b_antigens)
+    row (o, no_antigens)
+
+    source "He called the antigens A and B, and depending upon which antigen the RBC expressed, blood either belonged to blood group A or blood group B. A third blood group contained RBCs that reacted as if they lacked the properties of A and B, and this group was later called \"O\" after the German word \"Ohne\", which means \"without\". The following year the fourth blood group, AB, was added to the ABO blood group system. These RBCs expressed both A and B antigens."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK2267/"
+    trust authoritative
+}

@@ -39,13 +39,13 @@
 // A single entity can have multiple architectures (e.g., behavioral vs structural),
 // which is powerful for simulation and verification.
 //
-// Locating the Grammar File
-// -------------------------
+// Grammar Embedding
+// -----------------
 //
-// The vhdl.grammar file lives in code/grammars/, which is three directory
-// levels above this source file (packages/go/vhdl-parser/ -> code/).
-// The path is resolved at runtime using runtime.Caller(0) so it works
-// regardless of the current working directory.
+// The VHDL parser grammars are embedded at compile time as native Go data in
+// the internal/grammars/v* subpackages (ParserGrammarData). Nothing is read
+// from code/grammars/ at run time, so the parser works when built standalone
+// and needs no filesystem capability.
 //
 // Usage
 // -----
@@ -78,22 +78,7 @@ import (
 	vhdlv2019 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-parser/internal/grammars/v2019"
 )
 
-// getGrammarPath resolves the absolute path to vhdl.grammar.
-//
-// Uses runtime.Caller(0) to find the directory containing this source file,
-// then navigates three levels up to reach code/ and into grammars/.
-//
-// Directory layout:
-//
-//	code/
-//	  grammars/
-//	    vhdl.grammar       <-- target
-//	  packages/
-//	    go/
-//	      vhdl-parser/
-//	        parser.go      <-- we are here
-//
-// So from parser.go: ../../../grammars/vhdl.grammar
+// DefaultVersion is the VHDL edition used when no version is specified.
 const DefaultVersion = vhdllexer.DefaultVersion
 
 func parserGrammarForVersion(version string) (*grammartools.ParserGrammar, error) {
@@ -157,13 +142,10 @@ func CreateVhdlParserVersion(source string, version string) (*parser.GrammarPars
 		return nil, err
 	}
 
-	return StartNew[*parser.GrammarParser]("vhdlparser.CreateVhdlParser", nil,
-		func(_ *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Create the parser from the compiled grammar.
-			// NewGrammarParser builds a packrat parser with memoization that
-			// will interpret the grammar rules against the token stream.
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	// Step 2: Create the parser from the compiled grammar.
+	// NewGrammarParser builds a packrat parser with memoization that
+	// will interpret the grammar rules against the token stream.
+	return parser.NewGrammarParser(tokens, grammar), nil
 }
 
 // ParseVhdl tokenizes and parses VHDL source code in one step.

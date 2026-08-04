@@ -1932,6 +1932,10 @@ fn app_state_from_anki_note_tsv_import(imported: AnkiNoteTsvImport) -> AppState 
     }
 }
 
+// Aggregates the whole app view-state into the props object handed to the
+// renderer; the parameters mirror the discrete pieces of UI state (deck,
+// selection, clock, screen, …) rather than being worth bundling into a struct.
+#[allow(clippy::too_many_arguments)]
 fn engram_app_props_for_state(
     state: &AppState,
     deck_id: &str,
@@ -3041,6 +3045,10 @@ fn insert_note_type_editor_props(
     );
 }
 
+// As with engram_app_props_for_state, this flattens the browser view-state
+// (queries, filter, …) into a props object; the parameter list mirrors that
+// state directly.
+#[allow(clippy::too_many_arguments)]
 fn engram_browser_props_for_state(
     state: &AppState,
     display_query: &str,
@@ -3318,7 +3326,7 @@ fn browser_card_state(
     collection_created_at_days: Option<i64>,
     now: u64,
 ) -> &'static str {
-    if progress.map_or(true, browser_progress_is_new_overlay) {
+    if progress.is_none_or(browser_progress_is_new_overlay) {
         if let Some(state) =
             imported_anki_browser_card_state(card_sources, collection_created_at_days, now)
         {
@@ -3370,9 +3378,9 @@ fn browser_card_flag(
         .unwrap_or("none")
 }
 
-fn browser_card_sources_by_id<'a>(
-    state: &'a AppState,
-) -> HashMap<&'a str, Vec<&'a ExternalSourceRecord>> {
+fn browser_card_sources_by_id(
+    state: &AppState,
+) -> HashMap<&str, Vec<&ExternalSourceRecord>> {
     let mut sources_by_id: HashMap<&str, Vec<&ExternalSourceRecord>> = HashMap::new();
     for source in &state.external_sources {
         if source.target == ExternalSourceTarget::Card && source.source == "anki-v11" {
@@ -5410,8 +5418,7 @@ fn parse_leech_action(value: &str) -> Result<LeechAction, String> {
     let normalized = value
         .trim()
         .to_ascii_lowercase()
-        .replace('_', "-")
-        .replace(' ', "-");
+        .replace(['_', ' '], "-");
     match normalized.as_str() {
         "suspend" | "0" => Ok(LeechAction::Suspend),
         "tag-only" | "tagonly" | "tag" | "1" => Ok(LeechAction::TagOnly),

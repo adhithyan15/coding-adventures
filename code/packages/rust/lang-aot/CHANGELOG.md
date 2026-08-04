@@ -1,5 +1,666 @@
 # Changelog — `lang-aot`
 
+## 0.220.35 - 2026-08-03 (fix `llvm_lambda.rs` undefined GC symbols)
+
+`tests/llvm_lambda.rs` linked only `dynval_runtime.c`, whose `__dyn_cons` calls
+`__gc_alloc_kind`/`__gc_register_kind` — symbols only the `gc-core-capi`
+staticlib defines. Every McCarthy lambda test failed to link ("Undefined
+symbols ... ___gc_alloc_kind") on any host with `clang` available. Adds
+`mod common;` and `common::gc_link_args()` to the clang invocation, mirroring
+the working `e6d6_llvm_records.rs` pattern. Confirmed the fix is real: reverted
+locally, the same undefined-symbol linker error reproduces exactly.
+
+## 0.220.34 - 2026-08-02 (ALGOL dynamic own strings — seven-backend matrix)
+
+The matrix now replaces an `own string` from branch-selected procedure results
+on successive calls before forwarding the newest runtime value through a string
+formal on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.33 - 2026-08-02 (ALGOL dynamic captured strings — seven-backend matrix)
+
+The matrix now overwrites a captured string from a branch-selected procedure
+result before forwarding the final dynamic value through a string formal.
+
+## 0.220.32 - 2026-08-02 (ALGOL composed integer procedures — seven-backend matrix)
+
+The matrix now feeds two integer procedure results to a second integer procedure
+on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.31 - 2026-08-02 (ALGOL composed real procedures — seven-backend matrix)
+
+The matrix now passes two real procedure results to a second real procedure and
+converts its f64 result through `entier` on every standard backend.
+
+## 0.220.30 - 2026-08-02 (ALGOL composed string procedures — seven-backend matrix)
+
+The matrix now feeds a branch-selected string procedure result directly into a
+second procedure's string value formal, then checks the callee-selected result
+on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.29 - 2026-08-02 (ALGOL composed boolean procedures — seven-backend matrix)
+
+The matrix now feeds two boolean procedure results as typed value actuals to a
+second boolean procedure before using its result in a branch on all seven backends.
+
+## 0.220.28 - 2026-08-02 (ALGOL boolean procedure control flow — seven-backend matrix)
+
+The matrix now returns `boolean procedure` results directly into a compound
+condition and its branch on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.27 - 2026-08-02 (ALGOL runtime procedure strings in arrays — seven-backend matrix)
+
+The matrix now stores branch-selected `string procedure` results in `array<str>`,
+reads them back for lexical ordering, and prints the selected element on Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.26 - 2026-08-02 (right-associative ALGOL exponentiation — seven-backend matrix)
+
+The matrix now proves that `2 ^ 3 ^ 2` is `2 ^ (3 ^ 2)` by deriving exit 42 from
+512. The typed integer multiplication path runs on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT.
+
+## 0.220.25 - 2026-08-01 (forwarded captured 4-D ALGOL boolean arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that forwards a captured,
+non-unit-bound four-dimensional `boolean array` value formal to a sibling array formal.
+Caller-side checkerboard reads prove the `array<bool>` handle, all four lower bounds,
+and all three row-major strides survived two procedure boundaries on Native AOT, LLVM,
+WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.24 - 2026-08-01 (ALGOL runtime integer exponents — seven-backend matrix)
+
+The matrix now executes runtime positive and negative integer exponents from an integer
+base. The compiler widens both operands to the shared `f64_pow` operation, so `2^3` and
+the reciprocal `2^-1` run on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.23 - 2026-08-01 (forwarded captured 4-D ALGOL real arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that forwards a captured,
+non-unit-bound four-dimensional `real array` value formal to a sibling array formal.
+A caller-side floating-point sum proves the `array<f64>` handle, all four lower bounds,
+and all three row-major strides survived two procedure boundaries on Native AOT, LLVM,
+WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.22 - 2026-08-01 (forwarded captured 4-D ALGOL string arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that forwards a captured,
+non-unit-bound four-dimensional `string array` value formal to a sibling array formal.
+The callee's lexical ordering, equality, and inequality checks prove the dynamic
+`array<str>` handle, all four lower bounds, and all three row-major strides survived two
+procedure boundaries on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.21 - 2026-08-01 (captured four-dimensional ALGOL string arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that writes a four-dimensional,
+non-unit-bound `string array` value formal. Its lexical ordering, equality, and
+inequality checks prove the dynamic `array<str>` descriptor retains all four lower
+bounds and all three row-major strides on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.20 - 2026-08-01 (captured four-dimensional ALGOL integer arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that writes a four-dimensional,
+non-unit-bound `integer array` value formal. A caller-side corner sum proves the dynamic
+`array<i64>` descriptor retains all four lower bounds and all three row-major strides on
+Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.19 - 2026-08-01 (captured three-dimensional ALGOL real arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that writes a three-dimensional,
+non-unit-bound `real array` value formal. A caller-side floating-point sum proves the
+dynamic `array<f64>` descriptor retains all three lower bounds and both row-major strides
+on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.18 - 2026-08-01 (captured three-dimensional ALGOL boolean arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that writes a three-dimensional,
+non-unit-bound `boolean array` value formal. Its checkerboard reads prove the dynamic
+`array<bool>` descriptor retains all three lower bounds and both row-major strides on
+Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.17 - 2026-08-01 (captured three-dimensional ALGOL string arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that writes a three-dimensional,
+non-unit-bound `string array` value formal. Its caller verifies lexical ordering,
+equality, and inequality of distinct cells, proving the dynamic `array<str>` descriptor
+retains all three lower bounds and both row-major strides on Native AOT, LLVM, WASM,
+JVM, CLR, VM, and JIT.
+
+## 0.220.16 - 2026-08-01 (captured multidimensional ALGOL string arrays — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure that writes a two-dimensional,
+non-unit-bound `string array` value formal. Its caller verifies lexical ordering,
+equality, and inequality of distinct cells, proving the dynamic `array<str>` descriptor
+survives capture on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.15 - 2026-08-01 (multidimensional ALGOL boolean arrays — seven-backend matrix)
+
+The matrix now runs a two-dimensional, non-unit-bound boolean array through a
+value formal. Its checkerboard writes prove both lower bounds and the outer
+row-major stride survive the call on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.14 - 2026-07-31 (ALGOL boolean arrays — seven-backend matrix)
+
+The matrix now executes a proper ALGOL procedure with a `boolean array` value
+formal. It writes `true` and `false` through a non-unit-bound descriptor; the
+caller reads those cells through `not` and exits with 42 on Native AOT, LLVM,
+WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.13 - 2026-07-31 (ALGOL nested scalar-formal capture — seven-backend matrix)
+
+The matrix now executes an ALGOL procedure whose nested sibling increments an
+enclosing scalar `value` parameter. The outer frame publishes the typed value
+to shared global storage before the nested call; the program returns 42 on
+Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.12 - 2026-07-31 (ALGOL switch designators — seven-backend matrix)
+
+The matrix now executes a switch whose selected element first evaluates a
+boolean condition and then subscripts a second switch. It returns 42 on Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT, proving that switch-list designators are
+evaluated at computed-goto time rather than flattened at declaration time.
+
+## 0.220.11 - 2026-07-31 (ALGOL nested array-formal capture — seven-backend matrix)
+
+The matrix now executes a nested ALGOL procedure which writes a two-dimensional
+array `value` formal from its enclosing procedure. The generated descriptor
+globals preserve the shared handle, nonzero lower bounds, and outer stride; the
+program returns 42 on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.10 - 2026-07-31 (ALGOL zero-argument procedures — seven-backend matrix)
+
+The matrix now executes an ALGOL typed procedure invoked as `answer()` in a
+value expression and a proper procedure invoked as `store()` in statement
+position. The zero-argument IIR calls return 42 on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT.
+
+## 0.220.9 - 2026-07-31 (ALGOL multidimensional array parameters — seven-backend matrix)
+
+The matrix now executes an ALGOL procedure with a two-dimensional `integer
+array` value parameter whose actual is captured by a forwarding procedure. Its
+nonzero lower bounds force the shared call ABI to preserve the typed handle,
+both lower bounds, and the outer row-major stride. The callee writes two cells
+and returns 42 on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.8 - 2026-07-31 (ALGOL integer-to-real promotion — seven-backend matrix)
+
+The matrix now executes an ALGOL program that widens an integer into a real
+array element, scalar, and real procedure parameter before comparing the array
+element back to the original integer. It exits with 42 on Native AOT, LLVM,
+WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.7 - 2026-07-31 (ALGOL array value parameters — seven-backend matrix)
+
+The matrix now executes an ALGOL integer procedure with a one-dimensional
+`integer array` value parameter. The callee writes and reads `values[4:5]`
+through its parameter and returns 42; a proper procedure forwards the captured
+descriptor, covering global handle/lower-bound reload. The program runs on
+Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+The JVM scalar-narrowing pass now narrows `array<i64>` formal descriptors to
+`array<i32>` together with their allocation/access instructions. This keeps the
+method signature's `int[]` aligned with `iaload`/`iastore`, preventing a real
+JVM verifier failure.
+
+## 0.220.6 - 2026-07-30 (ALGOL static scalar strings — seven-backend matrix)
+
+The matrix now executes an ALGOL proper procedure that writes an enclosing
+`string` and an integer procedure whose `own string memo` is initialized on
+its first call and read on its second. The program exits with 3 across Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT, locking in typed persistent global
+strings on every standard LANG target.
+
+## 0.220.5 - 2026-07-30 (ALGOL own arrays — seven-backend matrix)
+
+Test-only. The matrix now executes an ALGOL procedure containing `own integer
+array memo[4:5]`. Three calls update and read the same `memo[4]` cell, producing
+1 + 2 + 3 = 6 across Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. This locks
+in first-call-only allocation and persistent declared-bound metadata.
+
+## 0.220.4 - 2026-07-30 (ALGOL captured arrays — seven-backend matrix)
+
+Test-only. The matrix now executes an ALGOL program where a proper procedure
+mutates an enclosing `integer array values[4:5]` and the enclosing block reads
+the result back as 42. It covers Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT,
+locking in typed module-global array handles and the frontend's captured bounds.
+
+## 0.220.3 - 2026-07-30 (native records — run-verify the movable-alloc change)
+
+Test-only. `e6d6_llvm_records` gains `records_run_on_native`: a real Twig record program
+(`(record Point (x : int) (y : int)) (point-x (Point 42 7))` and the `point-y` sibling) is compiled
+to a host executable and run, proving the record cells still round-trip after the native `alloc` op
+switched to the movable `{0,8}` pair allocator (`__twig_gc_alloc_pair`; aarch64-backend 0.34.0 /
+x86_64-backend 0.36.0). The GC-relocation proof itself is the twig-aot smoke differential
+`end_to_end_gc_record_field_traced_and_relocated`. No production-source change.
+
+## 0.220.2 - 2026-07-30 (native closures — broaden capture coverage)
+
+Test-only. `closures_run_on_native` (in `e6d7a_wasm_closures`) gains a **two-capture** case,
+`(((lambda (a b) (lambda (c) (+ (+ a b) c))) 10 20) 12) = 42`: the inner lambda captures both `a`
+and `b`, so the synthesized `__dyn_call_closure` dispatcher must `car`/`cdr`-walk a two-entry
+captured-environment cons chain before the call-time argument — the multi-capture path the prior
+capture-free and one-capture cases could not reach. Compiled to a real native binary and run. No
+production-source change.
+
+## 0.220.1 - 2026-07-17 (#118b-2b: tests link gc-core-capi, not the retired twig_gc.c)
+
+Test-only change tracking the retirement of `twig-aot/runtime/twig_gc.c`. The
+LLVM/native GC-allocating integration tests (`e6d2b_dynamic_arith`,
+`e6d6_llvm_records`, `e6d6b_union_match_tagged`, `e6d7a_wasm_closures`,
+`llvm_cons`/`llvm_cond`/`llvm_predicates`/`llvm_symbols`, and the `@__dyn_` cells in
+`lang_matrix`) used to hand `clang` the three C runtime files including `twig_gc.c`.
+That file is gone; a new `tests/common/mod.rs` helper (`gc_link_args`) builds
+`gc-core-capi`'s release staticlib and returns it plus the platform link libraries
+(`-lpthread -ldl` on Linux) in its place. No production-source or ABI change.
+
+## 0.220.0 - 2026-07-14 (AOT00 T7 — loop differential via BASIC FOR/NEXT)
+
+Adds `t7_differential_random_basic_loops_agree` to `tests/lang_matrix.rs` — the
+fourth generative differential (AOT00 T7), the first to exercise a **loop
+back-edge**. The three prior slices (arithmetic exit-code, arithmetic full-value,
+control-flow `IF`) never touch a loop; this generates
+`S := 0; FOR I = 1 TO n { S := S + <body(I)> }; PRINT S` accumulator programs
+(`<body>` a `+ - *` tree over the counter `I` + small literals, trip count
+`n ∈ 2..=6`, depth-capped so the `i64` sum can't overflow) and compares the printed
+result across every engine — exercising the loop header/latch, counter increment +
+bound test, and a mutated accumulator across iterations (a classic cross-backend
+divergence source). 264 full-value agreements over 120 loop programs locally.
+Spec §3d. `lang-aot` → 0.220.0 (0.219.0 is the concurrent E6d-list PR #8398).
+## 0.219.0 - 2026-07-14 (E6d list builtins on the generic VM/JIT — E6d COMPLETE on all 7 engines)
+
+The 12 E6d-1/E6d-3 cons + list matrix cells (`(car (cons 42 0))`,
+`(car (list 42 1 2))`, `(+ (length (list 1 2 3)) 39)`, `(null? (list))`,
+`(list-ref …)`, `append`, `reverse`, `assoc`, …) regain `Vm` + `Jit`, now that
+vm-core 0.19.0 handles `is_null` (list `null?`) with nil-handle reservation. With
+records, unions, closures, and lists all running on the interpreter columns, **the
+E6d dynamic-value feature set runs on all seven engines** (5 code-gen + VM + JIT).
+
+Verified no regression: all 178 `Vm` and 178 `Jit` matrix cells produce the
+expected result. `lang-aot` 0.218.0 → 0.219.0.
+
+## 0.218.0 - 2026-07-14 (E6d closures on the generic VM/JIT — matrix columns)
+
+The `lang_matrix` `run_vm` / `run_jit` helpers now apply the shared IIR-lowering
+passes the code-gen pipelines already run for every language
+(`lower_dynamic_for_generic_engine`: `lower_global_io` + `lower_closures_to_heap` +
+`lower_heap_builtins`). Without them the generic register VM / JIT saw the raw
+frontend `alloc_closure`/`cons`-builtin IIR they cannot dispatch; with them a
+Twig closure lowers to its cons-chain object + synthesized dispatcher over ops the
+VM now runs (`alloc`/`field_load`/`box`/dynamic `=`/`+` — added in vm-core 0.17/
+0.18), so **closures run on all seven engines**. The two E6d-7 closure matrix
+cells (`((lambda (x) (+ x 1)) 41)` and the capturing
+`(((lambda (x) (lambda (y) (+ x y))) 40) 2)`) regain `Vm` + `Jit`.
+
+Verified no regression: all 166 `Vm` and 166 `Jit` matrix cells still produce the
+expected result under the added passes (they are no-ops on non-dynamic programs,
+exactly as the code-gen pipelines rely on). `lang-aot` 0.217.0 → 0.218.0.
+
+## 0.217.0 - 2026-07-14 (AOT00 T7 — control-flow differential via BASIC IF/THEN)
+
+Adds `t7_differential_random_basic_conditionals_agree` to `tests/lang_matrix.rs` —
+the third generative differential (AOT00 T7), the first to exercise **control
+flow**. The two arithmetic slices test only straight-line evaluation; this
+generates `IF <a> <relop> <b> THEN … / … / GOTO … / … / END` programs (`<a..d>` the
+`+ - *` expression trees, `<relop>` over all six `= <> < > <= >=`) that branch
+between two `PRINT` arms, so the printed `i64` witnesses both the comparison result
+and that the right branch was taken. This exercises the **comparison ops +
+conditional branch + `GOTO`** codegen — where cross-backend disagreements are most
+likely (boolean representation / branch polarity, the class of the E6d-6 boxed-bool
+`jmp_if_false` bug). 264 full-value agreements over 120 branch programs locally;
+fast in-process engines (WASM/JIT) every program, toolchain engines sampled. Spec
+§3c.
+
+## 0.216.0 - 2026-07-14 (AOT00 T7 — full-value differential via BASIC PRINT)
+
+Adds `t7_differential_random_basic_print_agree` to `tests/lang_matrix.rs` — a
+second, **strictly stronger** generative differential (AOT00 T7). Where the seed
+`t7_differential_random_u8_expressions_agree` compares an 8-bit exit code (blind to
+the upper bits — a `u8 200+100` reads 44 on every engine only because the OS
+truncates the exit code), this generates `10 PRINT <expr>` Dartmouth BASIC programs
+over `+ - *` and compares the **full `i64` value** printed on stdout — negatives and
+large products included — across every engine, VM as the reference oracle. Literals
+`0..=16`, depth ≤ 3 (all-`*` ≤ `16^8 ≈ 4.3e9`, inside `i64`, never overflows; no
+division, so total). 368 full-value agreements over 160 programs locally; fast
+in-process engines every program, toolchain engines (native/LLVM/CLR) sampled.
+Spec: `code/specs/lang-full-t7-differential-harness.md` §3b.
+
+## 0.215.0 - 2026-07-14 (AOT00 T7 seed — generative differential harness)
+
+Adds `t7_differential_random_u8_expressions_agree` to `tests/lang_matrix.rs` — the
+first **generative** conformance test (AOT00 track T7). A deterministic zero-dep
+`xorshift64` PRNG builds random total `u8` expression trees over `+ & | ^`; each is
+run on every available engine and their results (normalised to the low byte, the
+`u8` exit observable) MUST agree, with the in-process VM as the reference oracle.
+Fast in-process engines (WASM/JIT) run on every program; the toolchain engines
+(native/LLVM/CLR) on a deterministic sample. Where the hand-written matrix cells
+each pin one (program, backend) result, this *generates* programs and auto-detects
+cross-backend disagreements — the safety net that would have caught the E6d union
+tagged-vs-boxed bug without a bespoke cell.
+
+On its first run it already surfaced a conformance finding (**T7-find-1**): a
+`uN`-returning function's value is not narrowed to its declared width before `ret`
+(CLR's printed `int32` shows `300` for a `u8` `200+100`; the exit-code backends
+only mask to 8 bits via OS exit truncation). Filed separately; the harness compares
+the low byte until it lands. Design: `code/specs/lang-full-t7-differential-harness.md`.
+
+## 0.214.0 - 2026-07-14 (E6d-7a-LLVM: closures on the LLVM column — all 5 code-gen backends)
+
+With the iir-to-llvm dynamic-comparison-width fix (0.41.0) landed, the E6d-7a
+closure pass (`lower_closures_to_heap`) is now wired into the LLVM pipeline
+(`compile_source_to_llvm_with_target`, before `lower_heap_builtins_runtime`) — the
+dispatcher's dynamic `=` index test previously mis-lowered to `icmp i1`. Closures
+now run on **all 5 code-gen backends**: the two E6d-7 matrix cells
+(`((lambda (x) (+ x 1)) 41)` and capturing `(((lambda (x) (lambda (y) (+ x y)))
+40) 2)`, both -> 42) regain `Llvm`, and `e6d7a_wasm_closures` gains a run-verified
+LLVM arm (5 tests: WASM 3, native 2... now + LLVM 2 = capture-free + capturing).
+(Note: E6d-6 records/unions on LLVM remain a separate gap — they emit structural
+`alloc`/`field_*` ops the LLVM backend doesn't support; closures avoid that by
+riding the `cons`/`dyn_cons` runtime-call path.)
+
+
+
+## 0.213.0 - 2026-07-14 (E6d-7a: closures on NativeAot + WASM)
+
+Wires `iir_builtin_lowering::lower_closures_to_heap` into the WASM pipeline (`compile_source_to_wasm`, before `lower_heap_builtins`); NativeAot gets it via twig-aot. Two matrix cells prove Twig `((lambda (x) (+ x 1)) 41)` -> 42 and a capturing `(((lambda (x) (lambda (y) (+ x y))) 40) 2)` -> 42 on [NativeAot, Wasm, Jvm, Clr] (JVM/CLR run closures via their native long[]/object[] dispatch). New run-verified integration test `e6d7a_wasm_closures` (WASM + native). **LLVM is a follow-up**: the dispatcher's dynamic `=` index test hits a pre-existing `lower_dynamic_arith` comparison-width bug on the LLVM column (`cmp_eq` typed `bool` -> `icmp i1` on an i64; also affects E6d-6 match on LLVM, latent since the LLVM column was never run locally).
+
+## 0.212.0 - 2026-07-13 — E6d-8: Twig dynamic globals on the code-gen backends
+
+A matrix cell proves a Twig **dynamic global** set+get roundtrip:
+
+- `(define (f) g) (define g 42) (f)` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A value global that is *forward-referenced*
+(read inside `f` before its `define`) is emitted by the frontend as
+`call_builtin "global_get"/"global_set"` — the dynamic `any`-typed global path
+(a non-forward `define` gets a typed-local slot instead). The shared
+`iir_builtin_lowering::lower_global_io` pass rewrites those to `global_load`/
+`global_store` — the typed-global ops every backend accepts — **but only the native
+`twig-aot` pipeline ran it**. The managed `lang-aot` pipelines (WASM/JVM/CLR/BEAM)
+and the LLVM pipeline never called it, so a dynamic global reached the backend as
+an unsupported `call_builtin` and failed to compile.
+
+Fix: add `lower_global_io` (as pipeline step 0, before the value-model passes,
+matching twig-aot) to `compile_source_to_wasm`, `compile_source_to_llvm_with_target`,
+`compile_source_to_jvm_class`, `compile_source_to_cil_artifact`,
+`compile_source_to_cil_text`, and `compile_source_to_beam`. No new backend code —
+`global_load`/`global_store` were already supported. Run-verified locally on WASM
+(in-process) + real dotnet CLR; native/LLVM/JVM via CI.
+
+Follow-up (not in this change): a dynamic global whose value flows into *dynamic
+arithmetic* (`(+ g 2)`) still traps, because the global slot stores a raw `i64`
+while `lower_dynamic_arith` treats the `any`-typed `global_load` result as boxed and
+inserts an `unbox`. Making that work needs the global slot widened to a boxed `any`
+(the spec's "typed-global slots widened to any").
+
+## 0.211.0 - 2026-07-13 — E6d-6: Twig unions / match on the code-gen backends
+
+Two matrix cells prove Twig **unions + `match`** dispatch on all five code-gen
+backends:
+
+- `(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))` → 42
+- `(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A union erases (frontend, unchanged) to
+integer-tagged constructors — a cons `(tag . fields…)` — and `match` compares the
+scrutinee's tag (`car`) to each variant's integer tag, binding fields via
+`car(cdr^i)`, over the E6d-1 heap substrate. The second cell (matching the *second*
+variant) proves the tag test actually discriminates rather than always taking the
+first arm.
+
+Two fixes made it run on the managed + native backends:
+
+1. **twig-ir-compiler 0.44.0** — the variant tag constant is typed `i64`, not
+   `"any"` (an `"any"` const was wrongly `unbox`ed by `lower_dynamic_arith` → WASM
+   `expected i32, got I64` trap).
+2. **iir-builtin-lowering 0.29.0** — a boxed-bool `jmp_if_false` (the boxed `=`
+   tag-compare result) now branches on its RAW bool. Both dyn_repr passes
+   previously wrapped it with nil-/McCarthy-truthiness, but a boxed `#f` is a
+   non-nil i31 / tagged-0, read as true → every arm mis-matched. Fixed in both the
+   structural pass (WASM/JVM/CLR/BEAM) and the native `dyn_truthy` path
+   (NativeAot/LLVM).
+
+Run-verified locally on WASM (in-process) + real dotnet CLR — including that the
+full matrix (every prior merged cell) still agrees, since fix #2 touches every
+managed conditional; native/LLVM/JVM via CI.
+
+## 0.210.0 - 2026-07-13 — E6d-5: Twig records on the code-gen backends
+
+Two matrix cells prove Twig **records** (construct + field access) round-trip:
+
+- `(record Point (x : int) (y : int)) (point-x (Point 42 7))` → 42 (first field)
+- `(record Point (x : int) (y : int)) (point-y (Point 7 42))` → 42 (second field)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A `(record Name (f : T) …)` erases (in the
+Twig frontend, unchanged) to a constructor `Name(…)` that builds a cons chain via
+typed `alloc [ref<LispyPair>]` + `field_store`, and accessors `name-f(r)` =
+`car(cdr^i(r))` via typed `field_load` — the **E6d-1 heap substrate**, so records
+ride the same proven cons/car/cdr path with no new value type and no frontend
+change.
+
+Shipping this surfaced and fixed a **latent wasm-runtime bug** (bumped to 0.4.0):
+struct field counts were registered by per-function count, which over-counts when
+functions share a signature — precisely what a record emits (constructor + N
+same-shape accessors + predicate collapse to a few distinct function types). The
+`$LispyPair` field count then landed at the wrong (too-high) type index, so the
+real `struct.set` type index was a zero-field filler and every record construction
+trapped `struct.set: field 0 out of range`. Single-function cons programs and the
+list-op helpers were unaffected (their function types were all distinct). Fixed by
+indexing on the deduplicated function-type count (`module.types.len()`).
+Run-verified locally on WASM (in-process) + real dotnet CLR; native/LLVM/JVM via CI.
+
+## 0.209.0 - 2026-07-13 — E6d-4: Twig symbols / quote on the code-gen backends
+
+Two matrix cells prove Twig **symbols** (quote literals + `equal?` identity):
+
+- `(equal? 'a 'a)` → #t → exit 1  (same symbol)
+- `(equal? 'a 'b)` → #f → exit 0  (distinct symbols)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A Twig quote literal (`'a` / `(quote a)`)
+now lowers to `const Var(name) : symbol` — the interned-const form McCarthy Lisp
+emits (twig-ir-compiler 0.43.0) — instead of the runtime `make_symbol` string path
+(which needs data-section string emission the code-gen backends lack). This rides
+the already-wired `intern_symbols` (native) / `intern_symbols_structural` (managed)
+passes: each distinct name gets one module-wide id in a reserved high range, so a
+symbol never collides with an integer atom and `equal?` on symbols is bit-equality
+— no new value type, no backend change. twig-vm is unaffected (its `const Var(name)`
+dispatch already interns text to a symbol). Run-verified locally on WASM
+(in-process) + real dotnet CLR; native/LLVM/JVM via CI. (Runtime symbol *creation*
+and `symbol->string` name recovery on the code-gen backends remain deferred — they
+need the `make_symbol` data-section path.)
+
+## 0.208.0 - 2026-07-13 — E6d-3b COMPLETE: Twig `assoc` list operation on the code-gen backends
+
+Two matrix cells prove the fifth and final E6d-3b list operation, `assoc`:
+
+- `(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))` → 42 (found)
+- `(null? (assoc 9 (list (cons 1 10) (cons 2 20))))` → 1 (absent key → nil)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. This **completes the E6d-3b list-operation
+set** — `length`, `list-ref`, `append`, `reverse`, `assoc` all run on the five
+code-gen backends. `assoc` searches an association list (a list of `(k . v)` cons
+pairs) via a synthesized recursive helper (`iir-builtin-lowering` 0.28.0):
+
+```
+__dyn_list_assoc(key, alist) = if null?(alist) then nil
+    else if key == car(car(alist)) then car(alist) else assoc(key, cdr(alist))
+```
+
+V1 keys are integers: the key test unboxes both keys to `i64` and compares with a
+typed `cmp_eq` (feeding `jmp_if_false`), because `equal?` lowers unevenly across
+the managed/runtime paths — symbol keys arrive with E6d-4. Run-verified locally on
+WASM (in-process) + real dotnet CLR; native/LLVM/JVM via CI.
+
+## 0.207.0 - 2026-07-13 — E6d-3b: Twig `reverse` list operation on the code-gen backends
+
+One matrix cell proves the fourth list operation, `reverse`:
+
+- `(car (reverse (list 1 2 42)))` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. `reverse (list 1 2 42)` builds `(42 2 1)`;
+`car` = 42. `reverse` is lowered by `iir-builtin-lowering` 0.27.0's `lower_list_ops`
+to a **nil-seeded** call to a synthesized *tail-recursive accumulator* helper
+`__dyn_list_reverse`:
+
+```
+reverse(a)          = __dyn_list_reverse(a, nil)      # nil seed at the call site
+__dyn_list_reverse(a, acc) = if null?(a) then acc
+                             else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+```
+
+Consing each element onto the accumulator's front reverses the order. The call
+site seeds the empty accumulator as `const 0 : ref<LispyPair>` (the exact nil
+sentinel the `list` desugar / `make_nil` emit). Like `append` there is no index,
+so no unbox/box — the recursion reuses `null?`/`car`/`cdr`/`cons` (E6d-1).
+Run-verified locally on WASM (in-process) + real dotnet CLR; native/LLVM/JVM via
+CI. `assoc` follows the same pattern.
+
+## 0.206.0 - 2026-07-12 — E6d-3b: Twig `append` list operation on the code-gen backends
+
+One matrix cell proves the third list operation, `append` (a list *rebuild*):
+
+- `(car (cdr (append (list 1 42) (list 3))))` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. `append (list 1 42) (list 3)` builds
+`(1 42 3)`; `car (cdr …)` = 42, proving the rebuilt spine is a genuine cons chain.
+`append` is lowered by `iir-builtin-lowering` 0.26.0's `lower_list_ops`, which
+rewrites `call_builtin "append" a b` to a synthesized recursive helper
+`__dyn_list_append` and injects it once:
+
+```
+__dyn_list_append(a, b) = if null?(a) then b else cons(car(a), append(cdr(a), b))
+```
+
+Unlike `list-ref` there is no index, so no unbox/box — `a`/`b`, `car(a)`, and the
+recursive result are all lisp references. Its one new op versus `length`/`list-ref`
+is the `cons` in the recursive arm (the E6d-1 heap builtin, rewritten to
+`alloc`/`field_store` for the injected helper by the same head-of-heap-lowering
+pass). Run-verified locally on WASM (in-process) + real dotnet CLR; native/LLVM/JVM
+via CI. `reverse`/`assoc` follow the same pattern.
+
+## 0.205.0 - 2026-07-12 — E6d-3b: Twig `list-ref` list operation on the code-gen backends
+
+One matrix cell proves the second list operation, `list-ref` (an index walk):
+
+- `(list-ref (list 10 20 42) 2)` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. Like `length`, `list-ref` is lowered by
+`iir-builtin-lowering` 0.25.0's `lower_list_ops`, which rewrites
+`call_builtin "list-ref" lst n` to a call to a synthesized recursive helper
+`__dyn_list_ref` and injects it once. The helper reuses `car`/`cdr` (E6d-1):
+`if ni == 0 then car(lst) else list-ref(cdr(lst), ni - 1)`.
+
+Design note — **the index is a boxed lisp value.** The lisp calling convention
+is uniform-anyref (`dyn_repr_structural` on the managed backends / `lower_dyn_repr`
+on native box *every* argument to a lisp function), so a raw-`i64` index param
+faults at the call boundary (`expected i64, got I32(2)`). The helper takes
+`n : ref<any>` and unboxes it once; the index test (`ni == 0` → raw `cmp_eq :
+bool` feeding `jmp_if_false`) and decrement (`ni - 1` → raw `sub : i64`,
+re-boxed for the recursive call) are then plain typed machine ops. Its return is
+always a `car` result / the recursive call — cleanly `ref<any>`. This mirrors the
+explicit-`box`/`unbox` shape the `length` helper already uses, proven-portable on
+all five columns. Run-verified locally on WASM (in-process) + real dotnet CLR;
+native/LLVM/JVM via CI. `append`/`reverse`/`assoc` follow the same pattern.
+
+## 0.204.0 - 2026-07-12 — E6d-3b: Twig `length` list operation on the code-gen backends
+
+Two matrix cells prove the first list *operation* (a cons-chain walk, unlike the
+E6d-3a `list` constructor):
+
+- `(+ (length (list 1 2 3)) 39)` → 42 — `length` = 3, composed with dynamic `+`,
+  proving it returns a genuine boxed lisp value.
+- `(null? (list))` → 1 — the empty list is nil; the direct regression guard for
+  the WASM nil-const fix.
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. `length` is lowered by `iir-builtin-lowering`
+0.24.0's new `lower_list_ops`, which rewrites `call_builtin "length"` to a call to a
+synthesized recursive `__dyn_list_length` helper (a proper lisp function: `null?`/
+`cdr` + dynamic `+`, all already lowered by E6d-1/E6d-2). This also required fixing
+the **WASM nil const**: `const 0 : ref<LispyPair>` now emits `ref.null`
+(iir-to-wasm 0.38.0) so `is_null`/`null?` detects the terminator — it was
+`i32.const 0`, so a walk overran the list end into `struct.get` on an i32. (CLR
+already lowered nil to `ldnull`; car/cdr never touch the nil tail, so E6d-1/E6d-3a
+were unaffected.) Run-verified locally on WASM + real dotnet CLR; native/LLVM/JVM
+via CI. `list-ref`/`append`/`reverse` follow the same helper pattern.
+
+## 0.203.0 - 2026-07-12 — E6d-3a: Twig `list` constructor on the code-gen backends
+
+Two matrix cells prove the `list` constructor as Twig's next dynamic capability:
+
+- `(car (list 42 1 2))` → 42
+- `(car (cdr (list 1 42 3)))` → 42 (list + `cdr` reaches the second element)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. `list` is pure sugar over `cons`, so it
+needed **no new backend op**: `iir-builtin-lowering` 0.23.0's new
+`desugar_list_in_function` expands `call_builtin "list"` → a nil `const` + a
+right-to-left `cons` chain at the head of *both* heap-lowering entry points
+(`lower_heap_builtins` managed + `lower_heap_builtins_runtime` native/LLVM), so the
+list rides the exact E6d-1 cons path on all five code-gen backends — no lang-aot
+pipeline change, no `call_builtin` allowlist entry. Run-verified locally on WASM +
+real dotnet CLR; native/LLVM/JVM via CI. List *operations* (`length`/`list-ref`/
+`append`/`reverse`) are E6d-3b (they walk the cons chain — a helper, not a desugar).
+
+## 0.202.0 - 2026-07-11 (FLOW-MATIC frontend — PL09 codegen)
+
+Adds `Language::FlowMatic`, wiring the new `flow-matic-iir-compiler` into the
+driver so FLOW-MATIC compiles to `interpreter_ir::IIRModule` and runs on every
+execution backend. This slice covers FLOW-MATIC's control flow + scalar-field
+moves (operations→labels, `COMPARE`/`IF`/`OTHERWISE`/`GO TO`/`JUMP`/`STOP`,
+`MOVE`); record/file I/O is a later rung. First step of the PL09 arc pivoting
+FLOW-MATIC and COBOL onto the IIR (execution) and SIR (transpile) pipelines.
+
+## 0.201.0 - 2026-07-11 (E6d-2b: dynamic arithmetic on NativeAot + LLVM)
+
+E6d-2b: the LLVM pipeline (`compile_source_to_llvm_with_target`) runs `lower_box_unbox_to_runtime_calls` after `lower_dyn_repr`, so a dynamic-arith program lowers to `__dyn_box_int`/`__dyn_unbox_int`. The E6d-2 matrix cell `(+ (car (cons 41 0)) 1)` -> 42 now covers all 5 code-gen backends [NativeAot, Llvm, Wasm, Jvm, Clr] (was Wasm/Jvm/Clr); `run_llvm` links the tagged-value runtime (dynval_runtime.c + twig_gc.c + twig_runtime.c) for `__dyn_*` programs. New integration test `e6d2b_dynamic_arith` proves native + LLVM = 42 by running.
+
+## 0.200.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_* + passes)
+
+DVAL01-2: the lang-aot wiring, `jit_lisp.rs`, and the LLVM/JIT/metacircular/
+conformance integration tests move to the `dyn_*` IIR builtin names and the
+renamed `dyn_repr`/`dyn_repr_structural` passes. Verified: the McCarthy-lisp
+cells stay green across VM/JIT/LLVM/native (native now emits the correct
+`__dyn_*` runtime symbols); cross-backend agreement is preserved. Pure rename
+of the builtin-name surface + the native emit fix (see aarch64/x86_64-backend).
+
+## 0.199.0 - 2026-07-11 (DVAL01-1c: rename Rust crate lispy-runtime -> dynval-runtime)
+
+DVAL01-1c: the Rust golden-reference crate `lispy-runtime` is renamed to `dynval-runtime`, completing the crate-level de-lisp of the generic dynamic-value substrate (spec DVAL01 section 3.2). lang-aot's `Cargo.toml` dependency and every `use lispy_runtime` / `lispy_runtime::` import across `src/jit_lisp.rs` and the LLVM/metacircular/conformance integration tests move to `dynval_runtime`; the local test-helper `lispy_runtime_c()` (which returns the path to the now-`dynval_runtime.c` runtime) becomes `dynval_runtime_c()`. Pure rename -- no ABI, tag-layout, or behaviour change. The public type names (`LispyValue` etc.) and the IIR `lispy_*` builtin names are renamed by DVAL01-2, not here. Verified by the cross-backend matrix staying green on all five code-gen backends.
+
+## 0.198.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
+
+DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.
+
+## 0.197.0 - 2026-07-11 (DVAL01-1a: dynamic-value runtime ABI __twig_lispy_* -> __dyn_*)
+
+De-lisp the tagged dynamic-value runtime ABI: every `__twig_lispy_*` C symbol (box_int/unbox_int/cons/car/cdr/pair_p/equal/not/nil/make_symbol/truthy/to_exit_code/tag_*) is renamed to the language-neutral `__dyn_*` (per spec DVAL01). Pure rename -- the 3-bit tag layout, encodings, and runtime behaviour are byte-for-byte unchanged, so any dynamic frontend (not just lisp) can target the same primitives. The GC ABI (`__twig_gc_*`) is untouched.
+
+## 0.196.0 — 2026-07-11 — LANG-FULL E6d-2a: dynamic integer arithmetic over `any` (structural backends)
+
+Wires the new `iir_builtin_lowering::lower_dynamic_arith` pass into every managed + native lisp lowering pipeline (after `lower_heap_builtins`), and adds a matrix cell `(+ (car (cons 41 0)) 1)` → 42 on the **structural** code-gen backends `[Wasm, Jvm, Clr]` (whose `i31ref`/`Integer`/boxed-int32 box/unbox now width-adapt to i64). NativeAot + LLVM (NaN-box tagged-i64 world) follow in E6d-2b. Run-verified: WASM in-process, JVM via a reflective launcher (both → 42); CLR via CI.
+
+## 0.195.0 — 2026-07-10 — E6d-1: Twig dynamic cons/car/cdr on the code-gen backends
+
+First slice of **E6 layer 2** (general dynamic dispatch — spec
+`code/specs/lang-full-e6-dispatch.md`). Two matrix cells prove Twig's first
+genuinely *dynamic* value runs on the code-gen backends:
+
+- `(car (cons 42 0))` → 42
+- `(car (cdr (cons 1 (cons 42 0))))` → 42 (nested, multi-cell pointer chasing)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. **Zero production code** — the surveyed
+fact held: the shared `iir-builtin-lowering` heap passes (`lower_heap_builtins` →
+`lower_lisp_repr_structural`), which run for *every* source language, already
+lower Twig's `call_builtin "cons"/"car"/"cdr"` to the `alloc`/`field_load`/
+`field_store` heap-object family over the uniform boxed `ref<any>` value that
+McCarthy Lisp already runs on all five code-gen backends (WASM `anyref` +
+`$LispyPair`, JVM `Object[]`, CLR `object[]`, LLVM tagged-i64 + `__twig_lispy_*`
+runtime, native). Run-verified locally on **WASM** (in-process) and **real dotnet
+CLR**; native/LLVM/JVM via CI.
+
+The generic `Vm`/`Jit` columns run `vm-core` typed IIR (no `ref<any>`/`alloc`), so
+dynamic Twig cells list the 5 code-gen columns; `twig-vm` is the off-matrix
+interpreter reference. Turns the stale `TW3 ☐` (cons core) into a guardrailed
+proof. Remaining E6 layer-2 slices: dynamic arithmetic, list ops, symbols,
+records/unions, closures-on-WASM, dynamic globals.
+
 ## 0.194.0 — 2026-07-10 — E4d-BA-arr: BASIC string arrays COMPLETE (all 7 backends)
 
 The string-array matrix cell (`DIM A$(2); A$(0)="O"; A$(1)="K"; PRINT A$(0)+A$(1)`

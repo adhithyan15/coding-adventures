@@ -288,8 +288,7 @@ fn serialize_pretty_recursive(
     // current_indent: indentation for closing brackets at this level.
     // next_indent: indentation for content one level deeper.
     let indent_unit: String =
-        std::iter::repeat(config.indent_char)
-            .take(config.indent_size)
+        std::iter::repeat_n(config.indent_char, config.indent_size)
             .collect();
     let current_indent = indent_unit.repeat(depth);
     let next_indent = indent_unit.repeat(depth + 1);
@@ -539,6 +538,8 @@ mod tests {
     // Test 7: Float number
     // -----------------------------------------------------------------
 
+    // `3.14` is arbitrary float serialization test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_serialize_float() {
         let result = serialize(&jfloat(3.14)).unwrap();
@@ -1213,6 +1214,8 @@ mod tests {
     // Test 58: Negative float
     // -----------------------------------------------------------------
 
+    // `-3.14` is arbitrary float serialization test data, not related to PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_serialize_negative_float() {
         let result = serialize(&jfloat(-3.14)).unwrap();

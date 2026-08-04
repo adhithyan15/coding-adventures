@@ -7,6 +7,7 @@
 
 #![forbid(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use std::{collections::BTreeSet, fmt};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -53,7 +54,7 @@ impl std::error::Error for SmartHomeError {}
 
 macro_rules! id_type {
     ($name:ident, $kind:literal) => {
-        #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
         pub struct $name(String);
 
         impl $name {
@@ -95,15 +96,17 @@ id_type!(VaultRef, "vault reference");
 id_type!(AgentId, "agent id");
 id_type!(CapabilityGrantId, "capability grant id");
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RuntimeKind {
     InProcessRust,
     RustWorkerProcess,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum BridgeTransport {
     LanHttp,
+    LanTcp,
+    LanUdp,
     Mdns,
     Serial,
     Ble,
@@ -111,7 +114,7 @@ pub enum BridgeTransport {
     LocalProcess,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Health {
     Unknown,
     Discoverable,
@@ -141,8 +144,9 @@ impl Health {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EntityKind {
+    Camera,
     Light,
     LightGroup,
     Switch,
@@ -156,14 +160,14 @@ pub enum EntityKind {
     Unknown,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CapabilityMode {
     Observe,
     Command,
     ObserveAndCommand,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ValueKind {
     Null,
     Boolean,
@@ -175,7 +179,7 @@ pub enum ValueKind {
     Array,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Value {
     Null,
     Bool(bool),
@@ -196,7 +200,7 @@ impl Value {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Capability {
     pub capability_id: CapabilityId,
     pub mode: CapabilityMode,
@@ -291,6 +295,87 @@ impl Capability {
         .with_unit("temperature")
     }
 
+    pub fn media_playback() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.playback"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Text,
+        )
+    }
+
+    pub fn media_volume() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.volume"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
+    pub fn media_grouping() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.grouping"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Array,
+        )
+    }
+
+    pub fn media_queue() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.queue"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
+    pub fn device_indicator() -> Self {
+        Self::new(
+            CapabilityId::trusted("device.indicator"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
+    pub fn device_display() -> Self {
+        Self::new(
+            CapabilityId::trusted("device.display"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Percentage,
+        )
+        .with_range(0.0, 100.0, Some(1.0))
+    }
+
+    pub fn device_configuration() -> Self {
+        Self::new(
+            CapabilityId::trusted("device.configuration"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
+    pub fn camera_recording() -> Self {
+        Self::new(
+            CapabilityId::trusted("camera.recording"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Boolean,
+        )
+    }
+
+    pub fn camera_ptz() -> Self {
+        Self::new(
+            CapabilityId::trusted("camera.ptz"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
+    pub fn sensor_calibration() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.calibration"),
+            CapabilityMode::Command,
+            ValueKind::Null,
+        )
+    }
+
     pub fn sensor_occupancy() -> Self {
         Self::new(
             CapabilityId::trusted("sensor.occupancy"),
@@ -361,6 +446,16 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
         Capability::scene_recall(),
         Capability::lock_state(),
         Capability::climate_setpoint(),
+        Capability::media_playback(),
+        Capability::media_volume(),
+        Capability::media_grouping(),
+        Capability::media_queue(),
+        Capability::device_indicator(),
+        Capability::device_display(),
+        Capability::device_configuration(),
+        Capability::camera_recording(),
+        Capability::camera_ptz(),
+        Capability::sensor_calibration(),
         Capability::sensor_occupancy(),
         Capability::sensor_contact(),
         Capability::sensor_temperature(),
@@ -371,7 +466,7 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
     ]
 }
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CapabilitySurfaceSummary {
     pub total_capabilities: usize,
     pub observe_only_capabilities: usize,
@@ -445,9 +540,10 @@ impl CapabilitySurfaceSummary {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ProtocolFamily {
     Hue,
+    Onvif,
     Zigbee,
     ZWave,
     Thread,
@@ -460,6 +556,7 @@ impl ProtocolFamily {
     pub fn as_str(&self) -> &str {
         match self {
             Self::Hue => "hue",
+            Self::Onvif => "onvif",
             Self::Zigbee => "zigbee",
             Self::ZWave => "zwave",
             Self::Thread => "thread",
@@ -470,7 +567,7 @@ impl ProtocolFamily {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ProtocolIdentifier {
     pub family: ProtocolFamily,
     pub kind: String,
@@ -503,7 +600,7 @@ impl ProtocolIdentifier {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct MqttTopicName(String);
 
 impl MqttTopicName {
@@ -536,7 +633,7 @@ impl fmt::Display for MqttTopicName {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct MqttTopicFilter(String);
 
 impl MqttTopicFilter {
@@ -565,7 +662,7 @@ impl fmt::Display for MqttTopicFilter {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum MqttQualityOfService {
     AtMostOnce,
     AtLeastOnce,
@@ -582,7 +679,7 @@ impl MqttQualityOfService {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum MqttTopicRole {
     Discovery,
     Availability,
@@ -603,7 +700,7 @@ impl MqttTopicRole {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MqttTopicBinding {
     pub role: MqttTopicRole,
     pub topic: MqttTopicName,
@@ -632,7 +729,7 @@ impl MqttTopicBinding {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Metadata {
     pub key: String,
     pub value: String,
@@ -647,7 +744,7 @@ impl Metadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct IntegrationDescriptor {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -744,7 +841,7 @@ impl IntegrationDescriptor {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct IntegrationSurfaceSummary {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -758,7 +855,7 @@ pub struct IntegrationSurfaceSummary {
     pub supports_pairing: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct IntegrationCatalogSummary {
     pub total_integrations: usize,
     pub in_process_rust_integrations: usize,
@@ -973,7 +1070,7 @@ pub fn canonical_integration_catalog_summary() -> IntegrationCatalogSummary {
     IntegrationCatalogSummary::from_descriptors(catalog.iter())
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Bridge {
     pub bridge_id: BridgeId,
     pub integration_id: IntegrationId,
@@ -1010,7 +1107,7 @@ impl Bridge {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Device {
     pub device_id: DeviceId,
     pub bridge_id: BridgeId,
@@ -1026,7 +1123,7 @@ pub struct Device {
     pub metadata: Vec<Metadata>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Entity {
     pub entity_id: EntityId,
     pub device_id: DeviceId,
@@ -1043,7 +1140,7 @@ impl Entity {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum StateSource {
     EventStream,
     Poll,
@@ -1051,7 +1148,7 @@ pub enum StateSource {
     Manual,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum StateConfidence {
     Confirmed,
     Optimistic,
@@ -1059,7 +1156,7 @@ pub enum StateConfidence {
     Unknown,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StateSnapshot {
     pub entity_id: EntityId,
     pub value: Value,
@@ -1077,7 +1174,7 @@ impl StateSnapshot {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SmartHomeInventorySummary {
     pub total_bridges: usize,
     pub online_bridges: usize,
@@ -1170,7 +1267,7 @@ impl SmartHomeInventorySummary {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum DeviceEventType {
     Discovered,
     Updated,
@@ -1180,13 +1277,13 @@ pub enum DeviceEventType {
     Health,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StateDelta {
     pub capability_id: CapabilityId,
     pub value: Value,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DeviceEvent {
     pub event_id: EventId,
     pub bridge_id: BridgeId,
@@ -1201,7 +1298,7 @@ pub struct DeviceEvent {
     pub metadata: Vec<Metadata>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CommandType {
     TurnOn,
     TurnOff,
@@ -1211,6 +1308,40 @@ pub enum CommandType {
     RecallScene,
     SetLock,
     SetThermostatSetpoint,
+    Media(MediaCommandType),
+    DeviceControl(DeviceControlCommandType),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum MediaCommandType {
+    SetPlaybackState,
+    PlayNext,
+    PlayPrevious,
+    SetVolume,
+    SetMute,
+    SetGroup,
+    ClearQueue,
+    PlayQueueItem,
+    RemoveQueueItem,
+    MoveQueueItem,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DeviceControlCommandType {
+    SetIndicatorMode,
+    SetIndicatorBrightness,
+    SetDisplayBrightness,
+    CalibrateSensor,
+    SetTemperatureUnit,
+    SetParticulateDisplayStandard,
+    SetAutomaticCo2BaselineDays,
+    SetGasLearningOffsets,
+    SetCompensatedDisplay,
+    TestIndicator,
+    SetCorrectionProfile,
+    SetCameraRecording,
+    RecallCameraPtzPreset,
+    MoveCameraPtz,
 }
 
 impl CommandType {
@@ -1223,11 +1354,52 @@ impl CommandType {
             Self::RecallScene => Some(CapabilityId::trusted("scene.recall")),
             Self::SetLock => Some(CapabilityId::trusted("lock.state")),
             Self::SetThermostatSetpoint => Some(CapabilityId::trusted("climate.setpoint")),
+            Self::Media(command) => Some(command.canonical_capability_id()),
+            Self::DeviceControl(command) => Some(command.canonical_capability_id()),
         }
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+impl MediaCommandType {
+    pub fn canonical_capability_id(self) -> CapabilityId {
+        match self {
+            Self::SetPlaybackState | Self::PlayNext | Self::PlayPrevious => {
+                CapabilityId::trusted("media.playback")
+            }
+            Self::SetVolume | Self::SetMute => CapabilityId::trusted("media.volume"),
+            Self::SetGroup => CapabilityId::trusted("media.grouping"),
+            Self::ClearQueue
+            | Self::PlayQueueItem
+            | Self::RemoveQueueItem
+            | Self::MoveQueueItem => CapabilityId::trusted("media.queue"),
+        }
+    }
+}
+
+impl DeviceControlCommandType {
+    pub fn canonical_capability_id(self) -> CapabilityId {
+        match self {
+            Self::SetIndicatorMode | Self::SetIndicatorBrightness => {
+                CapabilityId::trusted("device.indicator")
+            }
+            Self::SetDisplayBrightness => CapabilityId::trusted("device.display"),
+            Self::CalibrateSensor => CapabilityId::trusted("sensor.calibration"),
+            Self::TestIndicator => CapabilityId::trusted("device.indicator"),
+            Self::SetTemperatureUnit
+            | Self::SetParticulateDisplayStandard
+            | Self::SetAutomaticCo2BaselineDays
+            | Self::SetGasLearningOffsets
+            | Self::SetCompensatedDisplay
+            | Self::SetCorrectionProfile => CapabilityId::trusted("device.configuration"),
+            Self::SetCameraRecording => CapabilityId::trusted("camera.recording"),
+            Self::RecallCameraPtzPreset | Self::MoveCameraPtz => {
+                CapabilityId::trusted("camera.ptz")
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum PrivilegeTier {
     ReadOnly,
     LowRisk,
@@ -1235,7 +1407,7 @@ pub enum PrivilegeTier {
     HighRisk,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DeviceCommand {
     pub command_id: CommandId,
     pub entity_id: EntityId,
@@ -1279,17 +1451,28 @@ impl DeviceCommand {
 pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
     match command_type {
         CommandType::SetLock => PrivilegeTier::HighRisk,
-        CommandType::SetThermostatSetpoint => PrivilegeTier::HumanApproval,
+        CommandType::SetThermostatSetpoint
+        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording)
+        | CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset)
+        | CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => {
+            PrivilegeTier::HumanApproval
+        }
         CommandType::TurnOn
         | CommandType::TurnOff
         | CommandType::SetBrightness
         | CommandType::SetColor
         | CommandType::SetColorTemperature
-        | CommandType::RecallScene => PrivilegeTier::LowRisk,
+        | CommandType::RecallScene
+        | CommandType::Media(_)
+        | CommandType::DeviceControl(_) => PrivilegeTier::LowRisk,
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CommandStatus {
     Accepted,
     Rejected,
@@ -1297,7 +1480,7 @@ pub enum CommandStatus {
     Failed,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CommandResult {
     pub command_id: CommandId,
     pub status: CommandStatus,
@@ -1342,7 +1525,7 @@ impl CommandResult {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SceneScope {
     Room,
     Zone,
@@ -1351,13 +1534,13 @@ pub enum SceneScope {
     Custom,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SceneAction {
     pub entity_id: EntityId,
     pub desired_state: Value,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Scene {
     pub scene_id: SceneId,
     pub scope: SceneScope,
@@ -1366,7 +1549,7 @@ pub struct Scene {
     pub metadata: Vec<Metadata>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ToolSideEffects {
     None,
     Read,
@@ -1382,7 +1565,7 @@ pub struct ToolDescriptor {
     pub required_tier: PrivilegeTier,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SmartHomeToolCatalogSummary {
     pub total_tools: usize,
     pub read_tools: usize,
@@ -1443,7 +1626,7 @@ impl SmartHomeToolCatalogSummary {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SmartHomeTool {
     ListIntegrations,
     DescribeIntegration,
@@ -2645,7 +2828,7 @@ impl SmartHomeTool {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CapabilityGrantStatus {
     Pending,
     Active,
@@ -2653,7 +2836,7 @@ pub enum CapabilityGrantStatus {
     Expired,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CapabilityGrantScope {
     Tool(SmartHomeTool),
     Capability(CapabilityId),
@@ -2664,7 +2847,7 @@ pub enum CapabilityGrantScope {
     AllSmartHome,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CapabilityGrant {
     pub grant_id: CapabilityGrantId,
     pub principal_id: AgentId,
@@ -2844,7 +3027,7 @@ impl ToolDescriptor {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CapabilityGrantInventorySummary {
     pub generated_at_ms: u64,
     pub total_grants: usize,
@@ -2924,13 +3107,13 @@ impl CapabilityGrantInventorySummary {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum AuthorizationOutcome {
     Allowed,
     Denied,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum AuthorizationSubject {
     Tool(SmartHomeTool),
     Command {
@@ -2940,7 +3123,7 @@ pub enum AuthorizationSubject {
     },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AuthorizationDecision {
     pub principal_id: AgentId,
     pub subject: AuthorizationSubject,
@@ -3025,13 +3208,13 @@ impl AuthorizationDecision {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum AuthorizationSubjectKind {
     Tool,
     Command,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AuthorizationDecisionSummary {
     pub subject_kind: AuthorizationSubjectKind,
     pub outcome: AuthorizationOutcome,
@@ -3070,7 +3253,7 @@ impl AuthorizationDecisionSummary {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AuthorizationDecisionLogSummary {
     pub total_decisions: usize,
     pub allowed_decisions: usize,
@@ -3843,6 +4026,18 @@ mod tests {
             tier_for_command(CommandType::SetThermostatSetpoint),
             PrivilegeTier::HumanApproval
         );
+        assert_eq!(
+            tier_for_command(CommandType::DeviceControl(
+                DeviceControlCommandType::CalibrateSensor
+            )),
+            PrivilegeTier::HumanApproval
+        );
+        assert_eq!(
+            tier_for_command(CommandType::DeviceControl(
+                DeviceControlCommandType::SetDisplayBrightness
+            )),
+            PrivilegeTier::LowRisk
+        );
     }
 
     #[test]
@@ -4126,12 +4321,22 @@ mod tests {
             .map(|capability| capability.capability_id.as_str())
             .collect::<Vec<_>>();
 
-        assert_eq!(catalog.len(), 14);
+        assert_eq!(catalog.len(), 24);
         assert_eq!(ids[0], "light.on_off");
         assert!(ids.contains(&"light.color"));
         assert!(ids.contains(&"scene.recall"));
         assert!(ids.contains(&"lock.state"));
         assert!(ids.contains(&"climate.setpoint"));
+        assert!(ids.contains(&"media.playback"));
+        assert!(ids.contains(&"media.volume"));
+        assert!(ids.contains(&"media.grouping"));
+        assert!(ids.contains(&"media.queue"));
+        assert!(ids.contains(&"device.indicator"));
+        assert!(ids.contains(&"device.display"));
+        assert!(ids.contains(&"device.configuration"));
+        assert!(ids.contains(&"camera.recording"));
+        assert!(ids.contains(&"camera.ptz"));
+        assert!(ids.contains(&"sensor.calibration"));
         assert!(ids.contains(&"sensor.contact"));
         assert!(ids.contains(&"sensor.temperature"));
         assert!(ids.contains(&"sensor.humidity"));
@@ -4167,6 +4372,32 @@ mod tests {
             CommandType::RecallScene,
             CommandType::SetLock,
             CommandType::SetThermostatSetpoint,
+            CommandType::Media(MediaCommandType::SetPlaybackState),
+            CommandType::Media(MediaCommandType::PlayNext),
+            CommandType::Media(MediaCommandType::PlayPrevious),
+            CommandType::Media(MediaCommandType::SetVolume),
+            CommandType::Media(MediaCommandType::SetMute),
+            CommandType::Media(MediaCommandType::SetGroup),
+            CommandType::Media(MediaCommandType::ClearQueue),
+            CommandType::Media(MediaCommandType::PlayQueueItem),
+            CommandType::Media(MediaCommandType::RemoveQueueItem),
+            CommandType::Media(MediaCommandType::MoveQueueItem),
+            CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode),
+            CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness),
+            CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness),
+            CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor),
+            CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit),
+            CommandType::DeviceControl(
+                DeviceControlCommandType::SetParticulateDisplayStandard,
+            ),
+            CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays),
+            CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay),
+            CommandType::DeviceControl(DeviceControlCommandType::TestIndicator),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording),
+            CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset),
+            CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz),
         ];
 
         for command_type in command_types {

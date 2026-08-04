@@ -1,0 +1,8 @@
+{
+  "language": "russian",
+  "name": "Russian",
+  "script": "cyrillic",
+  "family": "Slavic (Indo-European)",
+  "deepRoots": ["Proto-Slavic", "Proto-Indo-European"],
+  "notes": "Grounds every word against English (via shared Indo-European roots) and Old Church Slavonic / Proto-Slavic. Cyrillic is taught inline, letter by letter, inside the words that first need it — with special attention to the 'false friends' that look like Latin letters but sound different."
+}

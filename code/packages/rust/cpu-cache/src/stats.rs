@@ -1,22 +1,22 @@
-/// Cache statistics tracking -- measuring how well the cache is performing.
-///
-/// Every cache keeps a scorecard. Just like a baseball player tracks batting
-/// average (hits / at-bats), a cache tracks its **hit rate** (cache hits /
-/// total accesses). A high hit rate means the cache is doing its job well --
-/// most memory requests are being served quickly from the cache rather than
-/// going to slower main memory.
-///
-/// Key metrics:
-/// - **Reads/Writes**: How many times the CPU asked for data or stored data.
-/// - **Hits**: How many times the requested data was already in the cache.
-/// - **Misses**: How many times we had to go to a slower level to get the data.
-/// - **Evictions**: How many times we had to kick out old data to make room.
-/// - **Writebacks**: How many evictions involved dirty data that needed to be
-///   written back to the next level (only relevant for write-back caches).
-///
-/// Analogy: Think of a library desk (L1 cache). If you keep the right books
-/// on your desk, you rarely need to walk to the shelf (L2). Your "hit rate"
-/// is how often the book you need is already on your desk.
+//! Cache statistics tracking -- measuring how well the cache is performing.
+//!
+//! Every cache keeps a scorecard. Just like a baseball player tracks batting
+//! average (hits / at-bats), a cache tracks its **hit rate** (cache hits /
+//! total accesses). A high hit rate means the cache is doing its job well --
+//! most memory requests are being served quickly from the cache rather than
+//! going to slower main memory.
+//!
+//! Key metrics:
+//! - **Reads/Writes**: How many times the CPU asked for data or stored data.
+//! - **Hits**: How many times the requested data was already in the cache.
+//! - **Misses**: How many times we had to go to a slower level to get the data.
+//! - **Evictions**: How many times we had to kick out old data to make room.
+//! - **Writebacks**: How many evictions involved dirty data that needed to be
+//!   written back to the next level (only relevant for write-back caches).
+//!
+//! Analogy: Think of a library desk (L1 cache). If you keep the right books
+//! on your desk, you rarely need to walk to the shelf (L2). Your "hit rate"
+//! is how often the book you need is already on your desk.
 
 /// Tracks performance statistics for a single cache level.
 ///

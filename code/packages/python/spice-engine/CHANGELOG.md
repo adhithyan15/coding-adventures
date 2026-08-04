@@ -1,8 +1,332 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `AF` values before
+  flicker-noise calculations.
+
+- Reject negative and non-finite Level-1 MOS model-card `KF` values before
+  flicker-noise calculations.
+
+- Reject negative and non-finite Level-1 MOS model-card `RSH` values before
+  drain/source geometry converts sheet resistance into external resistance.
+
+- Reject negative and non-finite Level-1 MOS model-card `RS` values before
+  external source-resistance stamping and noise calculations.
+
+- Reject negative and non-finite Level-1 MOS model-card `RD` values before
+  external drain-resistance stamping and noise calculations.
+
+- Reject Level-1 MOS model-card `LD` values that are non-finite, negative, or
+  leave a non-positive effective channel length.
+
+- Reject non-finite Level-1 MOS model-card `LEVEL` selectors instead of
+  silently canonicalizing them to `LEVEL=1`.
+
+- Reject non-positive and non-finite Level-1 MOS model-card `L` values before
+  channel-current, capacitance, and noise calculations.
+
+- Reject non-positive and non-finite Level-1 MOS model-card `W` values before
+  channel-current, capacitance, and noise calculations.
+
+- Reject negative and non-finite Level-1 MOS model-card `JS` values before
+  bulk-junction leakage-density and temperature preprocessing.
+
+- Reject non-positive and non-finite Level-1 MOS model-card `IS` values before
+  bulk-junction leakage and temperature preprocessing.
+
+- Reject negative and non-finite Level-1 MOS model-card `CGBO` values before
+  gate-bulk overlap-capacitance stamping.
+
+- Reject negative and non-finite Level-1 MOS model-card `CGDO` values before
+  gate-drain overlap-capacitance stamping.
+
+- Reject negative and non-finite Level-1 MOS model-card `CGSO` values before
+  gate-source overlap-capacitance stamping.
+
+- Reject negative and non-finite Level-1 MOS model-card `CBD` / `CJD` values
+  before drain-bulk capacitance shaping.
+
+- Reject negative and non-finite Level-1 MOS model-card `CBS` / `CJS` values
+  before source-bulk capacitance shaping.
+
+- Reject negative and non-finite Level-1 MOS model-card `CJSW` values before
+  sidewall-junction capacitance shaping.
+
+- Reject negative and non-finite Level-1 MOS model-card `CJ` values before
+  bottom-junction capacitance shaping.
+
+- Reject negative or non-finite Level-1 MOS model-card `MJSW` values with a
+  stable diagnostic before sidewall depletion-capacitance shaping.
+- Reject Level-1 MOS model-card `FC` values outside `[0, 1)` or non-finite
+  values with a stable diagnostic before depletion-capacitance shaping.
+- Reject negative or non-finite Level-1 MOS model-card `MJ` values with a
+  stable diagnostic before depletion-capacitance shaping.
+- Reject non-positive or non-finite Level-1 MOS model-card `PB` values with a
+  stable diagnostic before depletion and temperature preprocessing.
+- Reject negative or non-finite Level-1 MOS model-card `GAMMA` values with a
+  stable diagnostic before body-effect and temperature preprocessing.
+- Reject non-positive or non-finite Level-1 MOS model-card `PHI` values with a
+  stable diagnostic before electrostatic and temperature preprocessing.
+- Reject non-finite Level-1 MOS model-card `LAMBDA` / `LAM` values with a
+  stable diagnostic before current evaluation.
+- Reject non-finite Level-1 MOS model-card `VT0` / `VTO` / `VTH` values with a
+  stable diagnostic before threshold preprocessing.
+- Reject non-positive or non-finite Level-1 MOS model-card `KP` values with a
+  stable diagnostic before temperature scaling and current evaluation.
+- Reject negative or non-finite Level-1 MOS model-card `U0` / `UO` values with
+  a stable diagnostic before mobility preprocessing.
+- Reject non-positive or non-finite Level-1 MOS model-card `TOX` values with a
+  stable diagnostic before mobility and electrostatic preprocessing.
+- Reject non-positive or non-finite Level-1 MOS model-card `NSUB` values with a
+  stable diagnostic before process-parameter preprocessing.
+- Reject non-positive or non-finite Level-1 MOS model-card `TNOM` values with a
+  stable diagnostic before temperature and electrostatic preprocessing.
+- Reject negative or non-finite Level-1 MOS model-card `NSS` surface-state
+  densities with a stable diagnostic before threshold preprocessing.
+- Accept Berkeley Level-1 MOS model-card `TPG` gate-material selectors and use
+  their `-1`, `0`, or `1` work-function branches when deriving `VT0`, while
+  preserving explicit threshold-voltage precedence.
+- Accept Level-1 MOS model-card `NSS` surface-state density and include its
+  oxide-charge flat-band shift when deriving `VT0` from process parameters,
+  while preserving explicit threshold-voltage precedence.
+- Derive Level-1 MOS `VT0` from explicit model-card `NSUB` plus `TOX` using
+  Berkeley MOS1 default gate-work-function and surface-state assumptions,
+  preserving explicit `VTO` / `VT0` precedence for NMOS and PMOS.
+- Derive Level-1 MOS `PHI` and `GAMMA` from explicit model-card `NSUB` plus
+  `TOX`, preserving explicit electrostatic parameters and rejecting substrate
+  doping at or below the intrinsic carrier density.
+- Prefer a non-default Level-1 MOS model-card `TNOM` over the circuit nominal
+  temperature when applying Berkeley temperature preprocessing.
+- Scale Level-1 MOS zero-bias bottom-junction `CJ`, source/drain `CBS`/`CBD`,
+  and sidewall `CJSW` capacitances with temperature using Berkeley MOS1
+  `MJ`/`MJSW` grading paths.
+- Apply Berkeley MOS1 temperature preprocessing to the Level-1 MOS
+  bulk-junction potential `PB`.
+- Apply Berkeley MOS1 electrostatic temperature preprocessing to Level-1 MOS
+  `PHI` and polarity-aware `VT0` instead of a fixed threshold-voltage shift.
+- Scale Level-1 MOS bulk-junction `IS` and `JS` with temperature using the
+  silicon energy-gap law already shared by semiconductor junction models.
+- Scale Level-1 MOS `U0` alongside `KP` by `(T / T_NOM)^-3/2` so temperature
+  helpers preserve Berkeley surface-mobility state and their nominal ratio.
+- Add Level-1 MOS model-card `U0` / `UO` surface mobility and derive `KP` from
+  explicit `TOX` when `KP` is omitted, preserving explicit-`KP` precedence.
+- Add Level-1 MOS model-card `JS` as bulk-junction saturation-current density,
+  scaling source/drain leakage and shot noise by `AS` / `AD` when both areas
+  are present and otherwise retaining Berkeley-compatible `IS` fallback.
+- Apply Level-1 MOS model-card `IS` to the source-body and drain-body junctions
+  in DC, transient, transfer-function, and AC analysis, and emit distinct
+  `IBS` / `IBD` shot-noise sources.
+- Add Level-1 MOS model-card `MJSW`, defaulting to `0.33`, to shape `CJSW`
+  sidewall depletion independently from `MJ` bottom-junction capacitance.
+- Add the Level-1 MOS `PS` instance parameter. With model-card `CJSW`, its
+  product augments `CBS` in AC and transient source-body capacitance.
+- Add the Level-1 MOS `PD` instance parameter and model-card `CJSW` density.
+  Their product augments `CBD` in AC and transient drain-body capacitance.
+- Add the Level-1 MOS `AS` instance parameter. With model-card `CJ`, its
+  product augments `CBS` in AC and transient source-body capacitance.
+- Add the Level-1 MOS `AD` instance parameter and model-card `CJ` density.
+  Their product augments `CBD` in AC and transient drain-body capacitance.
+- Add the Level-1 MOS `NRS` instance parameter. It defaults to one and scales
+  the `RSH` source fallback while preserving explicit positive `RS` precedence,
+  intrinsic-node stamping, and `:RS` Johnson noise.
+- Add the Level-1 MOS `NRD` instance parameter. It defaults to one and scales
+  the `RSH` drain fallback while preserving explicit positive `RD` precedence,
+  intrinsic-node stamping, and `:RD` Johnson noise.
+- Add Level-1 MOS model-card `RSH` support. A positive sheet resistance supplies
+  the default one-square drain/source terminal resistances when `RD` / `RS`
+  remain zero, reusing intrinsic-node stamping and terminal Johnson noise.
+- Add Level-1 MOS model-card `RS` support. Nonzero values create an intrinsic
+  source node, stamp the external resistor in DC, TF, AC, and transient
+  analyses, route source-side capacitances through it, and emit `:RS` Johnson
+  noise.
+- Add Level-1 MOS model-card `RD` support. Nonzero values create an intrinsic
+  drain node, stamp the external resistor in DC, TF, AC, and transient
+  analyses, route drain-side capacitances through it, and emit `:RD` Johnson
+  noise.
+- Add Level-1 MOS model-card `TOX` support, defaulting to `100 nm` and deriving
+  intrinsic Meyer gate capacitance from silicon-dioxide permittivity and oxide
+  thickness.
+- Add Level-1 MOS model-card `LD` support, using `L - 2*LD` for channel
+  current and length-scaled intrinsic/`CGBO` capacitance.
+- Add Level-1 MOS model-card `FC` support, applying the continuous Berkeley
+  forward-bias continuation to `CBS` / `CBD` in AC and transient analysis.
+- Add Level-1 MOS model-card `AF` support and apply the configurable
+  drain-current exponent to MOS flicker-noise power spectral density.
+- Add Level-1 MOS model-card `KF` support and emit drain-current-scaled
+  inverse-frequency flicker noise alongside channel thermal noise.
+- Add JFET model-card `NLEV` and `GDSNOI` support, preserving the legacy
+  channel thermal-noise path below level 3 and adding the Berkeley
+  linear-region equation at level 3 and above.
+- Add JFET model-card `B` support with Parker-Skellern doping-tail shaping in
+  linear and saturation operation, preserving Shichman-Hodges behavior at the
+  Berkeley default of 1.
+- Add JFET model-card `EG` support, replacing the fixed 1.11 eV silicon
+  bandgap in gate saturation-current temperature scaling while preserving that
+  value as the default.
+- Add JFET model-card `XTI` support, scaling gate saturation current from
+  `TNOM` with the standard silicon bandgap temperature law and a default
+  exponent of 3.
+- Add JFET model-card `VTOTC` support, applying the alternative
+  `VTO(T) = VTO + VTOTC * (T - TNOM)` rule with precedence over `TCV` when
+  explicitly present.
+- Add JFET model-card `BETATCE` support, applying the alternative
+  `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))` rule with precedence over
+  `BEX` when explicitly present.
+- Add JFET model-card `BEX` support, applying
+  `BETA(T) = BETA * (T / TNOM)^BEX` with a temperature-invariant zero default.
+- Add JFET model-card `TNOM` / `T_NOM` and `TCV` support, converting nominal
+  Celsius values to Kelvin and applying Berkeley threshold-voltage temperature
+  scaling while preserving invariant behavior when `TCV` is omitted.
+- Add JFET model-card `RS` source-resistance support with an intrinsic source
+  node across DC, transient, AC, transfer-function, and noise analysis, plus
+  hierarchy preservation, validation, and a distinct thermal-noise source.
+- Add JFET model-card `RD` drain-resistance support with an intrinsic drain
+  node across DC, transient, AC, transfer-function, and noise analysis, plus
+  hierarchy preservation, validation, and a distinct thermal-noise source.
+- Add JFET model-card `IS` gate-junction saturation-current support,
+  defaulting to `1e-14`, stamping `IGS`/`IGD` leakage in DC, transient, AC,
+  and transfer-function analyses, and emitting distinct shot-noise sources.
+- Add JFET model-card `FC` forward-bias depletion coefficient support,
+  defaulting to `0.5` and shaping `CGS`/`CGD` depletion capacitance in AC and
+  transient analysis with hierarchy preservation and range validation.
+- Add JFET model-card `PB` gate-junction-potential support with `VJ` as an
+  alias, bias-dependent `CGS`/`CGD` depletion capacitance in AC and transient
+  analysis, hierarchy preservation, and finite-positive validation.
+- Add JFET model-card `AF` flicker-noise current-exponent support, defaulting
+  to `1` and applying `KF * abs(Id)^AF / frequency` across noise analysis.
+- Add JFET model-card `KF` flicker-noise support with a distinct drain-current
+  `flicker` contribution and Berkeley-default inverse-frequency scaling.
+- Add diode model-card `AF` flicker-noise current-exponent support, defaulting
+  to `1` and applying `KF * abs(Id)^AF / frequency` across noise analysis.
+- Add diode model-card `KF` flicker-noise support with a distinct diode-current
+  `flicker` contribution and Berkeley-default inverse-frequency scaling.
+- Add legacy SPICE2 BJT model-card `C2` and `C4` leakage-ratio support,
+  deriving `ISE` and `ISC` from `IS` when explicit leakage currents are absent.
+- Add BJT model-card `XCJC` support to partition base-collector depletion
+  capacitance between intrinsic and external base nodes in AC and transient
+  analysis.
+- Add BJT model-card `RBM` and `IRB` support for Berkeley bias-dependent base
+  resistance across DC, AC, transient, transfer-function, and noise analysis.
+- Add BJT model-card `RB` base-resistance support with an intrinsic base node
+  in DC, AC, and transient analysis plus thermal noise in noise analysis.
+- Add BJT model-card `RC` collector-resistance support with an intrinsic
+  collector node in DC, AC, and transient analysis plus thermal noise in noise
+  analysis.
+- Add BJT model-card `RE` emitter-resistance support with an intrinsic emitter
+  node in DC, AC, and transient analysis plus thermal noise in noise analysis.
+- Add BJT model-card `VTF` forward transit-time voltage-scale support, applying
+  `exp(Vbc / (1.44 * VTF))` to the `XTF` AC and transient storage enhancement.
+
+- Add BJT model-card `ITF` forward transit-time current-scale support, applying
+  `(If / (If + ITF))^2` to the `XTF` AC and transient storage enhancement.
+- Add BJT model-card `XTF` forward transit-time bias-coefficient support,
+  scaling forward diffusion capacitance and transient stored charge by
+  `TF * (1 + XTF)` with the Berkeley default of zero.
+- Add BJT model-card `PTF` forward excess-phase support, rotating AC forward
+  transconductance by the configured phase at `1 / (2*pi*TF)`.
+- Add BJT model-card `AF` flicker-noise exponent support, defaulting to `1`
+  and applying `KF * abs(Ib)^AF / frequency` across noise analysis.
+- Add BJT model-card `KF` flicker-noise support with a distinct `flicker`
+  contribution and Berkeley-default inverse-frequency scaling.
+- Add BJT model-card `TNOM` / `T_NOM` nominal-temperature support, with
+  Berkeley Celsius card values converted to Kelvin for model-owned temperature
+  scaling and inherited circuit defaults when absent.
+
 ## Unreleased
 
 ### Added
+
+- **BJT reverse high-current beta roll-off** — BJT model cards now accept
+  `IKR` and apply reverse base-charge modulation in DC, transient, AC,
+  transfer-function, temperature, and noise paths, matching Rust and
+  TypeScript. The supported-parameter catalog now contains 110 canonical rows.
+
+- **BJT reverse current gain** — BJT model cards now accept `BR`/`BETA_R` and
+  apply the reverse base-current branch in DC, transient, AC,
+  transfer-function, temperature, and noise paths, matching Rust and
+  TypeScript. `XTB` now scales both forward and reverse beta. The
+  supported-parameter catalog now contains 108 canonical rows.
+
+- **BJT forward-beta temperature exponent** — BJT model cards now accept `XTB`
+  and scale forward beta by the analysis-to-nominal absolute temperature ratio,
+  matching Rust and TypeScript. The supported-parameter catalog now contains
+  106 canonical rows.
+
+- **BJT base-collector leakage** — BJT model cards now accept `ISC`/`NC` and
+  apply the leakage branch in DC, transient, AC, transfer-function,
+  temperature, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 104 canonical rows.
+
+- **BJT base-emitter leakage** — BJT model cards now accept `ISE`/`NE` and
+  apply the leakage branch in DC, transient, AC, transfer-function,
+  temperature, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 100 canonical rows.
+
+- **BJT forward high-current beta roll-off** — BJT model cards now accept
+  `IKF`/`IK` and apply shared base-charge modulation in DC, transient, AC,
+  transfer-function, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 96 canonical rows.
+
+- **BJT reverse Early voltage** — BJT model cards now accept `VAR`/`VB` and
+  apply reverse Early-effect base-charge modulation in DC, transient, AC,
+  transfer-function, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 94 canonical rows.
+
+- **BJT forward-bias depletion coefficient** — BJT model cards now accept `FC`
+  and apply it to the shared `CJE` and `CJC` Berkeley continuation law in AC and
+  transient analysis, matching Rust and TypeScript. The supported-parameter
+  catalog now contains 92 canonical rows.
+
+- **BJT base-collector depletion shaping** — BJT model cards now accept
+  `VJC`/`PC` junction potential and `MJC`/`MC` grading coefficient parameters
+  and apply them to `CJC` in AC and transient analysis, matching Rust and
+  TypeScript. The supported-parameter catalog now contains 90 canonical rows.
+
+- **BJT base-emitter depletion shaping** — BJT model cards now accept
+  `VJE`/`PE` junction potential and `MJE`/`ME` grading coefficient parameters
+  and apply them to `CJE` in AC and transient analysis, matching Rust and
+  TypeScript. The supported-parameter catalog now contains 86 canonical rows.
+
+- **BJT reverse emission coefficient** — BJT model cards now accept `NR` and
+  apply it to reverse base-collector diffusion charge in AC and transient
+  analysis, matching Rust and TypeScript. The supported-parameter catalog now
+  contains 82 canonical rows.
+
+- **BJT forward emission coefficient** — BJT model cards now accept `NF` and
+  apply it to DC, transient charge, AC, transfer-function, and noise paths,
+  matching Rust and TypeScript. The supported-parameter catalog now contains
+  80 canonical rows.
+
+- **BJT forward Early voltage** — BJT model cards now accept `VAF`/`VA` and
+  apply collector-voltage modulation in DC, transient, AC, transfer-function,
+  and noise paths, matching Rust and TypeScript. The supported-parameter
+  catalog now contains 78 canonical rows.
+
+- **BJT energy gap** — BJT model cards now accept `EG`, apply each model's
+  energy gap to saturation-current temperature scaling, and preserve it through
+  subcircuit expansion, matching Rust and TypeScript. The supported-parameter
+  catalog now contains 76 canonical rows.
+
+- **BJT saturation-current temperature exponent** — BJT model cards now accept
+  `XTI`, apply it to saturation-current temperature scaling, and preserve it
+  through subcircuit expansion, matching Rust and TypeScript. The supported-
+  parameter catalog now contains 74 canonical rows.
+
+- **Diode energy gap** — diode model cards now accept `EG`, apply it to
+  saturation-current temperature scaling, and preserve it through subcircuit
+  expansion, matching Rust and TypeScript.
+
+- **Diode saturation-current temperature exponent** — diode model cards now
+  accept `XTI`, apply it to saturation-current temperature scaling, and
+  preserve it through subcircuit expansion, matching Rust and TypeScript.
+
+- **Diode forward-bias depletion coefficient** — diode model cards now accept
+  `FC` and apply the continuous Berkeley piecewise depletion-capacitance law in
+  AC and transient analysis, matching Rust and TypeScript.
+
+- **Bias-shaped diode depletion capacitance** — diode model cards now accept
+  `VJ`/`PB` junction potential and `M`/`MJ` grading coefficient parameters and
+  apply them to depletion capacitance in AC and transient analysis, matching
+  Rust and TypeScript.
 
 - **Model-card supported-parameter coverage dashboard** —
   `model_card_supported_parameter_coverage_dashboard()`,
@@ -20,7 +344,7 @@
   `model_card_supported_parameter_coverage_gate_issue_records()`,
   `format_model_card_supported_parameter_coverage_gate_issue_csv()`, and
   `format_model_card_supported_parameter_coverage_gate_issue_json()` now
-  validate the expected seven-kind, 67-row supported-parameter catalog and
+  validate the expected seven-kind, 72-row supported-parameter catalog and
   expose stable issue rows for release automation, matching Rust and
   TypeScript.
 

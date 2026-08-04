@@ -1,0 +1,83 @@
+% ============================================================================
+% arm-span-height.adj — estimating standing height from arm span
+% (height = span / 1.06) in the ADJ standard library.
+% ============================================================================
+% The arm-span-height entry of the *clinical* track — the estimate of a patient's standing height from their
+% ARM SPAN (fingertip-to-fingertip span of the outstretched arms) when height cannot be measured directly.
+% Many patients cannot stand for a stadiometer measurement — kyphoscoliosis and other chest/spine deformities,
+% contractures, amputation, non-ambulatory or bed-bound status — yet a height is still needed to compute
+% spirometry reference values, body-surface-area, BMI and weight-based drug doses. Arm span is close to
+% standing height and can be measured lying down, so it serves as a surrogate: because span slightly EXCEEDS
+% height in most adults, the cited page divides the measured span by a fixed factor to bring it back to an
+% estimated height. THE ESTIMATED HEIGHT IS THE ARM SPAN DIVIDED BY 1.06 — i.e. height = span / 1.06.
+%
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its one exact
+% rearrangement (the arm span a given height implies). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the measured arm span from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "arm-span-height.adj"
+%     observe arm_span(159)   % "…arm span 159 cm…"   (span cited by the model)
+%     ? estimated_height(arm_span)   % engine → 150 (cm, estimated standing height)
+%
+% Structurally this is a SINGLE VALUE OVER A CONSTANT — one measured quantity divided by a fixed factor — a
+% shape distinct from the sum-with-a-constant-over-a-constant (mid-parental-height, expected-aa-gradient),
+% ratio, product-over-constant and constant-scaled forms of the other clinical libraries. The one embedded
+% constant — the span-to-height factor 1.06 — is an exact terminating decimal as the cited expression prints
+% it (1.06 = 53/50), and the arm span is the one formal parameter bound at apply time, so every value the
+% engine returns is exact.
+%
+%   estimated_height(arm_span)     = arm_span / 1.06          % (cm, estimated standing height)
+%   arm_span(estimated_height)     = estimated_height * 1.06  % (cm, the arm span a given height implies)
+%
+% The two formulas COMPOSE and invert cleanly around the worked case arm_span = 159 cm (estimated height =
+% 159 / 1.06 = 150 cm): the `estimated_height` a consumer computes is exactly the value the inverse formula
+% back-solves to recover its own measured input (159).
+%
+% NOTE ON UNITS AND MODELLING: the arm span and estimated height are in the SAME unit (centimetres here) — the
+% factor 1.06 is dimensionless, so the estimate comes out in whatever unit the span was measured in. This is a
+% population SURROGATE: the true span-to-height ratio varies with age, sex and ancestry, and the cited page
+% prints ONE representative factor (1.06); this library grounds exactly that printed factor. The estimate
+% feeds downstream reference equations (spirometry, BSA, BMI); interpreting it in context is the clinician's
+% task, stated by the cited source but applied by the reader.
+%
+% Both formulas are defended by the SAME clause — the quoted height expression — because that one expression
+% (span / 1.06) sanctions the relation read either way. The quote is transcribed verbatim from the StatPearls
+% article "Spirometry", where the arm-span height adjustment is printed as the typed, all-ASCII, operand-
+% complete expression "height = span/1.06". Each `formula` therefore carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored —
+% the formula is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `arm_span` and `estimated_height` each appear BOTH as a derived result and as an input (of the
+% other formula), so each is a single dictionary term used in both roles. The `surface` lists are the everyday
+% names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary arm_span_height_vocab {
+    define arm_span          : finding  surface "arm span", "armspan", "arm-span", "span", "wingspan", "fingertip-to-fingertip span" % cm
+    define estimated_height  : finding  surface "estimated height", "predicted height", "height", "standing height", "surrogate height" % cm
+}
+
+% ----------------------------------------------------------------------------
+% The arm-span height estimate, both ways. Each is a named, importable, reusable formula over its formal
+% parameter, bound at apply time, and each carries the height expression from the StatPearls article (a quote
+% is required on a shipped formula). Each is an exact expression in the measured value and the exact factor
+% 1.06, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook arm_span_height_laws {
+    use arm_span_height_vocab
+
+    % Estimated height — the arm span brought back to a standing height by the 1.06 span-to-height factor.
+    formula estimated_height(arm_span) = arm_span / 1.06
+        source "height = span/1.06"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560526/"
+        trust authoritative
+
+    % Arm span — the same expression solved for the arm span a given height implies. Defended by the SAME clause.
+    formula arm_span(estimated_height) = estimated_height * 1.06
+        source "height = span/1.06"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560526/"
+        trust authoritative
+}

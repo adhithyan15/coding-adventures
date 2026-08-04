@@ -137,7 +137,7 @@ Schema (per cell):
 
 ### The harness
 
-A Python script `scripts/adj_pr6_foundation_bench.py` iterates the
+A Python script `code/scripts/adj_pr6_foundation_bench.py` iterates the
 matrix, shells out to the binary per cell, captures JSON output,
 and writes the aggregated result to
 `code/specs/data/adj25-pr6-foundation-bench-YYYY-MM-DD.json`. The
@@ -158,7 +158,7 @@ ollama pull qwen2.5:1.5b
 ollama pull qwen2.5:0.5b
 
 # Run the full matrix (~30 min – 2 h depending on hardware).
-python3 scripts/adj_pr6_foundation_bench.py \
+python3 code/scripts/adj_pr6_foundation_bench.py \
     --endpoint http://127.0.0.1:11434 \
     --binary code/packages/rust/target/release/adj_pr6_bench
 ```
@@ -166,7 +166,7 @@ python3 scripts/adj_pr6_foundation_bench.py \
 Subset runs (e.g., for debugging):
 
 ```bash
-python3 scripts/adj_pr6_foundation_bench.py \
+python3 code/scripts/adj_pr6_foundation_bench.py \
     --models gemma4:latest \
     --declarations matches,large-lithium
 ```

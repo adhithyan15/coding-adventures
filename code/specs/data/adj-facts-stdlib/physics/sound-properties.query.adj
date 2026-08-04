@@ -1,0 +1,25 @@
+% ============================================================================
+% sound-properties.query.adj — a worked recall over the physics sound-properties
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does pitch
+% correspond to physically?": it states no physics fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `sound_property` rows and returns the physical quantity + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% physical quantity `frequency`, recall the perceived property heard as it —
+% pitch). A perceived word the source never maps — `rhythm` — is never sorted
+% into a physical quantity, so a recall on it abstains honestly; the engine
+% never invents a correspondence.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli sound-properties.query.adj
+% ============================================================================
+
+import "sound-properties.adj"
+
+? sound_property(pitch, $P)          % expect frequency
+? sound_property(loudness, $P)       % expect amplitude
+? sound_property(timbre, $P)         % expect waveform
+? sound_property($X, frequency)      % expect pitch — reverse recall
+? sound_property(rhythm, $P)         % expect abstain — the source never maps rhythm

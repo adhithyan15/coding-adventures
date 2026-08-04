@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 126 \u2014 capnography ventilation index from four stated quantities (a NEW panel: capnography / end-tidal ventilation, and the ladder's FIRST three-term denominator containing a division). From a lone expired volume divided by an effective space (a dead space with a per-cycle shunt_reserve/breath_cycles quotient added to it), compute the ventilation index (expired_volume/(dead_space+shunt_reserve/breath_cycles)), the effective space (dead_space+shunt_reserve/breath_cycles), or the per-cycle reserve (shunt_reserve/breath_cycles). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a LONE TERM OVER AN ADD-A-QUOTIENT THREE-TERM DENOMINATOR a/(b+c/d) (divide the shunt reserve by the breath cycles, add that to the dead space, then divide the expired volume by that whole effective space, so a/(b+c/d) = (a/(b+(c/d))); the division sibling of rung-122's a/(b+c*d). No denominator on the ladder has ever contained a division, so this promotes the first quotient-bearing denominator to a queried gold. The precedence-and-grouping slips ride alongside as distractors. The harness matches the scalar to the printed options. The ventilation index is a rate (expired volume per unit of effective space), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via + and / \u2014 no constant leaks, and neither the effective space, the per-cycle quotient, nor the ventilation index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the dead space divides (a/b+c/d, evaluating (a/b)+(c/d), a wrong grouping) and adding before dividing the reserve (a/((b+c)/d) = a*d/(b+c), breaking the c/d-binds-first precedence, a wrong grouping). The core confusion tested is that a/(b+c/d) is (a/(b+(c/d))), not a/b+c/d and not a/((b+c)/d). The denominator uses only + and / of positive quantities so positivity is automatic; the five family values are pairwise distinct and all three queried readouts vary across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r126capno-01",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 30 divided by a dead space of 4 plus a shunt reserve of 6 over a breath cycle count of 3. What is the ventilation index (the expired volume divided by the effective space)?",
+      "program": "observe expired_volume(30)\nobserve dead_space(4)\nobserve shunt_reserve(6)\nobserve breath_cycles(3)\nlet answer = expired_volume / (dead_space + shunt_reserve / breath_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r126capno-02",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 30 divided by a dead space of 4 plus a shunt reserve of 6 over a breath cycle count of 3. What is the the effective space (the dead space plus the per-cycle shunt reserve, the divisor the expired volume is divided by)?",
+      "program": "observe expired_volume(30)\nobserve dead_space(4)\nobserve shunt_reserve(6)\nobserve breath_cycles(3)\nlet answer = dead_space + shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r126capno-03",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 30 divided by a dead space of 4 plus a shunt reserve of 6 over a breath cycle count of 3. What is the the per-cycle reserve (the shunt reserve spread over the breath cycles, before it is added to the dead space)?",
+      "program": "observe expired_volume(30)\nobserve dead_space(4)\nobserve shunt_reserve(6)\nobserve breath_cycles(3)\nlet answer = shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r126capno-04",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 44 divided by a dead space of 5 plus a shunt reserve of 5 over a breath cycle count of 2. What is the ventilation index (the expired volume divided by the effective space)?",
+      "program": "observe expired_volume(44)\nobserve dead_space(5)\nobserve shunt_reserve(5)\nobserve breath_cycles(2)\nlet answer = expired_volume / (dead_space + shunt_reserve / breath_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.866666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r126capno-05",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 44 divided by a dead space of 5 plus a shunt reserve of 5 over a breath cycle count of 2. What is the the effective space (the dead space plus the per-cycle shunt reserve, the divisor the expired volume is divided by)?",
+      "program": "observe expired_volume(44)\nobserve dead_space(5)\nobserve shunt_reserve(5)\nobserve breath_cycles(2)\nlet answer = dead_space + shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.866666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r126capno-06",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 44 divided by a dead space of 5 plus a shunt reserve of 5 over a breath cycle count of 2. What is the the per-cycle reserve (the shunt reserve spread over the breath cycles, before it is added to the dead space)?",
+      "program": "observe expired_volume(44)\nobserve dead_space(5)\nobserve shunt_reserve(5)\nobserve breath_cycles(2)\nlet answer = shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.866666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r126capno-07",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 60 divided by a dead space of 6 plus a shunt reserve of 9 over a breath cycle count of 3. What is the ventilation index (the expired volume divided by the effective space)?",
+      "program": "observe expired_volume(60)\nobserve dead_space(6)\nobserve shunt_reserve(9)\nobserve breath_cycles(3)\nlet answer = expired_volume / (dead_space + shunt_reserve / breath_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r126capno-08",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 60 divided by a dead space of 6 plus a shunt reserve of 9 over a breath cycle count of 3. What is the the effective space (the dead space plus the per-cycle shunt reserve, the divisor the expired volume is divided by)?",
+      "program": "observe expired_volume(60)\nobserve dead_space(6)\nobserve shunt_reserve(9)\nobserve breath_cycles(3)\nlet answer = dead_space + shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r126capno-09",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 60 divided by a dead space of 6 plus a shunt reserve of 9 over a breath cycle count of 3. What is the the per-cycle reserve (the shunt reserve spread over the breath cycles, before it is added to the dead space)?",
+      "program": "observe expired_volume(60)\nobserve dead_space(6)\nobserve shunt_reserve(9)\nobserve breath_cycles(3)\nlet answer = shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r126capno-10",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 26 divided by a dead space of 7 plus a shunt reserve of 3 over a breath cycle count of 2. What is the ventilation index (the expired volume divided by the effective space)?",
+      "program": "observe expired_volume(26)\nobserve dead_space(7)\nobserve shunt_reserve(3)\nobserve breath_cycles(2)\nlet answer = expired_volume / (dead_space + shunt_reserve / breath_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.214285714285714,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0588235294117645,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r126capno-11",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 26 divided by a dead space of 7 plus a shunt reserve of 3 over a breath cycle count of 2. What is the the effective space (the dead space plus the per-cycle shunt reserve, the divisor the expired volume is divided by)?",
+      "program": "observe expired_volume(26)\nobserve dead_space(7)\nobserve shunt_reserve(3)\nobserve breath_cycles(2)\nlet answer = dead_space + shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0588235294117645,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.214285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r126capno-12",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 26 divided by a dead space of 7 plus a shunt reserve of 3 over a breath cycle count of 2. What is the the per-cycle reserve (the shunt reserve spread over the breath cycles, before it is added to the dead space)?",
+      "program": "observe expired_volume(26)\nobserve dead_space(7)\nobserve shunt_reserve(3)\nobserve breath_cycles(2)\nlet answer = shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0588235294117645,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.214285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r126capno-13",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 78 divided by a dead space of 8 plus a shunt reserve of 8 over a breath cycle count of 2. What is the ventilation index (the expired volume divided by the effective space)?",
+      "program": "observe expired_volume(78)\nobserve dead_space(8)\nobserve shunt_reserve(8)\nobserve breath_cycles(2)\nlet answer = expired_volume / (dead_space + shunt_reserve / breath_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r126capno-14",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 78 divided by a dead space of 8 plus a shunt reserve of 8 over a breath cycle count of 2. What is the the effective space (the dead space plus the per-cycle shunt reserve, the divisor the expired volume is divided by)?",
+      "program": "observe expired_volume(78)\nobserve dead_space(8)\nobserve shunt_reserve(8)\nobserve breath_cycles(2)\nlet answer = dead_space + shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r126capno-15",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 78 divided by a dead space of 8 plus a shunt reserve of 8 over a breath cycle count of 2. What is the the per-cycle reserve (the shunt reserve spread over the breath cycles, before it is added to the dead space)?",
+      "program": "observe expired_volume(78)\nobserve dead_space(8)\nobserve shunt_reserve(8)\nobserve breath_cycles(2)\nlet answer = shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r126capno-16",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 95 divided by a dead space of 9 plus a shunt reserve of 7 over a breath cycle count of 2. What is the ventilation index (the expired volume divided by the effective space)?",
+      "program": "observe expired_volume(95)\nobserve dead_space(9)\nobserve shunt_reserve(7)\nobserve breath_cycles(2)\nlet answer = expired_volume / (dead_space + shunt_reserve / breath_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.055555555555555,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r126capno-17",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 95 divided by a dead space of 9 plus a shunt reserve of 7 over a breath cycle count of 2. What is the the effective space (the dead space plus the per-cycle shunt reserve, the divisor the expired volume is divided by)?",
+      "program": "observe expired_volume(95)\nobserve dead_space(9)\nobserve shunt_reserve(7)\nobserve breath_cycles(2)\nlet answer = dead_space + shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.055555555555555,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r126capno-18",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 95 divided by a dead space of 9 plus a shunt reserve of 7 over a breath cycle count of 2. What is the the per-cycle reserve (the shunt reserve spread over the breath cycles, before it is added to the dead space)?",
+      "program": "observe expired_volume(95)\nobserve dead_space(9)\nobserve shunt_reserve(7)\nobserve breath_cycles(2)\nlet answer = shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.055555555555555,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r126capno-19",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 120 divided by a dead space of 10 plus a shunt reserve of 10 over a breath cycle count of 2. What is the ventilation index (the expired volume divided by the effective space)?",
+      "program": "observe expired_volume(120)\nobserve dead_space(10)\nobserve shunt_reserve(10)\nobserve breath_cycles(2)\nlet answer = expired_volume / (dead_space + shunt_reserve / breath_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r126capno-20",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 120 divided by a dead space of 10 plus a shunt reserve of 10 over a breath cycle count of 2. What is the the effective space (the dead space plus the per-cycle shunt reserve, the divisor the expired volume is divided by)?",
+      "program": "observe expired_volume(120)\nobserve dead_space(10)\nobserve shunt_reserve(10)\nobserve breath_cycles(2)\nlet answer = dead_space + shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r126capno-21",
+      "qtype": "ventilation_index",
+      "stem": "A capnography trace records an expired volume of 120 divided by a dead space of 10 plus a shunt reserve of 10 over a breath cycle count of 2. What is the the per-cycle reserve (the shunt reserve spread over the breath cycles, before it is added to the dead space)?",
+      "program": "observe expired_volume(120)\nobserve dead_space(10)\nobserve shunt_reserve(10)\nobserve breath_cycles(2)\nlet answer = shunt_reserve / breath_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

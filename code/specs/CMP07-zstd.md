@@ -60,7 +60,19 @@ Analogy — Huffman vs FSE:
 FSE encoding:
 1. Build a **normalised frequency table** for the symbols (lit lengths, match lengths,
    offsets). Normalised counts sum to a power of 2 (the table size = 2^AccuracyLog).
-2. Build a **spread table** — each symbol occupies `table_size / count[sym]` slots.
+2. Build a **spread table** — each symbol occupies `count[sym]` slots, assigned by a
+   **single pass** over symbols in ascending order `0..maxSymbolValue`: for each symbol,
+   place its full count immediately (step = `(table_size>>1) + (table_size>>3) + 3`,
+   skipping any slot already claimed by a probability−1 symbol). This is
+   `FSE_buildDTable_internal`'s low-probability branch in the reference C implementation —
+   there is **no** "handle count>1 symbols first, then count==1 symbols" second pass; a
+   fabricated two-pass split of that shape produces a different (but internally
+   self-consistent) table layout that is silently non-conformant with real zstd. This bug
+   shape — passing a language port's own round-trip tests while producing wire-incompatible
+   output — was found independently in three ports; see lessons.md Lesson 96 for the full
+   derivation and the exact per-sequence field order (peek LL/ML/OF → read extras OF, ML,
+   LL → update states LL, ML, OF, skipping the update entirely for the last sequence in a
+   block).
 3. Encode backwards: each symbol takes the current state, looks up which new state to
    transition to, and emits the difference as bits.
 
@@ -143,15 +155,30 @@ Bits 7–6:  Frame_Content_Size_Flag
            10 → FCS is 4 bytes
            11 → FCS is 8 bytes
 Bits 5:    Single_Segment_Flag — if 1, no Window_Descriptor; FCS always present
-Bit  4:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
+Bit  4:    Unused_bit (decoders must ignore; not the checksum flag — see note below)
 Bit  3:    Reserved (must be 0)
-Bit  2:    Reserved (must be 0)
+Bit  2:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
 Bits 1–0:  Dictionary_ID_Flag
            00 → no dictionary ID
            01 → 1-byte dict ID
            10 → 2-byte dict ID
            11 → 4-byte dict ID
 ```
+
+> **Correction (2026-08):** an earlier revision of this table placed
+> Content_Checksum_Flag at bit 4 and marked bit 2 as reserved. That was
+> backwards. Verified empirically against the real `zstd` CLI: `zstd -c file`
+> (checksum on by default) emits FHD `0x64`; `zstd -c --no-check file` emits
+> FHD `0x60` — the differing bit is bit 2, and the checksummed output is
+> exactly 4 bytes longer. RFC 8878 §3.1.1.1 agrees: bit 4 is Unused_bit, bit 2
+> is Content_Checksum_Flag. A decoder that reads bit 4 for the checksum flag
+> will misparse any real-world frame that has a trailing checksum (which is
+> the common case — most encoders, including the reference `zstd` CLI, enable
+> it by default) as having trailing garbage after the last block. This
+> mistake was repo-wide (spec, Go, and Rust) — several language ports had
+> already copied the wrong bit position into a code comment before this was
+> caught; see `lessons.md` Lesson 95/96 and the `rust/zstd` conformance fix
+> that corrected this table.
 
 ### Window Descriptor (1 byte, present when Single_Segment_Flag=0)
 
@@ -232,6 +259,89 @@ Offset_Code         → actual offset (see repeat offset rules above)
 
 The bit streams are written **right-to-left** (backwards) and decoded left-to-right.
 This allows the encoder to determine state transitions without lookahead.
+
+#### Exact decode algorithm (bit-consumption order)
+
+This is the part every language port in this repo got wrong on the first pass
+(discovered during a repo-wide zstd conformance audit, 2026-08 — first found
+during the `java/zstd` rescue and reproduced identically against the Rust
+reference and multiple other independent implementations across this repo —
+see `lessons.md`). It is NOT recoverable from a same-codebase round-trip
+test: an encoder/decoder pair that agree with each other on a wrong order
+will still round-trip correctly against themselves. It is only detectable by
+decoding with (or encoding for) an independent, spec-conformant
+implementation — i.e. `zstd -d` on the CLI (TC-9, aka test case 9). Verified
+against RFC 8878 §3.1.1.3.2.1.2 and the actual
+reference C source (`ZSTD_decodeSequence`, `FSE_encodeSymbol`,
+`FSE_initCState2` in `github.com/facebook/zstd`):
+
+1. **Initial states.** Three reads at the start of the bitstream, each
+   `AccuracyLog` bits: **Literals_Length_State, Offset_State,
+   Match_Length_State** — in that order. This becomes the state used to
+   decode sequence 1.
+2. **Per sequence**, repeated for every sequence in the block:
+   a. **Peek** all three symbols from the CURRENT states —
+      `symbol = table[state].symbol`. This is a bare table lookup; it
+      consumes **zero bits**. (This is the detail every port missed: it's
+      tempting to fold "get symbol" and "consume transition bits" into one
+      step, but real zstd keeps them separate, and the separation is load-
+      bearing for step (c) below.)
+   b. **Read extra value bits**, in order **Offset, Match_Length,
+      Literals_Length**. (Note: this is the REVERSE of the initial-state
+      order in step 1, and also the reverse of the state-update order in
+      step (c) — the RFC is genuinely asymmetric here, not a typo.)
+   c. **Update FSE states** (consumes bits: `new_state = table[old_state].base
+      + read(table[old_state].nbBits)`), in order **Literals_Length,
+      Match_Length, Offset** — but **only if this is not the last sequence
+      in the block**. There is no "next" sequence to prepare a state for
+      after the last one, so no update bits are read (and a conformant
+      encoder must not write any either — see below).
+3. No content checksum / trailing bytes may follow the last block's payload
+   (`Content_Checksum_Flag`, if set, contributes exactly 4 more bytes before
+   end-of-frame; anything after that is a malformed/truncated frame and
+   must be rejected, not silently ignored).
+
+**Encoder implications** (the above is what a forward decoder consumes; the
+encoder writes it in exact reverse, since the bitstream is backward): process
+sequences from last to first. For the FIRST sequence processed (semantically
+the LAST real sequence), there is no bit-consuming transition to produce its
+starting state — it must be computed directly from the symbol with **zero
+bits written**, using the same formula real zstd calls `FSE_initCState2`:
+given per-symbol encode-table entries `deltaNbBits`/`deltaFindState` and the
+`stateTable`,
+```
+nbBitsOut = (deltaNbBits + (1 << 15)) >>> 16
+value     = (nbBitsOut << 16) - deltaNbBits
+state     = stateTable[(value >>> nbBitsOut) + deltaFindState]
+```
+For every subsequent sequence processed (all but the first), the normal
+`FSE_encodeSymbol` transition applies: `nbBitsOut = (state + deltaNbBits) >>>
+16`, flush the low `nbBitsOut` bits of `state`, then
+`state = stateTable[(state >>> nbBitsOut) + deltaFindState]`.
+
+#### Exact FSE table-construction algorithm
+
+Also load-bearing, also invisible to self-round-trip tests: the symbol
+"spread" step that assigns table slots must be a **single pass** over
+symbols in ascending order (`for s in 0..maxSymbolValue: place
+normalizedCount[s] copies of s, advancing by `step = (tableSize>>1) +
+(tableSize>>3) + 3` positions each time, skipping any position already
+claimed by a -1-probability symbol`). There is no "handle count>1 symbols in
+one pass, then count==1 symbols in a second pass" — that is NOT part of the
+real algorithm; it produces a different (but internally self-consistent)
+table and was one of several such bugs found independently across this
+repo's language ports (first in `java/zstd`'s first pass). See
+`FSE_buildDTable_internal` in `github.com/facebook/zstd`'s `fse_decompress.c`
+for the canonical version.
+
+#### Number_of_Sequences wire encoding
+
+The 2-byte form of `Number_of_Sequences` (values 128–32511) is **not** a
+plain little-endian `u16` with the high bit set — the marker/high byte comes
+FIRST on the wire regardless of host endianness: `byte0 = (count >> 8) |
+0x80`, `byte1 = count & 0xFF`. A little-endian-style encoding that writes the
+low byte first is self-consistent (round-trips against itself) but produces a
+non-conformant frame for any block with 128+ sequences.
 
 ## Educational Simplification
 
@@ -376,7 +486,12 @@ assert decompress(frame) == b"hello"
 ## Security Considerations
 
 - **Bomb protection**: the `Content_Size` field is an untrusted hint — do not pre-allocate
-  `Content_Size` bytes; grow output incrementally.
+  `Content_Size` bytes; grow output incrementally. Enforce a hard cap on total decompressed
+  output size, checked incrementally at every point output can grow — including inside the
+  per-sequence loop of Compressed-block decoding, not just once per top-level Raw/RLE block.
+  A Compressed block's *wire* size is capped (see Block size cap below), but that says
+  nothing about how large it can LZ77-expand to: a single sequence's match length can be
+  tens of KB, and one block can carry tens of thousands of sequences.
 - **Block size cap**: reject blocks claiming `Block_Size > 1 << 17` (128 KB + 1) as malformed.
 - **FSE table validation**: verify that normalised counts sum to the declared table size;
   reject tables with negative counts or counts that overflow.

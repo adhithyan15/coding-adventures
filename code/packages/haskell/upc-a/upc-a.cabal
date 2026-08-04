@@ -1,0 +1,39 @@
+cabal-version: 3.0
+name:          upc-a
+version:       0.1.0
+synopsis:      Pure UPC-A barcode encoder
+description:   Checked UPC-A normalization, modulo-10 checksums, attributed runs, and backend-neutral paint scenes.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.UpcA
+    build-depends:    aeson >=2.0 && <3
+                    , base >=4.14 && <5
+                    , barcode-layout-1d >=0.1 && <0.2
+                    , containers >=0.6 && <0.8
+                    , paint-instructions >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    UpcASpec
+    hs-source-dirs:   test
+    build-depends:    aeson >=2.0 && <3
+                    , base >=4.14 && <5
+                    , barcode-layout-1d >=0.1 && <0.2
+                    , containers >=0.6 && <0.8
+                    , hspec ==2.*
+                    , paint-instructions >=0.1 && <0.2
+                    , upc-a
+    ghc-options:      -Wall
+    default-language: Haskell2010

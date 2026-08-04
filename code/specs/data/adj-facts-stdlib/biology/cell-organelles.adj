@@ -1,0 +1,70 @@
+% ============================================================================
+% cell-organelles — each eukaryotic cell organelle and its primary function
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A biology facts library in the ADJ standard library — the kind a medicine or
+% science agent `import`s when it needs a grounded cell-biology fact: "the
+% mitochondrion produces energy; the nucleus maintains the DNA; the ribosome
+% makes protein." A cell is built from membrane-bound compartments called
+% organelles, and each organelle carries out one primary job. Recall is a
+% binding query:
+%
+%     ? organelle_function(mitochondrion, $F)   % produces_energy
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `organelle_function(organelle, function)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the function atom WITH its source, on the CPU, with zero model calls,
+% and abstains on an organelle (or non-organelle) not in the table. The query
+% also runs BACKWARD — bind the function and recall the organelle:
+%
+%     ? organelle_function($O, photosynthesis)  % chloroplast
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful one-word paraphrase of the primary-function text the source states —
+% never an interpretation the source does not support. A recalled function atom
+% therefore composes straight into downstream reasoning (a medicine agent asking
+% "which organelle produces_energy?" gets the grounded answer, not a guess) —
+% the concrete bridge from biology RECALL to reasoning.
+%
+% Provenance: every organelle name and its `function` atom is grounded in the
+% "Main function" column of the organelle tables on the Wikipedia "Organelle"
+% article (the citable artifact at the `locator`, which lists all rows below).
+% The `source` span is the VERBATIM "Main function" cell for the first data row
+% (mitochondrion), copied character-for-character from that page. The remaining
+% rows' atoms are each a faithful one-word paraphrase of that same column's cell
+% for their organelle:
+%
+%     nucleus                → "DNA maintenance, controls all activities …"    → maintains_dna
+%     ribosome               → "translation of RNA into proteins"              → makes_protein
+%     chloroplast            → "photosynthesis, traps energy from sunlight"     → photosynthesis
+%     endoplasmic_reticulum  → "translation and folding of new proteins …"     → folds_proteins
+%     golgi_apparatus        → "sorting, packaging, processing … of proteins"   → packages_proteins
+%     vacuole                → "storage, transportation, helps maintain …"     → storage
+%     lysosome               → "breakdown of large molecules …"                → breaks_down_molecules
+%
+% `trust consensus` — an encyclopedia (collaboratively edited reference), the
+% honest tier for a Wikipedia source (contrast the `authoritative` tier reserved
+% for a primary government reference such as NIH/NHGRI). Nothing here is asserted
+% from memory; each pair was read out of the fetched article and any organelle
+% whose function the article did not state would have been dropped.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table organelle_function {
+    columns organelle, function
+
+    row (mitochondrion, produces_energy)
+    row (nucleus, maintains_dna)
+    row (ribosome, makes_protein)
+    row (chloroplast, photosynthesis)
+    row (endoplasmic_reticulum, folds_proteins)
+    row (golgi_apparatus, packages_proteins)
+    row (vacuole, storage)
+    row (lysosome, breaks_down_molecules)
+
+    source "energy production from the oxidation of glucose substances and the release of adenosine triphosphate"
+    locator "https://en.wikipedia.org/wiki/Organelle"
+    trust consensus
+}

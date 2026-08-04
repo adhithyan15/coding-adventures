@@ -115,7 +115,18 @@ fn cos_is_even() {
 
 #[test]
 fn pythagorean_identity() {
-    let values = [0.0, 0.5, 1.0, PI / 6.0, PI / 4.0, PI / 3.0, PI / 2.0, PI, 2.5, 5.0];
+    let values = [
+        0.0,
+        0.5,
+        1.0,
+        PI / 6.0,
+        PI / 4.0,
+        PI / 3.0,
+        PI / 2.0,
+        PI,
+        2.5,
+        5.0,
+    ];
     for &x in &values {
         let s = sin(x);
         let c = cos(x);
@@ -220,6 +231,9 @@ fn sqrt_nine() {
     assert!(approx_equal(sqrt(9.0), 3.0));
 }
 
+// The literal 1.41421356237 is the expected reference value for sqrt(2) in this
+// test; it is intentional test data, not an approximation of SQRT_2 to replace.
+#[allow(clippy::approx_constant)]
 #[test]
 fn sqrt_two() {
     // sqrt(2) ≈ 1.41421356237
@@ -236,6 +250,19 @@ fn sqrt_large() {
     // sqrt(1e10) = 1e5
     let result = sqrt(1e10);
     assert!((result - 1e5_f64).abs() < 1e-4);
+}
+
+#[test]
+fn sqrt_covers_full_binary64_range() {
+    fn relative(actual: f64, expected: f64) -> bool {
+        (actual - expected).abs() / expected.abs() <= 1e-12
+    }
+    assert!(relative(sqrt(1e-100), 1e-50));
+    assert!(relative(sqrt(f64::from_bits(1)), 2.2227587494850775e-162));
+    assert!(relative(sqrt(f64::MAX), 1.3407807929942596e154));
+    assert!(sqrt(-0.0).is_sign_negative());
+    assert_eq!(sqrt(f64::INFINITY), f64::INFINITY);
+    assert!(sqrt(f64::NAN).is_nan());
 }
 
 #[test]
@@ -283,6 +310,15 @@ fn tan_negative_pi_over_4() {
 #[test]
 fn atan_zero() {
     assert_eq!(atan(0.0), 0.0);
+}
+
+#[test]
+fn atan_preserves_tiny_inputs_and_negative_zero() {
+    let minimum = f64::from_bits(1);
+    assert_eq!(atan(-0.0).to_bits(), (-0.0f64).to_bits());
+    assert_eq!(atan(2.0f64.powi(-30)), 2.0f64.powi(-30));
+    assert_eq!(atan(minimum), minimum);
+    assert_eq!(atan(-minimum), -minimum);
 }
 
 #[test]

@@ -64,7 +64,8 @@
 //! - **Comparisons** (i64 family): `cmp_{eq|ne|lt|le|gt|ge}_{i*|u*|bool}`
 //!   → `CMP_*_I64`.
 //! - **Control flow**: `label`, `jmp`, `jmp_if_true`, `jmp_if_false`.
-//! - **Returns**: `ret_{i*|u*|bool|void}` → `RET_I64` / `RET_VOID`.
+//! - **Returns**: `ret_{i*|u*}`, `ret_bool`, and `ret_void` preserve their
+//!   runtime value category through `RET_I64`, `RET_BOOL`, and `RET_VOID`.
 //! - **Builtins**: `call_builtin` → `CALL_BUILTIN <idx>`.
 //! - **Optional linear memory**: `load_mem`, `store_mem` (when the
 //!   GenericCirJit was constructed with a non-zero tape size).
@@ -118,6 +119,7 @@ pub(crate) mod opcode {
     pub const CALL_BUILTIN: u8 = 0x50;
     pub const RET_I64:      u8 = 0x60;
     pub const RET_VOID:     u8 = 0x61;
+    pub const RET_BOOL:     u8 = 0x62;
 }
 
 /// Maximum bytes the compiled bytecode can grow to.  1 MiB is enough
@@ -583,6 +585,13 @@ impl Backend for GenericCirJit {
                     }
                     return Value::Int(regs[code[pc] as usize]);
                 }
+                opcode::RET_BOOL => {
+                    if pc + 1 > code.len() {
+                        self.set_error("malformed bytecode: truncated RET_BOOL");
+                        return Value::Null;
+                    }
+                    return Value::Bool(regs[code[pc] as usize] != 0);
+                }
                 opcode::RET_VOID => {
                     return Value::Null;
                 }
@@ -916,7 +925,8 @@ fn compile_to_bytecode(
             continue;
         }
 
-        // Returns — accept ret_void or any ret_{int-width}.
+        // Returns — keep bool returns distinct from integer returns so a JIT
+        // call remains type-compatible with VM comparisons and branches.
         if op == "ret_void" {
             code.push(opcode::RET_VOID);
             continue;
@@ -928,7 +938,11 @@ fn compile_to_bytecode(
             let v = resolve_operand(
                 instr.srcs.first()?, &mut reg_map, &mut next_reg, &mut code,
             )?;
-            code.push(opcode::RET_I64);
+            code.push(if op == "ret_bool" {
+                opcode::RET_BOOL
+            } else {
+                opcode::RET_I64
+            });
             code.push(v);
             continue;
         }
@@ -1100,6 +1114,40 @@ mod tests {
         // so the same body returns 0 — the contrast the fix turns on.
         let bin0 = j.compile(&cir).unwrap();
         assert_eq!(j.run(&bin0, &[Value::Int(21)]).as_i64(), Some(0));
+    }
+
+    #[test]
+    fn compiled_boolean_function_preserves_boolean_return_type() {
+        // A caller can compare a procedure result with a boolean literal only
+        // when the compiled tier returns `Value::Bool`, not its integer carrier.
+        let cir = vec![
+            CIRInstr::new("const_bool", Some("result"), vec![CIROperand::Bool(false)], "bool"),
+            CIRInstr::new(
+                "cmp_eq_bool",
+                Some("inverted"),
+                vec![CIROperand::Var("p".into()), CIROperand::Bool(false)],
+                "bool",
+            ),
+            CIRInstr::new(
+                "mov",
+                Some("result"),
+                vec![CIROperand::Var("inverted".into())],
+                "bool",
+            ),
+            CIRInstr::new(
+                "ret_bool",
+                None::<&str>,
+                vec![CIROperand::Var("result".into())],
+                "bool",
+            ),
+        ];
+        let params = vec![("p".to_string(), "bool".to_string())];
+        let ctx = FunctionContext { name: "neg", params: &params, return_type: "bool" };
+        let j = jit_no_builtins();
+        let bin = j.compile_function(&ctx, &cir).expect("compiles");
+
+        assert_eq!(j.run(&bin, &[Value::Bool(false)]), Value::Bool(true));
+        assert_eq!(j.run(&bin, &[Value::Bool(true)]), Value::Bool(false));
     }
 
     /// Two parameters must land in declaration order — argument `i` → register

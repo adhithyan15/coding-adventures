@@ -115,9 +115,9 @@ pub fn design_low_pass(
     //   the centre tap is exactly 2·fc.
     let fc = cutoff_norm;
     let mut h = vec![0.0f32; n];
-    for k in 0..n {
+    for (k, h_k) in h.iter_mut().enumerate() {
         let x = (k as f32) - centre;
-        h[k] = if x == 0.0 {
+        *h_k = if x == 0.0 {
             2.0 * fc
         } else {
             (2.0 * PI * fc * x).sin() / (PI * x)
@@ -125,7 +125,7 @@ pub fn design_low_pass(
     }
 
     // ── Step 2: apply window.
-    for k in 0..n {
+    for (k, h_k) in h.iter_mut().enumerate() {
         let n_f = k as f32;
         let w = match window {
             WindowType::Rectangular => 1.0,
@@ -136,7 +136,7 @@ pub fn design_low_pass(
                     + 0.08 * (4.0 * PI * n_f / m).cos()
             }
         };
-        h[k] *= w;
+        *h_k *= w;
     }
 
     // ── Step 3: normalise so the windowed kernel sums to 1 (DC

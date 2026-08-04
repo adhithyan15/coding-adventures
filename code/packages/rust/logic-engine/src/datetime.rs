@@ -180,6 +180,16 @@ fn read_int(t: &Term) -> Option<i64> {
         Term::Num(Number::Int(i)) => Some(*i),
         // A whole-valued float is accepted (the decomposer may emit 2025.0).
         Term::Num(Number::Float(x)) if x.fract() == 0.0 && x.is_finite() => Some(*x as i64),
+        // A whole-valued exact decimal (NX-2) is accepted on the same integral gate — a date field
+        // written as `2025` lowers to `Int`, but one written `2025.0` lowers to `Exact`.
+        Term::Num(Number::Exact(d)) => {
+            let x = d.to_f64();
+            if x.fract() == 0.0 && x.is_finite() {
+                Some(x as i64)
+            } else {
+                None
+            }
+        }
         _ => None,
     }
 }

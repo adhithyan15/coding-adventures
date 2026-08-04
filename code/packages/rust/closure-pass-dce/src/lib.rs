@@ -70,17 +70,17 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator, AssignmentTarget, BigIntLiteral,
     BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassExpression, ClassMember, MethodDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
     ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
-    ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
-    DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
+    ReturnStatement, Statement, StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VarKind,
+    DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 use std::collections::HashMap;
@@ -253,6 +253,170 @@ fn is_pure_leaf(expr: &Expression) -> bool {
     )
 }
 
+/// Is evaluating `expr` free of observable side effects? Used to decide whether
+/// a statement whose only job is to evaluate `expr` (e.g. the test of an
+/// otherwise-empty `if`) can be dropped entirely.
+///
+/// This is broader than [`is_pure_leaf`] (which is literals only): it mirrors
+/// the reference Closure Compiler's notion, under which reading a binding or a
+/// property, and combining pure sub-expressions with the pure operators, has no
+/// side effect. So `if (x) {}`, `if (x.y) {}`, `if (x[k]) {}`, `if (a && b) {}`,
+/// `if (typeof x) {}`, `if (!x) {}` all drop.
+///
+/// SAFE-BY-CONSTRUCTION: anything not positively known pure returns `false`
+/// (never removed). The impure set — calls, `new`, assignment, `++`/`--`,
+/// `delete`, `yield`, `await`, tagged templates, dynamic `import()`, and
+/// (conservatively) the comma operator — is therefore handled by the catch-all.
+///
+/// - **Member access** is pure only when its object *and* (for a computed key)
+///   its property are pure — `f().y` is NOT pure (the call runs).
+/// - **`delete`** is excluded from the pure unary operators: it mutates.
+/// - The comma operator (`SequenceExpression`) returns `false` even when both
+///   operands are pure, because the reference compiler rewrites
+///   `if (a, b) {}` to `a;` (a different transform), so declining here keeps us
+///   byte-identical rather than removing it outright.
+fn is_side_effect_free(expr: &Expression) -> bool {
+    match expr {
+        // Leaf values and bindings: no side effect to read.
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::UndefinedLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::Identifier(_)
+        | Expression::ThisExpression(_) => true,
+        // Property read: pure iff the object (and computed key) are pure.
+        Expression::MemberExpression(m) => {
+            is_side_effect_free(&m.object)
+                && (!m.computed || is_side_effect_free(&m.property))
+        }
+        // Pure prefix operators over a pure operand. `delete` is NOT here — it
+        // removes a property (a side effect).
+        Expression::UnaryExpression(u) => {
+            u.operator != UnaryOperator::Delete && is_side_effect_free(&u.argument)
+        }
+        Expression::BinaryExpression(b) => {
+            is_side_effect_free(&b.left) && is_side_effect_free(&b.right)
+        }
+        Expression::LogicalExpression(l) => {
+            is_side_effect_free(&l.left) && is_side_effect_free(&l.right)
+        }
+        Expression::ConditionalExpression(c) => {
+            is_side_effect_free(&c.test)
+                && is_side_effect_free(&c.consequent)
+                && is_side_effect_free(&c.alternate)
+        }
+        // Anything else (Call / New / Assignment / Update / Sequence / Yield /
+        // Await / TaggedTemplate / ImportExpression / …) is treated as possibly
+        // side-effecting and is NOT removed.
+        _ => false,
+    }
+}
+
+/// Is `expr` a **side-effecting** expression that the reference Closure Compiler
+/// leaves UNCHANGED once it sits in statement position — so a construct whose
+/// only observable effect is evaluating it (e.g. an empty-body `switch` with a
+/// side-effecting discriminant) can be replaced by `<expr>;` byte-identically?
+///
+/// True for the always-impure, always-minimal forms: a **call** (`f()`,
+/// `a.b()`), an **assignment** (`x = y`, `x += 1`), and an **update**
+/// (`x++` / `--y`). Each of these carries a side effect that cannot be reduced
+/// away, and Closure prints it as-is in statement position.
+///
+/// Deliberately NARROW. Closure *further* simplifies several other impure
+/// forms once they reach statement position, because the discarded value lets
+/// pure wrappers fall away:
+///
+/// - `f() ? a : b` → `f();`   (pure branches dropped)
+/// - `f().x`       → `f();`   (pure member read dropped)
+/// - `-f()`        → `f();`   (pure unary dropped)
+/// - `g(), h()`    → `g(); h();`  (sequence split into statements)
+///
+/// Extracting any of those *raw* would diverge from Closure's simplified output,
+/// so they are excluded here — reproducing them needs the separate
+/// "remove useless code in statement position" transform. Declining leaves the
+/// enclosing construct intact (no regression).
+fn is_terminal_impure_expr(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::CallExpression(_)
+            | Expression::AssignmentExpression(_)
+            | Expression::UpdateExpression(_)
+    )
+}
+
+/// Is `expr` a bare-identifier self-assignment `x = x` — a plain `=` whose
+/// target and value are the SAME named identifier?
+///
+/// Such an assignment is a no-op on a lexical binding (read the variable, write
+/// the same value straight back), so removing the statement it forms is sound;
+/// Closure does exactly this at SIMPLE. The gate is deliberately narrow:
+///   - the operator must be `=` (`AssignmentOperator::Eq`) — a compound assign
+///     like `x += x` is `x = x + x`, NOT a no-op;
+///   - the target must be an IDENTIFIER, not a member — `o.x = o.x` / `a[i] =
+///     a[i]` can run a getter/setter and is observable, so it is NOT matched
+///     (Closure keeps it too);
+///   - the value must be an identifier with the same `name` as the target.
+fn is_bare_identifier_self_assign(expr: &Expression) -> bool {
+    let Expression::AssignmentExpression(a) = expr else {
+        return false;
+    };
+    if a.operator != AssignmentOperator::Eq {
+        return false;
+    }
+    match (&a.left, &*a.right) {
+        (AssignmentTarget::Identifier(target), Expression::Identifier(value)) => {
+            target.name == value.name
+        }
+        _ => false,
+    }
+}
+
+/// Would emitting `expr` at the START of a statement begin with a `{` that the
+/// code printer leaves UNPARENTHESISED — so the `{` opens a *block* and the
+/// program mis-parses? True when the leftmost leaf along the
+/// member-object / call-callee / postfix-update / assignment-member-target
+/// spine is an **object literal** (`{…}`). The emitter tags an object literal
+/// at primary precedence and so does not wrap it in those positions
+/// (`({}).f()` prints as `{}.f()`), which is fine mid-expression but a
+/// mis-parse at statement start.
+///
+/// A rewrite that moves an expression to statement-start position — like the
+/// extract-discriminant fold below — must DECLINE when this holds, or a valid
+/// `switch (({}).f()) {}` would become the broken `{}.f();`. (A leftmost
+/// *function*/*class* expression is NOT a hazard: the emitter already wraps
+/// those in member-object / call-callee position. The underlying gap — no
+/// statement-start parens for a compound expression whose leftmost token is
+/// `{` — is a separate emitter fix.)
+fn leftmost_is_object_literal(expr: &Expression) -> bool {
+    match expr {
+        Expression::ObjectExpression(_) => true,
+        Expression::MemberExpression(m) => leftmost_is_object_literal(&m.object),
+        Expression::CallExpression(c) => leftmost_is_object_literal(&c.callee),
+        Expression::UpdateExpression(u) if !u.prefix => leftmost_is_object_literal(&u.argument),
+        Expression::AssignmentExpression(a) => match &a.left {
+            AssignmentTarget::MemberExpression(m) => leftmost_is_object_literal(&m.object),
+            AssignmentTarget::Identifier(_) => false,
+        },
+        _ => false,
+    }
+}
+
+/// Does this statement do nothing when executed — an `EmptyStatement` (`;`) or
+/// an empty `BlockStatement` (`{}`)? Used to test whether an `if`'s branch is
+/// empty. (An empty block IS observably a no-op: it declares no bindings.)
+fn statement_is_empty(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::EmptyStatement(_))
+    ) || matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) if b.body.is_empty()
+    )
+}
+
 // =====================================================================
 // Program / top-level
 // =====================================================================
@@ -293,6 +457,37 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
         );
     }
 
+    // Strip stray top-level `EmptyStatement`s (`;`) — CLOC12.195.
+    //
+    // Like `debugger`, an empty statement at statement-list position is a pure
+    // no-op, so the program body needs its own sweep separate from
+    // `dce_block_statement`'s (which already does this for block bodies). These
+    // arise from a hand-written `;`, from `constant-fold`/`fold-control-flow`
+    // folding `if (false) …;` / `while (false) …;` to an `EmptyStatement`, and
+    // from the trailing `;` a flattened block leaves behind
+    // (`g(0);{g(1)};g(2)` → `g(0);g(1);;g(2)` → `g(0);g(1);g(2)`). Upstream
+    // Closure removes them all; matching it here removes the last stray `;`.
+    // A `for (…) ;` / `if (c) ;` empty *substatement* is a loop/if body, NOT a
+    // statement-list member, so it never reaches this sweep — it stays intact,
+    // exactly as Closure keeps it.
+    let before_empty_drop = new_body.len();
+    let removed_empty_cvs: Vec<Option<String>> = new_body
+        .iter()
+        .filter(|item| is_empty_program_item(item))
+        .map(program_item_cv)
+        .collect();
+    new_body.retain(|item| !is_empty_program_item(item));
+    let dropped_empties = before_empty_drop - new_body.len();
+    if dropped_empties > 0 {
+        st.record_deletion(
+            &removed_empty_cvs,
+            &prog.cv,
+            "removed-empty-statement",
+            &format!("program with {} top-level items", before_empty_drop),
+            &format!("dropped {} top-level empty statements", dropped_empties),
+        );
+    }
+
     Program {
         cv: prog.cv.clone(),
         version: prog.version,
@@ -323,23 +518,157 @@ fn dce_statement(stmt: &Statement, st: &mut DceState) -> Statement {
 fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStatement {
     match stmt {
         TaggedStatement::ExpressionStatement(s) => {
+            let expression = dce_expression(&s.expression, st);
+
+            // Bare-identifier self-assignment `x = x;` is a no-op — read the
+            // variable `x`, write the SAME value back to the SAME binding — so
+            // Closure removes it at SIMPLE. Collapse the statement to
+            // `EmptyStatement`, which the block/program sweep then drops
+            // (mirroring the empty-`if` → `;` path above).
+            //
+            // Scoped to a plain `=` between two IDENTICALLY-named identifiers:
+            //   - a MEMBER self-assign (`o.x = o.x`, `a[i] = a[i]`) is KEPT — a
+            //     property read/write can trigger a getter/setter (observable),
+            //     so Closure keeps it and so do we (`is_bare_identifier_self_
+            //     assign` returns false for a member target);
+            //   - a COMPOUND assign (`x += x`, i.e. `x = x + x`) is not a no-op
+            //     and is excluded by the `=`-only (`AssignmentOperator::Eq`)
+            //     gate;
+            //   - a differently-named assign (`x = y`) obviously stays.
+            // Reading a bare identifier is treated as side-effect-free here, the
+            // same crate-wide contract the equal-branch / ternary folds rely on
+            // (a truly-undeclared `x` would throw `ReferenceError`, an edge
+            // Closure also does not model).
+            if is_bare_identifier_self_assign(&expression) {
+                st.record(
+                    &s.cv,
+                    "self_assign_removed",
+                    "ExpressionStatement{ x = x }",
+                    "EmptyStatement",
+                );
+                return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
+            // `void <impure>;` → `<impure>;` — the `void` operator (ECMAScript
+            // §13.5.2) evaluates its operand for its side effects and always
+            // yields `undefined`. An expression statement already discards its
+            // value, so at statement position the `void` wrapper is pure noise
+            // and is dropped, keeping the operand:
+            //
+            //   void f();       →  f();
+            //   void a.b();     →  a.b();
+            //   void new C();   →  new C();
+            //
+            // This matches the reference compiler at SIMPLE. Deliberately scoped:
+            //   * STATEMENT position only — `var x = void f();`,
+            //     `return void f()`, `h(void f())` keep the `void` because the
+            //     `undefined` result IS observed there (they fall through to the
+            //     verbatim rebuild below);
+            //   * IMPURE operand only — a `void <pure>` (e.g. `void 0;`) is left
+            //     untouched. The reference removes the whole statement in that
+            //     case, but constant-fold folds `void <pure>` to `undefined`
+            //     before this pass runs, so a from-source `void 0;` and a
+            //     from-source `undefined;` are indistinguishable here and the
+            //     reference keeps the latter. Matching the removal needs
+            //     pass-order work (tracked separately), so we decline the pure
+            //     case rather than risk removing an observable `undefined;`.
+            //   A `void` nested in a larger discarding expression
+            //   (`c && void f()`) is a separate, narrower transform, not here.
+            if let Expression::UnaryExpression(u) = &expression {
+                if u.operator == UnaryOperator::Void && !is_side_effect_free(&u.argument) {
+                    st.record(
+                        &s.cv,
+                        "void_operator_dropped",
+                        "ExpressionStatement{ void <impure> }",
+                        "ExpressionStatement{ <impure> }",
+                    );
+                    return TaggedStatement::ExpressionStatement(ExpressionStatement {
+                        cv: s.cv.clone(),
+                        expression: (*u.argument).clone(),
+                    });
+                }
+            }
+
             TaggedStatement::ExpressionStatement(ExpressionStatement {
                 cv: s.cv.clone(),
-                expression: dce_expression(&s.expression, st),
+                expression,
             })
         }
         TaggedStatement::BlockStatement(s) => {
             TaggedStatement::BlockStatement(dce_block_statement(s, st))
         }
-        TaggedStatement::IfStatement(s) => TaggedStatement::IfStatement(IfStatement {
-            cv: s.cv.clone(),
-            test: dce_expression(&s.test, st),
-            consequent: Box::new(dce_statement(&s.consequent, st)),
-            alternate: s.alternate.as_ref().map(|a| Box::new(dce_statement(a, st))),
-        }),
+        TaggedStatement::IfStatement(s) => {
+            let test = dce_expression(&s.test, st);
+            let consequent = Box::new(dce_statement(&s.consequent, st));
+            let alternate = s.alternate.as_ref().map(|a| Box::new(dce_statement(a, st)));
+
+            // Empty-`if` elimination. When both branches do nothing (consequent
+            // empty AND alternate absent-or-empty) the whole statement's only
+            // remaining effect is evaluating `test`; if `test` is side-effect-
+            // free the entire `if` is dead and collapses to `;` (which the
+            // block/program sweep then drops). `if(x){}`, `if(x.y){}else{}`, … →
+            // removed.
+            let cons_empty = statement_is_empty(&consequent);
+            let alt_empty = alternate.as_ref().is_none_or(|a| statement_is_empty(a));
+            if cons_empty && alt_empty && is_side_effect_free(&test) {
+                st.record(
+                    &s.cv,
+                    "if_eliminated",
+                    "IfStatement{ <empty>, test side-effect-free }",
+                    "EmptyStatement",
+                );
+                return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
+            // A side-effecting test with both branches empty still has to RUN
+            // the test, so the `if` wrapper is dead but the test survives as an
+            // expression statement: `if(f()){}` → `f();`, `if(a.b()){}` →
+            // `a.b();`, `if(f(1,2)){}else{}` → `f(1,2);`. This is the impure
+            // twin of the `is_side_effect_free` removal above (the two guards
+            // are mutually exclusive — a call is never side-effect-free).
+            //
+            // Scoped to a plain `CallExpression`: as an expression statement a
+            // bare call is already Closure's *final* form, so the rewrite is
+            // byte-identical. Other impure tests get FURTHER simplifications
+            // that are separate transforms, so we decline them here rather than
+            // emit a non-canonical intermediate:
+            //   - `!f()`   → Closure drops the discarded `!`   → `f();`
+            //   - `a = b`  → dead-assignment removal may delete it entirely
+            //   - `a, f()` → the sequence is split into statements `a;f();`
+            //   - `new F()`→ emitted `new F` (no parens) in statement position
+            // Non-empty branches are a different rewrite again (`if(f()){g()}`
+            // → `f()&&g()`, the if→logical arc), so this only fires when BOTH
+            // branches are empty.
+            if cons_empty && alt_empty && matches!(test, Expression::CallExpression(_)) {
+                st.record(
+                    &s.cv,
+                    "if_to_expression_statement",
+                    "IfStatement{ <empty>, test = CallExpression }",
+                    "ExpressionStatement",
+                );
+                return TaggedStatement::ExpressionStatement(ExpressionStatement {
+                    cv: s.cv.clone(),
+                    expression: test,
+                });
+            }
+
+            TaggedStatement::IfStatement(IfStatement {
+                cv: s.cv.clone(),
+                test,
+                consequent,
+                alternate,
+            })
+        }
         TaggedStatement::WhileStatement(s) => TaggedStatement::WhileStatement(WhileStatement {
             cv: s.cv.clone(),
             test: dce_expression(&s.test, st),
+            body: Box::new(dce_statement(&s.body, st)),
+        }),
+        // `with (object) body` (CLOC12.187) — DCE the object and body like
+        // `while`. Not yet reachable (the bridge still declines `with`).
+        TaggedStatement::WithStatement(s) => TaggedStatement::WithStatement(WithStatement {
+            cv: s.cv.clone(),
+            object: dce_expression(&s.object, st),
             body: Box::new(dce_statement(&s.body, st)),
         }),
         // Recurse DCE into the do-while body and test. Like `while`, a
@@ -494,24 +823,55 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
 
             // gap-014 step 2 / CLOC12.34 — empty-switch elimination.
             //
-            // If every case's consequent is empty (or there are no
-            // cases at all) AND both the discriminant and every
-            // case-test are leaf literals (no side-effect risk),
-            // collapse the whole switch to `;`. The block-walker
-            // (`dce_block_statement`) will drop the EmptyStatement
-            // in its next sweep.
+            // If every case runs nothing (no cases at all, or every
+            // consequent is only empty statements / empty blocks) AND
+            // evaluating the discriminant and every case-test has no
+            // observable side effect, the whole switch is a no-op and
+            // collapses to `;`. The block-walker (`dce_block_statement`)
+            // drops the EmptyStatement in its next sweep.
             //
-            // Conservative bail: anything else (Identifier
-            // discriminant, computed test, non-empty consequent)
-            // keeps the switch intact. The "drop after pure
-            // discriminant with side-effecting tests" rule is a
-            // future slice that needs a proper effect analysis.
-            let all_consequents_empty = new_cases.iter().all(|c| c.consequent.is_empty());
+            // The two gates are deliberately ASYMMETRIC, mirroring the
+            // reference Closure Compiler (`PeepholeRemoveDeadCode`)
+            // byte-for-byte:
+            //
+            //   • The DISCRIMINANT gate is [`is_side_effect_free`] — a
+            //     bare read is enough. So `switch (x) {}`,
+            //     `switch (a.b) {}`, `switch (a && b) {}`,
+            //     `switch (!x) {}`, `switch (typeof x) {}` all drop,
+            //     not just literal discriminants.
+            //
+            //   • Each case TEST, however, must be [`is_pure_leaf`] (a
+            //     literal) or absent (`default:`). Closure KEEPS a
+            //     switch whose case test is a non-literal even when it
+            //     is side-effect-free: `switch (x) { case y: }` and
+            //     `switch (x) { case a.b: case c: }` survive, while
+            //     `switch (x) { case 1: case 2: }` and
+            //     `switch (x) { default: }` drop. We match that exactly
+            //     rather than removing more (which would diverge).
+            //
+            // A consequent counts as empty when every statement in it is
+            // itself empty (via [`statement_is_empty`]), so
+            // `switch (x) { case 1: {} }` — a case whose only body is an
+            // empty block — also drops.
+            //
+            // Still a conservative bail (keeps the switch, a KNOWN
+            // divergence handled by a separate future slice): a
+            // side-EFFECTING discriminant, e.g. `switch (f()) {}`, which
+            // Closure rewrites to `f();` — extracting the discriminant
+            // as an expression statement. That extract-discriminant
+            // transform needs its own effect-preserving lowering and is
+            // out of scope here; `is_side_effect_free(&new_disc)` is
+            // false for `f()`, so this path declines and we leave the
+            // switch untouched (no regression).
+            let all_consequents_empty = new_cases
+                .iter()
+                .all(|c| c.consequent.iter().all(statement_is_empty));
             let discriminant_pure = is_pure_leaf(&new_disc);
             let all_tests_pure_or_none = new_cases
                 .iter()
-                .all(|c| c.test.as_ref().map_or(true, is_pure_leaf));
-            if all_consequents_empty && discriminant_pure && all_tests_pure_or_none {
+                .all(|c| c.test.as_ref().is_none_or(is_pure_leaf));
+            let discriminant_side_effect_free = is_side_effect_free(&new_disc);
+            if all_consequents_empty && discriminant_side_effect_free && all_tests_pure_or_none {
                 st.record(
                     &s.cv,
                     "switch_eliminated",
@@ -519,6 +879,55 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                     "EmptyStatement",
                 );
                 return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
+            // gap-014 step 2b — extract a SIDE-EFFECTING discriminant.
+            //
+            // The mirror of the removal above: SAME shape (every consequent
+            // empty, every case test a literal or absent), but the discriminant
+            // HAS a side effect, so the switch cannot simply vanish — its one
+            // observable act is evaluating the discriminant once (no consequent
+            // runs, and the literal case tests are side-effect-free). So it
+            // collapses to a bare expression statement of the discriminant,
+            // matching the reference Closure Compiler:
+            //
+            //   switch (f())    {}          → f();
+            //   switch (a.b())  {}          → a.b();
+            //   switch (x++)    {}          → x++;
+            //   switch (x = y)  {}          → x = y;
+            //   switch (f()) { case 1: }    → f();      (empty literal-test case)
+            //   switch (f()) { default: }   → f();
+            //
+            // SCOPE — only a discriminant Closure leaves AS-IS in statement
+            // position is extracted (`is_terminal_impure_expr`: call, assignment,
+            // update). A discriminant Closure *further* simplifies once extracted
+            // (`f() ? a : b` → `f();`, `f().x` → `f();`, `-f()` → `f();`,
+            // `g(), h()` → `g(); h();`) is DECLINED — extracting the raw form
+            // would diverge, and reproducing it needs the separate
+            // statement-simplification pass. A case test with its own side effect
+            // (`switch (f()) { case g(): }`) is also declined: `all_tests_pure_or_none`
+            // is false, so both this and the removal above leave the switch intact
+            // (dropping the switch would drop the test's effect).
+            // The extra `!leftmost_is_object_literal` guard prevents a
+            // statement-start mis-parse: extracting `switch (({}).f()) {}` would
+            // otherwise emit `{}.f();`, where the leading `{` opens a block. The
+            // switch is kept instead (it emits correctly — its discriminant is
+            // not at statement start).
+            if all_consequents_empty
+                && all_tests_pure_or_none
+                && is_terminal_impure_expr(&new_disc)
+                && !leftmost_is_object_literal(&new_disc)
+            {
+                st.record(
+                    &s.cv,
+                    "switch_discriminant_extracted",
+                    "SwitchStatement{<empty body>, side-effecting discriminant}",
+                    "ExpressionStatement",
+                );
+                return TaggedStatement::ExpressionStatement(ExpressionStatement {
+                    cv: s.cv.clone(),
+                    expression: new_disc,
+                });
             }
 
             // gap-014 step 4 / CLOC12.36 — constant-discriminant
@@ -557,7 +966,7 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             if discriminant_pure && all_tests_pure_or_none {
                 if let Some(target) = pick_matching_case(&new_disc, &new_cases) {
                     let last = target.consequent.last();
-                    let terminates = last.map_or(false, is_case_terminator);
+                    let terminates = last.is_some_and(is_case_terminator);
                     // Empty consequent → fall-through to next case per
                     // ECMAScript §13.12. The classic "share body"
                     // pattern `case 1: case 2: body; break;` has
@@ -862,6 +1271,16 @@ fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
         Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd.kind != VarKind::Var,
         // A `function` declaration is itself a hoisted binding — unsafe.
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // A `class` declaration binds a name too — treated as unsafe like a
+        // function declaration (conservative: preserving it is never a
+        // miscompile, and a genuinely-unused one is removed downstream).
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
+        // An import declaration is module-top-level only; it never legally
+        // appears inside a block, so flattening/truncating it away is unsafe.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
     })
 }
 
@@ -1014,6 +1433,16 @@ fn block_is_scope_safe_to_flatten(b: &BlockStatement) -> bool {
             matches!(v.kind, VarKind::Var)
         }
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // A `class` declaration is block-scoped (per the doc above) — hoisting
+        // it out of an inner block would leak the binding, so it is never safe
+        // to flatten, exactly like a nested function declaration.
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
+        // An import declaration is module-top-level only; it never legally
+        // appears inside a block, so flattening/truncating it away is unsafe.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
         // Tagged statements never introduce a new lexical binding
         // by themselves. `ExpressionStatement`, control flow,
         // `EmptyStatement`, etc. are all safe.
@@ -1047,6 +1476,15 @@ fn is_debugger_statement(stmt: &Statement) -> bool {
 /// `dce_program` needs this thin wrapper over [`is_debugger_statement`].
 fn is_debugger_program_item(item: &ProgramItem) -> bool {
     matches!(item, ProgramItem::Statement(s) if is_debugger_statement(s))
+}
+
+/// Is this top-level item a bare `EmptyStatement` (`;`)? Mirrors
+/// [`is_empty_statement`] for the `ProgramItem` list, so [`dce_program`] can
+/// sweep stray semicolons out of the program body the same way
+/// [`dce_block_statement`] sweeps them out of a block body. An `EmptyStatement`
+/// only ever appears as a `ProgramItem::Statement`, never a `Declaration`.
+fn is_empty_program_item(item: &ProgramItem) -> bool {
+    matches!(item, ProgramItem::Statement(s) if is_empty_statement(s))
 }
 
 /// Fetch a statement's own correlation-vector id, if it carries one.
@@ -1083,6 +1521,7 @@ fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
         BlockStatement(s) => s.cv.clone(),
         IfStatement(s) => s.cv.clone(),
         WhileStatement(s) => s.cv.clone(),
+        WithStatement(s) => s.cv.clone(),
         DoWhileStatement(s) => s.cv.clone(),
         ForStatement(s) => s.cv.clone(),
         ForInStatement(s) => s.cv.clone(),
@@ -1129,6 +1568,61 @@ fn dce_declaration(decl: &Declaration, st: &mut DceState) -> Declaration {
                 is_async: f.is_async,
             })
         }
+        // A class *declaration* runs DCE inside its heritage operand and each
+        // method body, exactly as `dce_class` does for a class *expression* —
+        // only the outer node type and the required `id` differ.
+        Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
+        Declaration::ExportNamedDeclaration(i) => Declaration::ExportNamedDeclaration(i.clone()),
+        Declaration::ExportDefaultDeclaration(i) => Declaration::ExportDefaultDeclaration(i.clone()),
+        Declaration::ExportAllDeclaration(i) => Declaration::ExportAllDeclaration(i.clone()),
+        Declaration::ClassDeclaration(c) => {
+            Declaration::ClassDeclaration(dce_class_declaration(c, st))
+        }
+    }
+}
+
+/// DCE inside a class *declaration*: the `extends` operand and each method
+/// body. Mirrors `dce_class` (the expression form).
+fn dce_class_declaration(c: &ClassDeclaration, st: &mut DceState) -> ClassDeclaration {
+    ClassDeclaration {
+        cv: c.cv.clone(),
+        id: c.id.clone(),
+        super_class: c.super_class.as_ref().map(|s| Box::new(dce_expression(s, st))),
+        body: c
+            .body
+            .iter()
+            .map(|m| match m {
+                ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
+                    cv: md.cv.clone(),
+                    key: md.key.clone(),
+                    kind: md.kind,
+                    value: FunctionExpression {
+                        cv: md.value.cv.clone(),
+                        id: md.value.id.clone(),
+                        params: md.value.params.clone(),
+                        body: dce_block_statement(&md.value.body, st),
+                        generator: md.value.generator,
+                        is_async: md.value.is_async,
+                    },
+                    computed: md.computed,
+                    is_static: md.is_static,
+                }),
+                // A class field runs DCE inside its initializer (an expression
+                // that runs at construction). The key is cloned; the value is
+                // optional.
+                ClassMember::Field(fd) => ClassMember::Field(PropertyDefinition {
+                    cv: fd.cv.clone(),
+                    key: fd.key.clone(),
+                    value: fd.value.as_ref().map(|v| dce_expression(v, st)),
+                    computed: fd.computed,
+                    is_static: fd.is_static,
+                }),
+                // A static-init block runs DCE inside each of its statements
+                // (they run at class-definition time) — mirroring the method
+                // body. No key, no binding name; only the statement list recurses.
+                ClassMember::StaticBlock(b) => ClassMember::StaticBlock(dce_block_statement(b, st)),
+            })
+            .collect(),
     }
 }
 
@@ -1182,6 +1676,20 @@ fn dce_class(c: &ClassExpression, st: &mut DceState) -> Expression {
                     computed: md.computed,
                     is_static: md.is_static,
                 }),
+                // A class field runs DCE inside its initializer (an expression
+                // that runs at construction). The key is cloned; the value is
+                // optional.
+                ClassMember::Field(fd) => ClassMember::Field(PropertyDefinition {
+                    cv: fd.cv.clone(),
+                    key: fd.key.clone(),
+                    value: fd.value.as_ref().map(|v| dce_expression(v, st)),
+                    computed: fd.computed,
+                    is_static: fd.is_static,
+                }),
+                // A static-init block runs DCE inside each of its statements
+                // (they run at class-definition time) — mirroring the method
+                // body. No key, no binding name; only the statement list recurses.
+                ClassMember::StaticBlock(b) => ClassMember::StaticBlock(dce_block_statement(b, st)),
             })
             .collect(),
     })
@@ -1353,6 +1861,9 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
                         kind: p.kind,
                         key: match &p.key {
                             PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                            // A private name (`#x`) never occurs in an object
+                            // literal, but the match must stay exhaustive.
+                            PropertyKey::PrivateName(p) => PropertyKey::PrivateName(p.clone()),
                             PropertyKey::StringLiteral(s) => {
                                 PropertyKey::StringLiteral(s.clone())
                             }
@@ -1701,6 +2212,65 @@ mod tests {
             .as_ref()
             .expect("a stripped top-level debugger must be tombstoned");
         assert_eq!(del.reason, "removed-debugger");
+    }
+
+    #[test]
+    fn top_level_empty_statement_is_removed() {
+        // `keep(); ;` at PROGRAM level → `keep();` — CLOC12.195. Before this the
+        // program-body sweep only stripped `debugger`, leaving stray top-level
+        // `;` behind (block bodies were already cleaned by `dce_block_statement`).
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty_stmt()),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed, "a stray top-level `;` should be removed");
+        assert_eq!(out.body.len(), 1, "only the kept statement survives");
+        assert!(matches!(
+            &out.body[0],
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(_)))
+        ));
+    }
+
+    #[test]
+    fn multiple_top_level_empty_statements_all_removed() {
+        // `; ; keep(); ;` → `keep();` — leading, interior, and trailing empties.
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(empty_stmt()),
+            ProgramItem::Statement(empty_stmt()),
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty_stmt()),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "all three empties swept, `keep` remains");
+    }
+
+    #[test]
+    fn top_level_empty_statement_removal_tombstones_the_statement() {
+        // The program-body empty sweep is a separate code path from the
+        // block-body sweep, so it gets its own tombstone test (mirrors the
+        // top-level debugger tombstone test).
+        let mut log = CVLog::new(true);
+        let empty_id = log.create(None);
+        let empty = Statement::empty_statement(EmptyStatement {
+            cv: Some(empty_id.clone()),
+        });
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty),
+        ]);
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&empty_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a stripped top-level empty statement must be tombstoned");
+        assert_eq!(del.source, "dce");
+        assert_eq!(del.reason, "removed-empty-statement");
     }
 
     #[test]
@@ -2332,20 +2902,163 @@ mod tests {
         assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
     }
 
-    /// Conservative bail: Identifier discriminant might TDZ-throw
-    /// for an uninitialised `let` / `const`. Keep the switch.
+    /// A bare Identifier discriminant is side-effect-free, so an
+    /// otherwise-empty `switch (x) {}` DROPS — matching the reference
+    /// Closure Compiler byte-for-byte (verified: `switch(x){}` → ``).
+    /// The read of `x` has no observable effect, and with no cases
+    /// there is nothing to run.
     #[test]
-    fn empty_switch_with_identifier_discriminant_keeps_switch() {
+    fn empty_switch_with_identifier_discriminant_drops() {
         let body = vec![switch_stmt(ident("x"), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// A member-read discriminant (`switch (a.b) {}`) is also
+    /// side-effect-free — object and (non-computed) key are pure — so
+    /// the empty switch drops. Oracle: `switch(a.b){}` → ``.
+    #[test]
+    fn empty_switch_with_member_discriminant_drops() {
+        let body = vec![switch_stmt(member(ident("a"), "b"), vec![])];
         let prog = program_with_function(body, Some("fn.1"));
         let (out, contribs, _, _) = run_pass(prog);
         let block = extract_function_body(&out);
-        // SwitchStatement preserved.
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// A unary `!x` discriminant is side-effect-free (the operand is a
+    /// pure read and `!` has no effect), so `switch (!x) {}` drops.
+    /// Oracle: `switch(!x){}` → ``.
+    #[test]
+    fn empty_switch_with_unary_discriminant_drops() {
+        let body = vec![switch_stmt(not(ident("x")), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+    }
+
+    /// A side-EFFECTING **call** discriminant on an empty-body switch is
+    /// EXTRACTED to a bare expression statement: `switch (f()) {}` → `f();`
+    /// (the switch's only observable act is evaluating `f()`). Matches Closure.
+    #[test]
+    fn empty_switch_with_call_discriminant_extracts() {
+        let body = vec![switch_stmt(call0("f"), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(changed);
+        match &block.body[0] {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                assert!(
+                    matches!(&es.expression, Expression::CallExpression(_)),
+                    "expected the discriminant call as the expression; got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected ExpressionStatement (extracted call); got {:?}", other),
+        }
+        assert!(contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// Extraction still applies with an empty literal-test case:
+    /// `switch (f()) { case 1: }` → `f();`.
+    #[test]
+    fn empty_switch_with_call_discriminant_and_literal_case_extracts() {
+        let cases = vec![case_empty(Some(num(1.0)))];
+        let body = vec![switch_stmt(call0("f"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+        assert!(contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+    }
+
+    /// A side-effecting discriminant that is NOT a terminal-impure form is
+    /// DECLINED (kept), because Closure further simplifies it once extracted and
+    /// we don't reproduce that here. `switch (f().x) {}` — a member read on a
+    /// call — is kept (Closure would emit `f();`, dropping the pure `.x`).
+    #[test]
+    fn empty_switch_with_member_discriminant_keeps_switch() {
+        let disc = member(call0("f"), "x"); // f().x — impure but not terminal
+        let body = vec![switch_stmt(disc, vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
         assert!(matches!(
             &block.body[0],
             Statement::Tagged(TaggedStatement::SwitchStatement(_))
         ));
-        assert!(!contribs.iter().any(|c| c.tag == "switch_eliminated"));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+    }
+
+    /// A discriminant whose leftmost token is an object literal is NOT extracted
+    /// — emitting it at statement start would begin with `{` and mis-parse as a
+    /// block. `switch (({}).f()) {}` is kept (it emits correctly as a switch),
+    /// rather than rewritten to the broken `{}.f();`.
+    #[test]
+    fn empty_switch_with_object_literal_leftmost_discriminant_keeps_switch() {
+        let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        // ({}).f()
+        let disc = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(member(obj, "f")),
+            arguments: vec![],
+        });
+        let body = vec![switch_stmt(disc, vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(
+            matches!(&block.body[0], Statement::Tagged(TaggedStatement::SwitchStatement(_))),
+            "object-literal-rooted discriminant must keep the switch; got {:?}",
+            block.body[0]
+        );
+        assert!(!contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+    }
+
+    /// A case test with its OWN side effect blocks extraction — dropping the
+    /// switch would drop that effect. `switch (f()) { case g(): }` is kept
+    /// (`all_tests_pure_or_none` is false for the call test).
+    #[test]
+    fn empty_switch_with_impure_case_test_keeps_switch() {
+        let cases = vec![case_empty(Some(call0("g")))];
+        let body = vec![switch_stmt(call0("f"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+    }
+
+    /// A case whose only consequent is an empty block (`case 1: {}`)
+    /// counts as empty via `statement_is_empty`, so the whole switch
+    /// drops. Oracle: `switch(x){case 1:{}}` → ``.
+    #[test]
+    fn empty_switch_with_empty_block_consequent_drops() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![empty_block_stmt()],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
     }
 
     /// Non-empty consequent keeps the switch even with a pure
@@ -2412,7 +3125,7 @@ mod tests {
 
     /// Helper — extract the unique SwitchStatement from a function
     /// body so we can pattern-match on it.
-    fn extract_switch<'a>(prog: &'a Program) -> &'a SwitchStatement {
+    fn extract_switch(prog: &Program) -> &SwitchStatement {
         let block = extract_function_body(prog);
         match &block.body[0] {
             Statement::Tagged(TaggedStatement::SwitchStatement(s)) => s,
@@ -2966,5 +3679,273 @@ mod tests {
             "the statement after a try/finally must remain reachable; got {:?}",
             block.body,
         );
+    }
+
+    // ---------------- empty-`if` elimination ------------------------------
+
+    fn empty_block_stmt() -> Statement {
+        Statement::block_statement(BlockStatement { cv: None, body: vec![] })
+    }
+    fn if_full(test: Expression, consequent: Statement, alternate: Option<Statement>) -> Statement {
+        Statement::if_statement(IfStatement {
+            cv: None,
+            test,
+            consequent: Box::new(consequent),
+            alternate: alternate.map(Box::new),
+        })
+    }
+    fn member(obj: Expression, prop: &str) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(obj),
+            property: Box::new(ident(prop)),
+            computed: false,
+        })
+    }
+    fn call0(name: &str) -> Expression {
+        Expression::CallExpression(coding_adventures_javascript_ast::CallExpression {
+            cv: None,
+            callee: Box::new(ident(name)),
+            arguments: vec![],
+        })
+    }
+    fn not(arg: Expression) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Not,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    }
+    fn voidop(arg: Expression) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Void,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    }
+
+    /// `void f();` → `f();` — an impure operand is unwrapped, keeping the call
+    /// but dropping the redundant `void`.
+    #[test]
+    fn void_impure_operand_unwraps_to_operand() {
+        let prog = program()
+            .with_body(vec![ProgramItem::Statement(expr_stmt(voidop(call0("f"))))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "the statement is kept, unwrapped");
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) => {
+                assert!(
+                    matches!(&es.expression, Expression::CallExpression(_)),
+                    "expected the bare call `f()`; got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected an ExpressionStatement; got {other:?}"),
+        }
+    }
+
+    /// `void 0;` → KEPT — a pure operand is deliberately left untouched (see the
+    /// scoping note in the handler): the reference keeps a from-source
+    /// `undefined;`, which is indistinguishable here from a folded `void 0`, so
+    /// declining avoids removing an observable `undefined;`.
+    #[test]
+    fn void_pure_operand_is_kept() {
+        let prog = program()
+            .with_body(vec![ProgramItem::Statement(expr_stmt(voidop(num(0.0))))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "`void 0;` must be kept (pure operand)");
+        assert_eq!(out.body.len(), 1);
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) => {
+                assert!(
+                    matches!(&es.expression, Expression::UnaryExpression(u) if u.operator == UnaryOperator::Void),
+                    "the `void 0` should be untouched; got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected an ExpressionStatement; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn empty_if_with_side_effect_free_test_is_removed() {
+        // `if(x){}`, `if(x.y){}`, `if(true){}`, `if(!x){}` — the test is
+        // side-effect-free and both branches empty, so the whole `if` is dead
+        // and drops (collapses to `;`, then the program sweep removes it).
+        for test in [ident("x"), member(ident("x"), "y"), boolean(true), not(ident("x"))] {
+            let prog = program()
+                .with_body(vec![ProgramItem::Statement(if_full(test.clone(), empty_block_stmt(), None))]);
+            let (out, _c, changed, _) = run_pass(prog);
+            assert!(changed, "empty if with pure test should mark changed: {test:?}");
+            assert!(out.body.is_empty(), "the empty if should be removed; got {:?}", out.body);
+        }
+    }
+
+    #[test]
+    fn empty_if_else_both_empty_is_removed() {
+        // `if(x){}else{}` — both branches empty, pure test → removed.
+        let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+            ident("x"),
+            empty_block_stmt(),
+            Some(empty_block_stmt()),
+        ))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(out.body.is_empty(), "if/else with both branches empty should drop");
+    }
+
+    #[test]
+    fn empty_if_removed_but_neighbours_kept() {
+        // The removal must not disturb sibling statements.
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(call0("before"))),
+            ProgramItem::Statement(if_full(ident("x"), empty_block_stmt(), None)),
+            ProgramItem::Statement(expr_stmt(call0("after"))),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "only the empty if should be removed; got {:?}", out.body);
+    }
+
+    // ---------------- bare-identifier self-assignment removal ---------
+
+    /// `target op value` assignment expression.
+    fn assign(op: AssignmentOperator, target: &str, value: Expression) -> Expression {
+        Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: op,
+            left: AssignmentTarget::Identifier(Identifier {
+                cv: None,
+                name: target.to_string(),
+            }),
+            right: Box::new(value),
+        })
+    }
+
+    #[test]
+    fn bare_identifier_self_assign_is_removed() {
+        // `x = x;` is a no-op → removed (collapses to `;`, then swept).
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(assign(
+            AssignmentOperator::Eq,
+            "x",
+            ident("x"),
+        )))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed, "x=x should be removed");
+        assert!(out.body.is_empty(), "x=x should drop entirely; got {:?}", out.body);
+    }
+
+    #[test]
+    fn self_assign_removed_but_neighbours_kept() {
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(call0("before"))),
+            ProgramItem::Statement(expr_stmt(assign(AssignmentOperator::Eq, "x", ident("x")))),
+            ProgramItem::Statement(expr_stmt(call0("after"))),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "only x=x should be removed; got {:?}", out.body);
+    }
+
+    #[test]
+    fn different_name_assign_is_kept() {
+        // `x = y;` is a real write — never removed.
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(assign(
+            AssignmentOperator::Eq,
+            "x",
+            ident("y"),
+        )))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "x=y must be kept");
+        assert_eq!(out.body.len(), 1);
+    }
+
+    #[test]
+    fn compound_self_assign_is_kept() {
+        // `x += x;` is `x = x + x`, NOT a no-op — must be kept.
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(assign(
+            AssignmentOperator::AddEq,
+            "x",
+            ident("x"),
+        )))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "x+=x must be kept (not a no-op)");
+        assert_eq!(out.body.len(), 1);
+    }
+
+    #[test]
+    fn member_self_assign_is_kept() {
+        // `o.x = o.x;` can run a getter/setter — observable, so kept.
+        let target = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::MemberExpression(Box::new(match member(ident("o"), "x") {
+                Expression::MemberExpression(m) => m,
+                _ => unreachable!(),
+            })),
+            right: Box::new(member(ident("o"), "x")),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(target))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "o.x=o.x must be kept (getter/setter observable)");
+        assert_eq!(out.body.len(), 1);
+    }
+
+    #[test]
+    fn empty_if_with_call_test_becomes_expression_statement() {
+        // `if(f()){}` and `if(f()){}else{}` — the call may have side effects, so
+        // the `if` wrapper is dead but the call must still RUN: it survives as
+        // an expression statement `f();`.
+        for alt in [None, Some(empty_block_stmt())] {
+            let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+                call0("f"),
+                empty_block_stmt(),
+                alt,
+            ))]);
+            let (out, _c, changed, _) = run_pass(prog);
+            assert!(changed, "impure-call empty if should mark changed");
+            assert_eq!(out.body.len(), 1, "the call must survive as one statement");
+            let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(
+                es,
+            ))) = &out.body[0]
+            else {
+                panic!("expected an ExpressionStatement; got {:?}", out.body[0])
+            };
+            assert!(
+                matches!(&es.expression, Expression::CallExpression(_)),
+                "the expression statement should wrap the call test"
+            );
+        }
+    }
+
+    #[test]
+    fn empty_if_with_non_call_impure_test_is_kept() {
+        // `if(!f()){}` — the test is impure (the inner call runs) but is NOT a
+        // bare `CallExpression`. Closure would drop the discarded `!` (→ `f();`),
+        // a separate transform, so we DECLINE and keep the `if` intact rather
+        // than emit a non-canonical `!f();`.
+        let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+            not(call0("f")),
+            empty_block_stmt(),
+            None,
+        ))]);
+        let (out, _c, _changed, _) = run_pass(prog);
+        assert_eq!(out.body.len(), 1, "non-call impure-test empty if must be kept");
+        assert!(matches!(
+            &out.body[0],
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::IfStatement(_)))
+        ));
+    }
+
+    #[test]
+    fn if_with_non_empty_consequent_is_kept() {
+        // `if(x)g();` — the consequent does work, so nothing is removed.
+        let prog = program()
+            .with_body(vec![ProgramItem::Statement(if_full(ident("x"), expr_stmt(call0("g")), None))]);
+        let (out, _c, _changed, _) = run_pass(prog);
+        assert_eq!(out.body.len(), 1, "non-empty-consequent if must be kept");
     }
 }

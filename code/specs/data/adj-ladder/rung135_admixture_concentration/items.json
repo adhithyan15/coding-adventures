@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 135 \u2014 admixture concentration from four stated quantities (a NEW panel: admixture, carrying the PRODUCT numerator onto a SUM denominator). rung-132 put a quotient over a sum (a/b)/(c+d); rung-135 puts a PRODUCT over a sum (a*b)/(c+d) \u2014 and it is the sum-denominator twin of the over-a-rate trio (131 sum, 133 difference, 134 product over (c/d)). From a total dose (dose_count * dose_size) divided by a total volume (base_volume + added_volume), compute the admixture concentration ((dose_count*dose_size)/(base_volume+added_volume)), the total dose (dose_count*dose_size), or the total volume (base_volume+added_volume). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a PRODUCT NUMERATOR OVER A SUM (a*b)/(c+d) (multiply out the dose, pool the volume, then divide the dose by the pooled volume \u2014 the two-part denominator is ONE total, not two divisors). The divide-by-a-sum slips ride alongside as distractors. The harness matches the scalar to the printed options. The admixture concentration is a concentration (how much total dose sits in each unit of pooled volume), framed as a CONCENTRATION so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via *, /, and + \u2014 no constant leaks, and neither the total dose, the total volume, nor the admixture concentration ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: distributing the division across the sum ((a*b)/c + (a*b)/d, FALSE because x/(c+d) != x/c + x/d, a wrong operation) and dropping the grouping so the second volume is added on instead of pooled ((a*b)/c + d, a wrong operation). The core confusion tested is that (a*b)/(c+d) is one product over one pooled total, not (a*b)/c + (a*b)/d and not (a*b)/c + d. This rung uses only *, /, and + over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r135aca-01",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 3, diluted into a base volume of 4 plus an added volume of 5. What is the admixture concentration (the total dose divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(3)\nobserve base_volume(4)\nobserve added_volume(5)\nlet answer = (dose_count * dose_size) / (base_volume + added_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r135aca-02",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 3, diluted into a base volume of 4 plus an added volume of 5. What is the the total dose (the dose count times the dose size, the numerator that is divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(3)\nobserve base_volume(4)\nobserve added_volume(5)\nlet answer = dose_count * dose_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r135aca-03",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 3, diluted into a base volume of 4 plus an added volume of 5. What is the the total volume (the base volume plus the added volume, the pooled total the dose is divided by)?",
+      "program": "observe dose_count(2)\nobserve dose_size(3)\nobserve base_volume(4)\nobserve added_volume(5)\nlet answer = base_volume + added_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r135aca-04",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 4, diluted into a base volume of 3 plus an added volume of 7. What is the admixture concentration (the total dose divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(4)\nobserve base_volume(3)\nobserve added_volume(7)\nlet answer = (dose_count * dose_size) / (base_volume + added_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.8095238095238093,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r135aca-05",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 4, diluted into a base volume of 3 plus an added volume of 7. What is the the total dose (the dose count times the dose size, the numerator that is divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(4)\nobserve base_volume(3)\nobserve added_volume(7)\nlet answer = dose_count * dose_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.8095238095238093,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r135aca-06",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 4, diluted into a base volume of 3 plus an added volume of 7. What is the the total volume (the base volume plus the added volume, the pooled total the dose is divided by)?",
+      "program": "observe dose_count(2)\nobserve dose_size(4)\nobserve base_volume(3)\nobserve added_volume(7)\nlet answer = base_volume + added_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.8095238095238093,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r135aca-07",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 5, diluted into a base volume of 4 plus an added volume of 7. What is the admixture concentration (the total dose divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(5)\nobserve base_volume(4)\nobserve added_volume(7)\nlet answer = (dose_count * dose_size) / (base_volume + added_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.928571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r135aca-08",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 5, diluted into a base volume of 4 plus an added volume of 7. What is the the total dose (the dose count times the dose size, the numerator that is divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(5)\nobserve base_volume(4)\nobserve added_volume(7)\nlet answer = dose_count * dose_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.928571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r135aca-09",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 5, diluted into a base volume of 4 plus an added volume of 7. What is the the total volume (the base volume plus the added volume, the pooled total the dose is divided by)?",
+      "program": "observe dose_count(2)\nobserve dose_size(5)\nobserve base_volume(4)\nobserve added_volume(7)\nlet answer = base_volume + added_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.928571428571429,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r135aca-10",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 3 aliquots each of dose size 4, diluted into a base volume of 5 plus an added volume of 3. What is the admixture concentration (the total dose divided by the total volume)?",
+      "program": "observe dose_count(3)\nobserve dose_size(4)\nobserve base_volume(5)\nobserve added_volume(3)\nlet answer = (dose_count * dose_size) / (base_volume + added_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r135aca-11",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 3 aliquots each of dose size 4, diluted into a base volume of 5 plus an added volume of 3. What is the the total dose (the dose count times the dose size, the numerator that is divided by the total volume)?",
+      "program": "observe dose_count(3)\nobserve dose_size(4)\nobserve base_volume(5)\nobserve added_volume(3)\nlet answer = dose_count * dose_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r135aca-12",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 3 aliquots each of dose size 4, diluted into a base volume of 5 plus an added volume of 3. What is the the total volume (the base volume plus the added volume, the pooled total the dose is divided by)?",
+      "program": "observe dose_count(3)\nobserve dose_size(4)\nobserve base_volume(5)\nobserve added_volume(3)\nlet answer = base_volume + added_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r135aca-13",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 7, diluted into a base volume of 3 plus an added volume of 4. What is the admixture concentration (the total dose divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(7)\nobserve base_volume(3)\nobserve added_volume(4)\nlet answer = (dose_count * dose_size) / (base_volume + added_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.166666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r135aca-14",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 7, diluted into a base volume of 3 plus an added volume of 4. What is the the total dose (the dose count times the dose size, the numerator that is divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(7)\nobserve base_volume(3)\nobserve added_volume(4)\nlet answer = dose_count * dose_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.166666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r135aca-15",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 7, diluted into a base volume of 3 plus an added volume of 4. What is the the total volume (the base volume plus the added volume, the pooled total the dose is divided by)?",
+      "program": "observe dose_count(2)\nobserve dose_size(7)\nobserve base_volume(3)\nobserve added_volume(4)\nlet answer = base_volume + added_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.166666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r135aca-16",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 3 aliquots each of dose size 3, diluted into a base volume of 4 plus an added volume of 9. What is the admixture concentration (the total dose divided by the total volume)?",
+      "program": "observe dose_count(3)\nobserve dose_size(3)\nobserve base_volume(4)\nobserve added_volume(9)\nlet answer = (dose_count * dose_size) / (base_volume + added_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6923076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r135aca-17",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 3 aliquots each of dose size 3, diluted into a base volume of 4 plus an added volume of 9. What is the the total dose (the dose count times the dose size, the numerator that is divided by the total volume)?",
+      "program": "observe dose_count(3)\nobserve dose_size(3)\nobserve base_volume(4)\nobserve added_volume(9)\nlet answer = dose_count * dose_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6923076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r135aca-18",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 3 aliquots each of dose size 3, diluted into a base volume of 4 plus an added volume of 9. What is the the total volume (the base volume plus the added volume, the pooled total the dose is divided by)?",
+      "program": "observe dose_count(3)\nobserve dose_size(3)\nobserve base_volume(4)\nobserve added_volume(9)\nlet answer = base_volume + added_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6923076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r135aca-19",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 8, diluted into a base volume of 3 plus an added volume of 2. What is the admixture concentration (the total dose divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(8)\nobserve base_volume(3)\nobserve added_volume(2)\nlet answer = (dose_count * dose_size) / (base_volume + added_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333332,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r135aca-20",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 8, diluted into a base volume of 3 plus an added volume of 2. What is the the total dose (the dose count times the dose size, the numerator that is divided by the total volume)?",
+      "program": "observe dose_count(2)\nobserve dose_size(8)\nobserve base_volume(3)\nobserve added_volume(2)\nlet answer = dose_count * dose_size\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333332,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r135aca-21",
+      "qtype": "admix_conc",
+      "stem": "An admixture study records a dose count of 2 aliquots each of dose size 8, diluted into a base volume of 3 plus an added volume of 2. What is the the total volume (the base volume plus the added volume, the pooled total the dose is divided by)?",
+      "program": "observe dose_count(2)\nobserve dose_size(8)\nobserve base_volume(3)\nobserve added_volume(2)\nlet answer = base_volume + added_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

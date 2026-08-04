@@ -220,9 +220,8 @@ class TestDiscovery < Minitest::Test
 
     assert_equal 1, packages.size
     pkg = packages.first
-    # The fixture lives under .../ruby/build-tool/test/fixtures/simple/pkg-a,
-    # so the language inference picks up "ruby" from the path (because the
-    # word "ruby" appears in the path components).
+    # The fixture uses a canonical code/packages/ruby boundary so the test does
+    # not accidentally inherit the build tool's own code/programs/ruby path.
     assert_equal "ruby/pkg-a", pkg.name
     assert_equal "ruby", pkg.language
     assert_equal ["echo \"building pkg-a\""], pkg.build_commands

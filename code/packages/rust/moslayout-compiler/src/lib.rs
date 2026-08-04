@@ -69,7 +69,7 @@ use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser};
 use serde::{Deserialize, Serialize};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 mod _grammar;
 
@@ -105,6 +105,7 @@ mod _grammar;
 /// code; a follow-up PR will sweep it. This PR removes the
 /// registration so any future use of `Grid` resolves as a userland
 /// component reference (matching the userland v0.2.0 package).
+#[allow(dead_code)] // retained as API surface / scaffolding
 const PRIMITIVES: &[&str] = &[
     "Box", "Row", "Column", "Text", "Image", "Spacer",
     // Extended set from earlier specs (kept for completeness):
@@ -142,6 +143,8 @@ const PRIMITIVES: &[&str] = &[
     // min/max validation. See code/specs/UI29-4-form-and-nav-
     // candidates-survey.md for the full inclusion-criteria audit.
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
+    // Typed native composition boundary for host-supplied `node` slots.
+    "HostSurface",
     "HostCheckbox", "HostRadio",
     "HostLink", "HostTooltip", "HostNumberInput",
     // UI31 — `HostTable` sibling primitives. Recognised by the React
@@ -152,8 +155,22 @@ const PRIMITIVES: &[&str] = &[
     // `code/specs/UI31-host-table.md` §2 for the structural shape.
     "HostTableColGroup", "HostTableHead", "HostTableBody", "HostTableFoot",
     "Col",
+    // UI35 — the drag-and-drop family. Before this the kernel had **no**
+    // drag primitive of any kind, so "drag a card to another column" —
+    // the defining gesture of board software — could not be expressed in
+    // a `.mll` at all. Composition cannot supply it: each platform has
+    // its own native drag system (HTML pointer events, SwiftUI
+    // `.draggable`/`.dropDestination`, Compose dragAndDropSource/Target,
+    // QDrag, Flutter Draggable/DragTarget, WinUI CanDrag/Drop), and the
+    // keyboard-equivalent path, screen-reader announcements, and touch
+    // support that make dragging usable are per-platform concerns an
+    // author cannot re-derive. Two primitives because a drag has two
+    // ends — a card is typically both. See
+    // `code/specs/UI35-host-drag-drop.md`.
+    "HostDraggable", "HostDropTarget",
 ];
 
+#[allow(dead_code)] // retained as API surface / scaffolding
 fn is_primitive(tag: &str) -> bool {
     PRIMITIVES.contains(&tag)
 }
@@ -428,6 +445,55 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, CompileError> {
 // Parser
 // ===========================================================================
 
+/// Recursion-depth cap for the moslayout [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep recursion through `parse_rule` can overflow
+/// the *native* thread stack — an uncatchable process abort — before this
+/// crate's own `Result`-returning entry points ever get a chance to report
+/// anything). `moslayout-compiler` is reachable via the `mosaic` CLI on
+/// arbitrary `.mll` files, a real attack surface.
+///
+/// # Three independent recursive shapes
+///
+/// This grammar has three *independent* recursion paths that must all be
+/// measured, since a single `MAX_RULE_DEPTH` bounds the parser's internal
+/// rule-invocation counter for any of them:
+///
+/// - **Node-tree nesting** — `node = qualified_name [...] [LBRACE {node}
+///   RBRACE]`, direct self-recursion (1 rule-frame per real nesting level).
+/// - **`!` (NOT) chain** — `unary = NOT unary | postfix`, direct
+///   self-recursion (1 rule-frame per real nesting level), independent of
+///   the expression cycle below.
+/// - **Expression re-entry cycle** — `primary -> expr -> or_expr ->
+///   and_expr -> eq_expr -> rel_expr -> unary -> postfix -> primary`,
+///   reached by two distinct concrete constructs with different
+///   rule-frames-per-level: parenthesised nesting (8 hops/level) and
+///   bracket-index nesting (7 hops/level, since `postfix`'s bracket form
+///   calls `expr` directly inside its own loop, skipping a `primary`
+///   frame).
+///
+/// Measured (binary search, uncapped parser, on the true default-stack
+/// per-test worker thread — no `RUST_MIN_STACK` override and no explicit
+/// `Builder::stack_size`, matching what `cargo test` and a production
+/// caller both actually get — debug build, adversarial 5000-level input):
+/// node-tree nesting (the *binding*, lower floor) safe through 145
+/// rule-frames, crashes at 146; NOT-chain safe through 210, crashes at 220;
+/// bracket-index nesting safe through 260, crashes at 270; parenthesised
+/// nesting safe through 280, crashes at 290.
+///
+/// `MAX_RULE_DEPTH` is set to **100** — about 31% below the binding
+/// 145-rule-frame floor (comparable margin to sibling crates' 25-45%
+/// convention), independently confirmed not to crash a default-stack
+/// thread even thousands of rule-frames past the cap for any of the
+/// shapes (see this crate's tests). Measured real-nesting headroom at 100
+/// (capped parser, so no crash risk): node-tree nesting parses cleanly up
+/// to 97 levels (98 trips the cap), NOT-chain up to 86 levels (87 trips
+/// the cap), bracket-index nesting up to 12 levels (13 trips the cap),
+/// parenthesised nesting up to 10 levels (11 trips the cap) — comfortably
+/// past any hand-written moslayout expression's real nesting.
+const MAX_RULE_DEPTH: usize = 100;
+
 /// Parse moslayout source text into a grammar AST.
 ///
 /// The AST mirrors the grammar rules exactly; call `analyze` to convert it
@@ -435,7 +501,7 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, CompileError> {
 pub fn parse_layout(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = tokenize(source).map_err(|e| e.message)?;
     let grammar = _grammar::parser_grammar();
-    let mut parser = GrammarParser::new(tokens, grammar);
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| format!("parse error: {e}"))
 }
 
@@ -519,6 +585,7 @@ pub fn validate(
     }
 }
 
+#[allow(clippy::too_many_arguments)] // threaded validation context; signature kept as-is
 fn validate_node(
     node: &LayoutNode,
     known_slots: &HashSet<String>,
@@ -586,8 +653,8 @@ fn validate_node(
                     });
                 }
             }
-            LayoutPropValue::EmitRef(emit_name) => {
-                if has_interface && !known_emits.contains(emit_name) {
+            LayoutPropValue::EmitRef(emit_name)
+                if has_interface && !known_emits.contains(emit_name) => {
                     errors.push(CompileError {
                         kind: ErrorKind::UnknownEmit,
                         message: format!(
@@ -596,7 +663,6 @@ fn validate_node(
                         ),
                     });
                 }
-            }
             _ => {}
         }
     }
@@ -1114,7 +1180,7 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
                 kind: ErrorKind::InternalError,
                 message: format!(
                     "Expected qualified_name AST node at start of node, got {:?}",
-                    children.get(0)
+                    children.first()
                 ),
             });
         }
@@ -1170,7 +1236,8 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
                     idx += 1;
                 }
                 ASTNodeOrToken::Token(t) if t.value == "}" => {
-                    idx += 1; // skip RBRACE
+                    // RBRACE closes the child block; `idx` is not read after
+                    // the loop, so no need to advance it here.
                     break;
                 }
                 _ => {
@@ -1213,7 +1280,7 @@ fn extract_qualified_name(qn_ast: &GrammarASTNode) -> Result<String, CompileErro
 
     // Unqualified shape — single NAME token.
     if children.len() == 1 {
-        if let Some(ASTNodeOrToken::Token(t)) = children.get(0) {
+        if let Some(ASTNodeOrToken::Token(t)) = children.first() {
             if t.type_ == TokenType::Name {
                 return Ok(t.value.clone());
             }
@@ -1504,10 +1571,46 @@ fn reconstruct_expr_text(node: &GrammarASTNode) -> String {
 fn collect_tokens(node: &GrammarASTNode, out: &mut Vec<String>) {
     for child in &node.children {
         match child {
-            ASTNodeOrToken::Token(t) => out.push(t.value.clone()),
+            ASTNodeOrToken::Token(t) => out.push(token_source_text(t)),
             ASTNodeOrToken::Node(n) => collect_tokens(n, out),
         }
     }
+}
+
+/// A token's text as it must appear in *reconstructed source*.
+///
+/// For every token type but one this is just the token's value. The exception is
+/// `String`: the lexer strips a string literal's surrounding quotes and resolves its
+/// escapes before storing the value (see `TokenType::String`), so pushing that value
+/// verbatim silently rewrites the author's expression —
+///
+/// ```text
+/// ( status == "done" )   reconstructs as   status == done
+/// ```
+///
+/// — turning a string comparison into a comparison against an undefined identifier.
+/// Re-quoting restores the author's meaning. It also means a string's contents can no
+/// longer contribute structural characters (`}`, `,`, a bare quote) to the emitted
+/// source, which is what kept expression text from being able to break out of the
+/// construct it was interpolated into. See `code/specs/UI36-data-driven-sizing.md` §6.
+fn token_source_text(t: &Token) -> String {
+    if t.type_ != TokenType::String {
+        return t.value.clone();
+    }
+    let mut out = String::with_capacity(t.value.len() + 2);
+    out.push('"');
+    for c in t.value.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            _ => out.push(c),
+        }
+    }
+    out.push('"');
+    out
 }
 
 /// Resolve the standard `\`-escapes (`\n`, `\t`, `\\`, `\"`, `\r`, `\0`)
@@ -2382,12 +2485,51 @@ mod tests {
     /// with built-in ± buttons, mobile platforms' `inputmode="numeric"`
     /// keyboard) that userland composition couldn't reach parity.
     /// The kernel now stands at 21 primitives.
+    /// UI35 — `HostDraggable` and `HostDropTarget` joined the kernel as the
+    /// drag-and-drop family. Before them the kernel had no drag primitive of
+    /// any kind, so a board's defining gesture was inexpressible in a `.mll`.
+    /// Pinned for the same reason as the rest: PRIMITIVES is the roster every
+    /// backend matches against, and a refactor that silently drops an entry
+    /// sends the tag down the unknown-component fallback instead of failing.
+    #[test]
+    fn drag_and_drop_family_in_primitives() {
+        assert!(
+            PRIMITIVES.contains(&"HostDraggable"),
+            "UI35 added HostDraggable (the drag source)"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostDropTarget"),
+            "UI35 added HostDropTarget (the drop sink)"
+        );
+    }
+
+    /// Registration only matters if a real layout can use it: a board card is a
+    /// drop target wrapping a draggable, the shape every kanban lowering emits.
+    /// Compiling proves the tags resolve as primitives rather than falling
+    /// through to the unknown-component-reference path.
+    #[test]
+    fn a_draggable_card_inside_a_drop_target_compiles() {
+        let src = r#"
+          layout Board {
+            Column [ board ] {
+              HostDropTarget [ column ] {
+                HostDraggable [ card ] {
+                  Text ( content: "Write spec" )
+                }
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("UI35 drag/drop primitives must compile in a layout");
+    }
+
     #[test]
     fn host_dialog_and_friends_in_primitives() {
         assert!(PRIMITIVES.contains(&"HostInput"));
         assert!(PRIMITIVES.contains(&"HostButton"));
         assert!(PRIMITIVES.contains(&"HostTable"));
         assert!(PRIMITIVES.contains(&"HostScroll"));
+        assert!(PRIMITIVES.contains(&"HostSurface"));
         assert!(
             PRIMITIVES.contains(&"HostDialog"),
             "UI29-1 added HostDialog as the 16th kernel primitive"
@@ -2433,6 +2575,25 @@ mod tests {
             PRIMITIVES.contains(&"Col"),
             "UI31 added Col as the cell-definition sub-tag inside HostTableColGroup"
         );
+    }
+
+    #[test]
+    fn host_surface_with_node_slot_compiles() {
+        let interface = mosmodel_compiler::compile(
+            "component Browser { slot content-surface : node ; }",
+        )
+        .expect("compile node-slot interface");
+        let source = r#"
+          layout Browser {
+            Column [ shell ] {
+              HostSurface [ content-surface ] (
+                content : slot: content-surface
+              )
+            }
+          }
+        "#;
+        compile(source, Some(&interface.descriptor_json))
+            .expect("HostSurface must accept a host-supplied node slot");
     }
 
     // =====================================================================
@@ -2527,6 +2688,84 @@ mod tests {
                     text.contains("editable"),
                     "Expr should include field name: {text:?}"
                 );
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// A string literal inside an expression must keep its quotes.
+    ///
+    /// The lexer strips them (and resolves escapes) before storing a STRING token's
+    /// value, so reconstructing from `token.value` verbatim silently rewrote
+    /// `status == "done"` into `status == done` — a comparison against an undefined
+    /// identifier. Every backend interpolates this text into generated source, so the
+    /// bug reached all of them.
+    #[test]
+    fn expr_string_literal_keeps_its_quotes() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: ( status == "done" ) ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => assert!(
+                text.contains("\"done\""),
+                "the string literal lost its quotes: {text:?}"
+            ),
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// A quote inside the string must come back escaped, so the reconstructed text
+    /// can't terminate the literal early — which is also what stops a string's
+    /// contents from contributing structural characters to the emitted source.
+    #[test]
+    fn expr_string_literal_reescapes_an_inner_quote() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: ( label == "he said \"hi\"" ) ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("\\\""), "inner quote not re-escaped: {text:?}");
+                // Exactly two unescaped quotes: the ones that delimit the literal.
+                let bare = text
+                    .char_indices()
+                    .filter(|(i, c)| {
+                        *c == '"' && (*i == 0 || text.as_bytes()[i - 1] != b'\\')
+                    })
+                    .count();
+                assert_eq!(bare, 2, "unbalanced delimiters in {text:?}");
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// A non-string token is untouched — the fix must not start quoting identifiers.
+    #[test]
+    fn expr_non_string_tokens_are_unquoted() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: ( count > 3 ) ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(!text.contains('"'), "identifiers got quoted: {text:?}");
+                assert!(text.contains("count") && text.contains('3'), "{text:?}");
             }
             other => panic!("expected Expr, got {other:?}"),
         }
@@ -3051,4 +3290,109 @@ mod tests {
             "pkg::mosaic-pkg-grid::Cell"
         );
     }
+}
+
+/// Regression tests for [`MAX_RULE_DEPTH`], one triple per independent
+/// recursive shape (see that constant's doc comment).
+#[cfg(test)]
+mod depth_guard_tests {
+    fn nested_node_source(n: usize) -> String {
+        format!("layout L {{ {}{} }}", "N{".repeat(n), "}".repeat(n))
+    }
+
+    fn nested_not_source(n: usize) -> String {
+        format!("layout L {{ N(f: {}x) }}", "!".repeat(n))
+    }
+
+    fn nested_paren_source(n: usize) -> String {
+        format!("layout L {{ N(f: {}x{}) }}", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn nested_bracket_source(n: usize) -> String {
+        format!("layout L {{ N(f: x{}{}) }}", "[x".repeat(n), "]".repeat(n))
+    }
+
+    macro_rules! depth_guard_triple {
+        ($mod_name:ident, $source_fn:ident, $up_to_cap:expr, $one_past_cap:expr) => {
+            mod $mod_name {
+                use super::$source_fn as nested_source;
+
+                /// Deeply-nested input must produce a recoverable error, not
+                /// overflow the native stack. Parses 5000 levels — far past
+                /// `MAX_RULE_DEPTH` — on a worker thread with a generous
+                /// 32 MiB stack, so the *guard* is what stops the
+                /// recursion, not the stack running out.
+                #[test]
+                fn test_deeply_nested_input_returns_error_not_overflow() {
+                    let handle = std::thread::Builder::new()
+                        .name(
+                            concat!(
+                                "moslayout-depth-guard-",
+                                stringify!($mod_name),
+                                "-regression"
+                            )
+                            .to_string(),
+                        )
+                        .stack_size(32 * 1024 * 1024)
+                        .spawn(|| {
+                            let result = super::super::parse_layout(&nested_source(5000));
+                            assert!(
+                                result.is_err(),
+                                "deeply-nested input must fail with an error, not parse or crash"
+                            );
+                        })
+                        .expect("failed to spawn worker thread");
+                    handle
+                        .join()
+                        .expect("depth guard must keep the worker thread from crashing");
+                }
+
+                /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still
+                /// parses cleanly, and one layer deeper cleanly trips the
+                /// guard. These exact boundary counts were found
+                /// empirically by binary-searching against increasing
+                /// nesting counts at the production cap — see
+                /// `MAX_RULE_DEPTH`'s doc comment.
+                #[test]
+                fn test_nesting_up_to_cap_still_parses() {
+                    assert!(
+                        super::super::parse_layout(&nested_source($up_to_cap)).is_ok(),
+                        "{} levels must stay under the cap",
+                        $up_to_cap
+                    );
+                    assert!(
+                        super::super::parse_layout(&nested_source($one_past_cap)).is_err(),
+                        "one nesting level past the cap's measured limit must fail"
+                    );
+                }
+
+                /// A caller relying on `MAX_RULE_DEPTH` must have the guard
+                /// trip *before* the native stack overflows on a
+                /// default-stack thread — otherwise a production caller
+                /// (e.g. the `mosaic` CLI, or `cargo test`'s own per-test
+                /// thread) would still crash. Parses far-too-deep input on
+                /// a worker thread with **no** `stack_size` override (the
+                /// same default a thread gets in this environment,
+                /// unmodified by any `RUST_MIN_STACK` override). A clean
+                /// `Err` (not a `join()` failure from a crashed thread)
+                /// proves `MAX_RULE_DEPTH` sits safely below the native
+                /// overflow point on the default stack.
+                #[test]
+                fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+                    let handle = std::thread::spawn(|| {
+                        let result = super::super::parse_layout(&nested_source(5000));
+                        assert!(result.is_err(), "deeply-nested input must error, not crash");
+                    });
+                    handle.join().expect(
+                        "MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack",
+                    );
+                }
+            }
+        };
+    }
+
+    depth_guard_triple!(node_shape, nested_node_source, 97, 98);
+    depth_guard_triple!(not_shape, nested_not_source, 86, 87);
+    depth_guard_triple!(paren_shape, nested_paren_source, 10, 11);
+    depth_guard_triple!(bracket_shape, nested_bracket_source, 12, 13);
 }

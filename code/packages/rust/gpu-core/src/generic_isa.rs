@@ -361,6 +361,8 @@ fn exec_jmp(inst: &Instruction) -> ExecuteResult {
 
 #[cfg(test)]
 mod tests {
+    // 3.14 / -2.5 etc. are arbitrary float test values, not approximations of PI.
+    #![allow(clippy::approx_constant)]
     use super::*;
     use crate::opcodes;
     use fp_arithmetic::FP32;

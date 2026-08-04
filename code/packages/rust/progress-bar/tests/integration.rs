@@ -279,7 +279,7 @@ fn test_bar_width() {
     // Each draw writes 20 chars, and we have multiple draws (one per event
     // plus final), so total should be a multiple of 20.
     assert!(
-        block_count > 0 && block_count % 20 == 0,
+        block_count > 0 && block_count.is_multiple_of(20),
         "expected block count to be a multiple of 20, got: {}",
         block_count
     );

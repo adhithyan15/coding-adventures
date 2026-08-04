@@ -441,6 +441,7 @@ impl MemoryManager {
     }
 
     /// Internal: push buffer data to device. Returns cycles consumed.
+    #[allow(dead_code)] // retained as API surface / scaffolding for buffer sync
     pub(crate) fn sync_buffer_to_device(&mut self, buffer_id: usize) -> u64 {
         let buf = self.buffers.get(&buffer_id).expect("Buffer not found");
         let address = buf.device_address;
@@ -449,6 +450,7 @@ impl MemoryManager {
     }
 
     /// Internal: pull buffer data from device. Returns cycles consumed.
+    #[allow(dead_code)] // retained as API surface / scaffolding for buffer sync
     pub(crate) fn sync_buffer_from_device(&mut self, buffer_id: usize) -> u64 {
         let buf = self.buffers.get(&buffer_id).expect("Buffer not found");
         let address = buf.device_address;

@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
 import { getChangedFiles, mapFilesToPackages } from "../src/gitdiff.js";
 
@@ -11,18 +11,21 @@ import { getChangedFiles, mapFilesToPackages } from "../src/gitdiff.js";
 // root path; the caller is responsible for cleaning it up.
 function makeRepo(): string {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "gitdiff-test-"));
-  execSync("git init -q -b main", { cwd: root });
-  execSync("git config user.email a@b", { cwd: root });
-  execSync("git config user.name x", { cwd: root });
+  execFileSync("git", ["init", "-q", "-b", "main"], { cwd: root });
+  execFileSync("git", ["config", "user.email", "a@b"], { cwd: root });
+  execFileSync("git", ["config", "user.name", "x"], { cwd: root });
+  execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: root });
   fs.writeFileSync(path.join(root, "base.txt"), "base\n");
-  execSync("git add base.txt && git commit -q -m base", { cwd: root, shell: "/bin/sh" });
+  execFileSync("git", ["add", "base.txt"], { cwd: root });
+  execFileSync("git", ["commit", "-q", "-m", "base"], { cwd: root });
   // Tag the base commit so we have a stable ref to diff against.
-  execSync("git tag base", { cwd: root });
+  execFileSync("git", ["tag", "base"], { cwd: root });
   fs.writeFileSync(path.join(root, "changed.txt"), "changed\n");
   fs.mkdirSync(path.join(root, "code/packages/python/foo/src"), { recursive: true });
   fs.writeFileSync(path.join(root, "code/packages/python/foo/src/gates.py"), "x = 1\n");
   fs.writeFileSync(path.join(root, "code/packages/python/foo/README.md"), "# foo\n");
-  execSync("git add -A && git commit -q -m changes", { cwd: root, shell: "/bin/sh" });
+  execFileSync("git", ["add", "-A"], { cwd: root });
+  execFileSync("git", ["commit", "-q", "-m", "changes"], { cwd: root });
   return root;
 }
 
@@ -60,11 +63,15 @@ describe("getChangedFiles", () => {
 
 describe("mapFilesToPackages", () => {
   // Common setup used by the variants below.
-  const repoRoot = "/repo";
+  const repoRoot = fs.mkdtempSync(path.join(os.tmpdir(), "gitdiff-map-test-"));
   const pkgPaths = new Map([
-    ["python/foo", "/repo/code/packages/python/foo"],
-    ["python/bar", "/repo/code/packages/python/bar"],
+    ["python/foo", path.join(repoRoot, "code", "packages", "python", "foo")],
+    ["python/bar", path.join(repoRoot, "code", "packages", "python", "bar")],
   ]);
+
+  afterAll(() => {
+    fs.rmSync(repoRoot, { recursive: true, force: true });
+  });
 
   it("maps a file under a package directory to that package", () => {
     const out = mapFilesToPackages(

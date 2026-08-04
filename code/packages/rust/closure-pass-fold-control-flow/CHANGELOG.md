@@ -2,6 +2,593 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.39.0] - 2026-07-28
+
+### Added - remove a redundant trailing `continue` from a loop body
+
+A bare (unlabeled) `continue` at the tail of a `for`/`while`/`do-while` body is
+removed, matching the reference Closure Compiler at SIMPLE:
+
+```text
+  for (; c;) { a(); continue; }   ->  for(;c;)a();
+  for (; c;) { continue; }        ->  for(;c;);
+  do { a(); continue; } while(c); ->  do a();while(c);
+```
+
+A trailing bare `continue` is a no-op -- it jumps to the next iteration, which
+is exactly what falling off the end of the body already does. After the strip,
+the shortened body unwraps its single statement, comma-fuses, or (when now
+empty) normalizes to `;`, all via the existing machinery. Because `while` is
+rewritten to `for` (0.31.0) and re-folded, the `for` hook covers `while` too;
+the `do-while` arm has its own hook.
+
+Scoped to a bare, unlabeled `continue` that is the LITERAL last statement:
+  * `continue L` (labeled) may target an OUTER loop, so it is kept.
+  * a `continue` with dead code after it (`{a(); continue; b()}`) is left
+    alone -- removing the unreachable `b()` is a separate dead-code-after-jump
+    transform.
+
+## [0.38.0] - 2026-07-28
+
+### Added - empty-bodied `do … while` becomes the equivalent `while`/`for`
+
+An empty-bodied `do … while` now lowers to the equivalent loop, matching the
+reference Closure Compiler at SIMPLE:
+
+```text
+  do {} while(c);   ->  for(; c;) ;
+  do {} while(0);   ->  removed      (dead loop; dce drops the residual `;`)
+```
+
+`do {} while(test)` runs the (empty) body once and then evaluates `test`;
+because the body is a no-op, its test-evaluation sequence is IDENTICAL to
+`while(test){}` (the leading empty run changes nothing observable). We rewrite
+the empty case to a `while`, which the existing machinery lowers to `for` and —
+via the empty loop-body normalization (0.37.0) — collapses to `for(; test;) ;`;
+a statically-falsy test makes it a dead loop that collapses to `;` (removed
+downstream by dce). A NON-empty `do` body keeps the `do` form (a `do` body runs
+before its test, so it cannot generally become a `while`) and still gets the
+loop-body comma-fusion (0.36.0).
+
+This completes the empty-body follow-up noted in 0.37.0. (The other do-while
+gaps -- trailing `continue` removal, trailing `return` -> `break` -- remain
+tracked separately.)
+
+## [0.37.0] - 2026-07-25
+
+### Added - normalize an empty loop body `{}` to `;`
+
+A `for` loop whose body folds to an empty block (`{}`, `{;;}`, `{{}}`) now
+normalizes that body to an empty statement (`;`), matching the reference
+Closure Compiler at SIMPLE:
+
+```text
+  for (; c;) {}   ->  for (; c;) ;
+  while (c) {}    ->  for (; c;) ;   (while first lowers to for, then re-folds)
+```
+
+An empty block declares no bindings, so the `;` form is behaviour-identical.
+Because `while` is already rewritten to `for` (0.31.0) and re-folded here, this
+one change covers both `for` and `while` empty bodies. The existing
+`statement_is_empty` helper (used by the if-empty-then fold) recognises the
+do-nothing body, so nested empties (`{{}}`) collapse too.
+
+Not handled here (follow-up #226): an empty-bodied `do … while` (`do{}while(c)`
+-> `for(; c;) ;`), which additionally needs the do -> while/for rewrite.
+
+## [0.36.0] - 2026-07-24
+
+### Added - do-while loop-body comma-fusion
+
+A `do … while` loop body that is a block of all-plain-expression statements now
+fuses to a single (possibly comma-sequenced) expression statement, dropping the
+braces — matching the reference Closure Compiler at SIMPLE and completing the
+loop-body fusion already done for `for`/`while` (0.32.0):
+
+```text
+  do { a(); b(); } while(c);      ->  do a(), b(); while(c);
+  do { a(); b(); d(); } while(c); ->  do a(), b(), d(); while(c);
+  do { a(); } while(c);           ->  do a(); while(c);         (block unwrapped)
+```
+
+The comma operator runs the operands left-to-right with identical side effects
+and the loop discards the value, so the rewrite is behaviour-preserving. It runs
+after the body's own inner folds, so an `if (x) a();` that folded to `x && a()`
+participates: `do { if (x) a(); b(); } while(c);` -> `do x && a(), b(); while(c);`.
+
+Reuses the existing `stmts_as_sequence_expr` gate, which keeps the block intact
+for any body carrying a declaration (`var`/`let`/`const`), a
+`break`/`continue`/`return`, or a nested statement — none can join a
+comma-sequence. Unlike `while`, a `do`-loop is not rewritten to a `for`, so the
+fusion is applied directly in the `DoWhileStatement` fold arm.
+
+Not handled here (separate reference transforms, tracked as follow-ups): trailing
+`continue` removal in a do-body (`do{a();continue}while(c)` -> `do a();while(c)`),
+trailing `return` -> `break` in a loop, and empty-body `do{}while(c)` ->
+`for(;c;);`.
+
+## [0.35.0] - 2026-07-22
+
+### Added - split a comma-sequence expression statement into separate statements
+
+A comma sequence used as an expression statement at a statement-LIST position
+(program body or block body) now splits into one statement per sub-expression,
+matching the reference Closure Compiler's Normalize at SIMPLE byte-for-byte (the
+inverse of the existing loop-body comma-fusion):
+
+```text
+  a(), b();        ->  a(); b();
+  a(), b(), c();   ->  a(); b(); c();
+  1, a();          ->  1; a();      (each operand kept verbatim)
+```
+
+The comma operator evaluates its operands left-to-right and discards all but the
+last; an expression statement already discards its value, so running each operand
+as its own statement is behaviour-identical. A new `split_sequence_statement`
+helper feeds `fold_block_statement` / `fold_program` (the statement-list
+processors, which already splice), NOT `fold_statement` - a single-statement body
+(`if (x) a(), b();`, `for (;;) a(), b();`) has no braces, so the sequence must
+stay fused there; those cases are verified unchanged.
+
+Not handled (declined; tracked as a follow-up): a comma sequence in a `for`
+INIT (`for(a(),b();c;)d()` -> the reference pulls `a();` out before the loop),
+which is a for-header transform rather than an expression-statement split.
+
+## [0.34.0] - 2026-07-22
+
+### Fixed — a dead `if` branch / `for` loop no longer DROPS a hoisted `var` (miscompile)
+
+A statically-dead `if` branch used to be discarded whole, taking any hoisted
+`var` inside it with it — a **miscompile**, since the `var` still hoists to the
+enclosing function scope and a later read would flip from a declared-`undefined`
+binding to a `ReferenceError` (or a different outer binding):
+
+```js
+if (false) { var z = g(); } sink(z);   // was: sink(z)          → now: var z; sink(z);
+if (false) { var z = 1; } else h();    // was: h()              → now: var z; h();
+if (true)  h(); else { var z = 1; }    // was: h()              → now: var z; h();
+```
+
+The dead branch's hoisted `var`s are now EXTRACTED (initializers stripped, since
+the branch never runs) as a bare `var …;` placed BEFORE the taken branch —
+byte-identical to the reference Closure Compiler at SIMPLE (the same bug class as
+the `while (false)` drop fixed in 0.30.0). This is the `if` counterpart of the
+dead-loop var extraction.
+
+The dead-`for`-loop collapse also no longer DECLINES the last shape it couldn't
+represent — an **expression** init combined with a hoisted body `var`, which is
+two statements:
+
+```js
+for (f(); false; ) { var x = 1; } sink(x);   // was: loop kept   → now: var x; f(); sink(x);
+```
+
+Mechanism: a new `collapse_extracting_dead_vars` helper returns the two
+statements (`var …;` + survivor) wrapped in a `BlockStatement`, which
+`fold_program` / `fold_block_statement` then splice into the enclosing statement
+list (`block_is_scope_safe_to_hoist` admits a `var`-only block; adjacent `var`s
+then coalesce). The `if` literal-branch arms and the `for` collapse both route
+through it; the reversed extraction order matches `extract_dead_loop_vars`.
+
+## [0.33.0] - 2026-07-21
+
+### Removed — the `gap-015` function-body `var` hoist/split (net-wrong for byte-identity)
+
+Deleted `hoist_function_body_vars` and its three helpers
+(`hoist_visit_stmt`, `hoist_visit_block`, `hoist_rewrite_var_decl`). The
+transform used to lift every `var x = expr;` from inside a nested block up to
+the function-body top, splitting it into a bare `var x;` prefix plus an
+`x = expr;` assignment left at the original site — e.g.
+
+```js
+function f(){ if (cond) { var y = 1; } }
+// old (wrong):
+function f(){ var y; if (cond) y = 1; }
+```
+
+Its doc comment claimed "upstream Closure makes this hoist *syntactically*
+visible". **Differential probing against the real Closure Compiler jar
+(`closure-compiler-v20260712.jar`, `SIMPLE`, `--language_out NO_TRANSPILE`)
+disproved that across nine shapes** — `var` at the body top, nested in an
+`if`, in a loop, in a plain block, in a labeled block, in a `switch` case,
+deeply nested, and reassigned. In **every** case the reference compiler leaves
+the `var` declaration exactly where it was written; it never emits the
+hoist/split form. The transform therefore only ever moved closurec **away**
+from byte-identity, so it is removed rather than corrected.
+
+This does not touch the separate, oracle-correct dead-loop var extraction
+(`extract_dead_loop_vars`, from the `for(;false;)` / `if(false)` dead-branch
+work), which lifts hoisted `var`s out of a *removed* construct — behaviour the
+reference compiler does perform.
+
+The five call sites (function declaration, method body, static-init block,
+function expression, arrow block body) now fold their bodies and leave the
+result unchanged. Four unit tests that pinned the old split behaviour were
+rewritten to pin the new no-split invariant
+(`var_inside_if_consequent_block_stays_nested`,
+`var_at_top_of_function_body_stays_intact`,
+`nested_function_body_vars_are_isolated`, `bare_var_no_init_stays_nested`).
+
+## [0.32.0] - 2026-07-17
+
+### Added — `for` loop body comma-fusion: `for(…){a();b();}` → `for(…)a(),b();`
+
+A `for` loop whose **block body is entirely plain expression statements**
+collapses to a single (possibly comma-sequenced) expression statement, dropping
+the braces — matching the reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `for (;;) { a(); }` → `for (;;) a();` (single-statement block unwrapped)
+- `for (;;) { a(); b(); }` → `for (;;) a(), b();`
+- `for (;;) { a(); b(); c(); }` → `for (;;) a(), b(), c();`
+- `for (i=0;i<9;i++) { a(); b(); }` → `for (i=0;i<9;i++) a(), b();`
+
+The comma operator runs the statements left-to-right with the same side effects,
+and a loop body discards the value, so only that ordering matters — the rewrite
+is behaviour-preserving. It reuses the existing `stmts_as_sequence_expr` helper
+(introduced for the `if`→ternary/`&&` sequence folds), which **declines**
+(leaving the block intact) for any body carrying a declaration
+(`var`/`let`/`const`), a `break`/`continue`/`return`, a nested `if`/loop, or a
+nested block — none of which can join a comma-sequence. Only a `BlockStatement`
+body is a fusion candidate; a bare-statement body is already brace-free.
+
+Because the fusion runs **after** the body's own inner folds, an
+`if (x) a();` that folded to `x && a()` inside the block participates:
+`for (;;) { if (x) a(); b(); }` → `for (;;) x && a(), b();`.
+
+Applies to `while` loops too, transitively, once they are canonicalised to
+`for` (the while→for rewrite). Additive; MINOR bump 0.29.0 → 0.32.0 (0.30.0 =
+dead-loop hoist-var extraction, 0.31.0 = while→for, both in flight).
+## [0.31.0] - 2026-07-17
+
+### Added — `while (cond) body` → `for (; cond; ) body` canonicalization
+
+Every live `while` loop is now rewritten to the equivalent `for` loop — the
+form the reference Closure Compiler always emits. A `while` and a `for` with an
+empty init *and* empty update are exactly equivalent: no init runs, and
+`continue` targets the test in both (there is no update clause to fall through
+to), so this is a pure spelling change, never a semantic one. A redundant
+always-truthy test is elided to the canonical infinite `for (;;)`, mirroring the
+existing `for`-truthy-test elision:
+
+```text
+  while (x) a();        →  for (; x; ) a();      (test kept)
+  while (1) a();        →  for (;;) a();         (truthy test dropped)
+  while (true) a();     →  for (;;) a();         (also !0, 2, "x", …)
+  while (a && b) c();   →  for (; a && b; ) c();
+```
+
+Oracle byte-identical at SIMPLE for single-statement bodies (including nested
+`while (1) while (1) a();` → `for (;;) for (;;) a();`). Recorded as a `fold` CV
+contribution (`while-to-for` / `while-to-for-truthy`).
+
+The known-falsy arm (`while (false) …`) is unchanged. A multi-statement block
+body is carried across as a block (`while (1) { a(); b(); }` →
+`for (;;) { a(); b(); }`, valid); Closure additionally comma-fuses the body to
+`for (;;) a(), b();`, which is a separate loop-body-fusion transform (a
+follow-up) that applies to `for` loops too.
+## [0.30.0] - 2026-07-17
+
+### Changed — a dead loop's hoisted body `var`s are EXTRACTED, not declined or dropped
+
+The `for(;<falsy>;)` collapse no longer DECLINES when the body carries a
+hoistable `var` (0.29.0's conservative gate), and `while(<falsy>)` no longer
+DROPS one. Both now EXTRACT the hoisted bindings to a bare `var …;`, matching
+the reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `for(;false;){var x=1}` → `var x;`
+- `for(;false;){var x=1;var y=2}` → `var y,x;`  (reversed source order)
+- `for(var i=0;false;){var y=2}` → `var y,i=0;`  (reversed body vars, then the
+  `for`-init `var` declarators appended in order **with** their initializers)
+- `for(var i=0,j=1;false;){var y=2}` → `var y,i=0,j=1;`
+- `for(;false;){for(var k in o){}}` → `var k;`  (nested `for-in` header var)
+- `for(;false;){try{}finally{var x=1}}` → `var x;`  (exhaustive collection)
+- `while(false){var x=1}` → `var x;`  (**was** `[]` — dropping a used `var x`
+  was a miscompile: `typeof x` flips from `"undefined"` to a `ReferenceError`)
+
+A body `var`'s initializer is STRIPPED (the body never runs, so its effect —
+`var x=g()` → `var x;` — must not fire), while a `for`-init `var` runs once at
+entry and keeps its initializer. The exact emission is
+`REVERSE(body vars, stripped) ++ (for-init var declarators, in order, kept)`.
+
+Two new helpers: `collect_hoistable_vars` (an exhaustive var-**name** collector
+that mirrors the retired `body_has_hoistable_var` walker's coverage — blocks,
+both `if` arms, all loop bodies **and** their `var` headers, `switch` cases,
+`try` block/handler/finalizer, `with`, labeled — never descending into a nested
+function/class scope) and `extract_dead_loop_vars`.
+
+**Declined (kept as a valid, non-dropping loop — a follow-up):** a `for` with an
+**expression** init AND a hoisted body `var` (`for(f();false;){var x=1}` →
+Closure's `var x;f();` is two statements, which a single fold return can't
+represent). `if(false)` extraction is also deferred (its `else` branch makes it
+multi-statement). A `let`/`const` for-header still declines when its initializer
+has a side effect (0.29.0 gate, unchanged).
+
+NOTE (unchanged, separate gap): at script top level an extracted `var x;` whose
+`x` is never used is still removed by closurec's downstream unused-var DCE (`→
+[]`), where Closure keeps it. That is harmless (an unused binding) and is the
+pre-existing unused-decl-at-`SIMPLE` architectural gap; when the `var` is *used*
+the extraction survives and is byte-identical. Bug fix (while-drop) + byte-
+identity; MINOR bump 0.29.0 → 0.30.0.
+
+## [0.29.0] - 2026-07-16
+
+### Added — `for (init; <falsy literal>; update)` removal (the `for` twin of `while (false)`)
+
+A C-style `for` loop whose test is a known-falsy literal never runs its body or
+update, so the loop is dead. It collapses to just its `init` — which runs once,
+before the first (failing) test — matching the reference Closure Compiler at
+`SIMPLE` byte-for-byte:
+
+- `for (; false; ) body` → `;` (no init)
+- `for (a(); false; ) body` → `a();` (expression init runs once, kept)
+- `for (var i = 0; false; ) body` → `var i = 0;` (a `var` hoists to the enclosing
+  function scope, so the binding survives — kept)
+- `for (let i = 0; false; ) body` → `;` (a literal-init `let`/`const` in the
+  for-header is scoped to the loop, so removing the loop drops the binding
+  unobservably)
+- `for (; false; ) { function g(){} }` → `;` (a block-scoped `function` goes with
+  the dead loop)
+- `for (; 0; )` / `for (; !1; )` → same (any falsy literal)
+
+Mirrors the existing `while (false)` removal (`fold_while_statement`): a new
+`fold_for_statement` reuses the same `literal_truthy(test) == Some(false)` gate
+and tombstones the discarded body span via `record_fold_deleting`. A non-literal
+or truthy test rebuilds the loop unchanged — a `for (;;)` infinite loop stays,
+because its non-termination is observable.
+
+### Soundness guards — the collapse **declines** where dropping the loop would delete an observable effect
+
+Unlike `while (false)` (no init, empty-scoped body), a dead `for` can carry two
+effects that outlive the loop. The collapse now keeps the loop (folding only the
+test) rather than eliding them — matching Closure, which likewise does not drop
+these:
+
+- **Lexical init side effect** — a `let`/`const` header is initialized exactly
+  once at loop entry, *before* the failing test (ECMAScript §14.7.4), and the
+  binding is loop-scoped so it can't be lifted out. `for (let i = f(); false; )`
+  keeps the loop so `f()` still runs; only a purely-literal header
+  (`let i = 0`) collapses. Gated by `lexical_header_is_droppable`.
+- **Hoisted body `var`** — a `var` inside the never-run body hoists to the
+  enclosing function scope and stays observable, so `for (; false; ) { var x = 1; }`
+  keeps the loop rather than dropping `x`. (Closure instead *extracts* the
+  hoisted binding — `var x, i = 0;` — which is a deeper transform tracked as a
+  follow-up; declining is sound and never regresses.) Gated by
+  `body_has_hoistable_var`, a **fail-safe total walker** that descends into every
+  binding-transparent construct a `var` can hide in — blocks, both `if` arms,
+  all loop bodies *and their `var` headers* (`while`/`do`/`for`/`for-in`/
+  `for-of`), labeled bodies, `switch` cases, `try` block/handler/finalizer, and
+  `with` bodies. Its `match` is exhaustive (no wildcard), so a future statement
+  variant is a compile error rather than a silent false-negative that could drop
+  a hidden hoisted `var`.
+
+Both guards — and the completeness of the hoist detector (a `var` hidden in a
+`try`/`finally`, `do…while`, or nested `for` header must not be dropped) — were
+surfaced by the pre-push security review across two rounds. Additive; MINOR bump
+0.28.0 → 0.29.0.
+
+## [0.28.0] - 2026-07-16
+
+### Added — `if`→ternary / `if`→`&&` now comma-sequence multi-statement branches
+
+Generalises the two existing non-empty-`if` folds so a branch that is a **run
+of expression statements** collapses to a comma-sequence, matching the
+reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `if (x) a(); else { b(); c(); }` → `x ? a() : (b(), c());`
+- `if (x) { m(); n(); } else a();` → `x ? (m(), n()) : a();`
+- `if (x) { m(); n(); } else { a(); b(); }` → `x ? (m(), n()) : (a(), b());`
+- `if (x) { a(); b(); }` → `x && (a(), b());`
+
+The if-else→ternary fold and the if→`&&` fold now reduce each branch with
+`stmts_as_sequence_expr` (the helper introduced for the empty-then→`||`
+sequence fold) instead of `single_expr_stmt`. A single expression statement
+stays a bare expression; two-or-more expression statements become
+`(s1, s2, …)`. The comma operator evaluates left-to-right and yields the last,
+so a block's statement order and side effects are preserved exactly, and the
+wrapping expression statement discards the value — only the branches' effects
+matter, and they fire under the same condition as the original `if`.
+
+A branch containing anything other than expression statements (a `return`, a
+declaration, a nested `if`, …) makes `stmts_as_sequence_expr` return `None`, so
+both folds decline and keep the `if` intact — no misconversion.
+
+### Added — `if (x) S; else {}` → `x && S` (empty-else accepted by the `&&` fold)
+
+The if→`&&` fold previously required *no* alternate. An **empty** alternate
+(`else {}` / `else ;`) is a no-op, so `if (x) S; else {}` is behaviourally
+identical to `if (x) S;`; the gate is now "no alternate, or an empty one".
+Combined with the sequence generalisation, `if (x) { a(); b(); } else {}` →
+`x && (a(), b());`. A **non-empty** alternate that merely failed to ternarise
+is still not folded here (that would silently drop the else branch).
+
+All cases verified byte-identical against the reference Closure Compiler
+(`closure-compiler-v20260712.jar`, `SIMPLE`). Additive; MINOR bump
+0.27.0 → 0.28.0.
+
+## [0.27.0] - 2026-07-16
+
+### Added — empty-then `if` with a MULTI-statement else → `x || (seq)`
+
+Generalises the 0.26.0 empty-then→logical-OR fold from a *single* expression
+statement to a **run** of them, sequenced with the comma operator — verified
+byte-identical against the reference Closure Compiler (`SIMPLE`):
+
+- `if (x) {} else { a(); b(); }` → `x || (a(), b());`
+- `if (x) {} else { a(); b(); c(); }` → `x || (a(), b(), c());`
+- `if (x) {} else { a(); b; c(); }` → `x || (a(), b, c());` (a pure member such
+  as the bare `b` is **kept** — dropping it is a separate DCE transform)
+
+**Soundness.** The comma operator evaluates its operands left-to-right and yields
+the last, so `(s1, s2, …)` runs the else block's statements in the original order
+with the same side effects; the wrapping `x || (…)` discards the value, so only
+that ordering matters, and — as in 0.26.0 — the effects fire exactly when `x` is
+falsy.
+
+**Scope.** Every else-block member must be a plain expression statement. A block
+containing a `var`/`let`/`const` declaration, a `return`/`break`, an `if`/loop,
+or a nested block **declines** (the `if` is kept), because those can't join a
+comma-sequence — Closure reaches for a different rewrite there (e.g. the De
+Morgan `if (!x) { … }`). Non-empty then-branches (`if (x) a(); else { b(); c() }`
+→ `x ? a() : (b(), c())`) are the ternary-sequence generalisation, a separate
+follow-up.
+
+A new `stmts_as_sequence_expr` helper backs this: a strict superset of
+`single_expr_stmt` that returns the bare expression for a one-statement block and
+a `SequenceExpression` for a ≥2-statement all-expression block.
+
+## [0.26.0] - 2026-07-15
+
+### Added — empty-then `if` → logical-OR (`if (x) {} else S;` → `x || S;`)
+
+The mirror of the existing `if-to-logical-and` fold (`if (x) S;` → `x && S;`).
+When an `if`'s consequent does nothing and its alternate is a **single
+expression statement**, the whole `if` collapses to `test || expr` — verified
+byte-identical against the reference Closure Compiler (`SIMPLE`):
+
+- `if (x) {} else a();` → `x || a();`
+- `if (x) ; else a();` → `x || a();`
+- `if (x) {} else { a(); }` → `x || a();` (single-expr block unwraps)
+- `if (x) {} else b = 1;` → `x || (b = 1);` (the emitter parenthesises the
+  lower-precedence assignment)
+- `if (a && b) {} else c();` → `a && b || c();`
+
+**Soundness (the dual of the `&&` case):** `x || S` evaluates `x` first; if `x`
+is truthy the `||` short-circuits and does not evaluate `S` (matching the empty
+then-branch), and if `x` is falsy it evaluates `S` (matching the else). The
+wrapper expression statement discards the result, so only `S`'s side effects
+matter, and they fire exactly when `x` is falsy in both forms.
+
+**Scope.** The consequent must be empty (`{}`, `;`, or nested-empty blocks) and
+the alternate a single expression statement. A **multi-statement else** would
+need a sequence expression (`if (x) {} else { a(); b(); }` → `x || (a(), b())`),
+which is a separate arc, so it declines and keeps the `if`. A `!<inner>` test
+never reaches this path: the De Morgan swap already rewrites
+`if (!x) {} else S;` to `if (x) S; else {}` (non-empty consequent) upstream in
+the same fold.
+
+## [0.25.0] - 2026-07-15
+
+### Added — DIV#2: coalesce adjacent same-kind variable declarations
+
+A new statement-list post-step merges a run of *strictly adjacent*
+`VariableDeclaration` statements of the *same kind* (`var`/`let`/`const`) into a
+single multi-declarator declaration: `var a=1;var b=2;` → `var a=1,b=2;`,
+`let a=1;let b=2;` → `let a=1,b=2;`, `var a;var b;` → `var a,b;`, and 3+-decl
+runs collapse in one pass. Verified byte-identical to the reference Closure
+Compiler at `SIMPLE`. It is a pure size win with identical semantics —
+declarators keep their order (so initializer evaluation order is unchanged:
+`var a=b++;var c=2;` → `var a=b++,c=2;`), and merging same-scope same-kind
+bindings changes nothing about hoisting or the temporal dead zone.
+
+Runs as a post-step after this crate's other statement-list rewrites, so decls a
+block-flatten made adjacent (`{var a=1}var b=2` → `var a=1,b=2`) also merge. It
+is applied at both list-assembly points — the program body (`fold_program`) and
+block bodies (`fold_block_statement`) — via a small `VarDeclCarrier` trait so one
+generic `coalesce_var_decls` serves both `ProgramItem` and `Statement` lists.
+
+Decline conditions (each preserves byte-identity with Closure): different kinds
+don't merge (`var a=1;let b=2;` stays split); a non-declaration statement between
+two decls breaks the run (only strictly-adjacent decls merge); and a run whose
+merged declarator list would **repeat** a binding name is left untouched —
+`var a=1;var a=2;` must NOT become `var a=1,a=2;`, because Closure rewrites the
+redeclaration's second half to a bare assignment (`var a=1;a=2;`), a separate
+transform this pass does not perform, so it declines rather than diverge. (For
+`let`/`const` a repeated name is a syntax error that never reaches the pass.)
+
+Folded-away declaration statements have their CV ids tombstoned via
+`record_fold_deleting`, recording the surviving container declaration's CV.
+
+The repeated-name check uses a `HashSet`, keeping the pass linear in the number
+of declarators: a run of many strictly-adjacent single-declarator statements is
+trivially authorable in the input, so a linear per-declarator membership scan
+would be Θ(N²) — a linear-input → quadratic-work DoS on the hot pass path.
+
+## [0.24.0] - 2026-07-14
+
+### Added — CLOC12.194: flatten redundant `BlockStatement`s (oracle divergence #4)
+
+A bare `{ … }` block at statement-list position creates a lexical scope, but if
+nothing inside is block-scoped that scope is unobservable — the braces can be
+removed and the inner statements run directly in the enclosing list with
+identical semantics. `fold_program` and `fold_block_statement` now splice such a
+block's body in place; the empty block `{}` flattens to nothing (removed). This
+mirrors Closure's `PeepholeRemoveDeadCode` block normalization and closes
+**oracle divergence #3-adjacent #4**: it fires both on a hand-written `{ … }`
+and — importantly — on the block left behind when `if (true) { … }` collapses to
+its consequent, so `if (true) { a(); } else { b(); }` at SIMPLE now emits `a();`
+instead of `{ a(); }`.
+
+The soundness gate is the existing `block_is_scope_safe_to_hoist` predicate that
+already backs the CLOC25 `else`-hoist: a block declaring `let`/`const`/`class`/a
+`function` is **kept** (flattening would leak or collide its binding), while a
+plain `var` is function-scoped and hoists harmlessly. A spliced block that ends
+in a terminator re-arms the dead-code-after-terminator drop, exactly as the
+`else`-hoist does. Verified byte-identical to the reference Closure Compiler
+across the case set (`{a}`→`a;`, `{a;b}`→`a;b;`, `{var x=1;a}`→`var x=1;a;`,
+`{}`→removed, `if(true){…}`/`if(false){…}` unwrap; `let`/`const`/`class`/
+`function` blocks unchanged). Additive; MINOR bump 0.23.0 → 0.24.0.
+
+## [0.23.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration the control-flow predicate reports no foldable flow; the rebuild clones each export
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+the control-flow predicate reports no foldable flow; the rebuild clones each export. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.22.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant: the
+control-flow predicate reports an import has no foldable control flow, and the
+rebuild clones it unchanged.
+
+## [0.21.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+`fold_statement` now rebuilds a `with` statement with a folded object expression
+and body, and the cv-extraction match handles the new variant. Picks up
+javascript-ast 0.38.0.
+
+## [0.20.17] - 2026-07-11
+
+### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arm
+
+The object-literal key-rebuild match gains a `PropertyKey::PrivateName` arm that
+passes the key through unchanged (a private name never occurs in an object
+literal, but the match must stay exhaustive after `javascript-ast` 0.36.0 added
+the variant). PATCH.
+
+## [0.20.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added a `StaticBlock` arm that folds + `var`-hoists the block (a static block is its own hoisting scope), exactly like a method body.
+
+## [0.20.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: fold class-field initializers
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added a `Field` arm to the
+class-body member map folding the initializer (and computed key) with
+`fold_expression`. Reachable once the CLOC12.175 PR2 bridge produces the node.
+
+## [0.20.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+the transform arm to `fold_declaration` (folds control flow inside the heritage
+operand and method bodies via a new shared `#[inline(never)] fold_class_body`
+helper, also refactored out of `fold_class`), and a `false` arm to
+`block_is_scope_safe_to_hoist` (a block-scoped class declaration must not be
+hoisted out of an `else`, like a nested function declaration). Reachable once the
+CLOC12.174 PR2 bridge produces the node.
+
 ## [0.20.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

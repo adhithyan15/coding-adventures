@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.1] — 2026-07-16
+
+### Changed
+
+- `expand(...)`/`ev(expr, expand)` now collect like terms — `expand((x+1)^2)`
+  returns `1 + 2*x + x^2`, not the raw `1 + x + x + x*x` from before. No
+  code change in this crate: `expand_handler` delegates to
+  `cas_simplify::expand` unchanged, which gained a `collect_terms` pass (see
+  that crate's 0.5.0 CHANGELOG entry). Updated this crate's own
+  `expand_distributes_polynomial_multiplication` test and the
+  `expand_handler` doc comment, which had pinned/described the old
+  uncollected shape.
+
 ## [0.6.0] — 2026-07-03
 
 ### Fixed

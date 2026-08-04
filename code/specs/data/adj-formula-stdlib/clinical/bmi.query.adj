@@ -1,0 +1,7 @@
+% Worked consumer for body mass index.
+import "bmi.adj"
+
+observe body_mass(70)
+observe height(1.75)
+
+? bmi(body_mass, height)  % expect 22.857142857142858

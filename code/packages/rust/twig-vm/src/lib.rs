@@ -73,7 +73,7 @@ pub mod operand;
 use std::path::Path;
 
 use interpreter_ir::IIRModule;
-use lispy_runtime::LispyBinding;
+use dynval_runtime::LispyBinding;
 use twig_ir_compiler::compile_source as compile_twig;
 use twig_module_driver::{compile_module_tree, ModuleDriverError};
 
@@ -88,7 +88,7 @@ pub use operand::operand_to_value;
 // Re-export the most-used types so callers don't need to depend
 // on the upstream crates explicitly.
 pub use lang_runtime_core::{BuiltinFn, LangBinding, RuntimeError};
-pub use lispy_runtime::LispyValue;
+pub use dynval_runtime::LispyValue;
 pub use twig_ir_compiler::TwigCompileError;
 
 /// The Twig VM facade — owns the integration between

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-matlab-parser"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Parser for the MATLAB language (the array frontend on array-runtime)"
 

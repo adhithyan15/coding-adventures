@@ -641,9 +641,9 @@ fn ensure_node(
     node_order: &mut Vec<String>,
     node_attrs_map: &mut std::collections::HashMap<String, Vec<DotAttribute>>,
 ) {
-    if !node_attrs_map.contains_key(&id) {
-        node_order.push(id.clone());
-        node_attrs_map.insert(id, Vec::new());
+    if let std::collections::hash_map::Entry::Vacant(entry) = node_attrs_map.entry(id.clone()) {
+        node_order.push(id);
+        entry.insert(Vec::new());
     }
 }
 

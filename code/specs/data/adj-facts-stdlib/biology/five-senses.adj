@@ -1,0 +1,57 @@
+% ============================================================================
+% five-senses — each of the five senses and the body part you sense it with
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the very first facts a young child learns about their own body: you
+% have five senses, and each one has a body part that does the sensing. You SEE
+% with your eyes, HEAR with your ears, SMELL with your nose, TASTE with your
+% tongue, and FEEL (touch) with your skin. Recall is a binding query:
+%
+%     ? sense_organ(sight, $Organ)          % eyes
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `sense_organ(sense, organ)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the body
+% part WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the five senses.
+%
+% The five senses, as a truth table:
+%
+%     sense    organ    what it does
+%     -------  -------  --------------------------------
+%     sight    eyes     you use your eyes to SEE
+%     hearing  ears     you use your ears to HEAR
+%     smell    nose     you use your nose to SMELL
+%     taste    tongue   you use your tongue to TASTE
+%     touch    skin     you use your skin to FEEL (touch)
+%
+% Note that a NON-sense — say `balance`, or a body part like `hand` used as a
+% key — is deliberately NOT a row, so a five-senses recall ABSTAINS on it
+% rather than inventing an organ. That honest-abstention property is what makes
+% the table safe to trust: it answers exactly the five it can ground, and only
+% those.
+%
+% Provenance: the pairing is copied VERBATIM from the Nemours KidsHealth "The
+% Five Senses" classroom guide (K to Grade 2, Human Body Series), whose
+% "Activities for Students" page states (see `source`): "You use your eyes to
+% see, your ears to hear, your nose to smell, your tongue to taste, and your
+% skin to feel." The citable artifact is that guide at the `locator`.
+% `trust consensus` — KidsHealth / the Nemours Foundation is a well-established
+% secondary health-education reference (not a primary/official .gov source, so
+% not `authoritative`). Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table sense_organ {
+    columns sense, organ
+
+    row (sight, eyes)
+    row (hearing, ears)
+    row (smell, nose)
+    row (taste, tongue)
+    row (touch, skin)
+
+    source "You use your eyes to see, your ears to hear, your nose to smell, your tongue to taste, and your skin to feel."
+    locator "https://kidshealth.org/classroom/prekto2/body/functions/senses.pdf"
+    trust consensus
+}

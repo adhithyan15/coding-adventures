@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "id": "tiny-affine-precision-residency",
+  "title": "Two close inputs through one affine neuron",
+  "question": "Which digits and transfers disappear when precision shrinks and buffers stay resident?",
+  "graph": {
+    "equation": "y = x * w + b",
+    "weight": 2,
+    "bias": 0
+  },
+  "scenario": {
+    "inputs": [1.0004, 1.0006],
+    "reference_outputs": [2.0008, 2.0012]
+  },
+  "formats": [
+    {
+      "id": "binary32",
+      "title": "IEEE-754 binary32",
+      "storage_bytes_per_value": 4,
+      "input_payload_file": "../payloads/00-input-x.f32le.hex",
+      "output_payload_file": "../payloads/00-output-y.f32le.hex",
+      "encoded_inputs": [1.0003999471664429, 1.000599980354309],
+      "encoded_weight": 2,
+      "accumulators": [2.0007998943328857, 2.001199960708618],
+      "outputs": [2.0007998943328857, 2.001199960708618],
+      "maximum_absolute_error": 1.056671141697052e-7
+    },
+    {
+      "id": "binary16",
+      "title": "IEEE-754 binary16",
+      "storage_bytes_per_value": 2,
+      "input_payload_file": "../payloads/00-input-x.f16le.hex",
+      "output_payload_file": "../payloads/00-output-y.f16le.hex",
+      "encoded_inputs": [1, 1.0009765625],
+      "encoded_weight": 2,
+      "accumulators": [2, 2.001953125],
+      "outputs": [2, 2.001953125],
+      "maximum_absolute_error": 0.0007999999999999119
+    },
+    {
+      "id": "symmetric_int8",
+      "title": "Symmetric signed int8",
+      "storage_bytes_per_value": 1,
+      "accumulator_storage_bytes": 4,
+      "input_payload_file": "../payloads/00-input-x.i8.hex",
+      "weight_payload_file": "../payloads/00-weight-w.i8.hex",
+      "input_scale": 0.01,
+      "weight_scale": 0.5,
+      "zero_point": 0,
+      "encoded_inputs": [100, 100],
+      "encoded_weight": 4,
+      "accumulators": [400, 400],
+      "outputs": [2, 2],
+      "maximum_absolute_error": 0.0011999999999998678
+    }
+  ],
+  "residency": {
+    "dtype": "binary32",
+    "repeat_count": 3,
+    "upload_bytes_per_copy": 16,
+    "download_bytes_per_copy": 8,
+    "strategies": [
+      {
+        "id": "eager",
+        "title": "Eager copies",
+        "steps": ["upload x, w, and b", "run affine neuron", "download y", "discard device buffers"],
+        "upload_count": 3,
+        "download_count": 3,
+        "total_transfer_bytes": 72
+      },
+      {
+        "id": "resident",
+        "title": "Resident buffers",
+        "steps": ["upload x, w, and b once", "run affine neuron three times", "keep x, w, b, and y on device", "download final y once"],
+        "upload_count": 1,
+        "download_count": 1,
+        "total_transfer_bytes": 24
+      }
+    ]
+  }
+}

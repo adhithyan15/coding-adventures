@@ -1,0 +1,50 @@
+% Worked consumers for the four elementary arithmetic primitives.
+import "arithmetic.adj"
+
+observe addend_one(7)
+    quote "addend_one is 7." at 0 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+observe addend_two(5)
+    quote "addend_two is 5." at 17 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+? sum(addend_one, addend_two)  % expect 12
+
+observe minuend(7)
+    quote "minuend is 7." at 34 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+observe subtrahend(5)
+    quote "subtrahend is 5." at 48 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+? difference(minuend, subtrahend)  % expect 2
+
+observe factor_one(6)
+    quote "factor_one is 6." at 65 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+observe factor_two(7)
+    quote "factor_two is 7." at 82 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+? product(factor_one, factor_two)  % expect 42
+
+observe dividend(20)
+    quote "dividend is 20." at 99 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+observe divisor(5)
+    quote "divisor is 5." at 115 snapshot "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba"
+    source "arithmetic input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+    trust authoritative
+? quotient(dividend, divisor)  % expect 4

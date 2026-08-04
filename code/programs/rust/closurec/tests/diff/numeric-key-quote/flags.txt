@@ -1,0 +1,4 @@
+--js
+tests/diff/numeric-key-quote/input/a.js
+--compilation_level
+SIMPLE

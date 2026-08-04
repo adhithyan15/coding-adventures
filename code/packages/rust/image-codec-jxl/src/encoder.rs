@@ -55,7 +55,7 @@ use pixel_container::PixelContainer;
 fn encode_dim(bw: &mut BitWriter, dim: u32) {
     // The compact div8 path: flag=1, then a 5-bit field holding (dim/8 − 1).
     // Valid range: dim ∈ {8, 16, 24, …, 256}.
-    if dim > 0 && dim % 8 == 0 && (dim / 8) <= 32 {
+    if dim > 0 && dim.is_multiple_of(8) && (dim / 8) <= 32 {
         bw.write_bit(true); // div8 = 1
         bw.write_bits((dim / 8 - 1) as u64, 5);
         return;

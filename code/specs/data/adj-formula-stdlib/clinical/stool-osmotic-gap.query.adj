@@ -1,0 +1,28 @@
+% ============================================================================
+% stool-osmotic-gap.query.adj — worked applications of the stool (fecal) osmotic gap.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a diarrhoea work-up into a stool sodium and a stool
+% potassium: it `import`s the grounded formulabook, `observe`s the two values, and asks the engine to APPLY
+% the cited osmotic-gap formula. No arithmetic is stated by the consumer; the engine computes each value
+% EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with zero
+% model calls.
+%
+% Worked case (stool sodium = 30 mmol/L, stool potassium = 20 mmol/L): osmotic gap = 290 − 2 × (30 + 20) =
+% 290 − 100 = 190 mOsm/kg (a wide gap → osmotic diarrhoea). Each query fixes one input and asks the engine
+% to recover another quantity; every answer is exact and the inversions COMPOSE (each recovers exactly the
+% worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli stool-osmotic-gap.query.adj
+% ============================================================================
+
+import "stool-osmotic-gap.adj"
+
+% --- Osmotic gap: the gap the two electrolytes imply (expect 190). -----------------------------------
+observe stool_sodium(30)
+observe stool_potassium(20)
+? stool_osmotic_gap(stool_sodium, stool_potassium)   % expect 190
+
+% --- Inverse: the stool sodium a gap of 190 implies at the same potassium (expect 30). ---------------
+observe stool_osmotic_gap(190)
+? stool_sodium(stool_osmotic_gap, stool_potassium)   % expect 30

@@ -1,0 +1,33 @@
+cabal-version: 3.0
+name:          huffman-compression
+version:       0.1.0
+synopsis:      CMP04 canonical Huffman byte compression
+description:   Pure Haskell CMP04 compression with canonical Huffman codes and strict wire-format validation.
+category:      Compression
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  HuffmanCompression
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , containers >=0.6 && <0.8
+                    , huffman-tree >=0.1 && <0.2
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    HuffmanCompressionSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , huffman-compression
+                    , hspec == 2.*
+    default-language: Haskell2010

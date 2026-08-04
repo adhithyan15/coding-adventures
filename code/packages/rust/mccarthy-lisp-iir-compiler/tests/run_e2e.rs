@@ -10,7 +10,7 @@
 //! Results are inspected through `lispy-runtime`: symbols via the intern
 //! table (`name_of`), cons cells via the `car` / `cdr` builtins.
 
-use lispy_runtime::{name_of, LispyValue};
+use dynval_runtime::{name_of, LispyValue};
 use mccarthy_lisp_iir_compiler::compile_source;
 use mccarthy_lisp_vm::run;
 
@@ -28,10 +28,10 @@ fn sym_name(v: LispyValue) -> String {
 
 /// car / cdr via the runtime builtins (so tests don't reach into heap unsafe).
 fn car(v: LispyValue) -> LispyValue {
-    lispy_runtime::builtins::car(&[v]).expect("car")
+    dynval_runtime::builtins::car(&[v]).expect("car")
 }
 fn cdr(v: LispyValue) -> LispyValue {
-    lispy_runtime::builtins::cdr(&[v]).expect("cdr")
+    dynval_runtime::builtins::cdr(&[v]).expect("cdr")
 }
 
 // ============================================================

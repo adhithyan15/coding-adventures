@@ -64,6 +64,9 @@ impl<T: Eq + Debug> HashSet<T> {
         set
     }
 
+    // Inherent `add` inserts one element and returns a new persistent set;
+    // this is set insertion, not the binary `std::ops::Add` operator.
+    #[allow(clippy::should_implement_trait)]
     pub fn add(self, element: T) -> Self {
         Self {
             map: self.map.set(element, ()),

@@ -1,0 +1,74 @@
+% ============================================================================
+% powers.adj — the elementary powers formula library (ADJ-FORMULA-LIBRARIES FL-4).
+% ============================================================================
+% The "raise to a small whole power" track of the compute standard library,
+% built ENTIRELY by composing the cited `product` primitive of `arithmetic.adj`
+% — it re-derives no arithmetic. A square is a number times itself; a cube is a
+% number times itself twice. Where `average.adj` nests the cited `sum`, this
+% nests the cited `product`: `cube` APPLIES `product` to the result of another
+% `product`, so the audit trail reads as a chain of multiplications bottoming out
+% at one observed quantity. Write-once-use-many: a consumer imports this file,
+% binds the base from its own byte-provenance decomposition, and asks the engine
+% to apply the cited formula on the CPU — the model performs zero arithmetic.
+%
+%     import "powers.adj"                     % transitively imports arithmetic.adj
+%     observe base(5)                         % "…a side of 5…"  (span cited by the model)
+%     ? square(base)                          % engine → 25, carrying every citation
+%
+% The engine expands `square` → `product` (from arithmetic.adj) on the CPU and
+% composes the provenance chain, so the answer cites BOTH the square definition
+% (primary) and the `product` primitive it builds on (corroboration). The audit
+% trail names every formula that participated.
+%
+% Note: `adj-lang` formula bodies compose the four leaf operators (+ − × ÷); the
+% `^` operator is NOT a body token, so a power is expressed as REPEATED
+% multiplication through the cited `product`, not as an exponent. Fractional and
+% symbolic powers (e.g. square roots) belong to a later rung that wires the
+% engine's `Pow` op into the surface — they are deliberately out of scope here.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on a single elementary primitive — `product`. The import
+% is RELATIVE to this file, so a consumer that imports `powers.adj` gets
+% `product` (and its siblings) transitively and the bodies below resolve.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `square` and `cube` each range over a single base quantity. Rung-0
+% types an observable slot as `finding`; the `surface` synonyms let a decomposer
+% map everyday phrasing ("squared", "to the power of two", "cubed") onto the
+% canonical terms.
+% ----------------------------------------------------------------------------
+dictionary powers_vocab {
+    define base   : finding  surface "base", "number", "value", "the quantity"
+    define square : finding  surface "square", "squared", "second power", "to the power of two"
+    define cube   : finding  surface "cube", "cubed", "third power", "to the power of three"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. Neither writes a bare `*`: each APPLIES the cited
+% `product` primitive from `arithmetic.adj`, so the power is what it is BECAUSE
+% of the multiplication it composes, cited as such. `cube` nests `product` inside
+% `product` — the RS-1 composition core, one primitive feeding another.
+%
+%   square(base)  = base × base
+%   cube(base)    = (base × base) × base
+% ----------------------------------------------------------------------------
+formulabook powers {
+    use powers_vocab
+
+    % The square — the base multiplied by itself. Composes `product`: the square
+    % of 5 is 5 × 5 = 25.
+    formula square(base) = product(base, base)
+        source "The square of a number is that number multiplied by itself; the square of x is x^2 = x times x."
+        locator "https://mathworld.wolfram.com/Square.html"
+        trust authoritative
+
+    % The cube — the base multiplied by itself twice. Nests `product` inside
+    % `product`: the cube of 3 is (3 × 3) × 3 = 27.
+    formula cube(base) = product(product(base, base), base)
+        source "The cube of a number is that number raised to the third power; the cube of x is x^3 = x times x times x."
+        locator "https://mathworld.wolfram.com/Cube.html"
+        trust authoritative
+}

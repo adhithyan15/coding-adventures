@@ -1,0 +1,64 @@
+{
+  "bundle_id": "adj.math.arithmetic.proportion.v1",
+  "clauses": [
+    {
+      "claim_id": "adj.math.arithmetic.proportion",
+      "end": 92,
+      "input_claim": {
+        "end": 5241,
+        "quote": "    formula fourth_proportional(first_term, second_term, third_term) = quotient(product(second_term, third_term), first_term)\n        requires nonzero(first_term), nonzero(second_term), nonzero(third_term)\n        quote \"For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.\" at 0 snapshot \"6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851\"\n        source \"For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.\"\n        locator \"https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications\"\n        trust inferred\n",
+        "quote_sha256": "616227e8f7497746ec5bfbf7d7c0fe98011ed158c29d4005fbb6b6b9d3496e80",
+        "start": 4602
+      },
+      "locator": "https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications",
+      "quote": "For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.",
+      "quote_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+      "resolution": {
+        "authority_receipt_sha256": "5750280b55111800452e1060727df630c009789a2c325380e2ae0e60c1581137",
+        "authority_source_sha256": "a35bcb922594fce55973d557eed3f4ea33160b3be1e6c6c80dca59ac80586f25",
+        "classification": "primary_definition",
+        "kind": "accepted_root",
+        "reason": "OpenStax proportion-domain and cross-products rules are retained as the explicit definitional roots"
+      },
+      "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+      "source_ir_sha256": "cf6d73d910ea1abcf6d5a109f692f5c7abddaadc5631a8c86c4f8343d234e061",
+      "start": 0
+    }
+  ],
+  "dependencies": [
+    "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390"
+  ],
+  "formula_inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+  "input": {
+    "raw_source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76",
+    "receipt_sha256": "5729b4b776d6343721ed811ca8c8d4ebf00fcd038ed8e301f2277d47ddff540d",
+    "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6"
+  },
+  "kind": "provenance_bundle",
+  "library": "code/specs/data/adj-formula-stdlib/arithmetic/proportion.adj",
+  "sources": [
+    {
+      "raw_source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76",
+      "receipt_sha256": "5729b4b776d6343721ed811ca8c8d4ebf00fcd038ed8e301f2277d47ddff540d",
+      "representations": [],
+      "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6"
+    },
+    {
+      "raw_source_sha256": "a35bcb922594fce55973d557eed3f4ea33160b3be1e6c6c80dca59ac80586f25",
+      "receipt_sha256": "5750280b55111800452e1060727df630c009789a2c325380e2ae0e60c1581137",
+      "representations": [
+        {
+          "rendered_text_sha256": "b8e6728b95578281c1f646cbf57c563f64b435a8836ed0ebe15c03a13a48dc44",
+          "source_ir_sha256": "0a1fd86cf0a2cdf51fb422ec80017c492aa9e28c78bc26c4614d7b87e79a4aaa",
+          "transform_sha256": "5de2f86e219bcac6d51c302a739d4e537f7c0909aa683e56c9ab4651164c95ac"
+        },
+        {
+          "rendered_text_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+          "source_ir_sha256": "cf6d73d910ea1abcf6d5a109f692f5c7abddaadc5631a8c86c4f8343d234e061",
+          "transform_sha256": "549884cd1a47e8822ac906ab482f5b370916dd015a52f0dd9346ff4ec94dc4a4"
+        }
+      ],
+      "source_ir_sha256": "8a22fa899dc34c3ed1f951e3eb343629e7512a9aa9c005e68dc1f09e05476abe"
+    }
+  ]
+}

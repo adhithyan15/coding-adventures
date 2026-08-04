@@ -1,0 +1,24 @@
+% ============================================================================
+% friction-types.query.adj — a worked recall over the physics friction-types
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "when does static friction
+% act?": it states no mechanics fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `friction_context` rows and returns the context + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the context
+% `fluid_layers`, recall its friction type — fluid). A word that is not one of
+% the four everyday friction types abstains honestly — the engine never invents
+% a context.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli friction-types.query.adj
+% ============================================================================
+
+import "friction-types.adj"
+
+? friction_context(static, $Context)     % expect at_rest
+? friction_context(rolling, $Context)    % expect spherical_object
+? friction_context(fluid, $Context)      % expect fluid_layers
+? friction_context($Friction, sliding_motion) % reverse bind — expect sliding
+? friction_context(gravity, $Context)    % expect abstain — gravity is a force, not one of the four everyday friction types

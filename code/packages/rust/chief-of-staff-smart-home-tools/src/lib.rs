@@ -6,6 +6,11 @@
 //! explicit and testable.
 
 #![forbid(unsafe_code)]
+// Many tool-builder/handler functions in this crate take a wide, deliberately
+// flat set of parameters (each maps to a distinct field of a JSON tool payload).
+// Bundling them into structs purely to satisfy the arg-count heuristic would add
+// boilerplate without improving clarity, so the lint is allowed crate-wide.
+#![allow(clippy::too_many_arguments)]
 
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier as ToolPrivilegeTier, SchemaProperty,
@@ -20,8 +25,10 @@ use smart_home_core::{
     AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant, CapabilityGrantId,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand,
-    DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health,
-    IntegrationCatalogSummary, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily,
+    DeviceControlCommandType, DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId,
+    Health,
+    IntegrationCatalogSummary, IntegrationId, MediaCommandType, Metadata, PrivilegeTier,
+    ProtocolFamily,
     ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope,
     SmartHomeToolCatalogSummary, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
     VaultRef,
@@ -250,9 +257,7 @@ use std::rc::Rc;
 
 macro_rules! heap_object {
     ($(($name:expr, $value:expr $(,)?)),* $(,)?) => {{
-        let mut fields = Vec::new();
-        $(fields.push(($name, $value));)*
-        object_from_fields(fields)
+        object_from_fields(vec![$(($name, $value)),*])
     }};
 }
 
@@ -11818,18 +11823,13 @@ fn command_risk_audit_query(arguments: &JsonValue) -> Result<CommandRiskAuditQue
     })
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 enum AuthorizationGapAuditSort {
+    #[default]
     RiskDesc,
     DecidedAtDesc,
     DecidedAtAsc,
     PrincipalId,
-}
-
-impl Default for AuthorizationGapAuditSort {
-    fn default() -> Self {
-        Self::RiskDesc
-    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -51769,6 +51769,7 @@ fn topology_summary_json(summary: &RegistryTopologySummary) -> JsonValue {
         ("entities", integer(summary.entities as i64)),
         ("scenes", integer(summary.scenes as i64)),
         ("lan_http_bridges", integer(summary.lan_http_bridges as i64)),
+        ("lan_udp_bridges", integer(summary.lan_udp_bridges as i64)),
         ("mdns_bridges", integer(summary.mdns_bridges as i64)),
         ("serial_bridges", integer(summary.serial_bridges as i64)),
         ("ble_bridges", integer(summary.ble_bridges as i64)),
@@ -56729,7 +56730,7 @@ fn morning_brief_output_json(
     incident: &JsonValue,
     recovery: &JsonValue,
 ) -> JsonValue {
-    let sections = vec![
+    let sections = [
         morning_brief_section_from_output(
             "platform",
             "Platform controller readiness",
@@ -57955,7 +57956,7 @@ fn operator_readiness_lane_from_continuity_lane(item: &JsonValue) -> OperatorRea
     let priority = morning_brief_integer_at(item, &["priority"])
         .unwrap_or_else(|| operator_readiness_priority(&severity));
     let handoff_required = morning_brief_bool_at(item, &["handoff_required"])
-        .unwrap_or_else(|| matches!(severity.as_str(), "blocker" | "review"));
+        .unwrap_or(matches!(severity.as_str(), "blocker" | "review"));
 
     OperatorReadinessLane {
         lane_id: format!("operator:{}:{}", severity, section_id),
@@ -62367,6 +62368,10 @@ fn operations_brief_controller_handoff_ready_counts(
     (readiness.category_count(), readiness.ready_category_count())
 }
 
+// NOTE: the `is_idle` and final `else` arms both yield "ready" by design (an idle
+// system is treated as ready). The duplication is intentional so the distinct states
+// stay explicit; flag for review if an "idle"-specific status is ever introduced.
+#[allow(clippy::if_same_then_else)]
 fn operations_brief_status(
     controller_ready: bool,
     is_idle: bool,
@@ -63813,7 +63818,7 @@ fn device_command_json(command: &DeviceCommand) -> JsonValue {
             command
                 .idempotency_key
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -64338,7 +64343,7 @@ fn describe_primitive_output_json(
             JsonValue::Array(
                 ecosystem_sources
                     .iter()
-                    .map(|source| ecosystem_source_json(*source))
+                    .map(|source| ecosystem_source_json(source))
                     .collect(),
             ),
         ),
@@ -69147,7 +69152,7 @@ fn activation_handoff_package_json(package: &IntegrationActivationHandoffPackage
                 package
                     .risk_ids
                     .iter()
-                    .map(|risk_id| string(risk_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -69467,7 +69472,7 @@ fn activation_execution_packet_json(packet: &IntegrationActivationExecutionPacke
                 packet
                     .risk_ids
                     .iter()
-                    .map(|risk_id| string(risk_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -69829,7 +69834,7 @@ fn activation_verification_checkpoint_json(
                 checkpoint
                     .risk_ids
                     .iter()
-                    .map(|risk_id| string(risk_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -76373,7 +76378,7 @@ fn integration_activation_waiver_remediation_summary_json(
             summary
                 .next_remediation_kind
                 .as_ref()
-                .map(|kind| string(kind))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -76628,7 +76633,7 @@ fn integration_activation_waiver_closure_summary_json(
             summary
                 .next_closure_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -76876,7 +76881,7 @@ fn integration_activation_waiver_archive_summary_json(
             summary
                 .next_archive_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77132,7 +77137,7 @@ fn integration_activation_waiver_retention_summary_json(
             summary
                 .next_retention_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77398,7 +77403,7 @@ fn integration_activation_waiver_expiration_summary_json(
             summary
                 .next_expiration_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77662,7 +77667,7 @@ fn integration_activation_waiver_disposal_summary_json(
             summary
                 .next_disposal_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77940,7 +77945,7 @@ fn integration_activation_waiver_tombstone_summary_json(
             summary
                 .next_tombstone_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -78237,7 +78242,7 @@ fn integration_activation_waiver_purge_summary_json(
             summary
                 .next_purge_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -78537,7 +78542,7 @@ fn integration_activation_waiver_erasure_summary_json(
             summary
                 .next_erasure_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -78795,7 +78800,7 @@ fn integration_activation_waiver_erasure_receipt_summary_json(
             summary
                 .next_receipt_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79061,7 +79066,7 @@ fn integration_activation_waiver_release_closure_summary_json(
             summary
                 .next_release_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79352,7 +79357,7 @@ fn integration_activation_waiver_release_signoff_summary_json(
             summary
                 .next_signoff_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79669,7 +79674,7 @@ fn integration_activation_waiver_release_certification_summary_json(
             summary
                 .next_certification_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79991,7 +79996,7 @@ fn integration_activation_waiver_release_certification_remediation_summary_json(
             summary
                 .next_remediation_kind
                 .as_ref()
-                .map(|kind| string(kind))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -80013,7 +80018,7 @@ fn integration_activation_waiver_release_certification_remediation_summary_json(
             summary
                 .next_remediation_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -84602,7 +84607,7 @@ fn bridge_json(bridge: &Bridge) -> JsonValue {
             bridge
                 .address
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -84737,7 +84742,7 @@ fn device_json(device: &Device) -> JsonValue {
             device
                 .room_id
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
     ])
@@ -85054,7 +85059,7 @@ fn command_result_json(result: &CommandResult) -> JsonValue {
             result
                 .message
                 .as_ref()
-                .map(|message| string(message))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
     ])
@@ -85920,14 +85925,14 @@ fn state_transition_audit_row_json(row: &StateTransitionAuditRow) -> JsonValue {
             "worker_kind",
             row.worker_kind
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
             "status",
             row.status
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         ("reason", string(row.reason)),
@@ -86079,14 +86084,14 @@ fn supervision_remediation_row_json(row: &SupervisionRemediationRow) -> JsonValu
             "worker_kind",
             row.worker_kind
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
             "status",
             row.status
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         ("reason", string(row.reason)),
@@ -86216,7 +86221,7 @@ fn runtime_maintenance_window_json(row: &RuntimeMaintenanceWindowRow) -> JsonVal
             JsonValue::Array(
                 row.remediation_ids
                     .iter()
-                    .map(|remediation_id| string(remediation_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -89716,18 +89721,32 @@ fn json_to_smart_value_for_command(
     value: &JsonValue,
 ) -> Result<Value, ToolCallError> {
     match command_type {
-        CommandType::TurnOn | CommandType::TurnOff | CommandType::RecallScene => Ok(Value::Null),
-        CommandType::SetBrightness => match json_to_smart_value(value)? {
-            Value::Integer(value) if (0..=100).contains(&value) => {
-                Ok(Value::Percentage(value as u8))
+        CommandType::TurnOn
+        | CommandType::TurnOff
+        | CommandType::RecallScene
+        | CommandType::Media(MediaCommandType::PlayNext)
+        | CommandType::Media(MediaCommandType::PlayPrevious)
+        | CommandType::Media(MediaCommandType::ClearQueue)
+        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor)
+        | CommandType::DeviceControl(DeviceControlCommandType::TestIndicator) => Ok(Value::Null),
+        CommandType::SetBrightness
+        | CommandType::Media(MediaCommandType::SetVolume)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
+            match json_to_smart_value(value)? {
+                Value::Integer(value) if (0..=100).contains(&value) => {
+                    Ok(Value::Percentage(value as u8))
+                }
+                Value::Percentage(value) => Ok(Value::Percentage(value)),
+                other => Ok(other),
             }
-            Value::Percentage(value) => Ok(Value::Percentage(value)),
-            other => Ok(other),
-        },
+        }
         CommandType::SetColor
         | CommandType::SetColorTemperature
         | CommandType::SetLock
-        | CommandType::SetThermostatSetpoint => json_to_smart_value(value),
+        | CommandType::SetThermostatSetpoint
+        | CommandType::Media(_)
+        | CommandType::DeviceControl(_) => json_to_smart_value(value),
     }
 }
 
@@ -90119,6 +90138,58 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         "recall_scene" => Ok(CommandType::RecallScene),
         "set_lock" => Ok(CommandType::SetLock),
         "set_thermostat_setpoint" => Ok(CommandType::SetThermostatSetpoint),
+        "media_set_playback_state" => Ok(CommandType::Media(MediaCommandType::SetPlaybackState)),
+        "media_play_next" => Ok(CommandType::Media(MediaCommandType::PlayNext)),
+        "media_play_previous" => Ok(CommandType::Media(MediaCommandType::PlayPrevious)),
+        "media_set_volume" => Ok(CommandType::Media(MediaCommandType::SetVolume)),
+        "media_set_mute" => Ok(CommandType::Media(MediaCommandType::SetMute)),
+        "media_set_group" => Ok(CommandType::Media(MediaCommandType::SetGroup)),
+        "media_clear_queue" => Ok(CommandType::Media(MediaCommandType::ClearQueue)),
+        "media_play_queue_item" => Ok(CommandType::Media(MediaCommandType::PlayQueueItem)),
+        "media_remove_queue_item" => Ok(CommandType::Media(MediaCommandType::RemoveQueueItem)),
+        "media_move_queue_item" => Ok(CommandType::Media(MediaCommandType::MoveQueueItem)),
+        "device_set_indicator_mode" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorMode,
+        )),
+        "device_set_indicator_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorBrightness,
+        )),
+        "device_set_display_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetDisplayBrightness,
+        )),
+        "sensor_calibrate" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::CalibrateSensor,
+        )),
+        "device_set_temperature_unit" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetTemperatureUnit,
+        )),
+        "device_set_particulate_display_standard" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetParticulateDisplayStandard,
+        )),
+        "device_set_automatic_co2_baseline_days" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetAutomaticCo2BaselineDays,
+        )),
+        "device_set_gas_learning_offsets" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetGasLearningOffsets,
+        )),
+        "device_set_compensated_display" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCompensatedDisplay,
+        )),
+        "device_test_indicator" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::TestIndicator,
+        )),
+        "device_set_correction_profile" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCorrectionProfile,
+        )),
+        "camera_set_recording" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCameraRecording,
+        )),
+        "camera_recall_ptz_preset" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::RecallCameraPtzPreset,
+        )),
+        "camera_move_ptz" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::MoveCameraPtz,
+        )),
         _ => Err(validation_error(format!("unknown command_type `{label}`"))),
     }
 }
@@ -90186,6 +90257,8 @@ fn parse_discovery_source(label: &str) -> Result<DiscoverySource, ToolCallError>
     match label {
         "mdns" => Ok(DiscoverySource::Mdns),
         "ssdp" => Ok(DiscoverySource::Ssdp),
+        "udp_multicast" => Ok(DiscoverySource::UdpMulticast),
+        "udp_broadcast" => Ok(DiscoverySource::UdpBroadcast),
         "bluetooth" => Ok(DiscoverySource::Bluetooth),
         "usb" => Ok(DiscoverySource::Usb),
         "dhcp" => Ok(DiscoverySource::Dhcp),
@@ -90412,7 +90485,10 @@ fn parse_privilege_tier(label: &str) -> Result<PrivilegeTier, ToolCallError> {
 fn parse_discovery_mechanism(label: &str) -> Result<DiscoveryMechanism, ToolCallError> {
     match label {
         "mdns" => Ok(DiscoveryMechanism::Mdns),
+        "ws_discovery" => Ok(DiscoveryMechanism::WsDiscovery),
         "ssdp" => Ok(DiscoveryMechanism::Ssdp),
+        "udp_multicast" => Ok(DiscoveryMechanism::UdpMulticast),
+        "udp_broadcast" => Ok(DiscoveryMechanism::UdpBroadcast),
         "bluetooth" => Ok(DiscoveryMechanism::Bluetooth),
         "usb" => Ok(DiscoveryMechanism::Usb),
         "dhcp" => Ok(DiscoveryMechanism::Dhcp),
@@ -90445,6 +90521,7 @@ fn parse_auth_mode(label: &str) -> Result<AuthMode, ToolCallError> {
 fn parse_protocol_family(label: &str) -> Result<ProtocolFamily, ToolCallError> {
     match label {
         "hue" => Ok(ProtocolFamily::Hue),
+        "onvif" => Ok(ProtocolFamily::Onvif),
         "zigbee" => Ok(ProtocolFamily::Zigbee),
         "zwave" | "z_wave" | "z-wave" => Ok(ProtocolFamily::ZWave),
         "thread" => Ok(ProtocolFamily::Thread),
@@ -90462,6 +90539,7 @@ fn parse_protocol_family(label: &str) -> Result<ProtocolFamily, ToolCallError> {
 fn protocol_family_label(family: &ProtocolFamily) -> String {
     match family {
         ProtocolFamily::Hue => "hue".to_string(),
+        ProtocolFamily::Onvif => "onvif".to_string(),
         ProtocolFamily::Zigbee => "zigbee".to_string(),
         ProtocolFamily::ZWave => "zwave".to_string(),
         ProtocolFamily::Thread => "thread".to_string(),
@@ -91939,7 +92017,10 @@ fn implementation_status_label(status: ImplementationStatus) -> &'static str {
 fn discovery_mechanism_label(mechanism: DiscoveryMechanism) -> &'static str {
     match mechanism {
         DiscoveryMechanism::Mdns => "mdns",
+        DiscoveryMechanism::WsDiscovery => "ws_discovery",
         DiscoveryMechanism::Ssdp => "ssdp",
+        DiscoveryMechanism::UdpMulticast => "udp_multicast",
+        DiscoveryMechanism::UdpBroadcast => "udp_broadcast",
         DiscoveryMechanism::Bluetooth => "bluetooth",
         DiscoveryMechanism::Usb => "usb",
         DiscoveryMechanism::Dhcp => "dhcp",
@@ -91984,6 +92065,7 @@ fn scene_scope_label(scope: SceneScope) -> &'static str {
 
 fn entity_kind_label(kind: EntityKind) -> &'static str {
     match kind {
+        EntityKind::Camera => "camera",
         EntityKind::Light => "light",
         EntityKind::LightGroup => "light_group",
         EntityKind::Switch => "switch",
@@ -92474,6 +92556,56 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::RecallScene => "recall_scene",
         CommandType::SetLock => "set_lock",
         CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+        CommandType::Media(MediaCommandType::SetPlaybackState) => "media_set_playback_state",
+        CommandType::Media(MediaCommandType::PlayNext) => "media_play_next",
+        CommandType::Media(MediaCommandType::PlayPrevious) => "media_play_previous",
+        CommandType::Media(MediaCommandType::SetVolume) => "media_set_volume",
+        CommandType::Media(MediaCommandType::SetMute) => "media_set_mute",
+        CommandType::Media(MediaCommandType::SetGroup) => "media_set_group",
+        CommandType::Media(MediaCommandType::ClearQueue) => "media_clear_queue",
+        CommandType::Media(MediaCommandType::PlayQueueItem) => "media_play_queue_item",
+        CommandType::Media(MediaCommandType::RemoveQueueItem) => "media_remove_queue_item",
+        CommandType::Media(MediaCommandType::MoveQueueItem) => "media_move_queue_item",
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode) => {
+            "device_set_indicator_mode"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness) => {
+            "device_set_indicator_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
+            "device_set_display_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
+            "sensor_calibrate"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit) => {
+            "device_set_temperature_unit"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetParticulateDisplayStandard) => {
+            "device_set_particulate_display_standard"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays) => {
+            "device_set_automatic_co2_baseline_days"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets) => {
+            "device_set_gas_learning_offsets"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay) => {
+            "device_set_compensated_display"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::TestIndicator) => {
+            "device_test_indicator"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile) => {
+            "device_set_correction_profile"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
+            "camera_set_recording"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset) => {
+            "camera_recall_ptz_preset"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => "camera_move_ptz",
     }
 }
 
@@ -92538,6 +92670,9 @@ fn value_kind_label(kind: smart_home_core::ValueKind) -> &'static str {
 }
 
 trait BridgeTransportLabel {
+    // Implemented only for small `Copy` enums, so taking `self` by value is the
+    // natural, zero-cost convention here despite the `as_*` naming heuristic.
+    #[allow(clippy::wrong_self_convention)]
     fn as_str(self) -> &'static str;
 }
 
@@ -92545,6 +92680,8 @@ impl BridgeTransportLabel for smart_home_core::BridgeTransport {
     fn as_str(self) -> &'static str {
         match self {
             smart_home_core::BridgeTransport::LanHttp => "lan_http",
+            smart_home_core::BridgeTransport::LanTcp => "lan_tcp",
+            smart_home_core::BridgeTransport::LanUdp => "lan_udp",
             smart_home_core::BridgeTransport::Mdns => "mdns",
             smart_home_core::BridgeTransport::Serial => "serial",
             smart_home_core::BridgeTransport::Ble => "ble",
@@ -96286,6 +96423,47 @@ mod tests {
     use smart_home_testkit::{confirmed_state, hue_bridge_discovery_record, hue_lighting_runtime};
 
     const AGENT_ID: &str = "agent:chief-smart-home";
+
+    #[test]
+    fn udp_discovery_and_transport_labels_round_trip() {
+        assert_eq!(
+            parse_discovery_mechanism("udp_multicast").unwrap(),
+            DiscoveryMechanism::UdpMulticast
+        );
+        assert_eq!(
+            discovery_mechanism_label(DiscoveryMechanism::UdpMulticast),
+            "udp_multicast"
+        );
+        assert_eq!(
+            parse_discovery_mechanism("udp_broadcast").unwrap(),
+            DiscoveryMechanism::UdpBroadcast
+        );
+        assert_eq!(
+            discovery_mechanism_label(DiscoveryMechanism::UdpBroadcast),
+            "udp_broadcast"
+        );
+        assert_eq!(
+            parse_discovery_source("udp_broadcast").unwrap(),
+            DiscoverySource::UdpBroadcast
+        );
+        assert_eq!(
+            smart_home_core::BridgeTransport::LanUdp.as_str(),
+            "lan_udp"
+        );
+        assert_eq!(
+            smart_home_core::BridgeTransport::LanTcp.as_str(),
+            "lan_tcp"
+        );
+
+        let summary = RegistryTopologySummary {
+            lan_udp_bridges: 2,
+            ..RegistryTopologySummary::default()
+        };
+        assert_eq!(
+            field(&topology_summary_json(&summary), "lan_udp_bridges"),
+            Some(&integer(2))
+        );
+    }
 
     #[test]
     fn smart_home_tool_definitions_are_valid() {
@@ -121308,5 +121486,90 @@ mod tests {
             return None;
         };
         Some(*value)
+    }
+
+    #[test]
+    fn media_command_labels_round_trip_through_the_chief_boundary() {
+        let commands = [
+            ("media_set_playback_state", MediaCommandType::SetPlaybackState),
+            ("media_play_next", MediaCommandType::PlayNext),
+            ("media_play_previous", MediaCommandType::PlayPrevious),
+            ("media_set_volume", MediaCommandType::SetVolume),
+            ("media_set_mute", MediaCommandType::SetMute),
+            ("media_set_group", MediaCommandType::SetGroup),
+            ("media_clear_queue", MediaCommandType::ClearQueue),
+            ("media_play_queue_item", MediaCommandType::PlayQueueItem),
+            ("media_remove_queue_item", MediaCommandType::RemoveQueueItem),
+            ("media_move_queue_item", MediaCommandType::MoveQueueItem),
+        ];
+        for (label, media_command) in commands {
+            let command = CommandType::Media(media_command);
+            assert_eq!(parse_command_type(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
+    }
+
+    #[test]
+    fn device_control_command_labels_round_trip_through_the_chief_boundary() {
+        let commands = [
+            (
+                "device_set_indicator_mode",
+                DeviceControlCommandType::SetIndicatorMode,
+            ),
+            (
+                "device_set_indicator_brightness",
+                DeviceControlCommandType::SetIndicatorBrightness,
+            ),
+            (
+                "device_set_display_brightness",
+                DeviceControlCommandType::SetDisplayBrightness,
+            ),
+            (
+                "sensor_calibrate",
+                DeviceControlCommandType::CalibrateSensor,
+            ),
+            (
+                "device_set_temperature_unit",
+                DeviceControlCommandType::SetTemperatureUnit,
+            ),
+            (
+                "device_set_particulate_display_standard",
+                DeviceControlCommandType::SetParticulateDisplayStandard,
+            ),
+            (
+                "device_set_automatic_co2_baseline_days",
+                DeviceControlCommandType::SetAutomaticCo2BaselineDays,
+            ),
+            (
+                "device_set_gas_learning_offsets",
+                DeviceControlCommandType::SetGasLearningOffsets,
+            ),
+            (
+                "device_set_compensated_display",
+                DeviceControlCommandType::SetCompensatedDisplay,
+            ),
+            (
+                "device_test_indicator",
+                DeviceControlCommandType::TestIndicator,
+            ),
+            (
+                "device_set_correction_profile",
+                DeviceControlCommandType::SetCorrectionProfile,
+            ),
+            (
+                "camera_set_recording",
+                DeviceControlCommandType::SetCameraRecording,
+            ),
+            (
+                "camera_recall_ptz_preset",
+                DeviceControlCommandType::RecallCameraPtzPreset,
+            ),
+            ("camera_move_ptz", DeviceControlCommandType::MoveCameraPtz),
+        ];
+        for (label, device_command) in commands {
+            let command = CommandType::DeviceControl(device_command);
+            assert_eq!(parse_command_type(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
     }
 }

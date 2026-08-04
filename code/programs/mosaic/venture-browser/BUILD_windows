@@ -1,0 +1,2 @@
+@REM Mirror BUILD: package contract tests first, then the generated shell matrix.
+cargo test && powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-all.ps1

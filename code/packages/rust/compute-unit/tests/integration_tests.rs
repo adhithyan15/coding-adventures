@@ -1,3 +1,7 @@
+// These tests build config structs by mutating a `Default::default()` base for
+// readability across many optional fields; behavior is identical to a struct
+// literal, so allow the field-reassign pattern here.
+#![allow(clippy::field_reassign_with_default)]
 //! Integration tests for the compute-unit crate.
 //!
 //! These tests verify that all five compute unit simulators work correctly:
@@ -732,13 +736,11 @@ fn test_ane_display() {
 
 #[test]
 fn test_all_architectures_have_unique_values() {
-    let archs = vec![
-        Architecture::NvidiaSm,
+    let archs = [Architecture::NvidiaSm,
         Architecture::AmdCu,
         Architecture::GoogleMxu,
         Architecture::IntelXeCore,
-        Architecture::AppleAneCore,
-    ];
+        Architecture::AppleAneCore];
     let values: Vec<&str> = archs.iter().map(|a| a.value()).collect();
     // All unique
     let mut unique = values.clone();
@@ -910,12 +912,10 @@ fn test_warp_state_equality() {
 
 #[test]
 fn test_scheduling_policy_variants() {
-    let policies = vec![
-        SchedulingPolicy::RoundRobin,
+    let policies = [SchedulingPolicy::RoundRobin,
         SchedulingPolicy::Greedy,
         SchedulingPolicy::OldestFirst,
         SchedulingPolicy::Gto,
-        SchedulingPolicy::Lrr,
-    ];
+        SchedulingPolicy::Lrr];
     assert_eq!(policies.len(), 5);
 }

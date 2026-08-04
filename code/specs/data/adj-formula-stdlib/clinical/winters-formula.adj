@@ -1,0 +1,83 @@
+% ============================================================================
+% winters-formula.adj — Winter's formula: the expected (compensatory) PaCO₂ in metabolic acidosis
+% (expected PaCO₂ = 1.5 × HCO₃ + 8) in the ADJ standard library.
+% ============================================================================
+% The Winter's-formula entry of the *clinical* track — the RESPIRATORY COMPENSATION a simple metabolic
+% acidosis should produce. In metabolic acidosis the lungs blow off CO₂ to buffer the fall in
+% bicarbonate; Winter's formula predicts the arterial CO₂ tension (PaCO₂) that ADEQUATE compensation
+% should reach for a given serum bicarbonate. THE EXPECTED PaCO₂ IS 1.5 TIMES THE BICARBONATE PLUS 8
+% (mm Hg), within ±2 — i.e. expected PaCO₂ = 1.5 × HCO₃ + 8. A measured PaCO₂ higher than this window
+% signals a superimposed respiratory ACIDOSIS (inadequate compensation); lower signals a superimposed
+% respiratory ALKALOSIS (over-compensation). It ships as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with its exact rearrangement (the bicarbonate a given expected PaCO₂ implies). As
+% with every compute library, a consumer states NO arithmetic: it `import`s this file, binds the
+% measured bicarbonate from its own byte-provenance decomposition, and asks the engine to APPLY the
+% cited formula on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY
+% (over exact rationals — 1.5 = 3/2), carrying the formula's citation.
+%
+%     import "winters-formula.adj"
+%     observe hco3(10)   % "…serum bicarbonate 10 mEq/L…"     (span cited by the model)
+%     ? expected_paco2(hco3)
+%                         % engine → 23, the expected PaCO₂ (mm Hg)
+%
+% The 1.5 multiplier and the +8 mm Hg intercept are the EXACT constants of the cited formula (not
+% measurements); the ±2 is a TOLERANCE BAND around the point estimate, not part of the central value,
+% so this library computes the central expected PaCO₂ (1.5 × HCO₃ + 8) and leaves the ±2 acceptance
+% window to the consumer. The two formulas COMPOSE and invert cleanly around the worked case
+% HCO₃ = 10 mEq/L (expected PaCO₂ = 1.5 × 10 + 8 = 15 + 8 = 23 mm Hg): the `expected_paco2` a consumer
+% computes is exactly the value the `hco3` formula back-solves to recover 10.
+%
+%   expected_paco2(hco3)           = 1.5 * hco3 + 8              % (Winter's formula, read forward)
+%   hco3(expected_paco2)           = (expected_paco2 - 8) / 1.5  % (solved for the bicarbonate)
+%
+% NOTE ON UNITS AND MODELLING: PaCO₂ in mm Hg, bicarbonate in mEq/L; the 1.5 and 8 are the conventional
+% Winter's-formula constants. The formula applies to a SIMPLE metabolic acidosis with expected
+% respiratory compensation; it does not itself diagnose the acid–base disturbance, and (per the cited
+% article) the bicarbonate is conventionally a venous value. The cited article states the formula as a
+% single explicit equation — "PaCO2 = (1.5 x HCO3 +8 ) ±2" — which is exactly the relation read
+% forward; the rearrangement is the same relation solved for the bicarbonate.
+%
+% Both formulas are defended by the SAME clause — the quoted Winter's-formula sentence — because that
+% one statement (the expected PaCO₂ IS 1.5 times the bicarbonate plus 8) sanctions the relation read
+% either way. The quote is transcribed verbatim from the StatPearls "Anion Gap and Non-Anion Gap
+% Metabolic Acidosis" article on the NCBI Bookshelf (a current, non-archived article), so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the formula, including its 1.5 and 8 constants,
+% is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `hco3` and `expected_paco2` each appear BOTH as a derived result and as an input (of the
+% other formula), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended
+% unit.
+% ----------------------------------------------------------------------------
+dictionary winters_formula_vocab {
+    define hco3           : finding  surface "bicarbonate", "serum bicarbonate", "HCO3"   % mEq/L
+    define expected_paco2 : finding  surface "expected PaCO2", "expected pCO2", "predicted PaCO2"  % mm Hg
+}
+
+% ----------------------------------------------------------------------------
+% Winter's formula, both ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the formula sentence from the StatPearls "Anion Gap
+% and Non-Anion Gap Metabolic Acidosis" article on the NCBI Bookshelf (a quote is required on a shipped
+% formula). Each is an exact linear expression in the measured quantity and the cited 1.5/8 constants,
+% so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook winters_formula_laws {
+    use winters_formula_vocab
+
+    % Expected PaCO₂ — 1.5 times the bicarbonate plus the 8 mm Hg intercept (the central value of the
+    % ±2 window).
+    formula expected_paco2(hco3) = 1.5 * hco3 + 8
+        source "Metabolic acidosis causes a compensatory hyperventilation response within 12 to 24 hours, which can be calculated through Winter's formula: PaCO2 = (1.5 x HCO3 +8 ) ±2."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+
+    % Bicarbonate — the same formula solved for the bicarbonate (subtract the 8, divide by 1.5).
+    % Defended by the SAME sentence.
+    formula hco3(expected_paco2) = (expected_paco2 - 8) / 1.5
+        source "Metabolic acidosis causes a compensatory hyperventilation response within 12 to 24 hours, which can be calculated through Winter's formula: PaCO2 = (1.5 x HCO3 +8 ) ±2."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+}

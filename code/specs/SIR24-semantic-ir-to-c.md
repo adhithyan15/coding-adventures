@@ -74,10 +74,30 @@ then (4) `emit::emit_module`.
 `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
 `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
 
-**v0 rejects** (clean, source-positioned `UnsupportedFeature`):
+**Landed since v0** (`ACCEPTED_FEATURES` grows one version-bumped batch at a
+time — see the roadmap): the SIR26 integer conversions (`Conversions`,
+`SizedIntegers`, `Unsigned`, `WrappingArithmetic`); and the SIR16 batches
+`Loops` + `MutableBindings` (0.3.0–0.5.0), `Sequences` (0.6.0), `Maps`
+(0.7.0 — the `SIR_MAP` assoc-array with `MapLit`/`MapGet`/`MapSet`), `Floats`
+(0.8.0 — `FloatLit` on the v0 `SIR_FLOAT` tag; emitter-only, the runtime
+already carried the float path), `ShortCircuit` (0.9.0 — `LogicalAnd`/
+`LogicalOr` lowered to a truthiness-branch overwrite, reusing the eager
+`and`/`or` builtin lowering; yields the deciding operand), `DefaultParams`
+(SIR19, 0.10.0 — the `SIR_MISSING` sentinel now exists in the runtime; a
+`DirectCall` pads omitted trailing defaults with `_sir_missing()` and each
+function opens with an `if (_sir_is_missing(p)) { p = <default>; }` prologue),
+`KeywordParams` (SIR19, 0.11.0 — KW6: a `KeywordArg` is resolved to its
+callee's parameter slot BY NAME at emit time, using the thread-local signature
+map's parameter names, producing a plain positional call), and `Exceptions`
+(SIR17, 0.12.0 — the `setjmp`/`longjmp` handler stack of §"Exception model":
+`SIR_ERROR` value, a baked-in class-ancestry table for `rescue`-by-class
+matching, a two-handler structure so `ensure` runs even when a rescue body
+raises; `raise SomeClass` and `retry` deferred).
+
+**Still rejects** (clean, source-positioned `UnsupportedFeature`):
 `TailCalls` (C does not guarantee TCO), `Intrinsics` (empty whitelist), and
-every later feature until its batch lands (`Floats`, `Loops`, `Sequences`,
-`Maps`, `Exceptions`, `Classes`, … — see the roadmap).  `Bignum` stays
+every not-yet-landed feature (`NDArrays`, `Constants`,
+`Classes`, … — see the roadmap).  `Bignum` stays
 rejected until a bignum runtime ships, so a module that *needs* arbitrary
 precision is refused rather than silently truncated.
 
@@ -157,33 +177,55 @@ minimal bignum to the runtime (or links one), and closes the frontier for C —
 tracked alongside the same work for Go/Rust.  Until then `Bignum` is rejected,
 never truncated silently.
 
-## Block-as-expression
+## Portability contract
 
-A SIR `Block` produces a value (its trailing `value` expression after its
-`stmts`).  C — even C99, which lacks GCC's statement-expression extension in
-portable form — has no expression that runs statements and yields a value.
-The Go backend used an immediately-invoked function literal (IIFE); the
-portable-C analogue is a **lifted helper function**:
+The emitted C is **ISO C99** and uses **no compiler-specific extensions** — no
+GNU statement-expressions `({…})`, no nested functions, no `typeof`, no
+zero-length or variable-length arrays, no compound-literal argument arrays.  It
+must compile cleanly and warning-lean on **MSVC (`cl`), GCC, and Clang**, which
+the test harness verifies by compiling every emitted program with all three
+(see [§Tests](#tests)).  MSVC is invoked in C mode with `/std:c11` (its C99/C11
+support); GCC/Clang use their default C mode.  Only ISO facilities are used:
+`<stdint.h>` (`int64_t`) and the ordinary `<stdio.h>`/`<stdlib.h>`/`<string.h>`/
+`<stdarg.h>` surface.  C99 *mixed declarations* are used (declare-at-use) — a
+standard ISO feature all three compilers accept — but the Go/Rust IIFE trick
+has no portable-C equivalent, which drives the block lowering below.
 
-```c
-// Block { stmts: [x := e0], value: (+ x 2) }  ⇒
-static SirValue _sir_block_7(void) {
-    SirValue x = e0;
-    return _sir_plus2(x, _sir_int(2));
-}
-// ...used at the block's site as:  _sir_block_7()
-```
+## Block-as-expression (portable, no extensions)
 
-Helper functions are numbered (`_sir_block_<N>`) with a per-module counter
-reset at `emit_module` start (determinism — the golden-output test relies on
-byte-stable emission).  A **trivial** block (empty `stmts`) emits its `value`
-expression inline, no helper.  Blocks that close over locals take those
-locals as helper parameters (v0 blocks that reference an enclosing local are
-lifted with the referenced locals threaded as arguments; the free-variable
-set is exactly what the frontend already records for closures).
+A SIR `Block` produces a value (its trailing `value` after its `stmts`), and
+`If` is an expression.  Since portable C has no statement-expression, the
+emitter is **statement-oriented**: a value is always produced *into a
+destination* — either a `return` or an assignment to a named `SirValue`.  Two
+mutually-recursive routines do this, and neither needs a temporary or a helper
+for the common shapes:
 
-`If` lowers the same way when used as an expression — a helper returning the
-truthy or falsy branch, guarded by `_sir_truthy(cond)`.
+- **`emit_tail(e)`** — emit `e` in return position.
+  - simple `e` → `return <expr>;`
+  - `If` → a **returning if/else**: `if (_sir_truthy(cond)) { <then-stmts>;
+    emit_tail(then-value) } else { <else-stmts>; emit_tail(else-value) }`
+  - `Block` → `{ <stmts>; emit_tail(value) }`
+- **`emit_assign(dst, e)`** — emit statements that leave `e`'s value in the
+  already-declared lvalue `dst`.
+  - simple `e` → `dst = <expr>;`
+  - `If` → assigning if/else (each branch ends `emit_assign(dst, branch-value)`)
+  - `Block` → `{ <stmts>; emit_assign(dst, value) }`
+  - a **call with a compound argument** → open a block, `SirValue _aN =` each
+    argument in left-to-right order (`emit_assign` into a fresh temp for a
+    compound arg, a direct initialiser for a simple one), then
+    `dst = fn(_a0, _a1, …);`.  When *every* argument is simple the call is
+    emitted inline with no temporaries.
+
+Temporaries are declared at first use (C99 mixed declarations); block-scoped
+lets live in a `{ … }` so sibling blocks never collide.  A **trivial** block
+(empty `stmts`) emits its `value` inline.  Fresh temp/loop identifiers come
+from a per-module counter reset at `emit_module` start (byte-stable output for
+the determinism test).
+
+To keep call arguments free of embedded control flow, all variadic builtins are
+ordinary **C variadic functions** (`_sir_plus(int n, …)` over `stdarg.h`),
+never compound-literal arrays (`(SirValue[]){…}` — unsupported by older MSVC).
+So `(+ a b c)` emits `_sir_plus(3, a, b, c)`.
 
 ## Per-node lowering rules (v0)
 
@@ -319,11 +361,58 @@ lockstep:
    + call-time prologue).
 4. **Collections** — the `__method__` dispatch catalog
    (String / Array / Hash / Numeric / Symbol / Object, block and non-block).
+   Slice 1 (0.22.0) landed the common 0-arity String methods via a
+   `_sir_builtin_method` runtime dispatcher (`length`/`size`, `upcase`,
+   `downcase`, `reverse`, `empty?`, `to_s`; `length`/`size`/`empty?` polymorphic
+   over String/Array/Hash) — a built-in name the module did not define routes
+   there instead of the user method table.  Slice 2 (0.23.0) added the first
+   argument-taking methods (the dispatcher now collects its varargs): the 1-arg
+   String queries `include?`/`start_with?`/`end_with?` (→ bool) and `index`
+   (→ Int/nil).  The rest of the catalog (Array/Hash/Numeric, blocks) follows.
 5. **Exceptions** — `setjmp`/`longjmp` + typed runtime errors.
-6. **OOP** — `Classes` / `Constants` / `InstanceVars` / `ClassVars`, then
-   `Modules` (mixins / MRO).
+6. **OOP** (mirroring the Ruby backend's landed 7-slice arc) — slice 1
+   (`Classes` + `Constants`: the `SIR_INSTANCE` runtime, an empty class, `Foo.new`
+   → `_sir_new_instance`, and a `_sir_const_set`/`_sir_const_get` table) landed in
+   0.13.0; instance **methods** (an explicit `(class,method)`→closure table —
+   `_sir_def_method`/`_sir_call_method` — a data lookup, never reflection, per
+   §Security #2, so anti-RCE by construction) landed in 0.14.0;
+   `InstanceVars` + `self` (`@v` → `_sir_ivar_get`/`_sir_ivar_set` on the
+   receiver's lazily-allocated `@name → value` map; the receiver is carried in
+   `_sir_current_self`, saved/restored by `_sir_call_method` and re-bound at each
+   `TryCatch` handler since `longjmp` unwinds past the restore) landed in 0.15.0;
+   inheritance + `super` (`class Dog < Animal` → `_sir_register_super` into a
+   mutable user-ancestry table `_sir_class_super` consults BEFORE the baked-in
+   exception ancestry, so ONE `super_of` drives both `rescue`-matching and method
+   resolution; `_sir_call_method` resolves up the chain, `super` → `_sir_call_super`
+   from the superclass of the defining class; every walk bounded by
+   `SIR_ANCESTRY_MAX` against a cyclic hand-built hierarchy) landed in 0.16.0;
+   class methods (`def self.m` → `__def_class_method__` into a SEPARATE
+   class-method/singleton table — no collision with an instance method of the
+   same name — and `Class.m` → `__class_method__` → `_sir_call_class_method`, an
+   ancestry-walking lookup so class methods inherit, binding `self` to nil)
+   landed in 0.19.0; `ClassVars` (`@@x` → a `(class, @@name)` table shared down
+   the hierarchy — `_sir_cvar_get`/`_sir_cvar_set` resolve the owning class from
+   `_sir_current_class`, bound by dispatch; a class-body `@@x = 0` seeds it via
+   `_sir_cvar_set_in` with the class named explicitly) landed in 0.20.0; and
+   `Modules` (a module's methods register like a class's; `include`/`extend`
+   record `(class, module)` mixins that `_sir_resolve_method` /
+   `_sir_resolve_class_method` consult) landed in 0.21.0 — the FINAL OOP slice,
+   giving full 6-backend OOP parity, EXCEPT that `Foo.new` did not actually run
+   `initialize` until 0.36.3 (`_sir_call_new`: allocate, resolve `initialize`
+   up the ancestry, invoke it with the constructor args, return the object) —
+   `__new__` had silently rejected constructor arguments since 0.13.0, so
+   every other backend's `.new` ran the constructor and C's did not. True
+   parity landed in 0.36.3.
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
+8. **SIR18 string interpolation** (`"a#{x}b"` → `Expr::StrConcat { parts }`) —
+   a new `_sir_display_str` runtime helper (Ruby's `to_s`-style display into a
+   fresh string; a string-returning PARALLEL to the pre-existing
+   `puts`/`print` `_sir_fmt` family, not a refactor of it) plus an emitter arm
+   that folds each part through it and pairwise through `_sir_cat` into one
+   `_sir_str(...)` — landed in 0.36.4. `Feature::StringInterpolation` had been
+   the C backend's only remaining unaccepted `Strings`-adjacent feature; every
+   other backend but Go/JS/Rust already had a real emit arm for it.
 
 ## Out of scope (v0)
 

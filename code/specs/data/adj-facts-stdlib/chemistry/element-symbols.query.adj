@@ -1,0 +1,22 @@
+% ============================================================================
+% element-symbols.query.adj — a worked recall over the chemistry symbols library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is oxygen's symbol?"
+% or "which element is Na?": it states no chemistry fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `element_symbol` rows and returns the answer + the table's
+% source/locator/trust. Recall runs in BOTH directions because the row is a plain
+% relation: bind the symbol from the name, or the name from the symbol. An
+% element not in the table abstains honestly — the engine never invents a symbol.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli element-symbols.query.adj
+% ============================================================================
+
+import "element-symbols.adj"
+
+? element_symbol(oxygen, $S)        % expect o        (name  -> symbol)
+? element_symbol(sodium, $S)        % expect na
+? element_symbol($E, na)            % expect sodium   (symbol -> name, reverse)
+? element_symbol($E, k)             % expect potassium
+? element_symbol(unobtainium, $S)   % expect abstain — not a real element in the table

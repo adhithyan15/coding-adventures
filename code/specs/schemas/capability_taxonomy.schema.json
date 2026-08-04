@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/capability_taxonomy.schema.json",
+  "title": "Capability Category/Action Taxonomy Fixture",
+  "description": "Closed language-neutral conformance data for Spec 13 capability category/action pairs.",
+  "type": "object",
+  "required": [
+    "$schema",
+    "version",
+    "categories",
+    "all_actions",
+    "expected_valid_pair_count",
+    "expected_invalid_cross_pair_count"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/capability_taxonomy.schema.json"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "categories": {
+      "type": "object",
+      "required": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"],
+      "additionalProperties": false,
+      "properties": {
+        "fs": {
+          "$ref": "#/$defs/actions"
+        },
+        "net": {
+          "$ref": "#/$defs/actions"
+        },
+        "proc": {
+          "$ref": "#/$defs/actions"
+        },
+        "env": {
+          "$ref": "#/$defs/actions"
+        },
+        "ffi": {
+          "$ref": "#/$defs/actions"
+        },
+        "time": {
+          "$ref": "#/$defs/actions"
+        },
+        "stdin": {
+          "$ref": "#/$defs/actions"
+        },
+        "stdout": {
+          "$ref": "#/$defs/actions"
+        }
+      }
+    },
+    "all_actions": {
+      "$ref": "#/$defs/actions"
+    },
+    "expected_valid_pair_count": {
+      "type": "integer",
+      "const": 19
+    },
+    "expected_invalid_cross_pair_count": {
+      "type": "integer",
+      "const": 93
+    }
+  },
+  "$defs": {
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "read",
+          "write",
+          "create",
+          "delete",
+          "list",
+          "connect",
+          "listen",
+          "dns",
+          "exec",
+          "fork",
+          "signal",
+          "call",
+          "load",
+          "sleep"
+        ]
+      }
+    }
+  }
+}

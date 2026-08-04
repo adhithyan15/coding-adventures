@@ -53,6 +53,7 @@ package wave
 
 import (
 	"errors"
+	"math"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/trig"
 )
@@ -72,6 +73,12 @@ var ErrNegativeAmplitude = errors.New("amplitude must be non-negative")
 // positive. A frequency of zero would mean the wave never oscillates, which
 // is not a wave — it's a constant.
 var ErrZeroFrequency = errors.New("frequency must be positive")
+
+// ErrNonFiniteParameter is returned when a parameter is NaN or infinite.
+var ErrNonFiniteParameter = errors.New("wave parameters must be finite")
+
+// ErrAngularFrequencyOverflow is returned when 2*pi*frequency is not finite.
+var ErrAngularFrequencyOverflow = errors.New("angular frequency must be finite")
 
 // ============================================================================
 // Wave Type
@@ -127,6 +134,10 @@ func New(amplitude, frequency, phase float64) (*Wave, error) {
 			op.AddProperty("frequency", frequency)
 			op.AddProperty("phase", phase)
 
+			if !isFinite(amplitude) || !isFinite(frequency) || !isFinite(phase) {
+				return rf.Fail(nil, ErrNonFiniteParameter)
+			}
+
 			// Validate amplitude: must be non-negative.
 			// Amplitude is the absolute peak value of the wave. A negative peak
 			// doesn't make physical sense — you'd use phase to invert the wave.
@@ -140,6 +151,9 @@ func New(amplitude, frequency, phase float64) (*Wave, error) {
 			// phase shift of pi, so we enforce positive for simplicity.
 			if frequency <= 0 {
 				return rf.Fail(nil, ErrZeroFrequency)
+			}
+			if frequency > math.MaxFloat64/(2.0*trig.PI) {
+				return rf.Fail(nil, ErrAngularFrequencyOverflow)
 			}
 
 			return rf.Generate(true, false, &Wave{
@@ -172,6 +186,7 @@ func New(amplitude, frequency, phase float64) (*Wave, error) {
 //
 // If frequency is in Hertz (cycles/second), then period is in seconds.
 func (w *Wave) Period() float64 {
+	w.mustBeValid()
 	result, _ := StartNew[float64]("wave.Period", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			return rf.Generate(true, false, 1.0/w.Frequency)
@@ -200,6 +215,7 @@ func (w *Wave) Period() float64 {
 // Angular frequency is measured in radians per second (rad/s).
 // A 1 Hz wave has omega = 2*pi ≈ 6.283 rad/s.
 func (w *Wave) AngularFrequency() float64 {
+	w.mustBeValid()
 	result, _ := StartNew[float64]("wave.AngularFrequency", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			return rf.Generate(true, false, 2.0*trig.PI*w.Frequency)
@@ -246,19 +262,45 @@ func (w *Wave) AngularFrequency() float64 {
 //	w.Evaluate(0.75)  // sin(3*pi/2)  = -1.0   (reaches trough)
 //	w.Evaluate(1.00)  // sin(2*pi)    = 0.0    (completes one cycle)
 func (w *Wave) Evaluate(t float64) float64 {
+	w.mustBeValid()
+	if !isFinite(t) {
+		panic("time must be finite")
+	}
 	result, _ := StartNew[float64]("wave.Evaluate", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("t", t)
 
-			// Compute the total phase angle at time t.
-			// This combines the time-dependent phase (2*pi*f*t) with the initial
-			// phase offset (phi).
-			angle := 2.0*trig.PI*w.Frequency*t + w.Phase
+			if w.Amplitude == 0.0 {
+				return rf.Generate(true, false, 0.0)
+			}
+
+			twoPI := 2.0 * trig.PI
+			period := 1.0 / w.Frequency
+			reducedTime := t
+			if !math.IsInf(period, 1) {
+				reducedTime = math.Mod(t, period)
+			}
+			reducedPhase := math.Mod(w.Phase, twoPI)
+			angle := twoPI*(w.Frequency*reducedTime) + reducedPhase
 
 			// Apply the sine function and scale by amplitude.
 			// We use our own trig.Sin which is built from Maclaurin series —
 			// no standard library needed.
-			return rf.Generate(true, false, w.Amplitude*trig.Sin(angle))
+			unit := trig.Sin(angle)
+			unit = math.Max(-1.0, math.Min(1.0, unit))
+			return rf.Generate(true, false, w.Amplitude*unit)
 		}).GetResult()
 	return result
+}
+
+func isFinite(value float64) bool {
+	return !math.IsNaN(value) && !math.IsInf(value, 0)
+}
+
+func (w *Wave) mustBeValid() {
+	if w == nil || !isFinite(w.Amplitude) || w.Amplitude < 0 ||
+		!isFinite(w.Frequency) || w.Frequency <= 0 ||
+		w.Frequency > math.MaxFloat64/(2.0*trig.PI) || !isFinite(w.Phase) {
+		panic("invalid wave state")
+	}
 }

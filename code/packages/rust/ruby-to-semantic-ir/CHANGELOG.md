@@ -2,6 +2,123 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.9.1 — lower a dotted/chained bracket-index write receiver
+
+`ruby-parser` 0.8.1 widens `index_assignment`'s grammar to admit a
+receiver postfix chain (`index_write_receiver_postfix` — `dot_call` /
+`scope_resolution` / `index_suffix`) before the mandatory write-target
+`index_suffix`. This release adds the matching lowering: for each
+`index_write_receiver_postfix` child, unwrap its single
+`dot_call`/`scope_resolution`/`index_suffix` grandchild and fold it into
+the running `receiver` expression via the SAME `fold_one_dot_call`/
+`fold_one_scope_resolution`/`fold_one_index_suffix` helpers
+`apply_dot_chain` already uses for READ postfix chains — so
+`obj.data[0] = v` folds `.data` identically to how a plain `obj.data`
+read would, then dispatches `[]=` on THAT (rather than the bare `obj`
+receiver), and `a[0][1] = v` folds the first `[0]` as a receiver-side
+READ (`__method__("[]", a, 0)`) before dispatching `[]=` on its result.
+
+New tests: `chained_bracket_index_write_uses_the_inner_bracket_as_receiver`,
+`dotted_bracket_index_write_folds_the_dot_call_as_receiver`,
+`chained_and_dotted_bracket_index_write_pass_sir_validator`.
+
+`ruby-to-semantic-ir` 0.9.0 -> 0.9.1.
+
+## 0.9.0 — lower `<<` (Ruby's shift operator)
+
+`ruby-parser` 0.8.0 adds the `shift` grammar rule for `<<` (see that
+crate's CHANGELOG for the precedence/lexer details). This release adds a
+new `lower_shift_chain`, modeled directly on `lower_comparison_chain`
+(matches its single operator by LEXEME, since `<<` has no dedicated lexer
+`TokenType` either): `a << b` → `BuiltinCall("<<", [a, b])`, folding
+left-associatively for a chain (`a << 1 << 2` → nested `<<` calls, exactly
+how `+`/`-` already fold over `sum`). This is the op-name-keyed
+binary-operator protocol `+`/`-`/`*`/`/` use, NOT the `__method__`
+dispatch protocol Collections methods use — `<<` is an expression, not a
+dot-call.
+
+Two "still cleanly unsupported" pinning tests (`bitwise_operators_are_
+still_cleanly_unsupported_not_mis_parsed` here and its `ruby-parser`
+mirror) had `<<` removed from their operator list, since it's no longer
+unsupported; new tests cover the `<<` lowering shape and its precedence
+relative to `+` and `==` directly.
+
+`ruby-to-semantic-ir` 0.8.0 -> 0.9.0.
+
+## 0.8.0 — lower bracket-index read/write through `__method__` dispatch
+
+`ruby-parser` 0.7.0 adds real grammar rules for `recv[k]` (read,
+`index_suffix`) and `recv[k] = v` (write, `index_assignment`) — previously
+neither had a grammar rule at all (see that crate's CHANGELOG). This
+release adds the corresponding lowering:
+
+- `recv[k]` → `BuiltinCall("__method__", [recv, StrLit("[]"), k])`
+- `recv[k] = v` → `ExprStmt(BuiltinCall("__method__", [recv, StrLit("[]="), k, v]))`
+
+Both ride the SAME narrow-waist `__method__` dispatch every other
+Collections built-in uses (`.map`, `.each`, …) — no new IR node, no new
+`Feature`. This routes the Array-vs-Hash decision to the BACKEND, at
+RUNTIME, based on the receiver's actual tag.
+
+An earlier version of this lowering used a compile-time heuristic instead
+(mirroring `python-to-semantic-ir`'s documented convention: a string-
+literal-key index lowers to `Feature::Maps`/`Expr::MapGet`/`Stmt::MapSet`,
+any other index lowers to `Feature::Sequences`/`Expr::SeqIndex`/
+`Stmt::SeqSet`). That heuristic mis-routes a Hash write whose key isn't a
+string literal — `h[2] = "b"` on an int-keyed Hash, or `h[:sym] = 1` on a
+symbol-keyed Hash — to the Array path regardless of `h`'s actual type,
+which crashes at runtime (`_sir_seq_set` exits on a non-sequence receiver).
+Both are common, legitimate Ruby. The `__method__` design was chosen
+specifically because it cannot mis-route: the C backend's
+`_sir_builtin_method_v` checks `recv.tag` itself, so the index's syntactic
+shape is irrelevant to which path runs.
+
+v0 scope carries over from `ruby-parser`: `index_assignment`'s left-hand
+side must be a bare local/param `NAME` — no dotted or chained receivers.
+
+### Added
+
+- `bracket_index_read_lowers_to_method_dispatch`,
+  `bracket_index_write_lowers_to_method_dispatch`,
+  `bracket_index_write_with_non_string_key_is_not_a_seq_set`,
+  `chained_bracket_index_read_nests_method_dispatch`,
+  `bracket_index_read_and_write_pass_sir_validator` — lowering-shape and
+  validator regression tests, including the non-string-key case that
+  motivated the design above.
+
+## 0.7.1 — regression tests for a `ruby-parser` grammar fix
+
+No behavior change in this crate — the actual fix (a bare comparison/logical
+statement, e.g. `x > 2`, mis-parsing as a paren-less call and splitting into
+two statements) lives entirely in `coding-adventures-ruby-parser`'s
+`ruby.grammar` (see that crate's 0.6.0 CHANGELOG entry). Adds regression
+tests here at the lowering/validation layer — the level a consumer would
+actually notice the bug at — covering the bare-statement, block-tail, and
+`def`-tail positions, plus a control case pinning that the (deliberately
+unguarded) bitwise operators remain unchanged.
+
+## 0.7.0 — lift a class CONSTANT to its name for `is_a?` / `when SomeClass`
+
+`case x when Integer` and `x.is_a?(Integer)` compiled on **Python alone**. Both
+lower to `is_a?`, and both passed the class as a bare `Const` `VarRef`. Only
+Python's backend could cope: Go and Rust REJECT a constant reference at emit
+("cannot lower a constant reference" — a `Const` is accepted only as an
+exception class in `raise Foo`), and JavaScript emitted an undefined reference
+that blew up at run time. Ruby type-dispatch is ordinary code, so this was a
+large hole rather than an exotic one.
+
+Both sites now surface the class as a `StrLit` of its NAME — exactly the
+convention `lower_class_pattern` (Phase FC) already documented and used
+("so no constant declaration is required and no `Constants` feature is pulled
+in"):
+
+- `when SomeClass` in a `case`.
+- A direct `x.is_a?(C)` / `x.kind_of?(C)` / `x.instance_of?(C)` call.
+
+Every backend's `is_a?` compares class NAMES, so the name is the honest thing
+to hand them, and no backend needs general constant-reference support. All four
+running backends (Python, JavaScript, Go, Rust) now agree.
+
 ## [0.6.3] - 2026-07-03
 
 ### Fixed (FC — sequential local assignments: `x = a` where `a` is an earlier local)

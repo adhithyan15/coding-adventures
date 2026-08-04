@@ -45,6 +45,7 @@ type TrigTests() =
     [<Fact>]
     member _.``Square root matches reference values``() =
         let approxEqual left right = abs (left - right) < 1e-10
+        let relative actual expected = abs (actual - expected) / abs expected <= 1e-12
 
         Assert.Equal(0.0, Trig.sqrt 0.0)
         Assert.True(approxEqual (Trig.sqrt 1.0) 1.0)
@@ -53,6 +54,12 @@ type TrigTests() =
         Assert.True(approxEqual (Trig.sqrt 2.0) 1.41421356237)
         Assert.True(approxEqual (Trig.sqrt 0.25) 0.5)
         Assert.True(abs (Trig.sqrt 1e10 - 1e5) < 1e-4)
+        Assert.True(relative (Trig.sqrt 1e-100) 1e-50)
+        Assert.True(relative (Trig.sqrt System.Double.Epsilon) 2.2227587494850775e-162)
+        Assert.True(relative (Trig.sqrt System.Double.MaxValue) 1.3407807929942596e154)
+        Assert.True(System.BitConverter.DoubleToInt64Bits(Trig.sqrt -0.0) < 0L)
+        Assert.True(System.Double.IsPositiveInfinity(Trig.sqrt System.Double.PositiveInfinity))
+        Assert.True(System.Double.IsNaN(Trig.sqrt System.Double.NaN))
         Assert.Throws<System.ArgumentOutOfRangeException>(fun () -> Trig.sqrt -1.0 |> ignore) |> ignore
 
     [<Fact>]
@@ -65,6 +72,10 @@ type TrigTests() =
         Assert.True(approxEqual (Trig.tan (-Trig.PI / 4.0)) -1.0)
 
         Assert.Equal(0.0, Trig.atan 0.0)
+        Assert.Equal(System.Int64.MinValue, System.BitConverter.DoubleToInt64Bits(Trig.atan -0.0))
+        Assert.Equal(System.Math.ScaleB(1.0, -30), Trig.atan (System.Math.ScaleB(1.0, -30)))
+        Assert.Equal(System.Double.Epsilon, Trig.atan System.Double.Epsilon)
+        Assert.Equal(-System.Double.Epsilon, Trig.atan (-System.Double.Epsilon))
         Assert.True(approxEqual (Trig.atan 1.0) (Trig.PI / 4.0))
         Assert.True(approxEqual (Trig.atan -1.0) (-Trig.PI / 4.0))
         Assert.True(approxEqual (Trig.atan (Trig.sqrt 3.0)) (Trig.PI / 3.0))

@@ -85,7 +85,7 @@ impl LiaTactic {
         bool_vars: &[String],
     ) -> SolverResult {
         // Flatten into a conjunction of linear constraints.
-        let constraints: Vec<Predicate> = assertions.iter().cloned().collect();
+        let constraints: Vec<Predicate> = assertions.to_vec();
 
         // Start with an empty partial assignment and eliminate variables
         // one by one.

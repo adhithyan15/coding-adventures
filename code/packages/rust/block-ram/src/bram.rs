@@ -71,7 +71,7 @@ impl ConfigurableBRAM {
         assert!(total_bits >= 1, "total_bits must be >= 1, got {total_bits}");
         assert!(width >= 1, "width must be >= 1, got {width}");
         assert!(
-            total_bits % width == 0,
+            total_bits.is_multiple_of(width),
             "width {width} does not evenly divide total_bits {total_bits}"
         );
 
@@ -93,7 +93,7 @@ impl ConfigurableBRAM {
     pub fn reconfigure(&mut self, width: usize) {
         assert!(width >= 1, "width must be >= 1, got {width}");
         assert!(
-            self.total_bits % width == 0,
+            self.total_bits.is_multiple_of(width),
             "width {width} does not evenly divide total_bits {}",
             self.total_bits
         );

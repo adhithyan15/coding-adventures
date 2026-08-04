@@ -1,0 +1,100 @@
+% ============================================================================
+% nitrogen-balance.adj — the nitrogen balance
+% (balance = protein intake / 6.25 − (urine urea nitrogen + 4)) in the ADJ standard library.
+% ============================================================================
+% The nitrogen-balance entry of the *clinical* track — the daily accounting of nitrogen IN versus nitrogen
+% OUT that tells whether a patient (typically in critical care or on nutrition support) is building tissue
+% (anabolic, POSITIVE balance) or breaking it down (catabolic, NEGATIVE balance). Nitrogen IN is estimated
+% from the dietary protein: protein is about 16 % nitrogen, i.e. 6.25 g of protein per gram of nitrogen, so
+% dividing the protein intake by 6.25 converts grams of protein to grams of nitrogen. Nitrogen OUT is the
+% urinary urea nitrogen (the dominant route) PLUS a fixed allowance of 4 g/day for the insensible losses
+% (skin, stool, non-urea urinary nitrogen) that are not measured. THE NITROGEN BALANCE IS THE PROTEIN-DERIVED
+% NITROGEN INTAKE MINUS THE MEASURED-PLUS-INSENSIBLE NITROGEN OUTPUT — i.e. balance = protein / 6.25 −
+% (UUN + 4). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with two exact
+% rearrangements (the protein intake and the urine urea nitrogen a given balance implies). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the protein intake and the
+% urine urea nitrogen from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% formula on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over exact
+% rationals), carrying the formula's citation.
+%
+%     import "nitrogen-balance.adj"
+%     observe protein_intake(125)         % "…protein 125 g/day…"   (span cited by the model)
+%     observe urine_urea_nitrogen(12)      % "…24h UUN 12 g…"        (span cited by the model)
+%     ? nitrogen_balance(protein_intake, urine_urea_nitrogen)   % engine → 4 (g/day)
+%
+% Structurally this is a QUOTIENT MINUS A SUM-WITH-A-CONSTANT — the protein-derived nitrogen intake less the
+% (measured output + insensible-loss allowance) — a shape distinct from the ratio, ratio-of-ratios,
+% percentage-sum, product-over-constant, chained-division, constant-scaled-difference, product-times-constant,
+% three-way-product-over-divisor, product-of-a-ratio-and-a-value, quotient-over-a-difference,
+% constant-times-a-difference-over-a-divisor, two-variables-and-a-constant-over-a-divisor,
+% product-of-a-value-and-a-difference-over-a-shared-value, ratio-scaled-by-a-constant, and
+% constant-minus-a-scaled-sum forms of the other clinical libraries. There are two embedded constants — the
+% protein-to-nitrogen factor 6.25 (grams protein per gram nitrogen) and the insensible-loss allowance 4 (g),
+% exactly as the cited equation prints them; the protein intake and urine urea nitrogen are formal parameters
+% bound at apply time. The engine holds 6.25 as the EXACT rational 25/4, so every value it returns is exact.
+% The three formulas COMPOSE and invert cleanly around the worked case protein intake = 125 g/day, urine urea
+% nitrogen = 12 g (balance = 125 / 6.25 − (12 + 4) = 20 − 16 = 4 g/day, a positive/anabolic balance): the
+% `nitrogen_balance` a consumer computes is exactly the value each inverse formula back-solves to recover its
+% own measured input (125, 12).
+%
+%   nitrogen_balance(protein_intake, urine_urea_nitrogen) = protein_intake / 6.25 - (urine_urea_nitrogen + 4)   % (g/day)
+%   protein_intake(nitrogen_balance, urine_urea_nitrogen) = (nitrogen_balance + urine_urea_nitrogen + 4) * 6.25  % (solved for protein intake)
+%   urine_urea_nitrogen(nitrogen_balance, protein_intake) = protein_intake / 6.25 - 4 - nitrogen_balance         % (solved for UUN)
+%
+% NOTE ON UNITS AND MODELLING: the protein intake and the nitrogen quantities are all in GRAMS (protein per
+% day; urea nitrogen over a 24-hour collection), and the balance comes out in grams of nitrogen per day. The
+% urine urea nitrogen must be a complete 24-hour collection for the balance to be meaningful, and the fixed
+% 4 g insensible allowance is an approximation (the cited protocol uses 4). This library only COMPUTES the
+% balance; obtaining a reliable 24-hour collection and interpreting positive versus negative balance is the
+% clinician's task, stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted nitrogen-balance equation — because that
+% one equation (protein / 6.25 − (UUN + 4)) sanctions the relation read every way. The quote is transcribed
+% verbatim from the PubMed Central article "Optimizing Protein Intake and Nitrogen Balance (OPINiB) in Adult
+% Critically Ill Patients", where the balance is printed as the typed, operand-complete, correctly-bracketed
+% expression "total protein intake (g)/6.25 -(UUN + 4 g)" (the division binds before the subtraction and the
+% (UUN + 4) output term is parenthesized, so strict precedence reads it correctly). Each `formula` therefore
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `protein_intake`, `urine_urea_nitrogen` and `nitrogen_balance` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary nitrogen_balance_vocab {
+    define protein_intake        : finding  surface "protein intake", "total protein intake", "dietary protein", "protein" % g/day
+    define urine_urea_nitrogen   : finding  surface "urine urea nitrogen", "urinary urea nitrogen", "UUN", "24h UUN"        % g
+    define nitrogen_balance      : finding  surface "nitrogen balance", "N balance", "nitrogen balance study"               % g/day
+}
+
+% ----------------------------------------------------------------------------
+% The nitrogen balance, three ways. Each is a named, importable, reusable formula over its formal parameters,
+% bound at apply time, and each carries the nitrogen-balance equation from the OPINiB PMC article (a quote is
+% required on a shipped formula). Each is an exact expression in the measured values and the exact constants
+% 6.25 and 4, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook nitrogen_balance_laws {
+    use nitrogen_balance_vocab
+
+    % Nitrogen balance — protein-derived nitrogen intake, less measured plus insensible nitrogen output.
+    formula nitrogen_balance(protein_intake, urine_urea_nitrogen) = protein_intake / 6.25 - (urine_urea_nitrogen + 4)
+        source "total protein intake (g)/6.25 -(UUN + 4 g)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5442349/"
+        trust authoritative
+
+    % Protein intake — the same equation solved for the protein intake. Defended by the SAME equation.
+    formula protein_intake(nitrogen_balance, urine_urea_nitrogen) = (nitrogen_balance + urine_urea_nitrogen + 4) * 6.25
+        source "total protein intake (g)/6.25 -(UUN + 4 g)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5442349/"
+        trust authoritative
+
+    % Urine urea nitrogen — the same equation solved for the UUN, the third reading of the one law.
+    formula urine_urea_nitrogen(nitrogen_balance, protein_intake) = protein_intake / 6.25 - 4 - nitrogen_balance
+        source "total protein intake (g)/6.25 -(UUN + 4 g)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5442349/"
+        trust authoritative
+}

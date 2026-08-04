@@ -144,7 +144,9 @@ export function mapFilesToPackages(
   // Convert package paths to relative strings for prefix matching.
   const relativePkgPaths = new Map<string, string>();
   for (const [name, absPath] of packagePaths) {
-    const relPath = path.relative(repoRoot, absPath);
+    // Git reports repository-relative paths with forward slashes on every
+    // platform, while path.relative() uses the host separator on Windows.
+    const relPath = path.relative(repoRoot, absPath).split(path.sep).join("/");
     relativePkgPaths.set(name, relPath);
   }
 

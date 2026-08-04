@@ -310,7 +310,7 @@ pub fn cmd_append(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
 }
 
 pub fn cmd_hset(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
-    if args.len() < 3 || args.len() % 2 == 0 {
+    if args.len() < 3 || args.len().is_multiple_of(2) {
         return (store, err("ERR wrong number of arguments for 'HSET'"));
     }
     let key = args[0].clone();
@@ -862,7 +862,7 @@ pub fn cmd_sdiff(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
 }
 
 pub fn cmd_zadd(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
-    if args.len() < 3 || args.len() % 2 == 0 {
+    if args.len() < 3 || args.len().is_multiple_of(2) {
         return (store, err("ERR wrong number of arguments for 'ZADD'"));
     }
     let key = args[0].clone();
@@ -1064,15 +1064,12 @@ pub fn cmd_pfcount(store: Store, args: &[Vec<u8>]) -> (Store, EngineResponse) {
         None => HyperLogLog::new(),
     };
     for key in iter {
-        match store.get(key) {
-            Some(entry) => match &entry.value {
-                EntryValue::Hll(other) => {
-                    hll = hll.merge(other);
-                }
-                _ => return (store, wrong_type()),
-            },
-            None => {}
-        }
+        if let Some(entry) = store.get(key) { match &entry.value {
+            EntryValue::Hll(other) => {
+                hll = hll.merge(other);
+            }
+            _ => return (store, wrong_type()),
+        } }
     }
     (store, integer(hll.count() as i64))
 }

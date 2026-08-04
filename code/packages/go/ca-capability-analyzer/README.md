@@ -8,6 +8,10 @@ Every Go package in this repository declares its OS-level capabilities in a `req
 
 `ca-capability-analyzer` closes the gap: it walks the AST of every `.go` file in a package and reports any raw stdlib calls that bypass the Operations system.
 
+Manifest loading also validates category and action as a closed pair using the
+19-pair Spec 13 taxonomy. Unknown vocabulary and invalid cross-pairs fail
+before the analyzer can synthesize a wildcard declaration.
+
 ```
 Package source files
        │

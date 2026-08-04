@@ -1,0 +1,18 @@
+[package]
+name = "smart-home-home-assistant-migration"
+version = "0.1.0"
+edition = "2021"
+description = "Executable Home Assistant export migration into the normalized smart-home runtime"
+license = "MIT"
+
+[dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+smart-home-automation-runtime = { path = "../smart-home-automation-runtime" }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+
+[[bin]]
+name = "smart-home-import-home-assistant"
+path = "src/main.rs"

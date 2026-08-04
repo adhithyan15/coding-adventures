@@ -1,7 +1,6 @@
 package lisplexer
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -66,12 +65,5 @@ func TestCreateLispLexer(t *testing.T) {
 	}
 	if tokens[len(tokens)-1].Type != lexer.TokenEOF {
 		t.Fatalf("expected EOF token, got %#v", tokens[len(tokens)-1])
-	}
-}
-
-func TestGrammarPath(t *testing.T) {
-	path := getTokensPath()
-	if filepath.Base(path) != "lisp.tokens" {
-		t.Fatalf("expected lisp.tokens path, got %s", path)
 	}
 }

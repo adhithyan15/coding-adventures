@@ -91,7 +91,7 @@ impl BrainfuckWasmCompiler {
             return Err(PackageError::new("validate-ir", err.message.clone()));
         }
 
-        let module = IrToWasmCompiler::default()
+        let module = IrToWasmCompiler
             .compile(&optimized_ir, &signatures)
             .map_err(|err| PackageError::new("lower", err.to_string()))?;
         let validated_module =

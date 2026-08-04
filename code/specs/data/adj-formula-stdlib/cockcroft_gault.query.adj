@@ -1,0 +1,10 @@
+% This entry program stays at the stdlib root so the clinical library's
+% cross-directory arithmetic import remains inside the import root.
+import "clinical/cockcroft_gault.adj"
+
+observe age(60)
+observe weight(72)
+observe creatinine(1)
+observe sex_factor(1)
+
+? cockcroft_gault(age, weight, creatinine, sex_factor)  % expect 80

@@ -1,0 +1,17 @@
+name: coding_adventures_activation_functions_native
+description: >
+  Native-through-Rust Dart bindings for neural-network activation functions.
+  Same API as the pure-Dart activation-functions package, executed by the Rust
+  activation-functions crate through a C ABI via dart:ffi. Pure double->double.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.1.0
+
+dependencies:
+  ffi: ^2.1.0
+
+dev_dependencies:
+  test: ^1.25.0

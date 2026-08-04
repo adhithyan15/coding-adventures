@@ -70,7 +70,10 @@ impl std::error::Error for DiscoveryError {}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum DiscoverySource {
     Mdns,
+    WsDiscovery,
     Ssdp,
+    UdpMulticast,
+    UdpBroadcast,
     Bluetooth,
     Usb,
     Dhcp,
@@ -85,7 +88,10 @@ impl DiscoverySource {
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Mdns => "mdns",
+            Self::WsDiscovery => "ws_discovery",
             Self::Ssdp => "ssdp",
+            Self::UdpMulticast => "udp_multicast",
+            Self::UdpBroadcast => "udp_broadcast",
             Self::Bluetooth => "bluetooth",
             Self::Usb => "usb",
             Self::Dhcp => "dhcp",
@@ -100,8 +106,11 @@ impl DiscoverySource {
     pub fn preference_rank(self) -> u8 {
         match self {
             Self::Manual => 100,
+            Self::WsDiscovery => 85,
             Self::Mdns => 80,
             Self::Ssdp => 70,
+            Self::UdpMulticast => 70,
+            Self::UdpBroadcast => 70,
             Self::Usb => 65,
             Self::Bluetooth => 60,
             Self::Mqtt => 55,
@@ -2352,7 +2361,10 @@ fn primary_protocol_for_entry(entry: &IntegrationCatalogEntry) -> ProtocolFamily
 fn source_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> DiscoverySource {
     match mechanism {
         DiscoveryMechanism::Mdns => DiscoverySource::Mdns,
+        DiscoveryMechanism::WsDiscovery => DiscoverySource::WsDiscovery,
         DiscoveryMechanism::Ssdp => DiscoverySource::Ssdp,
+        DiscoveryMechanism::UdpMulticast => DiscoverySource::UdpMulticast,
+        DiscoveryMechanism::UdpBroadcast => DiscoverySource::UdpBroadcast,
         DiscoveryMechanism::Bluetooth => DiscoverySource::Bluetooth,
         DiscoveryMechanism::Usb => DiscoverySource::Usb,
         DiscoveryMechanism::Dhcp => DiscoverySource::Dhcp,
@@ -2366,6 +2378,9 @@ fn source_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> DiscoverySou
 fn transport_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> BridgeTransport {
     match mechanism {
         DiscoveryMechanism::Mdns => BridgeTransport::Mdns,
+        DiscoveryMechanism::WsDiscovery => BridgeTransport::LanHttp,
+        DiscoveryMechanism::UdpMulticast => BridgeTransport::LanUdp,
+        DiscoveryMechanism::UdpBroadcast => BridgeTransport::LanUdp,
         DiscoveryMechanism::Bluetooth => BridgeTransport::Ble,
         DiscoveryMechanism::Usb => BridgeTransport::Serial,
         DiscoveryMechanism::Mqtt | DiscoveryMechanism::FileConfig => BridgeTransport::LocalProcess,
@@ -2404,7 +2419,10 @@ fn pairing_requirement_for_auth_modes(auth_modes: &[AuthMode]) -> PairingRequire
 fn discovery_mechanism_name(mechanism: DiscoveryMechanism) -> &'static str {
     match mechanism {
         DiscoveryMechanism::Mdns => "mdns",
+        DiscoveryMechanism::WsDiscovery => "ws_discovery",
         DiscoveryMechanism::Ssdp => "ssdp",
+        DiscoveryMechanism::UdpMulticast => "udp_multicast",
+        DiscoveryMechanism::UdpBroadcast => "udp_broadcast",
         DiscoveryMechanism::Bluetooth => "bluetooth",
         DiscoveryMechanism::Usb => "usb",
         DiscoveryMechanism::Dhcp => "dhcp",
@@ -2697,7 +2715,7 @@ fn parse_dns_name(packet: &[u8], offset: usize) -> Result<(String, usize), Disco
                     "compressed DNS name pointer is truncated",
                 ));
             }
-            let pointer = (((len as usize & 0x3F) << 8) | packet[cursor + 1] as usize) as usize;
+            let pointer = ((len as usize & 0x3F) << 8) | packet[cursor + 1] as usize;
             if pointer >= packet.len() {
                 return Err(invalid_mdns_message(
                     "compressed DNS name pointer is out of range",

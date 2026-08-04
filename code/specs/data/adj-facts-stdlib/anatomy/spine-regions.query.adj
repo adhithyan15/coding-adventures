@@ -1,0 +1,24 @@
+% ============================================================================
+% spine-regions.query.adj — a worked recall over the anatomy spine-regions
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many vertebrae are in
+% the thoracic region?": it states no anatomy fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `spine_region_vertebrae` rows and returns the number + the table's
+% source/locator/trust. The fifth query runs the relation BACKWARD (bind the
+% count 5, recall the region(s) that have it — lumbar AND sacral both do). The
+% skull is not a region of the vertebral column, so a recall on it abstains
+% honestly — the engine never invents a count.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli spine-regions.query.adj
+% ============================================================================
+
+import "spine-regions.adj"
+
+? spine_region_vertebrae(cervical, $N)    % expect 7
+? spine_region_vertebrae(thoracic, $N)    % expect 12
+? spine_region_vertebrae(coccygeal, $N)   % expect 4
+? spine_region_vertebrae($R, 5)           % expect lumbar AND sacral — reverse recall
+? spine_region_vertebrae(skull, $N)       % expect abstain — the skull is not a spine region

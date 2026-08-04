@@ -14,6 +14,12 @@ where A is amplitude, f is frequency, and φ is phase offset.
 
 It builds on the `trig` package, which computes sine from first principles using Taylor series — no `Math.sin` anywhere in the dependency chain.
 
+The complete PHY01 contract rejects non-finite parameters,
+angular-frequency overflow, and non-finite time. Evaluation preserves exact
+zero amplitude, reduces time and phase before local trig, and keeps every
+accepted binary64 result finite and amplitude-bounded, including positive
+subnormal frequencies with infinite represented periods.
+
 ## Installation
 
 ```bash

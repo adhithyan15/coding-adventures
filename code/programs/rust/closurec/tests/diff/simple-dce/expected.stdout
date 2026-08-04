@@ -1,1 +1,1 @@
-function f(){keep();return 1};f();f();
+function f(){keep();return 1}f();f();

@@ -1,0 +1,93 @@
+% ============================================================================
+% iv-drip-rate.adj — the gravity IV infusion drip rate
+% (drops per minute = [total IV volume / time] × drop factor) in the ADJ standard library.
+% ============================================================================
+% The IV-drip-rate entry of the *clinical* track — the number of drops per minute a nurse counts to run a
+% gravity (roller-clamp) intravenous infusion at the ordered rate. A gravity set has no pump, so the flow
+% is regulated by eye: the ordered volume over the ordered time gives a millilitre-per-minute rate, and the
+% tubing's DROP FACTOR (how many drops the particular giving-set delivers per millilitre — commonly 10, 15,
+% or 20 for macrodrip sets, 60 for microdrip) converts that volume rate into a countable drops-per-minute
+% rate. THE DRIP RATE IS THE TOTAL IV VOLUME DIVIDED BY THE TIME IN MINUTES, TIMES THE DROP FACTOR — i.e.
+% drops per minute = [total IV volume / time] × drop factor. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with two exact rearrangements (the total volume a given drip rate
+% delivers, and the drop factor a given drip rate implies). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the ordered volume, the time, and the set's drop
+% factor from its own byte-provenance decomposition, and asks the engine to APPLY the cited formula on the
+% CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the formula's citation.
+%
+%     import "iv-drip-rate.adj"
+%     observe total_iv_volume(1000)   % "…1000 mL…"        (span cited by the model)
+%     observe infusion_time(100)       % "…over 100 min…"   (span cited by the model)
+%     observe drop_factor(15)          % "…15 gtt/mL set…"  (span cited by the model)
+%     ? drops_per_minute(total_iv_volume, infusion_time, drop_factor)   % engine → 150 (gtt/min)
+%
+% Structurally this is a PRODUCT OF A RATIO AND A VALUE — the volume-per-time rate scaled by the drop
+% factor — a shape distinct from the ratio, ratio-of-ratios, percentage-sum, product-over-constant,
+% chained-division, constant-scaled-difference, product-times-constant, and three-way-product-over-divisor
+% forms of the other clinical libraries. There is NO embedded constant: the volume, time, and drop factor
+% are all formal parameters bound at apply time (the drop factor is a property of the giving set, supplied
+% by the consumer, not baked in), so every value the engine returns is exact. The three formulas COMPOSE
+% and invert cleanly around the worked case total IV volume = 1000 mL, time = 100 min, drop factor = 15
+% gtt/mL (drops per minute = 1000 / 100 × 15 = 10 × 15 = 150 gtt/min): the `drops_per_minute` a consumer
+% computes is exactly the value each inverse formula back-solves to recover its own measured input
+% (1000, 15).
+%
+%   drops_per_minute(total_iv_volume, infusion_time, drop_factor) = total_iv_volume / infusion_time * drop_factor   % (gtt/min)
+%   total_iv_volume(drops_per_minute, infusion_time, drop_factor) = drops_per_minute * infusion_time / drop_factor    % (solved for volume)
+%   drop_factor(drops_per_minute, total_iv_volume, infusion_time) = drops_per_minute * infusion_time / total_iv_volume % (solved for drop factor)
+%
+% NOTE ON UNITS AND MODELLING: the total IV volume is in millilitres (mL), the time in MINUTES (an order
+% written "over 8 hours" must be converted to minutes before binding), the drop factor in drops per
+% millilitre (gtt/mL), and the resulting drip rate in drops per minute (gtt/min). This library only
+% COMPUTES the drip rate; the ordered volume and duration come from the prescription and the drop factor
+% from the giving set's packaging, and the nurse counts and adjusts the roller clamp to the computed rate.
+%
+% All three formulas are defended by the SAME clause — the quoted drip-rate equation — because that one
+% equation ([total IV volume / time] × drop factor) sanctions the relation read every way. The quote is
+% transcribed verbatim from the StatPearls "Pharmacy Calculations" article on the NCBI Bookshelf (a
+% current, non-archived article), so each `formula` carries the provenance envelope every shipped grounded
+% clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula
+% is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `total_iv_volume`, `infusion_time`, `drop_factor` and `drops_per_minute` each appear BOTH as
+% a derived result and as an input (of the other formulas), so each is a single dictionary term used in
+% both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary iv_drip_rate_vocab {
+    define total_iv_volume   : finding  surface "total IV volume", "IV volume", "volume", "total volume"     % mL
+    define infusion_time     : finding  surface "time", "infusion time", "time in minutes"                   % minutes
+    define drop_factor       : finding  surface "drop factor", "drops per mL", "gtt factor", "set factor"    % gtt/mL
+    define drops_per_minute  : finding  surface "drops per minute", "drip rate", "gtt/min", "gtt per minute"  % gtt/min
+}
+
+% ----------------------------------------------------------------------------
+% The IV drip rate, three ways. Each is a named, importable, reusable formula over its formal parameters,
+% bound at apply time, and each carries the drip-rate equation from the StatPearls "Pharmacy Calculations"
+% article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact expression in
+% the measured values, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook iv_drip_rate_laws {
+    use iv_drip_rate_vocab
+
+    % Drip rate — the volume-over-time rate times the drop factor.
+    formula drops_per_minute(total_iv_volume, infusion_time, drop_factor) = total_iv_volume / infusion_time * drop_factor
+        source "[Total IV volume/Time (minute)] X Drop Factor = Drops per minute"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560924/"
+        trust authoritative
+
+    % Total IV volume — the same equation solved for the volume. Defended by the SAME equation.
+    formula total_iv_volume(drops_per_minute, infusion_time, drop_factor) = drops_per_minute * infusion_time / drop_factor
+        source "[Total IV volume/Time (minute)] X Drop Factor = Drops per minute"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560924/"
+        trust authoritative
+
+    % Drop factor — the same equation solved for the drop factor, the third reading of the one rate.
+    formula drop_factor(drops_per_minute, total_iv_volume, infusion_time) = drops_per_minute * infusion_time / total_iv_volume
+        source "[Total IV volume/Time (minute)] X Drop Factor = Drops per minute"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560924/"
+        trust authoritative
+}

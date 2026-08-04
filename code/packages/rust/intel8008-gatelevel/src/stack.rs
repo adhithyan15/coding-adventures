@@ -128,7 +128,7 @@ impl PushDownStack {
         })
     }
 
-    fn u16_to_slot(value: u16, slot: &mut Vec<FlipFlopState>) {
+    fn u16_to_slot(value: u16, slot: &mut [FlipFlopState]) {
         let bits: Vec<u8> = (0..14).map(|i| ((value >> i) & 1) as u8).collect();
         register(&bits, 0, slot);
         register(&bits, 1, slot);
@@ -141,7 +141,7 @@ fn slot_to_bits(slot: &[FlipFlopState]) -> Vec<u8> {
 }
 
 /// Write a bit vector into a slot via two-phase clock.
-fn write_bits_to_slot(bits: &[u8], slot: &mut Vec<FlipFlopState>) {
+fn write_bits_to_slot(bits: &[u8], slot: &mut [FlipFlopState]) {
     register(bits, 0, slot);
     register(bits, 1, slot);
 }

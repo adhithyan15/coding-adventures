@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/two-number-autoencoder-v1.json",
+  "title": "Two-number autoencoder learning lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "input", "encoder", "decoder", "optimizer", "expected"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "input_width", "bottleneck_width", "output_width", "encoder_activation", "decoder_activation", "loss", "reduction", "trainable_parameters", "update"],
+      "properties": {
+        "kind": { "const": "two-to-one-to-two-autoencoder-step" },
+        "input_width": { "const": 2 },
+        "bottleneck_width": { "const": 1 },
+        "output_width": { "const": 2 },
+        "encoder_activation": { "const": "identity" },
+        "decoder_activation": { "const": "identity" },
+        "loss": { "const": "mean-squared-reconstruction-error" },
+        "reduction": { "const": "mean-over-output-coordinates" },
+        "trainable_parameters": { "const": ["encoder.weights", "encoder.bias", "decoder.weights", "decoder.bias"] },
+        "update": { "const": "sgd" }
+      }
+    },
+    "input": { "$ref": "#/$defs/vector2" },
+    "encoder": { "$ref": "#/$defs/encoderParameters" },
+    "decoder": { "$ref": "#/$defs/decoderParameters" },
+    "optimizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["learning_rate"],
+      "properties": { "learning_rate": { "type": "number", "exclusiveMinimum": 0 } }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["forward", "backward", "gradient_check", "updated_parameters", "post_update"],
+      "properties": {
+        "forward": { "$ref": "#/$defs/forwardTrace" },
+        "backward": { "$ref": "#/$defs/backwardTrace" },
+        "gradient_check": { "$ref": "#/$defs/gradientCheck" },
+        "updated_parameters": { "$ref": "#/$defs/updatedParameters" },
+        "post_update": { "$ref": "#/$defs/forwardTrace" }
+      }
+    }
+  },
+  "$defs": {
+    "vector2": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+    "vector7": { "type": "array", "minItems": 7, "maxItems": 7, "items": { "type": "number" } },
+    "encoderParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weights", "bias"],
+      "properties": {
+        "weights": { "$ref": "#/$defs/vector2" },
+        "bias": { "type": "number" }
+      }
+    },
+    "decoderParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weights", "bias"],
+      "properties": {
+        "weights": { "$ref": "#/$defs/vector2" },
+        "bias": { "$ref": "#/$defs/vector2" }
+      }
+    },
+    "forwardTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["encoder_products", "bottleneck", "decoder_products", "reconstruction", "errors", "squared_errors", "loss"],
+      "properties": {
+        "encoder_products": { "$ref": "#/$defs/vector2" },
+        "bottleneck": { "type": "number" },
+        "decoder_products": { "$ref": "#/$defs/vector2" },
+        "reconstruction": { "$ref": "#/$defs/vector2" },
+        "errors": { "$ref": "#/$defs/vector2" },
+        "squared_errors": { "$ref": "#/$defs/vector2" },
+        "loss": { "type": "number", "minimum": 0 }
+      }
+    },
+    "backwardTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reconstruction_gradients", "decoder_weight_gradients", "decoder_bias_gradients", "bottleneck_gradient_contributions", "bottleneck_gradient", "encoder_weight_gradients", "encoder_bias_gradient"],
+      "properties": {
+        "reconstruction_gradients": { "$ref": "#/$defs/vector2" },
+        "decoder_weight_gradients": { "$ref": "#/$defs/vector2" },
+        "decoder_bias_gradients": { "$ref": "#/$defs/vector2" },
+        "bottleneck_gradient_contributions": { "$ref": "#/$defs/vector2" },
+        "bottleneck_gradient": { "type": "number" },
+        "encoder_weight_gradients": { "$ref": "#/$defs/vector2" },
+        "encoder_bias_gradient": { "type": "number" }
+      }
+    },
+    "gradientCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epsilon", "parameter_order", "analytical", "numerical", "max_absolute_error"],
+      "properties": {
+        "epsilon": { "type": "number", "exclusiveMinimum": 0 },
+        "parameter_order": { "const": ["encoder.weights[0]", "encoder.weights[1]", "encoder.bias", "decoder.weights[0]", "decoder.weights[1]", "decoder.bias[0]", "decoder.bias[1]"] },
+        "analytical": { "$ref": "#/$defs/vector7" },
+        "numerical": { "$ref": "#/$defs/vector7" },
+        "max_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "updatedParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["encoder", "decoder"],
+      "properties": {
+        "encoder": { "$ref": "#/$defs/encoderParameters" },
+        "decoder": { "$ref": "#/$defs/decoderParameters" }
+      }
+    }
+  }
+}

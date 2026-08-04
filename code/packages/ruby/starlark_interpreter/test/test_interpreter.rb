@@ -229,6 +229,42 @@ class TestStarlarkInterpreter < Minitest::Test
     assert_equal 42, result.variables["result"]
   end
 
+  def test_load_symbol_keeps_leading_raw_prefix_letter
+    files = {
+      "//rules.star" => <<~STARLARK
+        def rust_library(name):
+            return {"rule": "rust_library", "name": name}
+      STARLARK
+    }
+    resolver = ->(label) { files[label] }
+
+    result = interpret(<<~STARLARK, file_resolver: resolver)
+      load("//rules.star", "rust_library")
+      target = rust_library(name = "demo")
+    STARLARK
+
+    assert_equal({"rule" => "rust_library", "name" => "demo"}, result.variables["target"])
+  end
+
+  def test_loaded_function_keeps_its_module_globals
+    files = {
+      "//helper.star" => "def command():\n    return \"test\"\n",
+      "//rules.star" => <<~STARLARK
+        load("//helper.star", "command")
+        def target(name):
+            return [name, command()]
+      STARLARK
+    }
+    resolver = ->(label) { files[label] }
+
+    result = interpret(<<~STARLARK, file_resolver: resolver)
+      load("//rules.star", "target")
+      result = target(name = "demo")
+    STARLARK
+
+    assert_equal ["demo", "test"], result.variables["result"]
+  end
+
   def test_load_multiple_symbols
     resolver = ->(label) {
       files = {

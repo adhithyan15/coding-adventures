@@ -1,0 +1,87 @@
+% ============================================================================
+% fraction.adj — the fraction formula library (ADJ-FORMULA-LIBRARIES FL-4).
+% ============================================================================
+% The "part of a whole" track of the compute standard library, built ENTIRELY by
+% composing the cited primitives of `arithmetic.adj` — it re-derives no
+% arithmetic. Where `ratio.adj` ships the bare value of a fraction (a/b as a
+% quotient), this ships the operations a fraction actually PARTICIPATES in:
+% taking a fraction OF a quantity, flipping it (its reciprocal), and reading a
+% mixed number as a value. Each is a single application of a cited primitive, so
+% the answer names every formula that took part.
+%
+%     import "fraction.adj"                        % transitively imports arithmetic.adj
+%     observe fraction(0.25)                       % "…a quarter…"   (span cited by the model)
+%     observe whole(12)                            % "…of 12…"       (span cited by the model)
+%     ? fraction_of(fraction, whole)               % engine → 3, carrying every citation
+%
+% The engine expands `fraction_of` → `product` (from arithmetic.adj) on the CPU
+% and composes the provenance chain, so the answer cites BOTH the fraction
+% definition (primary) and the `product` primitive it builds on (corroboration).
+% The model performs zero arithmetic, and the audit trail names every formula
+% that participated.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on the elementary primitives — `product`, `quotient`, and
+% `sum` in particular. The import is RELATIVE to this file, so a consumer that
+% imports `fraction.adj` gets those primitives transitively and the bodies below
+% resolve.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `fraction_of` scales a whole by a fractional part; `reciprocal`
+% flips a fraction's numerator and denominator; `mixed_number` reads a
+% whole-plus-fraction quantity as a single value. Rung-0 types an observable slot
+% as `finding`; the `surface` synonyms let a decomposer map everyday phrasing
+% ("a quarter of", "flip", "and a half") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary fraction_vocab {
+    define fraction     : finding  surface "fraction", "fractional part", "the fraction"
+    define whole        : finding  surface "whole", "quantity", "total", "of the"
+
+    define numerator    : finding  surface "numerator", "top", "part", "first number"
+    define denominator  : finding  surface "denominator", "bottom", "whole", "second number"
+
+    define whole_number : finding  surface "whole number", "integer part", "whole part"
+
+    define fraction_of  : finding  surface "fraction of", "part of", "a fraction of a quantity"
+    define reciprocal   : finding  surface "reciprocal", "multiplicative inverse", "flipped fraction"
+    define mixed_number : finding  surface "mixed number", "mixed fraction", "whole and a fraction"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. None writes a bare operator: each APPLIES the cited
+% primitive from `arithmetic.adj`, so the operation is what it is BECAUSE of the
+% primitive it composes, cited as such.
+%
+%   fraction_of(fraction, whole)               = fraction * whole
+%   reciprocal(numerator, denominator)         = denominator / numerator
+%   mixed_number(whole_number, numerator, denominator)
+%                                              = whole_number + (numerator / denominator)
+% ----------------------------------------------------------------------------
+formulabook fractions {
+    use fraction_vocab
+
+    % A fraction OF a quantity — the fractional part scaling the whole. Composes
+    % `product` from arithmetic.adj: a quarter of 12 is 0.25 × 12 = 3.
+    formula fraction_of(fraction, whole) = product(fraction, whole)
+        source "A fraction represents a part of a whole; a fraction of a quantity is that quantity multiplied by the fraction."
+        locator "https://mathworld.wolfram.com/Fraction.html"
+        trust authoritative
+
+    % The reciprocal — the fraction flipped, numerator and denominator swapped.
+    % Composes `quotient` with its arguments exchanged: the reciprocal of a/b is
+    % b/a.
+    formula reciprocal(numerator, denominator) = quotient(denominator, numerator)
+        source "The reciprocal of a number x is the number which, when multiplied by x, yields 1; the reciprocal of a fraction a/b is b/a."
+        locator "https://mathworld.wolfram.com/Reciprocal.html"
+        trust authoritative
+
+    % A mixed number — a whole number plus a proper fraction, read as a single
+    % value. Composes `sum` and `quotient`: two and a half is 2 + 1/2 = 2.5.
+    formula mixed_number(whole_number, numerator, denominator) = sum(whole_number, quotient(numerator, denominator))
+        source "A mixed number is the sum of an integer and a proper fraction."
+        locator "https://mathworld.wolfram.com/MixedFraction.html"
+        trust authoritative
+}

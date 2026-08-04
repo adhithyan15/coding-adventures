@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/neural-learning-implementation-coverage-v1.json",
+  "title": "Neural-learning implementation coverage v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "source_fixture", "contracts", "hand_check", "lanes", "rules"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "const": "weighted-neuron-implementation-coverage" },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "source_fixture": { "const": "code/specs/fixtures/neural-learning-v1/labs/00-weighted-neuron.json" },
+    "contracts": {
+      "const": {
+        "native_catalog": "code/specs/fixtures/cross-language-consumers-v1/catalog.json",
+        "rust_c_abi_catalog": "code/specs/fixtures/neural-learning-rust-cabi-v1/catalog.json",
+        "native_validator": "code/scripts/validate_cross_language_fixture_consumers.py",
+        "binding_validator": "code/scripts/validate_neural_learning_rust_cabi.py",
+        "coverage_validator": "code/scripts/validate_neural_learning_implementation_coverage.py"
+      }
+    },
+    "hand_check": {
+      "const": {
+        "inputs": [2.0, -1.0],
+        "weights": [0.5, -0.25],
+        "contributions": [1.0, 0.25],
+        "bias": 0.1,
+        "prediction": 1.35,
+        "native_implementations": 3,
+        "rust_core_bindings": 1,
+        "total_verified_lanes": 4
+      }
+    },
+    "lanes": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {
+          "const": {
+            "id": "go-native",
+            "language": "Go",
+            "implementation": "native",
+            "arithmetic_owner": "Go",
+            "interface": "fixture JSON to Go arithmetic",
+            "evidence": "code/programs/go/neural-fixture-consumer/main.go",
+            "validator": "code/scripts/validate_cross_language_fixture_consumers.py"
+          }
+        },
+        {
+          "const": {
+            "id": "ruby-native",
+            "language": "Ruby",
+            "implementation": "native",
+            "arithmetic_owner": "Ruby",
+            "interface": "fixture JSON to Ruby arithmetic",
+            "evidence": "code/programs/ruby/neural-fixture-consumer/main.rb",
+            "validator": "code/scripts/validate_cross_language_fixture_consumers.py"
+          }
+        },
+        {
+          "const": {
+            "id": "rust-native",
+            "language": "Rust",
+            "implementation": "native",
+            "arithmetic_owner": "Rust",
+            "interface": "fixture JSON to Rust arithmetic",
+            "evidence": "code/programs/rust/neural-fixture-consumer/src/main.rs",
+            "validator": "code/scripts/validate_cross_language_fixture_consumers.py"
+          }
+        },
+        {
+          "const": {
+            "id": "python-ctypes-rust-core",
+            "language": "Python",
+            "implementation": "rust-core-binding",
+            "arithmetic_owner": "Rust",
+            "interface": "Python ctypes to versioned C ABI",
+            "evidence": "code/scripts/validate_neural_learning_rust_cabi.py",
+            "validator": "code/scripts/validate_neural_learning_rust_cabi.py"
+          }
+        }
+      ],
+      "items": false
+    },
+    "rules": {
+      "const": [
+        "native means the language lane owns the weighted-neuron arithmetic",
+        "rust-core-binding means the caller crosses the stable C ABI and Rust owns the arithmetic",
+        "a registered lane counts as verified only after its executable validator passes",
+        "coverage counts implementation paths, not code quality, speed, or curriculum mastery"
+      ]
+    }
+  }
+}

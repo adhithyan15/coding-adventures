@@ -1,0 +1,23 @@
+% ============================================================================
+% wind-scale.query.adj — a worked recall over the meteorology wind-scale library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is a force-6 wind
+% called?": it states no weather fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `beaufort_force_name` rows and returns the name + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the name hurricane,
+% recall the force number that has it — 12). Beaufort force 13 is off the top of
+% the scale, so a recall on it abstains honestly — the engine never invents a
+% name.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wind-scale.query.adj
+% ============================================================================
+
+import "wind-scale.adj"
+
+? beaufort_force_name(0, $Name)    % expect calm
+? beaufort_force_name(6, $Name)    % expect strong_breeze
+? beaufort_force_name(12, $Name)   % expect hurricane
+? beaufort_force_name($F, hurricane) % expect 12 — reverse recall
+? beaufort_force_name(13, $Name)   % expect abstain — 13 is off the top of the scale

@@ -932,7 +932,7 @@ fn jmp_to_forward_label_backpatches_correct_offset() {
         .expect("lowering");
     assert_eq!(words, vec![
         0xE3A0_002A,    // 0: MOV r0, #42  (v)
-        B_BASE | 0,     // 1: B 0 (target = current + 8 = +0 words past prefetch)
+        B_BASE,     // 1: B 0 (target = current + 8 = +0 words past prefetch)
         0xE3A0_1063,    // 2: MOV r1, #99 (w, unreachable)
         // label "end" at word index 3
         BX_LR,          // 3: BX LR (ret v — v is already in r0)
@@ -1009,7 +1009,7 @@ fn jmp_if_true_emits_cmp_zero_then_bne() {
     assert_eq!(words, vec![
         0xE3A0_0001,    // 0: MOV r0, #1 (cond)
         0xE350_0000,    // 1: CMP r0, #0
-        B_NE_BASE | 0,  // 2: BNE end (imm24 = 4 - 2 - 2 = 0)
+        B_NE_BASE,  // 2: BNE end (imm24 = 4 - 2 - 2 = 0)
         0xE3A0_1000,    // 3: MOV r1, #0 (x — unreachable)
         BX_LR,          // 4: BX LR
     ], "jmp_if_true expected; got: {words:08x?}");
@@ -1031,7 +1031,7 @@ fn jmp_if_false_emits_cmp_zero_then_beq() {
     assert_eq!(words, vec![
         0xE3A0_0000,    // 0: MOV r0, #0 (cond)
         0xE350_0000,    // 1: CMP r0, #0
-        B_EQ_BASE | 0,  // 2: BEQ end
+        B_EQ_BASE,  // 2: BEQ end
         0xE3A0_1063,    // 3: MOV r1, #99 (unreachable)
         BX_LR,          // 4: BX LR
     ], "jmp_if_false expected; got: {words:08x?}");
@@ -1101,7 +1101,7 @@ fn call_emits_bl_with_backpatched_pc_relative_offset() {
         &IIRArmv7Config::default(),
     ).expect("lowering");
     assert_eq!(words, vec![
-        BL_BASE | 0,    // 0:  BL helper (imm24 = 0)
+        BL_BASE,    // 0:  BL helper (imm24 = 0)
         BX_LR,          // 1:  BX LR  (ret r — r is in r0 from the call's dest_reg)
         0xE3A0_0007,    // 2:  MOV r0, #7   (helper: const v)
         BX_LR,          // 3:  BX LR  (helper: ret v)
@@ -1176,7 +1176,7 @@ fn call_with_no_dest_discards_return_value() {
         &IIRArmv7Config::default(),
     ).expect("lowering");
     assert_eq!(words, vec![
-        BL_BASE | 0,    // 0:  BL helper (imm24 = 0, helper at word 2)
+        BL_BASE,    // 0:  BL helper (imm24 = 0, helper at word 2)
         BX_LR,          // 1:  BX LR (main ret_void)
         BX_LR,          // 2:  BX LR (helper ret_void)
     ], "void call expected; got: {words:08x?}");

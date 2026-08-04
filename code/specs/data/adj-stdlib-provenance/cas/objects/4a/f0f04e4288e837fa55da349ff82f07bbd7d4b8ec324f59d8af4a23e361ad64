@@ -1,0 +1,51 @@
+{
+  "kind": "text_transform",
+  "operations": [
+    {
+      "operation": "mathml_to_infix",
+      "result_end": 2,
+      "result_start": 0,
+      "source_end": 395842,
+      "source_start": 395677
+    },
+    {
+      "operation": "copy",
+      "result_end": 6,
+      "result_start": 2,
+      "source_end": 395853,
+      "source_start": 395849
+    },
+    {
+      "operation": "mathml_to_infix",
+      "result_end": 7,
+      "result_start": 6,
+      "source_end": 396028,
+      "source_start": 395883
+    },
+    {
+      "operation": "copy",
+      "result_end": 17,
+      "result_start": 7,
+      "source_end": 396045,
+      "source_start": 396035
+    },
+    {
+      "operation": "mathml_to_infix",
+      "result_end": 26,
+      "result_start": 17,
+      "source_end": 396368,
+      "source_start": 396075
+    },
+    {
+      "operation": "copy",
+      "result_end": 27,
+      "result_start": 26,
+      "source_end": 396376,
+      "source_start": 396375
+    }
+  ],
+  "result_sha256": "ac765615e8da33fba525925ae28f392d3c9343ac7539ea54fd0a103ca18fc718",
+  "result_size": 27,
+  "source_sha256": "89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e",
+  "source_size": 666580
+}

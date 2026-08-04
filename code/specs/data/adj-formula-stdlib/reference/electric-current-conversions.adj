@@ -1,0 +1,63 @@
+% ============================================================================
+% electric-current-conversions — electric-current-unit → ampere factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of electric-charge-conversions.adj, electric-potential-conversions.adj,
+% electric-resistance-conversions.adj, electric-capacitance-conversions.adj,
+% electric-inductance-conversions.adj, electric-conductance-conversions.adj and the other
+% NIST-cited conversion tables: a native tabular relation ingested VERBATIM from a published NIST
+% conversion table. The row states the factor converting the traditional (CGS-EMU) unit of
+% ELECTRIC CURRENT to the SI base unit, the ampere (A):
+%
+%     ? electric_current_to_ampere(abampere, $v)   % 10
+%
+% This EXTENDS the electromagnetic-EMU family alongside electric-charge (the abcoulomb → the
+% coulomb), electric-potential (the abvolt → the volt), electric-resistance (the abohm → the ohm),
+% electric-capacitance (the abfarad → the farad), electric-inductance (the abhenry → the henry) and
+% electric-conductance (the abmho → the siemens). The abampere is the BASE unit of the EMU
+% electromagnetic system — the other EMU electrical units are derived from it — and it is a NEW
+% dimension alongside the length/mass/area/volume/time/speed/energy/pressure/force/acceleration/
+% dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/magnetic-flux/illuminance/luminance/
+% radioactivity/absorbed-dose/dose-equivalent/exposure/power tables. Do NOT confuse ELECTRIC
+% CURRENT (the abampere → the ampere) with ELECTRIC CHARGE (the abcoulomb → the coulomb): those are
+% DIFFERENT quantities (charge is current integrated over time) that convert to DIFFERENT SI units
+% (ampere vs coulomb) — and here they even share the SAME numeric factor 1.0 E+01, which makes the
+% dimension guard below all the more important. Put a current given in abamperes into SI first,
+% then reason (write-once-use-many). Why a `table` and not a hand-written `relate` clause: this is
+% exactly the shape reference data comes in — a published table, not prose. The citable artifact IS
+% the NIST conversion-factors table at the `locator` below; the factor here is a CELL of NIST
+% Special Publication 811, Appendix B.9, defended by one provenance envelope. Each `row` lowers to
+% a ground relation `electric_current_to_ampere(unit, v)`, so the exact lookup above is the ordinary
+% SLD binding query — the engine returns the factor WITH this table's citation as its proof, on the
+% CPU, with zero model calls.
+%
+% HONESTY NOTE (like the electric-charge / electric-potential / electric-resistance /
+% electric-capacitance / electric-inductance / electric-conductance / power tables, only the EXACT
+% defined factor gets a row): NIST SP 811 B.9 prints the "abampere" current factor in BOLDFACE, its
+% convention for factors that are EXACT by definition, transcribed here as the plain decimal number
+% of amperes it names:
+%
+%     abampere   1.0 E+01  →  10
+%
+% This is exact because the abampere is DEFINED as exactly 1.0 E+01 ampere (the base EMU unit of
+% current). It terminates; nothing here is a rounded measurement. This table is SPECIFIC to electric
+% current: a unit of a DIFFERENT quantity — e.g. the "abcoulomb", which NIST SP 811 B.9 lists
+% separately as an electric-CHARGE unit converting to the coulomb, NOT the ampere (even though NIST
+% prints the SAME factor 1.0 E+01 for it) — therefore gets no row here, and a
+% `? electric_current_to_ampere(abcoulomb, $v)` ABSTAINS rather than mis-converting a charge unit as
+% if it were a current unit. That the numeric factor would coincide makes the abstain a real
+% dimension check, not an accident of value. The only claim this table makes is "this is the exact
+% factor NIST SP 811 B.9 prints for the abampere's conversion to the ampere" — which is exactly what
+% a byte-check against the cited table verifies. `trust authoritative` — a primary, re-fetchable
+% standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — the factor is a
+% verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table electric_current_to_ampere {
+    columns unit, ampere
+
+    row (abampere, 10)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

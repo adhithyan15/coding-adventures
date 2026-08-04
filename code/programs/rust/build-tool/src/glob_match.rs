@@ -165,10 +165,8 @@ fn do_match(pattern: &[u8], path: &[u8]) -> bool {
         // Walk through the path, and at each `/` boundary, try matching
         // the rest.
         for i in 0..path.len() {
-            if path[i] == b'/' {
-                if do_match(rest_pattern, &path[i + 1..]) {
-                    return true;
-                }
+            if path[i] == b'/' && do_match(rest_pattern, &path[i + 1..]) {
+                return true;
             }
         }
 

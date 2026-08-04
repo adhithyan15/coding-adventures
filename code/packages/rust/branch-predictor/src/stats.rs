@@ -1,15 +1,15 @@
-/// Prediction statistics -- measuring how well a branch predictor performs.
-///
-/// Every branch predictor needs a scorecard. When a CPU designer evaluates a
-/// predictor, the first question is always: "What's the accuracy?" A predictor
-/// that's 95% accurate causes a pipeline flush on only 5% of branches, while
-/// a 70% accurate predictor flushes on 30% -- potentially halving throughput
-/// on a deeply pipelined machine.
-///
-/// Real-world context:
-/// - Intel's Pentium Pro achieved ~90% accuracy with a two-level adaptive predictor
-/// - Modern CPUs (since ~2015) achieve 95-99% accuracy using TAGE or perceptron predictors
-/// - Even a 1% improvement in accuracy can yield measurable speedups on branch-heavy code
+//! Prediction statistics -- measuring how well a branch predictor performs.
+//!
+//! Every branch predictor needs a scorecard. When a CPU designer evaluates a
+//! predictor, the first question is always: "What's the accuracy?" A predictor
+//! that's 95% accurate causes a pipeline flush on only 5% of branches, while
+//! a 70% accurate predictor flushes on 30% -- potentially halving throughput
+//! on a deeply pipelined machine.
+//!
+//! Real-world context:
+//! - Intel's Pentium Pro achieved ~90% accuracy with a two-level adaptive predictor
+//! - Modern CPUs (since ~2015) achieve 95-99% accuracy using TAGE or perceptron predictors
+//! - Even a 1% improvement in accuracy can yield measurable speedups on branch-heavy code
 
 /// Tracks prediction accuracy for a branch predictor.
 ///

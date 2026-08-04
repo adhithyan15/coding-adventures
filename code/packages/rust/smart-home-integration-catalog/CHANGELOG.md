@@ -1,11 +1,72 @@
 # Changelog
 
+- Record challenge-selected Basic/Digest authentication for the Axis VAPIX
+  production transport.
+- Promote Enphase Envoy to a first-party authenticated local IQ Gateway meter
+  telemetry runtime with Vault-backed bearer-token and TLS trust-root boundaries.
+- Promote UniFi Network to a first-party local API-key runtime for bounded
+  application, site, and adopted-device health inspection.
+- Add first-party Synology Surveillance Station Web API discovery, isolated
+  authenticated sessions, and privilege-filtered camera health inspection.
+- Add first-party authenticated Frigate NVR and camera health inspection over
+  the bounded local HTTPS API session host.
+- Upgrade Blue Iris with permission-probed, readback-verified manual recording
+  and bounded PTZ controls over the authenticated local JSON session host.
+- Add first-party Blue Iris local HTTPS challenge-response authentication and
+  read-only NVR/camera health inspection.
+- Record capability-probed, queue-aware Axis preset recall and bounded PTZ
+  movement over the authenticated VAPIX host.
+- Add the first-party Axis VAPIX mDNS and authenticated inspection runtime.
+- Record capability-probed Reolink preset recall and bounded PTZ movement over
+  the authenticated local CGI runtime.
+
+- Upgrade Reolink with capability-probed recording state and authorized,
+  readback-verified recording enable/disable over the authenticated CGI host.
+
+- Record AirGradient's typed non-credential configuration entity and validated
+  correction-profile surface.
+
+- Upgrade AirGradient runtime coverage with authorized local indicator/display
+  controls, CO2 calibration, readback verification, and explicit cloud-control
+  conflict handling.
+
+- Add first-party AirGradient local environmental telemetry coverage and the
+  environmental telemetry primitive.
+
+## Unreleased
+
+- Upgraded HEOS runtime coverage with D23-authorized local playback, volume,
+  grouping, and queue controls over the existing TCP command host.
+- Upgraded HEOS CLI runtime coverage from polling-only inspection to local
+  push through authorized, bounded change-event subscriptions.
+- Added first-party HEOS CLI runtime coverage for SSDP/manual discovery and
+  read-only player identity, playback, volume, mute, and media inspection.
+- Added a reusable TCP primitive family for bounded local stream protocols.
+- Added first-party HomeWizard Energy API v1 local runtime coverage for verified
+  mDNS/manual discovery and read-only device and external-meter telemetry.
+- Added first-party Fronius Solar API v1 local runtime coverage for mDNS/manual
+  discovery and read-only site and inverter power and energy telemetry.
+- Added a first-party native Tasmota local HTTP path for mDNS/manual discovery,
+  optional authenticated polling, and verified relay and light commands while
+  preserving MQTT as the preferred push transport.
+- Added first-party Nanoleaf local runtime coverage for mDNS discovery,
+  physical-presence token pairing, authenticated polling, and verified light
+  commands.
+- Marked Sonos as a first-party polling runtime for SSDP discovery and
+  read-only UPnP player-state inspection.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.1.0] - 2026-05-08
 
 ### Added
 
+- First-party TP-Link Kasa legacy LAN runtime coverage with UDP broadcast
+  discovery, local polling, and verified plug, switch, and light commands.
+- First-party Govee LAN runtime coverage with UDP multicast discovery,
+  normalized local polling, and bounded UDP command primitives.
+- First-party ONVIF runtime catalog coverage with WS-Discovery, normalized
+  camera entities, local HTTP, and privacy-gated media primitives.
 - Integration catalog enums for category, connectivity class, discovery,
   authentication, and implementation status.
 - Primitive-family metadata for discovery, transport, auth/pairing, command

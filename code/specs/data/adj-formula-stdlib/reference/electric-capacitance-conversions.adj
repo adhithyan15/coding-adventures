@@ -1,0 +1,58 @@
+% ============================================================================
+% electric-capacitance-conversions — electric-capacitance-unit → farad factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of electric-charge-conversions.adj, electric-potential-conversions.adj,
+% electric-resistance-conversions.adj and the other NIST-cited conversion tables: a native
+% tabular relation ingested VERBATIM from a published NIST conversion table. The row states the
+% factor converting the traditional (CGS-EMU) unit of ELECTRIC CAPACITANCE to the SI coherent
+% derived unit, the farad (F):
+%
+%     ? electric_capacitance_to_farad(abfarad, $v)   % 1000000000
+%
+% This EXTENDS the electromagnetic-EMU family — electric-charge (the abcoulomb → the coulomb),
+% electric-potential (the abvolt → the volt) and electric-resistance (the abohm → the ohm) — with
+% CAPACITANCE, and is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% magnetic-flux/illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent/exposure/power
+% tables. Do NOT confuse ELECTRIC CAPACITANCE (the abfarad → the farad) with ELECTRIC RESISTANCE
+% (the abohm → the ohm), ELECTRIC POTENTIAL (the abvolt → the volt) or ELECTRIC CHARGE (the
+% abcoulomb → the coulomb): those are DIFFERENT quantities that convert to DIFFERENT SI units.
+% Electric capacitance (the farad) is charge per unit potential (one farad is one coulomb per
+% volt); the abfarad is its traditional (EMU) unit. Put a capacitance given in abfarads into SI
+% first, then reason (write-once-use-many). Why a `table` and not a hand-written `relate` clause:
+% this is exactly the shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; the factor here is a CELL
+% of NIST Special Publication 811, Appendix B.9 ("Factors for units listed alphabetically"),
+% defended by one provenance envelope. Each `row` lowers to a ground relation
+% `electric_capacitance_to_farad(unit, v)`, so the exact lookup above is the ordinary SLD binding
+% query — the engine returns the factor WITH this table's citation as its proof, on the CPU, with
+% zero model calls.
+%
+% HONESTY NOTE (like the electric-resistance / electric-potential / power tables, only the EXACT
+% defined factor gets a row): NIST SP 811 B.9 prints the "abfarad" capacitance factor in BOLDFACE,
+% its convention for factors that are EXACT by definition, transcribed here as the plain decimal
+% number of farads it names:
+%
+%     abfarad (abF)   1.0 E+09  →  1000000000
+%
+% This is exact because the abfarad is DEFINED as exactly 1.0 E+09 farad (the EMU of capacitance).
+% It terminates; nothing here is a rounded measurement. This table is SPECIFIC to electric
+% capacitance: a unit of a DIFFERENT quantity — e.g. the "abhenry", which NIST SP 811 B.9 lists
+% separately as an INDUCTANCE unit converting to the henry, NOT the farad — therefore gets no row
+% here, and a `? electric_capacitance_to_farad(abhenry, $v)` ABSTAINS rather than mis-converting
+% an inductance unit as if it were a capacitance unit. The only claim this table makes is "this is
+% the exact factor NIST SP 811 B.9 prints for the abfarad's conversion to the farad" — which is
+% exactly what a byte-check against the cited table verifies. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — the
+% factor is a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table electric_capacitance_to_farad {
+    columns unit, farad
+
+    row (abfarad, 1000000000)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

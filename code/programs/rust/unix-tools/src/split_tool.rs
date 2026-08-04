@@ -124,15 +124,13 @@ pub fn split_by_lines(
     }
 
     let mut result = Vec::new();
-    let mut chunk_index = 0;
 
     // --- Group lines into chunks of n ---
-    for chunk in lines.chunks(n) {
+    for (chunk_index, chunk) in lines.chunks(n).enumerate() {
         let suffix = generate_suffix(chunk_index, opts.suffix_length, opts.numeric_suffixes);
         let filename = format!("{}{}{}", prefix, suffix, opts.additional_suffix);
         let chunk_content = chunk.join("\n");
         result.push((filename, chunk_content));
-        chunk_index += 1;
     }
 
     result

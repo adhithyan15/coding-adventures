@@ -127,7 +127,7 @@ pub fn format_tokens_with_config(tokens: &[Token], config: &Config) -> String {
 
         if is_open_brace {
             depth += 1;
-            let next_is_close = printable.get(i + 1).map_or(false, |t| is_rbrace(t));
+            let next_is_close = printable.get(i + 1).is_some_and(|t| is_rbrace(t));
             if !next_is_close {
                 out.push('\n');
                 at_line_start = true;

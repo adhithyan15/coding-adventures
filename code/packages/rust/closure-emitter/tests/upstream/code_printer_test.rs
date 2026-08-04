@@ -232,7 +232,9 @@ fn test_number_formatting_shortest_form() {
     assert_emits(num(1e21), "1E21;"); //           beyond i64, expo wins
     // Tie or decimal-shorter → keep decimal.
     assert_emits(num(100.0), "100;"); //           "100" 3 vs "1E2" 3 → tie→decimal
-    assert_emits(num(0.5), "0.5;"); //             "0.5" 3 vs "5E-1" 4 → decimal
+    // Value position drops the leading fraction zero: `.5` (2) beats both
+    // `0.5` (3) and `5E-1` (4) — matches the reference CodePrinter.
+    assert_emits(num(0.5), ".5;");
     // Negative zero must keep its sign (`1/-0 === -Infinity`).
     assert_emits(num(-0.0), "-0;");
 }

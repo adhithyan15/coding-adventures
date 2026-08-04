@@ -1,0 +1,33 @@
+cabal-version: 3.0
+name:          bezier2d
+version:       0.1.0
+synopsis:      Quadratic and cubic Bezier curve geometry
+description:   Pure G2D02 evaluation, differentiation, splitting, adaptive flattening, tight bounds, and degree elevation for quadratic and cubic Bezier curves.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Bezier2D
+    build-depends:    base >=4.14 && <5
+                    , point2d >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Bezier2DSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , bezier2d
+                    , hspec == 2.*
+                    , point2d >=0.1 && <0.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

@@ -87,15 +87,11 @@ impl HashFunction for PolynomialRolling {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Default)]
 pub struct Murmur3_32 {
     pub seed: u32,
 }
 
-impl Default for Murmur3_32 {
-    fn default() -> Self {
-        Self { seed: 0 }
-    }
-}
 
 impl HashFunction for Murmur3_32 {
     fn hash(&self, data: &[u8]) -> u64 {

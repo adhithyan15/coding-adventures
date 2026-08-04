@@ -1,0 +1,36 @@
+% ============================================================================
+% dilution.query.adj — worked examples over the chemistry dilution library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a dilution question:
+% it states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited
+% conservation law. The native adj-lang engine binds the parameters, computes each
+% value EXACTLY on the CPU, and returns it with the relation's source/locator/trust.
+%
+% The four questions INVERT around one conserved product (M₁V₁ = M₂V₂ = 12): a 4 M
+% stock in 3 L, diluted to 6 L, gives 2 M; that same 4 M stock reaches a 2 M target
+% at exactly 6 L; a 2 M/6 L dilution came from a 4 M stock when 3 L was taken; and
+% reaching 2 M in 6 L from that 4 M stock needs exactly 3 L of it.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli dilution.query.adj
+% ============================================================================
+
+import "dilution.adj"
+
+% A 4 M stock, 3 L of it, diluted to a total of 6 L: M₂ = 4·3 / 6.
+observe initial_concentration(4)
+observe initial_volume(3)
+observe final_volume(6)
+? final_concentration(initial_concentration, initial_volume, final_volume)   % expect 2   (M₂ = M₁V₁/V₂)
+
+% That same 4 M stock in 3 L, to reach a 2 M target: V₂ = 4·3 / 2.
+observe final_concentration(2)
+? final_volume(initial_concentration, initial_volume, final_concentration)    % expect 6   (V₂ = M₁V₁/M₂)
+
+% A 2 M solution in 6 L known to have come from 3 L of stock: M₁ = 2·6 / 3.
+? initial_concentration(final_concentration, final_volume, initial_volume)    % expect 4   (M₁ = M₂V₂/V₁)
+
+% Reaching that 2 M in 6 L from the 4 M stock: V₁ = 2·6 / 4.
+? initial_volume(final_concentration, final_volume, initial_concentration)     % expect 3   (V₁ = M₂V₂/M₁)

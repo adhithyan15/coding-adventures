@@ -166,8 +166,7 @@ pub fn idwt_2d(
 
     // Verify total coeff length matches.
     let mut expected_total = ll_rows * ll_cols;
-    for j in 1..=(levels as usize) {
-        let (rj, cj) = level_dims[j];
+    for &(rj, cj) in level_dims.iter().take(levels as usize + 1).skip(1) {
         // 3 detail sub-bands at level j, each (rj, cj).
         expected_total += 3 * rj * cj;
     }
@@ -220,7 +219,7 @@ fn validate_2d_inputs(
     n_rows: u32,
     n_cols: u32,
     levels: u32,
-    boundary: WaveletBoundary,
+    _boundary: WaveletBoundary,
 ) -> Result<(), WaveletError> {
     if image.is_empty() {
         return Err(WaveletError::EmptySignal);
@@ -307,6 +306,9 @@ fn forward_level_dims(
 /// One level of 2-D DWT: row-DWT each row, then column-DWT each
 /// of the resulting two columns of (L, H) blocks.  Returns
 /// (LL, HL, LH, HH), each of size (⌈rows/2⌉, ⌈cols/2⌉).
+// The 4-tuple return maps directly to the four DWT sub-bands (LL/HL/LH/HH); a
+// named type alias would add indirection without clarity. Behavior-preserving allow.
+#[allow(clippy::type_complexity)]
 fn dwt_2d_one_level(
     image: &[f32],
     n_rows: usize,
@@ -371,6 +373,9 @@ fn dwt_2d_one_level(
 }
 
 /// Inverse of [`dwt_2d_one_level`].
+// Args are the four sub-bands plus their geometry and transform params; each is a
+// distinct required input. Grouping into a struct adds no clarity. Behavior-preserving allow.
+#[allow(clippy::too_many_arguments)]
 fn idwt_2d_one_level(
     ll: &[f32],
     hl: &[f32],

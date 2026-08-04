@@ -1,0 +1,15 @@
+% ADJ-ARGUMENT-REBUTTAL AR-3 — the SAME rebutted paper as rebuttal.adj, but now the support AND
+% the rebuttal live in ONE `argument` block. Each `infer` carries its own `context:` (AR-3 surface
+% sugar): the support step is grounded in `initial_report`, the reanalysis step in `reanalysis`.
+% With a `functional` thesis + `context_order { reanalysis > initial_report }`, the reanalysis
+% conclusion OUTRANKS and the engine WITHDRAWS fatigue — the rebuttal is expressed inside the
+% argument, not as a raw `rule` bolted alongside it. Desugars to exactly the AR-2 machinery.
+argument bridge_failure {
+    premise beach : extracted shows(surface, beach_marks) quote "exhibited beach marks" at 21 snapshot "1baf6c66bb4db1f3ce48c03cdd93e8cf1c8d1c3a7e955e67c7693b65638fdf17" source "pA-support" trust authoritative
+    premise shear : extracted shows(surface, single_shear) quote "showed a single-shear lip" at 26 snapshot "e1d6c446ec0106f702b556b52c972eddce2e52b04c5cc925b9e15e548cbc2b9d" source "pB-reanalysis" trust authoritative
+    infer support    : because   conclude failed_by(axle, fatigue)  from beach source "beach marks are diagnostic of fatigue" trust authoritative context: initial_report
+    infer reanalysis : therefore conclude failed_by(axle, overload) from shear source "a single-shear lip indicates a one-time overload" trust authoritative context: reanalysis
+}
+functional failed_by(subject, mechanism)
+context_order { reanalysis > initial_report }
+? failed_by(axle, $Mechanism)

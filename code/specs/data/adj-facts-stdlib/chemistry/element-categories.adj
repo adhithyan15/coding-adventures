@@ -1,0 +1,96 @@
+% ============================================================================
+% element_category_property — the three BROAD categories of chemical element
+% and the defining electrical property the source states for each
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% Before the periodic table sorts elements into columns (see element-groups,
+% which maps a SPECIFIC element to its group family), it first sorts every
+% element into just THREE broad categories by how the element behaves —
+% especially whether it conducts electricity. "Metals are the good conductors;
+% nonmetals are the poor conductors; metalloids are the in-between ones we call
+% semiconductors." This is one of the very first sorting ideas a chemistry
+% student learns, and a rung a CHEMISTRY agent reasons UP from: to reason about
+% an unfamiliar element you first decide WHICH of the three categories it is in.
+% Recall is a binding query:
+%
+%     ? element_category_property(metal, $Property)      % good_conductor
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `element_category_property(category, property)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the property WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these three broad categories (it never
+% invents a property).
+%
+% The three broad categories and the defining electrical property the source
+% states for each, as a little truth table:
+%
+%     category    defining electrical property   the source's cue
+%     ---------   ----------------------------   ------------------------------
+%     metal       good_conductor                 "good conductors ... free electrons"
+%     nonmetal    poor_conductor                 "poor conductors of heat and electricity"
+%     metalloid   semiconductor                  "act as electrical conductors ...
+%                                                  thus they are called semiconductors"
+%
+% The query also runs BACKWARD — bind a property and recall its category:
+%
+%     ? element_category_property($Category, poor_conductor)   % nonmetal
+%
+% A word that is NOT one of these three broad categories — `compound`, `alloy`,
+% `mixture` — is deliberately NOT a row, so a category recall ABSTAINS on it
+% rather than inventing a property. That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% category→property pairs it can ground, and only those.
+%
+% The `property` value of every row is a SINGLE lowercase atom, chosen to be the
+% source's OWN word for the category's electrical behaviour — metals are "good
+% conductors", nonmetals are "poor conductors", and metalloids are called
+% "semiconductors" — so every value stays literally checkable against the quoted
+% span. (These three atoms are also pairwise distinct, so the reverse binding
+% query is unambiguous.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every category→property
+% pair below was read out of a fetched Chemistry LibreTexts page this session,
+% and any pair whose property could not be verified there would have been
+% dropped). Each pair, with the primary source it was copied from and the
+% verbatim span that states it:
+%
+%   metal → good_conductor
+%     https://chem.libretexts.org/Bookshelves/General_Chemistry/Map:_Chemistry_-_The_Central_Science_(Brown_et_al.)/07:_Periodic_Properties_of_the_Elements/7.06:_Metals_Nonmetals_and_Metalloids
+%     (Chemistry LibreTexts — "Chemistry: The Central Science" (Brown et al.) map)
+%     "Metals are good conductors because they have free electrons."
+%
+%   nonmetal → poor_conductor
+%     (same LibreTexts page, Nonmetals section)
+%     "They are non-lustrous, brittle and poor conductors of heat and
+%      electricity (except graphite)."
+%
+%   metalloid → semiconductor
+%     (same LibreTexts page, Metalloids section)
+%     "Some metalloids, such as silicon and germanium, can act as electrical
+%      conductors under the right conditions, thus they are called
+%      semiconductors."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the LibreTexts statement that
+% fixes the first row (metal → good_conductor). Every OTHER row's per-fact
+% source and verbatim span is listed above, so each property remains
+% independently checkable. The source is Chemistry LibreTexts, a widely used
+% open teaching resource (a course-textbook summary, not a primary standards
+% body), so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table element_category_property {
+    columns category, property
+
+    row (metal, good_conductor)
+    row (nonmetal, poor_conductor)
+    row (metalloid, semiconductor)
+
+    source "Metals are good conductors because they have free electrons."
+    locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Map:_Chemistry_-_The_Central_Science_(Brown_et_al.)/07:_Periodic_Properties_of_the_Elements/7.06:_Metals_Nonmetals_and_Metalloids"
+    trust consensus
+}

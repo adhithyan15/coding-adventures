@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-daemon-runtime",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "*:*",
+      "justification": "Serves the authenticated Chief API on the caller-supplied WebSocket listener."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Measures the caller-supplied reconciliation interval using process-local monotonic waits."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "Waits interruptibly between bounded reconciliation ticks."
+    }
+  ],
+  "justification": "Fail-closed daemon scheduling and serving over injected control-plane, transport, storage, process, identity, keyring, and authorization adapters."
+}

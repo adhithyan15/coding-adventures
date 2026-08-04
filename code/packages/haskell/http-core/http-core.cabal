@@ -1,0 +1,33 @@
+cabal-version: 3.0
+name:          http-core
+version:       0.1.0
+synopsis:      Pure Haskell shared HTTP message types and semantic helpers
+description:   Defines ordered headers, bounded HTTP versions, request and
+               response heads, body framing hints, request-target helpers,
+               and path-only route matching without wire parsing or I/O.
+category:      Network
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.HttpCore
+    build-depends:    base >=4.14 && <5
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    HttpCoreSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , http-core
+                    , hspec ==2.*
+    ghc-options:      -Wall
+    default-language: Haskell2010

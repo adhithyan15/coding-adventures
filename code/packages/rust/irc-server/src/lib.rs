@@ -533,8 +533,8 @@ impl IRCServer {
             (client.registered, client.nick.clone(), client.mask())
         };
 
-        if registered {
-            if let Some(_) = nick_opt {
+        if registered
+            && nick_opt.is_some() {
                 let quit_msg = Message {
                     prefix: Some(mask.clone()),
                     command: "QUIT".to_string(),
@@ -549,7 +549,6 @@ impl IRCServer {
                     });
                 }
             }
-        }
 
         // Remove the client from every channel they were in.
         let channels_to_clean: Vec<String> = self.clients[&conn_id].channels.iter().cloned().collect();
@@ -585,7 +584,7 @@ impl IRCServer {
     /// values without the wire-format colon).
     fn make_msg(&self, command: &str, params: &[&str]) -> Message {
         let cleaned: Vec<String> = params.iter().map(|p| {
-            if p.starts_with(':') { p[1..].to_string() } else { p.to_string() }
+            if let Some(stripped) = p.strip_prefix(':') { stripped.to_string() } else { p.to_string() }
         }).collect();
         Message {
             prefix: Some(self.server_name.clone()),
@@ -1537,20 +1536,20 @@ impl IRCServer {
                     sorted.sort_unstable();
                     format!("+{}", sorted.iter().collect::<String>())
                 };
-                return vec![Response {
+                vec![Response {
                     conn_id,
                     msg: self.make_msg(RPL_CHANNELMODEIS, &[&nick, &chan_name, &mode_str]),
-                }];
+                }]
             } else {
                 // Set: acknowledge by broadcasting MODE to channel members.
                 let mode_str = msg.params[1].clone();
                 // Apply simple single-char modes (no parameters in v1).
-                if mode_str.starts_with('+') {
-                    for ch in mode_str[1..].chars() {
+                if let Some(mode_chars) = mode_str.strip_prefix('+') {
+                    for ch in mode_chars.chars() {
                         self.channels.get_mut(&chan_name).unwrap().modes.insert(ch);
                     }
-                } else if mode_str.starts_with('-') {
-                    for ch in mode_str[1..].chars() {
+                } else if let Some(mode_chars) = mode_str.strip_prefix('-') {
+                    for ch in mode_chars.chars() {
                         self.channels.get_mut(&chan_name).unwrap().modes.remove(&ch);
                     }
                 }
@@ -1561,19 +1560,19 @@ impl IRCServer {
                     command: "MODE".to_string(),
                     params: vec![chan_name.clone(), mode_str],
                 };
-                return self.channels[&chan_name].members.keys()
+                self.channels[&chan_name].members.keys()
                     .cloned()
                     .map(|mid| Response { conn_id: mid, msg: mode_broadcast.clone() })
-                    .collect();
+                    .collect()
             }
         } else {
             // ── User MODE ─────────────────────────────────────────────────────
             if msg.params.len() == 1 {
                 // Query: return user modes.  We don't track user modes in v1.
-                return vec![Response {
+                vec![Response {
                     conn_id,
                     msg: self.make_msg("221", &[&nick, "+"]),
-                }];
+                }]
             } else {
                 // Set user mode: acknowledge.
                 let mode_str = msg.params[1].clone();
@@ -1583,7 +1582,7 @@ impl IRCServer {
                     command: "MODE".to_string(),
                     params: vec![target, mode_str],
                 };
-                return vec![Response { conn_id, msg: mode_broadcast }];
+                vec![Response { conn_id, msg: mode_broadcast }]
             }
         }
     }

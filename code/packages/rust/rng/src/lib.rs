@@ -405,7 +405,7 @@ mod tests {
         let mut g = Lcg::new(99);
         for _ in 0..1000 {
             let f = g.next_float();
-            assert!(f >= 0.0 && f < 1.0, "float out of [0,1): {f}");
+            assert!((0.0..1.0).contains(&f), "float out of [0,1): {f}");
         }
     }
 
@@ -414,7 +414,7 @@ mod tests {
         let mut g = Xorshift64::new(99);
         for _ in 0..1000 {
             let f = g.next_float();
-            assert!(f >= 0.0 && f < 1.0, "float out of [0,1): {f}");
+            assert!((0.0..1.0).contains(&f), "float out of [0,1): {f}");
         }
     }
 
@@ -423,7 +423,7 @@ mod tests {
         let mut g = Pcg32::new(99);
         for _ in 0..1000 {
             let f = g.next_float();
-            assert!(f >= 0.0 && f < 1.0, "float out of [0,1): {f}");
+            assert!((0.0..1.0).contains(&f), "float out of [0,1): {f}");
         }
     }
 
@@ -492,7 +492,7 @@ mod tests {
     fn check_distribution(counts: &[usize; 6]) {
         for (face, &count) in counts.iter().enumerate() {
             assert!(
-                count >= 1400 && count <= 2600,
+                (1400..=2600).contains(&count),
                 "face {} appeared {} times (expected ~2000 ±30%)",
                 face + 1,
                 count

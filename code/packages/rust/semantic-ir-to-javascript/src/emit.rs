@@ -56,21 +56,36 @@
 //! StandardError` catches a `raise MyErr` when `class MyErr < StandardError`
 //! (E2's JS half); the class body's non-`def` statements are emitted inline.
 //!
+//! ## Symbolic expressions + pattern/rewrite (SIR23)
+//!
+//! A `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+//! `SymPatternNamed`/`SymRule`/`SymReplaceAll` node lowers to a call into
+//! `__Sir.Symbolic.*` — a plain-JS port of the published
+//! `sir-runtime-symbolic`/`symbolic-ir`/`cas-pattern-matching` TypeScript
+//! packages (see `runtime.rs`), so the artifact stays self-contained.
+//! `emit_sym_operand` wraps a bare `IntLit`/`FloatLit`/`StrLit` child
+//! through the matching leaf-term constructor before it can sit inside a
+//! term tree. Mirrors the TypeScript backend's SIR23 arms exactly, minus
+//! the `import`.
+//!
 //! ## Deferred nodes (still rejected at the capability check)
 //!
 //! String interpolation (`StrConcat`), the remaining SIR17 OOP scopes
 //! (`ModuleDef`, `SingletonClassDef` dispatch, the `Instance`/`ClassVar`
-//! scopes), and `Intrinsic` are **not emitted**.  Their `Feature`s are
-//! absent from the backend's `accepts_features()` list, so a module that
-//! uses them is rejected at the capability check *before* lowering — the
-//! `panic!` arms below are defence-in-depth that fire only on a backend bug
-//! (the accept-set drifting out of sync with what `emit` handles), never on
-//! user input.
+//! scopes), the SIR22 array/matrix domain, and `Intrinsic` are **not
+//! emitted**.  Their `Feature`s are absent from the backend's
+//! `accepts_features()` list, so a module that uses them is rejected at
+//! the capability check *before* lowering — the `panic!` arms below are
+//! defence-in-depth that fire only on a backend bug (the accept-set
+//! drifting out of sync with what `emit` handles), never on user input.
 
 use std::cell::Cell;
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, Module, Param, ParamKind, Scope, Stmt};
+use semantic_ir::{
+    Block, ElementwiseOpKind, Expr, Function, Global, IndexArg, Module, Param, ParamKind, Scope,
+    Stmt,
+};
 
 use crate::runtime::RUNTIME;
 
@@ -105,12 +120,103 @@ pub fn emit_module(m: &Module) -> String {
     // other source language keeps the default Lisp `#t`/`#f`, so existing Twig
     // output is unchanged.
     //
-    // SECURITY: the replacement value MUST remain a hardcoded literal selected
-    // by a boolean — never text derived from `source_language` or any other
-    // source-controlled field — so this substitution can never inject into the
-    // emitted JavaScript.
+    // A second, independent placeholder: an APL-sourced module renders a bare/
+    // boxed negative number with APL's own high-minus glyph `¯` rather than
+    // ASCII `-` (see `runtime.rs`'s `SIR_DISPLAY_APL_HIGH_MINUS` for the full
+    // writeup, including why this can't be decided from the value's shape
+    // alone — a rank-0 SIR22 NDArray is not unique to APL).
+    //
+    // A THIRD, independent placeholder, added alongside J's own oracle tests
+    // (`j-to-semantic-ir/tests/oracle.rs`, "Bug A"): a J-sourced module
+    // renders a bare/boxed negative number with a leading underscore `_`
+    // and a non-finite value as lowercase `inf`/`_inf`, matching
+    // `j_runtime::value::fmt_num` exactly — neither ASCII `-`/`Infinity`
+    // nor APL's high-minus `¯`/`∞` is J's own convention. Mutually exclusive
+    // with `display_apl_high_minus` by construction (both are computed from
+    // the same single `source_language` field), so `runtime.rs`'s
+    // `fmtNum` never needs to arbitrate between them.
+    //
+    // A FOURTH, independent placeholder (SIR23 addendum item 4 of 4 — see
+    // `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s "Per-language
+    // display convention" section): a Derive-sourced module renders a
+    // compound SIR23 symbolic term through Derive's OWN precedence-aware
+    // infix/prefix/bracket/case-bridged convention (`runtime.rs`'s
+    // `SIR_DISPLAY_DERIVE`, gating `Symbolic.toDisplayString` rather than
+    // `formatSeen`/`fmtNum` — a DIFFERENT stringifier than the first three
+    // flags gate, since this one is about the SIR23 symbolic-expression
+    // domain, not SIR16 booleans or SIR22 arrays), rather than the
+    // generic, source-language-agnostic `head(args, …)` form every other
+    // language (and Derive, before this item) still gets.
+    //
+    // A FIFTH, independent placeholder (task #109, the direct Q sibling of
+    // J's own "A THIRD" entry above, found by `q-to-semantic-ir/tests/
+    // oracle.rs`'s own `DISPLAY_GAP` cases): `true` when the module's
+    // `source_language` is Q, else `false`. Q's own console convention
+    // renders a negative number with a plain ASCII `-` (never APL's
+    // high-minus `¯`, never J's leading underscore `_`) and a non-finite
+    // value as lowercase `-inf`/`inf` — note the ASCII minus prefix on
+    // infinity, DIFFERENT from J's own `_inf` spelling
+    // (`q_runtime::value::fmt_num`, ported 1:1 in `ArrayRt.fmtNum` below).
+    // Q's bare/boxed-scalar path already happens to print ASCII `-` today
+    // (the generic `String(v)`/`floatToRubyString` fallback ends up
+    // matching Q's own convention for a plain negative integer by
+    // coincidence), but NOT for non-finite values or whole-valued floats
+    // (see `runtime.rs`'s `formatSeen` gate for the exact divergence), and
+    // a genuine SIR22 `NDArray` result reaches `ArrayRt.fmtNum`, which
+    // renders APL's own high-minus glyph unconditionally whenever neither
+    // of the other two `fmtNum`-gating flags is set — this flag closes
+    // both gaps in one place. Mutually exclusive with the four flags above
+    // by construction (all five are computed from the same single
+    // `source_language` field in `emit.rs`), so `fmtNum`/`formatSeen`
+    // below never need to arbitrate between them — only one can ever be
+    // `true` for a given module.
+    //
+    // A SIXTH, independent placeholder (MA13/Wave 7 close-out): `true` when
+    // the module's `source_language` is Axiom, else `false`. Gates
+    // `Symbolic.toDisplayString`'s `"symbol"` case (see `runtime.rs`'s
+    // `SIR_DISPLAY_AXIOM_BOOLEAN` for the full writeup) so the shared
+    // comparison/logic/`has`-query handlers' `True`/`False` symbols render
+    // real Axiom's own lowercase `true`/`false` convention. Mutually
+    // exclusive with the five flags above by construction (all six are
+    // computed from the same single `source_language` field).
+    //
+    // SECURITY: all six replacement values MUST remain a hardcoded literal
+    // selected by a boolean — never text derived from `source_language` or
+    // any other source-controlled field — so this substitution can never
+    // inject into the emitted JavaScript.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
+    let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
+    let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
+    let display_derive = m.metadata.source_language.as_deref() == Some("derive");
+    let display_q_ascii_minus = m.metadata.source_language.as_deref() == Some("q");
+    let display_axiom_boolean = m.metadata.source_language.as_deref() == Some("axiom");
+    out.push_str(
+        &RUNTIME
+            .replace(
+                "__SIR_DISPLAY_RUBY__",
+                if display_ruby { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_APL_HIGH_MINUS__",
+                if display_apl_high_minus { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_J_UNDERSCORE__",
+                if display_j_underscore { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_DERIVE__",
+                if display_derive { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_Q_ASCII_MINUS__",
+                if display_q_ascii_minus { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_AXIOM_BOOLEAN__",
+                if display_axiom_boolean { "true" } else { "false" },
+            ),
+    );
     emit_ancestry_registration(&mut out, m);
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -415,6 +521,57 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, "{}{} = ", pad, sanitize_ident(global));
                 emit_expr(out, value, indent);
                 out.push_str(";\n");
+            } else if is_sym23_root_shape(expr) {
+                // SIR23 addendum, item 1: evaluate a top-level symbolic
+                // statement exactly ONCE here, at the statement boundary
+                // — never inside `Expr::SymApply`'s own codegen arm
+                // (which keeps emitting a bare, unevaluated
+                // `__Sir.Symbolic.apply(...)`, unchanged). `SymApply`/
+                // `SymSymbol`/`SymRational` are confirmed exhaustive as
+                // the SIR23 root shapes these frontends' `lower.rs`
+                // modules ever hand back at statement level
+                // (`derive-to-semantic-ir/CHANGELOG.md`'s own disclosed
+                // scope: "this crate therefore only ever constructs
+                // Expr::SymSymbol/Expr::SymApply"). `evalTerm` recurses
+                // into `head`/every arg itself (mirroring
+                // `eval_apply`'s own "evaluate args first" step), so one
+                // top-level call here evaluates an arbitrarily nested
+                // expression bottom-up — wrapping every NESTED
+                // `SymApply` occurrence instead would cause redundant,
+                // potentially-exponential re-evaluation, which the SIR23
+                // addendum calls out explicitly.
+                out.push_str(&pad);
+                out.push_str("__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
+                emit_expr(out, expr, indent);
+                out.push_str("));\n");
+            } else if let Some(inner) = pick_print_of_sym23_root(expr) {
+                // `print(<bare SIR23 root shape>)` — the harness-only
+                // observability pattern `derive-to-semantic-ir`'s and
+                // `reduce-to-semantic-ir`'s own `tests/oracle.rs` use
+                // (their frontends' own lowering never wraps a top-level
+                // statement in `print`/`console.log` itself — see each
+                // oracle file's own module doc, "a harness-only 'make it
+                // observable' step" — so this shape never occurs in
+                // production output today, only in a test harness that
+                // needs a value on stdout to diff). Discovered
+                // empirically while verifying this addendum item against
+                // that exact harness: without this arm, the harness's own
+                // `wrap_top_level_in_print` re-shapes the statement's
+                // `expr` from a bare SIR23 root (which the arm above
+                // would evaluate) into `BuiltinCall("print", [bare root])`
+                // — invisible to the check above, so the printed value
+                // stayed unevaluated even with `evalTerm` fully wired.
+                // The fix generalizes the SAME "evaluate the one value
+                // this statement observes" policy to this shape too — the
+                // statement still gets exactly one `evalTerm` call, still
+                // never touches `Expr::SymApply`'s own codegen arm, and
+                // still lives entirely in this `Stmt::ExprStmt` arm,
+                // mirroring the `pick_global_set` special-case immediately
+                // above.
+                out.push_str(&pad);
+                out.push_str("__Sir.print(__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
+                emit_expr(out, inner, indent);
+                out.push_str(")));\n");
             } else {
                 out.push_str(&pad);
                 emit_expr(out, expr, indent);
@@ -630,17 +787,83 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             }
             out.push('\n');
         }
-        // ── SIR22: array/matrix indexed assignment (deferred) ───────
-        // `Feature::NDArrays` is not in `ACCEPTED_FEATURES` (see lib.rs),
-        // so `check_module` rejects any module using `IndexSet` before
-        // lowering reaches this emitter. Panic here only guards against
-        // that capability check ever drifting — mirrors the `StrConcat`/
-        // `Intrinsic` deferred-kind panics in `emit_expr` below.  Real
-        // codegen (`__SirArray.indexSet(...)`, per the SIR22 spec's
-        // "Backend impact") lands in a follow-up PR.
-        Stmt::IndexSet { span, .. } => {
-            panic!("javascript backend reached a deferred `IndexSet` at {span} — not accepted yet");
+        // ── SIR22: array/matrix indexed assignment ──────────────────
+        // `target[indices...] = value;` — mutates in place via
+        // `__Sir.Array.indexSet` (see `runtime.rs`'s "array/matrix
+        // domain" section), matching the SIR22 spec's own note that
+        // `IndexSet` is a `Stmt`, not a pure `Expr`, for exactly this
+        // in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str(&pad);
+            out.push_str("__Sir.Array.indexSet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("], ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
         }
+    }
+}
+
+/// The JS string `__Sir.Array.elementwise`'s `applyOp` switches on —
+/// exact `ElementwiseOpKind` variant names, not `.name()`'s lowercase
+/// forms (`"add"`, etc., used elsewhere for e.g. debug/display), since
+/// this string is a real runtime dispatch key, not a cosmetic label.
+fn elementwise_op_js_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "Add",
+        ElementwiseOpKind::Sub => "Sub",
+        ElementwiseOpKind::Mul => "Mul",
+        ElementwiseOpKind::Div => "Div",
+        ElementwiseOpKind::Pow => "Pow",
+        ElementwiseOpKind::Max => "Max",
+        ElementwiseOpKind::Min => "Min",
+        ElementwiseOpKind::Eq => "Eq",
+        ElementwiseOpKind::Ne => "Ne",
+        ElementwiseOpKind::Lt => "Lt",
+        ElementwiseOpKind::Le => "Le",
+        ElementwiseOpKind::Ge => "Ge",
+        ElementwiseOpKind::Gt => "Gt",
+    }
+}
+
+/// Emit one `IndexArg` as the JS object literal `__Sir.Array.indexGet`/
+/// `indexSet` expect: `{ kind: "scalar", value }` / `{ kind: "whole" }` /
+/// `{ kind: "range", indices: <NDArray> }`. The `Range` case reuses
+/// `emit_expr` on the inner `Expr::Range` node directly — that node's own
+/// `Expr::Range` arm already emits a call into `__Sir.Array.range(...)`,
+/// which returns exactly the `NDArray` shape `indices` needs, so no
+/// separate handling is needed here.
+fn emit_index_arg(out: &mut String, arg: &IndexArg, indent: usize) {
+    match arg {
+        IndexArg::Scalar(e) => {
+            out.push_str("{ kind: \"scalar\", value: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+        IndexArg::Whole => {
+            out.push_str("{ kind: \"whole\" }");
+        }
+        IndexArg::Range(e) => {
+            out.push_str("{ kind: \"range\", indices: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+    }
+}
+
+fn emit_index_args(out: &mut String, indices: &[IndexArg], indent: usize) {
+    for (i, arg) in indices.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_index_arg(out, arg, indent);
     }
 }
 
@@ -662,6 +885,33 @@ fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
     None
 }
 
+/// Is `e` one of the three SIR23 root shapes a symbolic-domain frontend
+/// (Wolfram/Macsyma/Derive/Reduce/Maple) ever hands back at STATEMENT
+/// level? See `emit_stmt`'s `Stmt::ExprStmt` arm for how this gates the
+/// SIR23 addendum's `evalTerm` wrap.
+fn is_sym23_root_shape(e: &Expr) -> bool {
+    matches!(
+        e,
+        Expr::SymApply { .. } | Expr::SymSymbol { .. } | Expr::SymRational { .. }
+    )
+}
+
+/// Detect `BuiltinCall("print", [<bare SIR23 root shape>])` and return
+/// the inner expression. See `emit_stmt`'s `Stmt::ExprStmt` arm for why
+/// this needs the identical `evalTerm` treatment a bare top-level SIR23
+/// statement gets — this shape is the harness-only observability pattern
+/// `derive-to-semantic-ir`'s/`reduce-to-semantic-ir`'s own `tests/
+/// oracle.rs` use (`wrap_top_level_in_print`), not something any
+/// frontend's own lowering emits today.
+fn pick_print_of_sym23_root(e: &Expr) -> Option<&Expr> {
+    if let Expr::BuiltinCall { name, args, .. } = e {
+        if name == "print" && args.len() == 1 && is_sym23_root_shape(&args[0]) {
+            return Some(&args[0]);
+        }
+    }
+    None
+}
+
 // ---------------------------------------------------------------------------
 // Expressions
 // ---------------------------------------------------------------------------
@@ -672,7 +922,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             let _ = write!(out, "{value}");
         }
         Expr::FloatLit { value, .. } => {
-            out.push_str(&format_float(*value));
+            // A Ruby `Float` literal is minted through `mkFloat`, which boxes
+            // an integral value (`7.0` — otherwise indistinguishable from the
+            // Integer `7`) and leaves a non-integral one native (`3.5`).  This
+            // is where the Integer-vs-Float tag is BORN; every downstream
+            // numeric helper unwraps via `numOf` and re-tags via `mkFloat`.
+            let _ = write!(out, "__Sir.mkFloat({})", format_float(*value));
         }
         Expr::BoolLit { value, .. } => {
             out.push_str(if *value { "true" } else { "false" });
@@ -820,26 +1075,285 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::KeywordArg { span, .. } => {
             panic!("javascript backend reached a `KeywordArg` outside call-argument position at {span} — this is a backend bug (keyword args are collapsed by emit_call_args)");
         }
-        // ── SIR22: array/matrix nodes (deferred) ──────────────────────
-        // Neither `Feature::NDArrays` nor `Feature::MatrixOps` is in
-        // `ACCEPTED_FEATURES` (see lib.rs), so `check_module` rejects any
-        // module using these nodes before lowering reaches this emitter —
-        // per the SIR22 spec's "Backend impact": real codegen (calls into
-        // `sir-runtime-array`'s `__SirArray.matmul`/`elementwise`/`range`/
-        // `indexGet`) is a first-wave-JS follow-up PR, not required for
-        // this spec to land safely.  These panics only guard against the
-        // capability check ever drifting, exactly like `StrConcat` above.
-        Expr::ArrayLit { span, .. }
-        | Expr::Range { span, .. }
-        | Expr::MatMul { span, .. }
-        | Expr::ElementwiseOp { span, .. }
-        | Expr::Transpose { span, .. }
-        | Expr::IndexGet { span, .. } => {
+        // ── SIR22: array/matrix nodes (base cut) ──────────────────────
+        // Real codegen: calls into the inlined `__Sir.Array.*` sub-runtime
+        // (see `runtime.rs`'s "array/matrix domain" section) — a plain-JS
+        // port of `sir-runtime-array`, mirroring how the SIR23 `Sym*` arms
+        // above call into `__Sir.Symbolic.*`. `rows` is row-major in the
+        // literal syntax (per the SIR22 spec); `__Sir.Array.fromRows`
+        // reconciles that with column-major storage, so the emitter just
+        // nests the row/element expressions unchanged.
+        Expr::ArrayLit { rows, .. } => {
+            out.push_str("__Sir.Array.fromRows([");
+            for (i, row) in rows.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_args(out, row, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        // `__Sir.Array.range(start, stop, step)` — note the argument
+        // ORDER: the SIR node's own field order is `start, step, stop`,
+        // but `sir-runtime-array`'s `range(start, stop, step = 1)`
+        // (and this runtime's port of it) takes `stop` before `step`.
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            out.push_str("__Sir.Array.range(");
+            emit_expr(out, start, indent);
+            out.push_str(", ");
+            emit_expr(out, stop, indent);
+            out.push_str(", ");
+            match step {
+                Some(step) => emit_expr(out, step, indent),
+                None => out.push('1'),
+            }
+            out.push(')');
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            out.push_str("__Sir.Array.matmul(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        // The op name must match `applyOp`'s switch in `runtime.rs`
+        // exactly (`"Add"`, not `.name()`'s lowercase `"add"`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.elementwise({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            out.push_str("__Sir.Array.transpose(");
+            emit_expr(out, target, indent);
+            let _ = write!(out, ", {conjugate})");
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            out.push_str("__Sir.Array.indexGet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("])");
+        }
+        // ── SIR22 addendum: APL primitive operators — real codegen ────
+        // Each of the nine maps 1:1 onto a call into the ported
+        // `__Sir.Array.*` sub-runtime (see `runtime.rs`'s "SIR22 addendum"
+        // section) — the same treatment `ElementwiseOp`/`Transpose`/
+        // `MatMul` above already get for the SIR22 base cut.
+        // `Reduce`/`Scan`/`OuterProduct` carry an `ElementwiseOpKind` and
+        // so reuse `elementwise_op_js_name` exactly like `ElementwiseOp`
+        // does; the remaining six have no `op` field at all (they are
+        // "bespoke, not BinOp-shaped" per the SIR22 spec addendum and
+        // `apl-runtime::builtins`'s own doc comment) and just recurse into
+        // their operand(s).
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.reduce({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.scan({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.outer({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            out.push_str("__Sir.Array.shape(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs`) — `__Sir.Array.reshape(shapeArg, target)` takes the
+        // same order, so no argument reordering is needed at this call
+        // site (contrast `Expr::Range`'s `start, step, stop` vs.
+        // `range`'s `start, stop, step` just above, which DOES reorder).
+        Expr::Reshape { shape, target, .. } => {
+            out.push_str("__Sir.Array.reshape(");
+            emit_expr(out, shape, indent);
+            out.push_str(", ");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            out.push_str("__Sir.Array.indexGenerator(");
+            emit_expr(out, count, indent);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            out.push_str("__Sir.Array.indexOf(");
+            emit_expr(out, haystack, indent);
+            out.push_str(", ");
+            emit_expr(out, needle, indent);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            out.push_str("__Sir.Array.ravel(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            out.push_str("__Sir.Array.catenate(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
+        // validated module (capability check rejects it).
+        Expr::Convert { span, .. } => {
             panic!(
-                "javascript backend reached a deferred SIR22 array/matrix expression ({}) at {span} — not accepted yet",
+                "javascript backend reached a deferred SIR26 expression ({}) at {span} — not accepted yet",
                 e.kind_name()
             );
         }
+        // ── SIR23: symbolic expression + pattern/rewrite nodes ────────
+        // Mirrors the TypeScript backend's SIR23 arms exactly, but calls
+        // into the INLINED `__Sir.Symbolic.*` runtime (runtime.rs) rather
+        // than an imported `@coding-adventures/sir-runtime-symbolic`.
+        Expr::SymSymbol { name, .. } => {
+            out.push_str("__Sir.Symbolic.sym(");
+            out.push_str(&quote_js_string(name));
+            out.push(')');
+        }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "__Sir.Symbolic.rational({numer}, {denom})");
+        }
+        Expr::SymApply { head, args, .. } => {
+            out.push_str("__Sir.Symbolic.apply(");
+            emit_sym_operand(out, head, indent);
+            out.push_str(", [");
+            for (i, a) in args.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, a, indent);
+            }
+            out.push_str("])");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            out.push_str("__Sir.Symbolic.blank()");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                out.push_str("__Sir.Symbolic.blankTyped(");
+                out.push_str(&quote_js_string(name));
+                out.push(')');
+            }
+            _ => panic!(
+                "javascript backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            out.push_str("__Sir.Symbolic.named(");
+            out.push_str(&quote_js_string(name));
+            out.push_str(", ");
+            emit_sym_operand(out, pattern, indent);
+            out.push(')');
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            out.push_str(if *delayed {
+                "__Sir.Symbolic.ruleDelayed("
+            } else {
+                "__Sir.Symbolic.rule("
+            });
+            emit_sym_operand(out, lhs, indent);
+            out.push_str(", ");
+            emit_sym_operand(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            out.push_str("__Sir.Symbolic.unwrap(");
+            out.push_str(if *repeated {
+                "__Sir.Symbolic.replaceRepeated("
+            } else {
+                "__Sir.Symbolic.replaceAll("
+            });
+            emit_sym_operand(out, expr, indent);
+            out.push_str(", [");
+            for (i, r) in rules.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, r, indent);
+            }
+            out.push_str("]))");
+        }
+    }
+}
+
+/// Wrap a `SymApply`/`SymRule`/`SymReplaceAll` operand that is a bare
+/// literal (`IntLit`/`FloatLit`/`StrLit`) through the matching
+/// `__Sir.Symbolic.*` leaf-term constructor — a raw JS number/string is
+/// never a valid Symbolic term, so it must become one before it can sit
+/// inside a term tree. Any other operand (already a Symbolic-producing
+/// expression, e.g. a nested `SymApply` or a `VarRef`) emits unchanged.
+/// Mirrors the TypeScript backend's identically-named helper exactly.
+fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
+    match e {
+        Expr::IntLit { .. } => {
+            out.push_str("__Sir.Symbolic.int(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::FloatLit { value, .. } => {
+            // The Symbolic constructors want a RAW number to wrap into a term
+            // (`{kind:"float", value}`), not a tagged-float box — so emit the
+            // bare literal here rather than routing through `mkFloat`.
+            let _ = write!(out, "__Sir.Symbolic.numberNode({})", format_float(*value));
+        }
+        Expr::StrLit { .. } => {
+            out.push_str("__Sir.Symbolic.stringNode(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        _ => emit_expr(out, e, indent),
     }
 }
 
@@ -1202,11 +1716,29 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if args.len() == 2 {
         let poly = match name {
             "+" => Some("__Sir.plus"),
+            // `<<` (Ruby's shift operator) is ALSO polymorphic — native JS
+            // `<<` is wrong for every receiver type (Int32-coercing bitwise
+            // op for numbers, string concat via `+` only, no Array-push
+            // meaning at all) — so it routes through `__Sir.shiftLeft` the
+            // same way. The frontend always emits this as a 2-arg call (a
+            // `<<` chain lowers to NESTED binary calls, not one flat
+            // variadic one), so this fast path covers every frontend-
+            // sourced use; `__Sir.shiftLeft` itself stays variadic-capable
+            // for a hand-built module.
+            "<<" => Some("__Sir.shiftLeft"),
             "*" => Some("__Sir.times"),
             // `/` routes through the runtime `divide` helper, which ADDS
             // the Ruby zero-divisor check (native JS `/` yields `Infinity`,
-            // not a `ZeroDivisionError`).  See `runtime::divide`.
+            // not a `ZeroDivisionError`) AND picks Integer#/ floor vs Float#/
+            // true-division from the operand tags.  See `runtime::divide`.
             "/" => Some("__Sir.divide"),
+            // `-` and `%` route through runtime helpers (not native infix)
+            // because their result must be RE-TAGGED: a boxed Float operand
+            // yields a boxed Float result (`7.0 - 1 == 6.0`), which native
+            // `-`/`%` on a `SirFloat` object cannot produce.  See
+            // `runtime::minus` / `runtime::mod`.
+            "-" => Some("__Sir.minus"),
+            "%" => Some("__Sir.mod"),
             _ => None,
         };
         if let Some(helper) = poly {
@@ -1218,26 +1750,32 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
-    // Other 2-argument binary operators → native infix.  `-`/`/`/`%` are
-    // numeric-only in the SIR contract, and the comparisons are pure
-    // value tests, so native JS infix is faithful.
+    // 2-argument comparisons route through thin runtime helpers that unwrap
+    // a tagged Float via `numOf` before comparing.  `numOf` is the IDENTITY
+    // for every non-`SirFloat` value, so `eq`/`lt`/… are byte-identical to
+    // the old native `===`/`<`/… for all existing values, and additionally
+    // correct for a boxed Float (`7.0 == 7` is true; `7.0 < 8` works — a
+    // native `<` on a `SirFloat` object would coerce to `NaN`).
     if args.len() == 2 {
-        let infix = match name {
-            "-" => Some("-"),
-            "/" => Some("/"),
-            "%" => Some("%"),
-            "=" => Some("==="),
-            "!=" => Some("!=="),
-            "<" => Some("<"),
-            ">" => Some(">"),
-            "<=" => Some("<="),
-            ">=" => Some(">="),
+        let cmp = match name {
+            "=" => Some("__Sir.eq"),
+            // `==` is the operator spelling the Ruby frontend emits; it is a
+            // synonym for `=` (both structural equality).  The others were
+            // already routed; only `==` was missing, so `puts(1 == 1)` fell
+            // through to `callBuiltin`, which has no `==` and threw
+            // `TypeError: unknown builtin: ==`.
+            "==" => Some("__Sir.eq"),
+            "!=" => Some("__Sir.ne"),
+            "<" => Some("__Sir.lt"),
+            ">" => Some("__Sir.gt"),
+            "<=" => Some("__Sir.le"),
+            ">=" => Some("__Sir.ge"),
             _ => None,
         };
-        if let Some(op) = infix {
-            out.push('(');
+        if let Some(helper) = cmp {
+            let _ = write!(out, "{helper}(");
             emit_expr(out, &args[0], indent);
-            let _ = write!(out, " {op} ");
+            out.push_str(", ");
             emit_expr(out, &args[1], indent);
             out.push(')');
             return;
@@ -1252,10 +1790,26 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 out.push_str("))");
                 return;
             }
-            "neg" => {
-                out.push_str("(-(");
+            // MATLAB/Octave-family truthiness ("nonzero is true") for a
+            // boolean-context operand that may be a genuine JS boolean
+            // (an already-lowered comparison/`~`/`&&`/`||`) or a bare
+            // number — `matlabTruthy` handles both correctly, unlike the
+            // canonical `truthy()` above, which implements the unrelated
+            // Ruby/Lisp convention (`0` is truthy there). See
+            // `matlab-to-semantic-ir::lower::to_matlab_condition`, the
+            // sole emitter of this builtin.
+            "matlab_truthy" => {
+                out.push_str("__Sir.matlabTruthy(");
                 emit_expr(out, &args[0], indent);
-                out.push_str("))");
+                out.push(')');
+                return;
+            }
+            "neg" => {
+                // Unary minus re-tags: `-(7.0)` is the boxed Float `-7.0`,
+                // which native `-` on a `SirFloat` object cannot produce.
+                out.push_str("__Sir.neg(");
+                emit_expr(out, &args[0], indent);
+                out.push(')');
                 return;
             }
             "len" => {
@@ -1466,6 +2020,8 @@ fn is_js_reserved(s: &str) -> bool {
             | "private"
             | "protected"
             | "public"
+            | "arguments"
+            | "eval"
     )
 }
 
@@ -1550,6 +2106,25 @@ mod tests {
     }
 
     #[test]
+    fn is_js_reserved_flags_strict_mode_contextual_words() {
+        // `eval` and `arguments` are not syntactic keywords, but this
+        // backend always emits strict-mode code (`"use strict";` / ES
+        // modules), and strict mode forbids binding, assigning to, or
+        // otherwise shadowing either name — so they must be treated as
+        // reserved here too, exactly like the syntactic keywords above.
+        assert!(is_js_reserved("eval"));
+        assert!(is_js_reserved("arguments"));
+        assert!(sanitize_ident("eval").starts_with("_$"));
+        assert!(sanitize_ident("arguments").starts_with("_$"));
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_js_reserved("value"));
+        assert!(!is_js_reserved("evaluate"));
+        assert!(!is_js_reserved("argument"));
+    }
+
+    #[test]
     fn sanitize_rewrites_invalid_chars() {
         let r = sanitize_ident("null?");
         assert!(r.starts_with("_$"));
@@ -1623,7 +2198,7 @@ mod tests {
                 value: 2.5,
                 span: s()
             }),
-            "2.5"
+            "__Sir.mkFloat(2.5)"
         );
         assert_eq!(
             emit_e(&Expr::BoolLit {
@@ -1696,7 +2271,7 @@ mod tests {
     }
 
     #[test]
-    fn emit_builtin_arithmetic_is_native_infix() {
+    fn emit_builtin_arithmetic_routes_through_retagging_helpers() {
         let two = || {
             vec![
                 Expr::IntLit {
@@ -1709,9 +2284,10 @@ mod tests {
                 },
             ]
         };
-        // `-`/`%` stay native infix (numeric-only in the SIR contract).
-        assert_eq!(emit_e(&bc("-", two())), "(1 - 2)");
-        assert_eq!(emit_e(&bc("%", two())), "(1 % 2)");
+        // `-`/`%` route through runtime helpers (not native infix) so a boxed
+        // Float operand yields a boxed Float result (`7.0 - 1 == 6.0`).
+        assert_eq!(emit_e(&bc("-", two())), "__Sir.minus(1, 2)");
+        assert_eq!(emit_e(&bc("%", two())), "__Sir.mod(1, 2)");
     }
 
     #[test]
@@ -1758,7 +2334,7 @@ mod tests {
     }
 
     #[test]
-    fn emit_builtin_comparison_is_native_infix() {
+    fn emit_builtin_comparison_routes_through_numof_helpers() {
         let two = || {
             vec![
                 Expr::IntLit {
@@ -1771,12 +2347,18 @@ mod tests {
                 },
             ]
         };
-        assert_eq!(emit_e(&bc("=", two())), "(1 === 2)");
-        assert_eq!(emit_e(&bc("!=", two())), "(1 !== 2)");
-        assert_eq!(emit_e(&bc("<", two())), "(1 < 2)");
-        assert_eq!(emit_e(&bc(">", two())), "(1 > 2)");
-        assert_eq!(emit_e(&bc("<=", two())), "(1 <= 2)");
-        assert_eq!(emit_e(&bc(">=", two())), "(1 >= 2)");
+        // Comparisons route through thin `numOf`-unwrapping helpers — for
+        // plain numbers these are exactly the old `===`/`<`/…, and additionally
+        // correct for a boxed Float (`7.0 == 7`, `7.0 < 8`).
+        assert_eq!(emit_e(&bc("=", two())), "__Sir.eq(1, 2)");
+        // `==` is the operator spelling the Ruby frontend emits — a synonym
+        // for `=`, and the one arm that was missing (so `puts(1 == 1)` threw).
+        assert_eq!(emit_e(&bc("==", two())), "__Sir.eq(1, 2)");
+        assert_eq!(emit_e(&bc("!=", two())), "__Sir.ne(1, 2)");
+        assert_eq!(emit_e(&bc("<", two())), "__Sir.lt(1, 2)");
+        assert_eq!(emit_e(&bc(">", two())), "__Sir.gt(1, 2)");
+        assert_eq!(emit_e(&bc("<=", two())), "__Sir.le(1, 2)");
+        assert_eq!(emit_e(&bc(">=", two())), "__Sir.ge(1, 2)");
     }
 
     #[test]
@@ -1799,7 +2381,7 @@ mod tests {
                     span: s()
                 }]
             )),
-            "(-(5))"
+            "__Sir.neg(5)"
         );
         assert_eq!(
             emit_e(&bc(
@@ -2266,40 +2848,42 @@ mod tests {
 
     #[test]
     fn emit_float_lit_decimal_and_specials() {
+        // A Float literal is minted through `__Sir.mkFloat`, which boxes an
+        // integral value and leaves a non-integral / non-finite one native.
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: 3.0,
                 span: s()
             }),
-            "3.0"
+            "__Sir.mkFloat(3.0)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: 2.5,
                 span: s()
             }),
-            "2.5"
+            "__Sir.mkFloat(2.5)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: f64::INFINITY,
                 span: s()
             }),
-            "Infinity"
+            "__Sir.mkFloat(Infinity)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: f64::NEG_INFINITY,
                 span: s()
             }),
-            "-Infinity"
+            "__Sir.mkFloat(-Infinity)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: f64::NAN,
                 span: s()
             }),
-            "NaN"
+            "__Sir.mkFloat(NaN)"
         );
     }
 
@@ -2510,7 +3094,7 @@ mod tests {
         };
         let out = emit_s(&st);
         assert!(
-            out.starts_with("while (__Sir.truthy((i < 3))) {\n"),
+            out.starts_with("while (__Sir.truthy(__Sir.lt(i, 3))) {\n"),
             "got {out}"
         );
         assert!(out.contains("i = __Sir.plus(i, 1);"));

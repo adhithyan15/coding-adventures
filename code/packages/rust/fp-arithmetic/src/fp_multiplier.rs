@@ -117,18 +117,18 @@ pub fn fp_mul(a: &FloatBits, b: &FloatBits) -> FloatBits {
     // ===================================================================
     let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
     let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-    let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-    let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+    let mut mant_a = bits_msb_to_int(&a.mantissa);
+    let mut mant_b = bits_msb_to_int(&b.mantissa);
 
     // Add implicit leading 1 for normal numbers
     if exp_a != 0 {
-        mant_a = (1u64 << fmt.mantissa_bits) | mant_a;
+        mant_a |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_a = 1; // Denormal: true exponent = 1 - bias
     }
 
     if exp_b != 0 {
-        mant_b = (1u64 << fmt.mantissa_bits) | mant_b;
+        mant_b |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_b = 1;
     }
@@ -182,7 +182,12 @@ pub fn fp_mul(a: &FloatBits, b: &FloatBits) -> FloatBits {
 
         result_mant = product >> rp;
 
-        // Apply rounding
+        // Apply rounding (round to nearest even). The two `+= 1` arms are
+        // intentionally kept separate for clarity: the first rounds up because
+        // the remainder exceeds half; the second rounds up because it is exactly
+        // half and the mantissa is odd. They take the same action, so allow the
+        // identical-blocks lint.
+        #[allow(clippy::if_same_then_else)]
         if guard == 1 {
             if round_bit == 1 || sticky == 1 {
                 result_mant += 1;

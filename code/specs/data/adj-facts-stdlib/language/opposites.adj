@@ -1,0 +1,70 @@
+% ============================================================================
+% opposites — a common word and its opposite (antonym)
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% One of the very first things a child learns about words: many of them come in
+% pairs that mean the reverse of each other. HOT is the opposite of COLD, BIG is
+% the opposite of SMALL. The word for "the opposite of" is an ANTONYM. This tiny
+% library records a handful of clean word→opposite pairs so an ADJ program can
+% recall them, each one cited to a dictionary. Recall is a binding query:
+%
+%     ? opposite(hot, $Word)      % cold
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `opposite(word, opposite)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% opposite WITH its source, on the CPU, with zero model calls, and ABSTAINS on
+% any word not in the table (it never invents an opposite it cannot cite).
+%
+% The pairs, as a truth table:
+%
+%     word    opposite    read as…
+%     ------  --------    ----------------------
+%     hot     cold        "the opposite of hot is cold"
+%     big     small       "the opposite of big is small"
+%     fast    slow        "the opposite of fast is slow"
+%     wet     dry         "the opposite of wet is dry"
+%     happy   sad         "the opposite of happy is sad"
+%     open    closed      "the opposite of open is closed"
+%     hard    soft        "the opposite of hard is soft"
+%
+% Only ONE direction is shipped per pair (word → its opposite). A query like
+% `? opposite(cold, $W)` therefore ABSTAINS: the honest-abstention property is
+% deliberate — the table answers only what its source explicitly lists, and a
+% word with no shipped opposite (e.g. `purple`) returns no invented answer.
+%
+% Provenance — nothing here is from memory. Each pair is copied from the English
+% Wiktionary entry for the FIRST word, whose "Antonyms" line lists the opposite
+% verbatim. The per-pair citable spans (quoted exactly as printed) are:
+%
+%     hot    → en.wiktionary.org/wiki/hot     "Antonyms: cold, chilled"
+%     big    → en.wiktionary.org/wiki/big     "little, small, tiny, minuscule, …"
+%     fast   → en.wiktionary.org/wiki/fast    "Antonyms: slow"  (sense: quick/rapid)
+%     wet    → en.wiktionary.org/wiki/wet     "Antonym: dry"
+%     happy  → en.wiktionary.org/wiki/happy   "blue, depressed, down, miserable, moody, morose, sad, unhappy"
+%     open   → en.wiktionary.org/wiki/open    "closed, shut"
+%     hard   → en.wiktionary.org/wiki/hard    "Antonym: soft"  (sense: resistant to pressure)
+%
+% The single `source` span below is the clearest one (the `hot` entry); the
+% `locator` points at that entry, and each remaining pair's own page + verbatim
+% span is quoted above so every row is independently checkable. `trust
+% consensus` — a dictionary is a secondary reference, not a primary authority.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table opposite {
+    columns word, opposite
+
+    row (hot, cold)
+    row (big, small)
+    row (fast, slow)
+    row (wet, dry)
+    row (happy, sad)
+    row (open, closed)
+    row (hard, soft)
+
+    source "Antonyms: cold, chilled"
+    locator "https://en.wiktionary.org/wiki/hot"
+    trust consensus
+}

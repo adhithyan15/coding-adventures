@@ -122,6 +122,32 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // call collapses its keyword args into one trailing object literal.  Direct
     // lowering, no runtime helper — mirrors how `DefaultParams` is declared.
     Feature::KeywordParams,
+    // SIR23: the symbolic-expression + pattern/rewrite domain.  A
+    // `SymSymbol`/`SymApply` node sets `SymbolicExpr`; a `SymPatternBlank`/
+    // `SymPatternNamed`/`SymRule`/`SymReplaceAll` node sets
+    // `PatternMatching`.  Both route through the imported
+    // `@coding-adventures/sir-runtime-symbolic` package (`__SirSym`), gated
+    // by `uses_symbolic` — see `emit`'s SIR23 arms and
+    // `code/specs/SIR23-symbolic-pattern-semantic-ir.md` §"Backend impact".
+    Feature::SymbolicExpr,
+    Feature::PatternMatching,
+    // A `SymRational` node sets this (shared with SIR22 rather than a new
+    // flag of its own — see the SIR23 spec's "New Feature flags"); no other
+    // construct in this backend triggers it yet, so accepting it is scoped
+    // exactly to `SymRational`.
+    Feature::Rationals,
+    // SIR22: the full array/matrix domain — the base cut (`ArrayLit`,
+    // `Range`, `MatMul`, `ElementwiseOp`, `Transpose`, `IndexGet` (an
+    // `Expr`), `IndexSet` (a `Stmt`)) AND the "APL addendum" (`Reduce`/
+    // `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+    // `Ravel`/`Catenate`) share these same three features (the addendum
+    // spec gives them no flag of their own) and both now lower to calls
+    // into the imported `@coding-adventures/sir-runtime-array` package
+    // (`__SirArray`), gated by `uses_array` — see `emit`'s SIR22 arms and
+    // `code/specs/SIR22-array-matrix-semantic-ir.md` §"Backend impact".
+    Feature::NDArrays,
+    Feature::MatrixOps,
+    Feature::ArrayColumnMajor,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -1203,7 +1229,7 @@ mod tests {
 
     #[test]
     fn defined_method_call_operand_emits_method_ts() {
-        use semantic_ir::Scope;
+        
         // Q10h: `defined?(recv.meth)` — the `__method__` dispatch envelope —
         // reports the constant "method", not the generic "expression". The
         // receiver and method name are never rendered (non-evaluation contract).
@@ -1565,6 +1591,633 @@ mod tests {
         assert!(
             src.contains("g(7)") && !src.contains("g(7, {"),
             "a call with no keyword args emits no trailing object; got:\n{src}"
+        );
+    }
+
+    // ── SIR23: symbolic-expression/pattern codegen ──────────────────────
+
+    #[test]
+    fn accepts_sir23_symbolic_features() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::SymbolicExpr,
+            Feature::PatternMatching,
+            Feature::Rationals,
+        ]);
+        compile(&m).expect("SIR23 features accepted");
+    }
+
+    #[test]
+    fn non_symbolic_module_omits_sir_runtime_symbolic_import() {
+        let a = compile(&minimal_module()).expect("compile");
+        assert!(
+            !a.source.contains("sir-runtime-symbolic"),
+            "a module with no symbolic node must not import sir-runtime-symbolic; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn symbolic_module_imports_sir_runtime_symbolic() {
+        let m = module_with_main_body(
+            vec![],
+            Expr::SymSymbol { name: "z".into(), span: s() },
+            &[Feature::SymbolicExpr],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains(
+                r#"import * as __SirSym from "@coding-adventures/sir-runtime-symbolic";"#
+            ),
+            "a module using SymSymbol must import sir-runtime-symbolic; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn sym_symbol_and_sym_rational_emit_leaf_constructors() {
+        let m = module_with_main_body(
+            vec![],
+            Expr::SymApply {
+                head: Box::new(Expr::SymSymbol { name: "f".into(), span: s() }),
+                args: vec![Expr::SymRational { numer: 1, denom: 3, span: s() }],
+                span: s(),
+            },
+            &[Feature::SymbolicExpr, Feature::Rationals],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains(r#"__SirSym.apply(__SirSym.sym("f"), [__SirSym.rational(1, 3)])"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn literal_children_of_sym_apply_are_wrapped_as_terms() {
+        // IntLit/FloatLit/StrLit are reused directly per the SIR23 spec, but
+        // a bare JS number/string is never a valid IRNode, so a SymApply's
+        // literal args must be wrapped through the matching __SirSym
+        // constructor rather than emitted as bare host values.
+        let m = module_with_main_body(
+            vec![],
+            Expr::SymApply {
+                head: Box::new(Expr::SymSymbol { name: "f".into(), span: s() }),
+                args: vec![
+                    Expr::IntLit { value: 2, span: s() },
+                    Expr::FloatLit { value: 1.5, span: s() },
+                    Expr::StrLit { value: "hi".into(), span: s() },
+                ],
+                span: s(),
+            },
+            &[Feature::SymbolicExpr, Feature::Floats, Feature::Strings],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains(
+                r#"__SirSym.apply(__SirSym.sym("f"), [__SirSym.int(2), __SirSym.numberNode(1.5), __SirSym.stringNode("hi")])"#
+            ),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn untyped_and_typed_pattern_blanks_emit_blank_and_blank_typed() {
+        let m = module_with_main_body(
+            vec![],
+            Expr::SymApply {
+                head: Box::new(Expr::SymSymbol { name: "f".into(), span: s() }),
+                args: vec![
+                    Expr::SymPatternBlank { head: None, span: s() },
+                    Expr::SymPatternBlank {
+                        head: Some(Box::new(Expr::SymSymbol { name: "Integer".into(), span: s() })),
+                        span: s(),
+                    },
+                ],
+                span: s(),
+            },
+            &[Feature::SymbolicExpr, Feature::PatternMatching],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("__SirSym.blank()"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains(r#"__SirSym.blankTyped("Integer")"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "SymPatternBlank's head-constraint must be a SymSymbol")]
+    fn pattern_blank_with_non_symbol_head_panics_rather_than_miscompiling() {
+        let m = module_with_main_body(
+            vec![],
+            Expr::SymPatternBlank {
+                head: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                span: s(),
+            },
+            &[Feature::SymbolicExpr, Feature::PatternMatching],
+        );
+        let _ = compile(&m);
+    }
+
+    #[test]
+    fn rule_vs_rule_delayed_emit_distinct_constructors() {
+        let xpat = Expr::SymPatternNamed {
+            name: "x".into(),
+            pattern: Box::new(Expr::SymPatternBlank { head: None, span: s() }),
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![],
+            Expr::SymRule {
+                lhs: Box::new(xpat.clone()),
+                rhs: Box::new(xpat),
+                delayed: true,
+                span: s(),
+            },
+            &[Feature::SymbolicExpr, Feature::PatternMatching],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains(r#"__SirSym.ruleDelayed(__SirSym.named("x", __SirSym.blank()), __SirSym.named("x", __SirSym.blank()))"#),
+            "delayed: true must emit ruleDelayed, not rule; got:\n{}",
+            a.source
+        );
+        assert!(!a.source.contains("__SirSym.rule("), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn replace_all_and_replace_repeated_both_route_through_unwrap() {
+        let xpat = Expr::SymPatternNamed {
+            name: "x".into(),
+            pattern: Box::new(Expr::SymPatternBlank { head: None, span: s() }),
+            span: s(),
+        };
+        let make_rule = |xpat: Expr| Expr::SymRule {
+            lhs: Box::new(Expr::SymApply {
+                head: Box::new(Expr::SymSymbol { name: "Add".into(), span: s() }),
+                args: vec![xpat.clone(), Expr::IntLit { value: 0, span: s() }],
+                span: s(),
+            }),
+            rhs: Box::new(xpat),
+            delayed: false,
+            span: s(),
+        };
+        let target = Expr::SymApply {
+            head: Box::new(Expr::SymSymbol { name: "Add".into(), span: s() }),
+            args: vec![
+                Expr::SymSymbol { name: "z".into(), span: s() },
+                Expr::IntLit { value: 0, span: s() },
+            ],
+            span: s(),
+        };
+
+        let one_pass = module_with_main_body(
+            vec![],
+            Expr::SymReplaceAll {
+                expr: Box::new(target.clone()),
+                rules: vec![make_rule(xpat.clone())],
+                repeated: false,
+                span: s(),
+            },
+            &[Feature::SymbolicExpr, Feature::PatternMatching],
+        );
+        let a1 = compile(&one_pass).expect("compile");
+        assert!(
+            a1.source.contains("__SirSym.unwrap(__SirSym.replaceAll("),
+            "repeated: false must route through replaceAll; got:\n{}",
+            a1.source
+        );
+        assert!(!a1.source.contains("replaceRepeated"), "got:\n{}", a1.source);
+
+        let fixed_point = module_with_main_body(
+            vec![],
+            Expr::SymReplaceAll {
+                expr: Box::new(target),
+                rules: vec![make_rule(xpat)],
+                repeated: true,
+                span: s(),
+            },
+            &[Feature::SymbolicExpr, Feature::PatternMatching],
+        );
+        let a2 = compile(&fixed_point).expect("compile");
+        assert!(
+            a2.source.contains("__SirSym.unwrap(__SirSym.replaceRepeated("),
+            "repeated: true must route through replaceRepeated; got:\n{}",
+            a2.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_wolfram_replace_all_compiles_and_emits_expected_calls() {
+        // A real Wolfram program (not a hand-built IR) through the actual
+        // wolfram-to-semantic-ir frontend, proving this backend's SIR23
+        // codegen matches what the frontend genuinely produces, not just
+        // synthetic `Module`s built by hand elsewhere in this file.
+        let module = wolfram_to_semantic_ir::compile_source("x /. a -> b\n", "demo")
+            .expect("lower wolfram");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains(
+                r#"import * as __SirSym from "@coding-adventures/sir-runtime-symbolic";"#
+            ),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains(r#"__SirSym.unwrap(__SirSym.replaceAll(__SirSym.sym("x"), [__SirSym.rule(__SirSym.sym("a"), __SirSym.sym("b"))]))"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    // ── SIR22: array/matrix codegen (HML01 Stream A, item 7 TS half) ───
+    //
+    // Both the base cut (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+    // `Transpose`/`IndexGet`/`IndexSet`) and the "APL addendum" (`Reduce`/
+    // `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+    // `Ravel`/`Catenate`) are accepted and lower to calls into the imported
+    // `@coding-adventures/sir-runtime-array` package; see `runtime.rs`'s
+    // `RUNTIME_ARRAY` and `emit`'s SIR22 arms. These are structural (IR-to-
+    // string) tests only — this crate's OWN established convention for the
+    // base cut, unchanged for the addendum: `tests/run_with_node.rs` proves
+    // *other* emitted constructs actually run via a hand-rolled type-
+    // annotation-stripping + inline-stub-runtime shim (real `.ts` cannot run
+    // directly under plain `node`), but there is no array-specific e2e test
+    // at all for either the base cut or this addendum — building a real
+    // node-execution proof for `__SirArray` would need either a genuine
+    // `tsc`/`ts-node` toolchain dependency or hand-porting all of
+    // `sir-runtime-array`'s logic into that inline stub, and neither has
+    // been done (deliberately out of scope here, mirroring the base cut).
+
+    #[test]
+    fn accepts_nd_arrays_feature() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::NDArrays]);
+        compile(&m).expect("nd-arrays accepted");
+    }
+
+    #[test]
+    fn accepts_matrix_ops_feature() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::MatrixOps]);
+        compile(&m).expect("matrix-ops accepted");
+    }
+
+    #[test]
+    fn non_array_module_omits_sir_runtime_array_import() {
+        let a = compile(&minimal_module()).expect("compile");
+        assert!(
+            !a.source.contains("sir-runtime-array"),
+            "a module with no array node must not import sir-runtime-array; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn array_module_imports_sir_runtime_array() {
+        let m = module_with_main_body(
+            vec![],
+            Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            },
+            &[Feature::NDArrays, Feature::ArrayColumnMajor],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains(
+                r#"import * as __SirArray from "@coding-adventures/sir-runtime-array";"#
+            ),
+            "a module using ArrayLit must import sir-runtime-array; got:\n{}",
+            a.source
+        );
+    }
+
+    /// Regression test for the gap this backend used to reject cleanly
+    /// (`find_unimplemented_sir22_addendum_node`, since removed):
+    /// `apl-to-semantic-ir`'s real lowering emits `Expr::Reduce` (APL
+    /// `+/A`) with exactly these three features. Before real codegen
+    /// existed, that module would sail past `accepts_features()` (since
+    /// `NDArrays`/`MatrixOps` are accepted for the SIR22 base cut) and
+    /// panic inside `emit`, so a dedicated tree-walk rejected it cleanly
+    /// instead. Now that real codegen exists, the module must instead
+    /// COMPILE — proof the gap is closed by an actual implementation, not
+    /// merely relocated.
+    #[test]
+    fn compiles_reduce_node_instead_of_rejecting_it() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::Reduce {
+            op: semantic_ir::ElementwiseOpKind::Add,
+            target: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            }),
+            span: s(),
+        };
+        let artifact = compile(&m).expect("Reduce node now compiles");
+        assert!(
+            artifact
+                .source
+                .contains("__SirArray.reduce(\"Add\", __SirArray.fromRows([[1]]))"),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    /// One emitted-call-shape assertion per SIR22-addendum `Expr` variant
+    /// (mirrors `emits_array_lit_and_matmul_as_sir_array_calls`/
+    /// `emits_elementwise_op_with_pascal_case_op_name` above for the base
+    /// cut). `Reshape` gets its own dedicated test just below, proving
+    /// argument ORDER, not merely that the call shape is present.
+    #[test]
+    fn emits_all_nine_addendum_nodes_as_sir_array_calls() {
+        let features = &[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ];
+        let one = || {
+            Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            })
+        };
+        let two = || {
+            Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 2, span: s() }]],
+                span: s(),
+            })
+        };
+        let cases: Vec<(Expr, &str)> = vec![
+            (
+                Expr::Scan {
+                    op: semantic_ir::ElementwiseOpKind::Add,
+                    target: one(),
+                    span: s(),
+                },
+                "__SirArray.scan(\"Add\", __SirArray.fromRows([[1]]))",
+            ),
+            (
+                Expr::OuterProduct {
+                    op: semantic_ir::ElementwiseOpKind::Mul,
+                    lhs: one(),
+                    rhs: two(),
+                    span: s(),
+                },
+                "__SirArray.outer(\"Mul\", __SirArray.fromRows([[1]]), __SirArray.fromRows([[2]]))",
+            ),
+            (
+                Expr::Shape {
+                    target: one(),
+                    span: s(),
+                },
+                "__SirArray.shape(__SirArray.fromRows([[1]]))",
+            ),
+            (
+                Expr::IndexGenerator {
+                    count: one(),
+                    span: s(),
+                },
+                "__SirArray.indexGenerator(__SirArray.fromRows([[1]]))",
+            ),
+            (
+                Expr::IndexOf {
+                    haystack: one(),
+                    needle: two(),
+                    span: s(),
+                },
+                "__SirArray.indexOf(__SirArray.fromRows([[1]]), __SirArray.fromRows([[2]]))",
+            ),
+            (
+                Expr::Ravel {
+                    target: one(),
+                    span: s(),
+                },
+                "__SirArray.ravel(__SirArray.fromRows([[1]]))",
+            ),
+            (
+                Expr::Catenate {
+                    lhs: one(),
+                    rhs: two(),
+                    span: s(),
+                },
+                "__SirArray.catenate(__SirArray.fromRows([[1]]), __SirArray.fromRows([[2]]))",
+            ),
+        ];
+        for (value, expected_call) in cases {
+            let mut m = minimal_module();
+            m.manifest = FeatureManifest::from_features(features);
+            let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+            main.body.value = value;
+            let artifact = compile(&m).expect("addendum node compiles");
+            assert!(
+                artifact.source.contains(expected_call),
+                "expected `{expected_call}` in:\n{}",
+                artifact.source
+            );
+        }
+    }
+
+    /// Dedicated field-order test for `Reshape`: `semantic_ir::Expr::Reshape`'s
+    /// own field order is `shape, target` (checked directly in `nodes.rs`,
+    /// not assumed), and `sir-runtime-array`'s `reshape(shapeArg, target)`
+    /// (`shape.ts`) takes that SAME order — so, unlike `Expr::Range`'s
+    /// `start, step, stop` vs. `range`'s `start, stop, step` (which DOES
+    /// reorder at the call site, see `emits_range_with_stop_before_step_
+    /// argument_order` below), no reordering happens here. This test uses
+    /// two DISTINCT operands (`[[1]]` for `shape`, `[[2]]` for `target`) so
+    /// a real argument-order bug — accidentally swapping them — would fail
+    /// this assertion rather than passing by coincidence.
+    #[test]
+    fn emits_reshape_with_shape_before_target_argument_order() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::Reshape {
+            shape: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            }),
+            target: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 2, span: s() }]],
+                span: s(),
+            }),
+            span: s(),
+        };
+        let artifact = compile(&m).expect("reshape body compiles");
+        assert!(
+            artifact.source.contains(
+                "__SirArray.reshape(__SirArray.fromRows([[1]]), __SirArray.fromRows([[2]]))"
+            ),
+            "expected shape (`[[1]]`) before target (`[[2]]`); got:\n{}",
+            artifact.source
+        );
+    }
+
+    /// End-to-end version: a real module body using `Expr::ArrayLit` and
+    /// `Expr::MatMul` (the concrete SIR22 nodes the spec names), not just a
+    /// hand-set manifest flag — proving real codegen runs from actual node
+    /// usage, and asserting the exact generated call shape.
+    #[test]
+    fn emits_array_lit_and_matmul_as_sir_array_calls() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::MatMul {
+            lhs: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            }),
+            rhs: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 2, span: s() }]],
+                span: s(),
+            }),
+            span: s(),
+        };
+        let artifact = compile(&m).expect("array/matmul body compiles");
+        assert!(
+            artifact.source.contains(
+                "__SirArray.matmul(__SirArray.fromRows([[1]]), __SirArray.fromRows([[2]]))"
+            ),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    #[test]
+    fn emits_elementwise_op_with_pascal_case_op_name() {
+        // The op name must match `sir-runtime-array`'s `applyOp` switch
+        // exactly (`"Mul"`, not `ElementwiseOpKind::name()`'s lowercase
+        // `"mul"`).
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::ElementwiseOp {
+            op: semantic_ir::ElementwiseOpKind::Mul,
+            lhs: Box::new(Expr::IntLit { value: 2, span: s() }),
+            rhs: Box::new(Expr::IntLit { value: 3, span: s() }),
+            span: s(),
+        };
+        let artifact = compile(&m).expect("elementwise body compiles");
+        assert!(
+            artifact.source.contains("__SirArray.elementwise(\"Mul\", 2, 3)"),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    #[test]
+    fn emits_range_with_stop_before_step_argument_order() {
+        // `Expr::Range`'s own field order is `start, step, stop`, but
+        // `__SirArray.range(start, stop, step)` takes `stop` before
+        // `step` — a real ordering bug here would silently swap the
+        // wrong two arguments rather than fail to compile.
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::NDArrays]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::Range {
+            start: Box::new(Expr::IntLit { value: 1, span: s() }),
+            step: Some(Box::new(Expr::IntLit { value: 2, span: s() })),
+            stop: Box::new(Expr::IntLit { value: 10, span: s() }),
+            span: s(),
+        };
+        let artifact = compile(&m).expect("range body compiles");
+        assert!(
+            artifact.source.contains("__SirArray.range(1, 10, 2)"),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    #[test]
+    fn emits_index_set_as_a_statement_not_an_assignment() {
+        use semantic_ir::{IndexArg, Scope, Stmt};
+        let mut m = minimal_module();
+        m.manifest =
+            FeatureManifest::from_features(&[Feature::NDArrays, Feature::ArrayColumnMajor]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.stmts.push(Stmt::LetBinding {
+            name: "a".into(),
+            sir_type: None,
+            value: Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            },
+            span: s(),
+        });
+        main.body.stmts.push(Stmt::IndexSet {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            indices: vec![
+                IndexArg::Scalar(Box::new(Expr::IntLit { value: 0, span: s() })),
+                IndexArg::Whole,
+            ],
+            value: Box::new(Expr::IntLit { value: 9, span: s() }),
+            span: s(),
+        });
+        let artifact = compile(&m).expect("index-set body compiles");
+        assert!(
+            artifact.source.contains(
+                "__SirArray.indexSet(a, [{ kind: \"scalar\", value: 0 }, { kind: \"whole\" }], 9);"
+            ),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_matlab_matmul_compiles_and_emits_expected_calls() {
+        // A real MATLAB program (not a hand-built IR) through the actual
+        // matlab-to-semantic-ir frontend, proving this backend's SIR22
+        // codegen matches what the frontend genuinely produces — mirrors
+        // `end_to_end_wolfram_replace_all_compiles_and_emits_expected_calls`
+        // above for SIR23.
+        let module = matlab_to_semantic_ir::compile_source(
+            "A = [1 2; 3 4];\nB = A * A;\ndisp(B(1, 1));\n",
+            "demo",
+        )
+        .expect("lower matlab");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains(
+                r#"import * as __SirArray from "@coding-adventures/sir-runtime-array";"#
+            ),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("const A: __Sir.Val = __SirArray.fromRows([[1, 2], [3, 4]]);"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("__SirArray.matmul(A, A)"),
+            "got:\n{}",
+            a.source
         );
     }
 }

@@ -43,6 +43,9 @@ const M_SOF0: u8 = 0xC0;
 const M_DHT:  u8 = 0xC4;
 const M_SOS:  u8 = 0xDA;
 // APP0–APPF and other skip-able markers
+// Kept for the marker-table completeness even though the parser skips APPn
+// segments by length rather than by matching this constant.
+#[allow(dead_code)]
 const M_APP0: u8 = 0xE0;
 
 // ---------------------------------------------------------------------------
@@ -393,8 +396,8 @@ fn decode_scan(
     }
 
     // Allocate planes for decoded samples (one per component, padded to 8×8 blocks).
-    let blocks_wide = (w + 7) / 8;
-    let blocks_tall = (h + 7) / 8;
+    let blocks_wide = w.div_ceil(8);
+    let blocks_tall = h.div_ceil(8);
     let padded_w = blocks_wide * 8;
     let padded_h = blocks_tall * 8;
 

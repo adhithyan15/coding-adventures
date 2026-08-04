@@ -4,13 +4,15 @@ use std::{
 };
 
 use spice_engine::{
-    ac_sweep, dc_op_with_options, dc_sweep, transient_with_method, AcPoint,
-    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex,
-    CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor,
-    Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
-    TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    ac_sweep, dc_op_with_options, dc_sweep, mosfet_from_model_card, normalize_model_card,
+    transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs,
+    Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element,
+    ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
+    MutualInductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
+    TransientPoint, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
+
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 
 mod syntax;
 
@@ -391,6 +393,9 @@ pub struct AnalysisPlanStep {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+// Boxing the large `Op(DcResult)` variant would ripple through every consumer's
+// pattern matches; the size difference is not worth that churn here.
+#[allow(clippy::large_enum_variant)]
 pub enum AnalysisResult {
     Op(DcResult),
     Tran(Vec<TransientPoint>),
@@ -1119,7 +1124,7 @@ fn selected_output_probes(parsed: &ParsedNetlist, kind: AnalysisKind) -> Vec<Out
                 if card
                     .analysis
                     .as_deref()
-                    .map_or(true, |name| analysis_name_matches(name, kind)) =>
+                    .is_none_or(|name| analysis_name_matches(name, kind)) =>
             {
                 Some(card.probes.as_slice())
             }
@@ -1817,10 +1822,266 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
     if params_text.starts_with('(') && params_text.ends_with(')') {
         params_text = &params_text[1..params_text.len() - 1];
     }
+    let params = parse_model_params(params_text)?;
+    if matches!(kind.as_str(), "NMOS" | "PMOS") {
+        if let Some(level) = params.get("LEVEL") {
+            if !level.is_finite() || (*level - 1.0).abs() > 1.0e-12 {
+                return Err(NetlistParseError::new(
+                    "only MOS LEVEL=1 model cards are supported",
+                ));
+            }
+        }
+        if let Some(surface_state_density) = params.get("NSS") {
+            if !surface_state_density.is_finite() || *surface_state_density < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET NSS must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(gate_material_type) = params.get("TPG") {
+            if !matches!(*gate_material_type, -1.0 | 0.0 | 1.0) {
+                return Err(NetlistParseError::new("MOSFET TPG must be -1, 0, or 1"));
+            }
+        }
+        if let Some(oxide_thickness) = params.get("TOX") {
+            if !oxide_thickness.is_finite() || *oxide_thickness <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET TOX must be finite and positive",
+                ));
+            }
+        }
+        for surface_mobility in [params.get("U0"), params.get("UO")].into_iter().flatten() {
+            if !surface_mobility.is_finite() || *surface_mobility < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET U0 must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(transconductance) = params.get("KP") {
+            if !transconductance.is_finite() || *transconductance <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET KP must be finite and positive",
+                ));
+            }
+        }
+        for threshold_voltage in [params.get("VT0"), params.get("VTO"), params.get("VTH")]
+            .into_iter()
+            .flatten()
+        {
+            if !threshold_voltage.is_finite() {
+                return Err(NetlistParseError::new("MOSFET VT0 must be finite"));
+            }
+        }
+        for channel_length_modulation in [params.get("LAMBDA"), params.get("LAM")]
+            .into_iter()
+            .flatten()
+        {
+            if !channel_length_modulation.is_finite() {
+                return Err(NetlistParseError::new("MOSFET LAMBDA must be finite"));
+            }
+        }
+        if let Some(bulk_potential) = params.get("PHI") {
+            if !bulk_potential.is_finite() || *bulk_potential <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET PHI must be finite and positive",
+                ));
+            }
+        }
+        if let Some(body_effect_coefficient) = params.get("GAMMA") {
+            if !body_effect_coefficient.is_finite() || *body_effect_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET GAMMA must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(bulk_junction_potential) = params.get("PB") {
+            if !bulk_junction_potential.is_finite() || *bulk_junction_potential <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET PB must be finite and positive",
+                ));
+            }
+        }
+        if let Some(bulk_junction_grading_coefficient) = params.get("MJ") {
+            if !bulk_junction_grading_coefficient.is_finite()
+                || *bulk_junction_grading_coefficient < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET MJ must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(depletion_coefficient) = params.get("FC") {
+            if !depletion_coefficient.is_finite()
+                || *depletion_coefficient < 0.0
+                || *depletion_coefficient >= 1.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET FC must be finite and in [0, 1)",
+                ));
+            }
+        }
+        if let Some(sidewall_grading_coefficient) = params.get("MJSW") {
+            if !sidewall_grading_coefficient.is_finite() || *sidewall_grading_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET MJSW must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(bottom_junction_capacitance) = params.get("CJ") {
+            if !bottom_junction_capacitance.is_finite() || *bottom_junction_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CJ must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(sidewall_junction_capacitance) = params.get("CJSW") {
+            if !sidewall_junction_capacitance.is_finite() || *sidewall_junction_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CJSW must be finite and non-negative",
+                ));
+            }
+        }
+        for source_bulk_capacitance in [params.get("CBS"), params.get("CJS")].into_iter().flatten()
+        {
+            if !source_bulk_capacitance.is_finite() || *source_bulk_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CBS must be finite and non-negative",
+                ));
+            }
+        }
+        for drain_bulk_capacitance in [params.get("CBD"), params.get("CJD")].into_iter().flatten() {
+            if !drain_bulk_capacitance.is_finite() || *drain_bulk_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CBD must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(gate_source_overlap_capacitance) = params.get("CGSO") {
+            if !gate_source_overlap_capacitance.is_finite()
+                || *gate_source_overlap_capacitance < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET CGSO must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(gate_drain_overlap_capacitance) = params.get("CGDO") {
+            if !gate_drain_overlap_capacitance.is_finite() || *gate_drain_overlap_capacitance < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET CGDO must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(gate_bulk_overlap_capacitance) = params.get("CGBO") {
+            if !gate_bulk_overlap_capacitance.is_finite() || *gate_bulk_overlap_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CGBO must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(saturation_current) = params.get("IS") {
+            if !saturation_current.is_finite() || *saturation_current <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET IS must be finite and positive",
+                ));
+            }
+        }
+        if let Some(saturation_current_density) = params.get("JS") {
+            if !saturation_current_density.is_finite() || *saturation_current_density < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET JS must be finite and non-negative",
+                ));
+            }
+        }
+        for substrate_doping in [params.get("N_SUB"), params.get("NSUB"), params.get("N")]
+            .into_iter()
+            .flatten()
+        {
+            if !substrate_doping.is_finite() || *substrate_doping <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET N_SUB must be finite and positive",
+                ));
+            }
+        }
+        for nominal_temperature in [params.get("T_NOM"), params.get("TNOM")]
+            .into_iter()
+            .flatten()
+        {
+            if !nominal_temperature.is_finite() || *nominal_temperature <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET T_NOM must be finite and positive",
+                ));
+            }
+        }
+        if let Some(width) = params.get("W") {
+            if !width.is_finite() || *width <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET W must be finite and positive",
+                ));
+            }
+        }
+        if let Some(length) = params.get("L") {
+            if !length.is_finite() || *length <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET L must be finite and positive",
+                ));
+            }
+        }
+        if let Some(lateral_diffusion_length) = params.get("LD") {
+            let length = params
+                .get("L")
+                .copied()
+                .unwrap_or_else(|| MosfetLevel1Params::default().l);
+            if !lateral_diffusion_length.is_finite()
+                || *lateral_diffusion_length < 0.0
+                || length - 2.0 * lateral_diffusion_length <= 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+                ));
+            }
+        }
+        if let Some(drain_resistance) = params.get("RD") {
+            if !drain_resistance.is_finite() || *drain_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET RD must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(source_resistance) = params.get("RS") {
+            if !source_resistance.is_finite() || *source_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET RS must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(sheet_resistance) = params.get("RSH") {
+            if !sheet_resistance.is_finite() || *sheet_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET RSH must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(flicker_noise_coefficient) = params.get("KF") {
+            if !flicker_noise_coefficient.is_finite() || *flicker_noise_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET KF must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(flicker_noise_exponent) = params.get("AF") {
+            if !flicker_noise_exponent.is_finite() || *flicker_noise_exponent < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET AF must be finite and non-negative",
+                ));
+            }
+        }
+    }
     Ok(ModelCard {
         name: fields[1].clone(),
         kind,
-        params: parse_model_params(params_text)?,
+        params,
     })
 }
 
@@ -1891,31 +2152,110 @@ fn parse_element_params(
 fn build_mosfet_params(
     model: &ModelCard,
     instance_params: &HashMap<String, f64>,
-) -> MosfetLevel1Params {
+) -> Result<MosfetLevel1Params, NetlistParseError> {
     let mut params = MosfetLevel1Params::default();
-    for (name, value) in model.params.iter().chain(instance_params.iter()) {
+    for (name, value) in &model.params {
         apply_mosfet_param(&mut params, name, *value);
     }
-    params
+    apply_mosfet_electrostatic_defaults(model, &mut params)?;
+    for (name, value) in instance_params {
+        apply_mosfet_param(&mut params, name, *value);
+    }
+    if !model.params.contains_key("KP") && !instance_params.contains_key("KP") {
+        if let Some(oxide_thickness) = model.params.get("TOX").filter(|value| **value > 0.0) {
+            params.kp = params.surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / oxide_thickness;
+        }
+    }
+    if let Some(value) = instance_params.get("NRD") {
+        params.drain_squares = *value;
+    }
+    if let Some(value) = instance_params.get("NRS") {
+        params.source_squares = *value;
+    }
+    if let Some(value) = instance_params.get("AD") {
+        params.drain_area = *value;
+    }
+    if let Some(value) = instance_params.get("AS") {
+        params.source_area = *value;
+    }
+    if let Some(value) = instance_params.get("PD") {
+        params.drain_perimeter = *value;
+    }
+    if let Some(value) = instance_params.get("PS") {
+        params.source_perimeter = *value;
+    }
+    Ok(params)
+}
+
+fn apply_mosfet_electrostatic_defaults(
+    model: &ModelCard,
+    params: &mut MosfetLevel1Params,
+) -> Result<(), NetlistParseError> {
+    let has_substrate_doping = ["N_SUB", "NSUB", "N"]
+        .iter()
+        .any(|name| model.params.contains_key(*name));
+    if !has_substrate_doping || !model.params.contains_key("TOX") {
+        return Ok(());
+    }
+
+    let mut parameters = Vec::new();
+    for (canonical, aliases) in [
+        ("VT0", &["VT0", "VTO", "VTH"][..]),
+        ("GAMMA", &["GAMMA"][..]),
+        ("PHI", &["PHI"][..]),
+        ("TOX", &["TOX"][..]),
+        ("N_SUB", &["N_SUB", "NSUB", "N"][..]),
+        ("T_NOM", &["T_NOM", "TNOM"][..]),
+        ("NSS", &["NSS"][..]),
+        ("TPG", &["TPG"][..]),
+    ] {
+        if let Some(value) = aliases.iter().find_map(|alias| model.params.get(*alias)) {
+            parameters.push((canonical, *value));
+        }
+    }
+
+    let normalized = normalize_model_card(&model.name, &model.kind, &parameters)
+        .map_err(|error| NetlistParseError::new(error.to_string()))?;
+    let derived = mosfet_from_model_card("M", "d", "g", "s", "b", &normalized)
+        .map_err(|error| NetlistParseError::new(error.to_string()))?;
+    params.vt0 = derived.params.vt0;
+    params.gamma = derived.params.gamma;
+    params.phi = derived.params.phi;
+    Ok(())
 }
 
 fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
     match name {
-        "VT0" | "VTO" => params.vt0 = value,
+        "VT0" | "VTO" | "VTH" => params.vt0 = value,
         "KP" => params.kp = value,
-        "LAMBDA" => params.lambda = value,
+        "LAMBDA" | "LAM" => params.lambda = value,
         "GAMMA" => params.gamma = value,
         "PHI" => params.phi = value,
         "W" => params.w = value,
         "L" => params.l = value,
+        "LD" => params.lateral_diffusion_length = value,
+        "TOX" => params.oxide_thickness = value,
+        "U0" | "UO" => params.surface_mobility = value,
+        "RD" => params.drain_resistance = value,
+        "RS" => params.source_resistance = value,
+        "RSH" => params.sheet_resistance = value,
         "IS" => params.saturation_current = value,
+        "JS" => params.saturation_current_density = value,
         "N_SUB" | "NSUB" | "N" => params.n_sub = value,
         "T_NOM" | "TNOM" => params.t_nom = value,
         "CGSO" => params.gate_source_overlap_capacitance = value,
         "CGDO" => params.gate_drain_overlap_capacitance = value,
         "CGBO" => params.gate_bulk_overlap_capacitance = value,
-        "CBS" => params.source_bulk_capacitance = value,
-        "CBD" => params.drain_bulk_capacitance = value,
+        "CBS" | "CJS" => params.source_bulk_capacitance = value,
+        "CBD" | "CJD" => params.drain_bulk_capacitance = value,
+        "CJ" => params.bottom_junction_capacitance = value,
+        "CJSW" => params.sidewall_junction_capacitance = value,
+        "PB" => params.bulk_junction_potential = value,
+        "MJ" => params.bulk_junction_grading_coefficient = value,
+        "MJSW" => params.sidewall_junction_grading_coefficient = value,
+        "FC" => params.forward_bias_depletion_coefficient = value,
+        "KF" => params.flicker_noise_coefficient = value,
+        "AF" => params.flicker_noise_exponent = value,
         _ => {}
     }
 }
@@ -2160,6 +2500,72 @@ fn parse_element(
                 }
             };
             let instance_params = parse_element_params(&fields[6..], "MOSFET")?;
+            if let Some(param_name) = instance_params.keys().find(|name| {
+                !matches!(
+                    name.as_str(),
+                    "W" | "L" | "NRD" | "NRS" | "AD" | "AS" | "PD" | "PS"
+                )
+            }) {
+                return Err(NetlistParseError::new(format!(
+                    "unsupported MOSFET parameter {param_name:?}"
+                )));
+            }
+            if let Some(width) = instance_params.get("W") {
+                if !width.is_finite() || *width <= 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET W must be finite and positive",
+                    ));
+                }
+            }
+            if let Some(length) = instance_params.get("L") {
+                if !length.is_finite() || *length <= 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET L must be finite and positive",
+                    ));
+                }
+            }
+            if let Some(drain_squares) = instance_params.get("NRD") {
+                if !drain_squares.is_finite() || *drain_squares < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET NRD must be finite and non-negative",
+                    ));
+                }
+            }
+            if let Some(source_squares) = instance_params.get("NRS") {
+                if !source_squares.is_finite() || *source_squares < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET NRS must be finite and non-negative",
+                    ));
+                }
+            }
+            if let Some(drain_area) = instance_params.get("AD") {
+                if !drain_area.is_finite() || *drain_area < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET AD must be finite and non-negative",
+                    ));
+                }
+            }
+            if let Some(source_area) = instance_params.get("AS") {
+                if !source_area.is_finite() || *source_area < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET AS must be finite and non-negative",
+                    ));
+                }
+            }
+            if let Some(drain_perimeter) = instance_params.get("PD") {
+                if !drain_perimeter.is_finite() || *drain_perimeter < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET PD must be finite and non-negative",
+                    ));
+                }
+            }
+            if let Some(source_perimeter) = instance_params.get("PS") {
+                if !source_perimeter.is_finite() || *source_perimeter < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET PS must be finite and non-negative",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],
@@ -2167,7 +2573,7 @@ fn parse_element(
                 &fields[3],
                 &fields[4],
                 mosfet_type,
-                build_mosfet_params(model, &instance_params),
+                build_mosfet_params(model, &instance_params)?,
             )))
         }
         'G' => {

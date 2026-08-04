@@ -1,0 +1,23 @@
+% ============================================================================
+% skin-layers.query.adj — a worked recall over the anatomy skin-layers library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the defining
+% descriptor of the epidermis?": it states no anatomy fact — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `skin_layer_property` rows and returns the descriptor + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% descriptor `fat`, recall the layer that has it — the subcutaneous layer). A
+% bone is not a skin layer, so a recall on it abstains honestly — the engine
+% never invents a descriptor.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli skin-layers.query.adj
+% ============================================================================
+
+import "skin-layers.adj"
+
+? skin_layer_property(epidermis, $P)     % expect outermost
+? skin_layer_property(dermis, $P)        % expect thickest
+? skin_layer_property(subcutaneous, $P)  % expect fat
+? skin_layer_property($L, fat)           % expect subcutaneous — reverse recall
+? skin_layer_property(bone, $P)          % expect abstain — a bone is not a skin layer

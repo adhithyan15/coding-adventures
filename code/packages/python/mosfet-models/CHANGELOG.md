@@ -3,6 +3,42 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.U0` adds Berkeley zero-bias surface mobility with a
+  600 cm^2/V/s default and finite, non-negative validation.
+- `Level1Params.JS` adds zero-default Berkeley bulk-junction saturation-current
+  density for source/drain area scaling while preserving scalar `IS`.
+- `Level1Params.MJSW` adds Berkeley sidewall-junction depletion grading,
+  defaulting to `0.33` independently from bottom-junction `MJ`.
+- `Level1Params.PS` adds zero-default Berkeley source diffusion perimeter,
+  contributing `CJSW * PS` to the zero-bias source-body capacitance.
+- `Level1Params.PD` and `Level1Params.CJSW` add zero-default Berkeley drain
+  diffusion perimeter and sidewall capacitance density, contributing
+  `CJSW * PD` to the zero-bias drain-body capacitance.
+- `Level1Params.AS` adds the zero-default Berkeley source diffusion area,
+  contributing `CJ * AS` to the zero-bias source-body capacitance.
+- `Level1Params.AD` and `Level1Params.CJ` add zero-default Berkeley drain
+  diffusion area and bottom-junction capacitance density, contributing
+  `CJ * AD` to the zero-bias drain-body capacitance.
+- `Level1Params.NRS` adds the Berkeley source diffusion square count, defaulting
+  to one with finite, non-negative validation.
+- `Level1Params.NRD` adds the Berkeley drain diffusion square count, defaulting
+  to one with finite, non-negative validation.
+- `Level1Params.RSH` adds zero-default Berkeley drain/source sheet resistance
+  with finite, non-negative validation.
+- `Level1Params.RS` adds the zero-default Berkeley external source resistance
+  parameter with finite, non-negative validation.
+- `Level1Params.RD` adds the zero-default Berkeley external drain resistance
+  parameter with finite, non-negative validation.
+- `Level1Params.TOX` adds Berkeley-default gate oxide thickness and derives
+  Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
+- `Level1Params.LD` applies Berkeley lateral-diffusion geometry through
+  `L_eff = L - 2*LD` to channel current and length-scaled capacitance.
+- `Level1Params.FC` adds the continuous Berkeley forward-bias continuation to
+  the existing `PB` / `MJ` bulk-junction depletion-capacitance model.
+- `Level1Params.AF` provides the Level-1 MOS flicker-noise current exponent,
+  defaulting to one.
+- `Level1Params.KF` provides the Level-1 MOS flicker-noise coefficient, with a
+  noise-disabled default of zero.
 - `Level1Params` now includes MOS Level-1 capacitance footholds (`CGSO`,
   `CGDO`, `CGBO`, `CBS`, `CBD`) and reports them through `MosResult`.
 - `Level1Params.PB` and `Level1Params.MJ` now shape zero-bias bulk-junction

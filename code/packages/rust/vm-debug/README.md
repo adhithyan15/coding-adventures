@@ -54,7 +54,7 @@ Before this crate existed, `DebugHooks` and `DebugServer` lived in
 forced each to either:
 
 - pull in `twig-vm` (the whole Twig→IIR→Lispy stack including
-  `lispy-runtime` and `twig-ir-compiler`), or
+  `dynval-runtime` and `twig-ir-compiler`), or
 - copy-paste the 600+-line `DebugServer` impl.
 
 Neither is sustainable.  Extracting the substrate into one

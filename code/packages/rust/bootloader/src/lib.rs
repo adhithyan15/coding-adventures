@@ -1,3 +1,7 @@
+// `field_reassign_with_default`: builds instruction records off a Default base.
+// `unused_assignments`: the `emit!` macro bumps `address` after every push; the
+// final expansion's increment is intentionally unused to keep the macro uniform.
+#![allow(clippy::field_reassign_with_default, unused_assignments)]
 //! S02 Bootloader -- generates RISC-V machine code for loading the OS
 //! kernel from disk into RAM and transferring control to it.
 //!

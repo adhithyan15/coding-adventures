@@ -1,0 +1,53 @@
+% ============================================================================
+% continents — each continent's size rank, largest = 1 (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% A geography facts library — one of the very first things a child learns from a
+% globe or a classroom map: the seven great landmasses of the world, put in order
+% from biggest to smallest. Asia is the huge one that fills most of the map;
+% Australia is the small one down in the corner. Recall is a binding query:
+%
+%     ? continent_size_rank(asia, $R)     % 1  (Asia is the largest continent)
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `continent_size_rank(continent, rank)` carrying the National Geographic
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the rank WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of the seven named continents (e.g.
+% greenland is the world's largest ISLAND, not a continent, so it is deliberately
+% NOT a row here). The `rank` value is a NUMBER, so a recalled rank composes into
+% arithmetic (how many continents sit between Asia and Europe? 6 − 1 − 1 = 4).
+%
+% Two-word continent names are written as lowercase atoms with an underscore:
+% `north_america`, `south_america`.
+%
+% Provenance: National Geographic Education states the full size ordering in a
+% single sentence — "The continents are, from largest to smallest: Asia, Africa,
+% North America, South America, Antarctica, Europe, and Australia." That one span
+% fixes all seven ranks in order: asia 1, africa 2, north_america 3,
+% south_america 4, antarctica 5, europe 6, australia 7. The citable artifact is
+% National Geographic Education's "Continent" resource at the `locator`.
+% `trust consensus` — National Geographic is an authoritative secondary reference
+% (an educational encyclopedia), not a primary/official standards body, so the
+% honest tier is `consensus`. (This same ordering is independently corroborated by
+% Encyclopaedia Britannica and by Wikipedia's "Continent" article, which lists the
+% seven "from largest to smallest in area" in exactly this order.) Nothing here is
+% asserted from memory. The set of continents is the seven-continent model taught
+% in the United States. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table continent_size_rank {
+    columns continent, rank
+
+    row (asia, 1)
+    row (africa, 2)
+    row (north_america, 3)
+    row (south_america, 4)
+    row (antarctica, 5)
+    row (europe, 6)
+    row (australia, 7)
+
+    source "The continents are, from largest to smallest: Asia, Africa, North America, South America, Antarctica, Europe, and Australia."
+    locator "https://education.nationalgeographic.org/resource/Continent/"
+    trust consensus
+}

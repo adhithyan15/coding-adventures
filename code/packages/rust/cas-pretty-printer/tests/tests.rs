@@ -1,3 +1,6 @@
+// The float literal is intentional printer test input, not an approximation of a
+// std constant to be replaced.
+#![allow(clippy::approx_constant)]
 // Integration tests for cas-pretty-printer.
 //
 // Mirrors the Python reference tests in
@@ -537,7 +540,7 @@ fn register_custom_head_formatter() {
             .iter()
             .map(|row| {
                 if let IRNode::Apply(a) = row {
-                    let cells: Vec<String> = a.args.iter().map(|c| fmt(c)).collect();
+                    let cells: Vec<String> = a.args.iter().map(fmt).collect();
                     format!("[{}]", cells.join(", "))
                 } else {
                     fmt(row)

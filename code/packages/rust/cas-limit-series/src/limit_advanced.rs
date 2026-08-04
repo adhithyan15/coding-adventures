@@ -169,6 +169,10 @@ fn handle_form(
     build_unevaluated(expr, var, point, options.direction)
 }
 
+// Carries the full limit-evaluation context (expression parts, variable, point,
+// options, differentiation callback, and recursion depth bounds); these are the
+// irreducible inputs of one L'Hopital step, not a struct worth introducing.
+#[allow(clippy::too_many_arguments)]
 fn lhopital_step(
     numer: &IRNode,
     denom: &IRNode,
@@ -192,6 +196,9 @@ fn lhopital_step(
     limit_advanced_inner(new_ratio, var, point, options, depth + 1, max_depth)
 }
 
+// Same irreducible limit-evaluation context as `lhopital_step` (factors, variable,
+// point, options, recursion bounds); a struct would only relocate these inputs.
+#[allow(clippy::too_many_arguments)]
 fn zero_inf_rewrite(
     a: &IRNode,
     b: &IRNode,
@@ -242,6 +249,9 @@ fn zero_inf_rewrite(
     None
 }
 
+// Same irreducible limit-evaluation context as `lhopital_step` (base, exponent,
+// variable, point, options, recursion bounds); a struct would only relocate them.
+#[allow(clippy::too_many_arguments)]
 fn pow_exp_log(
     base: &IRNode,
     exponent: &IRNode,

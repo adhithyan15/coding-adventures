@@ -126,14 +126,14 @@ mod tests {
     // Test 1: name() returns "intel4004"
     #[test]
     fn name_is_intel4004() {
-        let gen = Intel4004CodeGenerator::default();
+        let gen = Intel4004CodeGenerator;
         assert_eq!(gen.name(), "intel4004");
     }
 
     // Test 2: validate() returns empty Vec on a valid program
     #[test]
     fn validate_empty_on_valid() {
-        let gen = Intel4004CodeGenerator::default();
+        let gen = Intel4004CodeGenerator;
         let errors = gen.validate(&minimal_prog());
         assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
     }
@@ -142,7 +142,7 @@ mod tests {
     //         STORE_BYTE is not supported on the 4004 (no memory-write instruction)
     #[test]
     fn validate_fails_on_unsupported_opcode() {
-        let gen = Intel4004CodeGenerator::default();
+        let gen = Intel4004CodeGenerator;
         let bad = IrProgram {
             instructions: vec![
                 IrInstruction::new(
@@ -171,7 +171,7 @@ mod tests {
     // Test 4: generate() returns non-empty assembly text
     #[test]
     fn generate_returns_text() {
-        let gen = Intel4004CodeGenerator::default();
+        let gen = Intel4004CodeGenerator;
         let asm = gen.generate(&minimal_prog());
         assert!(!asm.is_empty(), "expected non-empty assembly text");
     }
@@ -179,7 +179,7 @@ mod tests {
     // Test 5: generated text starts with ORG directive
     #[test]
     fn generate_starts_with_org() {
-        let gen = Intel4004CodeGenerator::default();
+        let gen = Intel4004CodeGenerator;
         let asm = gen.generate(&minimal_prog());
         assert!(asm.contains("ORG"), "expected ORG directive in assembly: {asm}");
     }
@@ -187,7 +187,7 @@ mod tests {
     // Test 6: LOAD_IMM lowers to LDM (load immediate data) mnemonic
     #[test]
     fn load_imm_lowers_to_ldm() {
-        let gen = Intel4004CodeGenerator::default();
+        let gen = Intel4004CodeGenerator;
         let asm = gen.generate(&minimal_prog());
         assert!(asm.contains("LDM"), "expected LDM in assembly: {asm}");
     }
@@ -195,7 +195,7 @@ mod tests {
     // Test 7: validate() then generate() succeeds end-to-end
     #[test]
     fn validate_then_generate() {
-        let gen = Intel4004CodeGenerator::default();
+        let gen = Intel4004CodeGenerator;
         let prog = minimal_prog();
         assert!(gen.validate(&prog).is_empty());
         let asm = gen.generate(&prog);

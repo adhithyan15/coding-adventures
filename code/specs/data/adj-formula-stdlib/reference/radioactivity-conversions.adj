@@ -1,0 +1,54 @@
+% ============================================================================
+% radioactivity-conversions — activity-unit → becquerel factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `luminance-conversions.adj` and the other NIST-cited conversion
+% tables: a native tabular relation ingested VERBATIM from a published NIST conversion
+% table. The row states the factor converting the CGS/traditional unit of RADIOACTIVITY
+% (activity of a radionuclide) to the SI coherent unit, the becquerel (Bq = one nuclear
+% transformation per second):
+%
+%     ? activity_to_becquerel(curie, $v)   % 37000000000
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% illuminance/luminance tables: this one normalises ACTIVITY — the rate at which a
+% radionuclide decays. The traditional unit is the curie (Ci), historically tied to the
+% activity of one gram of radium; the SI unit is the becquerel, one decay per second. Put
+% an activity given in curies into SI first, then reason (write-once-use-many). Why a
+% `table` and not a hand-written `relate` clause: this is exactly the shape reference data
+% comes in — a published table, not prose. The citable artifact IS the NIST conversion-
+% factors table at the `locator` below; the factor here is a CELL of NIST Special
+% Publication 811, Appendix B.9 ("Factors for units listed alphabetically"), defended by
+% one provenance envelope. Each `row` lowers to a ground relation
+% `activity_to_becquerel(unit, bq)`, so the exact lookup above is the ordinary SLD binding
+% query — the engine returns the factor WITH this table's citation as its proof, on the
+% CPU, with zero model calls.
+%
+% HONESTY NOTE (like luminance-/illuminance-/force-conversions, only the EXACT defined
+% factor gets a row): NIST SP 811 B.9 prints the "curie" activity factor in BOLDFACE, its
+% convention for factors that are EXACT by definition, transcribed here as the plain
+% decimal number of becquerels it names:
+%
+%     curie (Ci)   3.7 E+10  →  37000000000
+%
+% This is exact because the curie is DEFINED as exactly 3.7 × 10¹⁰ becquerels (that
+% defining value is fixed, not a rounded measurement of radium). It terminates; nothing
+% here is a rounded quantity. A traditional activity unit that NIST SP 811 B.9 does NOT
+% tabulate — e.g. the "rutherford" — therefore gets no row here, and a
+% `? activity_to_becquerel(rutherford, $v)` ABSTAINS rather than inventing a factor. The
+% only claim this table makes is "this is the exact factor NIST SP 811 B.9 prints for the
+% curie" — which is exactly what a byte-check against the cited table verifies.
+% `trust authoritative` — a primary, re-fetchable standards reference. (See ADJ-TABLES.md;
+% and feedback_nothing_human_authored — the factor is a verbatim cell of the cited table,
+% nothing asserted from memory.)
+% ============================================================================
+
+table activity_to_becquerel {
+    columns unit, becquerel
+
+    row (curie, 37000000000)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

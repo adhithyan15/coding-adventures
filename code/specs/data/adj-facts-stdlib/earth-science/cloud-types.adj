@@ -1,0 +1,60 @@
+% ============================================================================
+% cloud-types — each common cloud and the altitude level (étage) it belongs to
+% (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% One of the first things a child learns to read in the sky: clouds live at
+% different HEIGHTS, and forecasters sort them into three layers — a HIGH deck,
+% a MIDDLE deck, and a LOW deck (the French word for these decks is "étage").
+% Which layer a cloud belongs to is a plain fact you can look up. Recall is a
+% binding query:
+%
+%     ? cloud_altitude(cirrus, $Level)      % high  (cirrus is a high cloud)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `cloud_altitude(cloud, altitude)` carrying the NOAA / National
+% Weather Service citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the level WITH its source, on the CPU, with zero
+% model calls. The relation binds BOTH ways: forward `? cloud_altitude(stratus,
+% $L)` gives low, and reverse `? cloud_altitude($C, middle)` gives altostratus.
+% Both atoms — the cloud name and its level — are lowercase.
+%
+% The four clouds, and the deck each one sits in, as a truth table:
+%
+%     cloud         altitude   why (the level word the NWS page uses)
+%     ------------  ---------  ---------------------------------------------
+%     cirrus        high       "high clouds ... cirrus"        (above ~20,000 ft)
+%     altostratus   middle     "mid-level clouds ... altostratus" (6,500–20,000 ft)
+%     stratus       low        "low clouds include stratus"   (below 6,500 ft)
+%     cumulus       low        "low clouds include ... cumulus"
+%
+% The page uses the level words HIGH, MIDDLE ("the middle level of the
+% troposphere"), and LOW, so those exact words are the values shipped here.
+%
+% Honest abstention: only clouds the NWS page actually assigns to a level are
+% rows. A word the page does not classify — fog, a contrail, or a made-up
+% "rainbow" — is NOT a row, so the engine stays silent rather than invent a
+% level. That honest-miss property is what makes the table safe to trust.
+%
+% Provenance: the four cloud → level groupings are copied from NOAA's National
+% Weather Service (Louisville, KY / LMK office) "Cloud Classification and
+% Characteristics" page. Its three "main types" sentences at the `locator` name
+% each cloud under its deck (see `source`, quoted verbatim): the high deck lists
+% cirrus, the mid-level deck lists altostratus, and the low deck lists stratus
+% and cumulus. `trust authoritative` — weather.gov (NOAA/NWS) is a U.S.
+% government (.gov) primary source. Nothing here is asserted from memory.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table cloud_altitude {
+    columns cloud, altitude
+
+    row (cirrus, high)
+    row (altostratus, middle)
+    row (stratus, low)
+    row (cumulus, low)
+
+    source "The three main types of high clouds are cirrus, cirrostratus, and cirrocumulus. The two main type of mid-level clouds are altostratus and altocumulus. The two main types of low clouds include stratus, which develop horizontally, and cumulus, which develop vertically."
+    locator "https://www.weather.gov/lmk/cloud_classification"
+    trust authoritative
+}

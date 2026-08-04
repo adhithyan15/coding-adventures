@@ -3,8 +3,7 @@
 //! Composes ROM/BIOS, Bootloader, Interrupt Handler, OS Kernel, Display,
 //! and a RISC-V CPU into a complete system: PowerOn -> BIOS -> Bootloader -> Kernel -> Hello World -> Idle
 
-use riscv_simulator::{RiscVSimulator, CSRFile};
-use riscv_simulator::encoding::assemble;
+use riscv_simulator::RiscVSimulator;
 use display::{DisplayDriver, DisplayConfig, DisplaySnapshot, BYTES_PER_CELL};
 use bootloader::{Bootloader, BootloaderConfig, DiskImage, BOOT_PROTOCOL_MAGIC, DEFAULT_DISK_SIZE};
 use os_kernel::*;
@@ -38,6 +37,12 @@ impl std::fmt::Display for BootPhase {
 pub struct BootEvent { pub phase: BootPhase, pub cycle: usize, pub description: String }
 
 pub struct BootTrace { pub events: Vec<BootEvent> }
+
+impl Default for BootTrace {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl BootTrace {
     pub fn new() -> Self { Self { events: Vec::new() } }
@@ -119,7 +124,7 @@ impl SystemBoard {
         let idle_binary = generate_idle_program();
         let kernel_stub_size = 16usize;
         let mut total_size = kernel_stub_size + idle_binary.len() + user_program.len();
-        if total_size % 4 != 0 { total_size += 4 - (total_size % 4); }
+        if !total_size.is_multiple_of(4) { total_size += 4 - (total_size % 4); }
 
         let mut bl_config = self.config.bootloader_config.clone();
         bl_config.kernel_size = total_size as u32;
@@ -229,24 +234,23 @@ impl SystemBoard {
         let pc = self.cpu.as_ref().unwrap().pc as u32;
         match self.current_phase {
             BootPhase::Bios => {
-                if pc >= BOOTLOADER_BASE && pc < BOOTLOADER_BASE + 0x10000 {
+                if (BOOTLOADER_BASE..BOOTLOADER_BASE + 0x10000).contains(&pc) {
                     self.current_phase = BootPhase::Bootloader;
                     self.trace.add_event(BootPhase::Bootloader, self.cycle, "Bootloader executing");
                 }
             }
             BootPhase::Bootloader => {
-                if pc >= KERNEL_BASE && pc < KERNEL_BASE + 0x10000 {
+                if (KERNEL_BASE..KERNEL_BASE + 0x10000).contains(&pc) {
                     self.current_phase = BootPhase::KernelInit;
                     self.trace.add_event(BootPhase::KernelInit, self.cycle, "Kernel entry reached");
                     self.initialize_kernel();
                 }
             }
-            BootPhase::KernelInit => {
-                if pc >= USER_PROCESS_BASE && pc < USER_PROCESS_BASE + 0x10000 {
+            BootPhase::KernelInit
+                if (USER_PROCESS_BASE..USER_PROCESS_BASE + 0x10000).contains(&pc) => {
                     self.current_phase = BootPhase::UserProgram;
                     self.trace.add_event(BootPhase::UserProgram, self.cycle, "User program executing");
                 }
-            }
             _ => {}
         }
     }

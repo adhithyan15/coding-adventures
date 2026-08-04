@@ -1,0 +1,32 @@
+% ============================================================================
+% alveolar-gas-equation.query.adj — worked applications of the alveolar gas equation.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a blood-gas / oxygenation vignette into an inspired
+% oxygen fraction, the atmospheric and water-vapour pressures, the arterial CO2, and the respiratory
+% quotient: it `import`s the grounded formulabook, `observe`s the values, and asks the engine to APPLY the
+% cited alveolar gas equation. No arithmetic is stated by the consumer; the engine computes each value
+% EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with zero
+% model calls.
+%
+% Worked case (FiO2 = 1 i.e. 100% oxygen, Patm = 760 mmHg, PH2O = 47 mmHg, PaCO2 = 40 mmHg, RQ = 0.8):
+% alveolar PO2 = 1 × (760 − 47) − 40 / 0.8 = 713 − 50 = 663 mmHg. Each query fixes all but one quantity and
+% asks the engine to recover the missing one; every answer is exact and the inversions COMPOSE (each
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli alveolar-gas-equation.query.adj
+% ============================================================================
+
+import "alveolar-gas-equation.adj"
+
+% --- Alveolar PO2: the alveolar oxygen the inspired gas and arterial CO2 imply (expect 663). --------
+observe fio2(1)
+observe patm(760)
+observe ph2o(47)
+observe paco2(40)
+observe rq(0.8)
+? alveolar_po2(fio2, patm, ph2o, paco2, rq)   % expect 663
+
+% --- Inverse: the arterial CO2 an alveolar PO2 of 663 implies at the same inspired gas (expect 40). -
+observe alveolar_po2(663)
+? paco2(fio2, patm, ph2o, alveolar_po2, rq)   % expect 40

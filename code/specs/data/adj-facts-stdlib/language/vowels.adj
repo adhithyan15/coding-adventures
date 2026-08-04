@@ -1,0 +1,59 @@
+% ============================================================================
+% vowels — which letters of the English alphabet are vowels
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% One of the very first things a child learns about the alphabet: most letters
+% are CONSONANTS, but a special handful are VOWELS. In English there are five
+% vowel letters — a, e, i, o, u — and every other letter (b, c, d, f, …) is a
+% consonant. This tiny library records that membership so an ADJ program can
+% ASK whether a letter is a vowel, and get a cited answer. Recall is a binding
+% query:
+%
+%     ? vowel_letter(a, $V)      % yes
+%     ? vowel_letter(b, $V)      % abstains — b is not in the table
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `vowel_letter(letter, is_vowel)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% membership WITH its source, on the CPU, with zero model calls, and ABSTAINS
+% on any letter not in the table (it never guesses).
+%
+% The five vowels, as a truth table:
+%
+%     letter   is_vowel    read as…
+%     ------   --------    -------------------------------
+%     a        yes         "a is a vowel"
+%     e        yes         "e is a vowel"
+%     i        yes         "i is a vowel"
+%     o        yes         "o is a vowel"
+%     u        yes         "u is a vowel"
+%
+% Only the FIVE vowel rows are shipped — nothing else. A consonant such as `b`
+% has NO row, so a query like `? vowel_letter(b, $V)` ABSTAINS rather than
+% answering "no": the table's honest-abstention property means it only ever
+% asserts the membership it can cite, and stays silent on everything else. (The
+% letter `y` is deliberately NOT shipped: the source names it only as a
+% "sometimes" vowel, so an unqualified vowel-letter table must leave it out.)
+%
+% Provenance — nothing here is from memory. The five vowels are copied from the
+% Simple English Wikipedia "Vowel" article, which states verbatim (see
+% `source`) that the vowel letters in English are A, E, I, O and U. The citable
+% artifact is that article at the `locator`. `trust consensus` — an encyclopedia
+% is a secondary reference, not a .gov/.edu-primary literacy standard.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table vowel_letter {
+    columns letter, is_vowel
+
+    row (a, yes)
+    row (e, yes)
+    row (i, yes)
+    row (o, yes)
+    row (u, yes)
+
+    source "These letters are vowels in English: A, E, I, O and U (and sometimes Y)"
+    locator "https://simple.wikipedia.org/wiki/Vowel"
+    trust consensus
+}

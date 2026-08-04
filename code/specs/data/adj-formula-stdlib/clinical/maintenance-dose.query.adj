@@ -1,0 +1,30 @@
+% ============================================================================
+% maintenance-dose.query.adj — worked applications of the pharmacokinetic maintenance dose.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a dosing problem into a target steady-state
+% concentration, a clearance, a dosing interval, and a bioavailability: it `import`s the grounded
+% formulabook, `observe`s the four values, and asks the engine to APPLY the cited maintenance-dose formula.
+% No arithmetic is stated by the consumer; the engine computes each value EXACTLY (over exact rationals) and
+% carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (target steady-state concentration = 10 mg/L, clearance = 5 L/h, dosing interval = 8 h,
+% bioavailability = 1 for an intravenous drug): maintenance dose = 10 × 5 × 8 / 1 = 400 mg every 8 hours.
+% Each query fixes three of the four inputs and asks the engine to recover another quantity; every answer
+% is exact and the inversions COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli maintenance-dose.query.adj
+% ============================================================================
+
+import "maintenance-dose.adj"
+
+% --- MD: the maintenance dose the target, clearance, interval, and F imply (expect 400). ------------
+observe ssc(10)
+observe cl(5)
+observe di(8)
+observe b(1)
+? md(ssc, cl, di, b)   % expect 400
+
+% --- Inverse: the steady-state concentration a 400 mg dose achieves at the same CL, DI, F (expect 10). -
+observe md(400)
+? ssc(md, cl, di, b)   % expect 10

@@ -48,48 +48,11 @@
 package xmllexer
 
 import (
-	"path/filepath"
-	"runtime"
+	"sync"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
-
-// ---------------------------------------------------------------------------
-// Grammar File Location
-// ---------------------------------------------------------------------------
-
-// getGrammarPath computes the absolute path to the xml.tokens grammar file.
-//
-// We use runtime.Caller(0) to find the directory of this Go source file at
-// runtime, then navigate up three levels (xml-lexer -> go -> packages ->
-// code) to reach the grammars directory. This approach works regardless of
-// the working directory, which is important because tests and the build tool
-// may run from different locations.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    xml.tokens          <-- this is what we want
-//	  packages/
-//	    go/
-//	      xml-lexer/
-//	        xml_lexer.go    <-- we are here (3 levels below code/)
-func getGrammarPath() string {
-	// runtime.Caller(0) returns the file path of the current source file.
-	// The underscore variables are: program counter, line number, and ok bool.
-	_, filename, _, _ := runtime.Caller(0)
-
-	// filepath.Dir gives us the directory containing xml_lexer.go
-	parent := filepath.Dir(filename)
-
-	// Navigate up 3 levels: xml-lexer -> go -> packages -> code,
-	// then down into grammars/
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	return filepath.Join(root, "xml", "xml.tokens")
-}
 
 // ---------------------------------------------------------------------------
 // XML On-Token Callback
@@ -191,18 +154,68 @@ func XmlOnToken(token lexer.Token, ctx *lexer.LexerContext) {
 // Public API
 // ---------------------------------------------------------------------------
 
-// CreateXmlLexer loads the XML token grammar and returns a configured
-// GrammarLexer ready to tokenize the given XML text.
+// -----------------------------------------------------------------------
+// Go-Compatible Pattern Rewrites
+// -----------------------------------------------------------------------
 //
-// This function reads the xml.tokens file, parses it into a TokenGrammar,
-// creates a GrammarLexer, and registers the XmlOnToken callback for
-// pattern group switching.
+// The XML token grammar uses Perl-style negative lookaheads (?!...) which
+// Go's regexp package does not support. For example:
 //
-// The returned lexer operates with pattern groups. The XmlOnToken callback
-// switches between groups as tag delimiters, comments, CDATA sections, and
+//   COMMENT_TEXT = /([^-]|-(?!->))+/
+//
+// means "match everything except the --> sequence". In Python's regex
+// engine, (?!->) is a zero-width assertion that checks the next chars
+// without consuming them. Go has no equivalent.
+//
+// Our workaround: rewrite each problematic pattern into a simpler
+// Go-compatible regex that matches a single "safe unit" — either a run of
+// characters that can't start the end delimiter, or a single instance of the
+// delimiter-start character. We then reorder definitions so the end-delimiter
+// pattern (e.g., COMMENT_END) is tried BEFORE the text pattern. This ensures
+// that when the end delimiter appears, it matches first. When it doesn't, the
+// text pattern matches one safe chunk.
+//
+// The consequence is that the lexer may produce multiple consecutive text
+// tokens (e.g., two COMMENT_TEXT tokens instead of one). The TokenizeXml
+// function merges these adjacent same-type tokens into a single token,
+// preserving the expected output.
+//
+// Pattern rewrites:
+//
+//   Original (Python)                    Go-compatible
+//   ──────────────────────────────────   ────────────────────
+//   COMMENT_TEXT: ([^-]|-(?!->))+        [^-]+|-
+//   CDATA_TEXT:   ([^\]]|\](?!\]>))+     [^\]]+|\]
+//   PI_TEXT:      ([^?]|\?(?!>))+        [^?]+|\?
+//
+// And reorder: end-delimiter before text in each group.
+//
+// The compiled-in grammar (TokenGrammarData in grammar_data.go) still carries
+// the original Python lookahead patterns, so we apply these rewrites to it
+// once, lazily, and cache the result. The rewrite mutates the shared grammar
+// in place but is idempotent, and sync.OnceValue guarantees it runs exactly
+// once even under concurrent lexer creation.
+var goCompatibleGrammar = sync.OnceValue(func() *grammartools.TokenGrammar {
+	grammar := TokenGrammarData
+	rewriteGroup(grammar, "comment", "COMMENT_TEXT", `[^-]+|-`, "COMMENT_END")
+	rewriteGroup(grammar, "cdata", "CDATA_TEXT", `[^\]]+|\]`, "CDATA_END")
+	rewriteGroup(grammar, "pi", "PI_TEXT", `[^?]+|\?`, "PI_END")
+	return grammar
+})
+
+// CreateXmlLexer returns a GrammarLexer configured with the XML token grammar,
+// ready to tokenize the given XML text.
+//
+// The grammar is embedded at compile time as native Go in grammar_data.go
+// (TokenGrammarData); nothing is read from disk at run time. Its lookahead
+// text patterns are rewritten to Go-compatible regexes once (see
+// goCompatibleGrammar). The XmlOnToken callback is registered so the lexer
+// switches pattern groups as tag delimiters, comments, CDATA sections, and
 // processing instructions are encountered.
 //
-// Returns an error if the grammar file cannot be read or parsed.
+// The lexer works unchanged when the package is built standalone and needs no
+// filesystem capability. The error result is retained for API compatibility
+// and is always nil.
 //
 // Example:
 //
@@ -212,76 +225,18 @@ func XmlOnToken(token lexer.Token, ctx *lexer.LexerContext) {
 //	}
 //	tokens := lex.Tokenize()
 func CreateXmlLexer(source string) (*lexer.GrammarLexer, error) {
-	return StartNew[*lexer.GrammarLexer]("xmllexer.CreateXmlLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			// Read the grammar file from disk. This file defines all token patterns,
-			// skip patterns, pattern groups, and literal tokens for XML.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
+	// Create the grammar-driven lexer. The GrammarLexer constructor compiles
+	// all regex patterns and initializes skip pattern matching and pattern
+	// group support.
+	xmlLexer := lexer.NewGrammarLexer(source, goCompatibleGrammar())
 
-			// Parse the grammar file into a structured TokenGrammar object.
-			// This extracts token definitions (with regex patterns), skip
-			// definitions, pattern groups, and alias mappings.
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
+	// Register the on-token callback. This callback fires after each token
+	// match and switches pattern groups based on the token type. Without
+	// this callback, the lexer would stay in the default group forever and
+	// never recognize tag-internal patterns like attribute names and values.
+	xmlLexer.SetOnToken(XmlOnToken)
 
-			// -----------------------------------------------------------------------
-			// Go-Compatible Pattern Rewrites
-			// -----------------------------------------------------------------------
-			//
-			// The xml.tokens grammar uses Perl-style negative lookaheads (?!...)
-			// which Go's regexp package does not support. For example:
-			//
-			//   COMMENT_TEXT = /([^-]|-(?!->))+/
-			//
-			// means "match everything except the --> sequence". In Python's regex
-			// engine, (?!->) is a zero-width assertion that checks the next chars
-			// without consuming them. Go has no equivalent.
-			//
-			// Our workaround: rewrite each problematic pattern into a simpler
-			// Go-compatible regex that matches a single "safe unit" — either a run
-			// of characters that can't start the end delimiter, or a single instance
-			// of the delimiter-start character. We then reorder definitions so the
-			// end-delimiter pattern (e.g., COMMENT_END) is tried BEFORE the text
-			// pattern. This ensures that when the end delimiter appears, it matches
-			// first. When it doesn't, the text pattern matches one safe chunk.
-			//
-			// The consequence is that the lexer may produce multiple consecutive
-			// text tokens (e.g., two COMMENT_TEXT tokens instead of one). The
-			// TokenizeXml function merges these adjacent same-type tokens into a
-			// single token, preserving the expected output.
-			//
-			// Pattern rewrites:
-			//
-			//   Original (Python)                    Go-compatible
-			//   ──────────────────────────────────   ────────────────────
-			//   COMMENT_TEXT: ([^-]|-(?!->))+        [^-]+|-
-			//   CDATA_TEXT:   ([^\]]|\](?!\]>))+     [^\]]+|\]
-			//   PI_TEXT:      ([^?]|\?(?!>))+        [^?]+|\?
-			//
-			// And reorder: end-delimiter before text in each group.
-			//
-			rewriteGroup(grammar, "comment", "COMMENT_TEXT", `[^-]+|-`, "COMMENT_END")
-			rewriteGroup(grammar, "cdata", "CDATA_TEXT", `[^\]]+|\]`, "CDATA_END")
-			rewriteGroup(grammar, "pi", "PI_TEXT", `[^?]+|\?`, "PI_END")
-
-			// Create the grammar-driven lexer. The GrammarLexer constructor compiles
-			// all regex patterns and initializes skip pattern matching and pattern
-			// group support.
-			xmlLexer := lexer.NewGrammarLexer(source, grammar)
-
-			// Register the on-token callback. This callback fires after each token
-			// match and switches pattern groups based on the token type. Without
-			// this callback, the lexer would stay in the default group forever and
-			// never recognize tag-internal patterns like attribute names and values.
-			xmlLexer.SetOnToken(XmlOnToken)
-
-			return rf.Generate(true, false, xmlLexer)
-		}).GetResult()
+	return xmlLexer, nil
 }
 
 // rewriteGroup replaces a text pattern in a grammar group with a Go-compatible
@@ -382,7 +337,7 @@ func rewriteGroup(grammar *grammartools.TokenGrammar, groupName, textName, newPa
 // Always present:
 //   - EOF: end of input
 //
-// Returns an error if the grammar file cannot be loaded.
+// The error result is retained for API compatibility and is always nil.
 func TokenizeXml(source string) ([]lexer.Token, error) {
 	xmlLexer, err := CreateXmlLexer(source)
 	if err != nil {

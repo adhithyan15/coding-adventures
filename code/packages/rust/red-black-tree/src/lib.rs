@@ -189,9 +189,7 @@ fn delete_rec<T: Ord + Clone>(
     root: Option<Box<RBNode<T>>>,
     value: &T,
 ) -> Option<Box<RBNode<T>>> {
-    let Some(mut node) = root else {
-        return None;
-    };
+    let mut node = root?;
 
     if value < &node.value {
         if !is_red(&node.left) && !is_red_left(&node.left) {
@@ -346,11 +344,10 @@ fn validate<'a, T: Ord>(
             if max.is_some_and(|bound| node.value >= *bound) {
                 return None;
             }
-            if node.color == Color::Red {
-                if is_red(&node.left) || is_red(&node.right) {
+            if node.color == Color::Red
+                && (is_red(&node.left) || is_red(&node.right)) {
                     return None;
                 }
-            }
             let left = validate(node.left.as_deref(), min, Some(&node.value))?;
             let right = validate(node.right.as_deref(), Some(&node.value), max)?;
             if left != right {
@@ -417,10 +414,10 @@ fn bst_successor<'a, T: Ord>(root: &'a Option<Box<RBNode<T>>>, value: &T) -> Opt
     best
 }
 
-fn bst_kth_smallest<'a, T: Ord>(
-    root: &'a Option<Box<RBNode<T>>>,
+fn bst_kth_smallest<T: Ord>(
+    root: &Option<Box<RBNode<T>>>,
     k: usize,
-) -> Option<&'a T> {
+) -> Option<&T> {
     if k == 0 {
         return None;
     }

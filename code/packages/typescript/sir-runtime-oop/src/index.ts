@@ -542,6 +542,7 @@ const ARRAY_METHODS = new Set<string>([
   "sort",
   "min",
   "max",
+  "minmax",
   "sum",
   "uniq",
   "flatten",
@@ -555,6 +556,9 @@ const ARRAY_METHODS = new Set<string>([
   "values_at",
   "rotate",
   "zip",
+  "each_slice",
+  "each_cons",
+  "tally",
 ]);
 
 // Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
@@ -585,6 +589,8 @@ const ARRAY_BLOCK_METHODS = new Set<string>([
   "drop_while",
   "count",
   "each_with_object",
+  "chunk_while",
+  "slice_when",
 ]);
 
 // Non-block `Hash` methods (M1c). Hash is a JS `Map`.
@@ -602,6 +608,7 @@ const HASH_METHODS = new Set<string>([
   "length",
   "empty?",
   "to_a",
+  "to_h",
   "dig",
   "store",
   "[]=",
@@ -621,6 +628,27 @@ const HASH_BLOCK_METHODS = new Set<string>([
   "reject",
   "each_key",
   "each_value",
+  "transform_values",
+  "transform_keys",
+  "find",
+  "detect",
+  "any?",
+  "all?",
+  "none?",
+  "count",
+  "sort_by",
+  "min_by",
+  "max_by",
+  "group_by",
+  "partition",
+  "flat_map",
+  "collect_concat",
+  "reduce",
+  "inject",
+  "sum",
+  "to_h",
+  "each_with_index",
+  "each_with_object",
 ]);
 
 // Non-block `String` methods (M1c).  A Ruby `String` is a JS `string`, which is
@@ -660,6 +688,10 @@ const STRING_METHODS = new Set<string>([
   "rjust",
   "center",
   "swapcase",
+  "tr",
+  "count",
+  "delete",
+  "squeeze",
 ]);
 
 // Block-taking `String` methods (M1c); `each_char` yields one character.
@@ -683,6 +715,10 @@ const NUMERIC_METHODS = new Set<string>([
   "floor",
   "ceil",
   "round",
+  "divmod",
+  "fdiv",
+  "clamp",
+  "between?",
   "gcd",
   "pow",
   "**",
@@ -912,6 +948,21 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
       return recv.length > 0 ? recv.reduce((a: Val, b: Val) => (b < a ? b : a)) : null;
     case "max":
       return recv.length > 0 ? recv.reduce((a: Val, b: Val) => (b > a ? b : a)) : null;
+    case "minmax": {
+      // `minmax` (no block) — the two-element array `[min, max]` in one pass,
+      // via `<`/`>` (the same comparison the `min`/`max` arms use).
+      // `[3,1,2].minmax` → `[1, 3]`.  An empty array yields `[null, null]`
+      // (Ruby `[nil, nil]` — no smallest/largest element), matching the
+      // Go/Rust/Python/JS references' 2-element nil array.
+      if (recv.length === 0) return [null, null];
+      let lo = recv[0];
+      let hi = recv[0];
+      for (let i = 1; i < recv.length; i++) {
+        if (recv[i] < lo) lo = recv[i];
+        if (recv[i] > hi) hi = recv[i];
+      }
+      return [lo, hi];
+    }
     case "sum": {
       let total: Val = args.length > 0 ? args[0] : 0;
       for (const item of recv) total = total + item;
@@ -1006,6 +1057,38 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
         zipped.push(row);
       }
       return zipped;
+    }
+    case "each_slice": {
+      // `each_slice(n)` — consecutive sub-arrays of at most `n` elements (the
+      // last may be shorter).  `[1,2,3,4,5].each_slice(2)` → [[1,2],[3,4],[5]].
+      // Ruby raises ArgumentError for n <= 0; the never-raise floor yields [].
+      const n = args.length > 0 && Number.isInteger(args[0]) ? (args[0] as number) : 0;
+      if (n <= 0) return [];
+      const out: Val[] = [];
+      for (let i = 0; i < recv.length; i += n) out.push(recv.slice(i, i + n));
+      return out;
+    }
+    case "each_cons": {
+      // `each_cons(n)` — every consecutive n-element sliding window.
+      // `[1,2,3,4].each_cons(2)` → [[1,2],[2,3],[3,4]].  A window larger than
+      // the array (or n <= 0) yields [].
+      const n = args.length > 0 && Number.isInteger(args[0]) ? (args[0] as number) : 0;
+      if (n <= 0) return [];
+      const out: Val[] = [];
+      for (let i = 0; i + n <= recv.length; i++) out.push(recv.slice(i, i + n));
+      return out;
+    }
+    case "tally": {
+      // `tally` — a Hash counting how many times each element occurs, keyed in
+      // first-seen order.  `["a","b","a","c","a"].tally` →
+      // `{"a"=>3, "b"=>1, "c"=>1}`; an empty array yields `{}`.  A Hash is a JS
+      // `Map` (insertion-ordered), the same shape `group_by` returns, printed
+      // `{k=>v}` by `rubyInspect`.  Keys compare by JS SameValueZero, which
+      // agrees with Ruby `eql?`/hash on the scalar elements this covers;
+      // mirrors the Go/Rust/Python/JS references.
+      const counts = new Map<Val, Val>();
+      for (const x of recv) counts.set(x, ((counts.get(x) as number) ?? 0) + 1);
+      return counts;
     }
     default:
       return MISS;
@@ -1148,6 +1231,35 @@ function arrayBlockMethod(
       for (const item of recv) apply(block, [item, memo]);
       return memo;
     }
+    case "chunk_while": {
+      // `chunk_while { |prev, cur| pred }` — runs of consecutive elements: the
+      // block is called on each ADJACENT pair; while it is truthy the run
+      // continues, and a falsy result starts a new run.
+      // `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` → [[1,2],[4,5],[7]].
+      // An empty array yields []; a single element yields [[x]].
+      if (recv.length === 0) return [];
+      const chunks: Val[][] = [[recv[0]]];
+      for (let i = 1; i < recv.length; i++) {
+        if (truthy(apply(block, [recv[i - 1], recv[i]]))) { chunks[chunks.length - 1].push(recv[i]); }
+        else { chunks.push([recv[i]]); }
+      }
+      return chunks;
+    }
+    case "slice_when": {
+      // `slice_when { |prev, cur| pred }` — the INVERSE of `chunk_while`: runs
+      // of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+      // exactly WHERE the block is truthy (chunk_while starts a new run where
+      // the block is FALSY).
+      // `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → [[1,2],[4],[9,10,11,12]].
+      // An empty array yields []; a single element yields [[x]].
+      if (recv.length === 0) return [];
+      const slices: Val[][] = [[recv[0]]];
+      for (let i = 1; i < recv.length; i++) {
+        if (truthy(apply(block, [recv[i - 1], recv[i]]))) { slices.push([recv[i]]); }
+        else { slices[slices.length - 1].push(recv[i]); }
+      }
+      return slices;
+    }
     default:
       return MISS;
   }
@@ -1184,6 +1296,11 @@ function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeo
       return recv.size === 0;
     case "to_a":
       return [...recv.entries()].map(([k, v]: [Val, Val]) => [k, v]);
+    case "to_h":
+      // `Hash#to_h` with NO block → a shallow copy of the hash (a fresh `Map`,
+      // so mutating it never aliases the receiver).  The block form (which
+      // re-maps each pair to a new `[k, v]`) lives in `hashBlockMethod`.
+      return new Map<Val, Val>(recv);
     case "dig":
       // v0: single-level dig.
       return recv.has(args[0]) ? recv.get(args[0]) : null;
@@ -1211,7 +1328,12 @@ function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeo
 
 /** Block-taking `Hash` methods; the block receives `[key, value]` (or a single
  * key/value for `each_key`/`each_value`). Returns `MISS` if not a block method. */
-function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val | typeof MISS {
+function hashBlockMethod(
+  recv: Map<Val, Val>,
+  name: string,
+  args: Val[],
+  block: Closure,
+): Val | typeof MISS {
   switch (name) {
     case "each":
     case "each_pair":
@@ -1230,6 +1352,188 @@ function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val
       return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => truthy(apply(block, [k, v]))));
     case "reject":
       return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => !truthy(apply(block, [k, v]))));
+    case "transform_values":
+      // Ruby `Hash#transform_values { |v| … }`: a NEW hash whose keys are copied
+      // verbatim and whose values are the block results.  The block yields ONE
+      // argument (the value); keys stay untouched (and unique, so no collision)
+      // and insertion order is preserved.  Non-mutating.
+      return new Map<Val, Val>([...recv].map(([k, v]: [Val, Val]) => [k, apply(block, [v])]));
+    case "transform_keys":
+      // Ruby `Hash#transform_keys { |k| … }`: a NEW hash whose values are
+      // untouched and whose keys are the block results (yields ONE argument, the
+      // key).  Two source keys can map to the SAME new key; Ruby keeps the LAST
+      // such entry's value at the FIRST-seen position — which is exactly how the
+      // `Map` constructor folds a list of pairs (later duplicate keys overwrite
+      // the value while the slot stays put).
+      return new Map<Val, Val>([...recv].map(([k, v]: [Val, Val]) => [apply(block, [k]), v]));
+    // ── Enumerable aggregates (Hash includes Enumerable) ──────────────────
+    //
+    // Ruby's `Hash` mixes in `Enumerable`, so these iterate the hash as a
+    // sequence of `[key, value]` pairs: the block is yielded `[key, value]`
+    // (two arguments, matching `each`), and the "element" an aggregate returns
+    // is the two-element `[key, value]` list.
+    case "find":
+    case "detect":
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) return [k, v];
+      }
+      return null;
+    case "any?":
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) return true;
+      }
+      return false;
+    case "all?":
+      for (const [k, v] of recv) {
+        if (!truthy(apply(block, [k, v]))) return false;
+      }
+      return true;
+    case "none?":
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) return false;
+      }
+      return true;
+    case "count": {
+      // `count { |k, v| pred }` — number of pairs with a truthy block result.
+      let n = 0;
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) n++;
+      }
+      return n;
+    }
+    case "sort_by": {
+      // A NEW Array of `[k, v]` pairs sorted by the block key; `<`/`>` keeps
+      // numbers numeric (matching Array#sort_by).  Keys computed once.
+      const keyed = [...recv].map(([k, v]: [Val, Val]): [Val, Val] => [
+        apply(block, [k, v]),
+        [k, v],
+      ]);
+      keyed.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+      return keyed.map((pair) => pair[1]);
+    }
+    case "min_by":
+    case "max_by": {
+      // The `[k, v]` pair with the extremal block key (first-on-tie; nil on
+      // an empty hash).
+      const entries = [...recv];
+      if (entries.length === 0) return null;
+      const wantMin = name === "min_by";
+      let bestPair: Val = [entries[0][0], entries[0][1]];
+      let bestKey = apply(block, [entries[0][0], entries[0][1]]);
+      for (let i = 1; i < entries.length; i++) {
+        const [k, v] = entries[i];
+        const key = apply(block, [k, v]);
+        if (wantMin ? key < bestKey : key > bestKey) {
+          bestPair = [k, v];
+          bestKey = key;
+        }
+      }
+      return bestPair;
+    }
+    // ── Enumerable breadth (block-taking reshape / fold) ─────────────────────
+    //
+    // Same `[key, value]`-pair iteration as the aggregates: every method yields
+    // `(key, value)` EXCEPT `reduce`/`inject`, which follow Ruby's memo
+    // convention and yield `(memo, pair)` — the `[k, v]` Array as ONE argument.
+    case "group_by": {
+      // A Hash (`Map`) of block key -> Array of the `[k, v]` pairs that produced
+      // it, in first-seen key order (mirrors Array#group_by, which also returns
+      // a Map).
+      const groups = new Map<Val, Val>();
+      for (const [k, v] of [...recv]) {
+        const key = apply(block, [k, v]);
+        const bucket = groups.get(key);
+        if (Array.isArray(bucket)) bucket.push([k, v]);
+        else groups.set(key, [[k, v]]);
+      }
+      return groups;
+    }
+    case "partition": {
+      // `[[matching pairs], [rest pairs]]`, each a fresh Array of `[k, v]` pairs.
+      const yes: Val[] = [];
+      const no: Val[] = [];
+      for (const [k, v] of [...recv]) {
+        if (truthy(apply(block, [k, v]))) yes.push([k, v]);
+        else no.push([k, v]);
+      }
+      return [yes, no];
+    }
+    case "flat_map":
+    case "collect_concat": {
+      // Map each pair then concatenate one level: an Array result splices its
+      // elements, a scalar is appended as-is.
+      const out: Val[] = [];
+      for (const [k, v] of [...recv]) {
+        const mapped = apply(block, [k, v]);
+        if (Array.isArray(mapped)) out.push(...mapped);
+        else out.push(mapped);
+      }
+      return out;
+    }
+    case "reduce":
+    case "inject": {
+      // Ruby's memo fold.  Unlike every other method here (which yields the
+      // two-arg pair), `reduce` yields `(memo, pair)` — the `[k, v]` Array as
+      // ONE argument.  With an explicit seed the fold starts there; without one
+      // it seeds from the first pair; an empty seedless reduce is `nil`.
+      const pairs: Val[] = [...recv].map(([k, v]: [Val, Val]): Val => [k, v]);
+      let acc: Val;
+      let rest: Val[];
+      if (args.length > 0) {
+        acc = args[0];
+        rest = pairs;
+      } else if (pairs.length > 0) {
+        acc = pairs[0];
+        rest = pairs.slice(1);
+      } else {
+        return null;
+      }
+      for (const pair of rest) acc = apply(block, [acc, pair]);
+      return acc;
+    }
+    case "sum": {
+      // Numeric fold seeded at `0` (or the explicit seed arg) over the block
+      // results — the same `+` accumulation Array#sum uses.
+      let acc: Val = args.length > 0 ? args[0] : 0;
+      for (const [k, v] of [...recv]) {
+        acc = (acc as number) + (apply(block, [k, v]) as number);
+      }
+      return acc;
+    }
+    case "to_h": {
+      // `Hash#to_h { |k, v| [new_k, new_v] }` — a NEW hash from the `[k, v]`
+      // pairs the block returns.  The block is yielded the two args `(k, v)`
+      // (matching `each`) and must return a two-element `[k, v]` pair; a
+      // non-pair result is skipped (Ruby raises TypeError, deferred to the
+      // typed-error cascade), and a later pair with a duplicate key wins
+      // (Ruby's rule, and how `Map.set` behaves).
+      const out = new Map<Val, Val>();
+      for (const [k, v] of [...recv]) {
+        const pair = apply(block, [k, v]);
+        if (Array.isArray(pair) && pair.length === 2) { out.set(pair[0], pair[1]); }
+      }
+      return out;
+    }
+    case "each_with_index": {
+      // Yields each `[k, v]` pair with its 0-based index and returns the
+      // receiver.  Unlike the two-arg `(k, v)` yield of `each`, the element
+      // arrives as a single `[k, v]` Array (the second block param is the
+      // index), matching Ruby's Enumerable convention.
+      let i = 0;
+      for (const [k, v] of [...recv]) { apply(block, [[k, v], i]); i++; }
+      return recv;
+    }
+    case "each_with_object": {
+      // `each_with_object(memo) { |(k, v), memo| … }` — yields each `[k, v]`
+      // pair with the memo object and returns the (mutated) memo.  Like
+      // `each_with_index`, the element is the single `[k, v]` pair (the second
+      // block param is the memo).  With no memo argument the receiver is
+      // returned unchanged.
+      if (args.length === 0) { return recv; }
+      const memo = args[0];
+      for (const [k, v] of [...recv]) { apply(block, [[k, v], memo]); }
+      return memo;
+    }
     default:
       return MISS;
   }
@@ -1389,6 +1693,92 @@ function stringMethod(recv: string, name: string, args: Val[]): Val | typeof MIS
       }
       return out;
     }
+    case "tr": {
+      // Ruby `String#tr(from, to)`: translate each char that appears in `from`
+      // to the char at the same position in `to`.  A shorter `to` repeats its
+      // LAST char; an empty `to` deletes matching chars; when `from` repeats a
+      // char the last mapping wins.
+      //
+      //   "hello".tr("el", "ip") == "hippo"   (e→i, l→p)
+      //   "hello".tr("l", "r")   == "herro"   (single mapping)
+      //   "hello".tr("aeiou", "*") == "h*ll*" (shorter `to` repeats "*")
+      //   "hello".tr("l", "")    == "heo"     (empty `to` deletes)
+      //
+      // NOTE: the char-RANGE (`"a-z"`) and NEGATION (`"^abc"`) forms are a
+      // follow-up, matching the literal-only `sub`/`gsub` precedent here.  We
+      // iterate whole code points (`[...s]` / `for…of`) so astral runes are
+      // never split mid-surrogate.
+      const from = typeof args[0] === "string" ? (args[0] as string) : null;
+      const to = typeof args[1] === "string" ? (args[1] as string) : null;
+      if (from === null || to === null) return recv;
+      const toC = [...to];
+      const fromC = [...from];
+      // Map each `from` code point to its replacement (or `null` = delete).
+      const table = new Map<string, string | null>();
+      for (let i = 0; i < fromC.length; i++) {
+        if (toC.length === 0) table.set(fromC[i], null);
+        else table.set(fromC[i], i < toC.length ? toC[i] : toC[toC.length - 1]);
+      }
+      let out = "";
+      for (const ch of recv) {
+        if (table.has(ch)) {
+          const r = table.get(ch) as string | null;
+          if (r !== null) out += r;
+        } else {
+          out += ch;
+        }
+      }
+      return out;
+    }
+    case "count":
+    case "delete":
+    case "squeeze": {
+      // Char-set methods.  Each `string` argument is treated LITERALLY — the set
+      // of characters it contains (ranges/negation are a follow-up).  `count`
+      // returns how many chars of `recv` lie in the set; `delete` removes them;
+      // `squeeze` collapses consecutive runs (of set chars, or of ALL chars when
+      // no set is given).  Multiple set args INTERSECT (Ruby's rule).
+      //
+      //   "hello".count("l")        == 2
+      //   "hello".delete("l")       == "heo"
+      //   "mississippi".squeeze     == "misisipi"   (no set: all runs)
+      //   "aaabbbccc".squeeze("a")  == "abbbccc"    (only "a" runs collapse)
+      const sets: Array<Set<string>> = [];
+      for (const a of args) if (typeof a === "string") sets.push(new Set([...a]));
+      // A char is "in the set" only when it is present in EVERY set argument.
+      const inAll = (ch: string): boolean => sets.length > 0 && sets.every((set) => set.has(ch));
+      if (name === "squeeze" && sets.length === 0) {
+        // Bare `squeeze` collapses every run of identical characters.
+        let out = "";
+        let last: string | null = null;
+        for (const ch of recv) {
+          if (ch !== last) {
+            out += ch;
+            last = ch;
+          }
+        }
+        return out;
+      }
+      if (name === "count") {
+        let n = 0;
+        for (const ch of recv) if (inAll(ch)) n++;
+        return n;
+      }
+      if (name === "delete") {
+        let out = "";
+        for (const ch of recv) if (!inAll(ch)) out += ch;
+        return out;
+      }
+      // squeeze(set): collapse only runs of characters that lie in the set.
+      let out = "";
+      let last: string | null = null;
+      for (const ch of recv) {
+        if (ch === last && inAll(ch)) continue;
+        out += ch;
+        last = ch;
+      }
+      return out;
+    }
     default:
       return MISS;
   }
@@ -1521,8 +1911,52 @@ function numericMethod(recv: number, name: string, args: Val[]): Val | typeof MI
       return Math.floor(recv);
     case "ceil":
       return Math.ceil(recv);
-    case "round":
-      return Number.isInteger(recv) ? recv : rubyRound(recv);
+    case "round": {
+      // Ruby `round` / `round(ndigits)` — half AWAY from zero (via `rubyRound`,
+      // NOT `Math.round` which is half-toward-+∞).  With no argument (or an
+      // integer receiver and `ndigits >= 0`) the result is an integer; a
+      // positive `ndigits` rounds to that many decimals; `ndigits <= 0` rounds
+      // to a power of ten.  TS numbers are f64 — a hostile-magnitude `ndigits`
+      // degrades naturally (the `factor` saturates to `Infinity` and
+      // `recv / Infinity` is `0`), with no bignum and no allocation.  A
+      // non-finite receiver returns unchanged.
+      const nd = typeof args[0] === "number" ? Math.trunc(args[0]) : 0;
+      if (!Number.isFinite(recv)) return recv;
+      if (Number.isInteger(recv) && nd >= 0) return recv;
+      const factor = Math.pow(10, nd);
+      return rubyRound(recv * factor) / factor;
+    }
+    case "divmod": {
+      // Ruby `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
+      // the divisor-signed remainder.  Division by zero raises a typed
+      // `ZeroDivisionError` (so a translated `rescue` catches it).
+      const d = typeof args[0] === "number" ? args[0] : 0;
+      if (d === 0) raiseError("ZeroDivisionError", "divided by 0");
+      const q = Math.floor(recv / d);
+      const r = recv - q * d;
+      return [q, r];
+    }
+    case "fdiv": {
+      // Ruby `fdiv(n)` — floating-point division that NEVER raises: dividing by
+      // zero yields `Infinity`/`-Infinity`/`NaN` (JS `/` already produces these),
+      // honouring the never-raise floor.
+      return recv / (typeof args[0] === "number" ? args[0] : 0);
+    }
+    case "clamp": {
+      // Ruby `Comparable#clamp(min, max)`: `min` if recv < min, `max` if
+      // recv > max, else recv.  (The Range form is a follow-up.)
+      const lo = typeof args[0] === "number" ? args[0] : 0;
+      const hi = typeof args[1] === "number" ? args[1] : 0;
+      if (recv < lo) return lo;
+      if (recv > hi) return hi;
+      return recv;
+    }
+    case "between?": {
+      // Ruby `Comparable#between?(min, max)`: `min <= recv <= max`.
+      const lo = typeof args[0] === "number" ? args[0] : 0;
+      const hi = typeof args[1] === "number" ? args[1] : 0;
+      return recv >= lo && recv <= hi;
+    }
     case "gcd":
       return gcdInt(recv, args[0]);
     case "pow":
@@ -1691,7 +2125,7 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   } else if (recv instanceof Map) {
     const last = args[args.length - 1];
     if (HASH_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
-      const blkResult = hashBlockMethod(recv, name, last);
+      const blkResult = hashBlockMethod(recv, name, args.slice(0, -1), last);
       if (blkResult !== MISS) return blkResult;
     }
     const hashResult = hashMethod(recv, name, args);

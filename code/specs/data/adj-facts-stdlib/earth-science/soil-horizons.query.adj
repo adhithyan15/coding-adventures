@@ -1,0 +1,23 @@
+% ============================================================================
+% soil-horizons.query.adj — a worked recall over the earth-science
+% soil-horizons library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the C horizon made
+% of?": it states no soil-science fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `horizon_material` rows and returns the material + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the material
+% `bedrock`, recall its horizon — r). A word that is not one of the master
+% horizons abstains honestly — the engine never invents a material.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli soil-horizons.query.adj
+% ============================================================================
+
+import "soil-horizons.adj"
+
+? horizon_material(o, $Material)        % expect organic_matter
+? horizon_material(c, $Material)        % expect parent_material
+? horizon_material(r, $Material)        % expect bedrock
+? horizon_material($Horizon, bedrock)   % reverse bind — expect r
+? horizon_material(humus, $Material)    % expect abstain — humus is a component of soil organic matter, not one of the master horizons

@@ -1,0 +1,169 @@
+% ============================================================================
+% hormone-glands — each hormone and the endocrine gland that secretes it
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% The first big map of endocrinology, and a rung a MEDICINE agent reasons UP
+% from: the body's chemical messengers (hormones) are each MADE by a particular
+% endocrine gland, and the classic middle/high-school recall is "which gland
+% makes hormone X?" Insulin comes from the pancreas, thyroxine from the thyroid,
+% cortisol from the adrenal glands, melatonin from the pineal gland, growth
+% hormone from the pituitary. Before you can reason about a hormone excess, a
+% deficiency, or a gland tumor you must first know WHICH gland the hormone comes
+% from. Recall is a binding query:
+%
+%     ? hormone_gland(insulin, $Gland)      % pancreas
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `hormone_gland(hormone, gland)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the gland
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these grounded hormones (it never invents a gland).
+%
+% Each grounded hormone and the gland the source says makes it, as a little
+% truth table (several hormones map to the SAME gland — that is expected):
+%
+%     hormone              gland               a beginner's cue
+%     ------------------   -----------------   ------------------------------
+%     insulin              pancreas            beta cells, lowers blood sugar
+%     glucagon             pancreas            alpha cells, raises blood sugar
+%     thyroxine            thyroid             the metabolism hormone (T4)
+%     calcitonin           thyroid             parafollicular ("C") cells
+%     cortisol             adrenal_gland       the "stress" glucocorticoid
+%     epinephrine          adrenal_gland       adrenaline, adrenal medulla
+%     growth_hormone       pituitary           makes bones and muscles grow
+%     melatonin            pineal_gland        the sleep / daily-cycle hormone
+%     parathyroid_hormone  parathyroid_gland   raises blood calcium
+%     testosterone         testis              the principal androgen
+%     estrogen             ovary               a female sex hormone
+%     progesterone         ovary               a female sex hormone
+%
+% The query also runs BACKWARD — bind a gland and recall a hormone it makes:
+%
+%     ? hormone_gland($H, pituitary)        % growth_hormone
+%
+% A word that is NOT one of these grounded hormones — `aldosterone`, `renin`, a
+% neurotransmitter, a random word — is deliberately NOT a row, so a recall on it
+% ABSTAINS rather than inventing a gland. (`aldosterone` is a real adrenal
+% hormone, but the fetched span that names it did not also name the adrenal gland
+% in the same sentence, so it was DROPPED rather than grounded on memory — that
+% is the provenance discipline this table is built to demonstrate.) That
+% honest-abstention property is what makes the table safe to build a reasoner on:
+% it answers exactly the hormone→gland pairs it can ground, and only those.
+%
+% The `gland` value of every row is a SINGLE lowercase atom naming the endocrine
+% gland the source EXPLICITLY states makes that hormone — never one the source
+% does not support. (Where several hormones share a gland, the atom is repeated:
+% `pancreas` appears for both insulin and glucagon, `ovary` for both estrogen and
+% progesterone.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every hormone→gland pair
+% below was read out of a fetched primary U.S. government page, and any hormone
+% whose gland could not be verified in a fetched span was DROPPED). Each pair,
+% with the source it was copied from and the verbatim span that states it:
+%
+%   insulin → pancreas
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Beta cells in the pancreatic islets secrete the hormone insulin in
+%      response to a high concentration of glucose in the blood."
+%
+%   glucagon → pancreas
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Alpha cells in the pancreatic islets secrete the hormone glucagons in
+%      response to a low concentration of glucose in the blood."
+%     (the page spells it "glucagons"; the hormone is glucagon)
+%
+%   thyroxine → thyroid
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Internally, the gland consists of follicles, which produce thyroxine and
+%      triiodothyronine hormones." ("the gland" is the thyroid gland — the whole
+%      page is about the thyroid; the calcitonin span below names it outright)
+%
+%   calcitonin → thyroid
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Calcitonin is secreted by the parafollicular cells of the thyroid gland."
+%
+%   cortisol → adrenal_gland
+%     https://medlineplus.gov/lab-tests/cortisol-test/
+%     (MedlinePlus — U.S. National Library of Medicine / NIH)
+%     "Cortisol is a hormone made by your adrenal glands, two small glands that
+%      sit above your kidneys."
+%
+%   epinephrine → adrenal_gland
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/adrenal.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The adrenal medulla develops from neural tissue and secretes two hormones,
+%      epinephrine and norepinephrine."
+%
+%   growth_hormone → pituitary
+%     https://medlineplus.gov/lab-tests/growth-hormone-tests/
+%     (MedlinePlus — U.S. National Library of Medicine / NIH)
+%     "GH is made in the pituitary gland, a small organ at the base of your brain
+%      that controls many functions, including growth."
+%
+%   melatonin → pineal_gland
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/pituitary.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute; the "Pituitary
+%      & Pineal Glands" page)
+%     "The pinealocytes synthesize the hormone melatonin and secrete it directly
+%      into the cerebrospinal fluid, which takes it into the blood."
+%     (pinealocytes are the cells of the pineal gland)
+%
+%   parathyroid_hormone → parathyroid_gland
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "These are parathyroid glands, and they secrete parathyroid hormone or
+%      parathormone."
+%
+%   testosterone → testis
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The principal androgen is testosterone, which is secreted by the testes."
+%
+%   estrogen → ovary
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Two groups of female sex hormones are produced in the ovaries, the
+%      estrogens and progesterone."
+%
+%   progesterone → ovary
+%     https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Two groups of female sex hormones are produced in the ovaries, the
+%      estrogens and progesterone."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the SEER statement that fixes the
+% first row (insulin → pancreas). Every OTHER row's per-fact source and verbatim
+% span is listed above, so each gland remains independently checkable. All
+% sources are primary U.S. government references — the NCI SEER Training Modules
+% (National Cancer Institute) and MedlinePlus (National Library of Medicine /
+% NIH) — so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table hormone_gland {
+    columns hormone, gland
+
+    row (insulin, pancreas)
+    row (glucagon, pancreas)
+    row (thyroxine, thyroid)
+    row (calcitonin, thyroid)
+    row (cortisol, adrenal_gland)
+    row (epinephrine, adrenal_gland)
+    row (growth_hormone, pituitary)
+    row (melatonin, pineal_gland)
+    row (parathyroid_hormone, parathyroid_gland)
+    row (testosterone, testis)
+    row (estrogen, ovary)
+    row (progesterone, ovary)
+
+    source "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
+    locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
+    trust authoritative
+}

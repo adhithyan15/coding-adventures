@@ -14,18 +14,17 @@ public struct AlgolLexer: Sendable {
 
     public static func loadGrammar(version: String = "algol60") throws -> TokenGrammar {
         let normalizedVersion = try normalize(version)
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
+        // The grammar is embedded at compile time in the generated
+        // `_Grammar.swift` (from code/grammars/algol/<version>.tokens); nothing
+        // is read from disk at run time.
+        guard let grammar = EmbeddedGrammar.tokenGrammars[normalizedVersion] else {
+            throw NSError(
+                domain: "AlgolLexer",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "No embedded grammar for ALGOL version \(normalizedVersion)."]
+            )
         }
-        let tokensURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("algol")
-            .appendingPathComponent("\(normalizedVersion).tokens")
-
-        let content = try String(contentsOf: tokensURL, encoding: .utf8)
-        return try parseTokenGrammar(source: content)
+        return grammar
     }
 
     private static func normalize(_ version: String) throws -> String {

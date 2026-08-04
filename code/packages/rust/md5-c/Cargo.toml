@@ -1,0 +1,12 @@
+[package]
+name = "md5-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the coding_adventures_md5 crate — for Swift/C compile-time interop"
+
+[lib]
+name = "md5_c"
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+coding_adventures_md5 = { path = "../md5" }

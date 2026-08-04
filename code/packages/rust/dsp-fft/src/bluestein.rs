@@ -118,7 +118,7 @@ pub fn bluestein_scalar(
     signal: &[f32],
     direction: Direction,
 ) -> Result<Vec<f32>, FftError> {
-    if signal.len() % 2 != 0 {
+    if !signal.len().is_multiple_of(2) {
         return Err(FftError::InvalidInput(format!(
             "interleaved buffer must have even length; got {}",
             signal.len()
@@ -310,7 +310,7 @@ pub fn build_bluestein_graph_with_input(
     signal: &[f32],
     direction: Direction,
 ) -> Result<(Graph, TensorId), FftError> {
-    if signal.len() % 2 != 0 {
+    if !signal.len().is_multiple_of(2) {
         return Err(FftError::InvalidInput(format!(
             "interleaved buffer must have even length; got {}",
             signal.len()

@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/backward-optimizer-lowering-v1.schema.json",
+  "title": "Backward and optimizer lowering lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "question",
+    "absolute_tolerance",
+    "finite_difference_epsilon",
+    "training_graph",
+    "expected_ir",
+    "scenarios"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "const": "backward-optimizer-lowering" },
+    "title": { "$ref": "#/$defs/text" },
+    "question": { "$ref": "#/$defs/text" },
+    "absolute_tolerance": { "const": 1e-8 },
+    "finite_difference_epsilon": { "const": 1e-5 },
+    "training_graph": { "$ref": "#/$defs/trainingGraph" },
+    "expected_ir": { "$ref": "#/$defs/expectedIr" },
+    "scenarios": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/scenario" }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "text": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "number": { "type": "number" },
+    "numberArray": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/number" }
+    },
+    "attributes": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/identifier" },
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string", "maxLength": 512 },
+          { "type": "number" },
+          { "type": "boolean" },
+          {
+            "type": "array",
+            "maxItems": 16,
+            "items": {
+              "oneOf": [
+                { "type": "string", "maxLength": 64 },
+                { "type": "number" }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "instruction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "op",
+        "output",
+        "inputs",
+        "attributes",
+        "source_nodes",
+        "source_edges",
+        "source_instructions"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": { "type": "string", "pattern": "^[A-Z][A-Z0-9_-]*$", "maxLength": 64 },
+        "output": { "type": ["string", "null"], "maxLength": 64 },
+        "inputs": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "type": "string", "maxLength": 64 }
+        },
+        "attributes": { "$ref": "#/$defs/attributes" },
+        "source_nodes": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "type": "string", "maxLength": 64 }
+        },
+        "source_edges": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "type": "string", "maxLength": 64 }
+        },
+        "source_instructions": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "type": "string", "maxLength": 64 }
+        }
+      }
+    },
+    "irStream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["magic", "version", "instructions"],
+      "properties": {
+        "magic": { "type": "string", "maxLength": 16 },
+        "version": { "const": 0 },
+        "instructions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": { "$ref": "#/$defs/instruction" }
+        }
+      }
+    },
+    "expectedIr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backward", "optimizer", "matrix_training"],
+      "properties": {
+        "backward": { "$ref": "#/$defs/irStream" },
+        "optimizer": { "$ref": "#/$defs/irStream" },
+        "matrix_training": { "$ref": "#/$defs/irStream" }
+      }
+    },
+    "trainingGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "equation",
+        "loss",
+        "parameter_id",
+        "input_id",
+        "target_id",
+        "gradient_reduction",
+        "optimizer",
+        "optimizer_step_zeroes_gradient"
+      ],
+      "properties": {
+        "equation": { "const": "prediction = w * x" },
+        "loss": { "const": "half_squared_error" },
+        "parameter_id": { "const": "w" },
+        "input_id": { "const": "x" },
+        "target_id": { "const": "target" },
+        "gradient_reduction": { "const": "stable_row_sum_then_explicit_divisor" },
+        "optimizer": { "const": "sgd" },
+        "optimizer_step_zeroes_gradient": { "const": false }
+      }
+    },
+    "savedValues": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "target", "prediction", "residual", "loss"],
+      "properties": {
+        "x": { "$ref": "#/$defs/numberArray" },
+        "target": { "$ref": "#/$defs/numberArray" },
+        "prediction": { "$ref": "#/$defs/numberArray" },
+        "residual": { "$ref": "#/$defs/numberArray" },
+        "loss": { "$ref": "#/$defs/numberArray" }
+      }
+    },
+    "backwardTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["d_loss", "d_residual", "d_prediction", "local_d_w", "d_x", "gradient_buffer_before", "batch_gradient", "grad_w"],
+      "properties": {
+        "d_loss": { "$ref": "#/$defs/numberArray" },
+        "d_residual": { "$ref": "#/$defs/numberArray" },
+        "d_prediction": { "$ref": "#/$defs/numberArray" },
+        "local_d_w": { "$ref": "#/$defs/numberArray" },
+        "d_x": { "$ref": "#/$defs/numberArray" },
+        "gradient_buffer_before": { "$ref": "#/$defs/number" },
+        "batch_gradient": { "$ref": "#/$defs/number" },
+        "grad_w": { "$ref": "#/$defs/number" }
+      }
+    },
+    "optimizerTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parameter_before",
+        "applied_gradient",
+        "parameter_delta",
+        "parameter_after",
+        "gradient_buffer_after_step"
+      ],
+      "properties": {
+        "parameter_before": { "$ref": "#/$defs/number" },
+        "applied_gradient": { "$ref": "#/$defs/number" },
+        "parameter_delta": { "$ref": "#/$defs/number" },
+        "parameter_after": { "$ref": "#/$defs/number" },
+        "gradient_buffer_after_step": { "$ref": "#/$defs/number" }
+      }
+    },
+    "matrixTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["columns", "gradient_buffer_before", "batch_gradient", "grad_w", "applied_gradient", "parameter_after", "gradient_buffer_after_step"],
+      "properties": {
+        "columns": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "residual", "d_prediction", "local_d_w", "d_x"],
+          "properties": {
+            "x": { "$ref": "#/$defs/numberArray" },
+            "residual": { "$ref": "#/$defs/numberArray" },
+            "d_prediction": { "$ref": "#/$defs/numberArray" },
+            "local_d_w": { "$ref": "#/$defs/numberArray" },
+            "d_x": { "$ref": "#/$defs/numberArray" }
+          }
+        },
+        "gradient_buffer_before": { "$ref": "#/$defs/number" },
+        "batch_gradient": { "$ref": "#/$defs/number" },
+        "grad_w": { "$ref": "#/$defs/number" },
+        "applied_gradient": { "$ref": "#/$defs/number" },
+        "parameter_after": { "$ref": "#/$defs/number" },
+        "gradient_buffer_after_step": { "$ref": "#/$defs/number" }
+      }
+    },
+    "gradientAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analytical", "numerical", "absolute_error"],
+      "properties": {
+        "analytical": { "$ref": "#/$defs/number" },
+        "numerical": { "$ref": "#/$defs/number" },
+        "absolute_error": { "$ref": "#/$defs/number" }
+      }
+    },
+    "expectedTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["saved_values", "backward", "optimizer", "matrix_training", "gradient_audit", "max_path_error"],
+      "properties": {
+        "saved_values": { "$ref": "#/$defs/savedValues" },
+        "backward": { "$ref": "#/$defs/backwardTrace" },
+        "optimizer": { "$ref": "#/$defs/optimizerTrace" },
+        "matrix_training": { "$ref": "#/$defs/matrixTrace" },
+        "gradient_audit": { "$ref": "#/$defs/gradientAudit" },
+        "max_path_error": { "$ref": "#/$defs/number" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "initial_parameter", "learning_rate", "inputs", "targets", "gradient_buffer_before", "divisor", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "title": { "$ref": "#/$defs/text" },
+        "initial_parameter": { "$ref": "#/$defs/number" },
+        "learning_rate": { "$ref": "#/$defs/number" },
+        "inputs": { "$ref": "#/$defs/numberArray" },
+        "targets": { "$ref": "#/$defs/numberArray" },
+        "gradient_buffer_before": { "$ref": "#/$defs/number" },
+        "divisor": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "expected": { "$ref": "#/$defs/expectedTrace" }
+      }
+    }
+  }
+}

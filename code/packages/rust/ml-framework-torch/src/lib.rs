@@ -18,7 +18,7 @@
 //! ml-framework-torch = the car (layers, optimizers, training loop)
 //! ```
 
-use ml_framework_core::{Tensor, Parameter};
+use ml_framework_core::Tensor;
 
 // =========================================================================
 // Top-level tensor creation functions
@@ -256,11 +256,11 @@ pub mod nn {
             let shape = pred.shape();
             let batch_size = shape[0];
             let num_classes = shape[1];
-            let pred_data = pred.data();
+            let _pred_data = pred.data();
             let target_data = target.data();
             // Compute log-softmax then select correct class
             let log_softmax = pred.softmax(1).log();
-            let log_data = log_softmax.data();
+            let _log_data = log_softmax.data();
             // Build one-hot from integer labels
             let mut one_hot = vec![0.0; batch_size * num_classes];
             for i in 0..batch_size {
@@ -581,7 +581,7 @@ pub mod data {
         }
 
         pub fn num_batches(&self) -> usize {
-            (self.dataset.len() + self.batch_size - 1) / self.batch_size
+            self.dataset.len().div_ceil(self.batch_size)
         }
     }
 }
@@ -593,6 +593,9 @@ pub mod data {
 #[cfg(test)]
 mod tests {
     use super::*;
+    // `Parameter` lives in `ml_framework_core` and is re-imported inside `mod nn`,
+    // so it is not brought into scope by `use super::*`; import it directly for tests.
+    use ml_framework_core::Parameter;
 
     #[test]
     fn test_tensor_creation() {

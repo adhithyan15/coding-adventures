@@ -1,0 +1,31 @@
+% ============================================================================
+% transtubular-potassium-gradient.query.adj — worked applications of the transtubular potassium gradient.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a potassium-disorder vignette into a paired urine
+% and serum potassium and osmolality: it `import`s the grounded formulabook, `observe`s the four
+% laboratory values, and asks the engine to APPLY the cited gradient. No arithmetic is stated by the
+% consumer; the engine computes each value EXACTLY (over exact rationals) and carries the article's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (urine K = 63, serum K = 7, urine osmolality = 610, serum osmolality = 305): TTKG =
+% (63 / 7) / (610 / 305) = 9 / 2 = 4.5 — a TTKG under 6 in the face of a serum potassium of 7
+% (hyperkalaemia) points toward hypoaldosteronism. Each query fixes the gradient and three of the four
+% measured quantities and asks the engine to recover the fourth; every answer is exact and the five
+% COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli transtubular-potassium-gradient.query.adj
+% ============================================================================
+
+import "transtubular-potassium-gradient.adj"
+
+% --- Gradient: the TTKG the four laboratory values imply (expect 4.5). ------------------------------
+observe urine_potassium(63)
+observe serum_potassium(7)
+observe urine_osmolality(610)
+observe serum_osmolality(305)
+? transtubular_potassium_gradient(urine_potassium, serum_potassium, urine_osmolality, serum_osmolality)   % expect 4.5
+
+% --- Inverse: the urine potassium a TTKG of 4.5 implies at the other three values (expect 63). ------
+observe transtubular_potassium_gradient(4.5)
+? urine_potassium(transtubular_potassium_gradient, serum_potassium, urine_osmolality, serum_osmolality)   % expect 63

@@ -1,0 +1,71 @@
+\documentclass[11pt,twoside]{book}
+\input{preamble}
+
+\title{\Huge Russian, Step by Step, Root by Root}
+\author{Adhithya Rajasekaran}
+\date{}
+
+\begin{document}
+
+\frontmatter
+
+\begin{titlepage}
+  \centering
+  \vspace*{3cm}
+  {\Huge\bfseries Russian, Step by Step, Root by Root\par}
+  \vspace{1cm}
+  {\Large A gentle, etymology-driven introduction to Russian\par}
+  \vspace{1.5cm}
+  {\large Adhithya Rajasekaran\par}
+  \vfill
+  {\large Starter edition --- two cumulative chapters of short lessons.\par}
+  \vspace{1cm}
+  {\large Companion practice lessons live alongside this book at\\
+  \texttt{code/learning/human-languages/russian/lessons/}\par}
+  \vspace{2cm}
+  {\normalsize
+    Copyright \copyright\ Adhithya Rajasekaran. Licensed under
+    \href{https://creativecommons.org/licenses/by-sa/4.0/}%
+    {Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)}.
+    Russian is set in Noto Sans (SIL Open Font License).\par
+  }
+\end{titlepage}
+
+\chapter*{How to use this starter edition}
+\addcontentsline{toc}{chapter}{How to use this starter edition}
+
+Begin with no assumed Russian or Cyrillic. Each numbered section is a short,
+resumable lesson. It introduces only the word, letters, grammar, or contrast
+needed at that point, connects the expression to history you may already know,
+and ends with retrieval. Read in order: every checkpoint uses only earlier
+sections plus the expression just introduced.
+
+Stress matters in Russian but ordinary Cyrillic does not print it. Romanization
+marks the stressed vowel with an acute accent in this starter edition, then
+gradually yields to the script. Cyrillic letters appear inside useful words;
+there is no alphabet exam before the first greeting. Separate companion writing
+lessons break the same letters into strokes for the Language Ladder app.
+
+The companion Markdown curriculum still contains known five- and six-minute
+estimates. The shared migration backlog records that debt explicitly. This book
+uses shorter micro-sections; it does not pretend the future one-source duration
+gate has already been completed.
+
+\tableofcontents
+
+\mainmatter
+
+\input{chapters/ch01-greetings-and-courtesy}
+\input{chapters/ch02-introducing-yourself}
+
+\backmatter
+
+\chapter*{Sources for this starter edition}
+\addcontentsline{toc}{chapter}{Sources for this starter edition}
+
+The track's \texttt{pronunciation-reference.md}, roadmap, changelog, and
+companion lessons are the canonical content sources for this edition. Letter
+shapes and stroke order are coordinated with the repository's machine-readable
+\texttt{data/scripts/cyrillic.json} inventory.
+
+\end{document}

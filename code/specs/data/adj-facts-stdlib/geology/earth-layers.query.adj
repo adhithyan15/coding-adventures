@@ -1,0 +1,23 @@
+% ============================================================================
+% earth-layers.query.adj — a worked recall over the geology earth-layers library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what state is the outer
+% core in?": it states no earth-science fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `has_state` rows and returns the state + the table's source/locator/trust.
+% The fourth query runs the relation BACKWARD (bind the state `liquid`, recall
+% which layer is in it — the outer_core). A word that is not one of the four
+% internal layers abstains honestly — the engine never invents a state.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli earth-layers.query.adj
+% ============================================================================
+
+import "earth-layers.adj"
+
+? has_state(crust, $State)       % expect rigid
+? has_state(mantle, $State)      % expect semi_solid
+? has_state(outer_core, $State)  % expect liquid
+? has_state(inner_core, $State)  % expect solid
+? has_state($Layer, liquid)      % reverse bind — expect outer_core
+? has_state(atmosphere, $State)  % expect abstain — the atmosphere is not one of the four internal layers

@@ -1,0 +1,24 @@
+% ============================================================================
+% element-groups.query.adj — a worked recall over the chemistry element-groups
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what family is sodium
+% in?": it states no chemistry fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `element_group_family` rows and returns the family + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% family noble_gas, recall an element that is in it — helium, the first noble
+% gas in the table). Gold is not in the table, so a recall on it abstains
+% honestly — the engine never invents a family.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli element-groups.query.adj
+% ============================================================================
+
+import "element-groups.adj"
+
+? element_group_family(sodium, $Family)    % expect alkali_metal
+? element_group_family(chlorine, $Family)  % expect halogen
+? element_group_family(iron, $Family)      % expect transition_metal
+? element_group_family($E, noble_gas)      % expect helium — reverse recall into the noble gases
+? element_group_family(gold, $Family)      % expect abstain — gold is not in the table

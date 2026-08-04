@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-agent-discovery"
+version = "0.1.0"
+edition = "2021"
+description = "Verified package discovery and registration candidates for D18 agents"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-agent-manifest = { path = "../chief-of-staff-agent-manifest" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+
+[dev-dependencies]
+chief-of-staff-skill-package = { path = "../chief-of-staff-skill-package" }
+coding_adventures_ed25519 = { path = "../ed25519" }

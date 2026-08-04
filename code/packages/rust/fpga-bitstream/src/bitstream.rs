@@ -147,7 +147,7 @@ pub struct BitstreamReport {
 /// Returns `(bitstream_bytes, report)`.
 pub fn emit_bitstream(config: &FpgaConfig) -> (Vec<u8>, BitstreamReport) {
     let (_, _, cram_bits) = part_specs(config.part);
-    let cram_bytes = ((cram_bits + 7) / 8) as usize;
+    let cram_bytes = cram_bits.div_ceil(8) as usize;
 
     let mut out: Vec<u8> = Vec::new();
 
@@ -168,11 +168,12 @@ pub fn emit_bitstream(config: &FpgaConfig) -> (Vec<u8>, BitstreamReport) {
 
     for ((row, col), _clb) in &sorted_clbs {
         // Tile address: big-endian u16 row, u16 col
-        let mut offset_payload = Vec::with_capacity(4);
-        offset_payload.push((*row >> 8) as u8);
-        offset_payload.push(*row as u8);
-        offset_payload.push((*col >> 8) as u8);
-        offset_payload.push(*col as u8);
+        let offset_payload = vec![
+            (*row >> 8) as u8,
+            *row as u8,
+            (*col >> 8) as u8,
+            *col as u8,
+        ];
         out.extend_from_slice(&cmd(CMD_CRAM_OFFSET, &offset_payload));
 
         // CRAM data: stub zeros of the correct byte count

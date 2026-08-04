@@ -191,9 +191,10 @@ fn protocol_error_response(message: &str) -> Vec<u8> {
 }
 
 fn runtime_options(options: &MiniRedisOptions) -> TcpRuntimeOptions {
-    let mut runtime_options = TcpRuntimeOptions::default();
-    runtime_options.max_connections = options.max_connections.max(1);
-    runtime_options
+    TcpRuntimeOptions {
+        max_connections: options.max_connections.max(1),
+        ..Default::default()
+    }
 }
 
 #[cfg(any(

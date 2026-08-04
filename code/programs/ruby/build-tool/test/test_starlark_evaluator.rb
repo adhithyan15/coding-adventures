@@ -16,6 +16,8 @@
 
 require_relative "test_helper"
 require_relative "../lib/build_tool/starlark_evaluator"
+require "open3"
+require "rbconfig"
 
 class TestStarlarkEvaluator < Minitest::Test
   include TestHelper
@@ -317,6 +319,7 @@ class TestStarlarkEvaluator < Minitest::Test
     assert_equal [], target.deps
     assert_equal "", target.test_runner
     assert_equal "", target.entry_point
+    assert_nil target.commands
   end
 
   def test_target_with_all_fields
@@ -443,6 +446,41 @@ class TestStarlarkEvaluator < Minitest::Test
     assert_equal "bin-b", targets[1].name
   end
 
+  def test_extract_targets_preserves_structured_commands
+    variables = {
+      "_targets" => [{
+        "rule" => "demo_library",
+        "name" => "demo",
+        "commands" => [
+          {"type" => "cmd", "program" => "demo", "args" => ["test", "a b"]},
+          nil
+        ]
+      }]
+    }
+
+    target = BuildTool::StarlarkEvaluator.send(:extract_targets, variables).fetch(0)
+
+    assert_equal 1, target.commands.length
+    assert_equal "demo", target.commands.fetch(0).program
+    assert_equal ["test", "a b"], target.commands.fetch(0).args
+    assert_equal ['demo test "a b"'], BuildTool::StarlarkEvaluator.generate_commands(target)
+  end
+
+  def test_extract_targets_rejects_malformed_structured_commands
+    variables = {
+      "_targets" => [{
+        "rule" => "demo_library",
+        "name" => "demo",
+        "commands" => [{"type" => "cmd", "program" => "demo", "args" => "test"}]
+      }]
+    }
+
+    error = assert_raises(RuntimeError) do
+      BuildTool::StarlarkEvaluator.send(:extract_targets, variables)
+    end
+    assert_includes error.message, "commands[0].args"
+  end
+
   # ==========================================================================
   # get_string / get_string_list helper tests
   # ==========================================================================
@@ -484,9 +522,37 @@ class TestStarlarkEvaluator < Minitest::Test
   # evaluate_build_file tests
   # ==========================================================================
   #
-  # These tests require the starlark_interpreter gem. We test with simple
-  # Starlark source that sets _targets directly, avoiding the need for
-  # load() and complex rule definitions.
+  # These tests require the repository-local starlark_interpreter runtime.
+  # We test with simple Starlark source that sets _targets directly, avoiding
+  # the need for load() and complex rule definitions.
+
+  def test_bundle_loads_repository_starlark_runtime_without_rubylib
+    gemfile = Pathname(__dir__).parent / "Gemfile"
+    env = {
+      "BUNDLE_GEMFILE" => gemfile.to_s,
+      "HTTP_PROXY" => "http://127.0.0.1:9",
+      "HTTPS_PROXY" => "http://127.0.0.1:9",
+      "RUBYLIB" => nil,
+      "RUBYOPT" => nil
+    }
+    script = 'require "coding_adventures_starlark_interpreter"; ' \
+             'feature = $LOADED_FEATURES.find { |path| ' \
+             'File.basename(path) == "coding_adventures_starlark_interpreter.rb" }; ' \
+             'abort "interpreter feature path missing" unless feature; print feature'
+
+    stdout, stderr, status = Open3.capture3(
+      env,
+      "bundle", "exec", RbConfig.ruby, "-e", script,
+      chdir: gemfile.dirname.to_s
+    )
+
+    assert status.success?, "clean bundle load failed: #{stderr}"
+    expected = (
+      gemfile.dirname / "../../../packages/ruby/starlark_interpreter" /
+      "lib/coding_adventures_starlark_interpreter.rb"
+    ).expand_path
+    assert_equal expected.to_s.tr("\\", "/"), stdout.tr("\\", "/")
+  end
 
   def test_evaluate_build_file_raises_for_missing_file
     assert_raises(RuntimeError) do
@@ -497,15 +563,6 @@ class TestStarlarkEvaluator < Minitest::Test
   end
 
   def test_evaluate_build_file_returns_empty_when_no_targets
-    # This test requires the starlark_interpreter gem. If it's not
-    # installed, we skip rather than fail -- the gem is only available
-    # when the full dependency chain is set up.
-    begin
-      require "coding_adventures_starlark_interpreter"
-    rescue LoadError
-      skip "starlark_interpreter gem not available"
-    end
-
     dir = create_temp_dir
     build_file = dir / "BUILD"
     # A valid Starlark file that doesn't declare any targets.
@@ -517,6 +574,85 @@ class TestStarlarkEvaluator < Minitest::Test
 
     assert_instance_of BuildTool::BuildFileResult, result
     assert_equal [], result.targets
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_evaluates_language_neutral_nested_load_fixture
+    repo_root = Pathname(__dir__).join("../../../../..").expand_path
+    fixture_path = repo_root / "code/specs/fixtures/build-tool-v1/cases/starlark-structured-context.json"
+    fixture = JSON.parse(fixture_path.read)
+    dir = create_temp_dir
+
+    fixture.fetch("workspace").fetch("files").each do |file|
+      write_file(dir / file.fetch("path"), file.fetch("content_utf8"))
+    end
+
+    entrypoint = fixture.fetch("input").fetch("options").fetch("entrypoint")
+    context = fixture.fetch("input").fetch("options").fetch("context").merge(
+      "repo_root" => dir.to_s.tr("\\", "/")
+    )
+    result = BuildTool::StarlarkEvaluator.evaluate_build_file(
+      (dir / entrypoint).to_s,
+      (dir / "code/packages/python/demo").to_s,
+      dir.to_s,
+      context: context
+    )
+
+    expected = fixture.fetch("expected").fetch("result").fetch("targets").first
+    target = result.targets.fetch(0)
+    assert_equal expected.fetch("rule"), target.rule
+    assert_equal expected.fetch("name"), target.name
+    assert_equal expected.fetch("srcs"), target.srcs
+    assert_equal expected.fetch("deps"), target.deps
+    assert_equal expected.fetch("rendered_commands"), BuildTool::StarlarkEvaluator.generate_commands(target)
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_cli_fails_closed_when_detected_starlark_cannot_be_evaluated
+    dir = create_temp_dir
+    write_file(
+      dir / "code/packages/ruby/demo/BUILD",
+      "load(\"missing.star\", \"demo\")\n_targets = [demo(name = \"demo\")]\n"
+    )
+    tool_dir = Pathname(__dir__).parent
+    env = {"BUNDLE_GEMFILE" => (tool_dir / "Gemfile").to_s}
+
+    _stdout, stderr, status = Open3.capture3(
+      env,
+      "bundle", "exec", RbConfig.ruby, (tool_dir / "build.rb").to_s,
+      "--root", dir.to_s, "--language", "ruby", "--force", "--dry-run",
+      chdir: tool_dir.to_s
+    )
+
+    assert_equal 1, status.exitstatus
+    assert_includes stderr, "Error: Starlark evaluation failed for ruby/demo"
+    refute_includes stderr, "Warning: Starlark eval failed"
+    refute_includes stderr.tr("\\", "/"), dir.to_s.tr("\\", "/")
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_cli_fails_closed_when_detected_starlark_declares_no_targets
+    dir = create_temp_dir
+    write_file(
+      dir / "code/packages/ruby/demo/BUILD",
+      "def helper():\n    return 1\n"
+    )
+    tool_dir = Pathname(__dir__).parent
+    env = {"BUNDLE_GEMFILE" => (tool_dir / "Gemfile").to_s}
+
+    _stdout, stderr, status = Open3.capture3(
+      env,
+      "bundle", "exec", RbConfig.ruby, (tool_dir / "build.rb").to_s,
+      "--root", dir.to_s, "--language", "ruby", "--force", "--dry-run",
+      chdir: tool_dir.to_s
+    )
+
+    assert_equal 1, status.exitstatus
+    assert_includes stderr, "Error: Starlark evaluation failed for ruby/demo: no targets declared"
+    refute_includes stderr.tr("\\", "/"), dir.to_s.tr("\\", "/")
   ensure
     FileUtils.rm_rf(dir) if dir
   end

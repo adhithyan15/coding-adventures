@@ -113,7 +113,7 @@ fn frequency_analysis_empty_string() {
     let (shift, decoded) = analysis::frequency_analysis("");
     // The specific shift returned for empty input is implementation-defined
     // but the function must not panic.
-    assert!(shift >= 0 && shift <= 25);
+    assert!((0..=25).contains(&shift));
     assert_eq!(decoded, "");
 }
 
@@ -125,7 +125,7 @@ fn frequency_analysis_all_same_letter() {
     let ciphertext = "EEEEEEEEEEE";
     let (shift, _decoded) = analysis::frequency_analysis(ciphertext);
     // Just verify it returns a valid shift.
-    assert!(shift >= 1 && shift <= 25);
+    assert!((1..=25).contains(&shift));
 }
 
 #[test]

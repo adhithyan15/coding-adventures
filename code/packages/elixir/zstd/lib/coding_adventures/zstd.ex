@@ -164,16 +164,26 @@ defmodule CodingAdventures.Zstd do
   #   nb   = number of extra bits to read for the next state transition
   #   base = added to those extra bits to form the next state
   #
-  # Construction (must mirror the Rust implementation exactly):
+  # Construction (must mirror the real zstd C reference — fse.h /
+  # fse_decompress.c's FSE_buildDTable_internal — exactly):
   #
   # Phase 1: symbols with norm[s] == -1 (prob = 1/sz) go at the HIGH end of the
   #   table (indices sz-1, sz-2, ...). These get exactly one slot.
   #
   # Phase 2: remaining symbols are spread across the LOW portion using a
-  #   deterministic step function. This ensures each symbol occupies the
-  #   correct fraction of slots proportional to its normalised count.
-  #   Two-pass: first symbols with count > 1, then count == 1.
-  #   This matches the reference implementation ordering.
+  #   deterministic step function, in a SINGLE pass over symbols in ascending
+  #   order 0..maxSymbolValue, placing each symbol's full count immediately
+  #   when encountered. This ensures each symbol occupies the correct
+  #   fraction of slots proportional to its normalised count.
+  #
+  #   An earlier revision of this codec used a fabricated two-pass split
+  #   (all count>1 symbols first, then all count==1 symbols) instead. That
+  #   produces a DIFFERENT table layout — internally self-consistent (our
+  #   own decoder mirrored our own encoder, so round-trip tests passed) but
+  #   not the real wire format, so output was rejected by the real `zstd`
+  #   CLI with "Data corruption detected". There is no correctness reason to
+  #   special-case cnt>1 vs cnt==1 — that was a spurious convention with no
+  #   basis in the reference algorithm. See lessons.md Lesson 96.
   #
   # Phase 3: assign nb and base to each slot.
   #   For symbol s with sym_next counter ns:
@@ -203,36 +213,29 @@ defmodule CodingAdventures.Zstd do
     # Phase 2: spread remaining symbols.
     # The step function step = (sz>>1) + (sz>>3) + 3 is co-prime to sz
     # (which is always a power of two), so it visits every slot in [0..high] exactly once.
-    {tbl1, sym_next1} =
-      Enum.reduce(0..1, {tbl0, sym_next0, 0}, fn pass, {tbl, sn, pos} ->
-        {new_tbl, new_sn, new_pos} =
-          norm
-          |> Enum.with_index()
-          |> Enum.reduce({tbl, sn, pos}, fn {c, s}, {tbl_acc, sn_acc, pos_acc} ->
-            if c <= 0 do
-              {tbl_acc, sn_acc, pos_acc}
-            else
-              cnt = c
-              skip = if pass == 0, do: cnt <= 1, else: cnt != 1
-              if skip do
-                {tbl_acc, sn_acc, pos_acc}
-              else
-                new_sn = Map.put(sn_acc, s, cnt)
-                # Spread cnt occurrences of symbol s across the table
-                {final_tbl, final_pos} =
-                  Enum.reduce(1..cnt, {tbl_acc, pos_acc}, fn _, {t, p} ->
-                    t2 = Map.put(t, p, {s, 0, 0})
-                    # Advance pos using the step, skipping slots above `high`
-                    next_p = advance_pos(p, step, sz, high)
-                    {t2, next_p}
-                  end)
-                {final_tbl, new_sn, final_pos}
-              end
-            end
-          end)
-        {new_tbl, new_sn, new_pos}
+    #
+    # SINGLE pass over symbols in ascending index order — see the module doc
+    # above for why a two-pass split is wrong.
+    {tbl1, sym_next1, _pos} =
+      norm
+      |> Enum.with_index()
+      |> Enum.reduce({tbl0, sym_next0, 0}, fn {c, s}, {tbl_acc, sn_acc, pos_acc} ->
+        if c <= 0 do
+          {tbl_acc, sn_acc, pos_acc}
+        else
+          cnt = c
+          new_sn = Map.put(sn_acc, s, cnt)
+          # Spread cnt occurrences of symbol s across the table
+          {final_tbl, final_pos} =
+            Enum.reduce(1..cnt, {tbl_acc, pos_acc}, fn _, {t, p} ->
+              t2 = Map.put(t, p, {s, 0, 0})
+              # Advance pos using the step, skipping slots above `high`
+              next_p = advance_pos(p, step, sz, high)
+              {t2, next_p}
+            end)
+          {final_tbl, new_sn, final_pos}
+        end
       end)
-      |> then(fn {tbl, sn, _pos} -> {tbl, sn} end)
 
     # Phase 3: assign nb and base using sym_next counters.
     # We iterate slots in ascending index order, tracking which occurrence
@@ -311,33 +314,25 @@ defmodule CodingAdventures.Zstd do
     # = sz - 1 - (count of -1 symbols). We compute it as the minimum free slot.
     idx_limit = find_idx_limit(spread0, sz)
 
-    {spread1, _} =
-      Enum.reduce(0..1, {spread0, 0}, fn pass, {sp, pos} ->
-        {new_sp, new_pos} =
-          norm
-          |> Enum.with_index()
-          |> Enum.reduce({sp, pos}, fn {c, s}, {sp_acc, pos_acc} ->
-            if c <= 0 do
-              {sp_acc, pos_acc}
-            else
-              cnt = c
-              skip = if pass == 0, do: cnt <= 1, else: cnt != 1
-              if skip do
-                {sp_acc, pos_acc}
-              else
-                {final_sp, final_pos} =
-                  Enum.reduce(1..cnt, {sp_acc, pos_acc}, fn _, {sp2, p} ->
-                    sp3 = Map.put(sp2, p, s)
-                    next_p = advance_pos(p, step, sz, idx_limit)
-                    {sp3, next_p}
-                  end)
-                {final_sp, final_pos}
-              end
-            end
+    # SINGLE pass over symbols in ascending index order — must mirror
+    # build_decode_table's Phase 2 exactly (the real algorithm has no
+    # count>1-vs-count==1 split; see Lesson 96 / the module doc above
+    # build_decode_table).
+    {spread1, _pos} =
+      norm
+      |> Enum.with_index()
+      |> Enum.reduce({spread0, 0}, fn {c, s}, {sp_acc, pos_acc} ->
+        if c <= 0 do
+          {sp_acc, pos_acc}
+        else
+          cnt = c
+          Enum.reduce(1..cnt, {sp_acc, pos_acc}, fn _, {sp2, p} ->
+            sp3 = Map.put(sp2, p, s)
+            next_p = advance_pos(p, step, sz, idx_limit)
+            {sp3, next_p}
           end)
-        {new_sp, new_pos}
+        end
       end)
-      |> then(fn {sp, pos} -> {sp, pos} end)
 
     _ = high  # suppress unused warning
 
@@ -532,15 +527,23 @@ defmodule CodingAdventures.Zstd do
   # ─── FSE encode/decode operations ─────────────────────────────────────────────
   #
   # The encoder and decoder both maintain FSE state in [sz, 2*sz).
-  # Encoding symbol `sym` from state E:
+  #
+  # DECODING a symbol from state S is a two-STEP process that the real
+  # zstd decoder keeps separate (see apply_sequences/11 below for why this
+  # matters — a compounding bug in an earlier revision fused these steps
+  # together in the wrong order relative to the three parallel LL/ML/OF
+  # streams):
+  #   1. PEEK: decode_table[S] → {sym, nb, base}. A bare lookup — consumes
+  #      NO bits. The state itself already IS the decode-table index.
+  #   2. UPDATE (only when another sequence follows): new_S = base +
+  #      read(nb bits). This prepares the state the NEXT sequence's peek
+  #      will use; it is never performed after the LAST sequence in a block.
+  #
+  # ENCODING mirrors this. Encoding symbol `sym` from state E (the normal
+  # case — see fse_init_state/3 below for the exception):
   #   1. Compute nb = (E + delta_nb) >>> 16   (bits to emit)
   #   2. Write low nb bits of E to the bitstream
   #   3. new_E = st[(E >>> nb) + delta_fs]
-  #
-  # Decoding symbol from state S:
-  #   1. Look up decode_table[S] → {sym, nb, base}
-  #   2. new_S = base + read(nb bits)
-  #   3. Return sym
 
   defp fse_encode_sym(state, sym, ee, st) do
     # ee is a map: symbol -> {delta_nb, delta_fs}
@@ -552,12 +555,41 @@ defmodule CodingAdventures.Zstd do
     {nb, state, new_state}
   end
 
-  defp fse_decode_sym(state, dt, br_state) do
-    # dt is a list of {sym, nb, base} indexed by state
-    {sym, nb, base} = Enum.at(dt, state)
-    {bits, new_br} = rbr_read_bits(br_state, nb)
-    new_state = base + bits
-    {sym, new_state, new_br}
+  # Initialise an FSE encoder state DIRECTLY from a symbol, with no bits
+  # written to the stream. Mirrors the real zstd reference's
+  # FSE_initCState2 (fse_compress.c).
+  #
+  # Sequences are encoded in reverse order (last sequence first), so the
+  # FIRST symbol this encoder ever processes is semantically the LAST
+  # sequence in the block. There is no "previous" state to transition FROM
+  # for that symbol — symmetrically, the decoder never performs a state
+  # UPDATE after decoding the last sequence (see apply_sequences/11) — so
+  # encoding it via the normal fse_encode_sym/4 transition (which always
+  # flushes nb bits) would write bits the decoder will never read,
+  # corrupting the alignment of every stream that follows.
+  #
+  # The formula uses `(delta_nb + 2^15) >>> 16` (a rounding shift) in place
+  # of the usual `(state + delta_nb) >>> 16` — there is no real "state" yet
+  # to add.
+  defp fse_init_state(sym, ee, st) do
+    {delta_nb, delta_fs} = Map.fetch!(ee, sym)
+    nb_bits_out = (delta_nb + (1 <<< 15)) >>> 16
+    value = (nb_bits_out <<< 16) - delta_nb
+    slot_i = (value >>> nb_bits_out) + delta_fs
+    slot = max(slot_i, 0)
+    Enum.at(st, slot)
+  end
+
+  # PEEK the symbol at the given FSE state — a bare decode-table lookup.
+  # Consumes NO bits. dt is a list of {sym, nb, base} indexed by state.
+  defp fse_peek(dt, state), do: Enum.at(dt, state)
+
+  # UPDATE an FSE state: consumes `nb` bits from the bitstream and returns
+  # the new state plus the advanced reader. Must be skipped entirely for the
+  # last sequence in a block (see apply_sequences/11).
+  defp fse_update_state({_sym, nb, base}, br) do
+    {bits, new_br} = rbr_read_bits(br, nb)
+    {base + bits, new_br}
   end
 
   # ─── LL / ML code number computation ─────────────────────────────────────────
@@ -762,29 +794,40 @@ defmodule CodingAdventures.Zstd do
   #   [symbol_compression_modes: 1 byte]  (0x00 = all Predefined)
   #   [FSE bitstream: variable]
   #
-  # The FSE bitstream is a backward bit stream (reverse bit writer):
-  #   Sequences are encoded in REVERSE ORDER (last first).
-  #   For each sequence (in reverse):
-  #     OF extra bits, ML extra bits, LL extra bits (in this order)
-  #     FSE encode: ML symbol, then OF symbol, then LL symbol
-  #   After all sequences, flush final FSE states:
-  #     (state_of - sz_of) as OF_ACC_LOG bits
-  #     (state_ml - sz_ml) as ML_ACC_LOG bits
-  #     (state_ll - sz_ll) as LL_ACC_LOG bits
-  #   Add sentinel and flush.
+  # The FSE bitstream is a backward bit stream (reverse bit writer): the LAST
+  # bits `RevBitWriter.add_bits/3` call writes are the FIRST bits a forward
+  # reader consumes. This function encodes sequences in REVERSE ORDER (last
+  # sequence first), so per-call write order is naturally the reverse of the
+  # decoder's per-sequence read order described in apply_sequences/11.
   #
-  # The decoder does the mirror:
-  #   1. Read LL_ACC_LOG bits → initial state_ll
-  #   2. Read ML_ACC_LOG bits → initial state_ml
-  #   3. Read OF_ACC_LOG bits → initial state_of
-  #   4. For each sequence:
-  #       decode LL symbol (state transition)
-  #       decode OF symbol
-  #       decode ML symbol
-  #       read LL extra bits → final ll value
-  #       read ML extra bits → final ml value
-  #       read OF extra bits → final offset value
-  #   5. Apply sequence to output buffer
+  # This must mirror RFC 8878 §3.1.1.3.2.1.2, cross-checked against the real
+  # `zstd` CLI and the reference C source (ZSTD_decodeSequence /
+  # FSE_encodeSymbol / FSE_initCState2). The decoder's FORWARD per-sequence
+  # order is:
+  #   1. PEEK all 3 symbols (LL, ML, OF) from the current states — free, no
+  #      bits consumed.
+  #   2. Read extra bits, order OF, ML, LL.
+  #   3. UPDATE states (consumes bits), order LL, ML, OF — but ONLY if
+  #      another sequence follows. The LAST sequence's states are never
+  #      updated (there is no "next" peek to prepare for).
+  # Reversing that per-sequence order gives this function's write order
+  # for every sequence except the very first one processed (semantically
+  # the LAST sequence, which has no incoming transition to encode — see
+  # fse_init_state/3): updates OF, ML, LL, then extras LL, ML, OF.
+  #
+  # Before any of that, the decoder reads the INITIAL states — in order LL,
+  # OF, ML (RFC 8878 is asymmetric here: this is a DIFFERENT order from the
+  # per-sequence update order above). Since these are the very LAST bits
+  # written overall (they become the FIRST bits a forward reader sees), we
+  # write them in reverse: ML, OF, LL.
+  #
+  # An earlier revision of this codec (a) got the extras/updates relative
+  # order backwards, (b) got the OF/ML update order backwards, and (c)
+  # always flushed a transition for every sequence instead of special-casing
+  # the last one — internally self-consistent (our own decoder mirrored our
+  # own encoder) but not the real wire format, so output was rejected by
+  # `zstd -d` with "Data corruption detected" even though our own
+  # round-trip tests passed. See lessons.md Lesson 96.
 
   defp encode_sequences_section(seqs) do
     {ee_ll, st_ll} = build_encode_sym(@ll_norm, @ll_acc_log)
@@ -795,18 +838,15 @@ defmodule CodingAdventures.Zstd do
     sz_ml = 1 <<< @ml_acc_log
     sz_of = 1 <<< @of_acc_log
 
-    # FSE encoder states start at table_size (= sz). The state range [sz, 2*sz)
-    # maps to slot range [0, sz) in the state table.
-    init_state_ll = sz_ll
-    init_state_ml = sz_ml
-    init_state_of = sz_of
-
-    # Encode sequences in reverse order into a RevBitWriter.
+    # Encode sequences in reverse order into a RevBitWriter. `first?` tracks
+    # whether we're on the very first iteration (= the LAST real sequence),
+    # which needs a direct-formula state init (fse_init_state/3) rather than
+    # a normal bit-flushing transition (fse_encode_sym/4) — see module doc.
     {bw, state_ll, state_ml, state_of} =
       Enum.reverse(seqs)
       |> Enum.reduce(
-        {RevBitWriter.new(), init_state_ll, init_state_ml, init_state_of},
-        fn {ll, ml, off}, {bw, s_ll, s_ml, s_of} ->
+        {RevBitWriter.new(), 0, 0, 0, true},
+        fn {ll, ml, off}, {bw, s_ll, s_ml, s_of, first?} ->
           ll_code = ll_to_code(ll)
           ml_code = ml_to_code(ml)
 
@@ -817,33 +857,54 @@ defmodule CodingAdventures.Zstd do
             if raw_off <= 1, do: 0, else: floor_log2(raw_off)
           of_extra = raw_off - (1 <<< of_code)
 
-          # Write extra bits (OF, ML, LL in this order for the backward stream).
-          bw = RevBitWriter.add_bits(bw, of_extra, of_code)
           {_ml_base, ml_extra_bits} = Enum.at(@ml_codes, ml_code)
           ml_extra = ml - elem(Enum.at(@ml_codes, ml_code), 0)
-          bw = RevBitWriter.add_bits(bw, ml_extra, ml_extra_bits)
           {_ll_base, ll_extra_bits} = Enum.at(@ll_codes, ll_code)
           ll_extra = ll - elem(Enum.at(@ll_codes, ll_code), 0)
+
+          {bw, new_s_ll, new_s_ml, new_s_of} =
+            if first? do
+              # Last real sequence: no incoming transition to flush.
+              # Initialise state directly from the symbol (no bits written).
+              new_s_of = fse_init_state(of_code, ee_of, st_of)
+              new_s_ml = fse_init_state(ml_code, ee_ml, st_ml)
+              new_s_ll = fse_init_state(ll_code, ee_ll, st_ll)
+              {bw, new_s_ll, new_s_ml, new_s_of}
+            else
+              # Transition state FROM "state used to peek the sequence
+              # processed in the PREVIOUS iteration" TO "state used to peek
+              # THIS sequence" — write order OF, ML, LL (a forward decoder
+              # will consume this, in order LL, ML, OF, as the update AFTER
+              # decoding this sequence).
+              {nb_of, val_of, new_s_of} = fse_encode_sym(s_of, of_code, ee_of, st_of)
+              bw = RevBitWriter.add_bits(bw, val_of, nb_of)
+
+              {nb_ml, val_ml, new_s_ml} = fse_encode_sym(s_ml, ml_code, ee_ml, st_ml)
+              bw = RevBitWriter.add_bits(bw, val_ml, nb_ml)
+
+              {nb_ll, val_ll, new_s_ll} = fse_encode_sym(s_ll, ll_code, ee_ll, st_ll)
+              bw = RevBitWriter.add_bits(bw, val_ll, nb_ll)
+
+              {bw, new_s_ll, new_s_ml, new_s_of}
+            end
+
+          # Extra bits, write order LL, ML, OF (a forward decoder reads these
+          # in order OF, ML, LL immediately after peeking symbols).
           bw = RevBitWriter.add_bits(bw, ll_extra, ll_extra_bits)
+          bw = RevBitWriter.add_bits(bw, ml_extra, ml_extra_bits)
+          bw = RevBitWriter.add_bits(bw, of_extra, of_code)
 
-          # FSE encode symbols. Decode order is LL, OF, ML; encode order (reversed
-          # for backward stream) is ML, OF, LL.
-          {nb_ml, val_ml, new_s_ml} = fse_encode_sym(s_ml, ml_code, ee_ml, st_ml)
-          bw = RevBitWriter.add_bits(bw, val_ml, nb_ml)
-
-          {nb_of, val_of, new_s_of} = fse_encode_sym(s_of, of_code, ee_of, st_of)
-          bw = RevBitWriter.add_bits(bw, val_of, nb_of)
-
-          {nb_ll, val_ll, new_s_ll} = fse_encode_sym(s_ll, ll_code, ee_ll, st_ll)
-          bw = RevBitWriter.add_bits(bw, val_ll, nb_ll)
-
-          {bw, new_s_ll, new_s_ml, new_s_of}
+          {bw, new_s_ll, new_s_ml, new_s_of, false}
         end
       )
+      |> then(fn {bw, s_ll, s_ml, s_of, _first?} -> {bw, s_ll, s_ml, s_of} end)
 
-    # Flush final FSE states (low acc_log bits of state - sz).
-    bw = RevBitWriter.add_bits(bw, state_of - sz_of, @of_acc_log)
+    # Flush initial states (the state used to peek the FIRST real sequence).
+    # A forward-reading decoder reads these FIRST, in order LL, OF, ML. Since
+    # these are the very LAST bits written overall, we write the reverse:
+    # ML, OF, LL.
     bw = RevBitWriter.add_bits(bw, state_ml - sz_ml, @ml_acc_log)
+    bw = RevBitWriter.add_bits(bw, state_of - sz_of, @of_acc_log)
     bw = RevBitWriter.add_bits(bw, state_ll - sz_ll, @ll_acc_log)
 
     # Flush with sentinel bit and return byte list.
@@ -943,10 +1004,16 @@ defmodule CodingAdventures.Zstd do
             dt_ml = build_decode_table(@ml_norm, @ml_acc_log)
             dt_of = build_decode_table(@of_norm, @of_acc_log)
 
-            # Read initial FSE states.
+            # Read initial FSE states. RFC 8878 §3.1.1.3.2.1.2: the initial
+            # states are read in order LL, OF, ML — note this is a DIFFERENT
+            # order from the per-sequence symbol decode below (LL, ML, OF);
+            # the RFC is asymmetric here. Verified against the RFC text and
+            # cross-checked against the real `zstd` CLI (see lessons.md
+            # Lesson 96). An earlier revision of this codec read LL, ML, OF
+            # here, misaligning every bit read that follows.
             {s_ll, br} = rbr_read_bits(br, @ll_acc_log)
-            {s_ml, br} = rbr_read_bits(br, @ml_acc_log)
             {s_of, br} = rbr_read_bits(br, @of_acc_log)
+            {s_ml, br} = rbr_read_bits(br, @ml_acc_log)
 
             # Use binaries for the output buffer so back-references can use
             # binary_part/3 (O(1)) instead of Enum.at/2 (O(n)).
@@ -974,10 +1041,14 @@ defmodule CodingAdventures.Zstd do
   end
 
   defp apply_sequences(remaining, lits_bin, lit_pos, out, s_ll, s_ml, s_of, br, dt_ll, dt_ml, dt_of) do
-    # Decode LL symbol, then OF symbol, then ML symbol.
-    {ll_code, new_s_ll, br} = fse_decode_sym(s_ll, dt_ll, br)
-    {of_code, new_s_of, br} = fse_decode_sym(s_of, dt_of, br)
-    {ml_code, new_s_ml, br} = fse_decode_sym(s_ml, dt_ml, br)
+    # Step 1 — PEEK all 3 symbols (LL, ML, OF) from the CURRENT states. This
+    # is a bare table lookup (dt[state]) and consumes NO bits — the FSE
+    # state itself already IS the decode-table index. Only the subsequent
+    # state UPDATE (step 3 below) reads bits. See fse_peek/2 and the "FSE
+    # encode/decode operations" module doc above.
+    {ll_code, _ll_nb, _ll_base} = ll_entry = fse_peek(dt_ll, s_ll)
+    {ml_code, _ml_nb, _ml_base} = ml_entry = fse_peek(dt_ml, s_ml)
+    {of_code, _of_nb, _of_base} = of_entry = fse_peek(dt_of, s_of)
 
     if ll_code >= length(@ll_codes) do
       {:error, "invalid LL code #{ll_code}"}
@@ -988,15 +1059,43 @@ defmodule CodingAdventures.Zstd do
         {ll_base, ll_extra_bits} = Enum.at(@ll_codes, ll_code)
         {ml_base, ml_extra_bits} = Enum.at(@ml_codes, ml_code)
 
-        {ll_extra, br} = rbr_read_bits(br, ll_extra_bits)
-        {ml_extra, br} = rbr_read_bits(br, ml_extra_bits)
+        # Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
+        # §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
+        # required to decode offset. It does the same for Match_Length and
+        # then for Literals_Length."). An earlier revision of this codec
+        # read these LL, ML, OF (and interleaved with the state updates
+        # below in the wrong relative order) — see lessons.md Lesson 96.
         {of_extra, br} = rbr_read_bits(br, of_code)
+        {ml_extra, br} = rbr_read_bits(br, ml_extra_bits)
+        {ll_extra, br} = rbr_read_bits(br, ll_extra_bits)
 
         ll = ll_base + ll_extra
         ml = ml_base + ml_extra
         # Offset: of_raw = (1 << of_code) | of_extra; offset = of_raw - 3
         of_raw = (1 <<< of_code) ||| of_extra
         offset = of_raw - 3
+
+        # Step 3 — UPDATE states (consumes bits), order LL, ML, OF (RFC 8878
+        # §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
+        # Match_Length_State, and then Offset_State"), preparing the states
+        # the NEXT sequence's peek (step 1) will use.
+        #
+        # Per the reference decoder (ZSTD_decodeSequence), this update is
+        # skipped entirely for the LAST sequence — there is no "next"
+        # sequence to prepare a state for, and (symmetrically) the encoder
+        # never flushed any bits for that non-existent transition (see
+        # fse_init_state/3). Performing this read unconditionally, as an
+        # earlier revision of this codec did, consumes bits that were never
+        # written, corrupting the position of every stream that follows.
+        {new_s_ll, new_s_ml, new_s_of, br} =
+          if remaining != 1 do
+            {upd_s_ll, br} = fse_update_state(ll_entry, br)
+            {upd_s_ml, br} = fse_update_state(ml_entry, br)
+            {upd_s_of, br} = fse_update_state(of_entry, br)
+            {upd_s_ll, upd_s_ml, upd_s_of, br}
+          else
+            {s_ll, s_ml, s_of, br}
+          end
 
         # Emit `ll` literal bytes from the literals binary.
         lit_end = lit_pos + ll
@@ -1106,13 +1205,23 @@ defmodule CodingAdventures.Zstd do
       (@magic >>> 24) &&& 0xFF
     ]
 
-    # Frame Header Descriptor (FHD):
+    # Frame Header Descriptor (FHD), per RFC 8878 §3.1.1.1:
     #   bit 7-6: FCS_Field_Size flag = 11 → 8-byte FCS
     #   bit 5:   Single_Segment_Flag = 1 (no Window_Descriptor follows)
-    #   bit 4:   Content_Checksum_Flag = 0
-    #   bit 3-2: reserved = 0
+    #   bit 4:   Unused_bit = 0
+    #   bit 3:   Reserved_bit = 0
+    #   bit 2:   Content_Checksum_Flag = 0 (we never emit a trailing checksum)
     #   bit 1-0: Dict_ID_Flag = 0
     # = 0b1110_0000 = 0xE0
+    #
+    # NOTE: an earlier revision of this comment mislabelled bit 4 as
+    # Content_Checksum_Flag (it is actually Unused_bit; the real checksum
+    # flag is bit 2). Verified empirically against the real `zstd` CLI:
+    # `zstd -c file` (checksum on by default) emits FHD 0x64, `zstd -c
+    # --no-check file` emits FHD 0x60 — the differing bit is bit 2. This
+    # constant (0xE0) already has both bit 4 and bit 2 clear, so the
+    # mislabelling was comment-only and never caused a wire-format bug here
+    # — but see lessons.md Lesson 95 for the repo-wide pattern.
     fhd = [0xE0]
 
     # Frame_Content_Size: 8 bytes LE (uncompressed size).
@@ -1147,13 +1256,6 @@ defmodule CodingAdventures.Zstd do
     Enum.reverse(acc) |> List.flatten()
   end
 
-  # O(n) time, O(1) heap scan: returns true iff every byte in `bin` equals `b`.
-  # Replaces the prior `:binary.bin_to_list/1 |> Enum.all?` pattern, which
-  # allocated ~2 MB of cons cells per 128 KB block.
-  defp is_all_same(<<>>, _b), do: true
-  defp is_all_same(<<b, rest::binary>>, b), do: is_all_same(rest, b)
-  defp is_all_same(_bin, _b), do: false
-
   defp encode_blocks(data, offset, acc) do
     blk_end = min(offset + @max_block_size, byte_size(data))
     blk_size = blk_end - offset
@@ -1164,6 +1266,13 @@ defmodule CodingAdventures.Zstd do
     block_bytes = encode_one_block(block_bin, blk_size, last_bit)
     encode_blocks(data, blk_end, [block_bytes | acc])
   end
+
+  # O(n) time, O(1) heap scan: returns true iff every byte in `bin` equals `b`.
+  # Replaces the prior `:binary.bin_to_list/1 |> Enum.all?` pattern, which
+  # allocated ~2 MB of cons cells per 128 KB block.
+  defp is_all_same(<<>>, _b), do: true
+  defp is_all_same(<<b, rest::binary>>, b), do: is_all_same(rest, b)
+  defp is_all_same(_bin, _b), do: false
 
   defp encode_one_block(block_bin, blk_size, last_bit) do
     # Try RLE first: if all bytes are identical, use a 4-byte RLE block.

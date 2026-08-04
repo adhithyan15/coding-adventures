@@ -1,0 +1,149 @@
+% ============================================================================
+% genetic-code — the STANDARD GENETIC CODE: every mRNA codon and the amino acid
+% it specifies (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% The single most foundational fact-table in molecular biology, and one a
+% medicine agent reasons from constantly: the ribosome reads messenger RNA three
+% nucleotides at a time, and each of the 64 possible triplets (a "codon") maps to
+% exactly one of the 20 amino acids — or to a STOP signal that ends translation.
+% Recall is a binding query:
+%
+%     ? codon_amino_acid(atg, $A)      % m  (methionine — also the START codon)
+%     ? codon_amino_acid(taa, $A)      % stop
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `codon_amino_acid(codon, amino_acid)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% amino acid WITH its source, on the CPU, with zero model calls, and abstains on
+% any triplet that is not a real codon (e.g. a typo like `xyz`).
+%
+% WHY A CLINICAL REASONER NEEDS THIS
+% ----------------------------------
+% The genetic code is where genotype becomes phenotype, so it is the substrate
+% for reasoning about mutations:
+%
+%   * A POINT MUTATION swaps one base of a codon. Whether that is silent,
+%     missense, or nonsense is read straight off this table. Example: the sickle-
+%     cell mutation changes codon `gag` (e = glutamate) to `gtg` (v = valine) in
+%     beta-globin — two rows of this table are the entire molecular story.
+%       ? codon_amino_acid(gag, $A)   % e   (wild-type)
+%       ? codon_amino_acid(gtg, $A)   % v   (mutant)  → missense
+%   * A NONSENSE mutation turns a sense codon into a STOP (e.g. `caa` q → `taa`
+%     stop), truncating the protein.
+%   * DEGENERACY: 61 sense codons encode only 20 amino acids, so many codons are
+%     synonymous (e.g. all four of `ggt ggc gga ggg` → g, glycine). A mutation
+%     landing on the third "wobble" base is often SILENT — visible here as two
+%     rows sharing the same amino acid.
+%
+% TRANSLATION-TABLE NOTATION (matches the cited NCBI artifact)
+% ------------------------------------------------------------
+% NCBI publishes the code in the canonical 5-line block reproduced VERBATIM in
+% `source` below. Column i of that block names one codon and its product:
+%
+%     codon(i)      = Base1[i] Base2[i] Base3[i]      (read top-to-bottom)
+%     amino_acid(i) = AAs[i]                          ('*' = STOP)
+%
+% Following the artifact, codons are written with T (thymine) as they appear in
+% the table; in transcribed mRNA the corresponding base is U (uracil), so e.g.
+% row `atg` is the mRNA start codon AUG. Amino acids use the standard single
+% letter, LOWERCASED (`f` = Phe, `m` = Met, …); every STOP codon maps to the atom
+% `stop`. All 64 codons are shipped so that every triplet resolves.
+%
+% Amino-acid single-letter legend (for the reader):
+%   a Ala  c Cys  d Asp  e Glu  f Phe  g Gly  h His  i Ile  k Lys  l Leu
+%   m Met  n Asn  p Pro  q Gln  r Arg  s Ser  t Thr  v Val  w Trp  y Tyr
+%   stop = translation terminator (the '*' in the AAs line)
+%
+% PROVENANCE
+% ----------
+% Nothing here is from memory. The whole NCBI "Genetic Codes" page — translation
+% table 1, "The Standard Code" (SGC0) — is the citable artifact: its exact AAs /
+% Starts / Base1 / Base2 / Base3 lines are copied VERBATIM into `source`, and the
+% 64 rows below are a faithful column-by-column decode of those lines. `locator`
+% is the live NCBI URL. `trust authoritative` — ncbi.nlm.nih.gov is NIH/NLM, a
+% primary source. (See ../README.md; feedback_nothing_human_authored,
+% feedback_no_byte_arithmetic_for_llm, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table codon_amino_acid {
+    columns codon, amino_acid
+
+    % --- Base1 = T (mRNA U…) : the "U" block ---------------------------------
+    row (ttt, f)     % Phe
+    row (ttc, f)     % Phe
+    row (tta, l)     % Leu
+    row (ttg, l)     % Leu
+    row (tct, s)     % Ser
+    row (tcc, s)     % Ser
+    row (tca, s)     % Ser
+    row (tcg, s)     % Ser
+    row (tat, y)     % Tyr
+    row (tac, y)     % Tyr
+    row (taa, stop)  % STOP (ochre)
+    row (tag, stop)  % STOP (amber)
+    row (tgt, c)     % Cys
+    row (tgc, c)     % Cys
+    row (tga, stop)  % STOP (opal)
+    row (tgg, w)     % Trp
+
+    % --- Base1 = C -----------------------------------------------------------
+    row (ctt, l)     % Leu
+    row (ctc, l)     % Leu
+    row (cta, l)     % Leu
+    row (ctg, l)     % Leu
+    row (cct, p)     % Pro
+    row (ccc, p)     % Pro
+    row (cca, p)     % Pro
+    row (ccg, p)     % Pro
+    row (cat, h)     % His
+    row (cac, h)     % His
+    row (caa, q)     % Gln
+    row (cag, q)     % Gln
+    row (cgt, r)     % Arg
+    row (cgc, r)     % Arg
+    row (cga, r)     % Arg
+    row (cgg, r)     % Arg
+
+    % --- Base1 = A -----------------------------------------------------------
+    row (att, i)     % Ile
+    row (atc, i)     % Ile
+    row (ata, i)     % Ile
+    row (atg, m)     % Met — the START codon
+    row (act, t)     % Thr
+    row (acc, t)     % Thr
+    row (aca, t)     % Thr
+    row (acg, t)     % Thr
+    row (aat, n)     % Asn
+    row (aac, n)     % Asn
+    row (aaa, k)     % Lys
+    row (aag, k)     % Lys
+    row (agt, s)     % Ser
+    row (agc, s)     % Ser
+    row (aga, r)     % Arg
+    row (agg, r)     % Arg
+
+    % --- Base1 = G -----------------------------------------------------------
+    row (gtt, v)     % Val
+    row (gtc, v)     % Val
+    row (gta, v)     % Val
+    row (gtg, v)     % Val
+    row (gct, a)     % Ala
+    row (gcc, a)     % Ala
+    row (gca, a)     % Ala
+    row (gcg, a)     % Ala
+    row (gat, d)     % Asp
+    row (gac, d)     % Asp
+    row (gaa, e)     % Glu
+    row (gag, e)     % Glu
+    row (ggt, g)     % Gly
+    row (ggc, g)     % Gly
+    row (gga, g)     % Gly
+    row (ggg, g)     % Gly
+
+    % The citable artifact: NCBI translation table 1, "The Standard Code" (SGC0),
+    % 5-line block copied VERBATIM. Column i => codon Base1[i]Base2[i]Base3[i]
+    % maps to amino acid AAs[i] ('*' = stop); the 64 rows above decode it.
+    source "AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\nStarts = ---M------**--*----M---------------M----------------------------\nBase1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\nBase2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\nBase3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
+    locator "https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi"
+    trust authoritative
+}

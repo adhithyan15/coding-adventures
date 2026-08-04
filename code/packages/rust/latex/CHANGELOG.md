@@ -2,6 +2,89 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.71.0] — 2026-07-14
+
+### Added — single-integer TOTAL of the numbered labels (LTXDOC03 S35)
+
+A **new** public method `Document::numbered_label_count(&self) -> String` that renders the decimal
+**COUNT** of the labels S4 assigns a printed cross-reference number to — the `.len()` of the
+`number_labels().labels` numbering table — as one integer line. It is the **numbering-side companion**
+of S29's `label_definition_count`: where S29 counts *every* winning `\label` definition, S35 counts only
+the subset the numbering pass numbers — the labels on a **numbered section**, a **figure**, a **table**,
+or (since S8) a **labelled non-starred display equation**. An **inline** `\label` (in running text, a
+`LabelKind::Inline`) and a `\label` on a starred `\section*` receive no counter and are omitted from the
+numbering table, so they are excluded here — though S29 still counts them. The two totals are ordered by
+construction: **`numbered_label_count ≤ label_definition_count`**, because every numbered label is a
+winning definition (the numbering pass records only first-wins keys, exactly as S1 does) but not every
+winning definition is numbered; the difference `label_definition_count − numbered_label_count` is
+precisely the count of defined-but-unnumbered (inline / starred-section) labels. A key defined more than
+once contributes a **single** numbered row (first-definition-wins, matching S29) — S35 never
+double-counts. It reads only `number_labels().labels.len()` — never a `key`/`kind`/`number`, no source
+slicing at all — so every numbered label folds into one total. Being a COUNT renderer, its empty case
+(only inline labels, or no `\label`s at all) is the honest number `"0"` — **not** a `(no numbered
+labels)` marker (that discipline belongs to *list* renderers; this mirrors S27/S28/S29/S30/S31/S32/S33/S34).
+One line, no trailing newline. E.g. `\section{Intro}\label{sec:i}` plus an inline `\label{note}` → `1`
+(the section is numbered; the inline `note` is not — S29 reports `2`, and the gap `2 − 1 = 1` is the
+inline label). It is a read-only view over `number_labels()`; every S1–S34 output is left
+**byte-for-byte unchanged**; S35 is purely additive and leaves the `to_latex()` round-trip fixed point
+intact. Total & panic-free.
+
+## [0.70.0] — 2026-07-11
+
+### Added — single-integer TOTAL of the duplicate ("multiply defined") `\label`s (LTXDOC03 S34)
+
+A **new** public method `Document::duplicate_label_count(&self) -> String` that renders the decimal
+**COUNT** of the duplicate (later, losing) `\label`s — the `\label`s of already-defined keys, which LaTeX
+flags with *"Label `key' multiply defined"* — as one integer line. It is the **label-side twin** of S33's
+`duplicate_bibliography_count`: where S33 counts the losing `\bibitem`s, S34 counts the losing `\label`s.
+It is the *count-total* companion of S20's `duplicate_label_definitions` (which renders one `\label{key}`
+warning line per losing duplicate): S20 and S34 are two *views* of the one `duplicates` list
+`resolve_references()` produces — S34 collapses the whole list to a single `.len()` tally. It is the
+**warning-side companion** of S29's `label_definition_count` (which counts the *winning* label
+definitions), completing the *label totals family* just as S33 completed the citation totals family. S29
+counts the winning `definitions` and S34 the losing `duplicates`; together they **partition** every
+`\label` in the document — `label_definition_count + duplicate_label_count` equals the total number of
+`\label`s, because `resolve_references()` routes each `\label` into exactly one of
+`definitions`/`duplicates`. It reads only `resolve_references().duplicates.len()` — the winning first
+`\label` of a key lives in `definitions` (S22/S29's domain) and is excluded by construction — never a
+`key`/`kind`/`span`, no source slicing at all, so every losing `\label` (section, figure, equation, or
+inline) folds into one total. We do **not** de-duplicate: a key defined *three* times contributes *two*
+losing duplicates, exactly the two warning lines S20 emits. Being a COUNT renderer, its empty case (no
+labels, or every key defined exactly once) is the honest number `"0"` — **not** a `(no duplicate label
+definitions)` marker (that discipline belongs to the *list* renderer S20; this mirrors
+S27/S28/S29/S30/S31/S32/S33). One line, no trailing newline. E.g. `\label{x}` twice + `\label{y}` once →
+`1`. It is a read-only view over `resolve_references()`; every S1–S33 output is left **byte-for-byte
+unchanged**; S34 is purely additive and leaves the `to_latex()` round-trip fixed point intact. Total &
+panic-free.
+
+## [0.69.0] — 2026-07-10
+
+### Added — single-integer TOTAL of the duplicate ("multiply defined") `\bibitem`s (LTXDOC03 S33)
+
+A **new** public method `Document::duplicate_bibliography_count(&self) -> String` that renders the decimal
+**COUNT** of the duplicate (later, losing) `\bibitem`s — the `\bibitem`s of already-defined keys, which
+LaTeX flags with *"Citation `key' multiply defined"* — as one integer line. It is the *count-total*
+companion of S16's `duplicate_bibliography_entries` (which renders one `\bibitem{key}` warning line per
+losing duplicate): S16 and S33 are two *views* of the one `duplicate_entries` list `resolve_citations()`
+produces — S33 collapses the whole list to a single `.len()` tally. It is the **warning-side companion**
+of the resolved (S30/S31) and unresolved (S32) citation totals, completing the *totals family* over the
+citation tables. S30 counts the winning `entries` and S33 the losing `duplicate_entries`; together they
+**partition** every `\bibitem` inside a `thebibliography` — `bibliography_entry_count +
+duplicate_bibliography_count` equals the total number of `\bibitem`s, because `resolve_citations()` routes
+each `\bibitem` into exactly one of `entries`/`duplicate_entries`. It reads only
+`resolve_citations().duplicate_entries.len()` — the winning first `\bibitem` of a key lives in `entries`
+(S19/S30's domain) and is excluded by construction — never a `key`/`span`, no source slicing at all, so
+every losing `\bibitem` folds into one total. We do **not** de-duplicate: a key defined *three* times
+contributes *two* losing duplicates, exactly the two warning lines S16 emits. Being a COUNT renderer, its
+empty case (no bibliography, or every key defined exactly once) is the honest number `"0"` — **not** a
+`(no duplicate bibliography entries)` marker (that discipline belongs to the *list* renderer S16; this
+mirrors S27/S28/S29/S30/S31/S32). One line, no trailing newline. E.g. `\bibitem{smith}` twice +
+`\bibitem{jones}` once → `1`. It is a read-only view over `resolve_citations()`; every S1–S32 output is
+left **byte-for-byte unchanged**; S33 is purely additive and leaves the `to_latex()` round-trip fixed
+point intact. Total & panic-free.
+
+---
+
 ## [0.68.0] — 2026-07-09
 
 ### Added — single-integer TOTAL of the unresolved (dangling) citations (LTXDOC03 S32)

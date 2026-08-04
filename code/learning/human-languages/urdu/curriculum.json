@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "path": [
+    {
+      "id": "UR-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "UR-C01-salam"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "UR-C01-shukriya"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-003",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "UR-C01-ji-han",
+        "UR-C01-nahin"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-004",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "UR-C02-mera-naam"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "UR-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "UR-PATH-002"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL",
+        "COURTESY-YOUREWELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "UR-PATH-003"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "UR-PATH-004"
+      ],
+      "omits": [
+        "QUESTION-WHAT",
+        "PRONOUN-I",
+        "PRONOUN-ME",
+        "PRONOUN-YOU",
+        "PRONOUN-MY",
+        "WORD-NAME",
+        "WORD-IS",
+        "INTRO-WHATS-YOUR-NAME",
+        "INTRO-NICE-TO-MEET-YOU"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [],
+      "omits": [
+        "QUESTION-HOW",
+        "STATE-HOW-ARE-YOU",
+        "WORD-GOOD",
+        "WORD-WELL",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [],
+      "omits": [
+        "COURTESY-PLEASE",
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [],
+      "omits": [
+        "FAREWELL",
+        "FAREWELL-CASUAL",
+        "FAREWELL-LATER",
+        "FAREWELL-SOON",
+        "FAREWELL-TOMORROW",
+        "GREETING-GOODNIGHT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [],
+      "omits": [
+        "TIME-DAY",
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-DAY",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "UR-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Urdu script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "UR-C01-salam"
+      ]
+    }
+  ]
+}

@@ -378,7 +378,7 @@ impl Simulator {
             carry: if update_carry { carry } else { prev.carry },
             zero: result == 0,
             sign: (result & 0x80) != 0,
-            parity: ones % 2 == 0, // true = even parity
+            parity: ones.is_multiple_of(2), // true = even parity
         }
     }
 
@@ -674,7 +674,7 @@ impl Simulator {
                     // RET (0x3F = 00 111 111) is caught by sss=7, not here.
                     // -------------------------------------------------------
                     3 => {
-                        let ccc = ddd as u8 & 0x03;
+                        let ccc = ddd & 0x03;
                         let (cond_name, _) = Self::cond_name(ccc, false);
                         mnemonic = format!("R{}", cond_name);
                         if self.condition_met(ccc, false) {
@@ -740,7 +740,7 @@ impl Simulator {
                             self.pop_return();
                             mnemonic = "RET".to_string();
                         } else {
-                            let ccc = ddd as u8 & 0x03;
+                            let ccc = ddd & 0x03;
                             let (cond_name, _) = Self::cond_name(ccc, true);
                             mnemonic = format!("R{}", cond_name);
                             if self.condition_met(ccc, true) {
@@ -837,7 +837,7 @@ impl Simulator {
                     raw.push(addr_hi);
                     let target = ((addr_hi as u16 & 0x3F) << 8) | addr_lo as u16;
                     let sense = sss == 4; // T=1 means "jump if true"
-                    let ccc = ddd as u8;
+                    let ccc = ddd;
                     let (cond_name, _) = Self::cond_name(ccc, sense);
                     mnemonic = format!("J{} 0x{:04X}", cond_name, target);
                     if self.condition_met(ccc, sense) {
@@ -853,7 +853,7 @@ impl Simulator {
                     raw.push(addr_hi);
                     let target = ((addr_hi as u16 & 0x3F) << 8) | addr_lo as u16;
                     let sense = sss == 6; // T=1 means "call if true"
-                    let ccc = ddd as u8;
+                    let ccc = ddd;
                     let (cond_name, _) = Self::cond_name(ccc, sense);
                     mnemonic = format!("C{} 0x{:04X}", cond_name, target);
                     if self.condition_met(ccc, sense) {
@@ -899,7 +899,7 @@ impl Simulator {
                     mem_value = Some(src_val);
                 }
                 let a = self.regs[REG_A];
-                let (result, carry, clear_carry) = Self::alu_op(alu_code as u8, a, src_val, self.flags.carry);
+                let (result, carry, clear_carry) = Self::alu_op(alu_code, a, src_val, self.flags.carry);
                 if clear_carry {
                     self.flags = Self::compute_flags(result, false, true, self.flags);
                 } else {
@@ -929,7 +929,7 @@ impl Simulator {
                     raw.push(data);
                     let alu_code = ddd;
                     let a = self.regs[REG_A];
-                    let (result, carry, clear_carry) = Self::alu_op(alu_code as u8, a, data, self.flags.carry);
+                    let (result, carry, clear_carry) = Self::alu_op(alu_code, a, data, self.flags.carry);
                     if clear_carry {
                         self.flags = Self::compute_flags(result, false, true, self.flags);
                     } else {

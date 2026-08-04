@@ -1,0 +1,102 @@
+% ============================================================================
+% wave-properties — the four measurable properties of a wave and what each one
+% is / measures, as the source states it (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% Before you can reason about sound, light, or ocean swells you first learn to
+% MEASURE a wave, and a wave is measured along two axes at once. In SPACE it has
+% a wavelength (how far apart two identical parts are) and an amplitude (how far
+% the medium swings from its rest position). In TIME it has a frequency (how
+% many waves go by each second) and a period (how long one full wave takes).
+% These four numbers describe any wave completely, and each is a rung a PHYSICS
+% agent reasons up from. Recall is a binding query:
+%
+%     ? wave_property(wavelength, $Definition)   % distance_between_identical_parts
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `wave_property(property, definition)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% definition WITH its source, on the CPU, with zero model calls, and abstains on
+% a word that is not one of these four measurable wave properties (it never
+% invents a definition).
+%
+% Each measurable property and the definition the source states for it, as a
+% little truth table:
+%
+%     wave property   what the source says it is           axis it lives on
+%     -------------   ----------------------------------   --------------------
+%     wavelength      distance_between_identical_parts     space (distance)
+%     frequency       waves_per_second                     time  (rate)
+%     amplitude       max_displacement_from_rest           space (displacement)
+%     period          time_for_one_cycle                   time  (duration)
+%
+% The query also runs BACKWARD — bind a definition and recall its property:
+%
+%     ? wave_property($Property, time_for_one_cycle)   % period
+%
+% A word that is NOT one of these four measurable wave properties — `color`,
+% `speed`, `medium` — is deliberately NOT a row, so a wave-property recall
+% ABSTAINS on it rather than inventing a definition. (Color is a PERCEPTION that
+% depends on wavelength; it is not itself a measurable property of the wave, so
+% it is intentionally left out.) That honest-abstention property is what makes
+% the table safe to build a reasoner on: it answers exactly the property→
+% definition pairs it can ground, and only those.
+%
+% The `definition` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful compression of the definition the source EXPLICITLY states for that
+% property — never one the source does not support. Each atom stays literally
+% checkable against the quoted span below (e.g. the source says a wave's period
+% is the "time it takes for one wave cycle to complete", so the atom is
+% `time_for_one_cycle`, using the source's own words).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every property→definition
+% pair below was read out of a fetched OpenStax Physics page, and any pair whose
+% definition could not be verified there would have been dropped). Each pair,
+% with the primary source it was copied from and the verbatim span that states
+% it:
+%
+%   wavelength → distance_between_identical_parts
+%     https://openstax.org/books/physics/pages/13-2-wave-properties-speed-amplitude-frequency-and-period
+%     (OpenStax, Physics — Rice University open textbook)
+%     "The wavelength λ is the distance between adjacent identical parts of a
+%      wave, parallel to the direction of propagation."
+%
+%   frequency → waves_per_second
+%     https://openstax.org/books/physics/pages/13-2-wave-properties-speed-amplitude-frequency-and-period
+%     (OpenStax, Physics — Rice University open textbook)
+%     "Frequency—number of waves passing by a specific point per second"
+%
+%   amplitude → max_displacement_from_rest
+%     https://openstax.org/books/physics/pages/13-2-wave-properties-speed-amplitude-frequency-and-period
+%     (OpenStax, Physics — Rice University open textbook)
+%     "Amplitude—distance between the resting position and the maximum
+%      displacement of the wave"
+%
+%   period → time_for_one_cycle
+%     https://openstax.org/books/physics/pages/13-2-wave-properties-speed-amplitude-frequency-and-period
+%     (OpenStax, Physics — Rice University open textbook)
+%     "Period—time it takes for one wave cycle to complete"
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the OpenStax statement that fixes
+% the first row (wavelength → distance_between_identical_parts). Every OTHER
+% row's per-fact source and verbatim span is listed above, so each definition
+% remains independently checkable. All four rows come from the same OpenStax
+% Physics page — a peer-reviewed open textbook (a teaching summary), so `trust
+% consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table wave_property {
+    columns property, definition
+
+    row (wavelength, distance_between_identical_parts)
+    row (frequency, waves_per_second)
+    row (amplitude, max_displacement_from_rest)
+    row (period, time_for_one_cycle)
+
+    source "The wavelength λ is the distance between adjacent identical parts of a wave, parallel to the direction of propagation."
+    locator "https://openstax.org/books/physics/pages/13-2-wave-properties-speed-amplitude-frequency-and-period"
+    trust consensus
+}

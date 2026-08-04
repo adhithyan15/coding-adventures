@@ -33,18 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic acknowledgement-record summary digest.
+1. Python and TypeScript Berkeley SPICE MOS nominal-temperature validation parity.
    - Status: current PR completion candidate.
-   - Add a Rust-only Berkeley app-deck shell dashboard surface that wraps
-     runtime activation receipt journal summary handoff receipt acknowledgement
-     record receipt acknowledgement record summaries into compact digest/routing
-     payloads for Mosaic and WebAssembly product shells.
-   - Expose native and JSON helpers with stable schema version, digest ID,
-     route/hold disposition, digest action, badge label/tone, routing targets,
-     compact notification/count metadata, and capability metadata.
-   - Preserve the public Berkeley parser contract and Python/TypeScript parser
-     parity while extending the Rust app facade as an app-substrate acceleration
-     layer.
+   - Reject zero, negative, and non-finite `TNOM` / `T_NOM` values with the
+     shared diagnostic.
+   - Preserve positive Kelvin values through canonical Level-1 lowering.
 
 ## Completed Slices
 
@@ -2960,9 +2953,1563 @@ the Rust, Python, and TypeScript surfaces together.
      metadata while leaving the public Berkeley parser contract and
      Python/TypeScript parser parity unchanged.
 
+213. Rust Berkeley Mosaic acknowledgement-record summary digest.
+   - Status: completed in PR 7718.
+   - Rust `spice-netlist-parser` now exposes native and JSON acknowledgement-
+     record summary digest helpers for Mosaic and WebAssembly product shells.
+   - The digest preserves stable schema, routing disposition, action, badge,
+     target, compact count, nested summary, and capability metadata while
+     leaving parser and cross-language solver behavior unchanged.
+
+214. Cross-language diode depletion-capacitance shaping.
+   - Status: completed in PR 8705.
+   - Rust, Python, and TypeScript diode model cards now accept `VJ`/`PB`
+     junction potential and `M`/`MJ` grading coefficient parameters.
+   - AC and transient analyses shape `CJO` from reverse bias while preserving
+     transit-time diffusion capacitance, and the supported-parameter release
+     gate now covers 69 canonical rows.
+
+215. Cross-language diode forward-bias depletion coefficient.
+   - Status: completed in PR 8708.
+   - Rust, Python, and TypeScript diode model cards now accept `FC` and apply
+     the continuous Berkeley piecewise depletion-capacitance law around the
+     `FC * VJ` transition in AC and transient analysis.
+   - The supported-parameter release gate now covers 70 canonical rows.
+
+216. Cross-language diode saturation-current temperature exponent.
+   - Status: completed in PR 8716.
+   - Rust, Python, and TypeScript diode model cards now accept `XTI` and apply
+     it to saturation-current temperature scaling.
+   - Hierarchical subcircuit expansion now preserves the complete diode model,
+     and the supported-parameter release gate now covers 71 canonical rows.
+
+217. Cross-language diode energy gap.
+   - Status: completed in PR 8718.
+   - Rust, Python, and TypeScript diode model cards now accept `EG` and apply
+     each model's energy gap to saturation-current temperature scaling.
+   - Hierarchical subcircuit expansion preserves `EG`, and the supported-
+     parameter release gate now covers 72 canonical rows.
+
+218. Cross-language BJT saturation-current temperature exponent.
+   - Status: completed in PR 8725.
+   - Rust, Python, and TypeScript BJT model cards now accept `XTI` and apply it
+     to saturation-current temperature scaling.
+   - Hierarchical subcircuit expansion preserves `XTI`, and the supported-
+   parameter release gate now covers 74 canonical rows.
+
+219. Cross-language BJT energy gap.
+   - Status: completed in PR 8730.
+   - Rust, Python, and TypeScript BJT model cards now accept `EG` and apply each
+     model's energy gap to saturation-current temperature scaling.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 76 canonical rows.
+
+220. Cross-language BJT forward Early voltage.
+   - Status: completed in PR 8734.
+   - Rust, Python, and TypeScript BJT model cards now accept `VAF` / `VA` and
+     apply collector-voltage modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 78 canonical rows.
+
+221. Cross-language BJT forward emission coefficient.
+   - Status: completed in PR 8740.
+   - Rust, Python, and TypeScript BJT model cards now accept `NF` and apply it
+     to forward junction current, transconductance, charge, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 80 canonical rows.
+
+222. Cross-language BJT reverse emission coefficient.
+   - Status: completed in PR 8744.
+   - Rust, Python, and TypeScript BJT model cards now accept `NR` and apply it
+     to reverse base-collector diffusion charge in AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 82 canonical rows.
+
+223. Cross-language BJT base-emitter depletion-capacitance shaping.
+   - Status: completed in PR 8752.
+   - Rust, Python, and TypeScript BJT model cards now accept `VJE` / `PE` and
+     `MJE` / `ME` and apply continuous Berkeley depletion shaping to `CJE` in
+     AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 86 canonical rows.
+
+224. Cross-language BJT base-collector depletion-capacitance shaping.
+   - Status: completed in PR 8755.
+   - Rust, Python, and TypeScript BJT model cards now accept `VJC` / `PC` and
+     `MJC` / `MC` and apply continuous Berkeley depletion shaping to `CJC` in
+     AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 90 canonical rows.
+
+225. Cross-language BJT forward-bias depletion coefficient.
+   - Status: completed in PR 8760.
+   - Rust, Python, and TypeScript BJT model cards now accept `FC` and apply it
+     as the shared continuous Berkeley piecewise-law transition point for both
+     `CJE` and `CJC` in AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 92 canonical rows.
+
+226. Cross-language BJT reverse Early voltage.
+   - Status: completed in PR 8762.
+   - Rust, Python, and TypeScript BJT model cards now accept `VAR` / `VB` and
+     apply reverse Early-effect base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 94 canonical rows.
+
+227. Cross-language BJT forward high-current beta roll-off.
+   - Status: completed in PR 8770.
+   - Rust, Python, and TypeScript BJT model cards now accept `IKF` / `IK` and
+     apply forward high-current base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 96 canonical rows.
+
+228. Cross-language BJT base-emitter leakage.
+   - Status: completed in PR 8778.
+   - Rust, Python, and TypeScript BJT model cards now accept `ISE` / `NE` and
+     apply the base-emitter leakage branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 100 canonical rows.
+
+229. Cross-language BJT base-collector leakage.
+   - Status: completed in PR 8785.
+   - Rust, Python, and TypeScript BJT model cards now accept `ISC` / `NC` and
+     apply the base-collector leakage branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 104 canonical rows.
+
+230. Cross-language BJT beta temperature exponent.
+   - Status: completed in PR 8792.
+   - Rust, Python, and TypeScript BJT model cards now accept `XTB` and scale
+     forward beta by the analysis-to-nominal absolute temperature ratio.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 106 canonical rows.
+
+231. Cross-language BJT reverse current gain.
+   - Status: completed in PR 8797.
+   - Rust, Python, and TypeScript BJT model cards now accept `BR` / `BETA_R`
+     and apply the reverse base-current branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - `XTB` scales both forward and reverse beta, hierarchical subcircuit
+     expansion preserves the complete BJT model, and the supported-parameter
+     release gate now covers 108 canonical rows.
+
+232. Cross-language BJT reverse high-current beta roll-off.
+   - Status: completed in PR 8801.
+   - Rust, Python, and TypeScript BJT model cards now accept `IKR` and apply
+     reverse high-current base-charge modulation in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 110 canonical rows.
+
+233. Cross-language BJT nominal model temperature.
+   - Status: completed in PR 8807.
+   - Rust, Python, and TypeScript BJT model cards now accept `TNOM` / `T_NOM`,
+     convert Berkeley Celsius card values to an absolute model temperature,
+     and use that model-owned value for temperature scaling when present.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 112 canonical rows.
+
+234. Cross-language BJT flicker-noise coefficient.
+   - Status: completed in PR 8812.
+   - Rust, Python, and TypeScript BJT model cards now accept `KF`, default it
+     to zero, and emit a distinct base-current `flicker` contribution with the
+     Berkeley-default `AF=1` inverse-frequency slope.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 114 canonical rows.
+
+235. Cross-language BJT flicker-noise exponent.
+   - Status: completed in PR 8815.
+   - Rust, Python, and TypeScript BJT model cards now accept `AF`, default it
+     to one, and apply it to base-current flicker noise as
+     `KF * abs(Ib)^AF / frequency`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 116 canonical rows.
+
+236. Cross-language BJT forward excess phase.
+   - Status: completed in PR 8828.
+   - Rust, Python, and TypeScript BJT model cards now accept `PTF`, default it
+     to zero, and rotate forward AC transconductance by the configured excess
+     phase at `1 / (2*pi*TF)`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 118 canonical rows.
+
+237. Cross-language BJT forward transit-time bias coefficient.
+   - Status: completed in PR 8836.
+   - Rust, Python, and TypeScript BJT model cards now accept `XTF`, default it
+     to zero, and scale forward diffusion capacitance and transient stored
+     charge by `TF * (1 + XTF)`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 120 canonical rows.
+
+238. Cross-language BJT forward transit-time current scale.
+   - Status: completed in PR 8844.
+   - Rust, Python, and TypeScript BJT model cards now accept `ITF`, default it
+     to zero, and apply `(If / (If + ITF))^2` to the `XTF` AC and transient
+     storage enhancement.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 122 canonical rows.
+
+239. Cross-language BJT forward transit-time voltage scale.
+   - Status: completed in PR 8851.
+   - Rust, Python, and TypeScript BJT model cards now accept `VTF`, default it
+     to zero, and apply `exp(Vbc / (1.44 * VTF))` to the `XTF` AC and transient
+     storage enhancement.
+   - Hierarchical subcircuit expansion preserves the complete BJT model and
+     transient state tracks the controlling base-collector voltage; the
+     supported-parameter release gate now covers 124 canonical rows.
+
+240. Cross-language BJT emitter resistance.
+   - Status: completed in PR 8856.
+   - Rust, Python, and TypeScript BJT model cards now accept `RE`, default it
+     to zero, and insert an intrinsic emitter node behind the configured
+     external series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     emitter topology, including resistor thermal noise; the
+     supported-parameter release gate now covers 126 canonical rows.
+
+241. Cross-language BJT collector resistance.
+   - Status: completed in PR 8861.
+   - Rust, Python, and TypeScript BJT model cards now accept `RC`, default it
+     to zero, and insert an intrinsic collector node behind the configured
+     external series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     collector topology, including resistor thermal noise; the
+     supported-parameter release gate now covers 128 canonical rows.
+
+242. Cross-language BJT base resistance.
+   - Status: completed in PR 8866.
+   - Rust, Python, and TypeScript BJT model cards now accept `RB`, default it
+     to zero, and insert an intrinsic base node behind the configured external
+     series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     base topology, including resistor thermal noise; the supported-parameter
+     release gate now covers 130 canonical rows.
+
+243. Cross-language BJT bias-dependent base resistance.
+   - Status: completed in PR 8872.
+   - Rust, Python, and TypeScript BJT model cards now accept `RBM` and `IRB`
+     and apply Berkeley base-charge and base-current-dependent resistance
+     reduction.
+   - DC, transient, AC, transfer-function, and noise paths share the
+     bias-dependent intrinsic-base topology; the supported-parameter release
+     gate now covers 134 canonical rows.
+
+244. Cross-language BJT base-collector capacitance partitioning.
+   - Status: completed in PR 8877.
+   - Rust, Python, and TypeScript BJT model cards now accept `XCJC`, default it
+     to one, and partition `CJC` depletion capacitance between intrinsic and
+     external base-collector branches in AC and transient analysis.
+   - Reverse transit-time diffusion capacitance remains intrinsic, hierarchical
+     expansion preserves the model, and the supported-parameter release gate
+     now covers 136 canonical rows.
+
+245. Cross-language legacy BJT leakage ratios.
+   - Status: completed in PR 8881.
+   - Rust, Python, and TypeScript BJT model cards now accept legacy SPICE2
+     `C2` and `C4` leakage ratios.
+   - `ISE` defaults to `C2 * IS` and `ISC` defaults to `C4 * IS`, while
+     explicit `ISE` and `ISC` retain precedence; the supported-parameter
+     release gate now covers 140 canonical rows.
+
+246. Cross-language diode series resistance.
+   - Status: completed in PR 8888.
+   - Rust, Python, and TypeScript diode model cards now accept `RS`, default it
+     to zero, and insert an intrinsic anode behind the configured external
+     series resistance.
+   - DC, transient, AC, transfer-function, hierarchy, temperature, and noise
+     paths share the intrinsic-anode topology, including resistor thermal
+     noise; the supported-parameter release gate now covers 141 canonical rows.
+
+247. Cross-language diode flicker-noise coefficient.
+   - Status: completed in PR 8894.
+   - Rust, Python, and TypeScript diode model cards now accept `KF`, default it
+     to zero, and emit a distinct diode-current flicker-noise contribution.
+   - Hierarchy and cloning paths preserve `KF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 142 canonical rows.
+
+248. Cross-language diode flicker-noise current exponent.
+   - Status: completed in PR 8902.
+   - Rust, Python, and TypeScript diode model cards now accept `AF`, default it
+     to one, and apply `KF * abs(Id)^AF / frequency` to diode flicker noise.
+   - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 143 canonical rows.
+
+249. Cross-language JFET flicker-noise coefficient.
+   - Status: completed in PR 8910.
+   - Rust, Python, and TypeScript JFET model cards now accept `KF`, default it
+     to zero, and emit a distinct drain-current flicker-noise contribution.
+   - Hierarchy and cloning paths preserve `KF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 145 canonical rows.
+
+250. Cross-language JFET flicker-noise current exponent.
+   - Status: completed in PR 8914.
+   - Rust, Python, and TypeScript JFET model cards now accept `AF`, default it
+     to one, and apply `KF * abs(Id)^AF / frequency` to JFET flicker noise.
+   - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 147 canonical rows.
+
+251. Cross-language JFET gate-junction potential.
+   - Status: completed in PR 8919.
+   - Rust, Python, and TypeScript JFET model cards now accept `PB`, with `VJ`
+     as an alias, default it to one volt, and use it to shape `CGS`/`CGD`
+     depletion capacitance in AC and transient analysis.
+   - Hierarchy and cloning paths preserve `PB`, finite-positive validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 149 canonical rows.
+
+252. Cross-language JFET forward-bias depletion coefficient.
+   - Status: completed in PR 8926.
+   - Rust, Python, and TypeScript JFET model cards now accept `FC`, default it
+     to `0.5`, and use it as the forward-bias transition point for the existing
+     `CGS` / `CGD` depletion-capacitance continuation in AC and transient
+     analysis.
+   - Hierarchy and cloning paths preserve `FC`, finite `[0, 1)` validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 151 canonical rows.
+
+253. Cross-language JFET gate-junction saturation current.
+   - Status: completed in PR 8930.
+   - Rust, Python, and TypeScript JFET model cards now accept `IS`, default it
+     to `1e-14` ampere, and stamp gate-source and gate-drain junction leakage
+     in DC, transient, AC, and transfer-function analyses.
+   - Hierarchy and cloning paths preserve `IS`, finite non-negative validation
+     is shared across analyses, distinct `IGS` / `IGD` shot-noise sources are
+     emitted, and the supported-parameter release gate now covers 153
+     canonical rows.
+
+254. Cross-language JFET drain resistance.
+   - Status: completed in PR 8934.
+   - Rust, Python, and TypeScript JFET model cards now accept `RD`, default it
+     to zero ohms, and route channel, gate-drain, charge, AC, transient,
+     transfer-function, and noise behavior through an intrinsic drain node
+     behind the external drain resistor when positive.
+   - Hierarchy and cloning paths preserve `RD`, finite non-negative validation
+     is shared across analyses, a distinct `RD` thermal-noise source is
+     emitted, and the supported-parameter release gate now covers 155
+     canonical rows.
+
+255. Cross-language JFET source resistance.
+   - Status: completed in PR 8938.
+   - Rust, Python, and TypeScript JFET model cards now accept `RS`, default it
+     to zero ohms, and route channel, gate-source, charge, AC, transient,
+     transfer-function, and noise behavior through an intrinsic source node
+     behind the external source resistor when positive.
+   - Hierarchy and cloning paths preserve `RS`, finite non-negative validation
+     is shared across analyses, a distinct `RS` thermal-noise source is
+     emitted, and the supported-parameter release gate now covers 157
+     canonical rows.
+
+256. Cross-language JFET threshold-voltage temperature scaling.
+   - Status: completed in PR 8943.
+   - Rust, Python, and TypeScript JFET model cards now accept `TNOM` / `T_NOM`
+     and `TCV`, convert nominal Celsius values to Kelvin, and apply
+     `VTO(T) = VTO - TCV * (T - TNOM)`.
+   - Hierarchy and cloning paths preserve both parameters, finite coefficients
+     and finite-positive nominal temperatures are validated, the zero default
+     remains temperature-invariant, and the supported-parameter release gate
+     now covers 161 canonical rows.
+
+257. Cross-language JFET beta temperature scaling.
+   - Status: completed in PR 8944.
+   - Rust, Python, and TypeScript JFET model cards now accept `BEX` and apply
+     `BETA(T) = BETA * (T / TNOM)^BEX`, with model `TNOM` overriding the
+     circuit nominal temperature.
+   - Hierarchy and cloning paths preserve the exponent, finite validation is
+     shared across analyses, the zero default remains temperature-invariant,
+     and the supported-parameter release gate now covers 163 canonical rows.
+
+258. Cross-language JFET alternative beta temperature scaling.
+   - Status: completed in PR 8946.
+   - Rust, Python, and TypeScript JFET model cards now accept `BETATCE` and
+     apply `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))` when explicitly
+     present, with precedence over `BEX`.
+   - Hierarchy and cloning paths preserve parameter presence, finite validation
+     is shared across analyses, the `BEX` fallback remains intact, and the
+     supported-parameter release gate now covers 165 canonical rows.
+
+259. Cross-language JFET alternative threshold-voltage temperature scaling.
+   - Status: completed in PR 8947.
+   - Rust, Python, and TypeScript JFET model cards now accept `VTOTC` and apply
+     `VTO(T) = VTO + VTOTC * (T - TNOM)` when explicitly present, with
+     precedence over `TCV`.
+   - Hierarchy and cloning paths preserve parameter presence, finite validation
+     is shared across analyses, the `TCV` fallback remains intact, and the
+     supported-parameter release gate now covers 167 canonical rows.
+
+260. Cross-language JFET gate saturation-current temperature exponent.
+   - Status: completed in PR 8963.
+   - Rust, Python, and TypeScript JFET model cards now accept `XTI` and scale
+     gate saturation current from `TNOM` with the standard bandgap law and a
+     default exponent of 3.
+   - Hierarchy and cloning paths preserve the exponent, finite validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 169 canonical rows.
+
+261. Cross-language JFET gate-junction bandgap voltage.
+   - Status: completed in PR 8972.
+   - Rust, Python, and TypeScript JFET model cards now accept `EG` and use the
+     configured bandgap voltage when scaling gate saturation current from
+     `TNOM`, preserving the Level-1 silicon default of 1.11 eV.
+   - Hierarchy and cloning paths preserve the voltage, finite-positive
+     validation is shared across analyses, and the supported-parameter release
+     gate now covers 171 canonical rows.
+
+262. Cross-language JFET doping-tail shaping.
+   - Status: completed in PR 8978.
+   - Rust, Python, and TypeScript JFET model cards now accept `B` and apply
+     Parker-Skellern doping-tail shaping to linear and saturation channel
+     current while preserving Shichman-Hodges behavior at the default of 1.
+   - Hierarchy and cloning preserve the parameter, finite and denominator
+   validation is shared across analyses, and the supported-parameter release
+   gate now covers 173 canonical rows.
+
+263. Cross-language JFET channel-noise equation selection.
+   - Status: completed in PR 8984.
+   - Rust, Python, and TypeScript JFET model cards now accept `NLEV` and
+     `GDSNOI`, preserving the legacy `2/3 * gm` channel thermal-noise path
+     below level 3 and selecting the Berkeley linear-region equation at level
+     3 and above.
+   - Hierarchy and cloning preserve both parameters, shared validation enforces
+   their domains, and the supported-parameter release gate now covers 177
+   canonical rows.
+
+264. Cross-language Level-1 MOS flicker-noise coefficient.
+   - Status: completed in PR 8985.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `KF`,
+     defaulting to zero, and emit a distinct drain-current-scaled
+     inverse-frequency flicker-noise source alongside channel thermal noise.
+   - Hierarchy and cloning preserve the coefficient, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 179 canonical rows.
+
+265. Cross-language Level-1 MOS flicker-noise current exponent.
+   - Status: completed in PR 8986.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `AF`,
+     defaulting to one, and apply `KF * abs(Id)^AF / frequency` to the MOS
+     flicker-noise source.
+   - Hierarchy and cloning preserve the exponent, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 181 canonical rows.
+
+266. Cross-language Level-1 MOS forward-bias depletion coefficient.
+   - Status: completed in PR 8995.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `FC`,
+     defaulting to `0.5`, and apply the continuous piecewise forward-bias
+     continuation to `CBS` and `CBD` depletion capacitance shaped by `PB` and
+     `MJ`.
+   - Hierarchy and cloning preserve the coefficient, shared validation
+     enforces its finite `[0, 1)` domain, and the supported-parameter release
+     gate now covers 183 canonical rows.
+
+267. Cross-language Level-1 MOS lateral diffusion.
+   - Status: completed in PR 9001.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `LD`,
+     defaulting to zero, and apply `L_eff = L - 2*LD` to channel current and
+     length-scaled intrinsic and `CGBO` capacitance.
+   - Hierarchy and cloning preserve the geometry, shared validation enforces
+     finite non-negative `LD` with positive effective length, and the
+     supported-parameter release gate now covers 185 canonical rows.
+
+268. Cross-language Level-1 MOS oxide thickness.
+   - Status: completed in PR 9007.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `TOX`,
+     defaulting to `1e-7 m`, and derive intrinsic Meyer gate capacitance from
+     `Cox = epsilon_ox / TOX`.
+   - Hierarchy and cloning preserve the oxide thickness, shared validation
+   enforces finite positive `TOX`, and the supported-parameter release gate
+   now covers 187 canonical rows.
+
+269. Cross-language Level-1 MOS drain resistance.
+   - Status: completed in PR 9011.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RD`,
+     defaulting to zero, and create an intrinsic drain node for positive values
+     across DC, transient, AC, transfer-function, and noise analyses.
+   - Hierarchy and cloning preserve `RD`, finite non-negative validation is
+     shared across analyses, drain-side capacitances terminate at the intrinsic
+     node, and the supported-parameter release gate now covers 189 canonical
+     rows.
+
+270. Cross-language Level-1 MOS source resistance.
+   - Status: completed in PR 9020.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RS`,
+     defaulting to zero, and create an intrinsic source node for positive values
+     across DC, transient, AC, transfer-function, and noise analyses.
+   - Hierarchy and cloning preserve `RS`, finite non-negative validation is
+     shared across analyses, source-side capacitances terminate at the intrinsic
+     node, and the supported-parameter release gate now covers 191 canonical
+     rows.
+
+271. Cross-language Level-1 MOS sheet resistance.
+   - Status: completed in PR 9026.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RSH`,
+     defaulting to zero ohms per square and supplying one-square drain/source
+     terminal resistances wherever explicit `RD` / `RS` remains zero.
+   - The shared intrinsic terminal topology covers DC, transient, AC,
+     transfer-function, and noise analyses, hierarchy preserves `RSH`, finite
+     non-negative validation is shared, and the supported-parameter release
+     gate now covers 193 canonical rows.
+
+272. Cross-language Level-1 MOS drain diffusion squares.
+   - Status: completed in PR 9029.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `NRD`,
+     defaulting to one drain diffusion square.
+   - When explicit `RD` remains zero, `RSH * NRD` supplies the drain
+     resistance across DC, TF, AC, transient, and noise analyses; hierarchy and
+     cloning preserve `NRD`, finite non-negative validation is shared, and the
+     model-card coverage gate remains at 193 canonical rows because `NRD` is
+     an instance parameter.
+
+273. Cross-language Level-1 MOS source diffusion squares.
+   - Status: completed in PR 9034.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `NRS`,
+     defaulting to one source diffusion square.
+   - When explicit `RS` remains zero, `RSH * NRS` supplies the source
+     resistance across DC, TF, AC, transient, and noise analyses; hierarchy and
+     cloning preserve `NRS`, finite non-negative validation is shared, and the
+     model-card coverage gate remains at 193 canonical rows because `NRS` is
+     an instance parameter.
+
+274. Cross-language Level-1 MOS drain diffusion area and bottom capacitance.
+   - Status: completed in PR 9038.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `AD`, and
+     model cards accept `CJ`, both defaulting to zero.
+   - `CBD + CJ * AD` supplies the zero-bias drain-body capacitance in AC and
+     transient analysis while preserving `PB`, `MJ`, and `FC` depletion
+     shaping.
+   - Hierarchy and cloning preserve `AD` / `CJ`, finite non-negative
+     validation is shared, the Rust netlist facade parses both, and the
+     model-card coverage gate now covers 195 canonical rows.
+
+275. Cross-language Level-1 MOS source diffusion area.
+   - Status: completed in PR 9043.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `AS`,
+     defaulting to zero.
+   - `CBS + CJ * AS` supplies zero-bias source-body capacitance in AC and
+     transient analysis while preserving `PB`, `MJ`, and `FC` shaping.
+   - Hierarchy and cloning preserve `AS`, finite non-negative validation is
+     shared, and the Rust netlist facade parses it.
+
+276. Cross-language Level-1 MOS drain diffusion perimeter.
+   - Status: completed in PR 9052.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `PD`, and
+     model cards accept `CJSW`, both defaulting to zero.
+   - `CBD + CJ * AD + CJSW * PD` supplies zero-bias drain-body capacitance in
+     AC and transient analysis while preserving depletion shaping.
+   - Hierarchy and cloning preserve `PD` / `CJSW`, finite non-negative
+     validation is shared, and the Rust netlist facade parses both.
+
+277. Cross-language Level-1 MOS source diffusion perimeter.
+   - Status: completed in PR 9064.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `PS`,
+     defaulting to zero.
+   - `CBS + CJ * AS + CJSW * PS` supplies zero-bias source-body capacitance in
+     AC and transient analysis while preserving depletion shaping.
+   - Hierarchy and cloning preserve `PS`, finite non-negative validation is
+     shared, and the Rust netlist facade parses it.
+
+278. Cross-language Level-1 MOS sidewall grading coefficient.
+   - Status: completed in PR 9080.
+   - Berkeley Level-1 MOS model cards now accept `MJSW` in Rust, Python, and
+     TypeScript, defaulting to `0.33`.
+   - `CJSW * PD` and `CJSW * PS` are shaped independently from the
+     `MJ`-controlled bottom-junction terms in AC and transient analysis.
+   - Hierarchy, cloning, validation, model-card coverage, and the Rust netlist
+     facade preserve the parameter.
+
+279. Berkeley netlist lowering for Level-1 MOS junction shaping.
+   - Status: completed in PR 9088.
+   - The Rust Berkeley netlist facade now preserves model-card `PB`, `MJ`, and
+     `FC` in the Level-1 engine parameter bundle.
+   - Source-deck integration coverage proves all three values reach the existing
+     cross-language depletion-capacitance behavior.
+
+280. Berkeley netlist lowering for remaining Level-1 MOS model fields.
+   - Status: completed in PR 9094.
+   - The Rust Berkeley netlist facade now preserves canonical `LD`, `TOX`,
+     `RD`, `RS`, `KF`, and `AF` plus aliases `VTH`, `LAM`, `CJS`, and `CJD`.
+   - Source-deck tests prove the values reach their existing engine fields
+     instead of silently falling back to defaults.
+
+281. Cross-language Level-1 MOS bulk-junction saturation current.
+   - Status: completed in PR 9100.
+   - Existing model-card `IS` now drives source-body and drain-body leakage for
+     NMOS and PMOS across DC, transient, transfer-function, and AC analysis.
+   - Junction thermal voltage follows `T_NOM`, forward exponential continuation
+     remains Newton-consistent, and noise emits distinct `IBS` and `IBD` shot
+     sources.
+
+282. Cross-language Level-1 MOS bulk-junction saturation current density.
+   - Status: completed in PR 9108.
+   - Model-card `JS` is preserved independently from scalar `IS` and scales
+     source/drain junction leakage by `AS` / `AD` when both areas are present.
+   - Berkeley fallback retains scalar `IS` when `JS` is zero or either
+     diffusion area is absent.
+   - Rust, Python, and TypeScript apply the effective currents consistently to
+     nonlinear, AC, transfer-function, and shot-noise behavior.
+
+283. Cross-language Level-1 MOS surface mobility preprocessing.
+   - Status: completed in PR 9117.
+   - Model cards accept `U0` and its `UO` alias in Rust, Python, and TypeScript,
+     defaulting to the Berkeley MOS1 value of 600 cm^2/V/s.
+   - When `TOX` is supplied and `KP` is omitted, all three implementations
+     derive `KP = U0 * Cox * 1e-4` while preserving explicit `KP` precedence.
+   - Normalized model-card coverage, validation, changelogs, and the Rust
+     Berkeley netlist facade preserve the parameter.
+
+284. Cross-language Level-1 MOS mobility temperature scaling.
+   - Status: completed in PR 9121.
+   - Level-1 MOS `U0` scales with the same Berkeley `(T / T_NOM)^-3/2`
+     mobility law already applied to `KP`.
+   - Direct MOS temperature helpers and circuit-level transforms preserve the
+     nominal `KP / U0` relationship in Rust, Python, and TypeScript.
+
+285. Cross-language Level-1 MOS bulk-junction leakage temperature scaling.
+   - Status: completed in PR 9126.
+   - Scalar `IS` and area-density `JS` scale through Level-1 MOS temperature
+     transforms using the shared silicon energy-gap saturation-current law.
+   - The nominal `JS / IS` relationship is preserved, and circuit-level
+     energy-gap configuration reaches MOS transforms in all three languages.
+
+286. Cross-language Level-1 MOS electrostatic temperature preprocessing.
+   - Status: completed in PR 9135.
+   - Berkeley MOS1 silicon band-gap preprocessing replaces the fixed threshold
+     shift for `PHI` and polarity-aware `VT0`.
+   - Direct MOS helpers and circuit-level transforms preserve matching
+     NMOS/PMOS behavior in Rust, Python, and TypeScript.
+
+287. Cross-language Level-1 MOS bulk-junction potential temperature preprocessing.
+   - Status: completed in PR 9142.
+   - Bulk-junction potential `PB` follows the Berkeley MOS1 silicon potential
+     correction alongside the existing electrostatic transform.
+   - Direct MOS helpers and circuit-level transforms preserve matching behavior
+     in Rust, Python, and TypeScript.
+
+288. Cross-language Level-1 MOS junction-capacitance temperature scaling.
+   - Status: completed in PR 9148.
+   - Zero-bias `CJ`, `CBS`, and `CBD` scale through the Berkeley MOS1 `MJ`
+     bottom-junction grading path.
+   - Zero-bias `CJSW` scales independently through `MJSW`, reusing the
+     temperature-adjusted bulk-junction potential in all three languages.
+
+289. Cross-language Level-1 MOS model nominal-temperature precedence.
+   - Status: completed in PR 9153.
+   - Non-default model-card `TNOM` is authoritative for Berkeley MOS1
+     temperature preprocessing while the default model value preserves the
+     circuit nominal temperature as the fallback.
+   - Direct MOS helpers and circuit-level temperature transforms preserve
+     matching behavior in Rust, Python, and TypeScript.
+
+290. Cross-language Level-1 MOS substrate-doping electrostatic derivation.
+   - Status: completed in PR 9156.
+   - Model-card `NSUB` plus `TOX` derives `PHI` and `GAMMA` using the Berkeley
+     MOS1 process-parameter equations.
+   - Explicit `PHI` / `GAMMA` takes precedence, and substrate doping at or below
+     the intrinsic carrier density is rejected in Rust, Python, and TypeScript.
+
+291. Cross-language Level-1 MOS process-derived threshold voltage.
+   - Status: completed in PR 9160.
+   - Model-card `NSUB` plus `TOX` derives polarity-aware `VT0` using Berkeley
+     MOS1 default gate-work-function and surface-state assumptions.
+   - Explicit `VTO` / `VT0` takes precedence for NMOS and PMOS across Rust,
+     Python, and TypeScript.
+
+292. Cross-language Level-1 MOS surface-state density.
+   - Status: completed in PR 9163.
+   - Model-card `NSS` contributes the Berkeley oxide-charge flat-band shift
+     when `VT0` is derived from `NSUB` plus `TOX`.
+   - Explicit `VTO` / `VT0` precedence, normalized parameter coverage, and
+     matching NMOS/PMOS behavior are preserved across all three languages.
+
+293. Cross-language Level-1 MOS gate material.
+   - Status: completed in PR 9165.
+   - Model-card `TPG` values `-1`, `0`, and `1` select the Berkeley MOS1 gate
+     work-function branch used to derive `VT0` from `NSUB` plus `TOX`.
+   - Explicit threshold precedence, `NSS` composition, parameter coverage, and
+     NMOS/PMOS parity are preserved across Rust, Python, and TypeScript.
+
+294. Cross-language Level-1 MOS surface-state density validation.
+   - Status: completed in PR 9168.
+   - Negative and non-finite model-card `NSS` values are rejected before
+     process-parameter preprocessing.
+   - Zero and positive surface-state densities, parameter coverage, and stable
+     diagnostics remain aligned across Rust, Python, and TypeScript.
+
+295. Cross-language Level-1 MOS nominal-temperature validation.
+   - Status: completed in PR 9173.
+   - Non-positive and non-finite model-card `TNOM` values are rejected before
+     temperature and electrostatic preprocessing.
+   - Positive nominal temperatures, parameter coverage, and stable diagnostics
+     remain aligned across Rust, Python, and TypeScript.
+
+296. Cross-language Level-1 MOS substrate-doping validation.
+   - Status: completed in PR 9183.
+   - Non-positive and non-finite model-card `NSUB` values are rejected before
+     process-parameter preprocessing, including when `TOX` is absent.
+   - Positive substrate doping and the stricter intrinsic-density requirement
+     for `NSUB` plus `TOX` remain aligned across Rust, Python, and TypeScript.
+
+297. Cross-language Level-1 MOS oxide-thickness validation.
+   - Status: completed in PR 9190.
+   - Non-positive and non-finite model-card `TOX` values are rejected before
+     mobility and electrostatic process-parameter preprocessing.
+   - Positive oxide thickness and stable diagnostics remain aligned across
+     Rust, Python, and TypeScript.
+
+298. Cross-language Level-1 MOS surface-mobility validation.
+   - Status: completed in PR 9197.
+   - Negative and non-finite model-card `U0` / `UO` values are rejected before
+     mobility preprocessing and process-derived `KP`.
+   - Zero and positive surface mobility plus stable diagnostics remain aligned
+     across Rust, Python, and TypeScript.
+
+299. Cross-language Level-1 MOS transconductance validation.
+   - Status: completed in PR 9202.
+   - Non-positive and non-finite model-card `KP` values are rejected before
+     temperature scaling and current evaluation.
+   - Positive explicit transconductance and its precedence over process-derived
+     `KP` remain aligned across Rust, Python, and TypeScript.
+
+300. Cross-language Level-1 MOS threshold-voltage validation.
+   - Status: completed in PR 9206.
+   - Non-finite model-card `VT0` / `VTO` / `VTH` values are rejected before
+     threshold preprocessing and explicit-value precedence.
+   - Arbitrary finite NMOS and PMOS threshold voltages remain aligned across
+     Rust, Python, and TypeScript.
+
+301. Cross-language Level-1 MOS channel-modulation validation.
+   - Status: completed in PR 9215.
+   - Non-finite model-card `LAMBDA` / `LAM` values are rejected before current
+     evaluation.
+   - Arbitrary finite channel-length modulation coefficients remain aligned
+     across Rust, Python, and TypeScript.
+
+302. Cross-language Level-1 MOS surface-potential validation.
+   - Status: completed in PR 9266.
+   - Non-positive and non-finite model-card `PHI` values are rejected before
+     electrostatic and temperature preprocessing.
+   - Positive explicit surface potentials remain aligned across Rust, Python,
+     and TypeScript.
+
+303. Cross-language Level-1 MOS body-effect validation.
+   - Status: completed in PR 9271.
+   - Negative and non-finite model-card `GAMMA` values are rejected before
+     body-effect and temperature preprocessing.
+   - Zero and positive explicit body-effect coefficients remain aligned across
+     Rust, Python, and TypeScript.
+
+304. Cross-language Level-1 MOS bulk-junction-potential validation.
+   - Status: completed in PR 9276.
+   - Non-positive and non-finite model-card `PB` values are rejected before
+     depletion and temperature preprocessing.
+   - Positive explicit bulk-junction potentials remain aligned across Rust,
+     Python, and TypeScript.
+
+305. Cross-language Level-1 MOS junction-grading validation.
+   - Status: completed in PR 9281.
+   - Negative and non-finite model-card `MJ` values are rejected before
+     depletion-capacitance shaping.
+   - Zero and positive junction-grading coefficients remain aligned across
+     Rust, Python, and TypeScript.
+
+306. Cross-language Level-1 MOS depletion-coefficient validation.
+   - Status: completed in PR 9294.
+   - Model-card `FC` values outside `[0, 1)` and non-finite values are rejected
+     before depletion-capacitance shaping.
+   - Finite forward-bias depletion coefficients in `[0, 1)` remain aligned
+     across Rust, Python, and TypeScript.
+
+307. Cross-language Level-1 MOS sidewall-grading validation.
+   - Status: completed in PR 9300.
+   - Negative and non-finite model-card `MJSW` values are rejected before
+     sidewall depletion-capacitance shaping.
+   - Zero and positive sidewall-grading coefficients remain aligned across Rust,
+     Python, and TypeScript.
+
+308. Cross-language Level-1 MOS bottom-junction-capacitance validation.
+   - Status: completed in PR 9305.
+   - Negative and non-finite model-card `CJ` values are rejected before
+     bottom-junction depletion-capacitance shaping.
+   - Zero and positive bottom-junction capacitances remain aligned across Rust,
+     Python, and TypeScript.
+
+309. Cross-language Level-1 MOS sidewall-junction-capacitance validation.
+   - Status: completed in PR 9311.
+   - Negative and non-finite model-card `CJSW` values are rejected before
+     sidewall depletion-capacitance shaping.
+   - Zero and positive sidewall-junction capacitances remain aligned across
+     Rust, Python, and TypeScript.
+
+310. Cross-language Level-1 MOS source-bulk-capacitance validation.
+   - Status: completed in PR 9355.
+   - Negative and non-finite model-card `CBS` / `CJS` values are rejected before
+     source-bulk depletion-capacitance shaping.
+   - Zero and positive source-bulk capacitances remain aligned across Rust,
+     Python, and TypeScript.
+
+311. Cross-language Level-1 MOS drain-bulk-capacitance validation.
+   - Status: completed in PR 9358.
+   - Negative and non-finite model-card `CBD` / `CJD` values are rejected before
+     drain-bulk depletion-capacitance shaping.
+   - Zero and positive drain-bulk capacitances remain aligned across Rust,
+     Python, and TypeScript.
+
+312. Cross-language Level-1 MOS gate-source-overlap-capacitance validation.
+   - Status: completed in PR 9360.
+   - Negative and non-finite model-card `CGSO` values are rejected before
+     gate-source overlap-capacitance stamping.
+   - Zero and positive gate-source overlap capacitances remain aligned across
+     Rust, Python, and TypeScript.
+
+313. Cross-language Level-1 MOS gate-drain-overlap-capacitance validation.
+   - Status: completed in PR 9364.
+   - Negative and non-finite model-card `CGDO` values are rejected before
+     gate-drain overlap-capacitance stamping.
+   - Zero and positive gate-drain overlap capacitances remain aligned across
+     Rust, Python, and TypeScript.
+
+314. Cross-language Level-1 MOS gate-bulk-overlap-capacitance validation.
+   - Status: completed in PR 9380.
+   - Negative and non-finite model-card `CGBO` values are rejected before
+     gate-bulk overlap-capacitance stamping.
+   - Zero and positive gate-bulk overlap capacitances remain aligned across
+     Rust, Python, and TypeScript.
+
+315. Cross-language Level-1 MOS saturation-current validation.
+   - Status: completed in PR 9384.
+   - Non-positive and non-finite model-card `IS` values are rejected before
+     bulk-junction leakage and temperature preprocessing.
+   - Positive saturation currents remain aligned across Rust, Python, and
+     TypeScript.
+
+316. Cross-language Level-1 MOS saturation-current-density validation.
+   - Status: completed in PR 9387.
+   - Negative and non-finite model-card `JS` values are rejected before
+     bulk-junction leakage-density and temperature preprocessing.
+   - Zero and positive saturation-current densities remain aligned across
+     Rust, Python, and TypeScript.
+
+317. Cross-language Level-1 MOS width validation.
+   - Status: completed in PR 9392.
+   - Non-positive and non-finite model-card `W` values are rejected before
+     channel-current, capacitance, and noise calculations.
+   - Positive model widths remain aligned across Rust, Python, and TypeScript.
+
+318. Cross-language Level-1 MOS length validation.
+   - Status: completed in PR 9397.
+   - Non-positive and non-finite model-card `L` values are rejected before
+     channel-current, capacitance, and noise calculations.
+   - Positive model lengths remain aligned across Rust, Python, and TypeScript.
+
+319. Cross-language Level-1 MOS model-level validation.
+   - Status: completed in PR 9402.
+   - Non-finite model-card `LEVEL` selectors are rejected before supported-level
+     comparison and normalization.
+   - Finite `LEVEL=1` selectors and the stable unsupported-level diagnostic
+     remain aligned across Rust, Python, and TypeScript.
+
+320. Cross-language Level-1 MOS lateral-diffusion validation.
+   - Status: completed in PR 9404.
+   - Non-finite and negative model-card `LD` values and values that leave
+     `L - 2*LD <= 0` are rejected before device construction.
+   - Valid lateral-diffusion lengths against explicit or default `L` remain
+     aligned across Rust, Python, and TypeScript.
+
+321. Cross-language Level-1 MOS drain-resistance validation.
+   - Status: completed in PR 9408.
+   - Negative and non-finite model-card `RD` values are rejected before
+     external drain-resistance stamping and noise calculations.
+   - Zero and positive drain resistances remain aligned across Rust, Python,
+     and TypeScript.
+
+322. Cross-language Level-1 MOS source-resistance validation.
+   - Status: completed in PR 9411.
+   - Negative and non-finite model-card `RS` values are rejected before
+     external source-resistance stamping and noise calculations.
+   - Zero and positive source resistances remain aligned across Rust, Python,
+     and TypeScript.
+
+323. Cross-language Level-1 MOS sheet-resistance validation.
+   - Status: completed in PR 9414.
+   - Negative and non-finite model-card `RSH` values are rejected before
+     drain/source geometry converts sheet resistance into external resistance.
+   - Zero and positive sheet resistances remain aligned across Rust, Python,
+     and TypeScript.
+
+324. Cross-language Level-1 MOS flicker-noise coefficient validation.
+   - Status: completed in PR 9417.
+   - Negative and non-finite model-card `KF` values are rejected before
+     flicker-noise calculations.
+   - Zero and positive flicker-noise coefficients remain aligned across Rust,
+     Python, and TypeScript.
+
+325. Cross-language Level-1 MOS flicker-noise exponent validation.
+   - Status: completed in PR 9422.
+   - Negative and non-finite model-card `AF` values are rejected before
+     flicker-noise calculations.
+   - Zero and positive flicker-noise exponents remain aligned across Rust,
+     Python, and TypeScript.
+
+326. Rust Berkeley SPICE MOS instance-parameter validation.
+   - Status: completed in PR 9427.
+   - Unsupported MOS instance parameter names are rejected before lowering
+     instead of silently ignoring typos.
+   - Supported `W`, `L`, `NRD`, `NRS`, `AD`, `AS`, `PD`, and `PS` geometry and
+     diffusion fields remain accepted.
+
+327. Rust Berkeley SPICE MOS instance-width validation.
+   - Status: completed in PR 9429.
+   - Zero, negative, and non-finite instance `W` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive instance widths and model-card/default width fallback remain
+     accepted.
+
+328. Rust Berkeley SPICE MOS instance-length validation.
+   - Status: completed in PR 9432.
+   - Zero, negative, and non-finite instance `L` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive instance lengths and model-card/default length fallback remain
+     accepted.
+
+329. Rust Berkeley SPICE MOS instance drain-squares validation.
+   - Status: completed in PR 9436.
+   - Negative and non-finite instance `NRD` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive drain-square counts remain accepted for `RSH * NRD`
+     resistance.
+
+330. Rust Berkeley SPICE MOS instance source-squares validation.
+   - Status: completed in PR 9437.
+   - Negative and non-finite instance `NRS` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive source-square counts remain accepted for `RSH * NRS`
+     resistance.
+
+331. Rust Berkeley SPICE MOS instance drain-area validation.
+   - Status: completed in PR 9439.
+   - Negative and non-finite instance `AD` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive drain areas remain accepted for bulk-junction behavior.
+
+332. Rust Berkeley SPICE MOS instance source-area validation.
+   - Status: completed in PR 9443.
+   - Negative and non-finite instance `AS` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive source areas remain accepted for bulk-junction behavior.
+
+333. Rust Berkeley SPICE MOS instance drain-perimeter validation.
+   - Status: completed in PR 9448.
+   - Negative and non-finite instance `PD` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive drain perimeters remain accepted for sidewall-junction
+     behavior.
+
+334. Rust Berkeley SPICE MOS instance source-perimeter validation.
+   - Status: completed in PR 9450.
+   - Negative and non-finite instance `PS` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive source perimeters remain accepted for sidewall-junction
+     behavior.
+
+335. Rust Berkeley SPICE MOS model-card oxide-thickness validation.
+   - Status: completed in PR 9453.
+   - Zero, negative, and non-finite model-card `TOX` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive oxide thicknesses remain accepted for mobility-derived
+     transconductance.
+
+336. Rust Berkeley SPICE MOS model-card surface-mobility validation.
+   - Status: completed in PR 9459.
+   - Negative and non-finite model-card `U0` / `UO` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive surface mobility remain accepted, including the `UO`
+     alias.
+
+337. Rust Berkeley SPICE MOS model-card transconductance validation.
+   - Status: completed in PR 9464.
+   - Zero, negative, and non-finite model-card `KP` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive explicit transconductance remains accepted and takes precedence
+     over mobility-derived values.
+
+338. Rust Berkeley SPICE MOS model-card threshold-voltage validation.
+   - Status: completed in PR 9469.
+   - Non-finite model-card `VT0` / `VTO` / `VTH` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Arbitrary finite NMOS and PMOS threshold voltages remain accepted across
+     all aliases.
+
+339. Rust Berkeley SPICE MOS model-card channel-length-modulation validation.
+   - Status: completed in PR 9473.
+   - Non-finite model-card `LAMBDA` / `LAM` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Arbitrary finite channel-length-modulation values remain accepted across
+     both aliases.
+
+340. Rust Berkeley SPICE MOS model-card bulk-potential validation.
+   - Status: completed in PR 9475.
+   - Zero, negative, and non-finite model-card `PHI` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive explicit bulk-potential values remain accepted.
+
+341. Rust Berkeley SPICE MOS model-card body-effect-coefficient validation.
+   - Status: completed in PR 9481.
+   - Negative and non-finite model-card `GAMMA` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive explicit body-effect coefficients remain accepted.
+
+342. Rust Berkeley SPICE MOS model-card bulk-junction-potential validation.
+   - Status: completed in PR 9484.
+   - Zero, negative, and non-finite model-card `PB` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive explicit bulk-junction potentials remain accepted.
+
+343. Rust Berkeley SPICE MOS model-card bulk-junction-grading validation.
+   - Status: completed in PR 9487.
+   - Negative and non-finite model-card `MJ` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive bulk-junction grading coefficients remain accepted.
+
+344. Rust Berkeley SPICE MOS model-card depletion-coefficient validation.
+   - Status: completed in PR 9490.
+   - Non-finite model-card `FC` values outside `[0, 1)` are rejected before
+     lowering MOS elements into engine parameters.
+   - Values at the inclusive lower boundary and below the exclusive upper
+     boundary remain accepted.
+
+345. Rust Berkeley SPICE MOS model-card sidewall-junction-grading validation.
+   - Status: completed in PR 9492.
+   - Negative and non-finite model-card `MJSW` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive sidewall-junction grading coefficients remain accepted.
+
+346. Rust Berkeley SPICE MOS model-card bottom-junction-capacitance validation.
+   - Status: completed in PR 9496.
+   - Negative and non-finite model-card `CJ` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive bottom-junction capacitances remain accepted.
+
+347. Rust Berkeley SPICE MOS model-card sidewall-junction-capacitance validation.
+   - Status: completed in PR 9502.
+   - Negative and non-finite model-card `CJSW` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive sidewall-junction capacitances remain accepted.
+
+348. Rust Berkeley SPICE MOS model-card source-bulk-capacitance validation.
+   - Status: completed in PR 9506.
+   - Negative and non-finite model-card `CBS` / `CJS` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive source-bulk capacitances remain accepted across both
+     aliases.
+
+349. Rust Berkeley SPICE MOS model-card drain-bulk-capacitance validation.
+   - Status: completed in PR 9508.
+   - Negative and non-finite model-card `CBD` / `CJD` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive drain-bulk capacitances remain accepted across both
+     aliases.
+
+350. Rust Berkeley SPICE MOS model-card gate-source-overlap-capacitance validation.
+   - Status: completed in PR 9512.
+   - Negative and non-finite model-card `CGSO` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive gate-source overlap capacitances remain accepted.
+
+351. Rust Berkeley SPICE MOS model-card gate-drain-overlap-capacitance validation.
+   - Status: completed in PR 9518.
+   - Negative and non-finite model-card `CGDO` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive gate-drain overlap capacitances remain accepted.
+
+352. Rust Berkeley SPICE MOS model-card gate-bulk-overlap-capacitance validation.
+   - Status: completed in PR 9522.
+   - Negative and non-finite model-card `CGBO` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive gate-bulk overlap capacitances remain accepted.
+
+353. Rust Berkeley SPICE MOS model-card saturation-current validation.
+   - Status: completed in PR 9525.
+   - Zero, negative, and non-finite model-card `IS` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive saturation currents remain accepted.
+
+354. Rust Berkeley SPICE MOS model-card saturation-current-density validation.
+   - Status: completed in PR 9529.
+   - Negative and non-finite model-card `JS` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive saturation-current densities remain accepted.
+
+355. Rust Berkeley SPICE MOS model-card width validation.
+   - Status: completed in PR 9533.
+   - Zero, negative, and non-finite model-card `W` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive model widths remain accepted.
+
+356. Rust Berkeley SPICE MOS model-card length validation.
+   - Status: completed in PR 9538.
+   - Zero, negative, and non-finite model-card `L` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive model lengths remain accepted.
+
+357. Rust Berkeley SPICE MOS model-card lateral-diffusion-length validation.
+   - Status: completed in PR 9541.
+   - Negative and non-finite model-card `LD` values, plus combinations where
+     `L - 2*LD <= 0`, are rejected before lowering MOS elements.
+   - Valid zero and positive lateral-diffusion lengths remain accepted.
+
+358. Rust Berkeley SPICE MOS model-card drain-resistance validation.
+   - Status: completed in PR 9543.
+   - Negative and non-finite model-card `RD` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive drain resistances remain accepted.
+
+359. Rust Berkeley SPICE MOS model-card source-resistance validation.
+   - Status: completed in PR 9547.
+   - Negative and non-finite model-card `RS` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive source resistances remain accepted.
+
+360. Rust Berkeley SPICE MOS model-card sheet-resistance validation.
+   - Status: completed in PR 9551.
+   - Negative and non-finite model-card `RSH` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive sheet resistances remain accepted.
+
+361. Rust Berkeley SPICE MOS model-card flicker-noise-coefficient validation.
+   - Status: completed in PR 9554.
+   - Negative and non-finite model-card `KF` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive flicker-noise coefficients remain accepted.
+
+362. Rust Berkeley SPICE MOS model-card flicker-noise-exponent validation.
+   - Status: completed in PR 9558.
+   - Negative and non-finite model-card `AF` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive flicker-noise exponents remain accepted.
+
+363. Rust Berkeley SPICE MOS model-card substrate-doping validation.
+   - Status: completed in PR 9562.
+   - Zero, negative, and non-finite model-card `N_SUB` / `NSUB` / `N` values
+     are rejected before lowering MOS elements into engine parameters.
+   - Positive substrate-doping values remain accepted across all aliases.
+
+364. Rust Berkeley SPICE MOS model-card nominal-temperature validation.
+   - Status: completed in PR 9566.
+   - Zero, negative, and non-finite model-card `T_NOM` / `TNOM` values are
+     rejected before lowering MOS elements into engine parameters.
+   - Positive nominal temperatures remain accepted across both aliases.
+
+365. Rust Berkeley SPICE MOS model-card level validation.
+   - Status: completed in PR 9570.
+   - Non-finite and non-Level-1 model-card `LEVEL` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Explicit `LEVEL=1` model cards and cards that omit `LEVEL` remain accepted.
+
+366. Rust Berkeley SPICE MOS model-card electrostatic-default lowering parity.
+   - Status: completed in PR 9577.
+   - `NSS` and `TPG` values are validated before lowering MOS elements.
+   - `N_SUB` / `TOX` derived `VT0`, `GAMMA`, and `PHI` defaults reuse shared
+     engine semantics instead of silently dropping supported inputs.
+
+367. Rust Berkeley SPICE MOS model-card supported-parameter and lowering audit.
+   - Status: completed during post-PR 9577 reconciliation.
+   - Every shared Level-1 alias is now validated and either directly lowered or
+     handled by the shared electrostatic-default path.
+   - No remaining Rust netlist-facade model-card gap was confirmed.
+
+368. Python and TypeScript Berkeley SPICE MOS model-card level validation parity.
+   - Status: completed in PR 9583.
+   - Non-finite and non-Level-1 model-card `LEVEL` values are rejected with the
+     same tolerance and diagnostic as Rust and the shared engines.
+   - Explicit `LEVEL=1` model cards and cards that omit `LEVEL` remain accepted.
+
+369. Python and TypeScript Berkeley SPICE MOS model-card oxide-thickness parity.
+   - Status: completed in PR 9586.
+   - Zero, negative, and non-finite model-card `TOX` values are rejected with
+     the shared diagnostic.
+   - Valid `TOX` values reach Level-1 oxide thickness in both facades.
+
+370. Python and TypeScript Berkeley SPICE MOS surface-mobility and derived-`KP` parity.
+   - Status: completed in PR 9591.
+   - `U0` / `UO` values are lowered and validated with the shared finite
+     non-negative domain.
+   - Shared engine semantics derive `KP` from surface mobility and `TOX` while
+     preserving explicit `KP` precedence.
+
+371. Python and TypeScript Berkeley SPICE MOS model-card transconductance validation.
+   - Status: completed in PR 9595.
+   - Zero, negative, and non-finite explicit model-card `KP` values are rejected
+     with the shared diagnostic.
+   - Positive explicit `KP` and derived transconductance behavior remain intact.
+
+372. Python and TypeScript Berkeley SPICE MOS threshold-voltage validation parity.
+   - Status: completed in PR 9598.
+   - Non-finite `VT0` / `VTO` / `VTH` values are rejected with the shared
+     diagnostic.
+   - Finite `VTH` values lower into canonical Level-1 threshold voltage.
+
+373. Python and TypeScript Berkeley SPICE MOS channel-modulation validation parity.
+   - Status: completed in PR 9600.
+   - Non-finite `LAMBDA` / `LAM` values are rejected with the shared diagnostic.
+   - Finite `LAM` values lower into canonical Level-1 channel modulation.
+
+374. Python and TypeScript Berkeley SPICE MOS body-effect validation parity.
+   - Status: completed in PR 9608.
+   - Negative and non-finite `GAMMA` values are rejected with the shared
+     diagnostic.
+   - Zero and positive body-effect coefficients lower into canonical Level-1
+     parameters.
+
+375. Python and TypeScript Berkeley SPICE MOS surface-potential validation parity.
+   - Status: completed in PR 9611.
+   - Zero, negative, and non-finite `PHI` values are rejected with the shared
+     diagnostic.
+   - Positive surface potentials lower into canonical Level-1 parameters.
+
+376. Python and TypeScript Berkeley SPICE MOS model-card width validation parity.
+   - Status: completed in PR 9616.
+   - Zero, negative, and non-finite `W` values are rejected with the shared
+     diagnostic while positive widths lower into Level-1 parameters.
+
+377. Python and TypeScript Berkeley SPICE MOS model-card length validation parity.
+   - Status: completed in PR 9621.
+   - Zero, negative, and non-finite `L` values are rejected with the shared
+     diagnostic while positive lengths lower into Level-1 parameters.
+
+378. Python and TypeScript Berkeley SPICE MOS saturation-current validation parity.
+   - Status: completed in PR 9627.
+   - Zero, negative, and non-finite `IS` values are rejected with the shared
+     diagnostic while positive saturation currents lower into Level-1 parameters.
+
+379. Python and TypeScript Berkeley SPICE MOS nominal-temperature validation parity.
+   - Status: completed in PR 9631.
+   - Zero, negative, and non-finite `TNOM` / `T_NOM` values are rejected with
+     the shared diagnostic while positive Kelvin values lower into Level-1
+     parameters.
+
+380. Python and TypeScript Berkeley SPICE MOS drain-resistance parity.
+   - Status: completed in PR 9637.
+   - Negative and non-finite `RD` values are rejected with the shared
+     diagnostic while zero and positive drain resistances lower into Level-1
+     parameters.
+
+381. Python and TypeScript Berkeley SPICE MOS source-resistance parity.
+   - Status: completed in PR 9645.
+   - Negative and non-finite `RS` values are rejected with the shared
+     diagnostic while zero and positive source resistances lower into Level-1
+     parameters.
+
+382. Python and TypeScript Berkeley SPICE MOS sheet-resistance parity.
+   - Status: completed in PR 9652.
+   - Negative and non-finite `RSH` values are rejected with the shared
+     diagnostic while zero and positive sheet resistances lower into Level-1
+     parameters.
+
+383. Python and TypeScript Berkeley SPICE MOS lateral-diffusion parity.
+   - Status: completed in PR 9656.
+   - Non-finite and negative `LD` values, plus values that leave a non-positive
+     effective channel length, are rejected with the shared diagnostic while
+     valid lateral diffusion lengths lower into Level-1 parameters.
+
+384. Python and TypeScript Berkeley SPICE MOS drain-squares parity.
+   - Status: completed in PR 9662.
+   - Negative and non-finite instance `NRD` values are rejected with the shared
+     diagnostic while zero and positive drain-square counts lower into Level-1
+     parameters.
+
+385. Python and TypeScript Berkeley SPICE MOS source-squares parity.
+   - Status: completed in PR 9667.
+   - Negative and non-finite instance `NRS` values are rejected with the shared
+     diagnostic while zero and positive source-square counts lower into
+     Level-1 parameters.
+
+386. Python and TypeScript Berkeley SPICE MOS drain-area parity.
+   - Status: completed in PR 9674.
+   - Negative and non-finite instance `AD` values are rejected with the shared
+     diagnostic while zero and positive drain diffusion areas lower into
+     Level-1 parameters.
+
+387. Python and TypeScript Berkeley SPICE MOS source-area parity.
+   - Status: completed in PR 9678.
+   - Negative and non-finite instance `AS` values are rejected with the shared
+     diagnostic while zero and positive source diffusion areas lower into
+     Level-1 parameters.
+
+388. Python and TypeScript Berkeley SPICE MOS drain-perimeter parity.
+   - Status: completed in PR 9682.
+   - Negative and non-finite instance `PD` values are rejected with the shared
+     diagnostic while zero and positive drain diffusion perimeters lower into
+     Level-1 parameters.
+
+389. Python and TypeScript Berkeley SPICE MOS source-perimeter parity.
+   - Status: completed in PR 9684.
+   - Negative and non-finite instance `PS` values are rejected with the shared
+     diagnostic while zero and positive source diffusion perimeters lower into
+     Level-1 parameters.
+
+390. Python and TypeScript Berkeley SPICE MOS junction-capacitance parity.
+   - Status: completed in PR 9689.
+   - Negative and non-finite model-card `CJ` values are rejected with the
+     shared diagnostic while zero and positive bottom-junction capacitance
+     densities lower into Level-1 parameters.
+
+391. Python and TypeScript Berkeley SPICE MOS sidewall-capacitance parity.
+   - Status: completed in PR 9693.
+   - Negative and non-finite model-card `CJSW` values are rejected with the
+     shared diagnostic while zero and positive sidewall-junction capacitance
+     densities lower into Level-1 parameters.
+
+392. Python and TypeScript Berkeley SPICE MOS junction-current parity.
+   - Status: completed in PR 9699.
+   - Negative and non-finite model-card `JS` values are rejected with the
+     shared diagnostic while zero and positive junction saturation-current
+     densities lower into Level-1 parameters.
+
+393. Python and TypeScript Berkeley SPICE MOS bulk-potential parity.
+   - Status: completed in PR 9700.
+   - Zero, negative, and non-finite model-card `PB` values are rejected with
+     the shared diagnostic while positive bulk-junction potentials lower into
+     Level-1 parameters.
+
+394. Python and TypeScript Berkeley SPICE MOS junction-grading parity.
+   - Status: completed in PR 9706.
+   - Negative and non-finite model-card `MJ` values are rejected with the
+     shared diagnostic while zero and positive bottom-junction grading
+     coefficients lower into Level-1 parameters.
+
+395. Python and TypeScript Berkeley SPICE MOS sidewall-grading parity.
+   - Status: completed in PR 9709.
+   - Negative and non-finite model-card `MJSW` values are rejected with the
+     shared diagnostic while zero and positive sidewall-junction grading
+     coefficients lower into Level-1 parameters.
+
+396. Python and TypeScript Berkeley SPICE MOS forward-bias parity.
+   - Status: completed in PR 9714.
+   - Non-finite model-card `FC` values and values outside `[0, 1)` are rejected
+     with the shared diagnostic while valid forward-bias depletion
+     coefficients lower into Level-1 parameters.
+
+397. Python and TypeScript Berkeley SPICE MOS flicker-noise coefficient parity.
+   - Status: completed in PR 9716.
+   - Negative and non-finite model-card `KF` values are rejected with the
+     shared diagnostic while zero and positive flicker-noise coefficients
+     lower into Level-1 parameters.
+
+398. Python and TypeScript Berkeley SPICE MOS flicker-noise exponent parity.
+   - Status: completed in PR 9718.
+   - Negative and non-finite model-card `AF` values are rejected with the
+     shared diagnostic while zero and positive flicker-noise exponents lower
+     into Level-1 parameters.
+
+399. Python and TypeScript Berkeley SPICE MOS junction-capacitance aliases.
+   - Status: completed in PR 9723.
+   - `CJS` and `CJD` are validated and lowered as canonical `CBS` and `CBD`
+     bottom-junction capacitances in both parser facades.
+
+400. Python and TypeScript Berkeley SPICE MOS electrostatic defaults.
+   - Status: completed in PR 9729.
+   - Both parser facades validate `NSS` and `TPG`, then reuse the shared engine
+     normalizer to derive missing `KP`, `VT0`, `GAMMA`, and `PHI` values from
+     process parameters while preserving explicit model and instance values.
+
+401. Python and TypeScript Berkeley SPICE JFET gate-source capacitance parity.
+   - Status: completed in PR 9731.
+   - Both parser facades validate non-negative finite `CGS` / `CGS0` values
+     and lower them into the shared engine gate-source capacitance field.
+
+402. Python and TypeScript Berkeley SPICE JFET gate-drain capacitance parity.
+   - Status: completed in PR 9734.
+   - Both parser facades validate non-negative finite `CGD` / `CGD0` values
+     and lower them into the shared engine gate-drain capacitance field.
+
+403. Python and TypeScript Berkeley SPICE diode saturation-current alias parity.
+   - Status: completed in PR 9738.
+   - Both parser facades validate positive finite `IS` / `JS` values and lower
+     `JS` into the shared engine diode saturation-current field.
+
+404. Python and TypeScript Berkeley SPICE diode thermal-voltage alias parity.
+   - Status: completed in PR 9740.
+   - Both parser facades validate positive finite `VT` / `V_T` values and
+     lower `V_T` into the shared engine diode thermal-voltage field.
+
+405. Python and TypeScript Berkeley SPICE diode junction-capacitance alias parity.
+   - Status: completed in PR 9745.
+   - Both parser facades validate non-negative finite `CJO` / `CJ` / `CJ0`
+     values and lower `CJ` into the shared engine diode junction-capacitance
+     field.
+
+406. Python and TypeScript Berkeley SPICE BJT forward-beta alias parity.
+   - Status: completed in PR 9750.
+   - Both parser facades validate positive finite `BF` / `BETA` / `BETA_F`
+     values and lower `BETA` into the shared engine BJT forward-beta field.
+
+407. Python and TypeScript Berkeley SPICE BJT HFE alias parity.
+   - Status: completed in PR 9754.
+   - Both parser facades validate positive finite `HFE` values and lower them
+     into the shared engine BJT forward-beta field after canonical aliases.
+
+408. Python and TypeScript Berkeley SPICE BJT thermal-voltage alias parity.
+   - Status: completed in PR 9757.
+   - Both parser facades validate positive finite `VT` / `V_T` values and
+     lower `V_T` into the shared engine BJT thermal-voltage field.
+
+409. Python and TypeScript Berkeley SPICE BJT base-emitter capacitance alias parity.
+   - Status: completed in PR 9760.
+   - Both parser facades validate finite non-negative `CJE` / `CJE0` / `CBE`
+     values and lower `CJE0` into the shared engine base-emitter capacitance
+     field after canonical `CJE` and before legacy `CBE`.
+
+410. Python and TypeScript Berkeley SPICE BJT base-collector capacitance alias parity.
+   - Status: completed in PR 9763.
+   - Both parser facades validate finite non-negative `CJC` / `CJC0` / `CBC`
+     values and lower `CJC0` into the shared engine base-collector capacitance
+     field after canonical `CJC` and before legacy `CBC`.
+
+411. Python and TypeScript Berkeley SPICE BJT transit-time validation parity.
+   - Status: completed in PR 9770.
+   - Both parser facades validate finite non-negative `TF` / `TR` values before
+     lowering them into the shared engine BJT transit-time fields.
+
+412. Python and TypeScript Berkeley SPICE BJT saturation-current validation parity.
+   - Status: completed in PR 9778.
+   - Both parser facades validate positive finite `IS` values before lowering
+     them into the shared engine BJT saturation-current field.
+
+413. Python and TypeScript Berkeley SPICE diode transit-time validation parity.
+   - Status: completed in PR 9785.
+   - Both parser facades validate finite non-negative `TT` values before
+     lowering them into the shared engine diode transit-time field.
+
+414. Python and TypeScript Berkeley SPICE diode emission-coefficient validation parity.
+   - Status: completed in PR 9799.
+   - Both parser facades validate positive finite `N` values before lowering
+     them into the shared engine diode emission-coefficient field.
+
+415. Python and TypeScript Berkeley SPICE diode breakdown-voltage validation parity.
+   - Status: completed in PR 9805.
+   - Both parser facades validate positive finite `BV` values before lowering
+     them into the shared engine diode breakdown-voltage field.
+
+416. Python and TypeScript Berkeley SPICE diode breakdown-current validation parity.
+   - Status: completed in PR 9809.
+   - Both parser facades validate positive finite `IBV` values before lowering
+     them into the shared engine diode breakdown-current field.
+
+417. Python and TypeScript Berkeley SPICE diode series-resistance parity.
+   - Status: completed in PR 9813.
+   - Both parser facades validate finite non-negative `RS` values and lower
+     them into the shared engine diode series-resistance field.
+
+418. Python and TypeScript Berkeley SPICE diode junction-potential parity.
+   - Status: completed in PR 9816.
+   - Both parser facades validate positive finite `VJ` / `PB` values and lower
+     them into the shared engine diode junction-potential field with canonical
+     `VJ` precedence.
+
+419. Python and TypeScript Berkeley SPICE diode grading-coefficient parity.
+   - Status: completed in PR 9820.
+   - Both parser facades validate finite non-negative `M` / `MJ` values and
+     lower them into the shared engine diode grading-coefficient field with
+     canonical `M` precedence.
+
+420. Python and TypeScript Berkeley SPICE diode depletion-coefficient parity.
+   - Status: completed in PR 9822.
+   - Both parser facades validate finite `FC` values in `[0, 1)` and lower
+     them into the shared engine diode depletion-coefficient field.
+
+421. Python and TypeScript Berkeley SPICE diode temperature-exponent parity.
+   - Status: completed in PR 9824.
+   - Both parser facades validate finite `XTI` values and lower them into the
+     shared engine diode saturation-current temperature-exponent field.
+
+422. Python and TypeScript Berkeley SPICE diode energy-gap parity.
+   - Status: completed in PR 9826.
+   - Both parser facades validate positive finite `EG` values and lower them
+     into the shared engine diode energy-gap field.
+
+423. Python and TypeScript Berkeley SPICE diode flicker-noise coefficient parity.
+   - Status: completed in PR 9829.
+   - Both parser facades validate finite non-negative `KF` values and lower
+     them into the shared engine diode flicker-noise coefficient field.
+
+424. Python and TypeScript Berkeley SPICE diode flicker-noise exponent parity.
+   - Status: completed in PR 9831.
+   - Both parser facades validate finite non-negative `AF` values and lower
+     them into the shared engine diode flicker-noise exponent field.
+
+425. Python and TypeScript Berkeley SPICE JFET flicker-noise coefficient parity.
+   - Status: completed in PR 9835.
+   - Both parser facades validate finite non-negative `KF` values and lower
+     them into the shared engine JFET flicker-noise coefficient field.
+
+426. Python and TypeScript Berkeley SPICE JFET flicker-noise exponent parity.
+   - Status: completed in PR 9837.
+   - Both parser facades validate finite non-negative `AF` values and lower
+     them into the shared engine JFET flicker-noise exponent field.
+
+427. Python and TypeScript Berkeley SPICE JFET junction-potential parity.
+   - Status: completed in PR 9839.
+   - Both parser facades validate positive finite `PB` / `VJ` values, prefer
+     canonical `PB`, and lower the result into the shared engine JFET
+     junction-potential field.
+
+428. Python and TypeScript Berkeley SPICE JFET depletion-coefficient parity.
+   - Status: completed in PR 9842.
+   - Both parser facades validate finite `FC` values in `[0, 1)` and lower
+     them into the shared engine JFET forward-bias depletion field.
+
+429. Python and TypeScript Berkeley SPICE JFET gate-current parity.
+   - Status: completed in PR 9843.
+   - Both parser facades validate positive finite `IS` values and lower them
+     into the shared engine JFET gate saturation-current field.
+
+430. Python and TypeScript Berkeley SPICE JFET temperature-exponent parity.
+   - Status: completed in PR 9848.
+   - Both parser facades validate finite `XTI` values and lower them into the
+     shared engine JFET gate-current temperature-exponent field.
+
+431. Python and TypeScript Berkeley SPICE JFET energy-gap parity.
+   - Status: completed in PR 9851.
+   - Both parser facades validate positive finite `EG` values and lower them
+     into the shared engine JFET bandgap-voltage field.
+
+432. Python and TypeScript Berkeley SPICE JFET noise-level parity.
+   - Status: completed in PR 9853.
+   - Both parser facades validate `NLEV` as a finite integer greater than or
+     equal to 1 and lower it into the shared engine noise-equation-level field.
+
+433. Python and TypeScript Berkeley SPICE JFET channel-noise parity.
+   - Status: completed in PR 9857.
+   - Both parser facades validate finite, non-negative `GDSNOI` values and
+     lower them into the shared engine channel-noise-coefficient field.
+
+434. Python and TypeScript Berkeley SPICE JFET drain-resistance parity.
+   - Status: implemented in this JFET drain-resistance parity slice.
+   - Both parser facades validate finite, non-negative `RD` values and lower
+     them into the shared engine intrinsic-drain-resistance field.
+
 ## Backlog
 
-1. Grammar-backed parser and app facade.
+1. Python and TypeScript Berkeley SPICE model-card validation parity.
+   - Resolve the JFET `B` policy before lowering it: all three parser facades
+     currently use `B` as a legacy beta alias, while the engine model uses `B`
+     for Parker-Skellern doping-tail shaping. Do not assign one card value to
+     both fields silently.
+   - Continue the unambiguous audited JFET gaps with `RS`,
+     `TCV`, `VTOTC`, `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
+   - Continue the audited BJT model-card gaps after the smaller JFET fields;
+     prioritize direct engine fields before adding new model surfaces.
+   - Re-audit MOS lowering after those direct JFET and BJT omissions close.
+
+2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -2970,7 +4517,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-2. Deck compatibility follow-up.
+3. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -2981,7 +4528,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-3. Production solver core follow-up.
+4. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -2992,14 +4539,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-4. Device model depth.
+5. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-5. Analysis completion.
+6. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -3008,14 +4555,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-6. Mixed-signal integration.
+7. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-7. Verilog-A and custom models.
+8. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.

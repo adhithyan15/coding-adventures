@@ -1,1 +1,7 @@
-{"capabilities":[]}
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "haskell/sql-backend",
+  "capabilities": [],
+  "justification": "Pure in-memory SQL backend interfaces and values with no operating-system access."
+}

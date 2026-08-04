@@ -5,6 +5,14 @@
 //! framing, and CRC checks stay in Rust, where the board firmware and host CLI
 //! already share the same implementation.
 
+// The `#[no_mangle] pub unsafe extern "C"` functions below form a single C-ABI
+// boundary that all shares one safety contract: every raw pointer passed in must
+// be a valid, properly-aligned pointer to the named type (or null, which each
+// function handles by returning an error status). That contract is enforced
+// uniformly via `mut_ref`/`ref_from_ptr` helpers rather than restated per-fn,
+// so a crate-level allow is used instead of ~50 near-identical `# Safety` blocks.
+#![allow(clippy::missing_safety_doc)]
+
 use std::cell::{Cell, RefCell};
 use std::collections::BTreeMap;
 use std::env;
@@ -4557,7 +4565,7 @@ pub fn input_callback_session_lifecycle_summary(
         .map_or(!queue_plan.dispatch_required, |summary| summary.terminal);
     let retryable = completion_summary
         .as_ref()
-        .map_or(false, |summary| summary.retryable);
+        .is_some_and(|summary| summary.retryable);
     let message = input_callback_session_lifecycle_message(
         queue_plan.queued,
         queue_plan.dispatch_required,
@@ -6831,12 +6839,11 @@ pub fn normalize_target_selector(selector: &str) -> String {
         if character.is_ascii_alphanumeric() {
             normalized.push(character.to_ascii_lowercase());
             last_was_separator = false;
-        } else if character == '-' || character == '_' || character.is_ascii_whitespace() {
-            if !normalized.is_empty() && !last_was_separator {
+        } else if (character == '-' || character == '_' || character.is_ascii_whitespace())
+            && !normalized.is_empty() && !last_was_separator {
                 normalized.push('_');
                 last_was_separator = true;
             }
-        }
     }
     if normalized.ends_with('_') {
         normalized.pop();

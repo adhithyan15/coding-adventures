@@ -1,0 +1,95 @@
+% ============================================================================
+% mixture_example — each kind of mixture and the everyday example the source
+% names for it (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% An early-chemistry fact set: matter that is not a pure substance is a MIXTURE,
+% and a first chemistry course sorts mixtures into a few named kinds — is it
+% evenly blended (homogeneous) or visibly patchy (heterogeneous)? does the stuff
+% dissolve (a solution), settle out on standing (a suspension), or stay cloudy
+% and suspended forever (a colloid)? The easiest way to learn the kinds is by the
+% one everyday example a textbook points at for each. That is exactly what this
+% table records: a mixture kind → the sample the source names for it. Recall is a
+% binding query:
+%
+%     ? mixture_example(colloid, $Example)     % milk
+%
+% Like every FACTS library this is a native `table` (ADJ-TABLES RS-5): each `row`
+% lowers to a ground relation `mixture_example(mixture_type, example)` carrying
+% the table's citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the example WITH its source, on the CPU, with zero model
+% calls, and abstains on a kind that is not in the table. It also runs BACKWARD
+% (bind an example, recall the kind the source classifies it as):
+%
+%     ? mixture_example($Kind, vegetable_soup)  % heterogeneous
+%
+% The five rows, as a little truth table (follow each kind to the sample the
+% source names — the phrase the example word is copied out of):
+%
+%     mixture_type    example          what the source says
+%     -------------   --------------   -------------------------------------
+%     homogeneous     salt_water       "The salt water ... is homogeneous"
+%     solution        salt_water       salt mixed into water "will form a
+%                                       solution"
+%     heterogeneous   vegetable_soup   "Vegetable soup is a heterogeneous
+%                                       mixture."
+%     suspension      salad_dressing   "The salad dressing ... is a suspension."
+%     colloid         milk             "Homogenized milk is a colloid."
+%
+% Note that `salt_water` appears TWICE — as the example for both `homogeneous`
+% and `solution`. That is not a mistake but the source's own point: a solution IS
+% a homogeneous mixture (the page states "All solutions would be considered
+% homogeneous"), so its salt-water example is the natural witness for BOTH kinds.
+% A reverse recall on `salt_water` therefore honestly returns both rows; a reverse
+% recall on a value the source names only once (vegetable_soup, salad_dressing,
+% milk) binds a single kind.
+%
+% A mixture kind the source does not name an example for here — an `alloy`, an
+% `emulsion` — has no row, so a recall on it ABSTAINS rather than inventing an
+% example. That honest-abstention property is what makes the table safe to reason
+% from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every mixture_type→example
+% pair was read out of a fetched teaching-reference page, and any pair whose
+% example word could not be copied verbatim from the source sentence was dropped).
+% All five rows come from the SAME source: the LibreTexts Chemistry page
+% "9.1: Mixtures" (chem.libretexts.org, Mendocino College "Introduction to
+% Chemistry (CHM 200)", §9.01). Each example word is copied character-for-
+% character out of that page's own sentence:
+%
+%   homogeneous → salt water
+%       "The salt water described above is homogeneous because the dissolved
+%        salt is evenly distributed throughout the entire salt water sample."
+%   solution → salt water
+%       "When the salt is thoroughly mixed into the water in this glass, it will
+%        form a solution."
+%   heterogeneous → vegetable soup
+%       "Vegetable soup is a heterogeneous mixture."
+%   suspension → salad dressing
+%       "The salad dressing in this bottle is a suspension."
+%   colloid → milk
+%       "Homogenized milk is a colloid."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source` below holds the
+% five verbatim example sentences (joined with " … "), the `locator` the page
+% URL, and `trust`. Every example word above therefore remains independently
+% checkable against the quoted sentence it was copied from. LibreTexts is a
+% SECONDARY teaching reference (a college course text, not a primary standards
+% body), so `trust consensus` — the honest tier for a teaching summary, per the
+% standard-library trust convention. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table mixture_example {
+    columns mixture_type, example
+
+    row (homogeneous, salt_water)
+    row (solution, salt_water)
+    row (heterogeneous, vegetable_soup)
+    row (suspension, salad_dressing)
+    row (colloid, milk)
+
+    source "The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample. … When the salt is thoroughly mixed into the water in this glass, it will form a solution. … Vegetable soup is a heterogeneous mixture. … The salad dressing in this bottle is a suspension. … Homogenized milk is a colloid."
+    locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
+    trust consensus
+}

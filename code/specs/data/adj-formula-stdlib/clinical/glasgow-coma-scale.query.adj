@@ -1,0 +1,35 @@
+% ============================================================================
+% glasgow-coma-scale.query.adj — worked examples over the clinical Glasgow-Coma-Scale library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a GCS question: it states NO
+% arithmetic and NO relation — it only `import`s the grounded library, `observe`s the element
+% scores it decomposed from the prompt (each a byte-provenanced span, elided here), and asks
+% the engine to APPLY the cited definition. The native adj-lang engine binds the parameters,
+% computes each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The four questions INVERT: an eye score of 4 plus a verbal score of 5 plus a motor score of
+% 6 gives a total of 4 + 5 + 6 = 15; and that 15 total minus any two of the element scores is
+% exactly what the third element's formula recovers the missing score from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli glasgow-coma-scale.query.adj
+% ============================================================================
+
+import "glasgow-coma-scale.adj"
+
+% E 4, V 5, M 6: total GCS = 4 + 5 + 6.
+observe eye_response(4)
+observe verbal_response(5)
+observe motor_response(6)
+? glasgow_coma_scale(eye_response, verbal_response, motor_response)   % expect 15  (GCS = E + V + M)
+
+% That 15 total with the same V 5 and M 6: E = 15 − 5 − 6.
+observe glasgow_coma_scale(15)
+? eye_response(glasgow_coma_scale, verbal_response, motor_response)   % expect 4   (same def, solved for E = GCS − V − M)
+
+% That 15 total with the same E 4 and M 6: V = 15 − 4 − 6.
+? verbal_response(glasgow_coma_scale, eye_response, motor_response)   % expect 5   (same def, solved for V = GCS − E − M)
+
+% That 15 total with the same E 4 and V 5: M = 15 − 4 − 5.
+? motor_response(glasgow_coma_scale, eye_response, verbal_response)   % expect 6   (same def, solved for M = GCS − E − V)

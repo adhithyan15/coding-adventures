@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+- Enforce finite construction, angular-frequency overflow, and finite-time
+  validation even after mutation of the public `Wave` fields.
+- Reduce time and phase before local trig evaluation and cover exact-zero,
+  maximum-finite, and minimum-subnormal boundaries.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added

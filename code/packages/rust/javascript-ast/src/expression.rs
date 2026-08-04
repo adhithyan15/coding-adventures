@@ -361,8 +361,15 @@ pub enum AssignmentOperator {
     #[serde(rename = "|=")] BitOrEq,
     #[serde(rename = "^=")] BitXorEq,
     #[serde(rename = "&=")] BitAndEq,
-    // Phase 5: LogicalAndEq (&&=), LogicalOrEq (||=),
-    // NullishCoalescingEq (??=) once we have ES2021 in scope.
+    // ES2021 logical assignment operators (CLOC12.183). Unlike the arithmetic /
+    // bitwise compound operators above, these **short-circuit**: `a &&= b` only
+    // assigns `b` when `a` is truthy, `a ||= b` only when `a` is falsy, and
+    // `a ??= b` only when `a` is null/undefined. The minifier never rewrites
+    // across that boundary — it preserves the operator verbatim — so modelling
+    // them here is a faithful round-trip, not a semantic transform.
+    #[serde(rename = "&&=")] LogicalAndEq,
+    #[serde(rename = "||=")] LogicalOrEq,
+    #[serde(rename = "??=")] NullishCoalescingEq,
 }
 
 /// The left-hand-side of an `AssignmentExpression`. Identifier or member
@@ -991,11 +998,42 @@ pub enum PropertyKind {
     Set,
 }
 
+/// A **private name** — `#x` — the key of a private class member
+/// (`class C { #x = 1; #m(){} }`) and, later, the property of a private
+/// member access (`this.#x`). ESTree calls this a `PrivateIdentifier`.
+///
+/// Mirrors [`Identifier`]: the `name` field holds the bare name **without**
+/// the leading `#` (so `#x` stores `"x"`); the emitter prepends the `#`.
+///
+/// # Why `name` serializes as `private_name`
+///
+/// [`PropertyKey`] is `#[serde(untagged)]`, so a variant is chosen during
+/// deserialization by *structural shape*. A `PrivateName { cv, name }` would
+/// be byte-for-byte identical to an [`Identifier`] (`{ cv, name }`), and the
+/// untagged deserializer would greedily pick whichever variant appears first —
+/// a private `#x` key would silently round-trip back as a plain `x`
+/// identifier (data loss + a mis-emit). Serializing the payload under the
+/// distinct key `private_name` gives the variant a unique required field, so
+/// `{ "name": … }` deserializes as [`Identifier`] and `{ "private_name": … }`
+/// as [`PrivateName`], with no ambiguity. The Rust field stays `name` for API
+/// symmetry with [`Identifier`].
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PrivateName {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    #[serde(rename = "private_name")]
+    pub name: String,
+}
+
 /// The key side of a [`Property`].
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PropertyKey {
     Identifier(Identifier),
+    /// A private class-member key — `#x` / `#m()`. Only legal inside a class
+    /// body; never in an object literal. Disambiguated from `Identifier` in
+    /// the untagged enum by [`PrivateName`]'s `private_name` serde key.
+    PrivateName(PrivateName),
     StringLiteral(StringLiteral),
     NumericLiteral(NumericLiteral),
     /// When the property is `[expr]: value` (computed = true).
@@ -1106,6 +1144,19 @@ pub enum ClassMember {
     /// A method / accessor / constructor: `m() {}`, `get x() {}`,
     /// `static m() {}`, `[k]() {}`, `constructor() {}`.
     Method(MethodDefinition),
+    /// A **field** (class property): `x = 1;`, `y;`, `static z = 2;`,
+    /// `[k] = v;`. A named slot with an *optional* initializer — no parameter
+    /// list, no body. See [`PropertyDefinition`].
+    Field(PropertyDefinition),
+    /// A **static initialization block**: `static { … }`. A block of statements
+    /// that runs *once, at class-definition time*, in the class's static scope.
+    /// It has no name, no key, no parameter list, and no initializer — only a
+    /// body, which is exactly a [`BlockStatement`]'s statement list, so the
+    /// variant wraps `BlockStatement` directly rather than re-modelling it.
+    /// (A member's *private* key `#x` is modelled by [`PropertyKey::PrivateName`]
+    /// on the `Field`/`Method` variants above; decorators are a later additive
+    /// variant.)
+    StaticBlock(BlockStatement),
 }
 
 /// A method-like class member. Unlike an object-literal [`Property`] it can be
@@ -1131,6 +1182,43 @@ pub struct MethodDefinition {
     /// identifier / string / numeric key.
     pub computed: bool,
     /// `true` for a `static` member.
+    #[serde(rename = "static")]
+    pub is_static: bool,
+}
+
+/// A **class field** (property) member: `x = 1;`, `y;`, `static z = 2;`,
+/// `[k] = v;`. The first non-method member kind (CLOC12.175).
+///
+/// # How it differs from [`MethodDefinition`]
+///
+/// A field is *not* a function-like member — it has:
+///
+/// | aspect      | `MethodDefinition`            | `PropertyDefinition` (field)      |
+/// |-------------|-------------------------------|-----------------------------------|
+/// | kind        | `MethodKind` (ctor/get/set/…) | none — a field is never any of    |
+/// | value       | always a `FunctionExpression` | an *optional* plain `Expression`  |
+/// | params/body | yes (the method function)     | none                              |
+///
+/// This matches the conformance target — Closure's Rhino uses a dedicated
+/// `MEMBER_FIELD_DEF` node, distinct from `MEMBER_FUNCTION_DEF`. The `key`
+/// reuses [`PropertyKey`] (a field key has the same four shapes as a method /
+/// property key: identifier / string / numeric / computed `[expr]`), and
+/// `computed` / `is_static` mirror [`MethodDefinition`]'s fields.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PropertyDefinition {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The field name. For a computed key (`[expr] = v`) this is
+    /// [`PropertyKey::Expression`] and `computed` is `true`.
+    pub key: PropertyKey,
+    /// The initializer, if any. `Some` for `x = <expr>`; `None` for a bare
+    /// `x;` field (declared but uninitialised).
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub value: Option<Expression>,
+    /// `true` for a computed key `[expr] = v`; `false` for a plain
+    /// identifier / string / numeric key.
+    pub computed: bool,
+    /// `true` for a `static` field.
     #[serde(rename = "static")]
     pub is_static: bool,
 }
@@ -1371,6 +1459,49 @@ mod tests {
         assert_eq!(traced.clone(), roundtrip(traced.clone()));
         assert_eq!(untraced.clone(), roundtrip(untraced.clone()));
         assert_eq!(type_tag(&traced), "Identifier");
+    }
+
+    // ---- PropertyKey::PrivateName (CLOC12.177) -----------------------
+
+    /// A `PropertyKey::PrivateName` round-trips as a `PrivateName` — NOT as an
+    /// `Identifier`. This is the whole point of the `private_name` serde key:
+    /// the untagged `PropertyKey` enum would otherwise pick `Identifier` (the
+    /// first structurally-matching variant) and silently lose the private-ness.
+    #[test]
+    fn private_name_key_roundtrips_and_stays_private() {
+        let key = PropertyKey::PrivateName(PrivateName { cv: None, name: "x".to_string() });
+        let json = serde_json::to_string(&key).expect("serialize");
+        // The distinguishing serde key must be present (and NOT the plain `name`
+        // that an `Identifier` would use).
+        assert!(
+            json.contains("private_name"),
+            "PrivateName must serialize under `private_name`, got {json}"
+        );
+        let back: PropertyKey = serde_json::from_str(&json).expect("deserialize");
+        assert_eq!(key, back);
+        assert!(
+            matches!(back, PropertyKey::PrivateName(_)),
+            "a private key must not round-trip back as another PropertyKey variant"
+        );
+    }
+
+    /// The traced form (a live `cv`) round-trips too, and a plain
+    /// `PropertyKey::Identifier` still deserializes as `Identifier` — proving the
+    /// new variant did not perturb the existing untagged disambiguation.
+    #[test]
+    fn private_name_traced_and_identifier_key_unaffected() {
+        let traced =
+            PropertyKey::PrivateName(PrivateName { cv: Some("pk.1".to_string()), name: "m".to_string() });
+        let j = serde_json::to_string(&traced).expect("serialize");
+        assert_eq!(traced, serde_json::from_str::<PropertyKey>(&j).expect("deserialize"));
+
+        let ident = PropertyKey::Identifier(Identifier { cv: None, name: "x".to_string() });
+        let ji = serde_json::to_string(&ident).expect("serialize");
+        let back: PropertyKey = serde_json::from_str(&ji).expect("deserialize");
+        assert!(
+            matches!(back, PropertyKey::Identifier(_)),
+            "a plain identifier key must still round-trip as Identifier, got {back:?}"
+        );
     }
 
     #[test]
@@ -2145,6 +2276,148 @@ mod tests {
         });
         let json = serde_json::to_string(&e).expect("serialize");
         assert!(!json.contains("\"cooked\""), "None cooked should be omitted; got {}", json);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    // ---- ClassMember::Field / PropertyDefinition (CLOC12.175) --------
+
+    /// Build a `class { <members> }` expression for round-tripping field
+    /// members through the wire format.
+    fn class_with(members: Vec<ClassMember>) -> Expression {
+        Expression::ClassExpression(ClassExpression {
+            cv: None,
+            id: None,
+            super_class: None,
+            body: members,
+        })
+    }
+
+    fn ident_key(name: &str) -> PropertyKey {
+        PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() })
+    }
+
+    #[test]
+    fn class_field_with_initializer_roundtrips() {
+        // `class { x = 1 }` — an instance field with a numeric initializer.
+        let e = class_with(vec![ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: ident_key("x"),
+            value: Some(Expression::NumericLiteral(NumericLiteral {
+                cv: None,
+                value: 1.0,
+                raw: "1".to_string(),
+            })),
+            computed: false,
+            is_static: false,
+        })]);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    #[test]
+    fn class_field_bare_omits_value_in_json() {
+        // `class { y }` — a bare field: `value: None` must be omitted from the
+        // wire format and round-trip back to `None`.
+        let e = class_with(vec![ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: ident_key("y"),
+            value: None,
+            computed: false,
+            is_static: false,
+        })]);
+        let json = serde_json::to_string(&e).expect("serialize");
+        assert!(!json.contains("\"value\""), "None value should be omitted; got {json}");
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    #[test]
+    fn class_field_static_serializes_static_camel() {
+        // `class { static z = 2 }` — the `is_static` flag serializes as the
+        // ESTree `static` key, not `is_static`.
+        let e = class_with(vec![ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: ident_key("z"),
+            value: Some(Expression::NumericLiteral(NumericLiteral {
+                cv: None,
+                value: 2.0,
+                raw: "2".to_string(),
+            })),
+            computed: false,
+            is_static: true,
+        })]);
+        let json = serde_json::to_string(&e).expect("serialize");
+        assert!(json.contains("\"static\":true"), "got {json}");
+        assert!(!json.contains("is_static"), "got {json}");
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    #[test]
+    fn class_field_computed_key_roundtrips() {
+        // `class { [a+b] = v }` — a computed-key field. The key is a
+        // `BinaryExpression`, unambiguously `PropertyKey::Expression` (unlike a
+        // bare identifier `[k]`, which `#[serde(untagged)]` `PropertyKey` would
+        // collapse to `Identifier` on the wire — a pre-existing limitation
+        // shared with method keys), so it round-trips as a computed key.
+        let e = class_with(vec![ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: PropertyKey::Expression(Box::new(Expression::BinaryExpression(
+                BinaryExpression {
+                    cv: None,
+                    operator: BinaryOperator::Add,
+                    left: Box::new(Expression::Identifier(Identifier {
+                        cv: None,
+                        name: "a".to_string(),
+                    })),
+                    right: Box::new(Expression::Identifier(Identifier {
+                        cv: None,
+                        name: "b".to_string(),
+                    })),
+                },
+            ))),
+            value: Some(Expression::Identifier(Identifier { cv: None, name: "v".to_string() })),
+            computed: true,
+            is_static: false,
+        })]);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    // ---- ClassMember::StaticBlock (CLOC12.176) -----------------------
+
+    #[test]
+    fn class_static_block_empty_roundtrips() {
+        // `class { static {} }` — an empty static-init block.
+        let e = class_with(vec![ClassMember::StaticBlock(TestBlock { cv: None, body: vec![] })]);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    #[test]
+    fn class_static_block_with_statement_roundtrips() {
+        // `class { static { return } }` — a static block whose body carries a
+        // statement (the statement list round-trips through the wire format).
+        let e = class_with(vec![ClassMember::StaticBlock(TestBlock {
+            cv: None,
+            body: vec![Statement::return_statement(ReturnStatement { cv: None, argument: None })],
+        })]);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    #[test]
+    fn class_static_block_interleaved_with_field_roundtrips() {
+        // `class { x = 1; static {} }` — a field and a static block coexist in
+        // one body, in source order, and both survive the round-trip.
+        let e = class_with(vec![
+            ClassMember::Field(PropertyDefinition {
+                cv: None,
+                key: ident_key("x"),
+                value: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+                computed: false,
+                is_static: false,
+            }),
+            ClassMember::StaticBlock(TestBlock { cv: None, body: vec![] }),
+        ]);
         assert_eq!(e.clone(), roundtrip(e));
     }
 }

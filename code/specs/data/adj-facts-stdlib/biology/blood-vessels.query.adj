@@ -1,0 +1,23 @@
+% ============================================================================
+% blood-vessels.query.adj — a worked recall over the biology blood-vessels library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does an artery do?":
+% it states no anatomy fact of its own — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `vessel_function` rows and returns the function + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the function
+% `toward_heart`, recall its vessel type — vein). A word that is not one of the
+% three main blood-vessel types abstains honestly — the engine never invents a
+% function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli blood-vessels.query.adj
+% ============================================================================
+
+import "blood-vessels.adj"
+
+? vessel_function(artery, $Function)      % expect away_from_heart
+? vessel_function(vein, $Function)        % expect toward_heart
+? vessel_function(capillary, $Function)   % expect exchange_of_materials
+? vessel_function($Vessel, toward_heart)  % reverse bind — expect vein
+? vessel_function(lymphatic, $Function)   % expect abstain — a lymphatic vessel is not one of the three main blood vessels

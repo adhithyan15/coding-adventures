@@ -1,0 +1,102 @@
+% ============================================================================
+% heat-transfer — the three modes of thermal-energy transfer (conduction,
+% convection, radiation) and HOW / through-what each one moves heat, in the
+% source's own words (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% One of the first big ideas of thermodynamics, and a rung a PHYSICS or an
+% EARTH-SCIENCE agent reasons UP from: heat (thermal energy) only ever moves
+% from a warmer thing to a cooler thing, and it can do so in exactly THREE
+% ways. "Conduction moves heat by direct contact; convection moves heat by the
+% motion of gasses and liquids; radiation moves heat by light waves." Before
+% you can reason about a stove, a weather system, or a spacecraft's thermal
+% control you must first know WHICH of the three modes is carrying the heat.
+% Recall is a binding query:
+%
+%     ? heat_transfer_mode(conduction, $Mechanism)      % direct_contact
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `heat_transfer_mode(mode, mechanism)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns
+% the mechanism WITH its source, on the CPU, with zero model calls, and abstains
+% on a word that is not one of these three modes (it never invents a mechanism).
+%
+% Each of the three modes and the mechanism the source states it transfers heat
+% by, as a little truth table:
+%
+%     mode          how / through-what it transfers heat   a beginner's cue
+%     ----------    ------------------------------------   -----------------------
+%     conduction    direct_contact                         a hot spoon warms your hand
+%     convection    motion_of_gasses_and_liquids           warm air rises, cool air sinks
+%     radiation     light_waves                            the Sun warms you across space
+%
+% The query also runs BACKWARD — bind a mechanism and recall its mode:
+%
+%     ? heat_transfer_mode($Mode, light_waves)   % radiation
+%
+% A word that is NOT one of these three modes — `evaporation`, `advection`,
+% `rock` — is deliberately NOT a row, so a heat-transfer recall ABSTAINS on it
+% rather than inventing a mechanism. That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% mode->mechanism pairs it can ground, and only those. (Evaporation is a
+% phase change, not one of the three modes of heat transfer — so it abstains.)
+%
+% The `mechanism` value of every row is a SINGLE lowercase atom, chosen to be
+% the mechanism the source EXPLICITLY states for that mode — never one the
+% source does not support. Where the token could have used an everyday word,
+% it uses the source's OWN word instead (the source says the "motion of gasses
+% and liquids", not "fluid flow"; it says "light waves", not "electromagnetic
+% waves"), so every value stays literally checkable against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every mode->mechanism pair
+% below was read out of a fetched NASA "Thermal Energy Transfer" Educator Notes
+% document, and any pair whose mechanism could not be verified there would have
+% been dropped). Each pair, with the primary source it was copied from and the
+% verbatim span that states it:
+%
+%   conduction -> direct_contact
+%     https://www.nasa.gov/wp-content/uploads/2024/04/thermal-energy-transfer-classroom-connection-final-v508.pdf
+%     (NASA Next Gen STEM — Thermal Energy Transfer, Educator Notes, p.2)
+%     "Conduction - the transfer of thermal energy by coming in direct contact
+%      with another object (e.g., holding a cup of hot chocolate, walking bare
+%      foot across a cold floor)"
+%
+%   convection -> motion_of_gasses_and_liquids
+%     https://www.nasa.gov/wp-content/uploads/2024/04/thermal-energy-transfer-classroom-connection-final-v508.pdf
+%     (NASA Next Gen STEM — Thermal Energy Transfer, Educator Notes, p.2)
+%     "Convection - the motion of gasses and liquids due to different densities
+%      (e.g., when warm air rises in your home)"
+%
+%   radiation -> light_waves
+%     https://www.nasa.gov/wp-content/uploads/2024/04/thermal-energy-transfer-classroom-connection-final-v508.pdf
+%     (NASA Next Gen STEM — Thermal Energy Transfer, Educator Notes, p.2)
+%     "Radiation - the absorption and emitting of visible or invisible light
+%      waves, called radiation, to from one object to another (e.g., sunlight
+%      on your skin, heating food in a microwave)"
+%
+% (The three-way framing itself is stated on the same page: "Thermal energy can
+% be transferred three ways:" followed by conduction, convection, and radiation
+% — another span of the same primary NASA teaching resource.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NASA statement that fixes the
+% first row (conduction -> direct_contact). Every OTHER row's per-fact source
+% and verbatim span is listed above, so each mechanism remains independently
+% checkable. All sources are NASA Next Gen STEM educator notes, a primary U.S.
+% government (National Aeronautics and Space Administration) teaching resource,
+% so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table heat_transfer_mode {
+    columns mode, mechanism
+
+    row (conduction, direct_contact)
+    row (convection, motion_of_gasses_and_liquids)
+    row (radiation, light_waves)
+
+    source "Conduction - the transfer of thermal energy by coming in direct contact with another object (e.g., holding a cup of hot chocolate, walking bare foot across a cold floor)"
+    locator "https://www.nasa.gov/wp-content/uploads/2024/04/thermal-energy-transfer-classroom-connection-final-v508.pdf"
+    trust authoritative
+}

@@ -191,14 +191,14 @@ fn encode_qoi_impl(c: &PixelContainer) -> Vec<u8> {
 
                 if a == prev.3 {
                     // Alpha unchanged — try compact delta ops first.
-                    if dr >= -2 && dr <= 1 && dg >= -2 && dg <= 1 && db >= -2 && db <= 1 {
+                    if (-2..=1).contains(&dr) && (-2..=1).contains(&dg) && (-2..=1).contains(&db) {
                         // QOI_OP_DIFF: 1 byte, each delta biased by +2 to fit in 2 bits.
                         let byte = (TAG_DIFF << 6)
                             | (((dr + 2) as u8) << 4)
                             | (((dg + 2) as u8) << 2)
                             | ((db + 2) as u8);
                         out.push(byte);
-                    } else if dg >= -32 && dg <= 31
+                    } else if (-32..=31).contains(&dg)
                         && (dr - dg) >= -8 && (dr - dg) <= 7
                         && (db - dg) >= -8 && (db - dg) <= 7
                     {
@@ -334,7 +334,7 @@ fn decode_qoi_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
                     // QOI_OP_DIFF: 2-bit deltas biased by +2.
                     let dr = ((tag >> 4) & 0x3) as i8 - 2;
                     let dg = ((tag >> 2) & 0x3) as i8 - 2;
-                    let db = ((tag >> 0) & 0x3) as i8 - 2;
+                    let db = (tag & 0x3) as i8 - 2;
                     // Apply deltas with wrapping u8 arithmetic.
                     curr = (
                         prev.0.wrapping_add(dr as u8),
@@ -353,7 +353,7 @@ fn decode_qoi_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
                     pos += 1;
                     let dg: i8    = (tag & 0x3F) as i8 - 32;
                     let dr_dg: i8 = ((next >> 4) & 0xF) as i8 - 8;
-                    let db_dg: i8 = ((next >> 0) & 0xF) as i8 - 8;
+                    let db_dg: i8 = (next & 0xF) as i8 - 8;
                     let dr = dr_dg + dg;
                     let db = db_dg + dg;
                     curr = (
@@ -392,7 +392,7 @@ fn decode_qoi_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
     }
 
     // Verify end marker.
-    if pos + 8 > bytes.len() || &bytes[pos..pos + 8] != END_MARKER {
+    if pos + 8 > bytes.len() || bytes[pos..pos + 8] != END_MARKER {
         return Err("QOI: missing end marker".into());
     }
 

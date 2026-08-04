@@ -1,0 +1,22 @@
+% ============================================================================
+% body-counts.query.adj — a worked recall over the anatomy body-counts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many chambers does
+% the heart have?": it states no anatomy fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `body_count` rows and returns the number + the table's source/locator/trust.
+% The fourth query runs the relation BACKWARD (bind the count, recall the
+% structure). A structure not in the table abstains honestly — the engine never
+% invents a count.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli body-counts.query.adj
+% ============================================================================
+
+import "body-counts.adj"
+
+? body_count(chromosomes, $N)          % expect 46
+? body_count(heart_chambers, $N)       % expect 4
+? body_count(pairs_of_ribs, $N)        % expect 12
+? body_count($S, 206)                  % expect bones_in_adult_body — reverse recall
+? body_count(spleens, $N)              % expect abstain — not in the table

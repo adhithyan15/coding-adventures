@@ -566,6 +566,10 @@ where
     Esp32Board::devkit_v1(backend).into_device(board_nonce)
 }
 
+// This is a `const fn` that builds one `PinCapabilities` row; every argument is
+// a distinct capability flag or label. Grouping them into a struct would just
+// move the same fields around and lose the flat, table-like call sites below.
+#[allow(clippy::too_many_arguments)]
 const fn pin(
     gpio: u8,
     label: &'static str,
@@ -664,6 +668,9 @@ mod tests {
         }
     }
 
+    // This test deliberately pins fields of the compile-time `ESP32_DEVKIT_V1`
+    // descriptor constant, so `assert!` on a const-evaluable bool is intentional.
+    #[allow(clippy::assertions_on_constants)]
     #[test]
     fn descriptor_targets_xtensa_esp32() {
         assert_eq!(ESP32_DEVKIT_V1.core, "Dual-core Xtensa LX6");

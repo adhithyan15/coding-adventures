@@ -98,7 +98,7 @@ mod tests {
             found: 3,
         };
         let s = format!("{e}");
-        assert!(s.contains('"' as char));
+        assert!(s.contains('"'));
         assert!(s.contains("2"));
         assert!(s.contains("3"));
     }

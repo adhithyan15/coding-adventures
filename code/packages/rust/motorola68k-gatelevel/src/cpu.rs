@@ -69,6 +69,12 @@ pub struct Cpu68K {
     pub halted: bool,
 }
 
+impl Default for Cpu68K {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Cpu68K {
     /// Create a new 68000 in power-on state (memory zeroed, registers default).
     pub fn new() -> Self {
@@ -131,7 +137,7 @@ impl Cpu68K {
         let hi = (op >> 12) & 0xF;
         match hi {
             0x0 => self.exec_line0(op),
-            0x1 | 0x2 | 0x3 => self.exec_move(op),
+            0x1..=0x3 => self.exec_move(op),
             0x4 => self.exec_line4(op),
             0x5 => self.exec_line5(op),
             0x6 => self.exec_line6(op),
@@ -510,7 +516,7 @@ impl Cpu68K {
                 }
                 if mode == 7 && reg == 5 {
                     let sr = self.rf.read_sr() & (imm as u16 | 0xFF00);
-                    self.rf.write_sr(sr & 0xFFFF);
+                    self.rf.write_sr(sr);
                     return;
                 }
                 let val = self.ea_read(mode, reg, sz);
@@ -683,7 +689,7 @@ impl Cpu68K {
         }
 
         // TRAP #n: 0x4E40–0x4E4F
-        if op >= 0x4E40 && op <= 0x4E4F {
+        if (0x4E40..=0x4E4F).contains(&op) {
             let n = op & 0xF;
             if n == 15 {
                 self.halted = true;
@@ -694,7 +700,7 @@ impl Cpu68K {
         }
 
         // LINK An, #d16: 0x4E50–0x4E57
-        if op >= 0x4E50 && op <= 0x4E57 {
+        if (0x4E50..=0x4E57).contains(&op) {
             let n = (op & 7) as usize;
             let disp = self.fetch_word_signed();
             self.push_long(self.rf.a[n]);
@@ -704,7 +710,7 @@ impl Cpu68K {
         }
 
         // UNLK An: 0x4E58–0x4E5F
-        if op >= 0x4E58 && op <= 0x4E5F {
+        if (0x4E58..=0x4E5F).contains(&op) {
             let n = (op & 7) as usize;
             self.rf.a[7] = self.rf.a[n];
             self.rf.a[n] = self.pop_long();
@@ -712,7 +718,7 @@ impl Cpu68K {
         }
 
         // SWAP Dn: 0x4840–0x4847
-        if op >= 0x4840 && op <= 0x4847 {
+        if (0x4840..=0x4847).contains(&op) {
             let n = (op & 7) as usize;
             let val = self.rf.d[n];
             let swapped = ((val >> 16) | ((val & WORD_MASK) << 16)) & LONG_MASK;
@@ -723,7 +729,7 @@ impl Cpu68K {
         }
 
         // EXT.W Dn: 0x4880–0x4887
-        if op >= 0x4880 && op <= 0x4887 {
+        if (0x4880..=0x4887).contains(&op) {
             let n = (op & 7) as usize;
             let b = self.rf.d[n] as u8;
             let w = (b as i8) as i16 as u16 as u32;
@@ -735,7 +741,7 @@ impl Cpu68K {
         }
 
         // EXT.L Dn: 0x48C0–0x48C7
-        if op >= 0x48C0 && op <= 0x48C7 {
+        if (0x48C0..=0x48C7).contains(&op) {
             let n = (op & 7) as usize;
             let w = self.rf.d[n] as u16;
             let lw = (w as i16) as i32 as u32;
@@ -751,14 +757,14 @@ impl Cpu68K {
         }
 
         // MOVE SR, Dn: 0x40C0–0x40C7
-        if op >= 0x40C0 && op <= 0x40C7 {
+        if (0x40C0..=0x40C7).contains(&op) {
             let n = (op & 7) as usize;
             self.rf.write_dn(n, self.rf.read_sr() as u32, 2);
             return;
         }
 
         // MOVE CCR, Dn: 0x42C0–0x42C7
-        if op >= 0x42C0 && op <= 0x42C7 {
+        if (0x42C0..=0x42C7).contains(&op) {
             let n = (op & 7) as usize;
             self.rf.write_dn(n, self.rf.read_ccr() as u32, 2);
             return;
@@ -895,7 +901,7 @@ impl Cpu68K {
             let target = (pc_before_ext.wrapping_add(disp as u32)) & ADDR_MASK;
             if !self.rf.test_cc(cc) {
                 let n = reg as usize;
-                let count = (self.rf.d[n] as u16).wrapping_sub(1) as u16;
+                let count = (self.rf.d[n] as u16).wrapping_sub(1);
                 self.rf.write_dn(n, count as u32, 2);
                 if count != 0xFFFF {
                     self.rf.pc = target;
@@ -1024,7 +1030,7 @@ impl Cpu68K {
             let dividend = self.rf.d[dn as usize] as i32;
             let quotient  = dividend / divisor; // truncate toward zero
             let remainder = dividend - quotient * divisor;
-            if quotient < -32768 || quotient > 32767 {
+            if !(-32768..=32767).contains(&quotient) {
                 let old_x = self.rf.flag_x();
                 let old_n = self.rf.flag_n();
                 let old_z = self.rf.flag_z();

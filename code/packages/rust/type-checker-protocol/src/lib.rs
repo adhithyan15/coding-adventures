@@ -69,11 +69,10 @@ impl<T> GenericTypeChecker<T> {
         ] {
             if let Some(hooks) = self.hooks.get(&key) {
                 for hook in hooks {
-                    if let Some(value) = hook(node, args) {
-                        if value.downcast_ref::<NotHandled>().is_none() {
+                    if let Some(value) = hook(node, args)
+                        && value.downcast_ref::<NotHandled>().is_none() {
                             return Some(value);
                         }
-                    }
                 }
             }
         }

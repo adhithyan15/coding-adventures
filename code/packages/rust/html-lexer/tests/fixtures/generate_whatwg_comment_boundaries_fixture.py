@@ -272,18 +272,18 @@ def comment_eof_cases() -> list[dict[str, object]]:
 def bogus_comment_cases() -> list[dict[str, object]]:
     return [
         {
-            "id": "processing-instruction-bogus-comment",
-            "description": "question-mark tag open recovers as a bogus comment",
+            "id": "disallowed-processing-instruction-target-comment",
+            "description": "the reserved xml processing-instruction target recovers as a bogus comment",
             "input": "a<?xml?>b",
             "tokens": ["Text(data=a)", "Comment(data=?xml?)", "Text(data=b)", "EOF"],
-            "diagnostics": ["unexpected-question-mark-instead-of-tag-name"],
+            "diagnostics": ["disallowed-processing-instruction-target"],
         },
         {
-            "id": "processing-instruction-bogus-comment-eof",
-            "description": "EOF in a question-mark bogus comment emits without eof-in-comment",
+            "id": "processing-instruction-target-eof",
+            "description": "EOF in a processing-instruction target discards the incomplete token",
             "input": "a<?xml",
-            "tokens": ["Text(data=a)", "Comment(data=?xml)", "EOF"],
-            "diagnostics": ["unexpected-question-mark-instead-of-tag-name"],
+            "tokens": ["Text(data=a)", "EOF"],
+            "diagnostics": ["eof-in-processing-instruction"],
         },
         {
             "id": "malformed-declaration-bogus-comment",

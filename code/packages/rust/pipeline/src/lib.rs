@@ -15,6 +15,12 @@
 //! can export that trace in the JSON contract consumed by the `html-renderer`
 //! package.
 
+// The pipeline's public API returns `Result<_, PipelineError>` throughout, and
+// `PipelineError` aggregates the (large) error types of every stage it wraps
+// (lexer, parser, compiler, VM). Boxing the error would diverge the whole API
+// surface for little benefit, so we allow the large-`Err` lint crate-wide.
+#![allow(clippy::result_large_err)]
+
 use lexer::token::{Token, TokenType};
 use lexer::tokenizer::{Lexer, LexerConfig};
 use parser::{ASTNode, ParseError, Parser as LangParser};

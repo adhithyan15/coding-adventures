@@ -1,0 +1,19 @@
+% ============================================================================
+% radioactivity-conversions.query.adj — a worked lookup over the activity table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many becquerels is
+% one curie?" question: it states no conversion fact — it only `import`s the grounded table
+% and asks binding queries. The native adj-lang engine resolves each `?` against the
+% table's row (lowered to an `activity_to_becquerel` relation) and returns the binding +
+% the table's source/locator/trust. A unit not in the table abstains honestly — the engine
+% never invents a factor (notably a traditional unit NIST does not tabulate, e.g. the
+% rutherford, which gets no row).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli radioactivity-conversions.query.adj
+% ============================================================================
+
+import "radioactivity-conversions.adj"
+
+? activity_to_becquerel(curie, $v)        % expect 37000000000
+? activity_to_becquerel(rutherford, $v)   % expect abstain — not tabulated by NIST, no row

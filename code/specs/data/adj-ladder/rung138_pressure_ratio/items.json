@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 138 \u2014 pressure ratio from four stated quantities (CONTINUING the OVER-A-DIFFERENCE column). rung-137 put a product over a difference (a*b)/(c-d); rung-138 puts a SUM over a difference (a+b)/(c-d) \u2014 the difference-denominator twin of the sum-numerator rungs (131 sum over a rate, 37 sum over a sum). From a combined flow (inflow + backflow) divided by a pressure gap (peak_reading - trough_reading), compute the pressure ratio ((inflow+backflow)/(peak_reading-trough_reading)), the combined flow (inflow+backflow), or the pressure gap (peak_reading-trough_reading). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a SUM NUMERATOR OVER A DIFFERENCE (a+b)/(c-d) (add the flows, gap the readings, then divide the flow by the gap \u2014 the two-part denominator is ONE gap, not two divisors). As on rung-137, the divide-across and lost-grouping errors go negative when c>d, so the two in-range canonical slips are used as distractors. The harness matches the scalar to the printed options. The pressure ratio is a ratio (how much combined flow rides on each unit of the pressure gap), framed as a RATIO so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via +, /, and - \u2014 no constant leaks, and neither the combined flow, the pressure gap, nor the pressure ratio ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make with a gap denominator: dividing by the SUM of the readings instead of their gap ((a+b)/(c+d), a total where a gap belongs, a wrong operation) and INVERTING the ratio ((c-d)/(a+b), the gap over the flow, the reciprocal, a wrong operation). The core confusion tested is that (a+b)/(c-d) is one sum over one gap, not (a+b)/(c+d) and not (c-d)/(a+b). This rung has a subtraction in the denominator, so the pressure gap is guarded (peak_reading - trough_reading >= 2) to keep the denominator positive; the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r138pra-01",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 2 combined with a backflow of 4, read against a peak reading of 7 and a trough reading of 2. What is the pressure ratio (the combined flow divided by the pressure gap)?",
+      "program": "observe inflow(2)\nobserve backflow(4)\nobserve peak_reading(7)\nobserve trough_reading(2)\nlet answer = (inflow + backflow) / (peak_reading - trough_reading)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r138pra-02",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 2 combined with a backflow of 4, read against a peak reading of 7 and a trough reading of 2. What is the the combined flow (the inflow plus the backflow, the numerator that is divided by the pressure gap)?",
+      "program": "observe inflow(2)\nobserve backflow(4)\nobserve peak_reading(7)\nobserve trough_reading(2)\nlet answer = inflow + backflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r138pra-03",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 2 combined with a backflow of 4, read against a peak reading of 7 and a trough reading of 2. What is the the pressure gap (the peak reading minus the trough reading, the difference the combined flow is divided by)?",
+      "program": "observe inflow(2)\nobserve backflow(4)\nobserve peak_reading(7)\nobserve trough_reading(2)\nlet answer = peak_reading - trough_reading\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r138pra-04",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 3 combined with a backflow of 5, read against a peak reading of 6 and a trough reading of 3. What is the pressure ratio (the combined flow divided by the pressure gap)?",
+      "program": "observe inflow(3)\nobserve backflow(5)\nobserve peak_reading(6)\nobserve trough_reading(3)\nlet answer = (inflow + backflow) / (peak_reading - trough_reading)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r138pra-05",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 3 combined with a backflow of 5, read against a peak reading of 6 and a trough reading of 3. What is the the combined flow (the inflow plus the backflow, the numerator that is divided by the pressure gap)?",
+      "program": "observe inflow(3)\nobserve backflow(5)\nobserve peak_reading(6)\nobserve trough_reading(3)\nlet answer = inflow + backflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r138pra-06",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 3 combined with a backflow of 5, read against a peak reading of 6 and a trough reading of 3. What is the the pressure gap (the peak reading minus the trough reading, the difference the combined flow is divided by)?",
+      "program": "observe inflow(3)\nobserve backflow(5)\nobserve peak_reading(6)\nobserve trough_reading(3)\nlet answer = peak_reading - trough_reading\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r138pra-07",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 4 combined with a backflow of 6, read against a peak reading of 8 and a trough reading of 4. What is the pressure ratio (the combined flow divided by the pressure gap)?",
+      "program": "observe inflow(4)\nobserve backflow(6)\nobserve peak_reading(8)\nobserve trough_reading(4)\nlet answer = (inflow + backflow) / (peak_reading - trough_reading)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r138pra-08",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 4 combined with a backflow of 6, read against a peak reading of 8 and a trough reading of 4. What is the the combined flow (the inflow plus the backflow, the numerator that is divided by the pressure gap)?",
+      "program": "observe inflow(4)\nobserve backflow(6)\nobserve peak_reading(8)\nobserve trough_reading(4)\nlet answer = inflow + backflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r138pra-09",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 4 combined with a backflow of 6, read against a peak reading of 8 and a trough reading of 4. What is the the pressure gap (the peak reading minus the trough reading, the difference the combined flow is divided by)?",
+      "program": "observe inflow(4)\nobserve backflow(6)\nobserve peak_reading(8)\nobserve trough_reading(4)\nlet answer = peak_reading - trough_reading\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r138pra-10",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 5 combined with a backflow of 7, read against a peak reading of 10 and a trough reading of 4. What is the pressure ratio (the combined flow divided by the pressure gap)?",
+      "program": "observe inflow(5)\nobserve backflow(7)\nobserve peak_reading(10)\nobserve trough_reading(4)\nlet answer = (inflow + backflow) / (peak_reading - trough_reading)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r138pra-11",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 5 combined with a backflow of 7, read against a peak reading of 10 and a trough reading of 4. What is the the combined flow (the inflow plus the backflow, the numerator that is divided by the pressure gap)?",
+      "program": "observe inflow(5)\nobserve backflow(7)\nobserve peak_reading(10)\nobserve trough_reading(4)\nlet answer = inflow + backflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r138pra-12",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 5 combined with a backflow of 7, read against a peak reading of 10 and a trough reading of 4. What is the the pressure gap (the peak reading minus the trough reading, the difference the combined flow is divided by)?",
+      "program": "observe inflow(5)\nobserve backflow(7)\nobserve peak_reading(10)\nobserve trough_reading(4)\nlet answer = peak_reading - trough_reading\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r138pra-13",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 6 combined with a backflow of 8, read against a peak reading of 11 and a trough reading of 2. What is the pressure ratio (the combined flow divided by the pressure gap)?",
+      "program": "observe inflow(6)\nobserve backflow(8)\nobserve peak_reading(11)\nobserve trough_reading(2)\nlet answer = (inflow + backflow) / (peak_reading - trough_reading)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r138pra-14",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 6 combined with a backflow of 8, read against a peak reading of 11 and a trough reading of 2. What is the the combined flow (the inflow plus the backflow, the numerator that is divided by the pressure gap)?",
+      "program": "observe inflow(6)\nobserve backflow(8)\nobserve peak_reading(11)\nobserve trough_reading(2)\nlet answer = inflow + backflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r138pra-15",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 6 combined with a backflow of 8, read against a peak reading of 11 and a trough reading of 2. What is the the pressure gap (the peak reading minus the trough reading, the difference the combined flow is divided by)?",
+      "program": "observe inflow(6)\nobserve backflow(8)\nobserve peak_reading(11)\nobserve trough_reading(2)\nlet answer = peak_reading - trough_reading\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r138pra-16",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 4 combined with a backflow of 5, read against a peak reading of 9 and a trough reading of 2. What is the pressure ratio (the combined flow divided by the pressure gap)?",
+      "program": "observe inflow(4)\nobserve backflow(5)\nobserve peak_reading(9)\nobserve trough_reading(2)\nlet answer = (inflow + backflow) / (peak_reading - trough_reading)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r138pra-17",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 4 combined with a backflow of 5, read against a peak reading of 9 and a trough reading of 2. What is the the combined flow (the inflow plus the backflow, the numerator that is divided by the pressure gap)?",
+      "program": "observe inflow(4)\nobserve backflow(5)\nobserve peak_reading(9)\nobserve trough_reading(2)\nlet answer = inflow + backflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r138pra-18",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 4 combined with a backflow of 5, read against a peak reading of 9 and a trough reading of 2. What is the the pressure gap (the peak reading minus the trough reading, the difference the combined flow is divided by)?",
+      "program": "observe inflow(4)\nobserve backflow(5)\nobserve peak_reading(9)\nobserve trough_reading(2)\nlet answer = peak_reading - trough_reading\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r138pra-19",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 7 combined with a backflow of 9, read against a peak reading of 13 and a trough reading of 3. What is the pressure ratio (the combined flow divided by the pressure gap)?",
+      "program": "observe inflow(7)\nobserve backflow(9)\nobserve peak_reading(13)\nobserve trough_reading(3)\nlet answer = (inflow + backflow) / (peak_reading - trough_reading)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r138pra-20",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 7 combined with a backflow of 9, read against a peak reading of 13 and a trough reading of 3. What is the the combined flow (the inflow plus the backflow, the numerator that is divided by the pressure gap)?",
+      "program": "observe inflow(7)\nobserve backflow(9)\nobserve peak_reading(13)\nobserve trough_reading(3)\nlet answer = inflow + backflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r138pra-21",
+      "qtype": "pressure_ratio",
+      "stem": "A pressure study records an inflow of 7 combined with a backflow of 9, read against a peak reading of 13 and a trough reading of 3. What is the the pressure gap (the peak reading minus the trough reading, the difference the combined flow is divided by)?",
+      "program": "observe inflow(7)\nobserve backflow(9)\nobserve peak_reading(13)\nobserve trough_reading(3)\nlet answer = peak_reading - trough_reading\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

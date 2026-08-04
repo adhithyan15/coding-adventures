@@ -77,7 +77,7 @@ fn assemble_strips(bytes: &[u8], ifd: &Ifd) -> Result<Vec<u8>, String> {
     let bits = ifd.bits_per_sample.first().copied().unwrap_or(8) as usize;
 
     // Compute bytes per sample (round up to nearest byte).
-    let bytes_per_sample = (bits + 7) / 8;
+    let bytes_per_sample = bits.div_ceil(8);
 
     // Row stride in bytes (uncompressed, chunky layout).
     let row_stride = width
@@ -185,7 +185,7 @@ fn assemble_tiles(bytes: &[u8], ifd: &Ifd) -> Result<Vec<u8>, String> {
     let height = ifd.height as usize;
     let samples = ifd.samples_per_pixel as usize;
     let bits = ifd.bits_per_sample.first().copied().unwrap_or(8) as usize;
-    let bytes_per_sample = (bits + 7) / 8;
+    let bytes_per_sample = bits.div_ceil(8);
     let row_stride = width * samples * bytes_per_sample;
 
     let tile_w = ifd.tile_width.unwrap() as usize;
@@ -195,8 +195,8 @@ fn assemble_tiles(bytes: &[u8], ifd: &Ifd) -> Result<Vec<u8>, String> {
     }
 
     // Number of tiles across and down.
-    let tiles_across = (width + tile_w - 1) / tile_w;
-    let tiles_down = (height + tile_h - 1) / tile_h;
+    let tiles_across = width.div_ceil(tile_w);
+    let tiles_down = height.div_ceil(tile_h);
     let num_tiles = tiles_across
         .checked_mul(tiles_down)
         .ok_or("TIFF: tile count overflow")?;

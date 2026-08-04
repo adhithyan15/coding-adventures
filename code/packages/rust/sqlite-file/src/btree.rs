@@ -16,7 +16,8 @@
 //!   one extra **right-most child** pointer. Walking one means descending into
 //!   every child.
 //!
-//! (Index b-trees use `0x0A`/`0x02`; this reader is table-only and rejects them.)
+//! (Index b-trees use `0x0A`/`0x02`; [`walk_table`] rejects them, and
+//! [`walk_index`] — used for indexes and `WITHOUT ROWID` tables — walks them.)
 //!
 //! ## The page-1 quirk, again
 //!
@@ -73,6 +74,8 @@ use crate::varint;
 
 const LEAF_TABLE: u8 = 0x0D;
 const INTERIOR_TABLE: u8 = 0x05;
+const LEAF_INDEX: u8 = 0x0A;
+const INTERIOR_INDEX: u8 = 0x02;
 
 /// Read the big-endian `u16` at `off` (bounds-checked).
 fn be_u16(page: &[u8], off: usize) -> Option<u16> {
@@ -230,27 +233,57 @@ fn read_leaf_cell(
         .get(n2..)
         .ok_or(SqliteError::Corrupt("truncated cell"))?;
 
+    let record = split_and_reassemble(pager, payload, payload_len, usable, max_local, file_bytes)?;
+    Ok((rowid, record))
+}
+
+/// Given a cell's payload slice (positioned at the first payload byte), return
+/// the full record — inline when it fits, or inline-head + overflow-chain tail
+/// when it does not.
+///
+/// The inline/overflow split is the same arithmetic for table-leaf and
+/// index-leaf cells except for the **inline ceiling** `max_local` (`X`), which
+/// the caller supplies:
+///
+/// ```text
+///   table-leaf:  X = U - 35
+///   index-leaf:  X = ((U - 12) * 64 / 255) - 23
+/// ```
+///
+/// with the shared floor and candidate:
+///
+/// ```text
+///   M = ((U - 12) * 32 / 255) - 23         (inline floor, both kinds)
+///   K = M + ((P - M) mod (U - 4))          (candidate inline length)
+///   inline = if K <= X { K } else { M }
+/// ```
+///
+/// `file_bytes` is the anti-amplification cap — a valid record's bytes all live
+/// in the file, so its length can never exceed the file's byte length; a hostile
+/// oversized `payload_len` is rejected before any allocation or reassembly.
+fn split_and_reassemble(
+    pager: &Pager<'_>,
+    payload: &[u8],
+    payload_len: usize,
+    usable: usize,
+    max_local: usize,
+    file_bytes: usize,
+) -> Result<Vec<u8>, SqliteError> {
     // Common case: the whole payload sits on this page.
     if payload_len <= max_local {
         let record = payload
             .get(..payload_len)
             .ok_or(SqliteError::Corrupt("record past page"))?;
-        return Ok((rowid, record.to_vec()));
+        return Ok(record.to_vec());
     }
 
     // Overflow. Reject a payload that could not physically fit in the file up
     // front — this bounds the reassembly target and rejects a hostile cell that
-    // claims a gigantic length. (A valid record's bytes all live in the file, so
-    // its length is at most the file's length.)
+    // claims a gigantic length.
     if payload_len > file_bytes {
         return Err(SqliteError::Corrupt("payload exceeds file size"));
     }
 
-    // How many bytes stay on this page, per the SQLite table-leaf rule.
-    //   X = usable - 35 = max_local          (the inline ceiling)
-    //   M = ((usable - 12) * 32 / 255) - 23   (the inline floor)
-    //   K = M + ((P - M) mod (usable - 4))
-    //   inline = if K <= X { K } else { M }
     let m = usable.saturating_sub(12).saturating_mul(32) / 255;
     let min_local = m.saturating_sub(23);
     let span = usable
@@ -277,7 +310,107 @@ fn read_leaf_cell(
         file_bytes,
         &mut record,
     )?;
-    Ok((rowid, record))
+    Ok(record)
+}
+
+/// The inline ceiling (`X`) for an **index** leaf/interior cell, per SQLite's
+/// index-b-tree rule: `((usable - 12) * 64 / 255) - 23`. (Table cells use the
+/// larger `usable - 35`; indexes keep more of the page for the b-tree structure,
+/// so their local payload cap is smaller.)
+fn index_max_local(usable: usize) -> usize {
+    (usable.saturating_sub(12).saturating_mul(64) / 255).saturating_sub(23)
+}
+
+/// Walk the **index** b-tree rooted at `root_page` and return every entry's
+/// record bytes. Used for indexes and for `WITHOUT ROWID` tables, both of which
+/// store their data in an index b-tree keyed by the record itself (there is no
+/// separate `rowid`).
+///
+/// ## Index pages differ from table pages in three ways
+///
+/// - **Page types** are `0x0A` (leaf) and `0x02` (interior), not `0x0D`/`0x05`.
+/// - **Cells carry no rowid.** A leaf cell is `[payload-len varint] [payload…]`;
+///   an interior cell is `[left-child (u32-be)] [payload-len varint] [payload…]`.
+/// - **Interior keys are real entries.** A SQLite index is a true b-tree, not a
+///   b+-tree: each key is stored exactly once, so a divider key living on an
+///   interior page is a genuine index entry and is **emitted here** (a table
+///   b-tree, by contrast, copies rowids down to the leaves, so its interior
+///   cells hold only pointers and are never emitted).
+///
+/// Order is unspecified — a `WITHOUT ROWID` scan is sorted by the SQL layer when
+/// it matters. Bounds-, cycle-, and amplification-guarded exactly like
+/// [`walk_table`]: corruption yields `Err`, never a panic or unbounded work.
+pub fn walk_index<'a>(
+    pager: &Pager<'a>,
+    header: &Header,
+    root_page: u32,
+) -> Result<Vec<Vec<u8>>, SqliteError> {
+    let usable = header.usable_size() as usize;
+    let max_local = index_max_local(usable);
+    let file_bytes = pager.page_count().saturating_mul(pager.page_size());
+    let mut emitted_bytes: usize = 0;
+
+    let mut records: Vec<Vec<u8>> = Vec::new();
+    let mut stack: Vec<u32> = vec![root_page];
+    let mut visited: std::collections::HashSet<u32> = std::collections::HashSet::new();
+
+    while let Some(page_no) = stack.pop() {
+        if !visited.insert(page_no) {
+            return Err(SqliteError::Corrupt("b-tree page cycle"));
+        }
+        let page = pager.page(page_no)?;
+        let header_off = if page_no == 1 { 100 } else { 0 };
+
+        let page_type = *page
+            .get(header_off)
+            .ok_or(SqliteError::Truncated("b-tree page"))?;
+        let cell_count =
+            be_u16(page, header_off + 3).ok_or(SqliteError::Truncated("b-tree page"))? as usize;
+
+        // The payload of a leaf cell starts at the cell offset; an interior
+        // cell's payload starts 4 bytes in, after its left-child pointer.
+        let (ptr_array, payload_skip) = match page_type {
+            LEAF_INDEX => (header_off + 8, 0usize),
+            INTERIOR_INDEX => (header_off + 12, 4usize),
+            _ => return Err(SqliteError::Corrupt("unexpected b-tree page type")),
+        };
+
+        for i in 0..cell_count {
+            let cell_off = cell_pointer(page, ptr_array, i)?;
+            // Interior cells also descend into a left child before the payload.
+            if payload_skip == 4 {
+                let child =
+                    be_u32(page, cell_off).ok_or(SqliteError::Corrupt("interior cell past page"))?;
+                stack.push(child);
+            }
+            let payload = page
+                .get(cell_off + payload_skip..)
+                .ok_or(SqliteError::Corrupt("cell pointer past page"))?;
+            let (payload_len, n1) =
+                varint::read(payload).ok_or(SqliteError::Corrupt("bad payload length"))?;
+            let payload_len = usize::try_from(payload_len)
+                .map_err(|_| SqliteError::Corrupt("bad payload length"))?;
+            let body = payload
+                .get(n1..)
+                .ok_or(SqliteError::Corrupt("truncated cell"))?;
+            let record =
+                split_and_reassemble(pager, body, payload_len, usable, max_local, file_bytes)?;
+            emitted_bytes = emitted_bytes
+                .checked_add(record.len())
+                .filter(|total| *total <= file_bytes)
+                .ok_or(SqliteError::Corrupt("row data exceeds file size"))?;
+            records.push(record);
+        }
+
+        // An interior index page also has a right-most child to descend into.
+        if page_type == INTERIOR_INDEX {
+            let rightmost = be_u32(page, header_off + 8)
+                .ok_or(SqliteError::Truncated("interior page header"))?;
+            stack.push(rightmost);
+        }
+    }
+
+    Ok(records)
 }
 
 /// Collect the tail of an overflow payload by walking the overflow-page chain,
@@ -631,6 +764,191 @@ mod tests {
         assert_eq!(
             walk_table(&pager, &header, 2),
             Err(SqliteError::Corrupt("payload exceeds file size"))
+        );
+    }
+
+    /// Build a one-page database whose page 1 is a *leaf index* b-tree holding
+    /// `records` as raw payloads (no rowid). Cells pack from the page end down.
+    fn one_leaf_index_db(ps: usize, records: &[Vec<u8>]) -> Vec<u8> {
+        let mut page = vec![0u8; ps];
+        page[0..16].copy_from_slice(MAGIC);
+        page[16..18].copy_from_slice(&(ps as u16).to_be_bytes());
+        page[56..60].copy_from_slice(&1u32.to_be_bytes());
+        page[28..32].copy_from_slice(&1u32.to_be_bytes());
+
+        let h = 100;
+        page[h] = LEAF_INDEX;
+        page[h + 3..h + 5].copy_from_slice(&(records.len() as u16).to_be_bytes());
+
+        let mut top = ps;
+        let ptr_array = h + 8;
+        for (i, record) in records.iter().enumerate() {
+            let mut cell = Vec::new();
+            varint::write(record.len() as i64, &mut cell); // no rowid on an index cell
+            cell.extend_from_slice(record);
+            top -= cell.len();
+            page[top..top + cell.len()].copy_from_slice(&cell);
+            page[ptr_array + i * 2..ptr_array + i * 2 + 2].copy_from_slice(&(top as u16).to_be_bytes());
+        }
+        page[h + 5..h + 7].copy_from_slice(&(top as u16).to_be_bytes());
+        page
+    }
+
+    #[test]
+    fn walks_a_single_leaf_index_page() {
+        let db = one_leaf_index_db(512, &[vec![0x01, 0x02], vec![0xAA], vec![0xBB, 0xCC, 0xDD]]);
+        let (header, pager) = Pager::open(&db).unwrap();
+        let mut got = walk_index(&pager, &header, 1).unwrap();
+        got.sort(); // order is unspecified; compare as a set
+        let mut want = vec![vec![0x01, 0x02], vec![0xAA], vec![0xBB, 0xCC, 0xDD]];
+        want.sort();
+        assert_eq!(got, want);
+    }
+
+    #[test]
+    fn empty_leaf_index_page_yields_no_records() {
+        let db = one_leaf_index_db(512, &[]);
+        let (header, pager) = Pager::open(&db).unwrap();
+        assert_eq!(walk_index(&pager, &header, 1).unwrap(), Vec::<Vec<u8>>::new());
+    }
+
+    #[test]
+    fn interior_index_emits_its_own_divider_keys_plus_children() {
+        // A SQLite index is a *true* b-tree: a divider key on an interior page is
+        // a genuine entry, stored only there. Page 1 is an interior index page
+        // with ONE cell (left child = 2, divider payload = [0x50]) and right-most
+        // child = 3. The walk must yield the two leaf records AND the divider.
+        let ps = 512usize;
+        let mut data = vec![0u8; ps * 3];
+        data[0..16].copy_from_slice(MAGIC);
+        data[16..18].copy_from_slice(&(ps as u16).to_be_bytes());
+        data[56..60].copy_from_slice(&1u32.to_be_bytes());
+        data[28..32].copy_from_slice(&3u32.to_be_bytes());
+
+        let h = 100;
+        data[h] = INTERIOR_INDEX;
+        data[h + 3..h + 5].copy_from_slice(&1u16.to_be_bytes()); // 1 cell
+        data[h + 8..h + 12].copy_from_slice(&3u32.to_be_bytes()); // right child = page 3
+        // Interior cell: [left child = 2 (u32-be)] [payload-len varint] [divider].
+        let divider = vec![0x50u8];
+        let mut cell = Vec::new();
+        cell.extend_from_slice(&2u32.to_be_bytes());
+        varint::write(divider.len() as i64, &mut cell);
+        cell.extend_from_slice(&divider);
+        let cell_off = ps - cell.len();
+        data[cell_off..cell_off + cell.len()].copy_from_slice(&cell);
+        data[h + 12..h + 14].copy_from_slice(&(cell_off as u16).to_be_bytes());
+
+        // Leaf pages 2 and 3, each one index record.
+        for (page_no, rec) in [(2u32, vec![0x20u8]), (3, vec![0x80u8])] {
+            let base = (page_no as usize - 1) * ps;
+            data[base] = LEAF_INDEX;
+            data[base + 3..base + 5].copy_from_slice(&1u16.to_be_bytes());
+            let mut c = Vec::new();
+            varint::write(rec.len() as i64, &mut c);
+            c.extend_from_slice(&rec);
+            let top = ps - c.len();
+            data[base + top..base + top + c.len()].copy_from_slice(&c);
+            data[base + 8..base + 10].copy_from_slice(&(top as u16).to_be_bytes());
+        }
+
+        let (header, pager) = Pager::open(&data).unwrap();
+        let mut got = walk_index(&pager, &header, 1).unwrap();
+        got.sort();
+        // Both leaves (0x20, 0x80) AND the interior divider (0x50) — three records.
+        assert_eq!(got, vec![vec![0x20u8], vec![0x50u8], vec![0x80u8]]);
+    }
+
+    /// The index-leaf inline split, mirrored so a test can lay an overflow index
+    /// record out exactly where the reader expects it. Same as the table split
+    /// but with the smaller index ceiling `X = ((U-12)*64/255) - 23`.
+    fn index_inline_len(usable: usize, payload_len: usize) -> usize {
+        let max_local = index_max_local(usable);
+        let min_local = (usable - 12) * 32 / 255 - 23;
+        let span = usable - 4;
+        let k = min_local + (payload_len - min_local) % span;
+        if k <= max_local {
+            k
+        } else {
+            min_local
+        }
+    }
+
+    #[test]
+    fn index_record_that_spills_into_overflow_is_reassembled() {
+        // A 1500-byte index payload on a 512-byte page overflows (index inline
+        // ceiling is only 102 bytes here, far below 1500). Page 2 is a one-cell
+        // leaf-index page; the tail spills across overflow pages 3, 4, …
+        let ps = 512usize;
+        let usable = ps;
+        let payload: Vec<u8> = (0..1500u32).map(|i| (i % 251) as u8).collect();
+        let inline = index_inline_len(usable, payload.len());
+        let (head, tail) = payload.split_at(inline);
+        let content = usable - 4;
+        let n_overflow = tail.len().div_ceil(content);
+        let total_pages = 2 + n_overflow;
+
+        let mut data = vec![0u8; ps * total_pages];
+        data[0..16].copy_from_slice(MAGIC);
+        data[16..18].copy_from_slice(&(ps as u16).to_be_bytes());
+        data[56..60].copy_from_slice(&1u32.to_be_bytes());
+        data[28..32].copy_from_slice(&(total_pages as u32).to_be_bytes());
+
+        // Page 2: one-cell leaf index (header at offset 0).
+        let base = ps;
+        data[base] = LEAF_INDEX;
+        data[base + 3..base + 5].copy_from_slice(&1u16.to_be_bytes());
+        let mut cell = Vec::new();
+        varint::write(payload.len() as i64, &mut cell); // index cell: no rowid
+        cell.extend_from_slice(head);
+        cell.extend_from_slice(&3u32.to_be_bytes()); // first overflow page = 3
+        let cell_rel = ps - cell.len();
+        data[base + cell_rel..base + cell_rel + cell.len()].copy_from_slice(&cell);
+        data[base + 8..base + 10].copy_from_slice(&(cell_rel as u16).to_be_bytes());
+
+        // Overflow pages 3..: [u32-be next][content].
+        for (i, chunk) in tail.chunks(content).enumerate() {
+            let page_no = 3 + i;
+            let ob = (page_no - 1) * ps;
+            let next = if i + 1 < n_overflow { (page_no + 1) as u32 } else { 0 };
+            data[ob..ob + 4].copy_from_slice(&next.to_be_bytes());
+            data[ob + 4..ob + 4 + chunk.len()].copy_from_slice(chunk);
+        }
+
+        let (header, pager) = Pager::open(&data).unwrap();
+        let got = walk_index(&pager, &header, 2).unwrap();
+        assert_eq!(got, vec![payload]);
+    }
+
+    #[test]
+    fn index_walk_rejects_a_table_page_type() {
+        // A table leaf (0x0D) is not a valid index page.
+        let mut db = one_leaf_index_db(512, &[vec![0x01]]);
+        db[100] = LEAF_TABLE;
+        let (header, pager) = Pager::open(&db).unwrap();
+        assert_eq!(
+            walk_index(&pager, &header, 1),
+            Err(SqliteError::Corrupt("unexpected b-tree page type"))
+        );
+    }
+
+    #[test]
+    fn index_walk_detects_a_child_pointer_cycle() {
+        // Interior index page whose right-most child points back at itself.
+        let ps = 512usize;
+        let mut data = vec![0u8; ps];
+        data[0..16].copy_from_slice(MAGIC);
+        data[16..18].copy_from_slice(&(ps as u16).to_be_bytes());
+        data[56..60].copy_from_slice(&1u32.to_be_bytes());
+        data[28..32].copy_from_slice(&1u32.to_be_bytes());
+        let h = 100;
+        data[h] = INTERIOR_INDEX;
+        data[h + 3..h + 5].copy_from_slice(&0u16.to_be_bytes());
+        data[h + 8..h + 12].copy_from_slice(&1u32.to_be_bytes()); // right child = self
+        let (header, pager) = Pager::open(&data).unwrap();
+        assert_eq!(
+            walk_index(&pager, &header, 1),
+            Err(SqliteError::Corrupt("b-tree page cycle"))
         );
     }
 

@@ -1,0 +1,4 @@
+--js
+tests/diff/octal-whitespace/input/a.js
+--compilation_level
+WHITESPACE_ONLY

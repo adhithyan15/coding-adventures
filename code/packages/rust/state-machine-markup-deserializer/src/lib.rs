@@ -683,6 +683,8 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "append_tag_name_replacement"
         | "append_attribute_name_replacement"
         | "append_comment_replacement"
+        | "convert_temporary_buffer_to_comment"
+        | "finalize_processing_instruction_target"
         | "append_doctype_name_replacement"
         | "append_doctype_public_identifier_replacement"
         | "append_doctype_system_identifier_replacement"
@@ -731,6 +733,7 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
             | "append_attribute_value(current)"
             | "append_comment(current)"
             | "append_comment(current_lowercase)"
+            | "append_processing_instruction_data(current)"
             | "append_doctype_name(current)"
             | "append_doctype_name(current_lowercase)"
             | "append_doctype_public_identifier(current)"
@@ -747,6 +750,9 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         return Ok(());
     }
     if action.starts_with("append_comment(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_processing_instruction_data(") && action.ends_with(')') {
         return Ok(());
     }
     if action.starts_with("append_doctype_name(") && action.ends_with(')') {

@@ -1,0 +1,68 @@
+% ============================================================================
+% volume-conversions — customary volume-unit → cubic-metre factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `length-conversions.adj` / `mass-conversions.adj` /
+% `area-conversions.adj`: a native tabular relation ingested VERBATIM from a
+% published NIST conversion table. Each row states the factor converting one
+% customary volume unit to cubic metres:
+%
+%     ? volume_to_cubic_metres(gallon, $M3)       % 0.003785412
+%     ? volume_to_cubic_metres(cubic_foot, $M3)   % 0.02831685
+%
+% Why a `table` and not ten hand-written `relate` clauses: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; every
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors
+% for units listed alphabetically"), and the whole table is defended by one
+% provenance envelope rather than repeating `source`/`locator`/`trust` on every
+% row. Each `row` lowers to a ground relation `volume_to_cubic_metres(unit, m3)`,
+% so the exact lookup above is the ordinary SLD binding query — the engine returns
+% the factor WITH this table's citation as its proof, on the CPU, with zero model
+% calls. A looked-up factor is a number, so it can feed a `let`/`formula`
+% downstream (e.g. multiply a volume by it) through the existing slot path.
+%
+% HONESTY NOTE (as for mass-conversions, which quotes NIST's ROUNDED factors, not
+% exact defined ones): the values below are NIST SP 811's published conversion
+% factors, rounded to SEVEN significant figures, transcribed character-for-character
+% from the SP 811 B.9 table (each printed in scientific notation there; the plain
+% decimal is the same value):
+%
+%     gallon (U.S.)                3.785 412 E-03  →  0.003785412
+%     quart (U.S. liquid)          9.463 529 E-04  →  0.0009463529
+%     pint (U.S. liquid)           4.731 765 E-04  →  0.0004731765
+%     fluid ounce (U.S.)           2.957 353 E-05  →  0.00002957353
+%     cubic foot                   2.831 685 E-02  →  0.02831685
+%     cubic inch                   1.638 706 E-05  →  0.00001638706
+%     cup (U.S.)                   2.365 882 E-04  →  0.0002365882
+%     tablespoon                   1.478 676 E-05  →  0.00001478676
+%     teaspoon                     4.928 922 E-06  →  0.000004928922
+%     barrel (petroleum, 42 gal)   1.589 873 E-01  →  0.1589873
+%
+% These are the table's printed 7-figure factors, NOT the underlying exact
+% definitions (e.g. the U.S. gallon is exactly 3.785 411 784 L = 0.003 785 411 784
+% m³; SP 811 rounds it to 0.003785412). The only claim this table makes is "these
+% are the factors NIST SP 811 B.9 prints" — which is exactly what a byte-check
+% against the cited table verifies. `trust authoritative` — a primary, re-fetchable
+% standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored —
+% nothing here is asserted "from memory": every factor is a verbatim cell of the
+% cited table.)
+% ============================================================================
+
+table volume_to_cubic_metres {
+    columns unit, cubic_metres
+
+    row (gallon, 0.003785412)
+    row (quart, 0.0009463529)
+    row (pint, 0.0004731765)
+    row (fluid_ounce, 0.00002957353)
+    row (cubic_foot, 0.02831685)
+    row (cubic_inch, 0.00001638706)
+    row (cup, 0.0002365882)
+    row (tablespoon, 0.00001478676)
+    row (teaspoon, 0.000004928922)
+    row (barrel, 0.1589873)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "conformance_revision": "v1",
+  "enabled": false,
+  "execution_corpus_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "hard_limits": {
+    "wall_time_ms": 60000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 67108864,
+    "process_count": 32,
+    "memory_mib": 1024,
+    "cpu_time_ms": 60000
+  },
+  "backends": [
+    {
+      "platform": "darwin",
+      "kind": "macos_isolated",
+      "status": "unavailable",
+      "identity_sha256": null
+    },
+    {
+      "platform": "linux",
+      "kind": "linux_oci",
+      "status": "unavailable",
+      "identity_sha256": null
+    },
+    {
+      "platform": "windows",
+      "kind": "windows_appcontainer",
+      "status": "unavailable",
+      "identity_sha256": null
+    }
+  ],
+  "adapters": []
+}

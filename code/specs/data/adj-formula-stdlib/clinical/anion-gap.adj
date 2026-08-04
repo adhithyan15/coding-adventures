@@ -1,0 +1,106 @@
+% ============================================================================
+% anion-gap.adj — the definition of the serum anion gap
+% (AG = (Na + K) − (Cl + HCO3)) in the ADJ standard library.
+% ============================================================================
+% The anion-gap entry of the *clinical* track, an acid–base sibling of
+% `mean-arterial-pressure.adj`, `pulse-pressure.adj` and `cardiac-output.adj`: the
+% foundational electrolyte relationship a first course states as THE ANION GAP IS THE
+% DIFFERENCE BETWEEN THE MEASURED CATIONS (Na, K) AND THE MEASURED ANIONS (Cl, HCO3) — as
+% an importable, byte-provenanced, PARAMETERIZED `formula`, together with two exact
+% rearrangements (the sodium the other three imply, and the bicarbonate the other three
+% imply). As with every compute library, a consumer states NO arithmetic: it `import`s
+% this file, binds the measured electrolytes from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited definition on the CPU. Zero math is performed by
+% the model; the engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "anion-gap.adj"
+%     observe sodium(140)        % "…Na 140 mEq/L…"      (span cited by the model)
+%     observe potassium(5)       % "…K 5 mEq/L…"         (span cited by the model)
+%     observe chloride(100)      % "…Cl 100 mEq/L…"      (span cited by the model)
+%     observe bicarbonate(25)    % "…HCO3 25 mEq/L…"     (span cited by the model)
+%     ? anion_gap(sodium, potassium, chloride, bicarbonate)
+%                                  % engine → 20, carrying AG = (Na + K) − (Cl + HCO3)
+%
+% All three formulas are EXACT over their parameters (sums and differences of measured
+% quantities); there is no separately grounded physiological constant, so every value the
+% engine returns is exact. The three COMPOSE and invert cleanly around the worked case
+% Na = 140, K = 5, Cl = 100, HCO3 = 25 mEq/L (AG = (140 + 5) − (100 + 25) = 20 mEq/L): the
+% `anion_gap` a consumer computes from the four electrolytes is exactly the `anion_gap`
+% the `sodium` formula moves to the other side to recover the sodium, and exactly the
+% `anion_gap` the `bicarbonate` formula moves to the other side to recover the
+% bicarbonate.
+%
+%   anion_gap(sodium, potassium, chloride, bicarbonate) = sodium + potassium - (chloride + bicarbonate)
+%                                                                 % AG = (Na + K) − (Cl + HCO3)   (definition)
+%   sodium(anion_gap, potassium, chloride, bicarbonate) = anion_gap + chloride + bicarbonate - potassium
+%                                                                 % Na = AG + Cl + HCO3 − K        (same def, solved for Na)
+%   bicarbonate(sodium, potassium, chloride, anion_gap) = sodium + potassium - chloride - anion_gap
+%                                                                 % HCO3 = Na + K − Cl − AG        (same def, solved for HCO3)
+%
+% NOTE: the electrolytes must be in the same unit (milliequivalents per litre, mEq/L, by
+% clinical convention — numerically equal to mmol/L for these monovalent ions); the anion
+% gap then comes out in that same unit. This library computes the exact value over
+% whatever consistent unit it is given. This is the potassium-INCLUSIVE form the cited
+% source states; a laboratory that omits potassium simply observes it as 0.
+%
+% All three formulas are defended by the SAME definitional sentence — "Using the results
+% of the comprehensive metabolic panel (CMP), the anion gap is the difference between
+% measured cations (positively charged ions like Na+ and K+) and measured anions
+% (negatively charged ions like Cl- and HCO3-)." — because that one definition (the anion
+% gap IS the cations-minus-anions difference) sanctions the relation read every way (AG
+% from the four electrolytes, Na from AG and the rest, or HCO3 from AG and the rest). The
+% quote is transcribed verbatim from the StatPearls "Biochemistry, Anion Gap" article on
+% the NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the definitional sentence is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable serum electrolyte the definition ranges
+% over, and each result is a derived quantity. `sodium`, `bicarbonate` and `anion_gap`
+% each appear BOTH as a derived result and as an input (of the other formulas), so each is
+% a single dictionary term used in both roles. The `surface` lists are the everyday names
+% a decomposer maps onto the canonical term; the trailing comment records the intended
+% unit.
+% ----------------------------------------------------------------------------
+dictionary anion_gap_vocab {
+    define sodium      : finding  surface "sodium", "Na", "Na+"                          % milliequivalents per litre (mEq/L)
+    define potassium   : finding  surface "potassium", "K", "K+"                         % milliequivalents per litre (mEq/L)
+    define chloride    : finding  surface "chloride", "Cl", "Cl-"                        % milliequivalents per litre (mEq/L)
+    define bicarbonate : finding  surface "bicarbonate", "HCO3", "HCO3-", "total CO2"    % milliequivalents per litre (mEq/L)
+    define anion_gap   : finding  surface "anion gap", "AG"                              % milliequivalents per litre (mEq/L)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote from
+% StatPearls on the NCBI Bookshelf (a quote is required on a shipped formula). Each is a
+% sum-and-difference of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook anion_gap_laws {
+    use anion_gap_vocab
+
+    % Anion gap — the difference between the measured cations (Na + K) and the measured
+    % anions (Cl + HCO3), i.e. AG = (Na + K) − (Cl + HCO3).
+    formula anion_gap(sodium, potassium, chloride, bicarbonate) = sodium + potassium - (chloride + bicarbonate)
+        source "Using the results of the comprehensive metabolic panel (CMP), the anion gap is the difference between measured cations (positively charged ions like Na+ and K+) and measured anions (negatively charged ions like Cl- and HCO3-)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539757/"
+        trust authoritative
+
+    % Sodium — the same definition solved for the sodium the anion gap and the other three
+    % electrolytes imply (Na = AG + Cl + HCO3 − K). Defended by the SAME definitional
+    % sentence, read the other way.
+    formula sodium(anion_gap, potassium, chloride, bicarbonate) = anion_gap + chloride + bicarbonate - potassium
+        source "Using the results of the comprehensive metabolic panel (CMP), the anion gap is the difference between measured cations (positively charged ions like Na+ and K+) and measured anions (negatively charged ions like Cl- and HCO3-)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539757/"
+        trust authoritative
+
+    % Bicarbonate — the same definition solved for the bicarbonate the anion gap and the
+    % other three electrolytes imply (HCO3 = Na + K − Cl − AG). Again the SAME definitional
+    % sentence, read the third way.
+    formula bicarbonate(sodium, potassium, chloride, anion_gap) = sodium + potassium - chloride - anion_gap
+        source "Using the results of the comprehensive metabolic panel (CMP), the anion gap is the difference between measured cations (positively charged ions like Na+ and K+) and measured anions (negatively charged ions like Cl- and HCO3-)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539757/"
+        trust authoritative
+}

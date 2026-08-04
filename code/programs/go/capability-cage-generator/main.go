@@ -107,6 +107,48 @@ func hasWildcard(targets []string) bool {
 	return false
 }
 
+// validCapabilityPair implements the closed category/action taxonomy from
+// Spec 13. Category and action are not independent enums: only these 19 pairs
+// are valid capability identities.
+func validCapabilityPair(category, action string) bool {
+	switch category {
+	case "fs":
+		return action == "read" || action == "write" || action == "create" ||
+			action == "delete" || action == "list"
+	case "net":
+		return action == "connect" || action == "listen" || action == "dns"
+	case "proc":
+		return action == "exec" || action == "fork" || action == "signal"
+	case "env":
+		return action == "read" || action == "write"
+	case "ffi":
+		return action == "call" || action == "load"
+	case "time":
+		return action == "read" || action == "sleep"
+	case "stdin":
+		return action == "read"
+	case "stdout":
+		return action == "write"
+	default:
+		return false
+	}
+}
+
+// generatorSupportsCapability reports whether this generator has a concrete,
+// enforcing method for a valid taxonomy pair. Valid but not-yet-supported
+// pairs fail explicitly rather than producing a TODO or weaker cage.
+func generatorSupportsCapability(category, action string) bool {
+	switch category + ":" + action {
+	case "fs:read", "fs:write", "fs:create", "fs:delete", "fs:list",
+		"net:connect", "net:listen", "net:dns",
+		"proc:exec", "env:read", "time:read", "time:sleep",
+		"stdin:read", "stdout:write":
+		return true
+	default:
+		return false
+	}
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Capability grouping
 // ─────────────────────────────────────────────────────────────────────────────
@@ -561,40 +603,6 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "\treturn os.ReadDir(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
-	case "fs:open":
-		if hasWildcard(g.Targets) {
-			fmt.Fprintf(b, "// OpenFile opens the named file for reading.\n")
-			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
-			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
-			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
-		} else {
-			fmt.Fprintf(b, "// OpenFile opens the named file for reading.\n")
-			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
-		}
-		fmt.Fprintf(b, "func (c *%s) OpenFile(path string) (*os.File, error) {\n", typeName)
-		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "open", targetToVar)
-		fmt.Fprintf(b, "\treturn os.Open(path) //nolint:cap\n")
-		fmt.Fprintf(b, "}\n\n")
-
-	case "fs:mkdir":
-		if hasWildcard(g.Targets) {
-			fmt.Fprintf(b, "// MkdirAll creates a directory named path, along with any necessary parents.\n")
-			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
-			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
-			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
-		} else {
-			fmt.Fprintf(b, "// MkdirAll creates a directory named path, along with any necessary parents.\n")
-			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
-		}
-		fmt.Fprintf(b, "func (c *%s) MkdirAll(path string, perm os.FileMode) error {\n", typeName)
-		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", false, "fs", "mkdir", targetToVar)
-		fmt.Fprintf(b, "\treturn os.MkdirAll(path, perm) //nolint:cap\n")
-		fmt.Fprintf(b, "}\n\n")
-
 	case "net:connect":
 		fmt.Fprintf(b, "// Connect opens a network connection to addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
@@ -669,7 +677,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "}\n\n")
 
 	default:
-		fmt.Fprintf(b, "// TODO: implement capability method for %s:%s\n\n", g.Category, g.Action)
+		panic(fmt.Sprintf("validated unsupported capability reached emitter: %s:%s", g.Category, g.Action))
 	}
 }
 
@@ -904,6 +912,21 @@ func emitCapabilityViolationError(b *strings.Builder) {
 
 // generateSource produces the content of gen_capabilities.go for a given manifest.
 func generateSource(manifestPath string, mf *manifestJSON) (string, error) {
+	for i, capability := range mf.Capabilities {
+		if !validCapabilityPair(capability.Category, capability.Action) {
+			return "", fmt.Errorf(
+				"capability %d has invalid category/action pair %q:%q",
+				i, capability.Category, capability.Action,
+			)
+		}
+		if !generatorSupportsCapability(capability.Category, capability.Action) {
+			return "", fmt.Errorf(
+				"capability %d uses recognized but unsupported category/action pair %q:%q",
+				i, capability.Category, capability.Action,
+			)
+		}
+	}
+
 	pkgName, err := goPackageName(manifestPath, mf.Package)
 	if err != nil {
 		return "", err
@@ -945,47 +968,69 @@ func generateSource(manifestPath string, mf *manifestJSON) (string, error) {
 // Single manifest processing
 // ─────────────────────────────────────────────────────────────────────────────
 
+type preparedManifest struct {
+	outPath string
+	source  string
+}
+
+// prepareManifest reads and renders one Go capability manifest without
+// mutating its package. The boolean result is false for non-Go packages.
+func prepareManifest(manifestPath string) (preparedManifest, bool, error) {
+	data, err := os.ReadFile(manifestPath) //nolint:cap
+	if err != nil {
+		return preparedManifest{}, false, fmt.Errorf("read %s: %w", manifestPath, err)
+	}
+
+	var mf manifestJSON
+	if err := json.Unmarshal(data, &mf); err != nil {
+		return preparedManifest{}, false, fmt.Errorf("parse %s: %w", manifestPath, err)
+	}
+
+	if !strings.HasPrefix(mf.Package, "go/") {
+		return preparedManifest{}, false, nil
+	}
+
+	source, err := generateSource(manifestPath, &mf)
+	if err != nil {
+		return preparedManifest{}, false, fmt.Errorf("generate %s: %w", manifestPath, err)
+	}
+
+	return preparedManifest{
+		outPath: filepath.Join(filepath.Dir(manifestPath), "gen_capabilities.go"),
+		source:  source,
+	}, true, nil
+}
+
+func emitPreparedManifest(prepared preparedManifest, dryRun bool) error {
+	if dryRun {
+		fmt.Printf("=== DRY RUN: would write %s ===\n", prepared.outPath)
+		fmt.Println(prepared.source)
+		return nil
+	}
+
+	if err := os.WriteFile(prepared.outPath, []byte(prepared.source), 0o644); err != nil { //nolint:cap
+		return fmt.Errorf("write %s: %w", prepared.outPath, err)
+	}
+	fmt.Printf("wrote %s\n", prepared.outPath)
+	return nil
+}
+
 // processManifest reads a single required_capabilities.json file, generates
 // the corresponding gen_capabilities.go, and writes it to the same directory.
 //
 // If dryRun is true, the generated source is printed to stdout instead of
 // written to disk.
 func processManifest(manifestPath string, dryRun bool) error {
-	data, err := os.ReadFile(manifestPath) //nolint:cap
+	prepared, isGoPackage, err := prepareManifest(manifestPath)
 	if err != nil {
-		return fmt.Errorf("read %s: %w", manifestPath, err)
+		return err
 	}
-
-	var mf manifestJSON
-	if err := json.Unmarshal(data, &mf); err != nil {
-		return fmt.Errorf("parse %s: %w", manifestPath, err)
-	}
-
-	// Only generate for Go packages.
-	if !strings.HasPrefix(mf.Package, "go/") {
-		fmt.Fprintf(os.Stderr, "skip %s: package %q is not a Go package (prefix not 'go/')\n",
-			manifestPath, mf.Package)
+	if !isGoPackage {
+		fmt.Fprintf(os.Stderr, "skip %s: manifest is not for a Go package (prefix not 'go/')\n",
+			manifestPath)
 		return nil
 	}
-
-	source, err := generateSource(manifestPath, &mf)
-	if err != nil {
-		return fmt.Errorf("generate %s: %w", manifestPath, err)
-	}
-
-	outPath := filepath.Join(filepath.Dir(manifestPath), "gen_capabilities.go")
-
-	if dryRun {
-		fmt.Printf("=== DRY RUN: would write %s ===\n", outPath)
-		fmt.Println(source)
-		return nil
-	}
-
-	if err := os.WriteFile(outPath, []byte(source), 0o644); err != nil { //nolint:cap
-		return fmt.Errorf("write %s: %w", outPath, err)
-	}
-	fmt.Printf("wrote %s\n", outPath)
-	return nil
+	return emitPreparedManifest(prepared, dryRun)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1005,15 +1050,28 @@ func processAll(repoRoot string, dryRun bool) error {
 		return nil
 	}
 
-	var errs []string
+	var (
+		errs     []string
+		prepared []preparedManifest
+	)
 	for _, m := range matches {
-		if err := processManifest(m, dryRun); err != nil {
+		rendered, isGoPackage, err := prepareManifest(m)
+		if err != nil {
 			errs = append(errs, err.Error())
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			continue
+		}
+		if isGoPackage {
+			prepared = append(prepared, rendered)
 		}
 	}
 	if len(errs) > 0 {
 		return fmt.Errorf("%d error(s) encountered", len(errs))
+	}
+	for _, rendered := range prepared {
+		if err := emitPreparedManifest(rendered, dryRun); err != nil {
+			return err
+		}
 	}
 	return nil
 }

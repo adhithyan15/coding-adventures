@@ -154,6 +154,90 @@ security-review gate, `cargo build --workspace` before pushing anything core-tou
 - **Runtime parity:** the Go/Rust runtime catalogs match the Python/TS method names + semantics
   (same v0 set); a shared golden-program suite runs through all five backends.
 
+## Addendum — the C backend lane (2026-08-02/03, retroactive spec sync)
+
+**Why this section exists:** the C lane below was built without a preceding spec
+update — a process gap against this repo's "specs first" standard. This addendum
+brings the spec in sync with what actually shipped, per the standing rule that a
+diverged implementation must update the spec and call out what changed and why.
+
+### What diverged from the original design
+
+- **No `Feature::MethodDispatch` flag was added.** C1 above proposed a dedicated
+  feature so a backend could accept collection methods without accepting classes.
+  In practice, every `__method__` call's method-name argument is an `Expr::StrLit`,
+  so the existing `Feature::Strings` gate already covers it for free — a backend
+  that accepts `Strings` can already receive a module containing `__method__`
+  calls, no new variant needed. The C backend instead gates structurally: an
+  `is_builtin_method` allowlist (`semantic-ir-to-c/src/emit.rs`) rejects any
+  `__method__` call whose method name it doesn't recognize, at emit time, before
+  ever reaching the runtime — the same "reject cleanly, don't emit code that fails
+  at runtime" posture C1 wanted, achieved without the extra `Feature` variant.
+- **A C backend lane was never in the C1–C6 milestone table.** The table above
+  only planned Python/JS frontends (C2/C3), the JS backend (C4), and new Go/Rust
+  runtime *packages* (C5/C6). The C backend took a different shape entirely: no
+  separate runtime package — the v0 catalog is dispatched directly inside
+  `semantic-ir-to-c`'s existing runtime-C-source template (`_sir_builtin_method_v`
+  in `runtime.rs`), delivered as a **slice cascade** (below) rather than one PR.
+
+### C-backend slice cascade (actual delivery)
+
+Each slice is Ruby-frontend → `__method__` dispatch (already existed, see "Current
+state" above) → a batch of C runtime dispatch arms + `is_builtin_method` entries,
+shipped as its own spec-adjacent PR (tests + changelog + README each time, per this
+repo's standard workflow):
+
+| Slice | Content | Status | PR |
+|-------|---------|--------|-----|
+| 1 | 0-arity String: `length`/`size`, `upcase`, `downcase`, `reverse`, `empty?`, `to_s` | ✅ merged | #9273 |
+| 2 | 1-arg String queries: `include?`, `start_with?`, `end_with?`, `index` | ✅ merged | #9277 |
+| 3 | 0-arg Array query/transform: `count`, `first`, `last`, `sort`, `min`, `max`, `sum`, `uniq`, `compact`, `flatten`, `to_a` | ✅ merged | #9617 |
+| 4 | Array mutation + 1-arg query: `push`, `pop`, `shift`, `fetch`, `values_at`, `rotate`, `zip` | ✅ merged | #9650 |
+| 5 | Array block methods: `each`, `map`, `select`, `reject`, `any?`, `all?`, `none?`, `sort_by`, `each_with_index`, `reduce`/`inject` | ✅ merged | #9628 |
+| 6 | Hash non-block: `keys`, `values`, `to_h`, `dig`, `merge`, `delete`, `clear`, `invert` | ✅ merged | #9657 |
+| 7 | Hash block: `each_key`, `each_value`, `group_by`, `partition` (+ `each`/`map`/`select`/`reject`/`sort_by`/`sum` widen to Hash) | ✅ merged | #9668 |
+| — | Bug fix: `Array#sum` ignored a block argument | ✅ merged | #9673 |
+| — | Bug fix: bracket-index (`a[i]`/`a[i] = v`) had no grammar rule at all — new `__method__("[]"/"[]=", …)` dispatch | ✅ merged | #9686 |
+| 8 | Remaining String methods: `capitalize`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`, `bytes`, `split`, `replace`, `sub`, `gsub`, `to_i`, `to_f`, `to_sym`, `swapcase`, `tr`, `each_char` (block) — semantics matched against the Python/TS `sir-runtime-oop` reference catalog | ✅ merged | #9694 |
+| 9 | Numeric methods: `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`, `positive?`, `negative?`, `pred`, `floor`, `ceil`, `round`, `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `digits` + block methods `times`/`upto`/`downto`/`step` | ✅ merged | #9713 |
+| 10 | Symbol + Object/Bool generic methods: `to_s`/`length`/`size`/`upcase`/`downcase`/`inspect`/`empty?`/`to_sym` widen to a Symbol receiver (reusing the slice-1/8 String helpers — `upcase`/`downcase` return a fresh interned Symbol, not a String); universal `Object` methods `nil?`/`equal?`/`itself`/`frozen?`; `TrueClass`/`FalseClass` eager (non-short-circuit) `&`/`\|`/`^` | ✅ merged | #9726 |
+| — | Cross-backend conformance corpus for the full collection-method catalog | ✅ merged | #9733 |
+| — | Bug fix: `puts` on an Array bracket-displayed instead of unpacking (C AND Ruby backends) | ✅ merged | #9772 |
+| — | Follow-up: `round(ndigits)`, the multi-digit form deferred by slice 9 | ✅ merged | — |
+| — | Follow-up: String char-set methods (`count`/`delete`/`squeeze`) + padding methods (`ljust`/`rjust`/`center`), deferred by slice 8 | ✅ merged | — |
+| — | Follow-up: bracket-index write with a dotted/chained receiver (`obj.data[i] = v`, `a[i][j] = v`), deferred by the bracket-index bug fix (#9686) | ✅ merged | — |
+
+**Slice 8's char-set/padding deferral is now closed**: `count(charset, ...)`,
+`delete(charset, ...)`, `squeeze(charset=nil)`, and `ljust`/`rjust`/
+`center(width, pad=" ")` were originally deferred to keep slice 8 reviewable
+at a similar size to its predecessors, then implemented as their own
+follow-up — see the table above. The `*`/`+` String operators remain
+deferred: they are Ruby *binary operators*, not dot-calls, and the Ruby
+frontend has no lowering path for them at all yet (same pre-existing gap as
+`<<` for `Array#push`; see the "Ruby frontend: add `<<` as a binary
+operator" backlog item), so there is nothing for a C dispatch arm to
+receive regardless.
+
+**Slice 9's `round(ndigits)` deferral is now closed**: the multi-digit form
+(`Integer#round(-2)`, `Float#round(2)`, etc.) was originally deferred to
+keep slice 9 reviewable at a similar size to its predecessors, then
+implemented as its own follow-up once the rest of the batch landed — see
+the table above.
+
+**Explicitly out of scope for slice 10**: `respond_to?` (needs a full
+reflective query across BOTH the user-defined method table and the entire
+`is_builtin_method` catalog — a materially larger undertaking than this
+slice's other methods); `dup`/`clone` (shallow-copy semantics for
+Array/Hash, identity for scalars — needs a generic copy helper this v0
+runtime doesn't have yet); generic `to_s`/`inspect`/`==`/`!=` on an
+ARBITRARY receiver (the display-conversion machinery this needs,
+`_sir_fmt`, writes directly to a `FILE*` rather than building a string —
+capturing it into a `SirValue` String needs its own follow-up refactor);
+`freeze`/`tap`/`then`/`yield_self` (identity/pipeline methods with no
+observable effect in a v0 with no mutability-tracking or block-less
+Enumerator return — low value until either lands). All tracked as
+follow-up work, same deferral discipline as slices 8/9.
+
 ## Out of scope (documented)
 
 - Comprehensions (`[x*2 for x in xs]`, Ruby `map`-via-block is in scope but Python/Ruby

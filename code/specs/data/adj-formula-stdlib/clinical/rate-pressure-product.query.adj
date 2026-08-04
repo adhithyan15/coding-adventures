@@ -1,0 +1,27 @@
+% ============================================================================
+% rate-pressure-product.query.adj — worked applications of the rate-pressure-product definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a cardiology/exercise vignette into
+% observed vitals: it `import`s the grounded formulabook, `observe`s the measured heart rate and
+% systolic pressure, and asks the engine to APPLY the cited definition. No arithmetic is stated
+% by the consumer; the engine computes each value EXACTLY (over exact rationals) and carries the
+% article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (heart rate = 80 /min, systolic blood pressure = 120 mmHg): RPP = 80 × 120 = 9600.
+% Each query below fixes two of the three quantities and asks the engine to recover the third;
+% every answer is exact and the three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli rate-pressure-product.query.adj
+% ============================================================================
+
+import "rate-pressure-product.adj"
+
+% --- Forward: the rate pressure product the two vitals imply (expect 9600). -------------------
+observe heart_rate(80)
+observe systolic_blood_pressure(120)
+? rate_pressure_product(heart_rate, systolic_blood_pressure)   % expect 9600
+
+% --- Inverse: the heart rate a rate pressure product of 9600 implies at that pressure (80). ----
+observe rate_pressure_product(9600)
+? heart_rate(rate_pressure_product, systolic_blood_pressure)   % expect 80

@@ -24,7 +24,7 @@
 use std::process::Command;
 
 use semantic_ir::{
-    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module,
     Span, Stmt,
 };
 use semantic_ir_to_go::compile;

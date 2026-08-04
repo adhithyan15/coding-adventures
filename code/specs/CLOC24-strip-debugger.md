@@ -80,12 +80,17 @@ debugger;
 use(x);
 ```
 
-At SIMPLE: `log` inlines (`log(1)` → `report(1)`, declaration deleted), `1 + 2`
-folds to `3`, and the top-level `debugger;` is **stripped**:
+At SIMPLE: `1 + 2` folds to `3`, the top-level `debugger;` is **stripped**, and
+`function log` is **KEPT** — SIMPLE is open-world, so it never inlines or
+deletes an observable top-level name (`log` could be called by another script
+sharing the page); that inline runs only at closed-world ADVANCED:
 
 ```text
-report(1);var x=3;use(x);
+function log(p){report(p)};log(1);var x=3;use(x);
 ```
+
+(ADVANCED still inlines `log` into `report(1)` and drops the declaration,
+giving `report(1);var x=3;use(x);`.)
 
 The whitespace-fallback regression guard now asserts `debugger` is **absent**:
 a `WHITESPACE_ONLY` fallback would have preserved it, so its absence is a second

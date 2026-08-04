@@ -1,0 +1,35 @@
+% ============================================================================
+% non-hdl-cholesterol.query.adj — worked lookups over the non-HDL cholesterol definition.
+% ============================================================================
+% The shape a consumer produces to read non-HDL cholesterol off a lipid panel: it `import`s the
+% grounded library, `observe`s the two panel cholesterols it decomposed from its own source
+% bytes, and asks the engine to APPLY the cited definition. No arithmetic is stated by the
+% consumer; the engine computes the exact value WITH the definition's StatPearls citation as its
+% proof, on the CPU, with zero model calls.
+%
+% Worked case (total cholesterol = 190 mg/dL, HDL-C = 40 mg/dL):
+%
+%   ? non_hdl_cholesterol(total_cholesterol, hdl_cholesterol)   % 150  (190 − 40, non-HDL-C = TC − HDL-C)
+%
+% and the same one definition, inverted both other ways:
+%
+%   ? total_cholesterol(non_hdl_cholesterol, hdl_cholesterol)   % 190  (150 + 40, TC = non-HDL-C + HDL-C)
+%   ? hdl_cholesterol(total_cholesterol, non_hdl_cholesterol)   % 40   (190 − 150, HDL-C = TC − non-HDL-C)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli non-hdl-cholesterol.query.adj
+% ============================================================================
+
+import "non-hdl-cholesterol.adj"
+
+% Forward: non-HDL cholesterol from the two panel cholesterols.
+observe total_cholesterol(190)
+observe hdl_cholesterol(40)
+? non_hdl_cholesterol(total_cholesterol, hdl_cholesterol)   % expect 150
+
+% Inverse 1: the total cholesterol a non-HDL value implies for an HDL.
+observe non_hdl_cholesterol(150)
+? total_cholesterol(non_hdl_cholesterol, hdl_cholesterol)   % expect 190
+
+% Inverse 2: the HDL the total and non-HDL imply.
+? hdl_cholesterol(total_cholesterol, non_hdl_cholesterol)   % expect 40

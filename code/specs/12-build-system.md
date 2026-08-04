@@ -2,7 +2,20 @@
 
 ## Overview
 
-The build system discovers, resolves, and builds packages across a multi-language monorepo. It is implemented in four languages (Go, Python, Ruby, Rust) with a shared architecture, but the Go implementation is the most up to date and is the primary build tool used in CI.
+The build system discovers, resolves, and builds packages across a
+multi-language monorepo. The Go implementation is the primary tool used in CI
+and is currently the broadest operational reference.
+
+Executable front doors also exist in C#, Elixir, F#, Haskell, Lua, Perl,
+Python, Ruby, Rust, Swift, and TypeScript. Dart, Java, and Kotlin are established
+package lanes that still need build-tool implementations. F# currently delegates
+to the C# engine. C and C++ are emerging lanes, and OCaml is planned as an
+emerging lane.
+
+These implementations are not yet feature-identical. Observable portable
+behavior is defined by [the build-tool conformance
+contract](build-tool-conformance.md), not by directory presence or this
+architecture overview.
 
 The build system is not part of the computing stack — it is the infrastructure that builds and tests the stack.
 
@@ -10,7 +23,8 @@ The build system is not part of the computing stack — it is the infrastructure
 
 1. **Incremental**: Only rebuild packages that changed (via git diff or hash comparison).
 2. **Parallel**: Independent packages build concurrently.
-3. **Multi-language**: The primary tool builds Python, Ruby, Go, Rust, and TypeScript packages.
+3. **Multi-language**: The primary tool discovers every established
+   implementation lane and the explicitly supported emerging lanes.
 4. **Zero configuration**: Packages are discovered automatically from the directory tree.
 5. **Deterministic**: Same inputs always produce the same build plan.
 
@@ -81,25 +95,21 @@ cargo test -p logic-gates -- --nocapture
 
 ### Platform-Specific BUILD Files
 
-On macOS, if `BUILD_mac` exists in a directory, it takes precedence over `BUILD`. On Linux, `BUILD_linux` takes precedence. This allows platform-specific build commands (e.g., different compiler flags).
-
-Priority:
-1. `BUILD_mac` (on macOS/Darwin only)
-2. `BUILD_linux` (on Linux only)
-3. `BUILD` (cross-platform fallback)
+Platform-specific shell files take precedence over shared Unix, Starlark, and
+generic fallbacks. The canonical order is specified and tested in
+`build-tool-conformance.md`. In particular, a Windows `BUILD_windows` override
+must win over a Starlark plan; current implementations that do otherwise are
+non-conforming.
 
 ### Language Inference
 
 The package's language is inferred from its directory path. The build system scans path components for known language names:
 
-| Path component | Language |
-|---------------|----------|
-| `python`      | python     |
-| `ruby`        | ruby       |
-| `go`          | go         |
-| `rust`        | rust       |
-| `typescript`  | typescript |
-| `elixir`      | elixir     |
+| Classification | Path components |
+|---|---|
+| Established implementation | `csharp`, `dart`, `elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`, `lua`, `perl`, `python`, `ruby`, `rust`, `swift`, `typescript` |
+| Emerging implementation | `c`, `cpp`; later `ocaml` |
+| Shared execution/build buckets | `dotnet`, `wasm`, `starlark` |
 
 For example, `code/packages/python/logic-gates` yields language `python`. If no known language component is found, the language is `unknown`.
 
@@ -182,12 +192,14 @@ Flags:
 
 ## Implementations
 
-| Language | Location                              | Parallelism      | Notes                    |
-|----------|---------------------------------------|-------------------|--------------------------|
-| Go       | `code/programs/go/build-tool/`        | goroutines        | Primary CI tool, broadest language support |
-| Python   | `code/programs/python/build-tool/`    | ThreadPoolExecutor| Reference implementation |
-| Ruby     | `code/programs/ruby/build-tool/`      | Threads           | Educational              |
-| Rust     | `code/programs/rust/build-tool/`      | rayon             | Native performance       |
+| Status | Languages | Notes |
+|---|---|---|
+| Operational front doors | C#, Elixir, F#, Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, TypeScript | Behavior and maturity vary; Go is the CI reference. |
+| Missing established front doors | Dart, Java, Kotlin | Required for final parity. |
+| Emerging/future | C, C++, OCaml | Graduation requires an explicit applicability decision and conformance. |
+
+The exact implementation inventory and remediation order live in
+`package-parity-roadmap.md`.
 
 ## Migration Note
 

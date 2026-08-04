@@ -1,0 +1,59 @@
+% ============================================================================
+% force-conversions — force-unit → newton factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `pressure-conversions.adj` / `speed-conversions.adj` /
+% `energy-conversions.adj`: a native tabular relation ingested VERBATIM from a
+% published NIST conversion table. Each row states the factor converting one force
+% unit to the SI unit of force, the newton (N):
+%
+%     ? force_to_newtons(kilogram_force, $n)   % 9.80665   (a kgf)
+%     ? force_to_newtons(dyne, $n)             % 0.00001   (a dyne)
+%
+% It completes the mechanical-unit conversion family already in this directory
+% (length, mass, time, area, volume, speed, pressure, energy — and now force). Why a
+% `table` and not several hand-written `relate` clauses: this is exactly the shape
+% reference data comes in — a published table, not prose. The citable artifact IS the
+% NIST conversion-factors table at the `locator` below; every factor here is a CELL of
+% NIST Special Publication 811, Appendix B.9 ("Factors for units listed
+% alphabetically"), and the whole table is defended by one provenance envelope rather
+% than repeating `source`/`locator`/`trust` on every row. Each `row` lowers to a
+% ground relation `force_to_newtons(unit, newtons)`, so the exact lookup above is the
+% ordinary SLD binding query — the engine returns the factor WITH this table's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like pressure-conversions / speed-conversions, these are EXACT defined
+% factors, not rounded ones): NIST SP 811 B.9 prints these three "Force" factors in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here
+% as the plain decimal number of newtons each unit names:
+%
+%     dyne (dyn)                     1.0     E-05   →  0.00001
+%     kilogram-force (kgf)           9.806 65 E+00  →  9.80665
+%     kilopond (kilogram-force) (kp) 9.806 65 E+00  →  9.80665
+%
+% These are exact because the dyne is 10⁻⁵ N by definition (1 g·cm/s² = 10⁻³ kg ·
+% 10⁻² m/s²) and the kilogram-force / kilopond are the weight of one kilogram under
+% the STANDARD acceleration of gravity, defined as exactly 9.80665 m/s² — so each
+% factor terminates. Deliberately OMITTED: the pound-force (4.448222 E+00), the
+% poundal (1.382550 E-01), the ounce-force (2.780139 E-01), the kip (4.448222 E+03)
+% and the ton-force (8.896443 E+03), each of which NIST prints NOT in boldface (a
+% rounded value, not a single exact factor — the international pound-force carries
+% more digits than the printed factor shows), so a
+% `? force_to_newtons(pound_force, $n)` (etc.) ABSTAINS rather than committing to a
+% rounded value. The only claim this table makes is "these are the exact factors NIST
+% SP 811 B.9 prints" — which is exactly what a byte-check against the cited table
+% verifies. `trust authoritative` — a primary, re-fetchable standards reference. (See
+% ADJ-TABLES.md; and feedback_nothing_human_authored — every factor is a verbatim
+% cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table force_to_newtons {
+    columns unit, newtons
+
+    row (dyne, 0.00001)
+    row (kilogram_force, 9.80665)
+    row (kilopond, 9.80665)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

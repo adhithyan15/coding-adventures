@@ -84,8 +84,8 @@ fn ext_entry(buf: &mut Vec<u8>, tag: u16, typ: u16, count: u32, offset: u32) {
 ///
 /// Use this only for round-trip tests — not for production CR2 output.
 pub fn encode_cr2(pixels: &PixelContainer) -> Vec<u8> {
-    let width = pixels.width as u32;
-    let height = pixels.height as u32;
+    let width = pixels.width;
+    let height = pixels.height;
     let pixel_bytes = (width as usize) * (height as usize) * 3;
 
     // ── File layout offsets ───────────────────────────────────────────────────

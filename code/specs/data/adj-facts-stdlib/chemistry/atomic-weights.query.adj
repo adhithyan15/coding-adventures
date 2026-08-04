@@ -1,0 +1,21 @@
+% ============================================================================
+% atomic-weights.query.adj — a worked recall over the atomic-weight library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is carbon's standard
+% atomic weight?": it states no chemistry fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `atomic_weight` rows and returns the weight + the table's source/locator/trust.
+% The third query runs the relation BACKWARD (bind the weight, recall the
+% element). A name that is not an element abstains honestly — the engine never
+% invents an atomic weight.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli atomic-weights.query.adj
+% ============================================================================
+
+import "atomic-weights.adj"
+
+? atomic_weight(carbon, $W)            % expect 12.011
+? atomic_weight(oxygen, $W)            % expect 15.999
+? atomic_weight($E, 12.011)            % expect carbon — the reverse recall
+? atomic_weight(adamantium, $W)        % expect abstain — not a chemical element

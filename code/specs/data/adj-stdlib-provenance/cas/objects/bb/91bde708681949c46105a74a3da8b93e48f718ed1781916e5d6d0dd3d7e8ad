@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "abde910a137b30c51b7c9a887c15b53d7b3ee95d",
+  "body_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+  "body_size": 1640,
+  "captured_at": "2026-08-03T00:30:00Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-formula-stdlib/arithmetic/percent-of.query.adj"
+}

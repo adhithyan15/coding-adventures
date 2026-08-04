@@ -403,6 +403,7 @@ impl RuntimeInstance {
     /// Create a runtime instance.
     ///
     /// If `devices` is None, creates default test devices (small configs).
+    #[allow(clippy::type_complexity)] // device spec tuples are a small, self-documenting builder input
     pub fn new(
         devices: Option<Vec<(Box<dyn AcceleratorDevice>, DeviceType, String)>>,
     ) -> Self {

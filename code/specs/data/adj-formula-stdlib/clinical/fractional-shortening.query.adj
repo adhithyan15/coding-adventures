@@ -1,0 +1,28 @@
+% ============================================================================
+% fractional-shortening.query.adj — worked applications of LV fractional shortening.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an echocardiography report into an end-diastolic
+% and an end-systolic left ventricular internal diameter: it `import`s the grounded formulabook,
+% `observe`s the two values, and asks the engine to APPLY the cited fractional-shortening formula. No
+% arithmetic is stated by the consumer; the engine computes each value EXACTLY (over exact rationals) and
+% carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (LVIDd = 50 mm, LVIDs = 32 mm): fractional shortening = (50 − 32) / 50 × 100 = 18 / 50 × 100
+% = 36% — a normal value (normal FS is roughly 25–45%). Each query fixes two of the three quantities and
+% asks the engine to recover the third; every answer is exact and the three COMPOSE (each inversion
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fractional-shortening.query.adj
+% ============================================================================
+
+import "fractional-shortening.adj"
+
+% --- FS: the fractional shortening the two diameters imply (expect 36). -----------------------------
+observe lvidd(50)
+observe lvids(32)
+? fractional_shortening(lvidd, lvids)   % expect 36
+
+% --- Inverse: the end-systolic diameter an FS of 36 implies at LVIDd 50 (expect 32). ----------------
+observe fractional_shortening(36)
+? lvids(lvidd, fractional_shortening)   % expect 32

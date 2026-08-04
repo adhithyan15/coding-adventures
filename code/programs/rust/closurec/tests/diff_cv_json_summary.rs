@@ -49,7 +49,7 @@ fn cv_json_summary_emits_parseable_object_with_expected_fields() {
     let input_path = "tests/diff/cv-json-summary/input/a.js";
 
     let res = Command::new(BINARY)
-        .args(&[
+        .args([
             "--correlation_vector",
             "--correlation_vector_summary",
             "--correlation_vector_summary_format",

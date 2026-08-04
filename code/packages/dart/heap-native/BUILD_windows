@@ -1,0 +1,1 @@
+echo "heap-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for heap_native.dll)"

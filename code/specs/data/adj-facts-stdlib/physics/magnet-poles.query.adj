@@ -1,0 +1,24 @@
+% ============================================================================
+% magnet-poles.query.adj — a worked recall over the physics magnet-poles library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what do two like poles
+% do?": it states no physics fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `magnet_pole_interaction` rows and returns the outcome + the table's
+% source/locator/trust. The fifth query runs the relation BACKWARD (bind the
+% outcome `attract`, recall a pairing that produces it — opposite poles). A
+% single pole is not a pole PAIRING, so a recall on it abstains honestly — the
+% engine never invents an interaction.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli magnet-poles.query.adj
+% ============================================================================
+
+import "magnet-poles.adj"
+
+? magnet_pole_interaction(like_poles, $Out)      % expect repel
+? magnet_pole_interaction(opposite_poles, $Out)  % expect attract
+? magnet_pole_interaction(north_to_north, $Out)  % expect repel
+? magnet_pole_interaction(north_to_south, $Out)  % expect attract
+? magnet_pole_interaction($P, attract)           % expect opposite_poles — reverse recall
+? magnet_pole_interaction(single_pole, $Out)     % expect abstain — not a pole pairing

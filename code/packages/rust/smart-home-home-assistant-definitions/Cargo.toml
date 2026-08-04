@@ -1,0 +1,21 @@
+[package]
+name = "smart-home-home-assistant-definitions"
+version = "0.1.0"
+edition = "2021"
+description = "Live Home Assistant scene and automation definition collection"
+license = "MIT"
+
+[dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+smart-home-home-assistant-migration = { path = "../smart-home-home-assistant-migration" }
+tls-platform = { path = "../tls-platform" }
+tungstenite = { version = "0.26", features = ["rustls-tls-webpki-roots"] }
+url-parser = { path = "../url-parser" }
+
+[[bin]]
+name = "smart-home-collect-home-assistant-definitions"
+path = "src/main.rs"

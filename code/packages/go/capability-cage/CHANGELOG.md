@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Security
+
+- `NewManifest` now rejects category/action combinations outside Spec 13's
+  closed 19-pair taxonomy before a manifest can be observed through `Has`,
+  `Check`, or `Capabilities`.
+- Added exhaustive conformance against the shared language-neutral taxonomy
+  fixture.
+
 ## [1.0.0] - 2026-03-25
 
 ### Added

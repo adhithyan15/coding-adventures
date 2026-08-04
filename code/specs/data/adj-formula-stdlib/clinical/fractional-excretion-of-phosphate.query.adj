@@ -1,0 +1,31 @@
+% ============================================================================
+% fractional-excretion-of-phosphate.query.adj — worked applications of the FEPO4.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hypophosphataemia workup into a paired urine and
+% serum phosphate and creatinine: it `import`s the grounded formulabook, `observe`s the four values, and
+% asks the engine to APPLY the cited FEPO4 formula. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on
+% the CPU, with zero model calls.
+%
+% Worked case (urine PO4 = 30 mg/dL, serum PO4 = 4 mg/dL, urine Cr = 50 mg/dL, serum Cr = 1 mg/dL):
+% FEPO4 = (30 × 1 × 100) / (4 × 50) = 3000 / 200 = 15% — an elevated value pointing to renal phosphate
+% wasting rather than a redistributive or gastrointestinal cause. Each query fixes all but one quantity and
+% asks the engine to recover the missing one; every answer is exact and the inversions COMPOSE (each
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fractional-excretion-of-phosphate.query.adj
+% ============================================================================
+
+import "fractional-excretion-of-phosphate.adj"
+
+% --- FEPO4: the fractional excretion of phosphate the four labs imply (expect 15). ------------------
+observe urine_phosphate(30)
+observe serum_phosphate(4)
+observe urine_creatinine(50)
+observe serum_creatinine(1)
+? fep(urine_phosphate, serum_phosphate, urine_creatinine, serum_creatinine)   % expect 15
+
+% --- Inverse: the urine phosphate an FEPO4 of 15 implies at the same serum PO4 and creatinines (expect 30). -
+observe fep(15)
+? urine_phosphate(fep, serum_phosphate, urine_creatinine, serum_creatinine)   % expect 30

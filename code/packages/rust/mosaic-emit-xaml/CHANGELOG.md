@@ -2,6 +2,89 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Fixed - Live native disabled state
+
+Slot-backed `disabled` properties now lower to one-way WinUI `IsEnabled`
+bindings. Generated buttons and inputs therefore observe runtime Mosaic state
+changes instead of retaining the value captured when their XAML first loads.
+
+### Added - optional generated-shell interaction acceptance
+
+Generated WinUI applications now invoke an optional package-host interaction
+hook after wiring the Mosaic component's dispatch event. Package owners can
+exercise emitted native controls and shared dispatch in direct launch
+acceptance without adding application-specific behavior to the shell.
+
+### Added - Native automation identifiers for authored controls
+
+`HostInput` and `HostButton` now preserve their MLL part names as WinUI
+`AutomationProperties.AutomationId` values. Generated applications can locate
+the same Mosaic-authored control deterministically for accessibility and direct
+native interaction acceptance without adding a parallel Win32 control tree.
+
+### Added - HostSurface native composition
+
+WinUI output now lowers Mosaic `HostSurface ( content: slot: ... )` to a
+`ContentPresenter` bound to the host-supplied `UIElement`, wrapped by the
+shared MSL-styled `Border`. This gives Direct2D and other native renderers a
+typed mount point inside Mosaic-authored application chrome.
+
+### Added - Native activation for MSL pressed states
+
+WinUI output now connects UI15's built-in `state pressed` blocks on
+`HostButton`, `HostCheckbox`, `HostRadio`, and `HostLink` directly to
+`ButtonBase.IsPressed`. DataTemplate instances remain row-local, pressed takes
+precedence over simultaneous focused or hover states, and explicit
+`state-when-pressed` predicates remain author-controlled. A Task App
+acceptance gate proves its Mosaic-authored add-task button feedback reaches
+generated XAML without handwritten Win32 UI.
+
+### Added - Native activation for MSL focused states
+
+WinUI output now connects UI15's built-in `state focused` blocks on native
+focus-capable Host controls to `Control.FocusState` through a generated
+`IValueConverter`. Pointer, keyboard, and programmatic focus activate the
+shared MSL properties and transitions; DataTemplate instances remain
+row-local, and explicit `state-when-focused` predicates remain
+author-controlled. A Task App acceptance gate proves its Mosaic-authored
+project-composer focus ring reaches the generated TextBox without handwritten
+Windows UI.
+
+### Added - Native activation for MSL hover states
+
+WinUI output now activates UI15's built-in `state hover` blocks on Mosaic
+controls that lower to the native ButtonBase family: `HostButton`,
+`HostCheckbox`, `HostRadio`, and `HostLink`. The generated `StateTrigger`
+binds directly to the control's native `IsPointerOver` dependency property.
+Bindings inside a `For` remain in the DataTemplate namescope, so each repeated
+row owns independent pointer state. Existing explicit `state-when-hover`
+predicates remain author-controlled and do not install pointer tracking.
+
+### Added - Native MSL states and transitions for Host controls
+
+`HostInput`, `HostButton`, `HostCheckbox`, `HostRadio`, `HostLink`, and
+`HostNumberInput` now consume structured MSL state and transition IR.
+Top-level `state-when-*` predicates become one-way WinUI `StateTrigger`
+bindings, state properties become `VisualState` setters, and MSL durations
+and easing curves become native `VisualTransition` values.
+
+Each transitioned property is emitted in a separate `VisualStateGroup`.
+This preserves MSL's property-scoped motion contract instead of letting one
+transition duration animate every property changed by a state. Part-level
+transitions apply in both directions, while a state-local transition
+overrides the curve on entry. Multiple active states retain React/SwiftUI
+precedence: the last `state-when-*` declaration wins. Stateful components use
+a transparent first-child `Grid`, which is the placement WinUI requires for
+automatic `StateTrigger` evaluation.
+
+Supported easing lowerings are `linear`, `ease`, `ease-in`, `ease-out`, and
+`ease-in-out`. WinUI XAML has no arbitrary cubic-bezier
+`EasingFunctionBase`, so `cubic-bezier(...)` currently uses the closest
+native `CubicEase` curve; an exact Composition-API lowering remains a
+follow-up. Template-local Host controls inside `For` keep their VisualStates
+inside the DataTemplate namescope so their triggers and targets remain
+row-local.
+
 ### Added - XAML host intent extension point
 
 Generated WinUI project shells now preserve structured `HostIntent` values from

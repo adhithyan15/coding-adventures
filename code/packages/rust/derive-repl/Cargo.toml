@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-derive-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `derive` binary for Derive (a subset)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-derive-runtime = { path = "../derive-runtime" }
+
+[[bin]]
+name = "derive"
+path = "src/main.rs"

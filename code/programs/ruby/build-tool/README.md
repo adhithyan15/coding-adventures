@@ -29,6 +29,50 @@ ruby build.rb --language python      # Only build Python packages
 ruby build.rb --cache-file FILE      # Custom cache file path
 ```
 
+## Metadata Safety
+
+Lua rockspecs are read as raw bytes and decoded as strict UTF-8 before any
+dependency parsing. Malformed metadata fails closed with CLI exit code `2` and
+a stable diagnostic that contains only portable identities:
+
+```text
+METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec encoding=UTF-8
+```
+
+The resolver never inserts replacement characters and never includes the host
+checkout root in this error. A literal U+FFFD character encoded correctly as
+UTF-8 remains valid metadata.
+
+## Canonical Discovery and Identities
+
+Discovery uses the repository's canonical language registry and treats only
+the exact component immediately below `packages` or `programs` as the language
+bucket. Programs retain a `programs` identity segment, such as
+`go/programs/build-tool`, so a library and program with the same basename stay
+distinct. Specification fixture trees are excluded, and duplicate qualified
+identities fail closed with exit code `2` and repository-relative paths.
+
+The resolver preserves those identities in metadata edges and in qualified
+dependencies declared by the selected legacy BUILD file's
+`# build-tool: deps=` comment. The shared discovery, duplicate-identity,
+package/program, and BUILD-comment fixtures exercise the same contracts used by
+other build-tool implementations.
+
+## Canonical Starlark BUILD Files
+
+Canonical Starlark files are evaluated with the normalized build-tool v1
+context (`version`, `os`, `arch`, `cpu_count`, `ci`, and `repo_root`). Loaded
+rule functions retain their defining module globals, and returned structured
+commands are validated as `program` plus string `args` before being rendered
+deterministically for the existing executor boundary.
+
+After discovery classifies a file as Starlark, parsing, loading, evaluation,
+target selection, and structured-command extraction are fail-closed. The tool
+does not reinterpret a failed Starlark file as legacy shell commands. Legacy
+fallback remains available only when a valid selected target intentionally
+provides no structured command list. Failure diagnostics redact the checkout
+root while retaining the package identity and stable evaluation detail.
+
 ## Testing
 
 ```bash
@@ -36,9 +80,27 @@ bundle install
 bundle exec rake test
 ```
 
+The `test/test_identity_registry.rb` and `test/test_resolution_utf8.rb` coverage
+exercise shared language-neutral discovery, dependency, valid-text, and
+invalid-text fixtures plus real CLI subprocesses. The full Rake suite enforces
+the whole-program coverage threshold. Starlark evaluator tests are mandatory: the
+suite removes ambient `RUBYLIB` and `RUBYOPT` injection in a subprocess and
+proves that the repository-local interpreter loads through the build tool's
+declared bundle rather than skipping when it is unavailable.
+
 ## Dependencies
 
-Zero runtime gem dependencies -- uses only Ruby standard library modules:
+The build tool has no third-party runtime gems. Its source-tree runtime closure
+is repository-owned:
+
+- `coding_adventures_progress_bar` provides progress reporting.
+- `coding_adventures_starlark_interpreter` and its transitive repository gems
+  are imported from the interpreter's authoritative Gemfile.
+
+After `bundle install`, `bundle exec ruby build.rb ...` loads that closure with
+no manual Ruby search path and performs no network resolution during build
+execution. The remaining runtime modules come from the Ruby standard library:
+
 - `json` for cache serialization
 - `digest/sha2` for file hashing
 - `open3` for subprocess execution
@@ -46,4 +108,4 @@ Zero runtime gem dependencies -- uses only Ruby standard library modules:
 - `optparse` for CLI argument parsing
 - `set` for efficient set operations
 
-Dev dependencies: minitest, rake, simplecov.
+Development dependencies: minitest, rake, simplecov.

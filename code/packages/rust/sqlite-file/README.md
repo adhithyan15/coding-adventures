@@ -40,19 +40,20 @@ Built leaf-to-root; this is the foundation:
 | DB header + in-memory pager | `header`, `pager` | ✅ header fields + zero-copy 1-based pages |
 | table b-tree walk (leaf + interior) | `btree` | ✅ `walk_table(root)` → `(rowid, record)` |
 | overflow chains (records spanning pages) | `btree` | ✅ reassembled inline + overflow; cycle/size guarded |
-| `sqlite_schema` + `read_table(bytes, name)` | `schema` | ⏳ Phase E4 |
+| `sqlite_schema` + `read_table(bytes, name)` | `schema` | ✅ read API |
 
 ## Usage
 
 ```rust
-use sqlite_file::record::{decode, SqlValue};
+use sqlite_file::read_table;
 
-// On-disk bytes of the row `(NULL, 42, "hi")`.
-let row = [0x04, 0x00, 0x01, 0x11, 0x2a, 0x68, 0x69];
-assert_eq!(
-    decode(&row).unwrap(),
-    vec![SqlValue::Null, SqlValue::Int(42), SqlValue::Text("hi".into())],
-);
+let rows = read_table(&db_bytes, "notes")?;
+for (rowid, columns) in rows {
+    // INTEGER PRIMARY KEY columns are stored as rowid and appear as NULL in
+    // the record payload; use `rowid` when a table aliases it.
+    println!("{rowid}: {columns:?}");
+}
+# Ok::<(), sqlite_file::SqliteError>(())
 ```
 
 ## Verification

@@ -48,11 +48,11 @@
 #[derive(Clone, Copy, Debug)]
 struct Fe([u64; 5]);
 
-/// The prime p = 2^255 - 19.
-///
-/// We don't store this as a Fe; instead we use it for final reduction.
-/// In limb form it would be [2^51 - 19, 2^51 - 1, 2^51 - 1, 2^51 - 1, 2^51 - 1]
-/// but we reduce differently.
+// The prime p = 2^255 - 19.
+//
+// We don't store this as a Fe; instead we use it for final reduction.
+// In limb form it would be [2^51 - 19, 2^51 - 1, 2^51 - 1, 2^51 - 1, 2^51 - 1]
+// but we reduce differently.
 
 const MASK51: u64 = (1u64 << 51) - 1;
 
@@ -279,8 +279,8 @@ impl Fe {
 
     fn mul_small(self, small: u64) -> Fe {
         let mut r = [0u128; 5];
-        for i in 0..5 {
-            r[i] = self.0[i] as u128 * small as u128;
+        for (i, r_i) in r.iter_mut().enumerate() {
+            *r_i = self.0[i] as u128 * small as u128;
         }
         Fe::carry_wide(r)
     }

@@ -232,7 +232,7 @@ const BASTORE: u8 = 0x54;
 ///   * `public static byte[] __tape` — the BF tape (typically 30,000 bytes)
 ///   * `public static void putchar(int)` — write one byte to stdout
 ///   * `public static int  getchar()`    — read one byte from stdin, or `-1` / `0`
-///                                          on EOF (BF's interpreter convention is `0`)
+///     on EOF (BF's interpreter convention is `0`)
 ///
 /// Picking a fixed host class keeps the BF-compiled class self-contained:
 /// no `<clinit>` required on the BF side, and no per-program tape size baked
@@ -811,6 +811,12 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         "ref<any>" => "Ljava/lang/Object;",
         // LANG-FULL E4: string literals flow as java.lang.String.
         "str" => "Ljava/lang/String;",
+        t if is_array_type(t) => match array_elem_type(t).as_deref() {
+            Some("i64") | Some("u64") => "[J",
+            Some("f64") => "[D",
+            Some("str") => "[Ljava/lang/String;",
+            _ => "[I",
+        },
         // LANG36: A closure is a `long[]` — descriptor is "[J".
         "closure" => "[J",
         _ => "I", // default for unknown — validator should have caught this
@@ -843,7 +849,7 @@ fn emit_iload(code: &mut Vec<u8>, idx: u16) {
             // `wide iload` uses a 2-byte index
             code.push(WIDE);
             code.push(ILOAD);
-            code.extend_from_slice(&(n as u16).to_be_bytes());
+            code.extend_from_slice(&n.to_be_bytes());
         }
     }
 }
@@ -856,7 +862,7 @@ fn emit_lload(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(LLOAD);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -868,7 +874,7 @@ fn emit_fload(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(FLOAD);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -880,7 +886,7 @@ fn emit_dload(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(DLOAD);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -929,7 +935,7 @@ fn emit_istore(code: &mut Vec<u8>, idx: u16) {
         n => {
             code.push(WIDE);
             code.push(ISTORE);
-            code.extend_from_slice(&(n as u16).to_be_bytes());
+            code.extend_from_slice(&n.to_be_bytes());
         }
     }
 }
@@ -942,7 +948,7 @@ fn emit_lstore(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(LSTORE);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -954,7 +960,7 @@ fn emit_fstore(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(FSTORE);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -966,7 +972,7 @@ fn emit_dstore(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(DSTORE);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -1021,11 +1027,11 @@ fn emit_iconst(code: &mut Vec<u8>, value: i32) {
         3 => code.push(ICONST_3),
         4 => code.push(ICONST_4),
         5 => code.push(ICONST_5),
-        v if v >= -128 && v <= 127 => {
+        v if (-128..=127).contains(&v) => {
             code.push(BIPUSH);
             code.push(v as u8);
         }
-        v if v >= -32768 && v <= 32767 => {
+        v if (-32768..=32767).contains(&v) => {
             code.push(SIPUSH);
             code.extend_from_slice(&(v as i16).to_be_bytes());
         }
@@ -1160,7 +1166,7 @@ fn emit_lconst(code: &mut Vec<u8>, value: i64) {
         // iconst_m1 + i2l for -1
         -1 => { code.push(ICONST_M1); code.push(I2L); }
         // bipush (byte-range) + i2l
-        v if v >= -128 && v <= 127 => {
+        v if (-128..=127).contains(&v) => {
             code.push(BIPUSH);
             code.push(v as i8 as u8);
             code.push(I2L);
@@ -1208,7 +1214,7 @@ fn emit_lconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i64) 
         4 => { code.push(ICONST_4); code.push(I2L); }
         5 => { code.push(ICONST_5); code.push(I2L); }
         -1 => { code.push(ICONST_M1); code.push(I2L); }
-        v if v >= -128 && v <= 127 => {
+        v if (-128..=127).contains(&v) => {
             code.push(BIPUSH);
             code.push(v as i8 as u8);
             code.push(I2L);
@@ -1911,7 +1917,7 @@ fn lower_function(
     module: &IIRModule,
     cp: &mut ConstantPoolBuilder,
     closure_dispatch: &HashMap<String, ClosureDispatchEntry>,
-    globals: &HashMap<String, String>,
+    globals: &HashMap<String, (String, String)>,
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let fname = &func.name;
 
@@ -3292,8 +3298,8 @@ fn lower_function(
                         detail: "array_get must have a dest".to_string(),
                     }
                 })?;
-                let handle_name = array_var_operand(instr, 0, "array_get", "handle", &fname)?;
-                let idx_name = array_var_operand(instr, 1, "array_get", "idx", &fname)?;
+                let handle_name = array_var_operand(instr, 0, "array_get", "handle", fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_get", "idx", fname)?;
                 // E4d-BA-arr: a `str` element loads with `aaload` (reference element);
                 // primitive elements use the typed `*aload` from `array_element_opcodes`.
                 let aload_op = if jvm_ref_array_element_class(&instr.type_hint).is_some() {
@@ -3333,9 +3339,9 @@ fn lower_function(
                         detail: "array_set must not have a dest".to_string(),
                     });
                 }
-                let handle_name = array_var_operand(instr, 0, "array_set", "handle", &fname)?;
-                let idx_name = array_var_operand(instr, 1, "array_set", "idx", &fname)?;
-                let val_name = array_var_operand(instr, 2, "array_set", "val", &fname)?;
+                let handle_name = array_var_operand(instr, 0, "array_set", "handle", fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_set", "idx", fname)?;
+                let val_name = array_var_operand(instr, 2, "array_set", "val", fname)?;
                 // E4d-BA-arr: a `str` element stores with `aastore` (reference element);
                 // primitive elements use the typed `*astore` from `array_element_opcodes`.
                 let astore_op = if jvm_ref_array_element_class(&instr.type_hint).is_some() {
@@ -3374,7 +3380,7 @@ fn lower_function(
                         detail: "array_len must have a dest".to_string(),
                     }
                 })?;
-                let handle_name = array_var_operand(instr, 0, "array_len", "handle", &fname)?;
+                let handle_name = array_var_operand(instr, 0, "array_len", "handle", fname)?;
                 let (h_slot, _) = lookup_var(&handle_name)?;
                 let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                 emit_aload(&mut code, h_slot);
@@ -3933,8 +3939,8 @@ fn lower_function(
                     (Some(fs1), Some(fs2))
                         if fs1.op == "field_store"
                             && fs2.op == "field_store"
-                            && fs1.srcs.get(0) == Some(&Operand::Var(dest_name.to_string()))
-                            && fs2.srcs.get(0) == Some(&Operand::Var(dest_name.to_string()))
+                            && fs1.srcs.first() == Some(&Operand::Var(dest_name.to_string()))
+                            && fs2.srcs.first() == Some(&Operand::Var(dest_name.to_string()))
                             && fs1.srcs.get(1) == Some(&Operand::Int(0))
                             && fs2.srcs.get(1) == Some(&Operand::Int(1)) =>
                     {
@@ -4033,7 +4039,7 @@ fn lower_function(
             //   aload  value
             //   aastore
             "field_store" => {
-                let arr_name = match instr.srcs.get(0) {
+                let arr_name = match instr.srcs.first() {
                     Some(Operand::Var(n)) => n.clone(),
                     _ => return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
@@ -4058,7 +4064,14 @@ fn lower_function(
                 let (arr_slot, _) = lookup_var(&arr_name)?;
                 let (val_slot, _) = lookup_var(&val_name)?;
 
+                // The local is declared `Object` (a `ref<any>` cons cell is not
+                // statically an array), so the verifier rejects a bare AALOAD/AASTORE
+                // with "Expecting to find array of objects or arrays on stack".
+                // A CHECKCAST to the cons-cell array type tells it what we know.
+                let objarr_cidx = cp.add_class("[Ljava/lang/Object;");
                 emit_aload(&mut code, arr_slot);
+                code.push(CHECKCAST);
+                code.extend_from_slice(&objarr_cidx.to_be_bytes());
                 emit_iconst(&mut code, field_idx);
                 emit_aload(&mut code, val_slot);
                 code.push(AASTORE);
@@ -4083,7 +4096,7 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "field_load has no dest".to_string(),
                 })?;
-                let arr_name = match instr.srcs.get(0) {
+                let arr_name = match instr.srcs.first() {
                     Some(Operand::Var(n)) => n.clone(),
                     _ => return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
@@ -4101,7 +4114,14 @@ fn lower_function(
                 let (dest_slot, _) = lookup_var(dest_name)?;
                 let (arr_slot, _) = lookup_var(&arr_name)?;
 
+                // The local is declared `Object` (a `ref<any>` cons cell is not
+                // statically an array), so the verifier rejects a bare AALOAD/AASTORE
+                // with "Expecting to find array of objects or arrays on stack".
+                // A CHECKCAST to the cons-cell array type tells it what we know.
+                let objarr_cidx = cp.add_class("[Ljava/lang/Object;");
                 emit_aload(&mut code, arr_slot);
+                code.push(CHECKCAST);
+                code.extend_from_slice(&objarr_cidx.to_be_bytes());
                 emit_iconst(&mut code, field_idx);
                 code.push(AALOAD);
                 emit_astore(&mut code, dest_slot);
@@ -4206,8 +4226,16 @@ fn lower_function(
                     }),
                 };
                 let (dest_slot, _) = lookup_var(dest_name)?;
-                let (src_slot, _) = lookup_var(&src_name)?;
-                emit_iload(&mut code, src_slot);
+                let (src_slot, src_ty) = lookup_var(&src_name)?;
+                // `Integer.valueOf` boxes a 32-bit int. When the value rides a
+                // `long` slot — E6d-2 dynamic arithmetic works in i64 — load it
+                // with `lload` and narrow with `l2i` first.
+                if src_ty == JvmType::Long {
+                    emit_lload(&mut code, src_slot);
+                    code.push(L2I);
+                } else {
+                    emit_iload(&mut code, src_slot);
+                }
                 let mref = cp.add_methodref(
                     "java/lang/Integer",
                     "valueOf",
@@ -4236,7 +4264,7 @@ fn lower_function(
                         detail: "unbox srcs[0] must be a Var".to_string(),
                     }),
                 };
-                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                 let (src_slot, _) = lookup_var(&src_name)?;
                 emit_aload(&mut code, src_slot);
                 let cidx = cp.add_class("java/lang/Integer");
@@ -4245,7 +4273,15 @@ fn lower_function(
                 let mref = cp.add_methodref("java/lang/Integer", "intValue", "()I");
                 code.push(INVOKEVIRTUAL);
                 code.extend_from_slice(&mref.to_be_bytes());
-                emit_istore(&mut code, dest_slot);
+                // `intValue` yields a 32-bit int. When the unboxed destination
+                // rides a `long` slot (E6d-2 dynamic arithmetic works in i64),
+                // widen with `i2l` and `lstore`.
+                if dest_ty == JvmType::Long {
+                    code.push(I2L);
+                    emit_lstore(&mut code, dest_slot);
+                } else {
+                    emit_istore(&mut code, dest_slot);
+                }
             }
 
             "is_null" => {
@@ -4253,7 +4289,7 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "is_null has no dest".to_string(),
                 })?;
-                let ref_name = match instr.srcs.get(0) {
+                let ref_name = match instr.srcs.first() {
                     Some(Operand::Var(n)) => n.clone(),
                     _ => return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
@@ -4280,11 +4316,10 @@ fn lower_function(
                 emit_istore(&mut code, dest_slot);
             }
 
-            // ── global_load → getstatic <this>.G_N:J ; lstore (LANG-FULL E6) ─
+            // ── global_load → getstatic <this>.G_N:<descriptor> (LANG-FULL E6) ─
             //
-            // A module global is a `public static long G_N` field of this class
-            // (collected in `globals`). `getstatic` pushes its value, `lstore`
-            // writes it into the dest's long slot.
+            // Scalar globals retain their `long` field; array globals retain a
+            // concrete reference descriptor. `getstatic` pushes the typed value.
             "global_load" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
@@ -4297,25 +4332,28 @@ fn lower_function(
                         detail: "global_load expects a string global name at srcs[0]".to_string(),
                     }),
                 };
-                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
+                let (field_name, descriptor) = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
                     detail: format!("global_load: global {gname:?} was not collected (internal error)"),
                 })?;
                 let (dest_slot, dest_type) = lookup_var(dest_name)?;
-                let fref = cp.add_fieldref(class_name, field_name, "J");
+                let fref = cp.add_fieldref(class_name, field_name, descriptor);
                 code.push(GETSTATIC);
                 code.extend_from_slice(&fref.to_be_bytes());
-                // `getstatic J` pushes a long.  The field is always 64-bit, but the
-                // dest local may be a narrower `int` (an `integer` program
-                // concretised to i32) — narrow the long with `l2i` before `istore`,
-                // the mirror of the `i2l` widen on `global_store`.
-                if dest_type != JvmType::Long {
+                if descriptor == "J" && dest_type != JvmType::Long {
                     code.push(L2I);
+                } else if descriptor != "J" && dest_type != JvmType::Ref {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!(
+                            "global_load of reference field {gname:?} requires a Ref destination"
+                        ),
+                    });
                 }
                 emit_typed_store(&mut code, dest_slot, dest_type);
             }
 
-            // ── global_store → lload ; putstatic <this>.G_N:J (LANG-FULL E6) ──
+            // ── global_store → typed load ; putstatic <this>.G_N:<descriptor> ──
             "global_store" => {
                 let gname = match instr.srcs.first() {
                     Some(Operand::Str(s)) => s,
@@ -4331,17 +4369,23 @@ fn lower_function(
                         detail: "global_store expects a Var value at srcs[1]".to_string(),
                     }),
                 };
-                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
+                let (field_name, descriptor) = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
                     detail: format!("global_store: global {gname:?} was not collected (internal error)"),
                 })?;
                 let (val_slot, val_type) = lookup_var(&val_src)?;
                 emit_typed_load(&mut code, val_slot, val_type);
-                // The field is `J` (long); widen an i32 value to long first.
-                if val_type != JvmType::Long {
+                if descriptor == "J" && val_type != JvmType::Long {
                     code.push(I2L);
+                } else if descriptor != "J" && val_type != JvmType::Ref {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!(
+                            "global_store of reference field {gname:?} requires a Ref value"
+                        ),
+                    });
                 }
-                let fref = cp.add_fieldref(class_name, field_name, "J");
+                let fref = cp.add_fieldref(class_name, field_name, descriptor);
                 code.push(PUTSTATIC);
                 code.extend_from_slice(&fref.to_be_bytes());
             }
@@ -4516,12 +4560,15 @@ fn one_src(
 }
 
 /// Extract (slot, type) for both sources of a binary instruction (must both be Vars).
+// The nested `(slot, type)` pairs are the natural shape here; a named struct
+// would only obscure the two-operand extraction at the single call cluster.
+#[allow(clippy::type_complexity)]
 fn two_srcs(
     func: &IIRFunction,
     instr: &interpreter_ir::IIRInstr,
     slots: &HashMap<String, (u16, JvmType)>,
 ) -> Result<((u16, JvmType), (u16, JvmType)), IIRJvmError> {
-    let s0 = instr.srcs.get(0).ok_or_else(|| IIRJvmError::InvalidOperand {
+    let s0 = instr.srcs.first().ok_or_else(|| IIRJvmError::InvalidOperand {
         function: func.name.clone(),
         detail: format!("{} needs 2 source operands, got 0", instr.op),
     })?;
@@ -5156,23 +5203,46 @@ pub fn lower_iir_to_jvm(
 
 /// Collect every distinct module-global name (read or written) into
 /// `(name → "G_N", [JvmFieldInfo])`, numbered in first-seen order across all
-/// functions (LANG-FULL E6 layer 1). Each global is a `public static long`
-/// field; the field name is index-based so an arbitrary source identifier can
-/// never form an invalid or colliding JVM field name.
-fn collect_global_fields(module: &IIRModule) -> (HashMap<String, String>, Vec<JvmFieldInfo>) {
-    let mut map: HashMap<String, String> = HashMap::new();
+/// functions (LANG-FULL E6 layer 1). Numeric globals remain `long`; string and
+/// array globals retain their concrete reference descriptor. Field names are
+/// index-based so an arbitrary source identifier can never collide.
+fn collect_global_fields(module: &IIRModule) -> (HashMap<String, (String, String)>, Vec<JvmFieldInfo>) {
+    let mut map: HashMap<String, (String, String)> = HashMap::new();
     let mut fields: Vec<JvmFieldInfo> = Vec::new();
     for f in &module.functions {
+        let mut types: HashMap<&str, &str> = f
+            .params
+            .iter()
+            .map(|(name, ty)| (name.as_str(), ty.as_str()))
+            .collect();
         for i in &f.instructions {
+            if let Some(dest) = &i.dest {
+                types.insert(dest, &i.type_hint);
+            }
             if i.op == "global_load" || i.op == "global_store" {
                 if let Some(Operand::Str(name)) = i.srcs.first() {
                     if !map.contains_key(name) {
                         let field_name = format!("G_{}", fields.len());
-                        map.insert(name.clone(), field_name.clone());
+                        let type_hint = if i.op == "global_load" {
+                            i.type_hint.as_str()
+                        } else {
+                            match i.srcs.get(1) {
+                                Some(Operand::Var(value)) => {
+                                    types.get(value.as_str()).copied().unwrap_or("i64")
+                                }
+                                _ => "i64",
+                            }
+                        };
+                        let descriptor = if is_array_type(type_hint) || type_hint == "str" {
+                            type_to_jvm_descriptor(type_hint).to_string()
+                        } else {
+                            "J".to_string()
+                        };
+                        map.insert(name.clone(), (field_name.clone(), descriptor.clone()));
                         fields.push(JvmFieldInfo {
                             access_flags: ACC_PUBLIC | ACC_STATIC,
                             name: field_name,
-                            descriptor: "J".to_string(), // long
+                            descriptor,
                         });
                     }
                 }
@@ -5374,8 +5444,8 @@ mod tests {
         assert!(code.contains(&ARRAYLENGTH), "arraylength (array_len) expected");
     }
 
-    /// E4d-BA-arr: `String[]` (BASIC `DIM A$(n)`) uses `anewarray java/lang/String`
-    /// + `aastore`/`aaload` — reference-element ops, since a str value is a native
+    /// E4d-BA-arr: `String[]` (BASIC `DIM A$(n)`) uses `anewarray java/lang/String` +
+    /// `aastore`/`aaload` — reference-element ops, since a str value is a native
     /// `java.lang.String` (not a primitive). The JVM bounds-checks each access.
     #[test]
     fn string_array_emits_reference_array_opcodes() {

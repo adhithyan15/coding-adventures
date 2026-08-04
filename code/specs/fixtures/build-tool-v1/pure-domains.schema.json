@@ -1,0 +1,1523 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-tool-pure-domains-v1.json",
+  "title": "Build-tool process-free domain record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain",
+    "outcome",
+    "input",
+    "result"
+  ],
+  "properties": {
+    "domain": {
+      "$ref": "#/$defs/pure_domain"
+    },
+    "outcome": {
+      "enum": [
+        "ok",
+        "error",
+        "unsupported",
+        "skipped"
+      ]
+    },
+    "input": {
+      "type": "object"
+    },
+    "result": {
+      "type": "object"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/diff_selection_record"
+    },
+    {
+      "$ref": "#/$defs/hashing_cache_record"
+    },
+    {
+      "$ref": "#/$defs/starlark_record"
+    },
+    {
+      "$ref": "#/$defs/sharding_record"
+    },
+    {
+      "$ref": "#/$defs/validation_record"
+    },
+    {
+      "$ref": "#/$defs/toolchain_detection_record"
+    },
+    {
+      "$ref": "#/$defs/cli_record"
+    }
+  ],
+  "$defs": {
+    "pure_domain": {
+      "enum": [
+        "diff_selection",
+        "hashing_cache",
+        "starlark",
+        "sharding",
+        "validation",
+        "toolchain_detection",
+        "cli"
+      ]
+    },
+    "safe_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?*\\u0000-\\u001F/]+(?:/[^<>:\"|?*\\u0000-\\u001F/]+)*$"
+    },
+    "portable_glob": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?\\u0000-\\u001F]+$"
+    },
+    "package_name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)+$",
+      "maxLength": 240
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "maxLength": 64
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "edge": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/package_name"
+        },
+        {
+          "$ref": "#/$defs/package_name"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "package_names": {
+      "type": "array",
+      "maxItems": 4096,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/package_name"
+      }
+    },
+    "empty_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 0
+    },
+    "json_value": {
+      "oneOf": [
+        {
+          "type": "string",
+          "maxLength": 1048576
+        },
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/json_value"
+          }
+        },
+        {
+          "type": "object",
+          "maxProperties": 1024,
+          "additionalProperties": {
+            "$ref": "#/$defs/json_value"
+          }
+        }
+      ]
+    },
+    "diff_package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "rel_path",
+        "source_mode"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "rel_path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "source_mode": {
+          "enum": [
+            "package_prefix",
+            "strict_globs"
+          ]
+        },
+        "source_globs": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/portable_glob"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source_mode": {
+                "const": "strict_globs"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "source_globs"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "source_globs"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "diff_selection_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options",
+        "changed_paths"
+      ],
+      "properties": {
+        "operation": {
+          "const": "diff_selection"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packages",
+            "edges",
+            "forced_packages",
+            "unknown_path_policy"
+          ],
+          "properties": {
+            "packages": {
+              "type": "array",
+              "maxItems": 4096,
+              "items": {
+                "$ref": "#/$defs/diff_package"
+              }
+            },
+            "edges": {
+              "type": "array",
+              "maxItems": 16384,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/edge"
+              }
+            },
+            "forced_packages": {
+              "$ref": "#/$defs/package_names"
+            },
+            "unknown_path_policy": {
+              "enum": [
+                "all",
+                "error"
+              ]
+            }
+          }
+        },
+        "changed_paths": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/safe_path"
+          }
+        }
+      }
+    },
+    "diff_selection_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "changed_packages",
+        "affected_packages",
+        "prerequisite_packages"
+      ],
+      "properties": {
+        "changed_packages": {
+          "$ref": "#/$defs/package_names"
+        },
+        "affected_packages": {
+          "$ref": "#/$defs/package_names"
+        },
+        "prerequisite_packages": {
+          "$ref": "#/$defs/package_names"
+        }
+      }
+    },
+    "diff_selection_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "diff_selection"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/diff_selection_input"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/diff_selection_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "dependency_digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "digest"
+      ],
+      "properties": {
+        "package": {
+          "$ref": "#/$defs/package_name"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "hashing_cache_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "hashing_cache"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm",
+            "package",
+            "include_paths",
+            "dependency_digests",
+            "dependents",
+            "prior_cache"
+          ],
+          "properties": {
+            "algorithm": {
+              "const": "sha256-v1"
+            },
+            "package": {
+              "$ref": "#/$defs/package_name"
+            },
+            "include_paths": {
+              "type": "array",
+              "maxItems": 4096,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/safe_path"
+              }
+            },
+            "dependency_digests": {
+              "type": "array",
+              "maxItems": 4096,
+              "items": {
+                "$ref": "#/$defs/dependency_digest"
+              }
+            },
+            "dependents": {
+              "$ref": "#/$defs/package_names"
+            },
+            "prior_cache": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "missing"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "corrupt"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state",
+                    "combined_digest",
+                    "status"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "record"
+                    },
+                    "combined_digest": {
+                      "$ref": "#/$defs/digest"
+                    },
+                    "status": {
+                      "enum": [
+                        "success",
+                        "failed"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "hashing_cache_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_digest",
+        "dependencies_digest",
+        "combined_digest",
+        "cache_status",
+        "invalidated_packages"
+      ],
+      "properties": {
+        "package_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "dependencies_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "combined_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "cache_status": {
+          "enum": [
+            "hit",
+            "miss",
+            "recovered"
+          ]
+        },
+        "invalidated_packages": {
+          "$ref": "#/$defs/package_names"
+        }
+      }
+    },
+    "hashing_cache_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "hashing_cache"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/hashing_cache_input"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/hashing_cache_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "starlark_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "os",
+        "arch",
+        "cpu_count",
+        "ci"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "os": {
+          "enum": [
+            "darwin",
+            "linux",
+            "windows"
+          ]
+        },
+        "arch": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "maxLength": 32
+        },
+        "cpu_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        },
+        "ci": {
+          "type": "boolean"
+        }
+      }
+    },
+    "starlark_evaluation_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "step_count",
+        "recursion_depth",
+        "load_depth",
+        "module_count",
+        "value_items",
+        "output_bytes"
+      ],
+      "properties": {
+        "step_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "recursion_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        },
+        "load_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "module_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        },
+        "value_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "output_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    },
+    "starlark_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "starlark"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "entrypoint",
+            "context",
+            "legacy_fallback",
+            "evaluation_limits"
+          ],
+          "properties": {
+            "entrypoint": {
+              "$ref": "#/$defs/safe_path"
+            },
+            "context": {
+              "$ref": "#/$defs/starlark_context"
+            },
+            "legacy_fallback": {
+              "enum": [
+                "generate_commands",
+                "error"
+              ]
+            },
+            "evaluation_limits": {
+              "$ref": "#/$defs/starlark_evaluation_limits"
+            }
+          }
+        }
+      }
+    },
+    "structured_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "program",
+        "args"
+      ],
+      "properties": {
+        "type": {
+          "const": "cmd"
+        },
+        "program": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._+-]+$",
+          "maxLength": 128
+        },
+        "args": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "type": "string",
+            "maxLength": 4096
+          }
+        }
+      }
+    },
+    "starlark_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule",
+        "name",
+        "srcs",
+        "deps",
+        "commands",
+        "rendered_commands",
+        "command_source"
+      ],
+      "properties": {
+        "rule": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "maxLength": 96
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "maxLength": 160
+        },
+        "srcs": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/portable_glob"
+          }
+        },
+        "deps": {
+          "$ref": "#/$defs/package_names"
+        },
+        "commands": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/structured_command"
+          }
+        },
+        "rendered_commands": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "maxLength": 16384
+          }
+        },
+        "command_source": {
+          "enum": [
+            "structured",
+            "legacy_fallback"
+          ]
+        }
+      }
+    },
+    "starlark_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "targets"
+      ],
+      "properties": {
+        "targets": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/starlark_target"
+          }
+        }
+      }
+    },
+    "starlark_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "starlark"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/starlark_input"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/starlark_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "shard_package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "language",
+        "build_command_count"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "language": {
+          "$ref": "#/$defs/language"
+        },
+        "build_command_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      }
+    },
+    "sharding_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "sharding"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packages",
+            "edges",
+            "scheduled_packages",
+            "shard_count"
+          ],
+          "properties": {
+            "packages": {
+              "type": "array",
+              "maxItems": 4096,
+              "items": {
+                "$ref": "#/$defs/shard_package"
+              }
+            },
+            "edges": {
+              "type": "array",
+              "maxItems": 16384,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/edge"
+              }
+            },
+            "scheduled_packages": {
+              "$ref": "#/$defs/package_names"
+            },
+            "shard_count": {
+              "type": "integer",
+              "minimum": -64,
+              "maximum": 64
+            },
+            "shard_index": {
+              "type": "integer",
+              "minimum": -64,
+              "maximum": 63
+            }
+          }
+        }
+      }
+    },
+    "shard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "name",
+        "assigned_packages",
+        "package_names",
+        "toolchains",
+        "estimated_cost"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^shard-[1-9][0-9]*-of-[1-9][0-9]*$",
+          "maxLength": 64
+        },
+        "assigned_packages": {
+          "$ref": "#/$defs/package_names"
+        },
+        "package_names": {
+          "$ref": "#/$defs/package_names"
+        },
+        "toolchains": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/toolchain"
+          }
+        },
+        "estimated_cost": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "sharding_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shards"
+      ],
+      "properties": {
+        "shards": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/shard"
+          }
+        }
+      }
+    },
+    "sharding_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "sharding"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/sharding_input"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/sharding_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "validation_check": {
+      "enum": [
+        "build_file_presence"
+      ]
+    },
+    "validation_diagnostic_code": {
+      "enum": [
+        "BUILD_FILE_MISSING",
+        "BUILD_FILE_EMPTY",
+        "LOCAL_DEPENDENCY_UNDECLARED",
+        "STANDALONE_PREREQUISITE_MISSING",
+        "STARLARK_SOURCE_INVALID",
+        "STARLARK_DEPENDENCY_INVALID",
+        "IDENTITY_AMBIGUOUS",
+        "MANIFEST_AMBIGUOUS",
+        "TOOLCHAIN_UNSUPPORTED",
+        "PATH_UNSAFE"
+      ]
+    },
+    "validation_package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "rel_path",
+        "language",
+        "build_file_state",
+        "build_references",
+        "is_starlark",
+        "declared_srcs",
+        "declared_deps"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "rel_path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "language": {
+          "$ref": "#/$defs/language"
+        },
+        "build_file_state": {
+          "enum": [
+            "present",
+            "empty",
+            "missing"
+          ]
+        },
+        "build_references": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/package_name"
+          }
+        },
+        "is_starlark": {
+          "type": "boolean"
+        },
+        "declared_srcs": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/portable_glob"
+          }
+        },
+        "declared_deps": {
+          "$ref": "#/$defs/package_names"
+        }
+      }
+    },
+    "validation_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "validation"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "platform",
+            "checks",
+            "packages",
+            "dependency_edges"
+          ],
+          "properties": {
+            "platform": {
+              "enum": [
+                "darwin",
+                "linux",
+                "windows"
+              ]
+            },
+            "checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/validation_check"
+              }
+            },
+            "packages": {
+              "type": "array",
+              "maxItems": 4096,
+              "items": {
+                "$ref": "#/$defs/validation_package"
+              }
+            },
+            "dependency_edges": {
+              "type": "array",
+              "maxItems": 16384,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/edge"
+              }
+            }
+          }
+        }
+      }
+    },
+    "validation_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "valid",
+        "diagnostic_codes"
+      ],
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "diagnostic_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/validation_diagnostic_code"
+          }
+        }
+      }
+    },
+    "validation_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "validation"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/validation_input"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "enum": [
+                  "ok",
+                  "error"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/validation_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "toolchain": {
+      "enum": [
+        "cpp",
+        "dart",
+        "dotnet",
+        "elixir",
+        "go",
+        "haskell",
+        "java",
+        "kotlin",
+        "lua",
+        "ocaml",
+        "perl",
+        "python",
+        "ruby",
+        "rust",
+        "swift",
+        "typescript"
+      ]
+    },
+    "toolchain_package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "language"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "language": {
+          "$ref": "#/$defs/language"
+        }
+      }
+    },
+    "toolchain_detection_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "toolchain_detection"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packages",
+            "scheduled_packages",
+            "forced_toolchains"
+          ],
+          "properties": {
+            "packages": {
+              "type": "array",
+              "maxItems": 4096,
+              "items": {
+                "$ref": "#/$defs/toolchain_package"
+              }
+            },
+            "scheduled_packages": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/$defs/package_names"
+                }
+              ]
+            },
+            "forced_toolchains": {
+              "type": "array",
+              "maxItems": 16,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/language"
+              }
+            }
+          }
+        }
+      }
+    },
+    "toolchain_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cpp",
+        "dart",
+        "dotnet",
+        "elixir",
+        "go",
+        "haskell",
+        "java",
+        "kotlin",
+        "lua",
+        "ocaml",
+        "perl",
+        "python",
+        "ruby",
+        "rust",
+        "swift",
+        "typescript"
+      ],
+      "properties": {
+        "cpp": {
+          "type": "boolean"
+        },
+        "dart": {
+          "type": "boolean"
+        },
+        "dotnet": {
+          "type": "boolean"
+        },
+        "elixir": {
+          "type": "boolean"
+        },
+        "go": {
+          "type": "boolean"
+        },
+        "haskell": {
+          "type": "boolean"
+        },
+        "java": {
+          "type": "boolean"
+        },
+        "kotlin": {
+          "type": "boolean"
+        },
+        "lua": {
+          "type": "boolean"
+        },
+        "ocaml": {
+          "type": "boolean"
+        },
+        "perl": {
+          "type": "boolean"
+        },
+        "python": {
+          "type": "boolean"
+        },
+        "ruby": {
+          "type": "boolean"
+        },
+        "rust": {
+          "type": "boolean"
+        },
+        "swift": {
+          "type": "boolean"
+        },
+        "typescript": {
+          "type": "boolean"
+        }
+      }
+    },
+    "toolchain_detection_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "toolchains"
+      ],
+      "properties": {
+        "toolchains": {
+          "$ref": "#/$defs/toolchain_map"
+        }
+      }
+    },
+    "toolchain_detection_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "toolchain_detection"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/toolchain_detection_input"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/toolchain_detection_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "cli_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "cli"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "condition",
+            "requires_execution"
+          ],
+          "properties": {
+            "action": {
+              "enum": [
+                "build",
+                "validate",
+                "dry_run",
+                "emit_plan"
+              ]
+            },
+            "condition": {
+              "enum": [
+                "success",
+                "package_failure",
+                "validation_failure",
+                "invalid_usage",
+                "unsafe_input"
+              ]
+            },
+            "requires_execution": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    "cli_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exit_code"
+      ],
+      "properties": {
+        "exit_code": {
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        }
+      }
+    },
+    "cli_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "cli"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "error"
+          ]
+        },
+        "input": {
+          "$ref": "#/$defs/cli_input"
+        },
+        "result": {
+          "$ref": "#/$defs/cli_result"
+        }
+      }
+    }
+  }
+}

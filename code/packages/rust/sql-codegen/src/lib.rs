@@ -73,8 +73,13 @@ use coding_adventures_sql_backend::{ColumnDef, SqlValue};
 use coding_adventures_sql_optimizer::OptimizedPlan;
 use coding_adventures_sql_planner::{
     AggFunc, AggregateItem, Assignment, BinaryOp as PlanBinaryOp, InsertSource, JoinKind,
-    OutputColumn, SortKey, SqlExpr, UnaryOp as PlanUnaryOp,
+    OutputColumn, SqlExpr, UnaryOp as PlanUnaryOp,
 };
+
+/// The CAST target type, re-exported from the planner so `Instruction::Cast`
+/// and the VM can name it without a parallel enum (it is a plain data enum
+/// with identical meaning across all three layers).
+pub use coding_adventures_sql_planner::CastType;
 
 // ---------------------------------------------------------------------------
 // Maximum recursion depth for compile_expr.
@@ -87,7 +92,7 @@ use coding_adventures_sql_planner::{
 const MAX_EXPR_DEPTH: usize = 512;
 
 std::thread_local! {
-    static EXPR_DEPTH: std::cell::Cell<usize> = std::cell::Cell::new(0);
+    static EXPR_DEPTH: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
 }
 
 // ===========================================================================
@@ -130,6 +135,14 @@ pub enum BinaryOp {
     Or,
     /// `left || right` (string concatenation)
     Concat,
+    /// `left & right` (bitwise AND; operands coerced to integer)
+    BitAnd,
+    /// `left | right` (bitwise OR; operands coerced to integer)
+    BitOr,
+    /// `left << right` (bitwise left shift; SQLite saturation/negation rules)
+    ShiftLeft,
+    /// `left >> right` (bitwise arithmetic right shift; SQLite rules)
+    ShiftRight,
 }
 
 /// A unary operator for the VM's evaluation stack.
@@ -143,6 +156,8 @@ pub enum UnaryOp {
     Neg,
     /// Logical negation: `NOT x`
     Not,
+    /// Bitwise complement: `~x` (operand coerced to integer)
+    BitNot,
 }
 
 /// An aggregate function tag.
@@ -171,12 +186,20 @@ pub enum AggFn {
     CountDistinct,
     /// `SUM(col)` — sum of all non-NULL values
     Sum,
+    /// `TOTAL(col)` — like SUM but always REAL and `0.0` (never NULL) for an
+    /// empty/all-NULL group.
+    Total,
     /// `AVG(col)` — arithmetic mean of non-NULL values
     Avg,
     /// `MIN(col)` — minimum value
     Min,
     /// `MAX(col)` — maximum value
     Max,
+    /// `GROUP_CONCAT([DISTINCT] col [, sep])` — concatenate non-NULL values in
+    /// row order, joined by `sep` (the constant separator captured at plan time;
+    /// the value stream is just `col`). `distinct` deduplicates values before
+    /// joining, matching `GROUP_CONCAT(DISTINCT col)`.
+    GroupConcat { sep: String, distinct: bool },
 }
 
 /// A sort key emitted by the code generator, used in `SortResult`.
@@ -189,6 +212,19 @@ pub struct CompiledSortKey {
     pub column: String,
     /// `true` = ascending (ASC), `false` = descending (DESC).
     pub ascending: bool,
+    /// Explicit NULL placement from `NULLS FIRST` / `NULLS LAST`. `None` = the
+    /// SQLite default (NULLs first for ASC, last for DESC).
+    pub nulls_first: Option<bool>,
+    /// Collating sequence from `COLLATE name`, applied to text values before
+    /// comparison. `None` = default byte order (BINARY). `Some("NOCASE")` =
+    /// ASCII case-insensitive; `Some("RTRIM")` = ignore trailing spaces.
+    pub collation: Option<String>,
+    /// Set when a positional `ORDER BY <n>` binds to output column `n-1` by INDEX
+    /// (a `ORDER BY <n>` over an aggregate, whose emitted value must be sorted
+    /// directly). During compilation this index is resolved to `column` (the
+    /// output column's emitted name) once the Project's columns are known; the VM
+    /// only ever reads `column`, so this is `None` by the time it runs.
+    pub output_index: Option<usize>,
 }
 
 /// The complete bytecode instruction set for the Mini-SQLite VM.
@@ -264,19 +300,37 @@ pub enum Instruction {
     /// SQL `BETWEEN` (or `NOT BETWEEN`) range test.
     ///
     /// Expects the stack to contain `[..., value, low, high]` (high on top).
-    /// Pops all three; pushes `Bool(value >= low AND value <= high)`.
-    /// If `inclusive = false` the bounds are exclusive (value > low AND value < high).
+    /// Pops all three; the payload is `!negated` (`true` for `BETWEEN`, `false`
+    /// for `NOT BETWEEN`). `BETWEEN` pushes the inclusive range test
+    /// `Bool(value >= low AND value <= high)`; `NOT BETWEEN` pushes its logical
+    /// negation `Bool(value < low OR value > high)`. Any NULL operand → NULL.
     ///
     /// ## Stack effect: `[..., value, low, high] → [..., Bool]`
-    Between(bool), // inclusive
+    Between(bool), // !negated: true = BETWEEN, false = NOT BETWEEN
 
-    /// SQL `LIKE` pattern match.
+    /// SQL `LIKE` / `NOT LIKE` pattern match.
     ///
-    /// Expects `[..., value, pattern]` (pattern on top).
-    /// Pops both; pushes a Bool result.
+    /// Expects `[..., value, pattern]` (pattern on top). Pops both; pushes a
+    /// Bool result (or NULL if either operand is NULL). The `bool` payload is the
+    /// `NOT` flag: when `true`, the (non-NULL) match result is inverted.
     ///
     /// ## Stack effect: `[..., value, pattern] → [..., Bool]`
-    Like,
+    Like(bool),
+
+    /// SQL `LIKE` / `NOT LIKE` with an `ESCAPE ch` clause.
+    ///
+    /// Expects `[..., value, pattern, escape]` (escape on top). The escape
+    /// value's first character makes a following `%`, `_`, or the escape
+    /// character itself a literal in the pattern. The `bool` payload is the `NOT`
+    /// flag (see [`Instruction::Like`]).
+    ///
+    /// ## Stack effect: `[..., value, pattern, escape] → [..., Bool]`
+    LikeEscape(bool),
+
+    /// SQL `CAST(value AS type)` — pop one value, push its conversion.
+    ///
+    /// ## Stack effect: `[..., value] → [..., converted]`
+    Cast(CastType),
 
     /// SQL `IN (v1, v2, ...)` list membership test.
     ///
@@ -379,9 +433,16 @@ pub enum Instruction {
     /// Push the current `GROUP BY` key values onto the stack and record them
     /// as the "current group" in the VM.
     ///
-    /// `Vec<String>` lists the column names making up the group key.
+    /// The first `Vec<String>` lists the column names making up the group key;
+    /// the parallel `Vec<Option<String>>` gives each key's collation (`None` =
+    /// the default BINARY, i.e. compare the bytes as-is).
+    ///
+    /// The collation folds ONLY the key string the VM groups on — the original
+    /// column values are kept for output, so `GROUP BY c` on a `COLLATE NOCASE`
+    /// column reports the first row's original text (`'A'`, not `'a'`) while
+    /// still grouping `'A'` with `'a'`.
     /// This instruction is emitted inside the scan loop, before `UpdateAgg`.
-    SaveGroupKey(Vec<String>),
+    SaveGroupKey(Vec<String>, Vec<Option<String>>),
 
     // ── Control flow ─────────────────────────────────────────────────────────
 
@@ -407,6 +468,23 @@ pub enum Instruction {
     ///
     /// ## Stack effect: `[..., val] → [...]`
     JumpIfFalse(String),
+
+    // ── Outer-join match flag ─────────────────────────────────────────────────
+    //
+    // A single boolean the VM keeps to implement `LEFT`/`RIGHT JOIN`. For each
+    // outer row we `ClearMatch`, `SetMatch` inside the inner loop whenever the
+    // `ON` condition holds, and after the inner loop `JumpIfMatched` over the
+    // NULL-padded emit — so an outer row with no match still produces one row
+    // (with the inner side's columns NULL). None of these touch the value stack.
+
+    /// Reset the outer-join match flag to `false` (start of each outer row).
+    ClearMatch,
+
+    /// Set the outer-join match flag to `true` (an inner row satisfied `ON`).
+    SetMatch,
+
+    /// Jump to `label` if the outer-join match flag is currently `true`.
+    JumpIfMatched(String),
 
     /// Halt the main scan loop and signal to the VM to move to post-processing.
     ///
@@ -462,7 +540,11 @@ pub enum Instruction {
     ///
     /// Emitted after `Halt` (and after `SortResult` if both are present) for
     /// `SELECT DISTINCT`.
-    DistinctResult,
+    /// Deduplicate the output rows. The `Vec<Option<String>>` gives one collation
+    /// per OUTPUT column, positionally parallel to the emitted row (`None` =
+    /// default BINARY). Only the dedupe KEY is folded — the surviving row keeps
+    /// its ORIGINAL text, since dedup retains the first occurrence.
+    DistinctResult(Vec<Option<String>>),
 
     /// Truncate the result set to at most `count` rows, starting from `offset`.
     ///
@@ -695,6 +777,27 @@ impl Compiler {
         // strip them.  This keeps `SortResult` as a simple name-based lookup.
         let (inner, mut post_ops) = peel_post_ops_through_project(plan);
 
+        // Resolve any positional `ORDER BY <n>` key that binds to an output column
+        // BY INDEX — a `ORDER BY <n>` over an AGGREGATE, which must sort the
+        // already-materialized value. The planner records the output index but
+        // cannot name the column (the emitted name is computed here); so bind the
+        // key to `output_column_name(columns[i])`. This runs BEFORE the hidden-sort
+        // analysis below so the resolved key is recognized as an OUTPUT column
+        // (not spuriously treated as a hidden sort column and re-evaluated).
+        if let OptimizedPlan::Project { columns, .. } = inner.as_ref() {
+            for op in &mut post_ops {
+                if let Instruction::SortResult(keys) = op {
+                    for key in keys.iter_mut() {
+                        if let Some(i) = key.output_index {
+                            if let Some(col) = columns.get(i) {
+                                key.column = output_column_name(col);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // Extract the sort keys (if any) so we can pass hidden sort columns
         // to compile_project.
         let hidden_sort_cols: Vec<(String, SqlExpr)> =
@@ -807,7 +910,12 @@ impl Compiler {
                             compiler.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
                             compiler.emit(Instruction::BeginRow);
                             for col in &cols {
-                                compiler.compile_expr(&col.expr);
+                                // Peel any explicit-COLLATE wrapper: a collation
+                                // never changes the emitted value (only how keys
+                                // compare), so the projection emits the underlying
+                                // expression. `output_column_name` still renders the
+                                // `COLLATE` suffix from the unpeeled column.
+                                compiler.compile_expr(strip_collate(&col.expr));
                                 let name = output_column_name(col);
                                 compiler.emit(Instruction::EmitColumn(name));
                             }
@@ -819,16 +927,34 @@ impl Compiler {
                             compiler.emit(Instruction::Label(skip_lbl.clone()));
                         });
                     }
-                    OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
-                        // Aggregate output already handles its own projection.
-                        self.compile_inner(input);
+                    OptimizedPlan::Aggregate {
+                        input: agg_input,
+                        group_by,
+                        aggregates,
+                    } => {
+                        // Project through the SELECT list. (Hidden sort-key
+                        // columns aren't appended here — an aggregate emits its
+                        // own row; a positional ORDER BY binds to an output
+                        // column, which needs no hidden column.)
+                        self.compile_aggregate(agg_input, group_by, aggregates, Some(&cols));
+                    }
+                    OptimizedPlan::Having {
+                        input: having_input,
+                        predicate,
+                    } => {
+                        self.compile_having(having_input, predicate, Some(&cols));
                     }
                     _ => {
                         let hidden_clone = hidden_cols.clone();
                         self.compile_scan_loop(input, move |compiler, _alias| {
                             compiler.emit(Instruction::BeginRow);
                             for col in &cols {
-                                compiler.compile_expr(&col.expr);
+                                // Peel any explicit-COLLATE wrapper: a collation
+                                // never changes the emitted value (only how keys
+                                // compare), so the projection emits the underlying
+                                // expression. `output_column_name` still renders the
+                                // `COLLATE` suffix from the unpeeled column.
+                                compiler.compile_expr(strip_collate(&col.expr));
                                 let name = output_column_name(col);
                                 compiler.emit(Instruction::EmitColumn(name));
                             }
@@ -904,11 +1030,12 @@ impl Compiler {
                 group_by,
                 aggregates,
             } => {
-                self.compile_aggregate(input, group_by, aggregates);
+                // No enclosing Project here: fall back to the fixed layout.
+                self.compile_aggregate(input, group_by, aggregates, None);
             }
 
             OptimizedPlan::Having { input, predicate } => {
-                self.compile_having(input, predicate);
+                self.compile_having(input, predicate, None);
             }
 
             OptimizedPlan::Join {
@@ -967,7 +1094,7 @@ impl Compiler {
             // We still handle them defensively by recursing into their child.
             OptimizedPlan::Sort { input, .. }
             | OptimizedPlan::Limit { input, .. }
-            | OptimizedPlan::Distinct(input) => {
+            | OptimizedPlan::Distinct(input, _) => {
                 self.compile_inner(input);
             }
 
@@ -1064,7 +1191,10 @@ impl Compiler {
                     compiler.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
-                        compiler.compile_expr(&col.expr);
+                        // Peel an explicit-COLLATE wrapper: the value is the
+                        // underlying expression (collation only folds keys); the
+                        // name still renders the `COLLATE` suffix.
+                        compiler.compile_expr(strip_collate(&col.expr));
                         let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
@@ -1081,12 +1211,34 @@ impl Compiler {
                 self.emit(Instruction::DefineColumns(col_names));
             }
 
-            // ── Aggregate / Having: these already emit rows.  The Project
-            //    wrapper's column aliases are pre-propagated into the
-            //    AggregateItem.alias fields by the planner.  Just compile the
-            //    inner plan directly and skip the extra scan loop. ────────────
-            OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
-                self.compile_inner(input);
+            // ── Aggregate / Having: these emit one row per group. Pass the
+            //    SELECT list down so the per-group row is projected through it
+            //    (order + identity), instead of the internal group-key-then-
+            //    aggregate layout. ─────────────────────────────────────────────
+            OptimizedPlan::Aggregate {
+                input: agg_input,
+                group_by,
+                aggregates,
+            } => {
+                self.compile_aggregate(agg_input, group_by, aggregates, Some(columns));
+            }
+            OptimizedPlan::Having {
+                input: having_input,
+                predicate,
+            } => {
+                self.compile_having(having_input, predicate, Some(columns));
+            }
+
+            // ── Join: thread the projection through the join's inner loop so
+            //    qualified columns resolve against the correct cursor. ─────────
+            OptimizedPlan::Join {
+                left,
+                right,
+                kind,
+                condition,
+            } => {
+                let cols = columns.to_vec();
+                self.compile_join_projected(left, right, kind, condition, &cols);
             }
 
             // ── All other inputs (plain Scan, etc.): standard scan loop ──────
@@ -1095,7 +1247,10 @@ impl Compiler {
                 self.compile_scan_loop(input, |compiler, _alias| {
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
-                        compiler.compile_expr(&col.expr);
+                        // Peel an explicit-COLLATE wrapper: the value is the
+                        // underlying expression (collation only folds keys); the
+                        // name still renders the `COLLATE` suffix.
+                        compiler.compile_expr(strip_collate(&col.expr));
                         let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
@@ -1162,6 +1317,71 @@ impl Compiler {
     // Aggregate compilation
     // -----------------------------------------------------------------------
 
+    /// Emit the Phase-2 output columns for one group of a grouped aggregate.
+    ///
+    /// This is the projection step — it runs after `FinalizeAgg` values are
+    /// available and inside a `BeginRow`/`EmitRow` pair supplied by the caller.
+    ///
+    /// **Projected path** — used whenever an enclosing `SELECT` list is available.
+    /// The row follows that list exactly — order, count, and identity all come
+    /// from what the user wrote — with each item compiled in the group's finalize
+    /// context: a GROUP BY key column reads its key value from the group's fake
+    /// row (so a collated key still reports its original text), and an aggregate
+    /// column resolves through `agg_slots` to its `FinalizeAgg` slot (the same
+    /// machinery HAVING uses). So `SELECT x, c FROM t GROUP BY c, x` yields
+    /// columns `[x, c]` (not the internal group-key order `[c, x]`), and
+    /// `SELECT max(x) AS mx, c FROM t GROUP BY c` yields `[mx, c]` (not
+    /// `[c, max(x)]`). This works for aggregate columns because the planner lowers
+    /// EVERY aggregate — including `group_concat` — to `SqlExpr::Aggregate`, so
+    /// `compile_expr` can resolve them, and `output_column_name` names them the
+    /// SQLite way.
+    ///
+    /// **Fixed path** — used only with no projection (an aggregate compiled
+    /// outside a `Project`; rare, mostly defensive / subquery paths). It emits
+    /// every GROUP BY key (from its underlying column, so the group's original
+    /// text and name are reported) followed by every aggregate in declaration
+    /// order.
+    fn emit_group_row(
+        &mut self,
+        projection: Option<&[OutputColumn]>,
+        group_by: &[SqlExpr],
+        agg_fns: &[AggFn],
+        aggregates: &[AggregateItem],
+    ) {
+        match projection {
+            Some(cols) => {
+                // Let `compile_expr` resolve an aggregate reference in the SELECT
+                // list to its accumulator slot (matched by func/arg/distinct); a
+                // bare column reference falls through to a `LoadColumn` against the
+                // group's fake row instead.
+                self.agg_slots = aggregates.iter().cloned().enumerate().collect();
+                for col in cols {
+                    // Peel an explicit-COLLATE wrapper before emitting the value
+                    // (collation folds keys, not emitted values); the name still
+                    // renders the `COLLATE` suffix from the unpeeled column.
+                    self.compile_expr(strip_collate(&col.expr));
+                    self.emit(Instruction::EmitColumn(output_column_name(col)));
+                }
+                self.agg_slots.clear();
+            }
+            None => {
+                for e in group_by {
+                    let e = strip_collate(e);
+                    self.compile_expr(e);
+                    let name = match e {
+                        SqlExpr::Column { name, .. } => name.clone(),
+                        _ => "?".to_string(),
+                    };
+                    self.emit(Instruction::EmitColumn(name));
+                }
+                for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
+                    self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
+                }
+            }
+        }
+    }
+
     /// Compile `Aggregate { input, group_by, aggregates }`.
     ///
     /// ## Two-phase structure
@@ -1189,19 +1409,14 @@ impl Compiler {
         input: &OptimizedPlan,
         group_by: &[SqlExpr],
         aggregates: &[AggregateItem],
+        projection: Option<&[OutputColumn]>,
     ) {
         let n = aggregates.len();
         // Allocate accumulator slots: one per aggregate in declaration order.
         self.emit(Instruction::InitAgg(n));
 
-        // Build group key column names for SaveGroupKey.
-        let group_key_cols: Vec<String> = group_by
-            .iter()
-            .map(|e| match e {
-                SqlExpr::Column { name, .. } => name.clone(),
-                _ => "?".to_string(),
-            })
-            .collect();
+        // Build group key column names for SaveGroupKey, plus each key's collation.
+        let (group_key_cols, group_key_colls) = group_key_cols_and_collations(group_by);
 
         // Compute all the agg function tags upfront so the borrow checker
         // can release the borrow on `aggregates` before we use the compiler.
@@ -1211,8 +1426,6 @@ impl Compiler {
             .collect();
         let agg_args: Vec<Option<SqlExpr>> =
             aggregates.iter().map(|a| a.arg.clone()).collect();
-        let agg_aliases: Vec<Option<String>> =
-            aggregates.iter().map(|a| a.alias.clone()).collect();
 
         // Phase 1: scan loop body — save group key + update each aggregate.
         let loop_lbl = self.fresh_label("agg_loop");
@@ -1222,7 +1435,7 @@ impl Compiler {
         // This body is injected into the scan loop for both Scan and Filter inputs.
         let emit_agg_body = |compiler: &mut Compiler| {
             if !group_key_cols.is_empty() {
-                compiler.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
+                compiler.emit(Instruction::SaveGroupKey(group_key_cols.clone(), group_key_colls.clone()));
             }
             for (i, (fn_tag, arg)) in agg_fns.iter().zip(agg_args.iter()).enumerate() {
                 if let Some(arg_expr) = arg {
@@ -1284,25 +1497,11 @@ impl Compiler {
             }
         }
 
-        // Phase 2: emit one output row per group.
-        // FinalizeAgg pushes the final accumulated value for each slot,
-        // then we assemble a row from group key values + aggregate values.
+        // Phase 2: emit one output row per group, projected through the SELECT
+        // list (see `emit_group_row`) so column order/identity match what the
+        // user wrote rather than the internal group-key-then-aggregate layout.
         self.emit(Instruction::BeginRow);
-        // Emit group-by columns first (as LoadColumn for each group key expr).
-        for e in group_by {
-            self.compile_expr(e);
-            let name = match e {
-                SqlExpr::Column { name, .. } => name.clone(),
-                _ => "?".to_string(),
-            };
-            self.emit(Instruction::EmitColumn(name));
-        }
-        // Emit finalized aggregate values.
-        for (i, (fn_tag, alias)) in agg_fns.iter().zip(agg_aliases.iter()).enumerate() {
-            self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-            let col_name = alias.clone().unwrap_or_else(|| format!("agg_{}", i));
-            self.emit(Instruction::EmitColumn(col_name));
-        }
+        self.emit_group_row(projection, group_by, &agg_fns, aggregates);
         self.emit(Instruction::EmitRow);
     }
 
@@ -1317,7 +1516,12 @@ impl Compiler {
     /// predicate check before the final row emission.
     ///
     /// If the predicate is false, we skip `EmitRow` for that group.
-    fn compile_having(&mut self, input: &OptimizedPlan, predicate: &SqlExpr) {
+    fn compile_having(
+        &mut self,
+        input: &OptimizedPlan,
+        predicate: &SqlExpr,
+        projection: Option<&[OutputColumn]>,
+    ) {
         match input {
             OptimizedPlan::Aggregate {
                 input: agg_input,
@@ -1327,13 +1531,7 @@ impl Compiler {
                 let n = aggregates.len();
                 self.emit(Instruction::InitAgg(n));
 
-                let group_key_cols: Vec<String> = group_by
-                    .iter()
-                    .map(|e| match e {
-                        SqlExpr::Column { name, .. } => name.clone(),
-                        _ => "?".to_string(),
-                    })
-                    .collect();
+                let (group_key_cols, group_key_colls) = group_key_cols_and_collations(group_by);
 
                 let agg_fns: Vec<AggFn> = aggregates
                     .iter()
@@ -1341,8 +1539,6 @@ impl Compiler {
                     .collect();
                 let agg_args: Vec<Option<SqlExpr>> =
                     aggregates.iter().map(|a| a.arg.clone()).collect();
-                let agg_aliases: Vec<Option<String>> =
-                    aggregates.iter().map(|a| a.alias.clone()).collect();
 
                 let loop_lbl = self.fresh_label("having_loop");
                 let end_lbl = self.fresh_label("having_end");
@@ -1359,7 +1555,7 @@ impl Compiler {
                             end_lbl.clone(),
                         ));
                         if !group_key_cols.is_empty() {
-                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
+                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone(), group_key_colls.clone()));
                         }
                         for (i, (fn_tag, arg)) in
                             agg_fns.iter().zip(agg_args.iter()).enumerate()
@@ -1376,7 +1572,7 @@ impl Compiler {
                     other => {
                         self.compile_inner(other);
                         if !group_key_cols.is_empty() {
-                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
+                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone(), group_key_colls.clone()));
                         }
                         for (i, (fn_tag, arg)) in
                             agg_fns.iter().zip(agg_args.iter()).enumerate()
@@ -1394,10 +1590,7 @@ impl Compiler {
                 // then check predicate, then emit row.
                 for (i, fn_tag) in agg_fns.iter().enumerate() {
                     self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    let col_name = agg_aliases[i]
-                        .clone()
-                        .unwrap_or_else(|| format!("agg_{}", i));
-                    self.emit(Instruction::EmitColumn(col_name));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(&aggregates[i])));
                 }
 
                 // HAVING predicate check — skip the row if false.
@@ -1409,26 +1602,16 @@ impl Compiler {
                     .iter()
                     .cloned()
                     .enumerate()
-                    .map(|(i, a)| (i, a))
                     .collect();
                 self.compile_expr(predicate);
                 self.agg_slots.clear();
                 self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
 
                 self.emit(Instruction::BeginRow);
-                for e in group_by {
-                    self.compile_expr(e);
-                    let name = match e {
-                        SqlExpr::Column { name, .. } => name.clone(),
-                        _ => "?".to_string(),
-                    };
-                    self.emit(Instruction::EmitColumn(name));
-                }
-                for (i, (fn_tag, alias)) in agg_fns.iter().zip(agg_aliases.iter()).enumerate() {
-                    self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    let col_name = alias.clone().unwrap_or_else(|| format!("agg_{}", i));
-                    self.emit(Instruction::EmitColumn(col_name));
-                }
+                // Project through the SELECT list (see `emit_group_row`) so the
+                // surviving group's columns follow what the user wrote, not the
+                // internal group-key-then-aggregate order.
+                self.emit_group_row(projection, group_by, &agg_fns, aggregates);
                 self.emit(Instruction::EmitRow);
                 self.emit(Instruction::Label(skip_lbl));
             }
@@ -1534,6 +1717,222 @@ impl Compiler {
         self.emit(Instruction::Jump(outer_loop));
         self.emit(Instruction::Label(outer_end));
         self.emit(Instruction::CloseScan(outer_alias));
+    }
+
+    /// Compile a nested-loop join of `left` and `right` **with a projection**:
+    /// the `columns` are evaluated and emitted *inside* the inner loop, once per
+    /// matched pair. This is the path a real `SELECT … FROM a JOIN b` takes
+    /// (the planner always wraps a join in a `Project`).
+    ///
+    /// ## Why this exists separately from [`compile_join`]
+    ///
+    /// Two problems had to be fixed together for qualified columns to resolve:
+    ///
+    /// 1. **Cursor keys must be distinct and match the column qualifiers.** A
+    ///    `FROM a` with no `AS` alias would otherwise open its cursor under the
+    ///    `None` key — and so would `FROM b`, so the two collided and *both*
+    ///    `a.x` and `b.y` read from whichever advanced last (resolving to NULL).
+    ///    Here each side is keyed by its **effective alias** — the explicit alias
+    ///    if given, else the table name — which is exactly what a `LoadColumn`
+    ///    qualifier (`a.x` → `LoadColumn(Some("a"), "x")`) looks up. Now the `ON`
+    ///    condition *and* the projected columns resolve against the right row.
+    /// 2. **The projection must run inside the loop.** Emitting the output
+    ///    columns after the join loop closed (the old `compile_scan_loop`
+    ///    fallback) evaluated them with no live cursor, producing a single
+    ///    all-NULL row. They belong in the per-pair body.
+    /// ## Join kinds
+    ///
+    /// - **INNER / CROSS** — the classic nested loop; a matched pair (or every
+    ///   pair, for CROSS) is projected and emitted.
+    /// - **LEFT / RIGHT OUTER** — every *outer* row must appear at least once.
+    ///   We keep a per-outer-row match flag ([`Instruction::ClearMatch`] /
+    ///   [`Instruction::SetMatch`]); after the inner loop, if nothing matched we
+    ///   emit one row with the inner side NULL. `RIGHT a b` is just `LEFT b a`
+    ///   (the outer/inner roles swap; the projection still references each table
+    ///   by name, so the output is unchanged). The NULL padding falls out for
+    ///   free: `CloseScan` drops the inner cursor's `current_row`, so its columns
+    ///   read NULL while the still-open outer cursor keeps its real values.
+    /// - **FULL OUTER** — every row from *both* sides, matched pairs joined and
+    ///   unmatched rows NULL-padded on the missing side. A single nested loop
+    ///   can't produce the unmatched *right* rows (the inner side is re-scanned
+    ///   per outer row, so "did this right row ever match *any* left row?" isn't
+    ///   known during the forward pass), so we run two passes and union them.
+    ///   Pass 1 is a LEFT JOIN (outer = left): all matched pairs, plus each left
+    ///   row that matched nothing, NULL-padded on the right. Pass 2 is a RIGHT
+    ///   *anti*-join (outer = right): for each right row we evaluate `ON` against
+    ///   every left row but **suppress the matched-pair emit** (pass 1 already
+    ///   produced those) and emit only the right rows that matched no left row,
+    ///   NULL-padded on the left. The union is exactly a FULL JOIN with no
+    ///   duplicated matched pairs; both passes reuse the same match-flag
+    ///   machinery, so no new VM instructions are needed. Ordering across the two
+    ///   passes is handled by the surrounding `ORDER BY` sort, which runs after
+    ///   every row is emitted.
+    fn compile_join_projected(
+        &mut self,
+        left: &OptimizedPlan,
+        right: &OptimizedPlan,
+        kind: &JoinKind,
+        condition: &Option<SqlExpr>,
+        columns: &[OutputColumn],
+    ) {
+        match kind {
+            // FULL OUTER = LEFT JOIN  ∪  RIGHT anti-join (see the doc above).
+            JoinKind::Full => {
+                let eval = condition.is_some();
+                // Pass 1: the LEFT half — matched pairs + left-only rows.
+                self.emit_join_pass(left, right, condition, eval, true, true, columns);
+                // Pass 2: the right rows that matched no left row. `emit_matched`
+                // is false so matched pairs are NOT emitted a second time.
+                self.emit_join_pass(right, left, condition, eval, false, true, columns);
+            }
+            _ => {
+                // RIGHT JOIN is LEFT JOIN with the operands swapped.
+                let (outer_plan, inner_plan) = if *kind == JoinKind::Right {
+                    (right, left)
+                } else {
+                    (left, right)
+                };
+                let is_outer = matches!(kind, JoinKind::Left | JoinKind::Right);
+                // INNER/LEFT/RIGHT evaluate the ON condition; CROSS has none.
+                let eval_condition = condition.is_some()
+                    && matches!(kind, JoinKind::Inner | JoinKind::Left | JoinKind::Right);
+                self.emit_join_pass(
+                    outer_plan,
+                    inner_plan,
+                    condition,
+                    eval_condition,
+                    /* emit_matched   */ true,
+                    /* emit_unmatched */ is_outer,
+                    columns,
+                );
+            }
+        }
+    }
+
+    /// Emit one nested-loop join pass over `outer_plan` × `inner_plan`.
+    ///
+    /// - `eval_condition` — evaluate the `ON` predicate to gate matches (false ⇒
+    ///   every pair "matches", i.e. a cross product).
+    /// - `emit_matched` — project + emit a row for each matched pair. FULL JOIN's
+    ///   second (anti-join) pass sets this false: it needs the match *flag* to
+    ///   know which right rows were unmatched, but must not re-emit pairs.
+    /// - `emit_unmatched` — after the inner loop, if this outer row matched no
+    ///   inner row, emit one row with the inner side NULL-padded (its cursor is
+    ///   closed, so its columns read NULL while the outer cursor holds its row).
+    ///
+    /// The match flag (`ClearMatch`/`SetMatch`/`JumpIfMatched`) is used whenever
+    /// `emit_unmatched` is set — that is the only case that must distinguish a
+    /// matched outer row from an unmatched one.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_join_pass(
+        &mut self,
+        outer_plan: &OptimizedPlan,
+        inner_plan: &OptimizedPlan,
+        condition: &Option<SqlExpr>,
+        eval_condition: bool,
+        emit_matched: bool,
+        emit_unmatched: bool,
+        columns: &[OutputColumn],
+    ) {
+        // The flag is needed only to decide the post-loop NULL-padded emit.
+        let use_match_flag = emit_unmatched;
+
+        let outer_loop = self.fresh_label("joinp_outer_loop");
+        let outer_end = self.fresh_label("joinp_outer_end");
+        let inner_loop = self.fresh_label("joinp_inner_loop");
+        let inner_end = self.fresh_label("joinp_inner_end");
+        let cond_skip = if eval_condition {
+            self.fresh_label("joinp_cond_skip")
+        } else {
+            String::new()
+        };
+        let after_null = if emit_unmatched {
+            self.fresh_label("joinp_after_null")
+        } else {
+            String::new()
+        };
+
+        // Effective alias = explicit alias, else the table name. This is the key
+        // both the cursor and the column qualifiers agree on.
+        let (outer_table, outer_alias_opt) = extract_scan_info(outer_plan);
+        let outer_alias = Some(outer_alias_opt.unwrap_or_else(|| outer_table.clone()));
+        let (inner_table, inner_alias_opt) = extract_scan_info(inner_plan);
+        let inner_alias = Some(inner_alias_opt.unwrap_or_else(|| inner_table.clone()));
+
+        // Outer scan.
+        self.emit(Instruction::OpenScan(outer_table, outer_alias.clone()));
+        self.emit(Instruction::Label(outer_loop.clone()));
+        self.emit(Instruction::AdvanceCursor(outer_alias.clone()));
+        self.emit(Instruction::JumpIfExhausted(
+            outer_alias.clone(),
+            outer_end.clone(),
+        ));
+
+        // Start each outer row with the match flag cleared.
+        if use_match_flag {
+            self.emit(Instruction::ClearMatch);
+        }
+
+        // Inner scan (re-opened per outer row).
+        self.emit(Instruction::OpenScan(inner_table, inner_alias.clone()));
+        self.emit(Instruction::Label(inner_loop.clone()));
+        self.emit(Instruction::AdvanceCursor(inner_alias.clone()));
+        self.emit(Instruction::JumpIfExhausted(
+            inner_alias.clone(),
+            inner_end.clone(),
+        ));
+
+        // Optional join condition (both cursors are live here, correctly keyed).
+        if eval_condition {
+            if let Some(cond) = condition {
+                self.compile_expr(cond);
+                self.emit(Instruction::JumpIfFalse(cond_skip.clone()));
+            }
+        }
+
+        // A matched pair: record the match, and project the row unless this pass
+        // only wants the unmatched (anti-join) rows.
+        if use_match_flag {
+            self.emit(Instruction::SetMatch);
+        }
+        if emit_matched {
+            self.emit_row_projection(columns);
+        }
+
+        if eval_condition {
+            self.emit(Instruction::Label(cond_skip));
+        }
+
+        self.emit(Instruction::Jump(inner_loop));
+        self.emit(Instruction::Label(inner_end));
+        self.emit(Instruction::CloseScan(inner_alias));
+
+        // If no inner row matched this outer row, emit one row with the inner
+        // side NULL (its cursor is now closed, so its columns read NULL; the
+        // outer cursor still holds this outer row).
+        if emit_unmatched {
+            self.emit(Instruction::JumpIfMatched(after_null.clone()));
+            self.emit_row_projection(columns);
+            self.emit(Instruction::Label(after_null));
+        }
+
+        self.emit(Instruction::Jump(outer_loop));
+        self.emit(Instruction::Label(outer_end));
+        self.emit(Instruction::CloseScan(outer_alias));
+    }
+
+    /// Emit `BeginRow`, one `EmitColumn` per output column, then `EmitRow` —
+    /// projecting the current cursor state into one result row.
+    fn emit_row_projection(&mut self, columns: &[OutputColumn]) {
+        self.emit(Instruction::BeginRow);
+        for col in columns {
+            // Peel any explicit-COLLATE wrapper: collation folds keys, not the
+            // emitted value; the name still renders the `COLLATE` suffix.
+            self.compile_expr(strip_collate(&col.expr));
+            let name = output_column_name(col);
+            self.emit(Instruction::EmitColumn(name));
+        }
+        self.emit(Instruction::EmitRow);
     }
 
     // -----------------------------------------------------------------------
@@ -1761,14 +2160,64 @@ impl Compiler {
             SqlExpr::Like {
                 value,
                 pattern,
-                negated: _,
+                negated,
+                escape,
             } => {
-                // Stack: [value, pattern] (pattern on top).
-                // The VM applies the LIKE match.  For NOT LIKE, the caller
-                // (optimizer or VM) applies NOT to the result.
+                // Stack: [value, pattern] (pattern on top), plus [escape] when an
+                // ESCAPE clause is present. The VM applies the LIKE match and,
+                // for `NOT LIKE`, the NULL-aware inversion carried by the
+                // instruction's `negated` flag.
                 self.compile_expr(value);
                 self.compile_expr(pattern);
-                self.emit(Instruction::Like);
+                match escape {
+                    Some(escape_expr) => {
+                        self.compile_expr(escape_expr);
+                        self.emit(Instruction::LikeEscape(*negated));
+                    }
+                    None => self.emit(Instruction::Like(*negated)),
+                }
+            }
+
+            // ── CAST ─────────────────────────────────────────────────────────
+
+            SqlExpr::Cast { expr, ty } => {
+                // Evaluate the operand, then convert it in place.
+                self.compile_expr(expr);
+                self.emit(Instruction::Cast(ty.clone()));
+            }
+
+            // ── CASE ─────────────────────────────────────────────────────────
+
+            SqlExpr::Case { branches, else_val } => {
+                // Short-circuit via a jump chain (no branch's THEN is evaluated
+                // unless its WHEN matched, and no later WHEN is evaluated once
+                // one matches). Exactly one value is left on the stack.
+                //
+                //     for each branch:  <compile cond>; JumpIfTrue(body_i)
+                //     <compile ELSE or LoadConst Null>; Jump(end)
+                //     body_i: <compile then_i>; Jump(end)
+                //     end:
+                let end = self.fresh_label("case_end");
+                let body_labels: Vec<String> =
+                    branches.iter().map(|_| self.fresh_label("case_body")).collect();
+
+                for ((cond, _), body) in branches.iter().zip(body_labels.iter()) {
+                    self.compile_expr(cond);
+                    self.emit(Instruction::JumpIfTrue(body.clone()));
+                }
+                // Fell through every WHEN → the ELSE value, or NULL.
+                match else_val {
+                    Some(e) => self.compile_expr(e),
+                    None => self.emit(Instruction::LoadConst(SqlValue::Null)),
+                }
+                self.emit(Instruction::Jump(end.clone()));
+
+                for ((_, then_val), body) in branches.iter().zip(body_labels.iter()) {
+                    self.emit(Instruction::Label(body.clone()));
+                    self.compile_expr(then_val);
+                    self.emit(Instruction::Jump(end.clone()));
+                }
+                self.emit(Instruction::Label(end));
             }
 
             // ── IN list ──────────────────────────────────────────────────────
@@ -1877,6 +2326,9 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
                             _ => "?".to_string(),
                         },
                         ascending: k.ascending,
+                        nulls_first: k.nulls_first,
+                        collation: k.collation.clone(),
+                        output_index: k.output_index,
                     })
                     .collect();
                 post_ops.push(Instruction::SortResult(compiled_keys));
@@ -1890,8 +2342,8 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
                 post_ops.push(Instruction::LimitResult(*count, *offset));
                 current = input;
             }
-            OptimizedPlan::Distinct(inner) => {
-                post_ops.push(Instruction::DistinctResult);
+            OptimizedPlan::Distinct(inner, colls) => {
+                post_ops.push(Instruction::DistinctResult(colls.clone()));
                 current = inner;
             }
             _ => break,
@@ -1912,15 +2364,133 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
 /// 2. If the expression is a bare column reference (`SELECT col`), use the
 ///    column name as the implicit label.  This matches SQL's convention that
 ///    `SELECT id FROM t` exposes a column named `id`.
-/// 3. Fall back to `"?"` for complex expressions without an alias.
+/// 3. For a function call (`SELECT UPPER(name)`), reconstruct the call text —
+///    `UPPER(name)` — as the label.  SQLite names an un-aliased expression
+///    column after the *source text* of the expression, so `SELECT UPPER(name),
+///    LENGTH(name)` returns columns `UPPER(name)` and `LENGTH(name)`.  Giving
+///    the two columns distinct names is not just cosmetic: the VM keys nothing
+///    by name (it projects positionally), but the differential oracle compares
+///    column names against real SQLite, and two `?`-named columns previously
+///    diverged.  We reconstruct rather than thread source spans through the
+///    parser, which matches SQLite exactly for the whitespace-free calls we
+///    emit and degrades to `?` for arguments we cannot render.
+/// 4. Fall back to `"?"` for other complex expressions without an alias.
 fn output_column_name(col: &OutputColumn) -> String {
     if let Some(alias) = &col.alias {
         return alias.clone();
     }
+    // An explicit `COLLATE` on the select-item is carried as `__collate(inner,
+    // 'NAME')`. SQLite names such a column after its SOURCE TEXT — `b COLLATE
+    // NOCASE`, not just `b` and not the internal builtin — so render the suffix
+    // form. The VALUE is still the underlying `inner` (every projection site
+    // peels the wrapper before emitting), and DISTINCT reads the collation from
+    // the wrapper separately.
+    if let SqlExpr::FunctionCall { name, args, .. } = &col.expr {
+        if name == "__collate" && args.len() == 2 {
+            if let SqlExpr::Literal(SqlValue::Text(coll)) = &args[1] {
+                let inner = render_expr_label(&args[0]).unwrap_or_else(|| "?".to_string());
+                return format!("{inner} COLLATE {coll}");
+            }
+        }
+    }
     match &col.expr {
         SqlExpr::Column { name, .. } => name.clone(),
+        SqlExpr::FunctionCall { .. } => render_expr_label(&col.expr).unwrap_or_else(|| "?".to_string()),
+        // An un-aliased aggregate column is named after its call text (`SUM(n)`,
+        // `COUNT(*)`, `GROUP_CONCAT(x)`), matching SQLite — the same rule
+        // `aggregate_column_name` applies to the extracted `AggregateItem`. This
+        // is what lets the SELECT-list projection name an aggregate column
+        // correctly when it re-projects (instead of the old fixed layout).
+        SqlExpr::Aggregate { func, arg, distinct } => {
+            render_aggregate_name(func, arg.as_deref(), *distinct)
+        }
         _ => "?".to_string(),
     }
+}
+
+/// Best-effort reconstruction of an expression's *source text*, used as the
+/// implicit column label for un-aliased expressions (mirroring SQLite).
+///
+/// Returns `None` for any node we do not know how to render, so the caller can
+/// fall back to `"?"` rather than emitting a misleading label.  We only render
+/// the shapes that actually appear as function arguments today — columns,
+/// simple literals, and nested calls — because the goal is faithful column
+/// *names*, not a general SQL pretty-printer.
+///
+/// | expression            | rendered label   |
+/// |-----------------------|------------------|
+/// | `UPPER(name)`         | `UPPER(name)`    |
+/// | `SUBSTR(name,1,2)`    | `SUBSTR(name,1,2)` |
+/// | `LENGTH(u.name)`      | `LENGTH(u.name)` |
+/// | `COALESCE(x,'-')`     | `COALESCE(x,'-')`|
+fn render_expr_label(expr: &SqlExpr) -> Option<String> {
+    match expr {
+        SqlExpr::Column { table: Some(t), name } => Some(format!("{t}.{name}")),
+        SqlExpr::Column { table: None, name } => Some(name.clone()),
+        SqlExpr::Literal(v) => Some(match v {
+            SqlValue::Null => "NULL".to_string(),
+            SqlValue::Bool(b) => if *b { "TRUE".to_string() } else { "FALSE".to_string() },
+            SqlValue::Int(n) => n.to_string(),
+            // Render floats via SQLite's own default text form is out of scope;
+            // the plain Rust form matches for the integral/simple cases we emit.
+            SqlValue::Float(f) => f.to_string(),
+            // Single-quote string literals, doubling embedded quotes as SQL does.
+            SqlValue::Text(s) => format!("'{}'", s.replace('\'', "''")),
+            // Blobs have no simple textual column-name form; decline to render.
+            SqlValue::Blob(_) => return None,
+        }),
+        SqlExpr::FunctionCall { name, args, .. } => {
+            let rendered: Option<Vec<String>> = args.iter().map(render_expr_label).collect();
+            Some(format!("{}({})", name, rendered?.join(",")))
+        }
+        _ => None,
+    }
+}
+
+/// SQLite-style implicit column name for an un-aliased aggregate: the function
+/// call text — `COUNT(*)`, `SUM(n)`, `MIN(x)`, `AVG(n)`, `COUNT(DISTINCT id)`.
+///
+/// An explicit `AS` alias always wins. Otherwise this mirrors SQLite, which
+/// names an un-aliased result column after the expression's source text — so a
+/// bare `SELECT COUNT(*)` returns a column literally named `COUNT(*)`, not the
+/// engine-internal `agg_0`. `COUNT(*)` alone has no argument (rendered `*`);
+/// every other aggregate renders its argument via [`render_expr_label`],
+/// prefixed with `DISTINCT ` when the aggregate is distinct.
+fn aggregate_column_name(item: &AggregateItem) -> String {
+    if let Some(alias) = &item.alias {
+        return alias.clone();
+    }
+    render_aggregate_name(&item.func, item.arg.as_ref(), item.distinct)
+}
+
+/// Render an un-aliased aggregate's implicit column name from its parts — the
+/// call text SQLite uses: `COUNT(*)`, `SUM(n)`, `MIN(x)`, `GROUP_CONCAT(x)`,
+/// `COUNT(DISTINCT id)`. Shared by [`aggregate_column_name`] (which names an
+/// extracted `AggregateItem`) and [`output_column_name`] (which names a
+/// `SqlExpr::Aggregate` in the SELECT list); both must agree so a re-projected
+/// aggregate column keeps the same header as the fixed-layout one.
+fn render_aggregate_name(func: &AggFunc, arg: Option<&SqlExpr>, distinct: bool) -> String {
+    let func_name = match func {
+        AggFunc::Count => "COUNT",
+        AggFunc::Sum => "SUM",
+        AggFunc::Total => "TOTAL",
+        AggFunc::Avg => "AVG",
+        AggFunc::Min => "MIN",
+        AggFunc::Max => "MAX",
+        AggFunc::GroupConcat { .. } => "GROUP_CONCAT",
+    };
+    let inner = match arg {
+        None => "*".to_string(),
+        Some(expr) => {
+            let base = render_expr_label(expr).unwrap_or_else(|| "?".to_string());
+            if distinct {
+                format!("DISTINCT {base}")
+            } else {
+                base
+            }
+        }
+    };
+    format!("{func_name}({inner})")
 }
 
 // ===========================================================================
@@ -1999,6 +2569,10 @@ fn map_binary_op(op: &PlanBinaryOp) -> BinaryOp {
         PlanBinaryOp::And => BinaryOp::And,
         PlanBinaryOp::Or => BinaryOp::Or,
         PlanBinaryOp::Concat => BinaryOp::Concat,
+        PlanBinaryOp::BitAnd => BinaryOp::BitAnd,
+        PlanBinaryOp::BitOr => BinaryOp::BitOr,
+        PlanBinaryOp::ShiftLeft => BinaryOp::ShiftLeft,
+        PlanBinaryOp::ShiftRight => BinaryOp::ShiftRight,
     }
 }
 
@@ -2007,6 +2581,7 @@ fn map_unary_op(op: &PlanUnaryOp) -> UnaryOp {
     match op {
         PlanUnaryOp::Neg => UnaryOp::Neg,
         PlanUnaryOp::Not => UnaryOp::Not,
+        PlanUnaryOp::BitNot => UnaryOp::BitNot,
     }
 }
 
@@ -2015,6 +2590,58 @@ fn map_unary_op(op: &PlanUnaryOp) -> UnaryOp {
 /// The `is_star` flag distinguishes `COUNT(*)` (no argument) from
 /// `COUNT(col)` (with an argument).  The planner uses a `None` argument
 /// for `COUNT(*)`, which we map to `AggFn::CountStar`.
+/// Peel a `__collate(<expr>, '<COLL>')` wrapper down to `<expr>`, leaving any
+/// other expression untouched.
+///
+/// A collated GROUP BY key is *grouped* by the collated value but *reported* as
+/// the underlying column's original value, so every site that emits the key —
+/// as opposed to keying on it — must strip the wrapper first. Without this the
+/// group `{'A','a'}` would report the folded `'a'` and be named `?` instead of
+/// reporting `'A'` under the name `c`.
+fn strip_collate(expr: &SqlExpr) -> &SqlExpr {
+    match expr {
+        SqlExpr::FunctionCall { name, args, .. } if name == "__collate" && args.len() == 2 => {
+            &args[0]
+        }
+        other => other,
+    }
+}
+
+/// Split GROUP BY key expressions into the column names the VM reads per row and
+/// the collation each key groups under (`None` = default BINARY).
+///
+/// A key that carries a collation arrives wrapped as `__collate(<column>,
+/// '<COLL>')` — the same representation explicit `COLLATE` and the planner's
+/// column-collation pass already use elsewhere. We **peel** that wrapper here
+/// rather than evaluating it, because the collation must fold only the grouping
+/// KEY, never the emitted value: SQLite reports the first row of each group with
+/// its ORIGINAL text (`'A'` stays `'A'` even though it grouped case-insensitively
+/// with `'a'`). The VM keeps the untouched values in `key_vals` for output and
+/// applies these collations only when building the key string.
+///
+/// | GROUP BY expression              | column | collation |
+/// |----------------------------------|--------|-----------|
+/// | `c`                              | `c`    | `None`    |
+/// | `__collate(c, 'NOCASE')`         | `c`    | `NOCASE`  |
+/// | anything else (computed key)     | `?`    | `None`    |
+fn group_key_cols_and_collations(group_by: &[SqlExpr]) -> (Vec<String>, Vec<Option<String>>) {
+    group_by
+        .iter()
+        .map(|e| match e {
+            SqlExpr::Column { name, .. } => (name.clone(), None),
+            SqlExpr::FunctionCall { name, args, .. } if name == "__collate" && args.len() == 2 => {
+                match (&args[0], &args[1]) {
+                    (SqlExpr::Column { name: col, .. }, SqlExpr::Literal(SqlValue::Text(coll))) => {
+                        (col.clone(), Some(coll.clone()))
+                    }
+                    _ => ("?".to_string(), None),
+                }
+            }
+            _ => ("?".to_string(), None),
+        })
+        .unzip()
+}
+
 fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
     match func {
         AggFunc::Count => {
@@ -2025,9 +2652,11 @@ fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
             }
         }
         AggFunc::Sum => AggFn::Sum,
+        AggFunc::Total => AggFn::Total,
         AggFunc::Avg => AggFn::Avg,
         AggFunc::Min => AggFn::Min,
         AggFunc::Max => AggFn::Max,
+        AggFunc::GroupConcat { sep } => AggFn::GroupConcat { sep: sep.clone(), distinct: false },
     }
 }
 
@@ -2037,6 +2666,10 @@ fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
 fn plan_agg_to_agg_fn_with_distinct(func: &AggFunc, is_star: bool, distinct: bool) -> AggFn {
     if distinct && matches!(func, AggFunc::Count) && !is_star {
         AggFn::CountDistinct
+    } else if let AggFunc::GroupConcat { sep } = func {
+        // GROUP_CONCAT carries its own `distinct` (dedup before joining), rather
+        // than mapping to a separate DISTINCT opcode like COUNT does.
+        AggFn::GroupConcat { sep: sep.clone(), distinct }
     } else {
         plan_agg_to_agg_fn(func, is_star)
     }
@@ -2364,6 +2997,9 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("name"),
                 ascending: true,
+                nulls_first: None,
+                collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);
@@ -2382,6 +3018,9 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("score"),
                 ascending: true,
+                nulls_first: None,
+                collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);
@@ -2390,7 +3029,7 @@ mod tests {
             .find(|i| matches!(i, Instruction::SortResult(_)))
             .unwrap();
         if let Instruction::SortResult(keys) = sort_instr {
-            assert_eq!(keys[0].ascending, true);
+            assert!(keys[0].ascending);
         }
     }
 
@@ -2401,6 +3040,9 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("score"),
                 ascending: false,
+                nulls_first: None,
+                collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);
@@ -2409,7 +3051,7 @@ mod tests {
             .find(|i| matches!(i, Instruction::SortResult(_)))
             .unwrap();
         if let Instruction::SortResult(keys) = sort_instr {
-            assert_eq!(keys[0].ascending, false);
+            assert!(!keys[0].ascending);
         }
     }
 
@@ -2421,10 +3063,16 @@ mod tests {
                 SortKey {
                     expr: col("a"),
                     ascending: true,
+                    nulls_first: None,
+                    collation: None,
+                    output_index: None,
                 },
                 SortKey {
                     expr: col("b"),
                     ascending: false,
+                    nulls_first: None,
+                    collation: None,
+                    output_index: None,
                 },
             ],
         });
@@ -2491,10 +3139,10 @@ mod tests {
 
     #[test]
     fn test_distinct_emits_distinct_result_after_halt() {
-        let plan = optimize(LogicalPlan::Distinct(Box::new(scan("t"))));
+        let plan = optimize(LogicalPlan::Distinct(Box::new(scan("t")), vec![]));
         let v = instrs(&plan);
         let halt_idx = first_idx(&v, |i| matches!(i, Instruction::Halt)).unwrap();
-        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult)).unwrap();
+        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult(_))).unwrap();
         assert!(dist_idx > halt_idx, "DistinctResult must come after Halt");
     }
 
@@ -2677,7 +3325,7 @@ mod tests {
         });
         let v = instrs(&plan);
         assert!(
-            v.iter().any(|i| matches!(i, Instruction::SaveGroupKey(_))),
+            v.iter().any(|i| matches!(i, Instruction::SaveGroupKey(..))),
             "GROUP BY should emit SaveGroupKey"
         );
     }
@@ -3002,10 +3650,11 @@ mod tests {
                 value: Box::new(col("name")),
                 pattern: Box::new(lit_text("A%")),
                 negated: false,
+                escape: None,
             },
         });
         let v = instrs(&plan);
-        assert!(v.iter().any(|i| matches!(i, Instruction::Like)));
+        assert!(v.iter().any(|i| matches!(i, Instruction::Like(_))));
     }
 
     #[test]
@@ -3199,6 +3848,9 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("x"),
                 ascending: true,
+                nulls_first: None,
+                collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);
@@ -3212,14 +3864,17 @@ mod tests {
 
     #[test]
     fn test_distinct_and_limit_ordering() {
-        let plan = optimize(LogicalPlan::Distinct(Box::new(LogicalPlan::Limit {
-            input: Box::new(scan("t")),
-            count: Some(3),
-            offset: None,
-        })));
+        let plan = optimize(LogicalPlan::Distinct(
+            Box::new(LogicalPlan::Limit {
+                input: Box::new(scan("t")),
+                count: Some(3),
+                offset: None,
+            }),
+            vec![],
+        ));
         let v = instrs(&plan);
         let halt_idx = first_idx(&v, |i| matches!(i, Instruction::Halt)).unwrap();
-        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult)).unwrap();
+        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult(_))).unwrap();
         let limit_idx =
             first_idx(&v, |i| matches!(i, Instruction::LimitResult(..))).unwrap();
         // Both post-ops must come after Halt.

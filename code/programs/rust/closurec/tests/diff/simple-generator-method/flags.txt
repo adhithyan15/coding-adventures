@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-generator-method/input/a.js
+--compilation_level
+SIMPLE

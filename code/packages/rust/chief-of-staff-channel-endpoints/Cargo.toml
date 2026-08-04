@@ -1,0 +1,15 @@
+[package]
+name = "chief-of-staff-channel-endpoints"
+version = "0.1.0"
+edition = "2021"
+description = "Durable one-way membership and authorized endpoints for D18 Chief channels"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
+coding-adventures-json-value = { path = "../json-value" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }

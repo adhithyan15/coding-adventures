@@ -1,0 +1,30 @@
+{
+  "matrix_ir_version": 1,
+  "tensors": [
+    { "id": 0, "dtype": "f32", "shape": [3, 1] },
+    { "id": 1, "dtype": "f32", "shape": [1, 1] },
+    { "id": 2, "dtype": "f32", "shape": [3, 1] },
+    { "id": 3, "dtype": "f32", "shape": [3, 1] },
+    { "id": 4, "dtype": "f32", "shape": [3, 1] }
+  ],
+  "inputs": [0],
+  "outputs": [4],
+  "ops": [
+    { "kind": "MatMul", "a": 0, "b": 1, "output": 2 },
+    { "kind": "Add", "lhs": 2, "rhs": 3, "output": 4 }
+  ],
+  "constants": [
+    {
+      "tensor_id": 1,
+      "dtype": "f32",
+      "shape": [1, 1],
+      "bytes_hex": "00000040"
+    },
+    {
+      "tensor_id": 3,
+      "dtype": "f32",
+      "shape": [3, 1],
+      "bytes_hex": "0000803f0000803f0000803f"
+    }
+  ]
+}

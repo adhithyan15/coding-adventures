@@ -2,6 +2,63 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.7] - Unreleased
+
+### Changed
+
+- Constant folding (`fold_plan`) now threads the `SortKey::output_index` field
+  (added in sql-planner 0.2.34) through the `Sort` node it rebuilds, so a
+  positional `ORDER BY <n>` over an aggregate keeps its output-index binding
+  across optimization for codegen to resolve.
+
+## [0.1.6] - Unreleased
+
+### Changed
+
+- `OptimizedPlan::Distinct` carries the per-output-column collations added in
+  sql-planner 0.2.27; every transform that rebuilds a Distinct node (lift,
+  constant folding, predicate pushdown, projection pruning, limit pushdown,
+  dead-code elimination, and the `Filter(Distinct(x))` → `Distinct(Filter(x))`
+  rewrite) threads them through unchanged.
+
+## [0.1.5] - Unreleased
+
+### Changed
+
+- Constant folding and column collection recurse into the new `SqlExpr::Like`
+  `escape` operand.
+
+## [0.1.4] - Unreleased
+
+### Changed
+
+- **Preserve `SortKey.collation` through constant folding.** `fold_plan` now
+  carries the new `collation` field on `Sort` keys so a `COLLATE` clause
+  survives optimization.
+
+## [0.1.3] - Unreleased
+
+### Added
+
+- Handle `SqlExpr::Case`: `fold_expr` folds each condition/value and the ELSE
+  while keeping the branch structure (short-circuiting stays the VM's job), and
+  `collect_columns_in_expr` recurses into every branch and the ELSE.
+
+## [0.1.2] - Unreleased
+
+### Changed
+
+- Carry the new `SortKey.nulls_first` field through constant-folding of `Sort`
+  plan nodes.
+
+## [0.1.1] - Unreleased
+
+### Added
+
+- Handle the new `SqlExpr::Cast` variant: `fold_expr` folds the cast's operand
+  but keeps the conversion (a cast of a constant is still evaluated by the VM),
+  and `collect_columns_in_expr` recurses into the operand.
+
 ## [0.1.0] — 2026-06-30
 
 ### Added

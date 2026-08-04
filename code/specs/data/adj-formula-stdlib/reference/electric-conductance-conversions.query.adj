@@ -1,0 +1,24 @@
+% ============================================================================
+% electric-conductance-conversions.query.adj — worked lookups over the NIST conductance → siemens table.
+% ============================================================================
+% The shape a consumer produces to convert a conductance given in a traditional CGS-EMU unit into
+% SI: it `import`s the grounded table and asks the engine to bind the factor. No arithmetic and
+% no factor is stated by the consumer; the engine returns the cell WITH the table's NIST citation
+% as its proof, on the CPU.
+%
+%   ? electric_conductance_to_siemens(abmho, $v)   % 1000000000   (abmho = 1.0 E+09 S, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS
+% rather than mis-converting across dimensions. The "abohm" is an electric-RESISTANCE unit (it
+% converts to the ohm, the reciprocal quantity), NOT a conductance unit:
+%
+%   ? electric_conductance_to_siemens(abohm, $v)   % abstains (abohm is resistance → ohm)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electric-conductance-conversions.query.adj
+% ============================================================================
+
+import "electric-conductance-conversions.adj"
+
+? electric_conductance_to_siemens(abmho, $v)   % expect 1000000000  (exact NIST SP 811 B.9 factor)
+? electric_conductance_to_siemens(abohm, $v)   % expect abstain      (resistance unit, wrong dimension)

@@ -6,12 +6,104 @@ documented in this file.
 ## Unreleased
 
 ### Added
-- The WHATWG post-parse repair audit now has a focused fixture and Rust replay
-  guard over the remaining html5lib rows that still justify finish-time repair
-  shims.
-- The WHATWG formatting audit now includes a focused post-parse repair evidence
-  guard for the html5lib cases that still justify legacy finish-time recovery
-  shims.
+- Table-context end tags that force recovery from SVG or MathML foreign
+  content now report the foreign-content parse error, covering 4 previously
+  silent malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
+- HTML start tags that force recovery from SVG or MathML foreign content now
+  report the foreign-content parse error, covering 15 previously silent
+  malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
+- SVG and MathML start tags foster-parented out of table structure now report
+  the table insertion-mode parse error, covering 26 previously silent malformed
+  corpus cases without changing DOM recovery or undeclared-diagnostic coverage.
+- Non-whitespace character data foster-parented out of table structure now
+  reports the table-text parse error, covering 14 previously silent malformed
+  corpus cases without changing DOM recovery or undeclared-diagnostic coverage.
+- Obsolete `menuitem` end tags now report the in-body parse error when no
+  matching `menuitem` is current, covering 4 previously silent malformed
+  corpus cases without changing DOM recovery or undeclared-diagnostic coverage.
+- A formatting end tag that cannot cross an open table scope now reports the
+  Standard's parse error, covering 2 previously silent malformed corpus cases
+  without changing DOM recovery.
+- A paragraph end tag that breaks out of MathML foreign content now reports
+  the Standard's parse error, covering 2 previously silent malformed corpus
+  cases without changing DOM recovery.
+- A `li` start tag now reports the Standard's parse error when implied-end-tag
+  recovery closes a non-current list item, covering 2 previously silent
+  malformed corpus cases without changing DOM recovery.
+- In-body end tags now report the Standard's parse error when implied-end-tag
+  recovery leaves their matching open element non-current, closing 18
+  previously silent malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
+- EOF in the tree builder's text insertion mode now reports the Standard's
+  parse error, pops the authored text element, and reprocesses EOF in the
+  original mode, closing 92 previously silent malformed corpus cases without
+  changing DOM recovery or diagnostics for seeded fragment contexts.
+- Fragment parsing now reports the in-body EOF parse error for authored
+  disallowed open elements while excluding synthetic context-shell nodes,
+  closing 54 previously silent malformed corpus cases without changing DOM
+  recovery or diagnostics for empty contexts.
+- Rejected `frameset` start tags after an explicit body or body-incompatible
+  content now report the Standard's in-body parse error without changing DOM
+  recovery, closing 39 previously silent malformed corpus cases.
+- Stray paragraph end tags before the parser has implied the document body now
+  reuse the existing pre-body diagnostic, closing 4 previously silent malformed
+  corpus cases without changing DOM recovery.
+- The after-after-frameset insertion mode now reports unexpected character,
+  start-tag, and end-tag tokens, closing 8 previously silent malformed corpus
+  cases without changing DOM recovery.
+- An accepted `</body>` token now enters the after-body insertion mode even
+  when `html`, `head`, and `body` were all implied, closing 5 previously silent
+  malformed corpus cases for following head-only and frameset start tags.
+- Full-document parsing now reports unexpected tokens that force recovery from
+  the Standard's after-body and after-after-body insertion modes, closing 8
+  previously silent malformed corpus cases without changing DOM recovery.
+- Initial doctypes now report the Standard's parse error when their name,
+  public identifier, or system identifier does not match the allowed HTML
+  forms, closing 14 previously silent malformed corpus cases.
+- Full-document parsing now reports the in-body EOF parse error when disallowed
+  elements remain on the stack, closing 335 previously silent malformed corpus
+  cases without changing DOM recovery or fragment diagnostics.
+- `body` and `html` end tags now report the Standard's parse error when
+  disallowed elements remain on the stack of open elements, closing 7
+  previously silent malformed corpus cases without changing DOM recovery.
+- Duplicate `html`, `head`, and `body` start tags now emit tree-construction
+  diagnostics while retaining the Standard's attribute-merge recovery for
+  `html` and `body`, closing 28 previously silent malformed corpus cases.
+- Full-document parsing now emits a `missing-doctype` tree-construction
+  diagnostic when the initial insertion mode sees a non-whitespace,
+  non-comment, non-processing-instruction token before a doctype, closing 783
+  previously silent malformed corpus cases.
+- Tree-construction conformance cases now retain their declared parse-error
+  rows and ratchet diagnostic coverage, exposing 1,577 malformed cases that
+  still produce no parser or lexer diagnostic without weakening DOM checks.
+- The conformance coverage report now pins the exact upstream WPT and
+  html5lib-tests commits, and the package owns an explicit prioritized backlog
+  and zero-debt completion boundary for future upstream drift.
+- Browser render-tree extraction can now accept the fetched document URL as
+  the fallback base, including resolution of relative authored `<base href>`
+  values, so Venture can fetch relative links and inline images after HTTP
+  navigation.
+- The declarative HTML lexer now implements the current processing-instruction
+  states, and the canonical 2,637-case tree corpus covers every source
+  signature in the current 1,934-case upstream WPT tree-construction corpus.
+- Processing instructions now have first-class tokenizer and DOM plumbing from
+  declarative target/data emission through tree construction.
+- The current WPT void-in-phrasing and foreign-content CDATA cases are now
+  mirrored in the canonical tree-construction corpus and its focused void and
+  foreign-content audits.
+- The conformance coverage audit now reads tree-construction cases from WPT and
+  tokenizer cases from html5lib-tests, pins every missing WPT source signature,
+  and accepts only explicit missing-case debt counts so the now-zero gap cannot
+  silently regress as upstream evolves.
+- Fostered `nobr` table-cell continuation nodes are now repaired while
+  processing the EOF token, retiring the final `finish_document` post-parse
+  shim and the now-obsolete focused post-parse repair audit while preserving
+  the rows in their table, formatting, shell, and interaction audits.
+- The insanely badly nested html5lib table sequence is now repaired while
+  processing the EOF token, retiring one finish-time post-parse shim while
+  preserving its focused table and formatting audit coverage.
 - `<hr>` inside open `select` elements is now placed during tree construction,
   removing a post-parse repair while preserving the html5lib select-list DOM
   audit behavior.
@@ -116,6 +208,12 @@ documented in this file.
   accesskey, autofocus, and related focus metadata.
 
 ### Fixed
+- Residual HTML start tags processed through the table insertion mode now use
+  foster parenting after table-context and head-element exceptions, keeping a
+  `marquee` sibling before its open table in the current adoption-agency WPT.
+- Replacement characters from null input are now stripped only at MathML and
+  SVG HTML integration points, preserving them in ordinary foreign-content
+  text while matching the current WPT fragment and CDATA cases.
 - Test fixture generators: `COMMENT_MARKUP` regex accepts both `-->` and
   `--!>` comment end forms, and tag-axis classifier scans pass `re.I` even
   though their inputs are already lowercased.  Both changes silence codeql
@@ -292,8 +390,9 @@ documented in this file.
 - Nested `form` start tags are now ignored with a parser diagnostic while an
   outer form remains open, keeping form-associated content in the existing form
   instead of creating nested form DOMs.
-- Duplicate open `html` and `head` start tags now merge missing attributes into
-  the existing shell elements instead of creating nested shell DOMs.
+- Duplicate open `html` start tags merge missing attributes into the existing
+  document element, while duplicate `head` start tags are ignored instead of
+  creating nested shell DOMs.
 - Late `head` start tags after body content has already started are ignored
   with a parser diagnostic.
 - Self-closing flags on non-void HTML start tags are now ignored with a parser

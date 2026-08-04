@@ -24,8 +24,9 @@ The crate intentionally stops at the contract layer:
   runtime parity definitions
 - a deterministic in-memory registry for runtimes and tests
 - explicit policy decisions for permission, tier, and approval gates
-- explicit approval grants that let a previously gated invocation proceed
-  without weakening permission or tier denials
+- user-visible approval challenges plus assurance-bearing, challenge-bound
+  grants; Tier 2 requires biometric assurance and Tier 3 requires a hardware
+  key without weakening permission or tier denials
 - a deterministic in-memory runtime that validates, invokes handlers, emits
   ordered events, applies policy before handler execution, and returns canonical
   `ToolResult` records

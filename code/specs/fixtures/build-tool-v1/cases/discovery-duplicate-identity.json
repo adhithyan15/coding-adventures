@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "discovery/duplicate-identity",
+  "domain": "discovery",
+  "summary": "Two unclassified buckets that collapse to one qualified name fail closed.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "discovery"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/alpha/demo/BUILD",
+        "content_utf8": "echo alpha\n"
+      },
+      {
+        "path": "code/packages/beta/demo/BUILD",
+        "content_utf8": "echo beta\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "discovery",
+    "options": {
+      "code_root": "code",
+      "platform": "linux"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "discovery/duplicate-identity",
+    "domain": "discovery",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [
+      {
+        "code": "DUPLICATE_PACKAGE_IDENTITY",
+        "severity": "error",
+        "path": "code/packages/alpha/demo",
+        "package": "unknown/demo",
+        "details": {
+          "paths": [
+            "code/packages/alpha/demo",
+            "code/packages/beta/demo"
+          ]
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

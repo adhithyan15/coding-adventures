@@ -1,0 +1,1 @@
+import {a, b as c} from "y"; a(1 + 2);

@@ -1,0 +1,92 @@
+% ============================================================================
+% kingdoms — each biological kingdom of life mapped to a representative example
+% organism the source lists for it (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the very first ideas a biology learner meets: every living thing on
+% Earth is sorted into a small number of top-level KINGDOMS, and each kingdom
+% has familiar example organisms that live in it. "Animals are in Animalia;
+% flowering plants are in Plantae; mushrooms are Fungi; amoebas are Protista;
+% cyanobacteria are Bacteria." Before you can reason about an organism at all,
+% it helps to know WHICH kingdom it belongs to. Recall is a binding query:
+%
+%     ? kingdom_example(fungi, $Example)      % mushrooms
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `kingdom_example(kingdom, example)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% example WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these kingdoms (it never invents an example).
+%
+% Each kingdom below and the representative example the source lists first for
+% it, as a little truth table:
+%
+%     kingdom     representative example   a beginner's cue
+%     ---------   ----------------------   ----------------------------------
+%     animalia    humans                   the animal kingdom — humans, birds…
+%     plantae     flowers                  the plant kingdom — flowers, ferns…
+%     fungi       mushrooms                the fungus kingdom — mushrooms, molds
+%     protista    amoebas                  single-celled eukaryotes — amoebas…
+%     bacteria    cyanobacteria            the prokaryote kingdom — cyanobacteria
+%
+% The query also runs BACKWARD — bind an example and recall its kingdom:
+%
+%     ? kingdom_example($Kingdom, mushrooms)   % fungi
+%
+% A word that is NOT one of these kingdoms — `virus`, `mineral`, `rock` — is
+% deliberately NOT a row, so a kingdom recall ABSTAINS on it rather than
+% inventing an example. (Viruses are a classic example: they are not placed in
+% any of these kingdoms, so the table honestly abstains on `virus`.) That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the kingdom→example pairs it can ground, and only those.
+%
+% The `example` value of every row is a SINGLE lowercase atom, chosen to be the
+% first single-organism example the source EXPLICITLY lists for that kingdom —
+% never one the source does not support. (The source's word is kept, lowercased:
+% it writes "Humans"/"Flowers"/"Mushrooms"/"Amoebas", so every value stays
+% literally checkable against the quoted "Examples:" span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every kingdom→example pair
+% below was read out of a single fetched Science Notes "Kingdoms of Life in
+% Biology" page, and any pair whose example could not be verified there would
+% have been dropped). Each pair, with the verbatim "Examples:" span that states
+% it (all from the one source below):
+%
+%   animalia → humans
+%     "Examples: Humans, birds, crustaceans, sponges"
+%   plantae → flowers
+%     "Examples: Flowers, grasses, conifers, multicellular algae, ferns, mosses"
+%   fungi → mushrooms
+%     "Examples: Mushrooms, yeast, molds"
+%   protista → amoebas
+%     "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds,
+%      single-celled algae"
+%   bacteria → cyanobacteria
+%     "Examples: Gram-positive and Gram-negative bacteria, cyanobacteria,
+%      actinobacteria"
+%
+% All five spans are from the same page,
+% https://sciencenotes.org/kingdoms-of-life-in-biology/ — a secondary science
+% teaching resource, so `trust consensus` (not a primary .gov/.edu source).
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the "Examples:" line that fixes
+% the first row (animalia → humans). Every OTHER row's verbatim "Examples:" span
+% is listed above, so each example remains independently checkable.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table kingdom_example {
+    columns kingdom, example
+
+    row (animalia, humans)
+    row (plantae, flowers)
+    row (fungi, mushrooms)
+    row (protista, amoebas)
+    row (bacteria, cyanobacteria)
+
+    source "Examples: Humans, birds, crustaceans, sponges"
+    locator "https://sciencenotes.org/kingdoms-of-life-in-biology/"
+    trust consensus
+}

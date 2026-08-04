@@ -1,0 +1,103 @@
+% ============================================================================
+% insect-parts — the three main body regions (tagmata) of an insect and what
+% each one bears / is used for, as the source states it (adj-facts-stdlib,
+% BIOLOGY).
+% ============================================================================
+% One of the very first big ideas of entomology, and a rung a BIOLOGY agent
+% reasons UP from: an insect's body is divided into just THREE main regions —
+% the head, the thorax, and the abdomen — and each region has a characteristic
+% job. "The head carries the eyes, the antennae, and the mouthparts; the legs
+% and wings attach at the thorax, which is the region for locomotion; the
+% abdomen holds the main organs and is used for digestion and reproduction."
+% Before you can reason about an insect's leg count, its wings, or its mouth,
+% you must first know WHICH of the three regions the part belongs to. Recall is
+% a binding query:
+%
+%     ? insect_region_bears(thorax, $Bears)      % legs_and_wings
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `insect_region_bears(region, bears)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns
+% the value WITH its source, on the CPU, with zero model calls, and abstains on
+% a word that is not one of these three body regions (it never invents a part).
+%
+% Each of the three main body regions and what the source says it bears / is
+% used for, as a little truth table:
+%
+%     body region   what it bears / is used for        a beginner's cue
+%     -----------   -----------------------------      ------------------------
+%     head          eyes_antennae_and_mouthparts       the sense-and-eat region
+%     thorax        legs_and_wings                     the locomotion region
+%     abdomen       digestion_and_reproduction         holds the main organs
+%
+% The query also runs BACKWARD — bind what a region bears and recall the region:
+%
+%     ? insect_region_bears($Region, legs_and_wings)   % thorax
+%
+% A word that is NOT one of these three main body regions — `tail`, `wing`,
+% `leg` — is deliberately NOT a row, so an insect-region recall ABSTAINS on it
+% rather than inventing a function. That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% region→feature pairs it can ground, and only those.
+%
+% The `bears` value of every row is a SINGLE lowercase atom, chosen to be a
+% feature / function the source EXPLICITLY states for that region — never one
+% the source does not support. (Each atom is built only from words that appear
+% in the source's own sentence for that region — "eyes", "antennae",
+% "mouthparts" / "legs", "wings" / "digestion", "reproduction" — so every value
+% stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every region→feature pair
+% below was read out of a fetched University of Florida IFAS/EDIS entomology
+% publication, and any pair whose feature could not be verified there would
+% have been dropped). Each pair, with the primary source it was copied from and
+% the verbatim span that states it:
+%
+%   head → eyes_antennae_and_mouthparts
+%     https://ask.ifas.ufl.edu/publication/IN758
+%     (UF/IFAS EDIS ENY-1000/IN758, "Insects, Oh Yes!: An Introduction" —
+%      University of Florida Entomology & Nematology Dept teaching resource)
+%     "The head has three main parts: the eyes, the antennae, and the
+%      mouthparts."
+%
+%   thorax → legs_and_wings
+%     https://ask.ifas.ufl.edu/publication/IN758
+%     (UF/IFAS EDIS ENY-1000/IN758 — University of Florida)
+%     "Its main function is locomotion, since the legs and wings attach to the
+%      body at the thorax."
+%
+%   abdomen → digestion_and_reproduction
+%     https://ask.ifas.ufl.edu/publication/IN758
+%     (UF/IFAS EDIS ENY-1000/IN758 — University of Florida)
+%     "The abdomen holds all of the main organs. An insect uses its abdomen for
+%      many different things. These include digestion, reproduction, defense,
+%      and communication."
+%
+% (The three-region framing itself is stated on the same page — "it is easy to
+% see the three body parts that make up an insect. The first region is the
+% head. ... The second part of the insect is the thorax. ... the third body
+% part is the abdomen" — another span of the same primary university source.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the UF/IFAS statement that fixes
+% the first row (head → eyes_antennae_and_mouthparts). Every OTHER row's per-
+% fact source and verbatim span is listed above, so each value remains
+% independently checkable. All sources are the UF/IFAS EDIS entomology
+% publication, a University of Florida (land-grant Entomology & Nematology
+% Dept) teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table insect_region_bears {
+    columns region, bears
+
+    row (head, eyes_antennae_and_mouthparts)
+    row (thorax, legs_and_wings)
+    row (abdomen, digestion_and_reproduction)
+
+    source "The head has three main parts: the eyes, the antennae, and the mouthparts."
+    locator "https://ask.ifas.ufl.edu/publication/IN758"
+    trust authoritative
+}

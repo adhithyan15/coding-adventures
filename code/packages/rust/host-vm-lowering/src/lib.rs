@@ -474,6 +474,9 @@ pub struct ArrayBound {
 }
 
 impl ArrayBound {
+    // `len` here validates bounds and returns a `Result`, not a plain count, so a
+    // companion `is_empty` (which would have to return `bool`) is not a meaningful fit.
+    #[allow(clippy::len_without_is_empty)]
     pub fn len(self) -> Result<usize, LoweringError> {
         if self.lower > self.upper {
             return Err(LoweringError::new(format!(

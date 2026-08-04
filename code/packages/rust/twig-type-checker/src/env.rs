@@ -1,3 +1,6 @@
+// The doc blocks use intentional ASCII alignment; allow the overindented-list
+// lint rather than disturb that layout.
+#![allow(clippy::doc_overindented_list_items)]
 //! Type environment and scope management for TW05-B + TW05-C.
 //!
 //! ## Two structures, two responsibilities

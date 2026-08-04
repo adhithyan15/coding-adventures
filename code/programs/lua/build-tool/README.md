@@ -51,6 +51,14 @@ lua build.lua --force                  # Rebuild everything
 - **Metatables for OOP**: DirectedGraph uses the standard `__index`
   metatable pattern for method dispatch.
 
+## Metadata Safety
+
+Lua `.rockspec` package metadata is decoded as strict UTF-8 before dependency
+resolution. Invalid bytes fail closed with `METADATA_INVALID_UTF8`, identify
+the package and repository-relative manifest, and make the CLI exit with code
+2. Diagnostics never expose the checkout path or silently replace invalid
+input bytes; a well-formed literal Unicode replacement character remains valid.
+
 ## Dependencies
 
 - Lua 5.4 (for native integers and bitwise operators)

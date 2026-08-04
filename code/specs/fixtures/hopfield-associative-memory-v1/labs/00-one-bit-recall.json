@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "id": "one-bit-recall",
+  "title": "Recall one corrupted bipolar bit",
+  "question": "Can four asynchronous Hopfield neurons restore one flipped bit while energy never increases?",
+  "absolute_tolerance": 1e-12,
+  "concepts": [
+    "bipolar-pattern",
+    "hebbian-outer-product",
+    "zero-diagonal",
+    "asynchronous-recall",
+    "energy-descent",
+    "normalized-overlap"
+  ],
+  "operation": {
+    "kind": "hopfield-associative-recall",
+    "storage": "single-pattern-normalized-hebbian",
+    "activation": "sign-preserve-zero",
+    "update": "asynchronous-in-place",
+    "energy": "symmetric-zero-diagonal-hopfield"
+  },
+  "stored_pattern": [1, -1, 1, -1],
+  "corrupted_state": [-1, -1, 1, -1],
+  "update_order": [0, 1, 2, 3],
+  "expected": {
+    "normalization": 4,
+    "weights": [
+      [0, -0.25, 0.25, -0.25],
+      [-0.25, 0, -0.25, 0.25],
+      [0.25, -0.25, 0, -0.25],
+      [-0.25, 0.25, -0.25, 0]
+    ],
+    "initial_energy": 0,
+    "initial_overlap": 0.5,
+    "initial_hamming_distance": 1,
+    "updates": [
+      {
+        "step": 0,
+        "neuron_index": 0,
+        "state_before": [-1, -1, 1, -1],
+        "incoming": [
+          {"source_index": 0, "weight": 0, "source_state": -1, "contribution": 0},
+          {"source_index": 1, "weight": -0.25, "source_state": -1, "contribution": 0.25},
+          {"source_index": 2, "weight": 0.25, "source_state": 1, "contribution": 0.25},
+          {"source_index": 3, "weight": -0.25, "source_state": -1, "contribution": 0.25}
+        ],
+        "local_field": 0.75,
+        "previous_state": -1,
+        "next_state": 1,
+        "changed": true,
+        "state_after": [1, -1, 1, -1],
+        "energy_before": 0,
+        "energy_after": -1.5,
+        "overlap_before": 0.5,
+        "overlap_after": 1
+      },
+      {
+        "step": 1,
+        "neuron_index": 1,
+        "state_before": [1, -1, 1, -1],
+        "incoming": [
+          {"source_index": 0, "weight": -0.25, "source_state": 1, "contribution": -0.25},
+          {"source_index": 1, "weight": 0, "source_state": -1, "contribution": 0},
+          {"source_index": 2, "weight": -0.25, "source_state": 1, "contribution": -0.25},
+          {"source_index": 3, "weight": 0.25, "source_state": -1, "contribution": -0.25}
+        ],
+        "local_field": -0.75,
+        "previous_state": -1,
+        "next_state": -1,
+        "changed": false,
+        "state_after": [1, -1, 1, -1],
+        "energy_before": -1.5,
+        "energy_after": -1.5,
+        "overlap_before": 1,
+        "overlap_after": 1
+      },
+      {
+        "step": 2,
+        "neuron_index": 2,
+        "state_before": [1, -1, 1, -1],
+        "incoming": [
+          {"source_index": 0, "weight": 0.25, "source_state": 1, "contribution": 0.25},
+          {"source_index": 1, "weight": -0.25, "source_state": -1, "contribution": 0.25},
+          {"source_index": 2, "weight": 0, "source_state": 1, "contribution": 0},
+          {"source_index": 3, "weight": -0.25, "source_state": -1, "contribution": 0.25}
+        ],
+        "local_field": 0.75,
+        "previous_state": 1,
+        "next_state": 1,
+        "changed": false,
+        "state_after": [1, -1, 1, -1],
+        "energy_before": -1.5,
+        "energy_after": -1.5,
+        "overlap_before": 1,
+        "overlap_after": 1
+      },
+      {
+        "step": 3,
+        "neuron_index": 3,
+        "state_before": [1, -1, 1, -1],
+        "incoming": [
+          {"source_index": 0, "weight": -0.25, "source_state": 1, "contribution": -0.25},
+          {"source_index": 1, "weight": 0.25, "source_state": -1, "contribution": -0.25},
+          {"source_index": 2, "weight": -0.25, "source_state": 1, "contribution": -0.25},
+          {"source_index": 3, "weight": 0, "source_state": -1, "contribution": 0}
+        ],
+        "local_field": -0.75,
+        "previous_state": -1,
+        "next_state": -1,
+        "changed": false,
+        "state_after": [1, -1, 1, -1],
+        "energy_before": -1.5,
+        "energy_after": -1.5,
+        "overlap_before": 1,
+        "overlap_after": 1
+      }
+    ],
+    "final_state": [1, -1, 1, -1],
+    "final_energy": -1.5,
+    "final_overlap": 1,
+    "final_hamming_distance": 0,
+    "converged": true
+  }
+}

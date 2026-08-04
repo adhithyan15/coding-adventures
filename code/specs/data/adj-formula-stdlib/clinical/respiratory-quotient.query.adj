@@ -1,0 +1,27 @@
+% ============================================================================
+% respiratory-quotient.query.adj — worked applications of the respiratory quotient.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an indirect-calorimetry assessment into a CO2
+% production and an O2 consumption: it `import`s the grounded formulabook, `observe`s the two values, and asks
+% the engine to APPLY the cited RQ formula. No arithmetic is stated by the consumer; the engine computes each
+% value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with zero
+% model calls.
+%
+% Worked case (VCO2 = 300 mL/min, VO2 = 400 mL/min): RQ = 300 / 400 = 0.75 (a fat-leaning mixed-fuel value).
+% Each query fixes one input and asks the engine to recover another quantity; every answer is exact and the
+% inversions COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli respiratory-quotient.query.adj
+% ============================================================================
+
+import "respiratory-quotient.adj"
+
+% --- RQ: the ratio VCO2 and VO2 imply (expect 0.75). ------------------------------------------------
+observe co2_production(300)
+observe o2_consumption(400)
+? respiratory_quotient(co2_production, o2_consumption)   % expect 0.75
+
+% --- Inverse: the VO2 an RQ of 0.75 implies at the same VCO2 (expect 400). ---------------------------
+observe respiratory_quotient(0.75)
+? o2_consumption(co2_production, respiratory_quotient)   % expect 400

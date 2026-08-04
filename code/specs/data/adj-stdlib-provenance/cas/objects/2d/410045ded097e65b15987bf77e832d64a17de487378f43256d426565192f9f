@@ -1,0 +1,47 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.percent_of.whole",
+          "end": 12,
+          "quote": "whole is 50.",
+          "quote_sha256": "1a8ec1ad749f8e4404e607c5f3592da31a1b642af6441b48547384d956417094",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 12,
+      "start": 0
+    },
+    {
+      "disposition": "discarded",
+      "end": 13,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 12
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.percent_of.rate",
+          "end": 24,
+          "quote": "rate is 20.",
+          "quote_sha256": "91ccf7b85ad9a0758c0b0d20fccc2c97c9ecc875f17cde04c8ff5342ecb0c4e5",
+          "start": 13
+        }
+      ],
+      "disposition": "represented",
+      "end": 24,
+      "start": 13
+    },
+    {
+      "disposition": "discarded",
+      "end": 25,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 24
+    }
+  ],
+  "source_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+  "source_size": 25
+}

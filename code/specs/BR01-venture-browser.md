@@ -41,6 +41,99 @@ ecosystem. The web in 1993 was simple enough that a single developer can
 understand the entire stack — from TCP socket to rendered pixel — and that is
 exactly the educational goal.
 
+## Implementation Status
+
+The current `html-parser` corpus gates are complete: the checked WPT
+tree-construction audit and html5lib tokenizer audit both ratchet missing
+upstream cases at zero. The `html-to-layout` package now provides the first
+executable browser seam from `BrowserRenderTree` to the shared Layout IR and
+`layout-block`.
+
+That does not make Venture complete. The current layout path places atomic
+inline boxes on shared lines; text-run fragmentation and baseline alignment
+remain. The `html-to-paint` composition package now carries canned HTML
+through shared layout into a backend-neutral `PaintScene`, extracts clickable
+link regions, resolves host-fetched GIF/JPEG image bytes into shared pixels,
+and proves text and inline-image scenes rasterize to RGBA pixels with Cairo.
+Fetch/decode failures now render clipped bordered HTML `alt` text. The concrete
+`http1-client` now composes URL parsing, bounded TCP I/O, HTTP response framing,
+and relative redirects into a synchronous HTTP/1.0 GET transport. Browser
+render-tree extraction can now use the final fetched document URL as its
+fallback base, so relative links and inline images remain fetchable even when
+the page omits `<base>`. `venture-browser-core` now owns the in-memory
+Back/Forward/Home/Reload model and composes an injectable page fetch through
+document-URL-aware parsing, layout, paint, and synchronous image resolution.
+Its acceptance path carries a redirected canned page and GIF resource through
+Cairo to RGBA pixels. The core also owns clamped vertical scroll geometry,
+scroll-aware link hit-testing, and viewport scene translation.
+`BrowserViewport` binds those policies to the current loaded page and resets
+scroll coherently when the page changes. `BrowserSession` now dispatches native
+navigation commands and content-link activation through transactional page
+loads, preserving the prior history and viewport on failure. The remaining
+browser gate is now being closed on macOS first. The shared
+`programs/mosaic/venture-browser` package authors Venture's title bar,
+navigation controls, address input, status line, and interaction states once
+in MIL, MLL, and MSL, with acceptance coverage for native SwiftUI and WinUI
+lowering. `BrowserChromeController` maps that exact slot/event contract onto
+`BrowserSession`, including transactional address drafts, redirect
+synchronization, and history-derived disabled states.
+The Mosaic kernel now exposes a typed `HostSurface` composition primitive;
+Venture's MIL declares the native page renderer as a node slot that lowers to
+SwiftUI `AnyView` and WinUI `ContentPresenter` rather than an empty placeholder.
+The package builder now carries that same slot through runnable project shells
+for every registered backend (React, Electron, SwiftUI, Qt, WebComponent, HTML,
+XAML, Flutter, and Compose). Its macOS acceptance gate compiles the generated
+SwiftPM shell with a real host-provided `NSView`, while the other shell gates
+verify their backend-native host-object seams.
+`venture-browser-macos` loads an HTTP page with native CoreText services,
+creates an AppKit `CAMetalLayer`, and presents the viewport through
+`paint-metal`. Native AppKit wheel events
+drive the shared clamped viewport and Metal repaint path. Primary-button events
+now use top-left viewport coordinates to activate links through transactional
+page loads, update the title, and repaint across repeated navigation. Named
+AppKit navigation keys now drive clamped viewport scrolling and Metal repaint.
+Command-Left/Right now reload Back/Forward history entries through the shared
+transactional session, update the native title, and repaint. The package-owned
+SwiftUI and WinUI `MosaicHost` adapters join generated chrome,
+`BrowserChromeController`, and the live Metal or Direct2D Venture page renderer
+through thin dynamic Rust bridges. They carry address and navigation events,
+native scrolling, link activation, keyboard navigation, and logical surface
+resize through one browser session without handwritten platform chrome. Resize
+reflows the retained render tree, image placement, link regions, and scroll
+bounds without refetching the HTML document. Direct launch acceptance now
+builds and starts the emitted SwiftUI and WinUI applications, loads each
+package-owned native bridge, and requires a rendered host-surface readiness
+signal. Direct UI interaction acceptance covers navigation, history, failure
+retention, focus, pointer activation, wheel and keyboard scrolling, resize,
+and repaint on those two primary platforms. The prioritized gaps below and
+the remaining generated platform hosts still keep the browser shell from being
+complete.
+
+### Prioritized Browser Completion Backlog
+
+1. **P0 — link-hover status and cursor acceptance (completed).** Resolve the hovered link
+   through `BrowserSession`, project its URL through the existing Mosaic
+   `status-text` slot, and let the generated SwiftUI and WinUI content surfaces
+   select their native pointing-hand cursor. Gate the same behavior through
+   direct generated-app interaction tests on macOS and Windows.
+2. **P1 — native scrollbar projection (completed).** Expose the shared viewport offset and
+   extent as target-neutral state, then bind generated native scrollbars to the
+   same Mosaic-hosted content surface without recreating browser chrome in
+   AppKit or Win32.
+3. **P2 — generated-host interaction gates (completed).**
+   Flutter now hydrates the emitted shell through an injected Mosaic host and
+   directly drives native disabled controls, address editing, Return, Go, and
+   host-response refresh. Qt Quick now exercises the same contract through
+   part-backed native controls and a package-owned QML test. Compose,
+   React/Electron, HTML, and Web Components now drive the same shared contract
+   through their generated host seams. The authoritative package entry points
+   run that matrix and additionally launch the generated SwiftUI or WinUI app
+   on its native host.
+
+These are browser-wiring and acceptance items. They do not relax the exact
+zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
+not imply complete browser conformance.
+
 ## Where It Fits
 
 Venture sits at the top of the stack. It is a **program** (not a library) that
@@ -56,18 +149,18 @@ Layer 6 — Platform Paint VMs
   └── P2D08 paint-vm-cairo (Linux, future)
 
 Layer 5 — Layout & Paint Translation
+  ├── html-to-layout
   ├── layout-block
-  ├── layout-to-paint
-  └── document-ast-to-layout
+  └── layout-to-paint
 
 Layer 4 — Document Model
-  ├── document-ast
+  ├── html-parser / dom-core
   ├── layout-ir
   └── paint-instructions
 
 Layer 3 — Protocol Parsers
   ├── http1.0-lexer / http1.0-parser / http1.0-client
-  └── html1.0-lexer / html1.0-parser
+  └── html-lexer / html-parser
 
 Layer 2 — Network Primitives
   ├── tcp-client
@@ -80,7 +173,7 @@ Layer 1 — Data Formats
 
 Every box is a separate crate. Improving any crate automatically improves the
 browser. Adding CSS support in the future means adding a `css-lexer`,
-`css-parser`, and updating `document-ast-to-layout` — Venture itself barely
+`css-parser`, and updating `html-to-layout` — Venture itself barely
 changes.
 
 ## Concepts
@@ -103,10 +196,10 @@ tcp-client ──────────────────► TcpStream (
 http1.0-client ──────────────► HttpResponse { status, headers, body }
   │
   ▼
-html1.0-parser ──────────────► DocumentNode (tree of elements & text)
+html-parser ─────────────────► BrowserRenderTree (display-ready HTML tree)
   │
   ▼
-document-ast-to-layout ──────► LayoutNode (styled tree with fonts/colors)
+html-to-layout ───────────────► LayoutNode (styled tree with fonts/colors)
   │
   ▼
 layout-block ────────────────► PositionedNode (x, y, width, height for each node)
@@ -154,7 +247,8 @@ When the user clicks somewhere in the content area, the browser needs to
 determine what they clicked on. This is **hit-testing**: given an (x, y) screen
 coordinate, find the element at that position.
 
-During the layout-to-paint stage, each link gets recorded as a `LinkRegion`:
+The `html-to-paint` stage records each positioned link as a `LinkRegion` in
+logical document-content coordinates:
 
 ```rust
 struct LinkRegion {
@@ -168,6 +262,10 @@ On mouse click:
 2. Linear scan through link regions (fine for Mosaic-era page complexity)
 3. If a region contains the point → navigate to that URL
 4. If no region matches → do nothing
+
+`extract_link_regions` and `hit_test_link` implement these geometry steps.
+Navigation history, visited-link policy, and host event dispatch remain the
+browser shell's responsibility.
 
 ### Scrolling
 
@@ -215,9 +313,9 @@ PaintScene before rendering. The paint VM sees pre-translated coordinates.
 │  │                                                            │   │
 │  │  url-parser → tcp-client → frame-extractor                │   │
 │  │                  → http1.0-lexer → http1.0-parser         │   │
-│  │                      → html1.0-lexer → html1.0-parser     │   │
-│  │                          → document-ast                    │   │
-│  │                              → document-ast-to-layout      │   │
+│  │                      → html-lexer → html-parser           │   │
+│  │                          → BrowserRenderTree              │   │
+│  │                              → html-to-layout              │   │
 │  │                                  → layout-block            │   │
 │  │                                      → layout-to-paint     │   │
 │  │                                          → paint-vm-direct2d│  │
@@ -230,13 +328,14 @@ the browser.
 
 ### Platform Abstraction
 
-The browser itself has a thin platform layer. Only Windows is implemented for
-v0.1; macOS and Linux are future work.
+The browser itself has a thin platform layer. The first runnable host targets
+macOS so it can be exercised on current development hardware; Windows remains
+the intended v0.1 parity target after the interaction model is proven.
 
 | Platform | Window              | Rendering                                     | Text Measurement           |
 |----------|---------------------|-----------------------------------------------|----------------------------|
-| Windows  | Win32 CreateWindowExW | paint-vm-direct2d (P2D06) or paint-vm-gdi (P2D07) | text-measure-directwrite  |
-| macOS    | Cocoa NSWindow (future) | paint-vm-metal (exists, partial)            | text-measure-coretext (future) |
+| Windows  | Win32 CreateWindowExW (next host) | paint-vm-direct2d (P2D06) or paint-vm-gdi (P2D07) | text-native DirectWrite |
+| macOS    | Cocoa NSWindow (initial host) | paint-metal + CAMetalLayer              | text-native CoreText |
 | Linux    | GTK/X11 (future)    | paint-vm-cairo (P2D08, future)                | text-measure-pango (future) |
 
 ### Win32 Window Structure
@@ -298,9 +397,11 @@ User action (Enter key / link click)
   │     - "image/*"   → display standalone image
   │     - other       → show raw text in monospace
   │
-  ├─ 6. html1_0_parser::parse(response.body) → DocumentNode tree
+  ├─ 6. html_parser::parse_browser_render_tree_with_document_url(
+  │         response.body, response.final_url)
+  │       → BrowserRenderTree
   │
-  ├─ 7. document_ast_to_layout(doc, mosaic_theme) → LayoutNode tree
+  ├─ 7. html_render_tree_to_layout(tree, mosaic_theme) → LayoutNode tree
   │     - Apply Mosaic-era font/color defaults
   │     - Annotate links with destination URLs
   │
@@ -321,8 +422,10 @@ User action (Enter key / link click)
 
 ### Link Handling
 
-During `document-ast-to-layout`, each `<a href="...">` is annotated with both
-its destination URL and a color/underline style:
+During `html-to-layout`, each `<a href="...">` retains its resolved destination
+in the `html` extension namespace and receives the default unvisited color.
+The browser host combines that target with session history to select the final
+color and underline style:
 
 - **Unvisited links**: `#0000EE` (blue) with underline
 - **Visited links**: `#551A8B` (purple) with underline
@@ -343,10 +446,13 @@ On **WM_LBUTTONDOWN**:
 
 When the HTML parser encounters `<img src="photo.gif">`:
 
-1. The `DocumentNode` tree contains an `ImageNode { src, alt }`.
-2. During layout, the image source URL is resolved against the page base URL.
-3. A separate `http1_0_client::get()` call fetches the image data.
-4. The `image` crate decodes the data (GIF or JPEG for v0.1) into pixels.
+1. The `BrowserRenderTree` contains an image node with resolved `src`, `alt`,
+   and authored dimensions.
+2. `html-to-layout` carries that resolved resource URL into `ImageContent`.
+3. The browser host fetches the image data through the `HtmlImageFetcher`
+   boundary.
+4. `html-to-paint` uses the repo's `image-codec-gif` or `image-codec-jpeg`
+   decoder to convert the fetched bytes into pixels.
 5. The pixel data becomes a `PaintImage` instruction in the `PaintScene`.
 6. If the image fails to load: render the alt text inside a bordered box
    (the classic "broken image" experience).
@@ -415,14 +521,11 @@ system window color and felt "native."
 [dependencies]
 url-parser             = { path = "../../../packages/rust/url-parser" }
 tcp-client             = { path = "../../../packages/rust/tcp-client" }
-frame-extractor        = { path = "../../../packages/rust/frame-extractor" }
-http1_0_lexer          = { path = "../../../packages/rust/http1.0-lexer" }
-http1_0_parser         = { path = "../../../packages/rust/http1.0-parser" }
-http1_0_client         = { path = "../../../packages/rust/http1.0-client" }
-html1_0_lexer          = { path = "../../../packages/rust/html1.0-lexer" }
-html1_0_parser         = { path = "../../../packages/rust/html1.0-parser" }
-document_ast           = { path = "../../../packages/rust/document-ast" }
-document_ast_to_layout = { path = "../../../packages/rust/document-ast-to-layout" }
+http-core              = { path = "../../../packages/rust/http-core" }
+http1                  = { path = "../../../packages/rust/http1" }
+http1-client           = { path = "../../../packages/rust/http1-client" }
+coding-adventures-html-parser = { path = "../../../packages/rust/html-parser" }
+html-to-layout         = { path = "../../../packages/rust/html-to-layout" }
 layout_ir              = { path = "../../../packages/rust/layout-ir" }
 layout_block           = { path = "../../../packages/rust/layout-block" }
 layout_to_paint        = { path = "../../../packages/rust/layout-to-paint" }
@@ -430,7 +533,10 @@ paint_instructions     = { path = "../../../packages/rust/paint-instructions" }
 paint_vm_direct2d      = { path = "../../../packages/rust/paint-vm-direct2d" }
 text_measure_directwrite = { path = "../../../packages/rust/text-measure-directwrite" }
 windows                = { version = "0.58", features = ["..."] }
-image                  = "0.25"  # GIF and JPEG decoding
+html-to-paint          = { path = "../../../packages/rust/html-to-paint" }
+venture-browser-core   = { path = "../../../packages/rust/venture-browser-core" }
+image-codec-gif        = { path = "../../../packages/rust/image-codec-gif" }
+image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
 ```
 
 ## Testing Strategy
@@ -485,7 +591,7 @@ image                  = "0.25"  # GIF and JPEG decoding
 
 - URL bar navigation with Enter key
 - Back, Forward, Home, Reload toolbar buttons
-- HTML 1.0 rendering via the full pipeline
+- Mosaic-era HTML rendering via the full pipeline
 - Vertical scrolling with mouse wheel and scrollbar
 - Link clicking with hit-testing and navigation
 - Inline images (GIF, JPEG) loaded synchronously

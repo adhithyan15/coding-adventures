@@ -22,7 +22,7 @@ fn test_gds_real_one() {
     assert_eq!(r[0], 0x41);
     // Mantissa = 0x10000000000000 (7 bytes)
     assert_eq!(r[1], 0x10);
-    for i in 2..8 { assert_eq!(r[i], 0x00); }
+    for &b in &r[2..8] { assert_eq!(b, 0x00); }
 }
 
 #[test]

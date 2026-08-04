@@ -74,7 +74,7 @@
 use std::collections::HashMap;
 use interpreter_ir::module::IIRModule;
 use crate::builtins::BuiltinRegistry;
-use crate::dispatch::{run_dispatch_loop, DispatchCtx, OpcodeHandler};
+use crate::dispatch::{run_dispatch_loop, DispatchCtx, JitHandlerMap, OpcodeHandler};
 use crate::errors::VMError;
 use crate::frame::VMFrame;
 use crate::profiler::VMProfiler;
@@ -109,6 +109,21 @@ pub struct VMCore {
     /// Guards against unbounded `HashMap` growth from loops that call
     /// `store_mem` with ever-increasing addresses.  Default: 1_000_000.
     pub max_memory_entries: usize,
+
+    /// Aggregate ceiling on live bytes across every `gc_alloc`'d object
+    /// (`FlatHeap::live_bytes`), checked before each allocation alongside
+    /// `max_memory_entries`'s object-*count* cap.
+    ///
+    /// `max_memory_entries` bounds how many objects can be live at once, but
+    /// says nothing about any single object's size — `gc_alloc [<size_bytes>]`
+    /// takes an explicit, IR-controlled byte count, so a handful of
+    /// allocations each requesting gigabytes would pass the count cap
+    /// outright. This is a genuinely separate unit (bytes, not a count) from
+    /// `max_memory_entries`, so it's its own field rather than a derived
+    /// multiple. Default: 64 MiB — generous enough for a legitimate large
+    /// single allocation (e.g. a multi-megabyte byte buffer) while still
+    /// bounding runaway per-allocation requests.
+    pub max_gc_heap_bytes: usize,
 
     /// Optional hard cap on the total number of instructions dispatched per
     /// `execute()` call.
@@ -149,9 +164,42 @@ pub struct VMCore {
     /// (unlike the single Brainfuck byte-tape, which is one flat space).
     arrays: Vec<Vec<Value>>,
 
+    /// The shared GC engine (`gc-core`'s `FlatHeap`) `gc_alloc`'d objects live
+    /// on. This is a real, per-`VMCore` collector instance — not a C-ABI
+    /// singleton like `gc-core-capi`'s — allocating and collecting through
+    /// the exact same engine the native-AOT backends use, just linked
+    /// directly as a Rust dependency instead of through the C ABI. Rooted
+    /// precisely at each `safepoint` from `Value::HeapRef`s found in
+    /// `frames`/`globals`/`memory`/`arrays` (see `dispatch::run_safepoint`) —
+    /// no stack scanning needed, because an interpreter already knows
+    /// exactly where every reference lives.
+    heap: gc_core::FlatHeap,
+
+    /// Live count of `gc_alloc`'d objects — incremented on `gc_alloc`,
+    /// decremented by each collection's `freed` count (a relocated survivor
+    /// under compaction is not freed, so it correctly stays counted).
+    ///
+    /// This is a **security-relevant cap input**, not just a metric:
+    /// `gc_field_load`/`gc_field_store` bounds-check against
+    /// `FlatHeap::payload_size`, which is O(live object count) (it walks the
+    /// block list — the same cost `kind_of`'s own docs already flag as
+    /// unsuitable for a hot per-instruction loop). Without a cap on how many
+    /// objects can be live at once, a program could allocate N objects then
+    /// perform M field accesses against the oldest one for O(N·M) wall-clock
+    /// work while an instruction budget (`max_instructions`) only charges
+    /// O(N+M) — a quadratic blowup that defeats the budget's intended linear
+    /// bound. `handle_gc_alloc` enforces `max_memory_entries` against this
+    /// counter before allocating, exactly mirroring the aggregate ceiling
+    /// `handle_alloc`/`handle_alloc_array` already enforce against
+    /// `ctx.arrays.len()`. Tracked in O(1) precisely *because* `FlatHeap`
+    /// itself doesn't expose an O(1) live-object counter (only `live_bytes`,
+    /// which bounds total payload size, not object *count* — the actual
+    /// driver of `payload_size`'s O(n) cost).
+    gc_object_count: usize,
+
     /// JIT handler registry.  When a `call` instruction names a function
     /// listed here, the handler is called instead of the interpreter.
-    jit_handlers: HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+    jit_handlers: JitHandlerMap,
 
     /// Language-specific opcode extensions.  Entries here shadow the
     /// standard opcode table, enabling languages to add or override any
@@ -199,11 +247,14 @@ impl VMCore {
             profiler_enabled: true,
             max_frames: 512,
             max_memory_entries: 1_000_000,
+            max_gc_heap_bytes: 64 * 1024 * 1024,
             max_instructions: None, // unlimited — trusted code path
             frames: Vec::new(),
             memory: HashMap::new(),
             globals: HashMap::new(),
             arrays: Vec::new(),
+            heap: gc_core::FlatHeap::new(),
+            gc_object_count: 0,
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),
             builtins: BuiltinRegistry::new(),
@@ -327,9 +378,12 @@ impl VMCore {
             memory: &mut self.memory,
             globals: &mut self.globals,
             arrays: &mut self.arrays,
+            heap: &mut self.heap,
+            gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
+            max_gc_heap_bytes: self.max_gc_heap_bytes,
             // Use saturating_add so that a near-u64::MAX metrics_instrs + a
             // large limit does not overflow (which would panic in debug builds
             // or wrap silently in release builds, disabling the limit).
@@ -401,9 +455,12 @@ impl VMCore {
             memory: &mut self.memory,
             globals: &mut self.globals,
             arrays: &mut self.arrays,
+            heap: &mut self.heap,
+            gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
+            max_gc_heap_bytes: self.max_gc_heap_bytes,
             max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
             fn_call_counts: &mut self.fn_call_counts,
             metrics_instrs: &mut self.metrics_instrs,
@@ -450,12 +507,22 @@ impl VMCore {
         self.profiler.as_ref().map_or(0, |p| p.total_observations())
     }
 
+    /// Read-only view of the shared GC engine `gc_alloc`'d objects live on.
+    ///
+    /// Useful for tests and diagnostics (live byte count, collection count,
+    /// profile) without exposing mutation outside the dispatch loop.
+    pub fn gc_heap(&self) -> &gc_core::FlatHeap {
+        &self.heap
+    }
+
     // ── LANG17: branch / loop / hot-function introspection ────────────────
 
     /// Names of functions called at least `threshold` times.
     ///
     /// Useful for identifying hot functions that the JIT should prioritise.
     /// The list is sorted by call count descending.
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn hot_functions(&self, threshold: u32) -> Vec<String> {
         let mut pairs: Vec<(&String, u32)> = self.fn_call_counts
             .iter()

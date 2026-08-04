@@ -1186,7 +1186,7 @@ mod tests {
         // The exact value depends on the decode/encode round-trip.
         // We accept any value in [60, 80] to allow for rounding.
         println!("bilinear midpoint r={}", r);
-        assert!(r >= 60 && r <= 80,
+        assert!((60..=80).contains(&r),
             "expected bilinear midpoint ~71, got {}", r);
     }
 

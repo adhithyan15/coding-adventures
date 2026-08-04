@@ -211,6 +211,11 @@ describe("built-in method catalog: non-block Array (M1a)", () => {
     expect(callMethod([10, 2, 30], "sort")).toEqual([2, 10, 30]);
     expect(callMethod([3, 1, 2], "min")).toBe(1);
     expect(callMethod([3, 1, 2], "max")).toBe(3);
+    // `minmax` → [min, max] in one call; empty → [null, null] (Ruby [nil, nil]).
+    expect(callMethod([3, 1, 2], "minmax")).toEqual([1, 3]);
+    expect(callMethod(["b", "a", "c"], "minmax")).toEqual(["a", "c"]);
+    expect(callMethod([], "minmax")).toEqual([null, null]);
+    expect(callMethod([1], "respond_to?", "minmax")).toBe(true);
     expect(callMethod([1, 2, 3], "sum")).toBe(6);
     expect(callMethod([1, 2, 3], "sum", 10)).toBe(16);
     expect(callMethod([], "min")).toBeNull();
@@ -330,7 +335,7 @@ describe("respond_to? honesty + nil floor (M1a)", () => {
     expect(callMethod([1], "respond_to?", "nil?")).toBe(true);
     expect(callMethod([1], "respond_to?", "is_a?")).toBe(true);
     expect(callMethod([1], "respond_to?", "map")).toBe(true); // block method (M1b)
-    expect(callMethod([1], "respond_to?", "each_slice")).toBe(false);
+    expect(callMethod([1], "respond_to?", "chunk")).toBe(false); // uncatalogued (non-`_while` variant)
   });
 
   it("known block method WITHOUT a block bottoms out at nil (no over-raise, T2)", () => {
@@ -419,6 +424,72 @@ describe("built-in method catalog: block-taking Array/Enumerable (M1b)", () => {
     expect(
       callMethod([1, 2, 3], "each_with_object", [], new Closure((x: Val, o: Val) => o.push(x * 10))),
     ).toEqual([10, 20, 30]);
+  });
+
+  it("each_slice / each_cons / chunk_while (consecutive-grouping family)", () => {
+    // `each_slice(n)` → consecutive <=n-size chunks (last may be shorter).
+    expect(callMethod([1, 2, 3, 4, 5], "each_slice", 2)).toEqual([[1, 2], [3, 4], [5]]);
+    expect(callMethod([1, 2, 3, 4], "each_slice", 2)).toEqual([[1, 2], [3, 4]]);
+    expect(callMethod([1, 2, 3], "each_slice", 5)).toEqual([[1, 2, 3]]);
+    expect(callMethod([], "each_slice", 2)).toEqual([]);
+    // n <= 0 → [] (Ruby raises ArgumentError; never-raise floor yields empty).
+    expect(callMethod([1, 2], "each_slice", 0)).toEqual([]);
+    // `each_cons(n)` → every consecutive n-element sliding window.
+    expect(callMethod([1, 2, 3, 4], "each_cons", 2)).toEqual([[1, 2], [2, 3], [3, 4]]);
+    expect(callMethod([1, 2, 3], "each_cons", 3)).toEqual([[1, 2, 3]]);
+    // window larger than the array (or n <= 0) → [].
+    expect(callMethod([1, 2], "each_cons", 3)).toEqual([]);
+    expect(callMethod([1, 2], "each_cons", 0)).toEqual([]);
+    // `chunk_while { |a, b| pred }` → runs while the adjacent-pair predicate holds.
+    expect(
+      callMethod([1, 2, 4, 5, 7], "chunk_while", new Closure((a: Val, b: Val) => (b as number) - (a as number) === 1)),
+    ).toEqual([[1, 2], [4, 5], [7]]);
+    // all-truthy → one run; all-falsy → singletons.
+    expect(callMethod([1, 2, 3], "chunk_while", new Closure(() => true))).toEqual([[1, 2, 3]]);
+    expect(callMethod([1, 2, 3], "chunk_while", new Closure(() => false))).toEqual([[1], [2], [3]]);
+    // empty → []; single element → [[x]].
+    expect(callMethod([], "chunk_while", new Closure(() => true))).toEqual([]);
+    expect(callMethod([9], "chunk_while", new Closure(() => true))).toEqual([[9]]);
+    // respond_to? advertises the new methods.
+    expect(callMethod([1], "respond_to?", "each_slice")).toBe(true);
+    expect(callMethod([1], "respond_to?", "each_cons")).toBe(true);
+    expect(callMethod([1], "respond_to?", "chunk_while")).toBe(true);
+  });
+
+  it("slice_when (inverse of chunk_while — split where the predicate holds)", () => {
+    // `slice_when { |a, b| pred }` starts a NEW run BETWEEN an adjacent pair
+    // exactly WHERE the block is truthy (chunk_while splits where FALSY).
+    expect(
+      callMethod([1, 2, 4, 9, 10, 11, 12], "slice_when", new Closure((a: Val, b: Val) => (b as number) - (a as number) > 1)),
+    ).toEqual([[1, 2], [4], [9, 10, 11, 12]]);
+    // all-truthy → every element its own singleton; all-falsy → one run.
+    expect(callMethod([1, 2, 3], "slice_when", new Closure(() => true))).toEqual([[1], [2], [3]]);
+    expect(callMethod([1, 2, 3], "slice_when", new Closure(() => false))).toEqual([[1, 2, 3]]);
+    // empty → []; single element → [[x]].
+    expect(callMethod([], "slice_when", new Closure(() => true))).toEqual([]);
+    expect(callMethod([9], "slice_when", new Closure(() => true))).toEqual([[9]]);
+    // respond_to? advertises it.
+    expect(callMethod([1], "respond_to?", "slice_when")).toBe(true);
+  });
+
+  it("tally (occurrence counts as a first-seen-ordered Hash)", () => {
+    // `tally` → a Map counting occurrences, keyed in first-seen order.
+    const t = callMethod(["a", "b", "a", "c", "a"], "tally") as Map<Val, Val>;
+    expect(t).toBeInstanceOf(Map);
+    expect(t.get("a")).toBe(3);
+    expect(t.get("b")).toBe(1);
+    expect(t.get("c")).toBe(1);
+    expect(t.size).toBe(3);
+    // First-seen key order is preserved (a, b, c).
+    expect([...t.keys()]).toEqual(["a", "b", "c"]);
+    // Integer elements count too.
+    const ti = callMethod([1, 1, 2, 3, 3, 3], "tally") as Map<Val, Val>;
+    expect([...ti.entries()]).toEqual([[1, 2], [2, 1], [3, 3]]);
+    // Empty array → empty Hash.
+    const te = callMethod([], "tally") as Map<Val, Val>;
+    expect(te.size).toBe(0);
+    // respond_to? advertises it.
+    expect(callMethod([1], "respond_to?", "tally")).toBe(true);
   });
 
   it("find/detect and flat_map", () => {
@@ -536,13 +607,169 @@ describe("built-in method catalog: Hash (M1c)", () => {
     expect(vs).toEqual([1, 2]);
   });
 
+  it("block transform_values / transform_keys", () => {
+    // transform_values: keys untouched, values are block results, non-mutating.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
+    const tv = callMethod(h, "transform_values", new Closure((v: Val) => (v as number) * 10)) as Map<Val, Val>;
+    expect([...tv.entries()]).toEqual([
+      ["a", 10],
+      ["b", 20],
+    ]);
+    expect([...h.entries()]).toEqual([
+      ["a", 1],
+      ["b", 2],
+    ]); // receiver unchanged
+
+    // transform_keys: values untouched, keys are block results.
+    const tk = callMethod(h, "transform_keys", new Closure((k: Val) => `${k}!`)) as Map<Val, Val>;
+    expect([...tk.entries()]).toEqual([
+      ["a!", 1],
+      ["b!", 2],
+    ]);
+
+    // transform_keys collision: both keys collapse onto "z" — Ruby keeps the
+    // LAST value at the FIRST-seen position, matching the Map pair-fold.
+    const collide = callMethod(h, "transform_keys", new Closure((_k: Val) => "z")) as Map<Val, Val>;
+    expect([...collide.entries()]).toEqual([["z", 2]]);
+  });
+
+  it("block Enumerable aggregates (find/any?/all?/none?/count/sort_by/min_by/max_by)", () => {
+    // Hash mixes in Enumerable: the block is yielded [key, value] and the
+    // "element" an aggregate returns is the two-element [key, value] pair.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3]]);
+    // find/detect → first matching [k, v] pair (or nil).
+    expect(callMethod(h, "find", new Closure((k: Val, v: Val) => (v as number) > 1))).toEqual(["b", 2]);
+    expect(callMethod(h, "detect", new Closure((k: Val, v: Val) => (v as number) > 9))).toBeNull();
+    // any?/all?/none? over block([k, v]).
+    expect(callMethod(h, "any?", new Closure((k: Val, v: Val) => v === 2))).toBe(true);
+    expect(callMethod(h, "all?", new Closure((k: Val, v: Val) => (v as number) > 0))).toBe(true);
+    expect(callMethod(h, "none?", new Closure((k: Val, v: Val) => (v as number) > 9))).toBe(true);
+    // count { |k, v| pred } → number of truthy pairs.
+    expect(callMethod(h, "count", new Closure((k: Val, v: Val) => (v as number) % 2 === 1))).toBe(2);
+    // sort_by → NEW array of [k, v] pairs ordered by the block key.
+    expect(callMethod(h, "sort_by", new Closure((k: Val, v: Val) => -(v as number)))).toEqual([
+      ["c", 3],
+      ["b", 2],
+      ["a", 1],
+    ]);
+    // min_by / max_by → the extremal [k, v] pair.
+    expect(callMethod(h, "min_by", new Closure((k: Val, v: Val) => v))).toEqual(["a", 1]);
+    expect(callMethod(h, "max_by", new Closure((k: Val, v: Val) => v))).toEqual(["c", 3]);
+    // min_by / max_by on an empty hash → nil; receiver unchanged throughout.
+    expect(callMethod(new Map<Val, Val>(), "min_by", new Closure((k: Val, v: Val) => v))).toBeNull();
+    expect([...h.entries()]).toEqual([
+      ["a", 1],
+      ["b", 2],
+      ["c", 3],
+    ]);
+  });
+
+  it("block Enumerable breadth (group_by/partition/flat_map/reduce/inject/sum)", () => {
+    // Hash mixes in Enumerable: every method yields [key, value] EXCEPT
+    // reduce/inject, which follow Ruby's memo convention and yield (memo, pair)
+    // — the [k, v] pair as ONE argument.  Mirrors the Python (#7978), Go
+    // (#7983), Rust (#7989), and JS (#7993) references.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+    const isEven = new Closure((k: Val, v: Val) => (v as number) % 2 === 0);
+    // group_by → a Hash: block key -> Array of [k, v] pairs (first-seen order).
+    expect(callMethod(h, "group_by", isEven)).toEqual(
+      new Map<Val, Val>([
+        [false, [["a", 1], ["c", 3]]],
+        [true, [["b", 2], ["d", 4]]],
+      ]),
+    );
+    // partition → [[matching pairs], [rest pairs]].
+    expect(callMethod(h, "partition", isEven)).toEqual([
+      [["b", 2], ["d", 4]],
+      [["a", 1], ["c", 3]],
+    ]);
+    // flat_map { |k, v| [k, v] } → one-level splice.
+    expect(
+      callMethod(
+        new Map<Val, Val>([["a", 1], ["b", 2]]),
+        "flat_map",
+        new Closure((k: Val, v: Val) => [k, v]),
+      ),
+    ).toEqual(["a", 1, "b", 2]);
+    // sum { |k, v| v } → 10 (seed defaults to 0).
+    expect(callMethod(h, "sum", new Closure((k: Val, v: Val) => v))).toBe(10);
+    // reduce(100) { |acc, pair| acc + pair[1] } → 110 (memo yields the pair).
+    expect(
+      callMethod(h, "reduce", 100, new Closure((acc: Val, pair: Val) => (acc as number) + ((pair as Val[])[1] as number))),
+    ).toBe(110);
+    // inject seedless { |acc, pair| … } seeds from the first [k, v] pair.
+    expect(
+      callMethod(
+        new Map<Val, Val>([["a", 1], ["b", 2]]),
+        "inject",
+        new Closure((acc: Val, pair: Val) => [(acc as Val[])[0], ((acc as Val[])[1] as number) + ((pair as Val[])[1] as number)]),
+      ),
+    ).toEqual(["a", 3]);
+    // Empty seedless reduce → nil; receiver unchanged throughout.
+    expect(callMethod(new Map<Val, Val>(), "reduce", new Closure((a: Val, p: Val) => a))).toBeNull();
+    expect([...h.entries()]).toEqual([
+      ["a", 1],
+      ["b", 2],
+      ["c", 3],
+      ["d", 4],
+    ]);
+  });
+
+  it("to_h + indexed/object iteration (to_h/each_with_index/each_with_object)", () => {
+    // `to_h` has a no-block (shallow copy) and a block (re-map) form.
+    // `each_with_index`/`each_with_object` yield the [k, v] PAIR as ONE argument
+    // alongside the index/memo (Ruby's Enumerable convention — contrast `each`'s
+    // two-arg (k, v) yield).  Mirrors Python #8009 / Go #8015 / Rust #8020 / JS
+    // #8024.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3]]);
+    // to_h (no block) → a fresh equal Map that does not alias the receiver.
+    const copy = callMethod(h, "to_h") as Map<Val, Val>;
+    expect(copy).toEqual(new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3]]));
+    copy.set("z", 99);
+    expect(h.has("z")).toBe(false);
+    // to_h with a block re-maps each [k, v] → [new_k, new_v] (upcase key, double
+    // value).
+    expect(
+      callMethod(h, "to_h", new Closure((k: Val, v: Val) => [(k as string).toUpperCase(), (v as number) * 2])),
+    ).toEqual(new Map<Val, Val>([["A", 2], ["B", 4], ["C", 6]]));
+    // to_h block whose new keys collide → the LAST pair wins (Ruby's rule).
+    expect(callMethod(h, "to_h", new Closure((k: Val, v: Val) => ["k", v]))).toEqual(
+      new Map<Val, Val>([["k", 3]]),
+    );
+    // to_h block returning a non-pair is skipped (never-throw floor).
+    expect(callMethod(h, "to_h", new Closure((k: Val, v: Val) => v))).toEqual(new Map<Val, Val>());
+    // each_with_index yields ([k, v], i) and returns the receiver.
+    const seen: Val[] = [];
+    const ewiResult = callMethod(
+      h, "each_with_index", new Closure((pair: Val, i: Val) => { seen.push([pair, i]); return null; }),
+    );
+    expect(seen).toEqual([[["a", 1], 0], [["b", 2], 1], [["c", 3], 2]]);
+    expect(ewiResult).toBe(h);
+    // each_with_object(memo) yields ([k, v], memo) and returns the memo; here we
+    // accumulate the values into a running total wrapped in an array.
+    const total = callMethod(
+      h, "each_with_object", [0], new Closure((pair: Val, memo: Val) => { (memo as Val[])[0] = ((memo as Val[])[0] as number) + ((pair as Val[])[1] as number); return null; }),
+    );
+    expect(total).toEqual([6]);
+    // each_with_object with NO memo argument returns the receiver unchanged.
+    expect(callMethod(h, "each_with_object", new Closure((pair: Val, memo: Val) => null))).toBe(h);
+    // respond_to? advertises the new methods; source hash unchanged throughout.
+    expect(callMethod(h, "respond_to?", "to_h")).toBe(true);
+    expect(callMethod(h, "respond_to?", "each_with_index")).toBe(true);
+    expect(callMethod(h, "respond_to?", "each_with_object")).toBe(true);
+    expect([...h.entries()]).toEqual([["a", 1], ["b", 2], ["c", 3]]);
+  });
+
   it("respond_to? honesty + nil floor", () => {
     const h = new Map<Val, Val>([["a", 1]]);
     expect(callMethod(h, "respond_to?", "keys")).toBe(true);
     expect(callMethod(h, "respond_to?", "each")).toBe(true);
-    expect(callMethod(h, "respond_to?", "transform_keys")).toBe(false);
+    expect(callMethod(h, "respond_to?", "min_by")).toBe(true);
+    expect(callMethod(h, "respond_to?", "transform_values")).toBe(true);
+    // `transform_keys!` (in-place bang variant) is still uncatalogued.
+    expect(callMethod(h, "respond_to?", "transform_keys!")).toBe(false);
     // T2: an unknown Hash method now raises NoMethodError (was nil).
-    expect(() => callMethod(h, "transform_keys")).toThrow(SirError);
+    expect(() => callMethod(h, "transform_keys!")).toThrow(SirError);
     expect(callMethod(h, "nil?")).toBe(false);
   });
 });
@@ -570,6 +797,26 @@ describe("built-in method catalog: String (M1c)", () => {
     // swapcase flips each ASCII letter, leaving other characters untouched.
     expect(callMethod("Hello World", "swapcase")).toBe("hELLO wORLD");
     expect(callMethod("a1B!c", "swapcase")).toBe("A1b!C");
+  });
+
+  it("char-set methods (tr / count / delete / squeeze)", () => {
+    // tr: positional translate; shorter `to` repeats its last char; empty `to`
+    // deletes; last mapping wins on repeated `from` chars.
+    expect(callMethod("hello", "tr", "el", "ip")).toBe("hippo");
+    expect(callMethod("hello", "tr", "l", "r")).toBe("herro");
+    expect(callMethod("hello", "tr", "aeiou", "*")).toBe("h*ll*");
+    expect(callMethod("hello", "tr", "l", "")).toBe("heo");
+    // A non-string arg (or missing `to`) is a no-op, holding the never-raise floor.
+    expect(callMethod("hello", "tr", "l")).toBe("hello");
+    // count / delete over a literal char set.
+    expect(callMethod("hello", "count", "l")).toBe(2);
+    expect(callMethod("hello", "count", "lo")).toBe(3);
+    expect(callMethod("hello", "delete", "l")).toBe("heo");
+    // Multiple set args INTERSECT (only chars in every set count/delete).
+    expect(callMethod("hello", "count", "lo", "o")).toBe(1);
+    // squeeze: bare form collapses every run; with a set only those runs.
+    expect(callMethod("mississippi", "squeeze")).toBe("misisipi");
+    expect(callMethod("aaabbbccc", "squeeze", "a")).toBe("abbbccc");
   });
 
   it("strip family and chomp", () => {
@@ -671,6 +918,31 @@ describe("built-in method catalog: Numeric (Integer/Float) (M1c)", () => {
     expect(callMethod(2.5, "round")).toBe(3);
     expect(callMethod(-2.5, "round")).toBe(-3);
     expect(callMethod(5, "round")).toBe(5);
+  });
+
+  it("numeric breadth (N1): round(ndigits) / divmod / fdiv / clamp / between?", () => {
+    // round(ndigits): positive → decimals half-away; ndigits <= 0 → power of ten.
+    expect(callMethod(3.14159, "round", 2)).toBe(3.14);
+    expect(callMethod(1250, "round", -2)).toBe(1300); // half away from zero
+    expect(callMethod(2.675, "round", 2)).toBe(2.68);
+    // divmod: floored quotient, divisor-signed remainder.
+    expect(callMethod(13, "divmod", 4)).toEqual([3, 1]);
+    expect(callMethod(13, "divmod", -4)).toEqual([-4, -3]);
+    // divmod by zero raises a typed ZeroDivisionError; a non-numeric divisor
+    // degrades to 0 → the same typed error (never an untyped throw).
+    expect(() => callMethod(1, "divmod", 0)).toThrow();
+    expect(() => callMethod(1, "divmod", "x")).toThrow();
+    // fdiv: float division that never throws (zero divisor → ±Infinity).
+    expect(callMethod(7, "fdiv", 2)).toBe(3.5);
+    expect(callMethod(1, "fdiv", 0)).toBe(Infinity);
+    expect(callMethod(-1, "fdiv", 0)).toBe(-Infinity);
+    // clamp / between?.
+    expect(callMethod(5, "clamp", 1, 10)).toBe(5);
+    expect(callMethod(-3, "clamp", 1, 10)).toBe(1);
+    expect(callMethod(99, "clamp", 1, 10)).toBe(10);
+    expect(callMethod(5, "between?", 1, 10)).toBe(true);
+    expect(callMethod(0, "between?", 1, 10)).toBe(false);
+    expect(callMethod(10, "between?", 1, 10)).toBe(true);
   });
 
   it("gcd / pow / digits", () => {

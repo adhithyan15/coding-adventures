@@ -1,0 +1,58 @@
+% ============================================================================
+% magnetic-flux-density-conversions — magnetic-flux-density-unit → tesla factors
+% (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `dynamic-viscosity-conversions.adj` and
+% `kinematic-viscosity-conversions.adj`: a native tabular relation ingested VERBATIM
+% from a published NIST conversion table. Each row states the factor converting one
+% magnetic-flux-density unit to the SI coherent unit of magnetic flux density, the
+% tesla (T):
+%
+%     ? magnetic_flux_density_to_teslas(gauss, $v)   % 0.0001
+%     ? magnetic_flux_density_to_teslas(gamma, $v)   % 0.000000001
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity tables: where
+% those normalise their own quantity, this one normalises a MAGNETIC FLUX DENSITY (the
+% strength of a magnetic field, one tesla being one weber per square metre). Put a
+% field given in the CGS gauss into SI first, then reason (write-once-use-many). Why a
+% `table` and not several hand-written `relate` clauses: this is exactly the shape
+% reference data comes in — a published table, not prose. The citable artifact IS the
+% NIST conversion-factors table at the `locator` below; every factor here is a CELL of
+% NIST Special Publication 811, Appendix B.9 ("Factors for units listed
+% alphabetically"), and the whole table is defended by one provenance envelope rather
+% than repeating `source`/`locator`/`trust` on every row. Each `row` lowers to a ground
+% relation `magnetic_flux_density_to_teslas(unit, teslas)`, so the exact lookup above is
+% the ordinary SLD binding query — the engine returns the factor WITH this table's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE: NIST SP 811 B.9 prints these two magnetic-flux-density factors in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here
+% as the plain decimal number of teslas each unit names:
+%
+%     gauss (Gs, G)   1.0 E-04  →  0.0001
+%     gamma           1.0 E-09  →  0.000000001
+%
+% These two are exact because both are coherent CGS-Gaussian / customary magnetic units
+% defined as exact powers of ten of the tesla — one gauss is exactly 10⁻⁴ T, and one
+% gamma is exactly 10⁻⁹ T (i.e. exactly one nanotesla). Both terminate; nothing here is
+% a rounded measurement. This table's scope is precisely those two base units NIST lists
+% for magnetic flux density; a unit with NO row — e.g. a `kilogauss` — ABSTAINS rather
+% than returning a factor the table does not carry. The only claim this table makes is
+% "these are the exact factors NIST SP 811 B.9 prints", which is exactly what a
+% byte-check against the cited table verifies. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — every factor is a verbatim cell of the cited table,
+% nothing asserted from memory.)
+% ============================================================================
+
+table magnetic_flux_density_to_teslas {
+    columns unit, teslas
+
+    row (gauss, 0.0001)
+    row (gamma, 0.000000001)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

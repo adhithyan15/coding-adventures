@@ -7,6 +7,7 @@ import {
   bSourceCurrent,
   bSourceVoltage,
   bjt,
+  bjtAtTemperature,
   bjtFromModelCard,
   circuitAtTemperature,
   cccs,
@@ -39,6 +40,7 @@ import {
   deviceModelReferenceDeckAuditSummaryRecords,
   deviceModelTemperatureAuditFixtures,
   diode,
+  diodeAtTemperature,
   diodeFromModelCard,
   formatCornerDcSweepTable,
   formatCornerDcTable,
@@ -77,13 +79,11 @@ import {
   formatModelCardSupportedParameterCoverageSummaryJson,
   formatModelCardSupportedParameterCoverageSummaryTable,
   formatModelCardSupportedParameterCoverageTable,
-  formatModelCardUnsupportedParameterIssueCsv,
-  formatModelCardUnsupportedParameterIssueJson,
-  formatModelCardUnsupportedParameterIssueTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
   inductor,
   jfet,
+  jfetAtTemperature,
   jfetFromModelCard,
   measureDcSweepDeck,
   measureDcSweepProbe,
@@ -93,9 +93,8 @@ import {
   modelCardSupportedParameterCoverageRecords,
   modelCardSupportedParameterCoverageSummary,
   modelCardSupportedParameterCoverageSummaryRecords,
-  modelCardUnsupportedParameterIssueRecords,
-  modelCardUnsupportedParameterIssues,
   mosfet,
+  mosfetAtTemperature,
   mosfetFromModelCard,
   normalizeModelCard,
   normalizeModelCardType,
@@ -123,7 +122,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(67);
+    expect(coverage).toHaveLength(207);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -132,8 +131,8 @@ describe("dcOp", () => {
     });
     expect(coverage.at(-1)).toStrictEqual({
       kind: "PMOS",
-      canonicalParameter: "MJ",
-      acceptedNames: ["MJ"],
+      canonicalParameter: "AF",
+      acceptedNames: ["AF"],
       aliasCount: 1,
     });
 
@@ -141,9 +140,9 @@ describe("dcOp", () => {
     expect(table.split("\n")[0]).toBe("kind\tcanonical_parameter\taccepted_names\talias_count");
     expect(table.split("\n")[1]).toBe("D\tIS\tIS|JS\t2");
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
-    expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
+    expect(table.split("\n").at(-1)).toBe("PMOS\tAF\tAF\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(67);
+    expect(records).toHaveLength(207);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -161,19 +160,19 @@ describe("dcOp", () => {
     expect(summary).toHaveLength(7);
     expect(summary[0]).toStrictEqual({
       kind: "D",
-      canonicalParameterCount: 7,
-      acceptedNameCount: 11,
-      aliasedParameterCount: 3,
+      canonicalParameterCount: 15,
+      acceptedNameCount: 21,
+      aliasedParameterCount: 5,
       maxAliasCount: 3,
-      aliasedParameters: ["IS", "VT", "CJO"],
+      aliasedParameters: ["IS", "VT", "CJO", "VJ", "M"],
     });
     expect(summary[5]).toStrictEqual({
       kind: "NMOS",
-      canonicalParameterCount: 18,
-      acceptedNameCount: 25,
-      aliasedParameterCount: 6,
+      canonicalParameterCount: 33,
+      acceptedNameCount: 41,
+      aliasedParameterCount: 7,
       maxAliasCount: 3,
-      aliasedParameters: ["VT0", "LAMBDA", "N_SUB", "T_NOM", "CBS", "CBD"],
+      aliasedParameters: ["VT0", "LAMBDA", "U0", "N_SUB", "T_NOM", "CBS", "CBD"],
     });
     expect(summary.at(-1)?.kind).toBe("PMOS");
 
@@ -181,22 +180,22 @@ describe("dcOp", () => {
     expect(table.split("\n")[0]).toBe(
       "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters",
     );
-    expect(table.split("\n")[1]).toBe("D\t7\t11\t3\t3\tIS|VT|CJO");
+    expect(table.split("\n")[1]).toBe("D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M");
     expect(table.split("\n").at(-1)).toBe(
-      "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD",
+      "PMOS\t33\t41\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD",
     );
     const records = modelCardSupportedParameterCoverageSummaryRecords();
     expect(records).toHaveLength(7);
     expect(records[0]).toStrictEqual({
       kind: "D",
-      canonical_parameter_count: "7",
-      accepted_name_count: "11",
-      aliased_parameter_count: "3",
+      canonical_parameter_count: "15",
+      accepted_name_count: "21",
+      aliased_parameter_count: "5",
       max_alias_count: "3",
-      aliased_parameters: "IS|VT|CJO",
+      aliased_parameters: "IS|VT|CJO|VJ|M",
     });
     expect(formatModelCardSupportedParameterCoverageSummaryCsv()).toMatch(
-      /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,7,11,3,3,IS\|VT\|CJO\n/,
+      /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,15,21,5,3,IS\|VT\|CJO\|VJ\|M\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageSummaryJson())).toStrictEqual(records);
   });
@@ -208,15 +207,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 67,
-      expectedCanonicalParameterCount: 67,
-      acceptedNameCount: 113,
-      aliasedParameterCount: 33,
+      canonicalParameterCount: 207,
+      expectedCanonicalParameterCount: 207,
+      acceptedNameCount: 279,
+      aliasedParameterCount: 59,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t67\t67\t113\t33\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t207\t207\t279\t59\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -239,15 +238,15 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(66);
-    expect(report.acceptedNameCount).toBe(110);
-    expect(report.aliasedParameterCount).toBe(32);
+    expect(report.canonicalParameterCount).toBe(206);
+    expect(report.acceptedNameCount).toBe(276);
+    expect(report.aliasedParameterCount).toBe(58);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
     expect(report.issues[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 18 canonical supported parameters, found 17",
+      message: "expected NMOS to expose 33 canonical supported parameters, found 32",
     });
     expect(report.issues.at(-1)).toStrictEqual({
       kind: "NMOS",
@@ -255,16 +254,16 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t66\t67\t110\t32\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t206\t207\t276\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 33 canonical supported parameters, found 32\nNMOS\taccepted_name_count\texpected NMOS to expose 41 accepted model-card names, found 38\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 18 canonical supported parameters, found 17",
+      message: "expected NMOS to expose 33 canonical supported parameters, found 32",
     });
     expect(formatModelCardSupportedParameterCoverageGateIssueCsv(report)).toMatch(
-      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 18 canonical supported parameters, found 17"\n/,
+      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 33 canonical supported parameters, found 32"\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageGateIssueJson(report))).toStrictEqual(
       records,
@@ -276,81 +275,962 @@ describe("dcOp", () => {
       JS: 2.0e-14,
       CJ: 1.5e-12,
       TT: 4.0e-9,
+      PB: 0.8,
+      MJ: 0.4,
+      FC: 0.35,
+      XTI: 2.2,
+      EG: 1.05,
       RS: 10.0,
+      KF: 1.0e-12,
+      AF: 1.3,
     });
     const diodeModel = diodeFromModelCard("D1", "a", "k", diodeCard);
-    expect(diodeCard.parameters).toStrictEqual({ IS: 2.0e-14, CJO: 1.5e-12, TT: 4.0e-9 });
-    expect(diodeCard.unsupportedParameters).toStrictEqual(["RS"]);
-    const diodeIssues = modelCardUnsupportedParameterIssues(diodeCard);
-    expect(diodeIssues).toStrictEqual([
-      {
-        modelName: "Dfast",
-        kind: "D",
-        parameter: "RS",
-        message: "unsupported D model-card parameter RS",
-      },
-    ]);
-    expect(formatModelCardUnsupportedParameterIssueTable(diodeCard)).toBe(
-      "model_name\tkind\tparameter\tmessage\nDfast\tD\tRS\tunsupported D model-card parameter RS",
-    );
-    const diodeIssueRecords = modelCardUnsupportedParameterIssueRecords(diodeCard);
-    expect(diodeIssueRecords).toStrictEqual([
-      {
-        model_name: "Dfast",
-        kind: "D",
-        parameter: "RS",
-        message: "unsupported D model-card parameter RS",
-      },
-    ]);
-    expect(formatModelCardUnsupportedParameterIssueCsv(diodeCard)).toBe(
-      "model_name,kind,parameter,message\nDfast,D,RS,unsupported D model-card parameter RS\n",
-    );
-    expect(JSON.parse(formatModelCardUnsupportedParameterIssueJson(diodeCard))).toStrictEqual(diodeIssueRecords);
+    expect(diodeCard.parameters).toStrictEqual({
+      IS: 2.0e-14,
+      CJO: 1.5e-12,
+      TT: 4.0e-9,
+      VJ: 0.8,
+      M: 0.4,
+      FC: 0.35,
+      XTI: 2.2,
+      EG: 1.05,
+      RS: 10.0,
+      KF: 1.0e-12,
+      AF: 1.3,
+    });
+    expect(diodeCard.unsupportedParameters).toStrictEqual([]);
     expectClose(diodeModel.saturationCurrent, 2.0e-14);
     expectClose(diodeModel.junctionCapacitance, 1.5e-12);
     expectClose(diodeModel.transitTime, 4.0e-9);
+    expectClose(diodeModel.junctionPotential, 0.8);
+    expectClose(diodeModel.gradingCoefficient, 0.4);
+    expectClose(diodeModel.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(diodeModel.saturationCurrentTemperatureExponent, 2.2);
+    expectClose(diodeModel.energyGapElectronVolts, 1.05);
+    expectClose(diodeModel.seriesResistance, 10.0);
+    expectClose(diodeModel.flickerNoiseCoefficient, 1.0e-12);
+    expectClose(diodeModel.flickerNoiseExponent, 1.3);
 
-    const bjtCard = normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12 });
+    const bjtCard = normalizeModelCard("Qsmall", "npn", {
+      BETA: 125.0,
+      CBE: 2.0e-12,
+      XTI: 2.4,
+      XTB: 1.5,
+      BETA_R: 0.25,
+      EG: 1.05,
+      VA: 80.0,
+      VB: 120.0,
+      IK: 2.0e-3,
+      IKR: 3.0e-3,
+      T_NOM: 50.0,
+      KF: 1.0e-12,
+      AF: 1.3,
+      PTF: 30.0,
+      XTF: 2.0,
+      ITF: 4.0e-3,
+      VTF: 0.6,
+      RE: 12.0,
+      RC: 13.0,
+      RB: 14.0,
+      RBM: 2.0,
+      IRB: 5.0e-6,
+      XCJC: 0.4,
+      ISE: 3.0e-13,
+      NE: 1.7,
+      ISC: 4.0e-13,
+      NC: 1.8,
+      NF: 1.2,
+      NR: 1.3,
+      PE: 0.8,
+      ME: 0.4,
+      PC: 0.7,
+      MC: 0.45,
+      FC: 0.4,
+    });
     const bjtModel = bjtFromModelCard("Q1", "c", "b", "e", bjtCard);
-    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, CJE: 2.0e-12 });
+    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, BR: 0.25, CJE: 2.0e-12, XTI: 2.4, XTB: 1.5, EG: 1.05, VAF: 80.0, VAR: 120.0, IKF: 2.0e-3, IKR: 3.0e-3, TNOM: 50.0, KF: 1.0e-12, AF: 1.3, PTF: 30.0, XTF: 2.0, ITF: 4.0e-3, VTF: 0.6, RE: 12.0, RC: 13.0, RB: 14.0, RBM: 2.0, IRB: 5.0e-6, XCJC: 0.4, ISE: 3.0e-13, NE: 1.7, ISC: 4.0e-13, NC: 1.8, NF: 1.2, NR: 1.3, VJE: 0.8, MJE: 0.4, VJC: 0.7, MJC: 0.45, FC: 0.4 });
     expect(bjtModel.polarity).toBe("NPN");
     expectClose(bjtModel.forwardBeta, 125.0);
+    expectClose(bjtModel.reverseBeta, 0.25);
     expectClose(bjtModel.baseEmitterCapacitance, 2.0e-12);
+    expectClose(bjtModel.saturationCurrentTemperatureExponent, 2.4);
+    expectClose(bjtModel.forwardBetaTemperatureExponent, 1.5);
+    expectClose(bjtModel.energyGapElectronVolts, 1.05);
+    expectClose(bjtModel.forwardEarlyVoltage, 80.0);
+    expectClose(bjtModel.reverseEarlyVoltage, 120.0);
+    expectClose(bjtModel.forwardBetaRolloffCurrent, 2.0e-3);
+    expectClose(bjtModel.reverseBetaRolloffCurrent, 3.0e-3);
+    expectClose(bjtModel.nominalTemperatureKelvin, 323.15);
+    expectClose(bjtModel.flickerNoiseCoefficient, 1.0e-12);
+    expectClose(bjtModel.flickerNoiseExponent, 1.3);
+    expectClose(bjtModel.forwardExcessPhaseDegrees, 30.0);
+    expectClose(bjtModel.forwardTransitTimeBiasCoefficient, 2.0);
+    expectClose(bjtModel.forwardTransitTimeCurrent, 4.0e-3);
+    expectClose(bjtModel.forwardTransitTimeVoltage, 0.6);
+    expectClose(bjtModel.emitterResistance, 12.0);
+    expectClose(bjtModel.collectorResistance, 13.0);
+    expectClose(bjtModel.baseResistance, 14.0);
+    expectClose(bjtModel.minimumBaseResistance, 2.0);
+    expectClose(bjtModel.baseResistanceHalfCurrent, 5.0e-6);
+    expectClose(bjtModel.baseCollectorCapacitanceFraction, 0.4);
+    expectClose(bjtModel.baseEmitterLeakageSaturationCurrent, 3.0e-13);
+    expectClose(bjtModel.baseEmitterLeakageEmissionCoefficient, 1.7);
+    expectClose(bjtModel.baseCollectorLeakageSaturationCurrent, 4.0e-13);
+    expectClose(bjtModel.baseCollectorLeakageEmissionCoefficient, 1.8);
+    expectClose(bjtModel.forwardEmissionCoefficient, 1.2);
+    expectClose(bjtModel.reverseEmissionCoefficient, 1.3);
+    expectClose(bjtModel.baseEmitterJunctionPotential, 0.8);
+    expectClose(bjtModel.baseEmitterGradingCoefficient, 0.4);
+    expectClose(bjtModel.baseCollectorJunctionPotential, 0.7);
+    expectClose(bjtModel.baseCollectorGradingCoefficient, 0.45);
+    expectClose(bjtModel.forwardBiasDepletionCoefficient, 0.4);
 
-    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02 });
+    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02, KF: 1.0e-12, AF: 1.3, VJ: 0.8, FC: 0.35, IS: 2.0e-13, XTI: 2.5, EG: 1.05, B: 1.1, NLEV: 3.0, GDSNOI: 1.25, RD: 125.0, RS: 75.0, T_NOM: 50.0, TCV: 0.01, VTOTC: -0.0025, BEX: 1.5, BETATCE: -0.5 });
     const jfetModel = jfetFromModelCard("J1", "d", "g", "s", jfetCard);
-    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02 });
+    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02, KF: 1.0e-12, AF: 1.3, PB: 0.8, FC: 0.35, IS: 2.0e-13, XTI: 2.5, EG: 1.05, B: 1.1, NLEV: 3.0, GDSNOI: 1.25, RD: 125.0, RS: 75.0, TNOM: 50.0, TCV: 0.01, VTOTC: -0.0025, BEX: 1.5, BETATCE: -0.5 });
     expect(jfetModel.polarity).toBe("NJF");
     expectClose(jfetModel.beta, 9.0e-4);
     expectClose(jfetModel.thresholdVoltage, -1.8);
     expectClose(jfetModel.channelLengthModulation, 0.02);
+    expectClose(jfetModel.flickerNoiseCoefficient, 1.0e-12);
+    expectClose(jfetModel.flickerNoiseExponent, 1.3);
+    expectClose(jfetModel.junctionPotential, 0.8);
+    expectClose(jfetModel.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(jfetModel.gateSaturationCurrent, 2.0e-13);
+    expectClose(jfetModel.gateSaturationCurrentTemperatureExponent, 2.5);
+    expectClose(jfetModel.bandgapVoltage, 1.05);
+    expectClose(jfetModel.dopingTailParameter, 1.1);
+    expectClose(jfetModel.noiseEquationLevel, 3.0);
+    expectClose(jfetModel.channelNoiseCoefficient, 1.25);
+    expectClose(jfetModel.drainResistance, 125.0);
+    expectClose(jfetModel.sourceResistance, 75.0);
+    expectClose(jfetModel.nominalTemperatureKelvin, 323.15);
+    expectClose(jfetModel.thresholdVoltageTemperatureCoefficient, 0.01);
+    expectClose(jfetModel.alternativeThresholdVoltageTemperatureCoefficient, -0.0025);
+    expectClose(jfetModel.mobilityTemperatureExponent, 1.5);
+    expectClose(jfetModel.mobilityTemperatureCoefficient, -0.5);
 
     const mosCard = normalizeModelCard("Mn", "nmos", {
       LEVEL: 1.0,
       VTO: 0.55,
       LAM: 0.04,
-      NSUB: 1.6,
+      NSUB: 1.6e16,
       CJD: 3.0e-13,
       PB: 0.9,
       MJ: 0.45,
+      MJSW: 0.25,
+      FC: 0.4,
+      LD: 50.0e-9,
+      RD: 125.0,
+      RS: 75.0,
+      RSH: 50.0,
+      IS: 4.0e-15,
+      JS: 2.0e-3,
+      CJ: 2.0e-3,
+      TOX: 25.0e-9,
+      UO: 500.0,
+      KF: 2.0e-24,
+      AF: 1.4,
     });
     const mosModel = mosfetFromModelCard("M1", "d", "g", "s", "b", mosCard);
     expect(mosCard.parameters).toStrictEqual({
       LEVEL: 1.0,
       VT0: 0.55,
       LAMBDA: 0.04,
-      N_SUB: 1.6,
+      N_SUB: 1.6e16,
       CBD: 3.0e-13,
       PB: 0.9,
       MJ: 0.45,
+      MJSW: 0.25,
+      FC: 0.4,
+      LD: 50.0e-9,
+      RD: 125.0,
+      RS: 75.0,
+      RSH: 50.0,
+      IS: 4.0e-15,
+      JS: 2.0e-3,
+      CJ: 2.0e-3,
+      TOX: 25.0e-9,
+      U0: 500.0,
+      KF: 2.0e-24,
+      AF: 1.4,
     });
     expect(mosModel.type).toBe("NMOS");
     expectClose(mosModel.params.VT0, 0.55);
     expectClose(mosModel.params.LAMBDA, 0.04);
-    expectClose(mosModel.params.N_SUB, 1.6);
+    expectClose(mosModel.params.N_SUB, 1.6e16);
     expectClose(mosModel.params.CBD, 3.0e-13);
     expectClose(mosModel.params.PB, 0.9);
     expectClose(mosModel.params.MJ, 0.45);
+    expectClose(mosModel.params.MJSW, 0.25);
+    expectClose(mosModel.params.FC, 0.4);
+    expectClose(mosModel.params.LD, 50.0e-9);
+    expectClose(mosModel.params.RD, 125.0);
+    expectClose(mosModel.params.RS, 75.0);
+    expectClose(mosModel.params.RSH, 50.0);
+    expectClose(mosModel.params.IS, 4.0e-15);
+    expectClose(mosModel.params.JS, 2.0e-3);
+    expectClose(mosModel.params.NRD, 1.0);
+    expectClose(mosModel.params.NRS, 1.0);
+    expectClose(mosModel.params.CJ, 2.0e-3);
+    expectClose(mosModel.params.TOX, 25.0e-9);
+    expectClose(mosModel.params.U0, 500.0);
+    expectClose(mosModel.params.KP, 500.0 * 1.0e-4 * 3.453133e-11 / 25.0e-9);
+    expectClose(mosModel.params.KF, 2.0e-24);
+    expectClose(mosModel.params.AF, 1.4);
+  });
+
+  it("derives MOS KP from surface mobility with explicit-KP precedence", () => {
+    const defaultMobility = mosfetFromModelCard(
+      "M1",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mdefault", "nmos", { TOX: 100.0e-9 }),
+    );
+    expectClose(defaultMobility.params.U0, 600.0);
+    expectClose(defaultMobility.params.KP, 600.0 * 1.0e-4 * 3.453133e-11 / 100.0e-9);
+
+    const explicit = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mexplicit", "nmos", {
+        TOX: 100.0e-9,
+        U0: 500.0,
+        KP: 250.0e-6,
+      }),
+    );
+    expectClose(explicit.params.U0, 500.0);
+    expectClose(explicit.params.KP, 250.0e-6);
+  });
+
+  it("derives MOS electrostatics from substrate doping with explicit precedence", () => {
+    const derived = mosfetFromModelCard(
+      "M1",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mderived", "nmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+        NSS: 1.0e10,
+      }),
+    );
+    const thermalVoltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19;
+    const expectedPhi = Math.max(
+      0.1,
+      2.0 * thermalVoltage * Math.log(4.0e21 / 1.45e16),
+    );
+    const expectedGamma =
+      Math.sqrt(
+        2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21,
+      ) /
+      (3.453133e-11 / 100.0e-9);
+    const expectedBandGap =
+      1.16 - (7.02e-4 * 300.15 * 300.15) / (300.15 + 1108.0);
+    const processVt0 =
+      expectedGamma * Math.sqrt(expectedPhi) +
+      0.5 * (expectedPhi - expectedBandGap);
+    const surfaceStateShift =
+      (1.0e10 * 1.0e4 * 1.602_176_634e-19) /
+      (3.453133e-11 / 100.0e-9);
+    const expectedVt0 = processVt0 - surfaceStateShift;
+    expectClose(derived.params.PHI, expectedPhi);
+    expectClose(derived.params.GAMMA, expectedGamma);
+    expectClose(derived.params.VT0, expectedVt0);
+
+    const pmos = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mp", "pmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+        NSS: 1.0e10,
+      }),
+    );
+    expectClose(pmos.params.VT0, -processVt0 - surfaceStateShift);
+
+    const explicit = mosfetFromModelCard(
+      "M3",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mexplicit", "nmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+        PHI: 0.72,
+        GAMMA: 0.41,
+        NSS: 1.0e10,
+        VTO: 0.63,
+      }),
+    );
+    expectClose(explicit.params.PHI, 0.72);
+    expectClose(explicit.params.GAMMA, 0.41);
+    expectClose(explicit.params.VT0, 0.63);
+
+    expect(() =>
+      mosfetFromModelCard(
+        "M4",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalizeModelCard("Minvalid", "nmos", {
+          NSUB: 1.0e10,
+          TOX: 1.0e-7,
+        }),
+      ),
+    ).toThrow("MOSFET NSUB must exceed the intrinsic carrier density");
+  });
+
+  it("shifts process-derived MOS threshold voltage by gate material", () => {
+    const process = { NSUB: 4.0e15, TOX: 100.0e-9 };
+    const defaultNmos = mosfetFromModelCard(
+      "M1",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mdefault", "nmos", process),
+    );
+    const bandGap =
+      1.16 - (7.02e-4 * 300.15 * 300.15) / (300.15 + 1108.0);
+
+    const oppositeNmos = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mopposite", "nmos", { ...process, TPG: -1.0 }),
+    );
+    expectClose(oppositeNmos.params.VT0, defaultNmos.params.VT0! + bandGap);
+
+    const metalNmos = mosfetFromModelCard(
+      "M3",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mmetal", "nmos", { ...process, TPG: 0.0 }),
+    );
+    expectClose(metalNmos.params.VT0, defaultNmos.params.VT0! - 0.05);
+
+    const defaultPmos = mosfetFromModelCard(
+      "M4",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mpdefault", "pmos", process),
+    );
+    const oppositePmos = mosfetFromModelCard(
+      "M5",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mpopposite", "pmos", { ...process, TPG: -1.0 }),
+    );
+    expectClose(oppositePmos.params.VT0, defaultPmos.params.VT0! - bandGap);
+
+    const explicit = mosfetFromModelCard(
+      "M6",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mexplicit", "nmos", {
+        ...process,
+        TPG: -1.0,
+        VTO: 0.63,
+      }),
+    );
+    expectClose(explicit.params.VT0, 0.63);
+
+    expect(() => normalizeModelCard("Minvalid", "nmos", { TPG: 0.5 })).toThrow(
+      "MOSFET TPG must be -1, 0, or 1",
+    );
+
+    for (const invalidNss of [-1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() => normalizeModelCard("Minvalid", "nmos", { NSS: invalidNss })).toThrow(
+        "MOSFET NSS must be finite and non-negative",
+      );
+    }
+  });
+
+  it("rejects invalid MOS model nominal temperatures", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { TNOM: 325.0 });
+    expect(valid.parameters.T_NOM).toBe(325.0);
+
+    for (const invalidTemperature of [0.0, -1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { TNOM: invalidTemperature }),
+      ).toThrow("MOSFET TNOM must be finite and positive");
+    }
+  });
+
+  it("rejects invalid MOS substrate doping", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { NSUB: 4.0e15 });
+    expect(valid.parameters.N_SUB).toBe(4.0e15);
+
+    for (const invalidDoping of [0.0, -1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { NSUB: invalidDoping }),
+      ).toThrow("MOSFET NSUB must be finite and positive");
+    }
+  });
+
+  it("rejects invalid MOS oxide thickness", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { TOX: 100.0e-9 });
+    expect(valid.parameters.TOX).toBe(100.0e-9);
+
+    for (const invalidThickness of [0.0, -1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { TOX: invalidThickness }),
+      ).toThrow("MOSFET TOX must be finite and positive");
+    }
+  });
+
+  it("rejects invalid MOS surface mobility", () => {
+    for (const [name, value] of [["U0", 0.0], ["UO", 600.0]] as const) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { [name]: value });
+      expect(valid.parameters.U0).toBe(value);
+    }
+
+    for (const invalidMobility of [-1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { U0: invalidMobility }),
+      ).toThrow("MOSFET U0 must be finite and non-negative");
+    }
+  });
+
+  it("rejects invalid MOS transconductance", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { KP: 200.0e-6 });
+    expect(valid.parameters.KP).toBe(200.0e-6);
+
+    for (const invalidTransconductance of [
+      0.0,
+      -1.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { KP: invalidTransconductance }),
+      ).toThrow("MOSFET KP must be finite and positive");
+    }
+  });
+
+  it("rejects non-finite MOS threshold voltage", () => {
+    for (const [name, value] of [["VT0", -0.7], ["VTO", 0.0], ["VTH", 0.7]] as const) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { [name]: value });
+      expect(valid.parameters.VT0).toBe(value);
+    }
+
+    for (const invalidThreshold of [
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { VTO: invalidThreshold }),
+      ).toThrow("MOSFET VT0 must be finite");
+    }
+  });
+
+  it("rejects non-finite MOS channel modulation", () => {
+    for (const [name, value] of [
+      ["LAMBDA", -0.01],
+      ["LAM", 0.0],
+      ["LAMBDA", 0.01],
+    ] as const) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { [name]: value });
+      expect(valid.parameters.LAMBDA).toBe(value);
+    }
+
+    for (const invalidModulation of [
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { LAM: invalidModulation }),
+      ).toThrow("MOSFET LAMBDA must be finite");
+    }
+  });
+
+  it("rejects non-positive or non-finite MOS surface potential", () => {
+    for (const value of [0.1, 0.84, 2.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { PHI: value });
+      expect(valid.parameters.PHI).toBe(value);
+    }
+
+    for (const invalidPotential of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { PHI: invalidPotential }),
+      ).toThrow("MOSFET PHI must be finite and positive");
+    }
+  });
+
+  it("rejects negative or non-finite MOS body-effect coefficient", () => {
+    for (const value of [0.0, 0.27, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { GAMMA: value });
+      expect(valid.parameters.GAMMA).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", {
+          GAMMA: invalidCoefficient,
+        }),
+      ).toThrow("MOSFET GAMMA must be finite and non-negative");
+    }
+  });
+
+  it("rejects non-positive or non-finite MOS bulk-junction potential", () => {
+    for (const value of [0.1, 0.8, 2.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { PB: value });
+      expect(valid.parameters.PB).toBe(value);
+    }
+
+    for (const invalidPotential of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { PB: invalidPotential }),
+      ).toThrow("MOSFET PB must be finite and positive");
+    }
+  });
+
+  it("rejects negative or non-finite MOS junction grading coefficient", () => {
+    for (const value of [0.0, 0.5, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { MJ: value });
+      expect(valid.parameters.MJ).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { MJ: invalidCoefficient }),
+      ).toThrow("MOSFET MJ must be finite and non-negative");
+    }
+  });
+
+  it("rejects out-of-range or non-finite MOS depletion coefficient", () => {
+    for (const value of [0.0, 0.5, 0.999]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { FC: value });
+      expect(valid.parameters.FC).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      1.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { FC: invalidCoefficient }),
+      ).toThrow("MOSFET FC must be finite and in [0, 1)");
+    }
+  });
+
+  it("rejects negative or non-finite MOS sidewall grading coefficient", () => {
+    for (const value of [0.0, 0.33, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { MJSW: value });
+      expect(valid.parameters.MJSW).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { MJSW: invalidCoefficient }),
+      ).toThrow("MOSFET MJSW must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS bottom-junction capacitance", () => {
+    for (const value of [0.0, 2.0e-3, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { CJ: value });
+      expect(valid.parameters.CJ).toBe(value);
+    }
+
+    for (const invalidCapacitance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { CJ: invalidCapacitance }),
+      ).toThrow("MOSFET CJ must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS sidewall-junction capacitance", () => {
+    for (const value of [0.0, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { CJSW: value });
+      expect(valid.parameters.CJSW).toBe(value);
+    }
+
+    for (const invalidCapacitance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { CJSW: invalidCapacitance }),
+      ).toThrow("MOSFET CJSW must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS source-bulk capacitance", () => {
+    for (const parameter of ["CBS", "CJS"]) {
+      for (const value of [0.0, 2.0e-10, 1.0]) {
+        const valid = normalizeModelCard("Mvalid", "nmos", {
+          [parameter]: value,
+        });
+        expect(valid.parameters.CBS).toBe(value);
+      }
+
+      for (const invalidCapacitance of [
+        Number.NEGATIVE_INFINITY,
+        -0.1,
+        Number.POSITIVE_INFINITY,
+        Number.NaN,
+      ]) {
+        expect(() =>
+          normalizeModelCard("Minvalid", "nmos", {
+            [parameter]: invalidCapacitance,
+          }),
+        ).toThrow("MOSFET CBS must be finite and non-negative");
+      }
+    }
+  });
+
+  it("rejects negative or non-finite MOS drain-bulk capacitance", () => {
+    for (const parameter of ["CBD", "CJD"]) {
+      for (const value of [0.0, 2.0e-10, 1.0]) {
+        const valid = normalizeModelCard("Mvalid", "nmos", {
+          [parameter]: value,
+        });
+        expect(valid.parameters.CBD).toBe(value);
+      }
+
+      for (const invalidCapacitance of [
+        Number.NEGATIVE_INFINITY,
+        -0.1,
+        Number.POSITIVE_INFINITY,
+        Number.NaN,
+      ]) {
+        expect(() =>
+          normalizeModelCard("Minvalid", "nmos", {
+            [parameter]: invalidCapacitance,
+          }),
+        ).toThrow("MOSFET CBD must be finite and non-negative");
+      }
+    }
+  });
+
+  it("rejects negative or non-finite MOS gate-source overlap capacitance", () => {
+    for (const value of [0.0, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { CGSO: value });
+      expect(valid.parameters.CGSO).toBe(value);
+    }
+
+    for (const invalidCapacitance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { CGSO: invalidCapacitance }),
+      ).toThrow("MOSFET CGSO must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS gate-drain overlap capacitance", () => {
+    for (const value of [0.0, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { CGDO: value });
+      expect(valid.parameters.CGDO).toBe(value);
+    }
+
+    for (const invalidCapacitance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { CGDO: invalidCapacitance }),
+      ).toThrow("MOSFET CGDO must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS gate-bulk overlap capacitance", () => {
+    for (const value of [0.0, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { CGBO: value });
+      expect(valid.parameters.CGBO).toBe(value);
+    }
+
+    for (const invalidCapacitance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { CGBO: invalidCapacitance }),
+      ).toThrow("MOSFET CGBO must be finite and non-negative");
+    }
+  });
+
+  it("rejects non-positive or non-finite MOS saturation current", () => {
+    for (const value of [1.0e-15, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { IS: value });
+      expect(valid.parameters.IS).toBe(value);
+    }
+
+    for (const invalidCurrent of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { IS: invalidCurrent }),
+      ).toThrow("MOSFET IS must be finite and positive");
+    }
+  });
+
+  it("rejects negative or non-finite MOS saturation current density", () => {
+    for (const value of [0.0, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { JS: value });
+      expect(valid.parameters.JS).toBe(value);
+    }
+
+    for (const invalidDensity of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { JS: invalidDensity }),
+      ).toThrow("MOSFET JS must be finite and non-negative");
+    }
+  });
+
+  it("rejects non-positive or non-finite MOS width", () => {
+    for (const value of [1.0e-9, 2.0e-6, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { W: value });
+      expect(valid.parameters.W).toBe(value);
+    }
+
+    for (const invalidWidth of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { W: invalidWidth }),
+      ).toThrow("MOSFET W must be finite and positive");
+    }
+  });
+
+  it("rejects non-positive or non-finite MOS length", () => {
+    for (const value of [1.0e-9, 2.0e-6, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { L: value });
+      expect(valid.parameters.L).toBe(value);
+    }
+
+    for (const invalidLength of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { L: invalidLength }),
+      ).toThrow("MOSFET L must be finite and positive");
+    }
+  });
+
+  it("rejects invalid MOS lateral diffusion length", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { LD: 0.1e-6, L: 1.0e-6 });
+    expect(valid.parameters.LD).toBe(0.1e-6);
+
+    const defaultLength = normalizeModelCard("Mdefault", "pmos", { LD: 50.0e-9 });
+    expect(defaultLength.parameters.LD).toBe(50.0e-9);
+
+    for (const parameters of [
+      { L: 1.0e-6, LD: Number.NEGATIVE_INFINITY },
+      { L: 1.0e-6, LD: -0.1e-6 },
+      { L: 1.0e-6, LD: 0.5e-6 },
+      { L: 1.0e-6, LD: Number.POSITIVE_INFINITY },
+      { L: 1.0e-6, LD: Number.NaN },
+      { LD: 65.0e-9 },
+    ]) {
+      expect(() => normalizeModelCard("Minvalid", "nmos", parameters)).toThrow(
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+      );
+    }
+  });
+
+  it("rejects negative or non-finite MOS drain resistance", () => {
+    for (const value of [0.0, 10.0, 1.0e6]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { RD: value });
+      expect(valid.parameters.RD).toBe(value);
+    }
+
+    for (const invalidResistance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { RD: invalidResistance }),
+      ).toThrow("MOSFET RD must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS source resistance", () => {
+    for (const value of [0.0, 10.0, 1.0e6]) {
+      const valid = normalizeModelCard("Mvalid", "pmos", { RS: value });
+      expect(valid.parameters.RS).toBe(value);
+    }
+
+    for (const invalidResistance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "pmos", { RS: invalidResistance }),
+      ).toThrow("MOSFET RS must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS sheet resistance", () => {
+    for (const value of [0.0, 10.0, 1.0e6]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { RSH: value });
+      expect(valid.parameters.RSH).toBe(value);
+    }
+
+    for (const invalidResistance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { RSH: invalidResistance }),
+      ).toThrow("MOSFET RSH must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS flicker-noise coefficient", () => {
+    for (const value of [0.0, 1.0e-24, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "pmos", { KF: value });
+      expect(valid.parameters.KF).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "pmos", { KF: invalidCoefficient }),
+      ).toThrow("MOSFET KF must be finite and non-negative");
+    }
+  });
+
+  it("rejects negative or non-finite MOS flicker-noise exponent", () => {
+    for (const value of [0.0, 1.0, 2.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { AF: value });
+      expect(valid.parameters.AF).toBe(value);
+    }
+
+    for (const invalidExponent of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { AF: invalidExponent }),
+      ).toThrow("MOSFET AF must be finite and non-negative");
+    }
+  });
+
+  it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
+    const legacyCard = normalizeModelCard("Qlegacy", "npn", {
+      IS: 2.0e-14,
+      C2: 15.0,
+      C4: 20.0,
+    });
+    const legacy = bjtFromModelCard("Q1", "c", "b", "e", legacyCard);
+
+    expect(legacyCard.parameters).toStrictEqual({
+      IS: 2.0e-14,
+      C2: 15.0,
+      C4: 20.0,
+    });
+    expectClose(legacy.baseEmitterLeakageSaturationCurrent, 3.0e-13);
+    expectClose(legacy.baseCollectorLeakageSaturationCurrent, 4.0e-13);
+
+    const explicitCard = normalizeModelCard("Qexplicit", "pnp", {
+      IS: 2.0e-14,
+      C2: 15.0,
+      ISE: 5.0e-13,
+      C4: 20.0,
+      ISC: 6.0e-13,
+    });
+    const explicit = bjtFromModelCard("Q2", "c", "b", "e", explicitCard);
+    expectClose(explicit.baseEmitterLeakageSaturationCurrent, 5.0e-13);
+    expectClose(explicit.baseCollectorLeakageSaturationCurrent, 6.0e-13);
   });
 
   it("provides cross-language device model audit fixtures", () => {
@@ -417,7 +1297,7 @@ describe("dcOp", () => {
     }
 
     const jfetFixture = fixtures.find((fixture) => fixture.kind === "NJF");
-    expect(jfetFixture?.temperatureBehavior.startsWith("JFET temperature scaling is intentionally")).toBe(true);
+    expect(jfetFixture?.temperatureBehavior.startsWith("JFET temperature scaling defaults")).toBe(true);
   });
 
   it("summarizes device model reference deck audit fixture coverage", () => {
@@ -773,10 +1653,20 @@ describe("dcOp", () => {
     expect(JSON.parse(formatDeviceModelReferenceDeckAuditGateCoverageDigestJson(report))).toStrictEqual(digestRecords);
   });
 
-  it("rejects non-Level-1 MOS model cards explicitly", () => {
-    expect(() => normalizeModelCard("Mbad", "nmos", { LEVEL: 2.0 })).toThrowError(
-      "only MOS LEVEL=1",
-    );
+  it("rejects non-Level-1 or non-finite MOS model cards explicitly", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { LEVEL: 1.0 });
+    expect(valid.parameters.LEVEL).toBe(1.0);
+
+    for (const invalidLevel of [
+      2.0,
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() => normalizeModelCard("Mbad", "nmos", { LEVEL: invalidLevel })).toThrowError(
+        "only MOS LEVEL=1",
+      );
+    }
   });
 
   it("stamps a custom-model evaluator hook as a DC current", () => {
@@ -921,6 +1811,330 @@ describe("dcOp", () => {
         .filter((element) => element.kind === "resistor")
         .map((element) => element.name),
     ).toEqual(["X1.Rtop", "X1.Rbot"]);
+  });
+
+  it("preserves the complete diode model through subcircuit expansion", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("diode-cell", ["in"], [
+        diode("Dcell", "in", "0", 2.0e-14, 0.026, 1.2, 6.0, 2.0e-6, 1.5e-12, 4.0e-9, 0.8, 0.4, 0.35, 2.2, 1.05, 10.0, 1.0e-12, 1.3),
+      ]),
+    );
+    circuit.add(xInstance("X1", ["a"], "diode-cell"));
+
+    const expanded = circuit.elements().find((element) => element.kind === "diode");
+    expect(expanded?.kind).toBe("diode");
+    if (expanded?.kind !== "diode") {
+      throw new Error("expected expanded diode");
+    }
+    expectClose(expanded.junctionPotential, 0.8);
+    expectClose(expanded.gradingCoefficient, 0.4);
+    expectClose(expanded.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(expanded.saturationCurrentTemperatureExponent, 2.2);
+    expectClose(expanded.energyGapElectronVolts, 1.05);
+    expectClose(expanded.seriesResistance, 10.0);
+    expectClose(expanded.flickerNoiseCoefficient, 1.0e-12);
+    expectClose(expanded.flickerNoiseExponent, 1.3);
+  });
+
+  it("preserves the complete JFET model through subcircuit expansion", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("jfet-cell", ["d", "g", "s"], [
+        {
+          ...jfet("Jcell", "d", "g", "s"),
+          flickerNoiseCoefficient: 1.0e-12,
+          flickerNoiseExponent: 1.3,
+          junctionPotential: 0.8,
+          forwardBiasDepletionCoefficient: 0.35,
+          gateSaturationCurrent: 2.0e-13,
+          gateSaturationCurrentTemperatureExponent: 2.5,
+          bandgapVoltage: 1.05,
+          dopingTailParameter: 1.1,
+          noiseEquationLevel: 3.0,
+          channelNoiseCoefficient: 1.25,
+          drainResistance: 125.0,
+          sourceResistance: 75.0,
+          thresholdVoltageTemperatureCoefficient: 0.01,
+          alternativeThresholdVoltageTemperatureCoefficient: -0.0025,
+          nominalTemperatureKelvin: 323.15,
+          mobilityTemperatureExponent: 1.5,
+          mobilityTemperatureCoefficient: -0.5,
+        },
+      ]),
+    );
+    circuit.add(xInstance("X1", ["d1", "g1", "0"], "jfet-cell"));
+
+    const expanded = circuit.elements().find((element) => element.kind === "jfet");
+    expect(expanded?.kind).toBe("jfet");
+    if (expanded?.kind !== "jfet") {
+      throw new Error("expected expanded JFET");
+    }
+    expectClose(expanded.flickerNoiseCoefficient, 1.0e-12);
+    expectClose(expanded.flickerNoiseExponent, 1.3);
+    expectClose(expanded.junctionPotential, 0.8);
+    expectClose(expanded.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(expanded.gateSaturationCurrent, 2.0e-13);
+    expectClose(expanded.gateSaturationCurrentTemperatureExponent, 2.5);
+    expectClose(expanded.bandgapVoltage, 1.05);
+    expectClose(expanded.dopingTailParameter, 1.1);
+    expectClose(expanded.noiseEquationLevel, 3.0);
+    expectClose(expanded.channelNoiseCoefficient, 1.25);
+    expectClose(expanded.drainResistance, 125.0);
+    expectClose(expanded.sourceResistance, 75.0);
+    expectClose(expanded.thresholdVoltageTemperatureCoefficient, 0.01);
+    expectClose(expanded.alternativeThresholdVoltageTemperatureCoefficient, -0.0025);
+    expectClose(expanded.nominalTemperatureKelvin, 323.15);
+    expectClose(expanded.mobilityTemperatureExponent, 1.5);
+    expectClose(expanded.mobilityTemperatureCoefficient, -0.5);
+  });
+
+  it("drops the intrinsic JFET drain voltage across RD", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdrain", "drain", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add({
+      ...jfet("J1", "drain", "gate", "0"),
+      beta: 1.0e-3,
+      drainResistance: 1_000.0,
+    });
+
+    const result = dcOp(circuit);
+    expectClose(result.nodeVoltages.get("drain")!, 5.0);
+    expect(result.nodeVoltages.get("__spice_J1_drain")!).toBeLessThan(5.0);
+  });
+
+  it("drops the intrinsic MOSFET drain voltage across RD", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdrain", "drain", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(mosfet("M1", "drain", "gate", "0", "0", "NMOS", {
+      RD: 1_000.0,
+    }));
+
+    const result = dcOp(circuit);
+    expectClose(result.nodeVoltages.get("drain")!, 5.0);
+    expect(result.nodeVoltages.get("__spice_M1_drain")!).toBeLessThan(5.0);
+  });
+
+  it("sets reverse-biased MOSFET bulk-junction leakage from IS", () => {
+    const biasCurrent = (
+      type: "NMOS" | "PMOS",
+      biasVoltage: number,
+      saturationCurrent: number,
+    ): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbias", "body", "0", biasVoltage));
+      circuit.add(mosfet("M1", "0", "0", "0", "body", type, {
+        IS: saturationCurrent,
+      }));
+      return Math.abs(dcOp(circuit).branchCurrent("Vbias")!);
+    };
+
+    for (const [type, biasVoltage] of [
+      ["NMOS", -0.3],
+      ["PMOS", 0.3],
+    ] as const) {
+      const unloaded = biasCurrent(type, biasVoltage, 1.0e-30);
+      const loaded = biasCurrent(type, biasVoltage, 1.0e-12);
+      expect(loaded).toBeGreaterThan(unloaded);
+    }
+  });
+
+  it("scales MOSFET JS only when both diffusion areas are present", () => {
+    const biasCurrent = (
+      saturationCurrent: number,
+      saturationCurrentDensity: number,
+      drainArea: number,
+      sourceArea: number,
+    ): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbias", "body", "0", -0.3));
+      circuit.add(mosfet("M1", "0", "0", "0", "body", "NMOS", {
+        IS: saturationCurrent,
+        JS: saturationCurrentDensity,
+        AD: drainArea,
+        AS: sourceArea,
+      }));
+      return Math.abs(dcOp(circuit).branchCurrent("Vbias")!);
+    };
+
+    const densityScaled = biasCurrent(1.0e-30, 1.0, 2.0e-12, 3.0e-12);
+    const equivalentScalar = biasCurrent(2.5e-12, 0.0, 2.0e-12, 3.0e-12);
+    expect(densityScaled / equivalentScalar).toBeCloseTo(1.0, 9);
+
+    const incompleteAreas = biasCurrent(4.0e-13, 1.0, 0.0, 3.0e-12);
+    const scalarFallback = biasCurrent(4.0e-13, 0.0, 0.0, 3.0e-12);
+    expect(incompleteAreas / scalarFallback).toBeCloseTo(1.0, 9);
+  });
+
+  it("raises the intrinsic MOSFET source voltage across RS", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdrain", "drain", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(mosfet("M1", "drain", "gate", "0", "0", "NMOS", {
+      RS: 1_000.0,
+    }));
+
+    const result = dcOp(circuit);
+    expect(result.nodeVoltages.get("__spice_M1_source")!).toBeGreaterThan(0.0);
+  });
+
+  it("biases both intrinsic MOSFET terminals through RSH", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdrain", "drain", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(mosfet("M1", "drain", "gate", "0", "0", "NMOS", {
+      RSH: 1_000.0,
+      NRD: 2.0,
+      NRS: 3.0,
+    }));
+
+    const result = dcOp(circuit);
+    expect(result.nodeVoltages.get("__spice_M1_drain")!).toBeLessThan(5.0);
+    expect(result.nodeVoltages.get("__spice_M1_source")!).toBeGreaterThan(0.0);
+  });
+
+  it("raises the intrinsic JFET source voltage across RS", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdrain", "drain", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add({
+      ...jfet("J1", "drain", "gate", "0"),
+      beta: 1.0e-3,
+      sourceResistance: 1_000.0,
+    });
+
+    const result = dcOp(circuit);
+    expect(result.nodeVoltages.get("__spice_J1_source")!).toBeGreaterThan(0.0);
+  });
+
+  it("shapes linear and saturation JFET current with B", () => {
+    function drainCurrent(drainVoltage: number, dopingTailParameter: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vdrain", "drain", "0", drainVoltage));
+      circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0"),
+        beta: 1.0e-3,
+        thresholdVoltage: -2.0,
+        junctionPotential: 1.0,
+        dopingTailParameter,
+      });
+      return Math.abs(dcOp(circuit).branchCurrent("Vdrain")!);
+    }
+
+    expect(drainCurrent(1.0, 1.1)).toBeGreaterThan(drainCurrent(1.0, 1.0));
+    expect(drainCurrent(3.0, 1.1)).toBeGreaterThan(drainCurrent(3.0, 1.0));
+  });
+
+  it("loads a forward-biased JFET gate from gate saturation current", () => {
+    function gateVoltage(
+      polarity: "NJF" | "PJF",
+      biasVoltage: number,
+      gateSaturationCurrent: number,
+    ): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbias", "bias", "0", biasVoltage));
+      circuit.add(resistor("Rgate", "bias", "gate", 1.0e6));
+      circuit.add({
+        ...jfet("J1", "0", "gate", "0", polarity),
+        gateSaturationCurrent,
+      });
+      return dcOp(circuit).nodeVoltages.get("gate")!;
+    }
+
+    expect(gateVoltage("NJF", 0.3, 1.0e-9)).toBeLessThan(
+      gateVoltage("NJF", 0.3, 1.0e-14),
+    );
+    expect(gateVoltage("PJF", -0.3, 1.0e-9)).toBeGreaterThan(
+      gateVoltage("PJF", -0.3, 1.0e-14),
+    );
+  });
+
+  it("preserves MOS geometry through subcircuit expansion", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("mos-cell", ["d", "g", "s", "b"], [
+        mosfet("Mcell", "d", "g", "s", "b", "NMOS", {
+          L: 1.0e-6,
+          LD: 0.1e-6,
+          RD: 125.0,
+          RS: 75.0,
+          RSH: 50.0,
+          NRD: 2.0,
+          NRS: 3.0,
+          AD: 4.0e-12,
+          AS: 5.0e-12,
+          CJ: 2.0e-3,
+          TOX: 25.0e-9,
+        }),
+      ]),
+    );
+    circuit.instantiate(xInstance("X1", ["d1", "g1", "0", "0"], "mos-cell"));
+
+    const expanded = circuit.elements().find(
+      (element): element is Mosfet => element.kind === "mosfet",
+    );
+    expect(expanded).toBeDefined();
+    expectClose(expanded!.params.L, 1.0e-6);
+    expectClose(expanded!.params.LD, 0.1e-6);
+    expectClose(expanded!.params.RD, 125.0);
+    expectClose(expanded!.params.RS, 75.0);
+    expectClose(expanded!.params.RSH, 50.0);
+    expectClose(expanded!.params.NRD, 2.0);
+    expectClose(expanded!.params.NRS, 3.0);
+    expectClose(expanded!.params.AD, 4.0e-12);
+    expectClose(expanded!.params.AS, 5.0e-12);
+    expectClose(expanded!.params.CJ, 2.0e-3);
+    expectClose(expanded!.params.TOX, 25.0e-9);
+  });
+
+  it("preserves the complete BJT model through subcircuit expansion", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("bjt-cell", ["c", "b", "e"], [
+        bjt("Qcell", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 2.4, 1.05, 80.0, 1.2, 1.3, 0.8, 0.4, 0.7, 0.45, 0.4, 120.0, 2.0e-3, 3.0e-13, 1.7, 4.0e-13, 1.8, 1.5, 0.25, 3.0e-3, 323.15, 1.0e-12, 1.3, 30.0, 2.0, 4.0e-3, 0.6, 12.0, 13.0, 14.0, 2.0, 5.0e-6, 0.4),
+      ]),
+    );
+    circuit.add(xInstance("X1", ["c1", "b1", "0"], "bjt-cell"));
+
+    const expanded = circuit.elements().find((element) => element.kind === "bjt");
+    expect(expanded?.kind).toBe("bjt");
+    if (expanded?.kind === "bjt") {
+      expectClose(expanded.saturationCurrentTemperatureExponent, 2.4);
+      expectClose(expanded.energyGapElectronVolts, 1.05);
+      expectClose(expanded.forwardEarlyVoltage, 80.0);
+      expectClose(expanded.reverseEarlyVoltage, 120.0);
+      expectClose(expanded.forwardEmissionCoefficient, 1.2);
+      expectClose(expanded.reverseEmissionCoefficient, 1.3);
+      expectClose(expanded.baseEmitterJunctionPotential, 0.8);
+      expectClose(expanded.baseEmitterGradingCoefficient, 0.4);
+      expectClose(expanded.baseCollectorJunctionPotential, 0.7);
+      expectClose(expanded.baseCollectorGradingCoefficient, 0.45);
+      expectClose(expanded.forwardBiasDepletionCoefficient, 0.4);
+      expectClose(expanded.forwardBetaRolloffCurrent, 2.0e-3);
+      expectClose(expanded.baseEmitterLeakageSaturationCurrent, 3.0e-13);
+      expectClose(expanded.baseEmitterLeakageEmissionCoefficient, 1.7);
+      expectClose(expanded.baseCollectorLeakageSaturationCurrent, 4.0e-13);
+      expectClose(expanded.baseCollectorLeakageEmissionCoefficient, 1.8);
+      expectClose(expanded.forwardBetaTemperatureExponent, 1.5);
+      expectClose(expanded.reverseBeta, 0.25);
+      expectClose(expanded.reverseBetaRolloffCurrent, 3.0e-3);
+      expectClose(expanded.nominalTemperatureKelvin, 323.15);
+      expectClose(expanded.flickerNoiseCoefficient, 1.0e-12);
+      expectClose(expanded.flickerNoiseExponent, 1.3);
+      expectClose(expanded.forwardExcessPhaseDegrees, 30.0);
+      expectClose(expanded.forwardTransitTimeBiasCoefficient, 2.0);
+      expectClose(expanded.forwardTransitTimeCurrent, 4.0e-3);
+      expectClose(expanded.forwardTransitTimeVoltage, 0.6);
+      expectClose(expanded.emitterResistance, 12.0);
+      expectClose(expanded.collectorResistance, 13.0);
+      expectClose(expanded.baseResistance, 14.0);
+      expectClose(expanded.minimumBaseResistance, 2.0);
+      expectClose(expanded.baseResistanceHalfCurrent, 5.0e-6);
+      expectClose(expanded.baseCollectorCapacitanceFraction, 0.4);
+    }
   });
 
   it("uses positive-to-negative orientation for current sources", () => {
@@ -1088,6 +2302,40 @@ describe("dcOp", () => {
     );
   });
 
+  it("limits fixed-bias diode current with series resistance", () => {
+    const ideal = new Circuit();
+    ideal.add(voltageSource("V1", "a", "0", 0.7));
+    ideal.add(diode("D1", "a", "0"));
+
+    const limited = new Circuit();
+    limited.add(voltageSource("V1", "a", "0", 0.7));
+    limited.add(
+      diode(
+        "D1",
+        "a",
+        "0",
+        1.0e-15,
+        0.02585,
+        1.0,
+        undefined,
+        1.0e-3,
+        0.0,
+        0.0,
+        1.0,
+        0.5,
+        0.5,
+        3.0,
+        1.11,
+        100.0,
+      ),
+    );
+
+    const idealCurrent = Math.abs(dcOp(ideal).branchCurrent("V1")!);
+    const limitedCurrent = Math.abs(dcOp(limited).branchCurrent("V1")!);
+    expect(limitedCurrent).toBeLessThan(idealCurrent);
+    expect(limitedCurrent).toBeLessThanOrEqual(0.7 / 100.0);
+  });
+
   it("uses diode breakdown voltage in reverse-bias current", () => {
     const leakage = new Circuit();
     leakage.add(voltageSource("V1", "0", "a", 5.0));
@@ -1123,6 +2371,43 @@ describe("dcOp", () => {
 
     expect(coldResult.voltage("a")).toBeGreaterThan(nominalResult.voltage("a")!);
     expect(hotResult.voltage("a")).toBeLessThan(nominalResult.voltage("a")!);
+  });
+
+  it("uses the diode model saturation-current temperature exponent", () => {
+    const temperatureKelvin = 350.0;
+    const nominalTemperatureKelvin = 300.15;
+    const defaultHot = diodeAtTemperature(
+      diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 3.0),
+      temperatureKelvin,
+      nominalTemperatureKelvin,
+    );
+    const flatHot = diodeAtTemperature(
+      diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 0.0),
+      temperatureKelvin,
+      nominalTemperatureKelvin,
+    );
+
+    expect(defaultHot.saturationCurrent / flatHot.saturationCurrent).toBeCloseTo(
+      (temperatureKelvin / nominalTemperatureKelvin) ** 3,
+      12,
+    );
+  });
+
+  it("uses the diode model energy gap for circuit temperature scaling", () => {
+    const silicon = new Circuit();
+    silicon.add(diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 3.0, 1.11));
+    const lowerGap = new Circuit();
+    lowerGap.add(diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 3.0, 0.8));
+
+    const siliconHot = circuitAtTemperature(silicon, 350.0).elements()[0];
+    const lowerGapHot = circuitAtTemperature(lowerGap, 350.0).elements()[0];
+
+    expect(siliconHot.kind).toBe("diode");
+    expect(lowerGapHot.kind).toBe("diode");
+    if (siliconHot.kind !== "diode" || lowerGapHot.kind !== "diode") {
+      throw new Error("expected diode temperature fixtures");
+    }
+    expect(siliconHot.saturationCurrent).toBeGreaterThan(lowerGapHot.saturationCurrent);
   });
 
   it("runs DC temperature sweeps and formats stable table output", () => {
@@ -1199,6 +2484,531 @@ describe("dcOp", () => {
     expect(hotResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
   });
 
+  it("uses the BJT model temperature exponent", () => {
+    const low = bjtAtTemperature(bjt("Qlow", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 0), 350);
+    const high = bjtAtTemperature(bjt("Qhigh", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 4), 350);
+    expect(high.saturationCurrent).toBeGreaterThan(low.saturationCurrent);
+  });
+
+  it("uses JFET VTOTC, BETATCE, and model nominal temperature", () => {
+    const transistor = {
+      ...jfet("J1", "d", "g", "s"),
+      thresholdVoltage: -2.0,
+      beta: 1.0e-4,
+      thresholdVoltageTemperatureCoefficient: 0.01,
+      alternativeThresholdVoltageTemperatureCoefficient: -0.0025,
+      nominalTemperatureKelvin: 310.0,
+      mobilityTemperatureExponent: -5.0,
+      mobilityTemperatureCoefficient: 1.0,
+    };
+    const atModelNominal = jfetAtTemperature(transistor, 310.0);
+    const hot = jfetAtTemperature(transistor, 320.0);
+    const cold = jfetAtTemperature(transistor, 300.0);
+    const invariant = jfetAtTemperature(jfet("Jflat", "d", "g", "s"), 350.0);
+    const bexFallback = jfetAtTemperature(
+      {
+        ...jfet("Jbex", "d", "g", "s"),
+        nominalTemperatureKelvin: 310.0,
+        mobilityTemperatureExponent: 1.0,
+      },
+      320.0,
+    );
+
+    expectClose(atModelNominal.thresholdVoltage, -2.0);
+    expectClose(atModelNominal.beta, 1.0e-4);
+    expectClose(hot.thresholdVoltage, -2.025);
+    expectClose(hot.beta, 1.0e-4 * 1.01 ** 10.0);
+    expect(hot.gateSaturationCurrent).toBeGreaterThan(atModelNominal.gateSaturationCurrent);
+    expectClose(cold.thresholdVoltage, -1.975);
+    expectClose(cold.beta, 1.0e-4 * 1.01 ** -10.0);
+    expect(cold.gateSaturationCurrent).toBeLessThan(atModelNominal.gateSaturationCurrent);
+    const lowerGapHot = jfetAtTemperature({ ...transistor, bandgapVoltage: 1.0 }, 320.0);
+    expect(lowerGapHot.gateSaturationCurrent).toBeLessThan(hot.gateSaturationCurrent);
+    expectClose(invariant.thresholdVoltage, -2.0);
+    expectClose(invariant.beta, 1.0e-4);
+    expectClose(bexFallback.beta, 1.0e-4 * 320.0 / 310.0);
+    const tcvFallback = jfetAtTemperature(
+      {
+        ...jfet("Jtcv", "d", "g", "s"),
+        thresholdVoltage: -2.0,
+        thresholdVoltageTemperatureCoefficient: 0.01,
+        nominalTemperatureKelvin: 310.0,
+      },
+      320.0,
+    );
+    expectClose(tcvFallback.thresholdVoltage, -2.1);
+  });
+
+  it("rejects invalid JFET temperature parameters", () => {
+    const invalidDopingTail = new Circuit();
+    invalidDopingTail.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      dopingTailParameter: Number.NaN,
+    });
+    expect(() => dcOp(invalidDopingTail)).toThrowError(
+      "doping-tail parameter must be finite",
+    );
+
+    const invalidSaturationExponent = new Circuit();
+    invalidSaturationExponent.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      gateSaturationCurrentTemperatureExponent: Number.NaN,
+    });
+    expect(() => dcOp(invalidSaturationExponent)).toThrowError(
+      "gate saturation-current temperature exponent must be finite",
+    );
+
+    const invalidBandgap = new Circuit();
+    invalidBandgap.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      bandgapVoltage: 0.0,
+    });
+    expect(() => dcOp(invalidBandgap)).toThrowError(
+      "bandgap voltage must be finite and positive",
+    );
+
+    const circuit = new Circuit();
+    circuit.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      thresholdVoltageTemperatureCoefficient: Number.NaN,
+    });
+    expect(() => dcOp(circuit)).toThrowError(
+      "threshold-voltage temperature coefficient must be finite",
+    );
+
+    const invalidAlternativeCoefficient = new Circuit();
+    invalidAlternativeCoefficient.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      alternativeThresholdVoltageTemperatureCoefficient: Number.NaN,
+    });
+    expect(() => dcOp(invalidAlternativeCoefficient)).toThrowError(
+      "alternative threshold-voltage temperature coefficient must be finite",
+    );
+
+    const invalidNominal = new Circuit();
+    invalidNominal.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      nominalTemperatureKelvin: 0.0,
+    });
+    expect(() => dcOp(invalidNominal)).toThrowError(
+      "nominal temperature must be finite and positive",
+    );
+
+    const invalidExponent = new Circuit();
+    invalidExponent.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      mobilityTemperatureExponent: Number.NaN,
+    });
+    expect(() => dcOp(invalidExponent)).toThrowError(
+      "mobility temperature exponent must be finite",
+    );
+
+    const invalidCoefficient = new Circuit();
+    invalidCoefficient.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      mobilityTemperatureCoefficient: Number.NaN,
+    });
+    expect(() => dcOp(invalidCoefficient)).toThrowError(
+      "mobility temperature coefficient must be finite",
+    );
+  });
+
+  it("uses the BJT beta temperature exponent", () => {
+    const transistor = {
+      ...bjt("Q1", "c", "b", "e"),
+      reverseBeta: 2.0,
+      forwardBetaTemperatureExponent: 2.0,
+    };
+    const hot = bjtAtTemperature(transistor, 350);
+    expect(hot.forwardBeta).toBeGreaterThan(transistor.forwardBeta);
+    expect(hot.reverseBeta).toBeGreaterThan(transistor.reverseBeta);
+  });
+
+  it("uses the BJT model nominal temperature", () => {
+    const transistor = {
+      ...bjt("Q1", "c", "b", "e"),
+      nominalTemperatureKelvin: 325.0,
+    };
+    const atModelNominal = bjtAtTemperature(transistor, 325.0);
+    expectClose(atModelNominal.saturationCurrent, transistor.saturationCurrent);
+    expectClose(atModelNominal.thermalVoltage, transistor.thermalVoltage);
+  });
+
+  it("rejects invalid BJT nominal temperatures", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), nominalTemperatureKelvin: 0.0 });
+    expect(() => dcOp(circuit)).toThrowError("nominal temperature must be finite and positive");
+  });
+
+  it("rejects invalid diode flicker noise exponents", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...diode("Dbad", "a", "0"), flickerNoiseExponent: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "flicker-noise exponent must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT flicker noise coefficients", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), flickerNoiseCoefficient: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "flicker noise coefficient must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT flicker noise exponents", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), flickerNoiseExponent: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "flicker noise exponent must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT forward excess phase", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), forwardExcessPhaseDegrees: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "forward excess phase must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT forward transit-time bias coefficients", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      forwardTransitTimeBiasCoefficient: -1.0,
+    });
+    expect(() => dcOp(circuit)).toThrowError(
+      "forward transit-time bias coefficient must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT forward transit-time currents", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      forwardTransitTimeCurrent: -1.0,
+    });
+    expect(() => dcOp(circuit)).toThrowError(
+      "forward transit-time current must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT forward transit-time voltages", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      forwardTransitTimeVoltage: -1.0,
+    });
+    expect(() => dcOp(circuit)).toThrowError(
+      "forward transit-time voltage must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT emitter resistances", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      emitterResistance: -1.0,
+    });
+    expect(() => dcOp(circuit)).toThrowError(
+      "emitter resistance must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT collector resistances", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      collectorResistance: -1.0,
+    });
+    expect(() => dcOp(circuit)).toThrowError(
+      "collector resistance must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT base resistances", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      baseResistance: -1.0,
+    });
+    expect(() => dcOp(circuit)).toThrow(
+      "base resistance must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT base-collector capacitance fractions", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      baseCollectorCapacitanceFraction: 1.1,
+    });
+    expect(() => dcOp(circuit)).toThrow(
+      "base-collector capacitance fraction must be between zero and one",
+    );
+  });
+
+  it("rejects non-finite BJT beta temperature exponents", () => {
+    const circuit = new Circuit();
+    circuit.add({
+      ...bjt("Qbad", "c", "b", "0"),
+      forwardBetaTemperatureExponent: Number.NaN,
+    });
+    expect(() => dcOp(circuit)).toThrowError(
+      "beta temperature exponent must be finite",
+    );
+  });
+
+  it("scales BJT base-emitter leakage saturation current with temperature", () => {
+    const transistor = {
+      ...bjt("Q1", "c", "b", "e"),
+      baseEmitterLeakageSaturationCurrent: 2.0e-13,
+    };
+    const hot = bjtAtTemperature(transistor, 350);
+    expect(hot.baseEmitterLeakageSaturationCurrent).toBeGreaterThan(
+      transistor.baseEmitterLeakageSaturationCurrent,
+    );
+  });
+
+  it("scales BJT base-collector leakage saturation current with temperature", () => {
+    const transistor = {
+      ...bjt("Q1", "c", "b", "e"),
+      baseCollectorLeakageSaturationCurrent: 2.0e-13,
+    };
+    const hot = bjtAtTemperature(transistor, 350);
+    expect(hot.baseCollectorLeakageSaturationCurrent).toBeGreaterThan(
+      transistor.baseCollectorLeakageSaturationCurrent,
+    );
+  });
+
+  it("uses the BJT model energy gap", () => {
+    const silicon = new Circuit();
+    silicon.add(bjt("Qsilicon", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11));
+    const lowerGap = new Circuit();
+    lowerGap.add(bjt("Qlower", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 0.8));
+    const siliconHot = circuitAtTemperature(silicon, 350);
+    const lowerGapHot = circuitAtTemperature(lowerGap, 350);
+    const siliconBjt = siliconHot.elements()[0];
+    const lowerGapBjt = lowerGapHot.elements()[0];
+    if (siliconBjt?.kind !== "bjt" || lowerGapBjt?.kind !== "bjt") {
+      throw new Error("expected temperature-adjusted BJTs");
+    }
+    expect(siliconBjt.saturationCurrent).toBeGreaterThan(lowerGapBjt.saturationCurrent);
+  });
+
+  it("rejects an invalid BJT energy gap", () => {
+    const circuit = new Circuit();
+    circuit.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 0));
+    expect(() => dcOp(circuit)).toThrowError("energy gap must be finite and positive");
+  });
+
+  it("uses BJT forward Early voltage to modulate collector current", () => {
+    const collectorVoltage = (forwardEarlyVoltage: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "vcc", "out", 1_000.0));
+      circuit.add(bjt("Q1", "out", "base", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, forwardEarlyVoltage));
+      return dcOp(circuit).voltage("out");
+    };
+
+    expect(collectorVoltage(20.0)).toBeLessThan(collectorVoltage(0.0));
+  });
+
+  it("rejects an invalid BJT forward Early voltage", () => {
+    const circuit = new Circuit();
+    circuit.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, -1.0));
+    expect(() => dcOp(circuit)).toThrowError("forward Early voltage must be finite and non-negative");
+  });
+
+  it("uses BJT reverse Early voltage to modulate collector current", () => {
+    const collectorVoltage = (reverseEarlyVoltage: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "vcc", "out", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), reverseEarlyVoltage });
+      return dcOp(circuit).voltage("out");
+    };
+
+    expect(collectorVoltage(20.0)).toBeGreaterThan(collectorVoltage(0.0));
+  });
+
+  it("rejects an invalid BJT reverse Early voltage", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), reverseEarlyVoltage: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError("reverse Early voltage must be finite and non-negative");
+  });
+
+  it("uses BJT forward beta roll-off to reduce high-current transport", () => {
+    const collectorVoltage = (forwardBetaRolloffCurrent: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "vcc", "out", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), forwardBetaRolloffCurrent });
+      return dcOp(circuit).voltage("out");
+    };
+
+    expect(collectorVoltage(1.0e-4)).toBeGreaterThan(collectorVoltage(0.0));
+  });
+
+  it("uses BJT reverse beta to control base-collector junction current", () => {
+    const baseCurrent = (reverseBeta: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(voltageSource("Vemitter", "emitter", "0", 0.65));
+      circuit.add({ ...bjt("Q1", "0", "base", "emitter"), reverseBeta });
+      return Math.abs(dcOp(circuit).branchCurrent("Vbase")!);
+    };
+
+    expect(baseCurrent(0.5)).toBeGreaterThan(baseCurrent(5.0));
+  });
+
+  it("rejects invalid BJT reverse beta", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), reverseBeta: 0.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "reverse beta must be positive",
+    );
+  });
+
+  it("uses BJT reverse beta roll-off to increase high-current base current", () => {
+    const baseCurrent = (reverseBetaRolloffCurrent: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(voltageSource("Vemitter", "emitter", "0", 0.65));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "emitter"),
+        reverseBeta: 1.0,
+        reverseBetaRolloffCurrent,
+      });
+      return Math.abs(dcOp(circuit).branchCurrent("Vbase")!);
+    };
+
+    expect(baseCurrent(1.0e-4)).toBeGreaterThan(baseCurrent(0.0));
+  });
+
+  it("rejects an invalid BJT reverse beta roll-off current", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), reverseBetaRolloffCurrent: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "reverse beta roll-off current must be finite and non-negative",
+    );
+  });
+
+  it("rejects an invalid BJT forward beta roll-off current", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), forwardBetaRolloffCurrent: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "forward beta roll-off current must be finite and non-negative",
+    );
+  });
+
+  it("uses BJT base-emitter leakage to increase base current", () => {
+    const baseCurrent = (baseEmitterLeakageSaturationCurrent: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "0"),
+        baseEmitterLeakageSaturationCurrent,
+        baseEmitterLeakageEmissionCoefficient: 1.5,
+      });
+      return Math.abs(dcOp(circuit).branchCurrent("Vbase")!);
+    };
+
+    expect(baseCurrent(1.0e-10)).toBeGreaterThan(baseCurrent(0.0));
+  });
+
+  it("rejects invalid BJT base-emitter leakage parameters", () => {
+    const badCurrent = new Circuit();
+    badCurrent.add({ ...bjt("Qbad", "c", "b", "0"), baseEmitterLeakageSaturationCurrent: -1.0 });
+    expect(() => dcOp(badCurrent)).toThrowError("base-emitter leakage saturation current");
+
+    const badCoefficient = new Circuit();
+    badCoefficient.add({ ...bjt("Qbad", "c", "b", "0"), baseEmitterLeakageEmissionCoefficient: 0.0 });
+    expect(() => dcOp(badCoefficient)).toThrowError("base-emitter leakage emission coefficient");
+  });
+
+  it("uses BJT base-collector leakage to increase base current", () => {
+    const baseCurrent = (baseCollectorLeakageSaturationCurrent: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "base"),
+        baseCollectorLeakageSaturationCurrent,
+        baseCollectorLeakageEmissionCoefficient: 1.5,
+      });
+      return Math.abs(dcOp(circuit).branchCurrent("Vbase")!);
+    };
+
+    expect(baseCurrent(1.0e-10)).toBeGreaterThan(baseCurrent(0.0));
+  });
+
+  it("rejects invalid BJT base-collector leakage parameters", () => {
+    const badCurrent = new Circuit();
+    badCurrent.add({ ...bjt("Qbad", "c", "b", "0"), baseCollectorLeakageSaturationCurrent: -1.0 });
+    expect(() => dcOp(badCurrent)).toThrowError("base-collector leakage saturation current");
+
+    const badCoefficient = new Circuit();
+    badCoefficient.add({ ...bjt("Qbad", "c", "b", "0"), baseCollectorLeakageEmissionCoefficient: 0.0 });
+    expect(() => dcOp(badCoefficient)).toThrowError("base-collector leakage emission coefficient");
+  });
+
+  it("uses BJT forward emission coefficient to reduce collector current", () => {
+    const collectorVoltage = (forwardEmissionCoefficient: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "vcc", "out", 1_000.0));
+      circuit.add(bjt("Q1", "out", "base", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, forwardEmissionCoefficient));
+      return dcOp(circuit).voltage("out");
+    };
+
+    expect(collectorVoltage(2.0)).toBeGreaterThan(collectorVoltage(1.0));
+  });
+
+  it("rejects an invalid BJT forward emission coefficient", () => {
+    const circuit = new Circuit();
+    circuit.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, 0.0));
+    expect(() => dcOp(circuit)).toThrowError("forward emission coefficient must be finite and positive");
+  });
+
+  it("rejects an invalid BJT reverse emission coefficient", () => {
+    const circuit = new Circuit();
+    circuit.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, 1.0, 0.0));
+    expect(() => dcOp(circuit)).toThrowError("reverse emission coefficient must be finite and positive");
+  });
+
+  it("rejects invalid BJT base-emitter depletion parameters", () => {
+    const invalidPotential = new Circuit();
+    invalidPotential.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, 1.0, 1.0, 0.0));
+    expect(() => dcOp(invalidPotential)).toThrowError("base-emitter junction potential must be finite and positive");
+
+    const invalidGrading = new Circuit();
+    invalidGrading.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, 1.0, 1.0, 0.75, 1.0));
+    expect(() => dcOp(invalidGrading)).toThrowError("base-emitter grading coefficient must be finite and in [0, 1)");
+  });
+
+  it("rejects invalid BJT base-collector depletion parameters", () => {
+    const invalidPotential = new Circuit();
+    invalidPotential.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.0));
+    expect(() => dcOp(invalidPotential)).toThrowError("base-collector junction potential must be finite and positive");
+
+    const invalidGrading = new Circuit();
+    invalidGrading.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, 1.0));
+    expect(() => dcOp(invalidGrading)).toThrowError("base-collector grading coefficient must be finite and in [0, 1)");
+  });
+
+  it("rejects invalid BJT forward-bias depletion coefficients", () => {
+    for (const coefficient of [-0.1, 1.0, Number.NaN]) {
+      const circuit = new Circuit();
+      circuit.add(bjt("Qbad", "c", "b", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, 0.33, coefficient));
+      expect(() => dcOp(circuit)).toThrowError("forward-bias depletion coefficient must be finite and in [0, 1)");
+    }
+  });
+
   it("uses MOSFET temperature scaling in common-source drain voltage", () => {
     const nominal = new Circuit();
     nominal.add(voltageSource("Vdd", "vdd", "0", 1.8));
@@ -1219,8 +3029,131 @@ describe("dcOp", () => {
     const coldResult = dcOp(cold);
     const hotResult = dcOp(hot);
 
-    expect(coldResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
-    expect(hotResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+    expect(coldResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+    expect(hotResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
+  });
+
+  it("keeps MOSFET surface mobility and KP aligned across temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+      U0: 500.0,
+    });
+    const hot = mosfetAtTemperature(nominal, 600.3, 300.15);
+    const scale = 2.0 ** -1.5;
+
+    expectClose(hot.params.KP, nominal.params.KP * scale);
+    expectClose(hot.params.U0, nominal.params.U0 * scale);
+    expectClose(
+      hot.params.KP / hot.params.U0,
+      nominal.params.KP / nominal.params.U0,
+    );
+  });
+
+  it("adjusts MOSFET PHI and threshold voltage by device polarity", () => {
+    const nmos = mosfet("Mn", "d", "g", "s", "b", "NMOS");
+    const pmos = mosfet("Mp", "d", "g", "s", "b", "PMOS", {
+      VT0: -0.42,
+    });
+
+    const hotNmos = mosfetAtTemperature(nmos, 350.0);
+    const hotPmos = mosfetAtTemperature(pmos, 350.0);
+
+    expectClose(hotNmos.params.PHI, 0.766_340_574_915_624_6);
+    expectClose(hotPmos.params.PHI, hotNmos.params.PHI);
+    expectClose(hotNmos.params.VT0, 0.379_106_188_982_781_14);
+    expectClose(hotPmos.params.VT0, -0.365_036_965_282_786_06);
+  });
+
+  it("adjusts the MOSFET bulk-junction potential across temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS");
+
+    const cold = mosfetAtTemperature(nominal, 275.0);
+    const hot = mosfetAtTemperature(nominal, 350.0);
+
+    expectClose(cold.params.PB, 0.839_148_690_629_946_5);
+    expectClose(hot.params.PB, 0.719_697_229_921_455);
+  });
+
+  it("scales MOSFET zero-bias junction capacitances with temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      CJ: 2.0e-12,
+      CBS: 3.0e-12,
+      CBD: 4.0e-12,
+      CJSW: 5.0e-12,
+    });
+
+    const cold = mosfetAtTemperature(nominal, 275.0);
+    const hot = mosfetAtTemperature(nominal, 350.0);
+    const coldBottomScale = 0.970_502_066_286_684_6;
+    const coldSidewallScale = 0.980_531_363_923_873_3;
+    const hotBottomScale = 1.060_159_235_535_130_4;
+    const hotSidewallScale = 1.039_705_095_096_974_2;
+
+    expectClose(cold.params.CJ, 2.0e-12 * coldBottomScale);
+    expectClose(cold.params.CBS, 3.0e-12 * coldBottomScale);
+    expectClose(cold.params.CBD, 4.0e-12 * coldBottomScale);
+    expectClose(cold.params.CJSW, 5.0e-12 * coldSidewallScale);
+    expectClose(hot.params.CJ, 2.0e-12 * hotBottomScale);
+    expectClose(hot.params.CBS, 3.0e-12 * hotBottomScale);
+    expectClose(hot.params.CBD, 4.0e-12 * hotBottomScale);
+    expectClose(hot.params.CJSW, 5.0e-12 * hotSidewallScale);
+  });
+
+  it("scales MOSFET bulk-junction saturation currents with temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      IS: 2.0e-15,
+      JS: 3.0e-12,
+    });
+    const hot = mosfetAtTemperature(nominal, 350.0);
+    const ratio = 350.0 / 300.15;
+    const exponent =
+      (1.11 * 1.602_176_634e-19) /
+      1.380_649e-23 *
+      (1.0 / 300.15 - 1.0 / 350.0);
+    const scale = ratio ** 3 * Math.exp(exponent);
+
+    expectClose(hot.params.IS, 2.0e-15 * scale);
+    expectClose(hot.params.JS, 3.0e-12 * scale);
+    expectClose(hot.params.JS / hot.params.IS, 1_500.0);
+
+    const circuit = new Circuit();
+    circuit.add(nominal);
+    const silicon = circuitAtTemperature(circuit, 350.0, 300.15, 1.11);
+    const lowerGap = circuitAtTemperature(circuit, 350.0, 300.15, 0.8);
+    const siliconMosfet = silicon.elements().find(
+      (element): element is Mosfet => element.kind === "mosfet",
+    );
+    const lowerGapMosfet = lowerGap.elements().find(
+      (element): element is Mosfet => element.kind === "mosfet",
+    );
+    expect(siliconMosfet!.params.IS).toBeGreaterThan(lowerGapMosfet!.params.IS);
+  });
+
+  it("prefers the MOSFET model nominal temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+      U0: 500.0,
+      T_NOM: 325.0,
+    });
+    const expectedScale = (350.0 / 325.0) ** -1.5;
+    const hot = mosfetAtTemperature(nominal, 350.0, 300.15);
+
+    expectClose(hot.params.KP, 200.0e-6 * expectedScale);
+    expectClose(hot.params.U0, 500.0 * expectedScale);
+
+    const circuit = new Circuit();
+    circuit.add(nominal);
+    const adjusted = circuitAtTemperature(circuit, 350.0, 300.15);
+    const adjustedMosfet = adjusted
+      .elements()
+      .find((element): element is Mosfet => element.kind === "mosfet");
+    expectClose(adjustedMosfet!.params.KP, 200.0e-6 * expectedScale);
+
+    const fallback = mosfet("M2", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+    });
+    const fallbackHot = mosfetAtTemperature(fallback, 350.0, 325.0);
+    expectClose(fallbackHot.params.KP, 200.0e-6 * expectedScale);
   });
 
   it("preserves subcircuits when applying temperature helpers", () => {
@@ -1250,6 +3183,73 @@ describe("dcOp", () => {
 
     expect(result.voltage("collector")).toBeGreaterThan(0.0);
     expect(result.voltage("collector")).toBeLessThan(5.0);
+  });
+
+  it("uses BJT emitter resistance to reduce fixed-base collector current", () => {
+    const collectorVoltage = (emitterResistance: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+      circuit.add(voltageSource("Vbase", "base", "0", 0.7));
+      circuit.add(resistor("Rc", "vcc", "collector", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "collector", "base", "0"),
+        emitterResistance,
+      });
+      return dcOp(circuit).voltage("collector") ?? 0.0;
+    };
+
+    expect(collectorVoltage(100.0)).toBeGreaterThan(collectorVoltage(0.0) + 0.5);
+  });
+
+  it("uses BJT collector resistance to drop intrinsic collector voltage", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vcollector", "collector", "0", 5.0));
+    circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+    circuit.add({
+      ...bjt("Q1", "collector", "base", "0"),
+      collectorResistance: 100.0,
+    });
+
+    const intrinsic = dcOp(circuit).voltage("__spice_Q1_collector") ?? 0.0;
+    expect(intrinsic).toBeGreaterThan(0.0);
+    expect(intrinsic).toBeLessThan(5.0);
+  });
+
+  it("uses BJT base resistance to drop intrinsic base voltage", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vcollector", "collector", "0", 5.0));
+    circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+    circuit.add({
+      ...bjt("Q1", "collector", "base", "0"),
+      baseResistance: 1_000.0,
+    });
+
+    const intrinsic = dcOp(circuit).voltage("__spice_Q1_base") ?? 0.0;
+    expect(intrinsic).toBeGreaterThan(0.0);
+    expect(intrinsic).toBeLessThan(0.65);
+  });
+
+  it("uses minimum BJT base resistance to reduce high-current base drop", () => {
+    const intrinsicBase = (
+      minimumBaseResistance: number | undefined,
+      baseResistanceHalfCurrent: number,
+    ): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcollector", "collector", "0", 5.0));
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add({
+        ...bjt("Q1", "collector", "base", "0"),
+        baseResistance: 1_000.0,
+        minimumBaseResistance,
+        baseResistanceHalfCurrent,
+      });
+      return dcOp(circuit).voltage("__spice_Q1_base") ?? 0.0;
+    };
+
+    const fixed = intrinsicBase(undefined, 0.0);
+    const biasDependent = intrinsicBase(10.0, 1.0e-6);
+    expect(biasDependent).toBeGreaterThan(fixed);
+    expect(biasDependent).toBeLessThan(0.65);
   });
 
   it("solves an NMOS operating point", () => {
@@ -1361,6 +3361,260 @@ describe("dcOp", () => {
     circuit.add(mosfet("Mbad", "out", "gate", "0", "0", "NMOS", { KP: 0.0 }));
 
     expect(() => dcOp(circuit)).toThrowError("MOSFET KP must be positive");
+  });
+
+  it("rejects invalid MOSFET forward-bias depletion coefficients", () => {
+    for (const coefficient of [Number.NaN, -0.1, 1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        FC: coefficient,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(coefficient)
+          ? "MOSFET FC must be in [0, 1)"
+          : "MOSFET FC must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET lateral diffusion lengths", () => {
+    for (const lateralDiffusionLength of [Number.NaN, -0.1e-6, 0.5e-6]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        L: 1.0e-6,
+        LD: lateralDiffusionLength,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(lateralDiffusionLength)
+          ? "MOSFET LD must be non-negative with L - 2*LD > 0"
+          : "MOSFET LD must be finite",
+      );
+    }
+  });
+
+  it("uses MOSFET lateral diffusion to shorten effective channel length", () => {
+    const drainCurrent = (lateralDiffusionLength: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vdrain", "drain", "0", 1.8));
+      circuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+      circuit.add(mosfet("M1", "drain", "gate", "0", "0", "NMOS", {
+        L: 1.0e-6,
+        LD: lateralDiffusionLength,
+      }));
+      return Math.abs(dcOp(circuit).branchCurrent("Vdrain")!);
+    };
+
+    expect(drainCurrent(0.1e-6) / drainCurrent(0.0)).toBeCloseTo(1.25);
+  });
+
+  it("rejects invalid MOSFET oxide thicknesses", () => {
+    for (const oxideThickness of [Number.NaN, 0.0, -1.0e-9]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        TOX: oxideThickness,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(oxideThickness)
+          ? "MOSFET TOX must be positive"
+          : "MOSFET TOX must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET surface mobilities", () => {
+    for (const surfaceMobility of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        U0: surfaceMobility,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(surfaceMobility)
+          ? "MOSFET U0 must be non-negative"
+          : "MOSFET U0 must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET drain resistances", () => {
+    for (const drainResistance of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        RD: drainResistance,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(drainResistance)
+          ? "MOSFET RD must be non-negative"
+          : "MOSFET RD must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET source resistances", () => {
+    for (const sourceResistance of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        RS: sourceResistance,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sourceResistance)
+          ? "MOSFET RS must be non-negative"
+          : "MOSFET RS must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET sheet resistances", () => {
+    for (const sheetResistance of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        RSH: sheetResistance,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sheetResistance)
+          ? "MOSFET RSH must be non-negative"
+          : "MOSFET RSH must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET drain square counts", () => {
+    for (const drainSquares of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        NRD: drainSquares,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(drainSquares)
+          ? "MOSFET NRD must be non-negative"
+          : "MOSFET NRD must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET source square counts", () => {
+    for (const sourceSquares of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        NRS: sourceSquares,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sourceSquares)
+          ? "MOSFET NRS must be non-negative"
+          : "MOSFET NRS must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET drain areas", () => {
+    for (const drainArea of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        AD: drainArea,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(drainArea)
+          ? "MOSFET AD must be non-negative"
+          : "MOSFET AD must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET source areas", () => {
+    for (const sourceArea of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        AS: sourceArea,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sourceArea)
+          ? "MOSFET AS must be non-negative"
+          : "MOSFET AS must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET drain perimeters", () => {
+    for (const drainPerimeter of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        PD: drainPerimeter,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(drainPerimeter)
+          ? "MOSFET PD must be non-negative"
+          : "MOSFET PD must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET source perimeters", () => {
+    for (const sourcePerimeter of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        PS: sourcePerimeter,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sourcePerimeter)
+          ? "MOSFET PS must be non-negative"
+          : "MOSFET PS must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET bottom junction capacitance densities", () => {
+    for (const bottomJunctionCapacitance of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        CJ: bottomJunctionCapacitance,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(bottomJunctionCapacitance)
+          ? "MOSFET CJ must be non-negative"
+          : "MOSFET CJ must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET sidewall junction capacitance densities", () => {
+    for (const sidewallCapacitance of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        CJSW: sidewallCapacitance,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sidewallCapacitance)
+          ? "MOSFET CJSW must be non-negative"
+          : "MOSFET CJSW must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET bulk-junction saturation-current densities", () => {
+    for (const saturationCurrentDensity of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        JS: saturationCurrentDensity,
+      }));
+      expect(() => dcOp(circuit)).toThrow(
+        saturationCurrentDensity < 0.0
+          ? "MOSFET JS must be non-negative"
+          : "MOSFET JS must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET sidewall grading coefficients", () => {
+    for (const gradingCoefficient of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        MJSW: gradingCoefficient,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(gradingCoefficient)
+          ? "MOSFET MJSW must be non-negative"
+          : "MOSFET MJSW must be finite",
+      );
+    }
   });
 
   it("rejects invalid BJT model parameters", () => {

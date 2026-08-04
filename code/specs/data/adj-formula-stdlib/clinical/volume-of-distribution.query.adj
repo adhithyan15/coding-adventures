@@ -1,0 +1,28 @@
+% ============================================================================
+% volume-of-distribution.query.adj — worked applications of the volume-of-distribution definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a pharmacokinetics/dosing vignette into
+% observed quantities: it `import`s the grounded formulabook, `observe`s the measured amount of
+% drug and plasma concentration, and asks the engine to APPLY the cited definition. No arithmetic
+% is stated by the consumer; the engine computes each value EXACTLY (over exact rationals) and
+% carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (amount of drug in the body = 200 mg, plasma concentration = 5 mg/L): Vd = 200 ÷ 5 =
+% 40 L. Each query below fixes two of the three quantities and asks the engine to recover the
+% third; every answer is exact and the three COMPOSE (each inversion recovers exactly the worked
+% value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli volume-of-distribution.query.adj
+% ============================================================================
+
+import "volume-of-distribution.adj"
+
+% --- Definition: the volume of distribution the amount and concentration imply (expect 40). ----
+observe amount_of_drug_in_body(200)
+observe plasma_concentration(5)
+? volume_of_distribution(amount_of_drug_in_body, plasma_concentration)   % expect 40
+
+% --- Inverse: the amount of drug a Vd of 40 implies at that concentration (200). ---------------
+observe volume_of_distribution(40)
+? amount_of_drug_in_body(volume_of_distribution, plasma_concentration)   % expect 200

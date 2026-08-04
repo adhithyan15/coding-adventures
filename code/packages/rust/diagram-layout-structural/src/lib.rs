@@ -7,9 +7,8 @@
 //! polyline paths for all relationships.
 
 use diagram_ir::{
-    CompartmentKind, LayoutedCompartment, LayoutedStructuralDiagram,
-    LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
-    RelKind, StructuralDiagram, StructuralNode,
+    LayoutedCompartment, LayoutedStructuralDiagram,
+    LayoutedStructuralNode, LayoutedStructuralRelationship, Point, StructuralDiagram, StructuralNode,
 };
 
 pub const VERSION: &str = "0.1.0";

@@ -1,0 +1,23 @@
+% ============================================================================
+% landforms.query.adj — a worked recall over the geography landforms library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what defines a canyon?":
+% it states no geography fact of its own — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `landform_description` rows and returns the descriptor + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the
+% descriptor `deep_narrow`, recall its landform — canyon). A word that is not
+% one of these landforms abstains honestly — the engine never invents a
+% descriptor.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli landforms.query.adj
+% ============================================================================
+
+import "landforms.adj"
+
+? landform_description(mountain, $Desc)      % expect projects_above_surroundings
+? landform_description(canyon, $Desc)        % expect deep_narrow
+? landform_description(plateau, $Desc)       % expect flat_elevated
+? landform_description($Landform, deep_narrow) % reverse bind — expect canyon
+? landform_description(ocean, $Desc)         % expect abstain — an ocean is a body of water, not a landform

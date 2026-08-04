@@ -87,7 +87,7 @@ pub fn unpack_12bit_le(data: &[u8], num_pixels: usize) -> Vec<u16> {
 pub fn row_stride_bytes(width: u32) -> usize {
     // Use usize to avoid overflow on large sensors.
     let bits = width as usize * 12;
-    (bits + 7) / 8
+    bits.div_ceil(8)
 }
 
 // ---------------------------------------------------------------------------

@@ -93,7 +93,7 @@ pub fn decompress(
 ///
 /// The arithmetic wraps at u8 boundaries (intentional — any high-bit noise
 /// disappears when adding back the cumulative sum).
-fn undo_horizontal_differencing(data: &mut Vec<u8>, width: usize, samples: usize) {
+fn undo_horizontal_differencing(data: &mut [u8], width: usize, samples: usize) {
     // Each row is `width * samples` bytes wide.
     let row_bytes = width * samples;
     if row_bytes == 0 {

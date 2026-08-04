@@ -4,7 +4,7 @@
 
 This crate is the bridge between:
 - the **Twig frontend** (`twig-lexer` → `twig-parser` → `twig-ir-compiler`) that produces an `IIRModule` from Twig source, and
-- the **Lispy runtime** (`lispy-runtime`, LANG20 PR 2) that provides the value representation, builtins, and `LangBinding` impl.
+- the **Lispy runtime** (`dynval-runtime`, LANG20 PR 2) that provides the value representation, builtins, and `LangBinding` impl.
 
 It exposes [`TwigVM`](src/lib.rs) — a facade that compiles Twig source and dispatches the resulting IIR end to end.
 
@@ -133,14 +133,14 @@ cargo test -p twig-vm
 MIRIFLAGS="-Zmiri-ignore-leaks" cargo +nightly miri test -p twig-vm
 ```
 
-The full suite passes under Miri — the dispatcher's integration with `lispy-runtime`'s tagged-pointer code is exercised on every `call_builtin` (cons, car, cdr) and every recursive `call`.  CI runs this on every PR via `.github/workflows/lang-runtime-safety.yml`.
+The full suite passes under Miri — the dispatcher's integration with `dynval-runtime`'s tagged-pointer code is exercised on every `call_builtin` (cons, car, cdr) and every recursive `call`.  CI runs this on every PR via `.github/workflows/lang-runtime-safety.yml`.
 
 ## Where this crate sits
 
 ```
 LANG20 PR 1: lang-runtime-core           ← LangBinding trait
-LANG20 PR 2: lispy-runtime               ← LispyBinding (concrete impl)
-LANG20 PR 3: twig-vm  ← THIS CRATE        wires twig-frontend + lispy-runtime
+LANG20 PR 2: dynval-runtime               ← LispyBinding (concrete impl)
+LANG20 PR 3: twig-vm  ← THIS CRATE        wires twig-frontend + dynval-runtime
 LANG20 PR 4: twig-vm  ← THIS CRATE        adds the dispatcher (call/jmp/ret)
 LANG20 PR 5: twig-vm  ← THIS CRATE        adds closures + globals + symbols
 LANG20 PR 6: twig-vm  ← THIS CRATE        adds send/load/store opcodes via LangBinding

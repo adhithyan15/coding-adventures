@@ -308,7 +308,7 @@ pub fn daa8(a: u8, flag_n: u8, flag_h: u8, flag_c: u8) -> AluResultZ80 {
         flag_z: compute_zero(&result_bits),
         flag_h: new_h,
         flag_pv: compute_parity(&result_bits),
-        flag_n: flag_n,  // preserved from previous operation
+        flag_n,  // preserved from previous operation
         flag_c: new_c,
     }
 }
@@ -576,7 +576,7 @@ pub fn res_bit(a: u8, bit_n: u8) -> u8 {
 pub fn add16(hl: u16, rp: u16) -> AluResultZ80 {
     let (result, cout, hc16) = add_16bit(hl, rp, 0);
     AluResultZ80 {
-        result: result,
+        result,
         flag_s: 0,    // not affected
         flag_z: 0,    // not affected
         flag_h: hc16, // carry from bit 11

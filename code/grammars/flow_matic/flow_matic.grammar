@@ -1,0 +1,116 @@
+# FLOW-MATIC Parser Grammar (B-0, 1955–1959)
+# ============================================================
+#
+# The syntactic layer of the FLOW-MATIC frontend (see PL06-flow-matic.md).  It
+# consumes the token stream produced by `flow_matic.tokens` and builds a generic
+# concrete syntax tree via the shared `GrammarParser` (a recursive-descent PEG
+# parser with packrat memoization).  Nothing is hand-written.
+#
+# A FLOW-MATIC program is a list of numbered OPERATIONS.  Each operation is a
+# parenthesised operation number, then one or more CLAUSES separated by ";",
+# terminated by a period ".".  The canonical inventory-pricing program (the
+# worked example this grammar targets) looks like:
+#
+#   (0)  INPUT INVENTORY FILE-A PRICE FILE-B ; OUTPUT PRICED-INV FILE-C
+#          UNPRICED-INV FILE-D ; HSP D .
+#   (1)  COMPARE PRODUCT-NO (A) WITH PRODUCT-NO (B) ;
+#          IF GREATER GO TO OPERATION 10 ; IF EQUAL GO TO OPERATION 5 ;
+#          OTHERWISE GO TO OPERATION 2 .
+#   ...
+#   (16) CLOSE-OUT FILES C ; D .
+#   (17) STOP . (END)
+#
+# ------------------------------------------------------------
+# Grammar reminders (see grammar-format.md)
+# ------------------------------------------------------------
+#   * The FIRST rule (`program`) is the entry point; the whole token stream must
+#     be consumed.
+#   * UPPERCASE names (NUMBER, NAME, LPAREN, …) reference token TYPES.
+#   * "QUOTED" literals match a token's VALUE.  Our keywords are normalized to
+#     uppercase by the lexer (@case_insensitive true), so literals are uppercase.
+#   * `{ x }` = zero or more (greedy, no backtracking into it once matched),
+#     `[ x ]` = optional, `( x )` = grouping, `|` = ordered choice.
+#   * No left recursion (packrat PEG).  We only ever iterate rightward.
+
+# @version 1
+
+# ------------------------------------------------------------
+# Program and operation (statement) structure
+# ------------------------------------------------------------
+#
+# `program_end` models the `(END)` marker that terminates a real FLOW-MATIC
+# listing.  It is optional and appears at most once, after the final operation.
+# When `{ statement }` reaches `(END)` it tries `statement`, fails at NUMBER
+# (the token after `(` is the keyword END, not a number), backtracks cleanly
+# consuming nothing, and `[ program_end ]` then matches it.
+program      = { statement } [ program_end ] ;
+program_end  = LPAREN "END" RPAREN ;
+
+# An operation: its parenthesised number label, its ";"-separated clauses, and
+# the terminating period.  The label `(0)` lexes as LPAREN NUMBER RPAREN — the
+# same shape as a field qualifier `(A)`, but with a NUMBER inside instead of a
+# NAME.  THIS is where the lexer's deliberate refusal to special-case operation
+# numbers pays off: the distinction lives here, structurally, not in a regex.
+statement    = LPAREN NUMBER RPAREN clause { SEMICOLON clause } PERIOD ;
+
+# ------------------------------------------------------------
+# Clauses — the English "verbs"
+# ------------------------------------------------------------
+#
+# Ordered choice.  Every alternative begins with a DISTINCT keyword, so there is
+# no prefix ambiguity and order among them is not load-bearing (we list them in
+# the order they first appear in the canonical program for readability).
+clause       = input_clause | output_clause | hsp_clause
+             | compare_clause | if_clause | otherwise_clause
+             | transfer_clause | move_clause | jump_clause
+             | read_item_clause | write_item_clause
+             | test_clause | rewind_clause | closeout_clause | stop_clause ;
+
+# --- Operation (0): file description ---
+#
+# `INPUT`/`OUTPUT` name one or more files, each as a (logical-name, FILE-handle)
+# pair — e.g. `INVENTORY FILE-A`, `PRICE FILE-B`.  `HSP D` routes a file to the
+# high-speed printer.
+input_clause  = "INPUT"  file_pair { file_pair } ;
+output_clause = "OUTPUT" file_pair { file_pair } ;
+file_pair     = NAME NAME ;
+hsp_clause    = "HSP" NAME ;
+
+# --- Operation (1): compare + three-way branch ---
+#
+# COMPARE names two FIELDS (a data name qualified by the file it is drawn from,
+# `PRODUCT-NO (A)`).  The branch clauses test the result of that comparison.
+compare_clause = "COMPARE" field "WITH" field ;
+field          = NAME LPAREN NAME RPAREN ;
+
+# A condition is the branch word after IF.  `END OF DATA` is the end-of-file
+# test used by the READ loop (operation 8): three adjacent keyword tokens.
+if_clause        = "IF" condition "GO" "TO" target ;
+otherwise_clause = "OTHERWISE" "GO" "TO" target ;
+condition        = "GREATER" | "EQUAL" | "LESS" | ( "END" "OF" "DATA" ) ;
+target           = "OPERATION" NUMBER ;
+
+# --- Data movement and control ---
+transfer_clause = "TRANSFER" NAME "TO" NAME ;   # whole record: TRANSFER A TO D
+move_clause     = "MOVE" field "TO" field ;     # one field:   MOVE UNIT-PRICE (B) TO UNIT-PRICE (C)
+jump_clause     = "JUMP" "TO" target ;
+
+# --- Record I/O ---
+read_item_clause  = "READ-ITEM"  NAME ;
+write_item_clause = "WRITE-ITEM" NAME ;
+
+# --- Sentinel test, tape control, shutdown ---
+#
+# `TEST … AGAINST ZZZZZZZZZZZZ` compares a field against a high-values sentinel
+# (all Z's — an ordinary NAME) or a numeric constant.
+test_clause     = "TEST" field "AGAINST" ( NAME | NUMBER ) ;
+rewind_clause   = "REWIND" NAME ;
+
+# `CLOSE-OUT FILES C ; D` — note the ";" here separates FILE NAMES within one
+# clause, overlapping the clause separator.  PEG greediness resolves it for
+# free: this inner `{ SEMICOLON NAME }` runs first and consumes `; D` before the
+# statement's own `{ SEMICOLON clause }` ever sees it.
+closeout_clause = "CLOSE-OUT" "FILES" NAME { SEMICOLON NAME } ;
+
+# `STOP` optionally carries the inline end marker `(END)` on the same operation.
+stop_clause     = "STOP" [ LPAREN "END" RPAREN ] ;

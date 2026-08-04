@@ -1,1 +1,1 @@
-log(`hello`,3);
+log("hello",3);

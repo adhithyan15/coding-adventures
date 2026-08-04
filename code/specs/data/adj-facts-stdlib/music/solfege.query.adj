@@ -1,0 +1,21 @@
+% ============================================================================
+% solfege.query.adj — a worked recall over the solfège library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which scale degree is this
+% solfège syllable?" — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `solfege_degree` rows and returns the degree (or the syllable, on a reverse
+% query) + the encyclopedia's source/locator/trust. Anything that is not one of
+% the seven diatonic syllables — a chromatic syllable, a random word — abstains
+% honestly: the engine never invents a degree it cannot cite.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli solfege.query.adj
+% ============================================================================
+
+import "solfege.adj"
+
+? solfege_degree(do, $N)       % expect 1   (do is the tonic, the first degree)
+? solfege_degree(sol, $N)      % expect 5   (sol is the fifth — the dominant)
+? solfege_degree($S, 3)        % expect mi  (reverse: which syllable is the third?)
+? solfege_degree(di, $N)       % expect abstain — di is a chromatic syllable, not a diatonic row

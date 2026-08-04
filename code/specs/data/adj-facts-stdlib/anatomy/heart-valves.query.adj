@@ -1,0 +1,24 @@
+% ============================================================================
+% heart-valves.query.adj — a worked recall over the anatomy heart-valves library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the tricuspid
+% valve separate?": it states no anatomy fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `valve_separates` rows and returns the boundary + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% boundary `left_ventricle_and_aorta`, recall the valve that guards it — the
+% aortic valve). The eustachian valve is not one of the four cardiac valves in
+% this table, so a recall on it abstains honestly — the engine never invents a
+% boundary.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli heart-valves.query.adj
+% ============================================================================
+
+import "heart-valves.adj"
+
+? valve_separates(tricuspid, $B)                    % expect right_atrium_and_right_ventricle
+? valve_separates(pulmonary, $B)                    % expect right_ventricle_and_pulmonary_trunk
+? valve_separates(mitral, $B)                       % expect left_atrium_and_left_ventricle
+? valve_separates($V, left_ventricle_and_aorta)     % expect aortic — reverse recall
+? valve_separates(eustachian, $B)                   % expect abstain — not one of the four valves

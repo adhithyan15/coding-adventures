@@ -30,6 +30,8 @@ println!("{}", status); // "HTTP/1.0 200 OK\r\n"
 - `read_line()` — read until `\n`
 - `read_exact(n)` — read exactly n bytes
 - `read_until(delimiter)` — read until delimiter byte
+- `read_until_limit(delimiter, max_bytes)` — delimiter read with a hard bound
+- `read_chunk(max_bytes)` — bounded streaming read, empty at EOF
 - `write_all(data)` — buffered write
 - `flush()` — send buffered data
 - `shutdown_write()` — half-close (signal "done writing")

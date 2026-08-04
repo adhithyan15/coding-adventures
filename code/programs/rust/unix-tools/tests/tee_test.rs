@@ -111,7 +111,7 @@ mod business_logic {
     #[test]
     fn write_to_single_file() {
         let path = temp_path("int_single");
-        tee_content("hello\n", &[path.clone()], false).unwrap();
+        tee_content("hello\n", std::slice::from_ref(&path), false).unwrap();
         assert_eq!(fs::read_to_string(&path).unwrap(), "hello\n");
         fs::remove_file(&path).ok();
     }
@@ -130,8 +130,8 @@ mod business_logic {
     #[test]
     fn append_mode() {
         let path = temp_path("int_append");
-        tee_content("first\n", &[path.clone()], false).unwrap();
-        tee_content("second\n", &[path.clone()], true).unwrap();
+        tee_content("first\n", std::slice::from_ref(&path), false).unwrap();
+        tee_content("second\n", std::slice::from_ref(&path), true).unwrap();
         assert_eq!(fs::read_to_string(&path).unwrap(), "first\nsecond\n");
         fs::remove_file(&path).ok();
     }
@@ -139,8 +139,8 @@ mod business_logic {
     #[test]
     fn overwrite_mode() {
         let path = temp_path("int_overwrite");
-        tee_content("original\n", &[path.clone()], false).unwrap();
-        tee_content("replaced\n", &[path.clone()], false).unwrap();
+        tee_content("original\n", std::slice::from_ref(&path), false).unwrap();
+        tee_content("replaced\n", std::slice::from_ref(&path), false).unwrap();
         assert_eq!(fs::read_to_string(&path).unwrap(), "replaced\n");
         fs::remove_file(&path).ok();
     }

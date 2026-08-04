@@ -20,21 +20,24 @@
 //!   `source` annotations are a [`LowerError::DuplicateAnnotation`].
 
 use logic_core::{
-    atom as core_atom, compound, float as core_float, var as core_var, LogicVar, Term as CoreTerm,
+    atom as core_atom, compound, int as core_int, var as core_var, LogicVar, Number as CoreNumber,
+    Term as CoreTerm,
 };
 use logic_engine::{
-    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp,
-    ContributionClause, Fact, JointContributionClause, KbError, KnowledgeBase,
-    PredicateContributionClause, PriorClause, Priority, Provenance, Rule, TrustTier,
-    UncertaintyMarker,
+    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputationId, ComputationScope,
+    ComputeExpr, ComputeOp, ContentHash, ContributionClause, DerivationNode, ExactRational, Fact,
+    FactId, JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause,
+    PriorClause, Priority, Provenance, Rule, TrustTier, UncertaintyMarker,
 };
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn,
-    OptDir, Program, RelOp, Statement, Term as AstTerm, TrustTierName,
+    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
+    FormulaPrecondition, NamedFn, NumLit, OptDir, Program, RelOp, SmAction, SmGuard, Statement,
+    Term as AstTerm, TrustTierName,
 };
+use crate::BindingOrigin;
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
 /// **unevaluated** [`ComputeExpr`] trees (they reference symbols the solver
@@ -87,6 +90,13 @@ pub enum LowerError {
     DuplicateAnnotation {
         name: &'static str,
     },
+    /// A `quote … at … snapshot …` pin (RS-4 PR-D4, §E.3.1) was malformed: the
+    /// snapshot was not a 64-char SHA-256 hex, or the quoted text carried no
+    /// visible content to anchor. Fail-closed — a malformed pin is a compile
+    /// error, never a half-built `Verbatim` span the verifier would then reject.
+    MalformedQuotePin {
+        reason: &'static str,
+    },
     EngineRejected {
         detail: String,
     },
@@ -117,6 +127,9 @@ pub enum LowerError {
         name: String,
         detail: String,
     },
+    BindingOriginMismatch {
+        detail: String,
+    },
     /// A finding / hypothesis term used in a clause is not `define`d in the
     /// program's dictionary (MYCIN-2026 closed-vocabulary enforcement).
     /// `expected` is the role the term was used in (`"finding"`/`"hypothesis"`).
@@ -143,6 +156,196 @@ pub enum LowerError {
         outer: String,
         inner: String,
     },
+    /// A `formula`'s body referenced a free identifier that is not one of its
+    /// declared parameters (ADJ-FORMULA-LIBRARIES rung-0 parameter-scoping). A
+    /// formula is a *closed* parameterized expression — every leaf must name a
+    /// parameter — so a stray identifier is a clean compile error, never a silent
+    /// mis-binding to some observed slot at apply time. Carries the offending
+    /// formula and variable.
+    FormulaFreeVariable {
+        formula: String,
+        variable: String,
+    },
+    /// Two imported formula books exported the same unqualified formula name.
+    /// Silent last-writer-wins resolution would make precondition enforcement
+    /// depend on import order, so duplicate exports are rejected.
+    DuplicateFormula {
+        formula: String,
+    },
+    /// A formula declared a precondition predicate outside the lowerer's closed,
+    /// typed execution set.
+    FormulaUnknownPrecondition {
+        formula: String,
+        predicate: String,
+    },
+    /// A known precondition predicate received the wrong number of arguments.
+    FormulaPreconditionArity {
+        formula: String,
+        predicate: String,
+        expected: usize,
+        got: usize,
+    },
+    /// The first precondition execution slice accepts arithmetic expressions
+    /// over parameters, but not nested formula/built-in applications. Reject
+    /// these explicitly rather than lowering an application to a poisoned slot
+    /// and misreporting a malformed guard as unresolved input.
+    FormulaPreconditionApplicationUnsupported {
+        formula: String,
+        predicate: String,
+    },
+    /// Internal control-flow carrier for a valid formula application that is
+    /// outside its declared domain. The top-level lowerer catches this and emits
+    /// a structured [`FormulaAbstention`] instead of failing compilation.
+    FormulaPreconditionAbstained {
+        abstention: Box<FormulaAbstention>,
+    },
+    /// A shipped `formula` carried no `source` (the provenance-required lint,
+    /// mirroring the recall-library adversarial write gate). A formula is a *claim
+    /// about the world* ("BMI is mass ÷ height²") and may not enter a library
+    /// unsourced — humans correct provenance, they do not author formulas by fiat.
+    FormulaMissingProvenance {
+        formula: String,
+    },
+    /// A `? name(args)` applied a `formula` whose argument was neither a plain
+    /// identifier (bind a parameter to a like-named slot) nor a number literal.
+    /// A compound / variable argument has no meaning as a formula binding at
+    /// rung-0, so it is rejected rather than silently mis-applied.
+    FormulaBadArgument {
+        formula: String,
+    },
+    /// An exact literal participating in a guarded formula could not cross the
+    /// compute layer's labeled `f64` boundary without changing value. Reject it
+    /// rather than making a guard decision or publishing a rounded result.
+    FormulaArgumentPrecisionLoss {
+        formula: String,
+        parameter: String,
+    },
+    /// A formula application `name(args)` in an expression named a formula that is
+    /// not registered by any imported `formulabook` (ADJ-RULE-SUBSTRATE RS-1). A
+    /// bare `IDENT` with no parentheses is an ordinary slot reference and does NOT
+    /// reach here; only an `IDENT(...)` application whose callee is unknown does.
+    /// Distinct from the aggregation/built-in-call paths (`sum(slot)`, `\sin(x)`),
+    /// which are recognised earlier — so an unknown *formula* is a clean, specific
+    /// diagnostic, never confused with a mistyped aggregation.
+    FormulaUnknown {
+        name: String,
+    },
+    /// A formula application supplied the wrong number of arguments for the named
+    /// formula (ADJ-RULE-SUBSTRATE RS-1). Carries the formula, the arity it
+    /// declares, and the count it was applied with.
+    FormulaArity {
+        formula: String,
+        expected: usize,
+        got: usize,
+    },
+    /// A formula application expanded deeper than [`FORMULA_MAX_APPLY_DEPTH`]
+    /// (ADJ-RULE-SUBSTRATE RS-1). A self- or mutually-recursive formula
+    /// (`formula f(x) = f(x)`) would otherwise expand forever; the depth guard
+    /// turns it into this clean, typed error — the compute analogue of the
+    /// resolver's recursion guard — so the process abstains with a reason instead
+    /// of hanging or overflowing the stack. Carries the depth limit reached.
+    FormulaRecursionTooDeep {
+        formula: String,
+        limit: usize,
+    },
+    /// A formula application expanded into more than [`FORMULA_MAX_EXPANSION_NODES`]
+    /// total AST nodes (ADJ-RULE-SUBSTRATE RS-1). **Depth alone cannot bound size:**
+    /// a body that references a parameter more than once (`formula g(x) = x * x`)
+    /// duplicates the bound argument subtree on every substitution, so a chain of
+    /// such formulas (`pᵢ(x) = pᵢ₋₁(x) * pᵢ₋₁(x)`) grows the expanded expression as
+    /// `2ⁿ` while the recursion depth grows only linearly — the depth guard never
+    /// fires and the process OOMs. This node budget is charged on every substituted
+    /// / emitted node and bails BEFORE the exponential tree is materialised, turning
+    /// an adversarial formulabook into a clean, fast, typed error. The cap is
+    /// generous for any legitimate composed formula (a handful of applications) yet
+    /// a tiny fraction of the blow-up. Carries the node limit reached.
+    FormulaExpansionTooLarge {
+        limit: usize,
+    },
+    /// A single expression nested deeper than [`FORMULA_MAX_NODE_DEPTH`] AST levels
+    /// (ADJ-RULE-SUBSTRATE RS-1). Distinct from [`FormulaExpansionTooLarge`], which
+    /// bounds total *size*: a left-leaning operator spine (`x + 0 + 0 + … + 0`, a
+    /// thousand terms) is small in nodes-per-level but arbitrarily DEEP, and the
+    /// recursive expansion/substitution walkers descend it frame-for-frame. Without a
+    /// depth bound a crafted deep spine overflows the native stack (an abort, not a
+    /// catchable error) before the node budget — which only trips at the BOTTOM of the
+    /// descent — ever fires. This guard caps walker recursion at [`FORMULA_MAX_NODE_DEPTH`]
+    /// (the stack-safe bound `adapter` uses for the same reason), so a pathological
+    /// spine is a clean, typed error long before it can exhaust the stack. It never
+    /// rejects a legitimate expression: those are a handful of levels deep, and
+    /// anything past the evaluator's own `MAX_EVAL_DEPTH` it would reject anyway.
+    /// Carries the depth limit reached.
+    FormulaNestingTooDeep {
+        limit: usize,
+    },
+    /// A `table` row's cell count did not match the table's declared `columns`
+    /// (ADJ-TABLES RS-5). A table's arity is fixed by its `columns` clause; a row
+    /// of a different length would lower to a relation of the wrong arity (and so
+    /// never match a lookup, or silently shadow a real one), so it is a clean
+    /// compile error instead. Carries the table name, the declared column count,
+    /// the offending row's index (0-based), and its actual cell count.
+    TableArity {
+        table: String,
+        expected: usize,
+        row: usize,
+        got: usize,
+    },
+    /// A shipped `table` carried no `source` (the provenance-required lint, shared
+    /// with `formula`/`relate`). A table asserts facts about the world — the very
+    /// reason it is a first-class construct is to be the auditable home for a
+    /// *cited* published table — so it may not enter a library unsourced. Carries
+    /// the table name.
+    TableMissingProvenance {
+        table: String,
+    },
+    /// A `table` declared zero `columns` (ADJ-TABLES RS-5). A table with no columns
+    /// has no arity and no lookup key; it is almost certainly a mistake, so it is
+    /// rejected rather than lowered to a stream of nullary facts. Carries the name.
+    TableNoColumns {
+        table: String,
+    },
+    /// A `? lookup <table> …` named a table that was never declared (ADJ-TABLES
+    /// RS-5c). A range lookup reads a specific `table` as a step function; an
+    /// unknown name would silently abstain forever, so it is a clean compile
+    /// error. Carries the referenced name.
+    LookupUnknownTable {
+        table: String,
+    },
+    /// A `? lookup <table> <col> …` named a `col` that is not one of the table's
+    /// declared `columns` (ADJ-TABLES RS-5c) — either the key column or the
+    /// `give` value column. Carries the table and the offending column name.
+    LookupUnknownColumn {
+        table: String,
+        column: String,
+    },
+    /// A range lookup's key column holds a non-numeric cell (ADJ-TABLES RS-5c). A
+    /// `range` lookup compares the query value against the key column with the
+    /// exact numeric comparators, so every key cell must be a number; an atom or
+    /// string key is meaningless for a step function. Carries the table, the key
+    /// column, and the offending row index (0-based).
+    LookupNonNumericKeyColumn {
+        table: String,
+        column: String,
+        row: usize,
+    },
+    /// An `interpolated` lookup's VALUE column holds a non-numeric cell (ADJ-TABLES
+    /// RS-5d). `mode interpolated` computes `v0 + (v1−v0)·(q−k0)/(k1−k0)` between the
+    /// two bracketing rows, so the `give` column must be a number in every row — you
+    /// cannot interpolate a category label. (A `range` lookup returns the cell
+    /// verbatim, so it imposes no such requirement; this check is interpolation-only.)
+    /// Carries the table, the value column, and the offending row index (0-based).
+    LookupNonNumericValueColumn {
+        table: String,
+        column: String,
+        row: usize,
+    },
+    /// A lookup named a `mode` that is not a recognized tactic at all (ADJ-TABLES
+    /// RS-5c/RS-5d/RS-5f). The valid modes are `range` (bracket / step function),
+    /// `interpolated` (linear between breakpoints), and `nearest` (closest key /
+    /// nearest-neighbour); all three are built. Carries the unrecognized mode.
+    LookupUnknownMode {
+        mode: String,
+    },
     /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
     /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
     /// the caller used `compile` directly on a program that still has imports,
@@ -151,6 +354,312 @@ pub enum LowerError {
     UnresolvedImport {
         path: String,
     },
+    /// A `statemachine` had no `initial <state>` clause, or its initial-state name
+    /// was empty (ADJ-STATEMACHINE §2 `SmMissingInitial`). The grammar requires the
+    /// clause syntactically; this catches a degenerate/empty name defensively so a
+    /// machine can never lower without a well-formed entry state. Carries the name.
+    SmMissingInitial {
+        machine: String,
+    },
+    /// A `statemachine` declared no `exit when … yield …` (ADJ-STATEMACHINE §2
+    /// `SmMissingExit`). A machine must be able to terminate on a *criterion*, not
+    /// only on the step budget, so at least one exit is required. Carries the name.
+    SmMissingExit {
+        machine: String,
+    },
+    /// A `statemachine`'s `budget N steps` had `N < 1` (ADJ-STATEMACHINE §2
+    /// `SmBudgetNotPositive`). The step budget is the termination guarantee — a
+    /// zero (or non-integer, folded to zero at adapt time) budget could never make
+    /// progress — so it must be strictly positive. Carries the name.
+    SmBudgetNotPositive {
+        machine: String,
+    },
+    /// A `statemachine`'s `initial <s>` or a `transition … to <s'>` named a state
+    /// that is not declared (ADJ-STATEMACHINE §2 `SmUnknownState`). Every control-
+    /// flow target must resolve to a `state`, else the driver would jump to a
+    /// non-existent node. Carries the machine name and the offending state name.
+    SmUnknownState {
+        machine: String,
+        state: String,
+    },
+    /// A shipped `statemachine` carried no `source` (ADJ-STATEMACHINE §2
+    /// `SmMissingProvenance`) — the same provenance-required lint `formula` /
+    /// `relate` / `table` enforce. A machine encodes a procedure asserted about the
+    /// world, so it may not enter a library unsourced. Carries the machine name.
+    SmMissingProvenance {
+        machine: String,
+    },
+    /// An `argument` premise declared a `kind` outside the closed set
+    /// `extracted | imported | inferred` (ADJ-ARGUMENT-IR §2.1). Carries the argument
+    /// name and the offending kind — never silently accepted.
+    ArgUnknownPremiseKind {
+        argument: String,
+        kind: String,
+    },
+    /// An `argument` inference's `from` list named a premise/inference that no earlier
+    /// element in the same argument binds (ADJ-ARGUMENT-IR §2.3). A reference must
+    /// resolve to a prior `name`, or the inference's body would cite nothing. Carries
+    /// the argument name and the dangling reference.
+    ArgUnknownReference {
+        argument: String,
+        reference: String,
+    },
+    /// Two elements of the same `argument` share a `name` (ADJ-ARGUMENT-IR §2.1). Names
+    /// are the handles `from` references resolve against, so they must be unique within
+    /// the argument. Carries the argument name and the duplicated name.
+    ArgDuplicateName {
+        argument: String,
+        name: String,
+    },
+    /// An `argument` element (a premise or an inference) carried no `source` — the
+    /// structural grounding gate (ADJ-ARGUMENT-IR §3, ADR-3). A shipped argument must be
+    /// *sourced*: every premise cites the bytes it is read from, and every inference cites
+    /// its warrant. This mirrors the "must be sourced" lint `table`/`statemachine`/
+    /// `formula` enforce, and is the precondition for the ADR-4 byte-anchor re-check.
+    /// Carries the argument name and the un-sourced element's name.
+    ArgMissingProvenance {
+        argument: String,
+        element: String,
+    },
+}
+
+/// A formula application declined because a declared domain requirement failed
+/// or could not be resolved from the available facts.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaAbstention {
+    /// The derived binding or query answer that was withheld.
+    pub name: String,
+    /// The formula whose requirement stopped evaluation (possibly a nested callee).
+    pub formula: String,
+    pub predicate: String,
+    /// Zero-based source order within the formula's `requires` clause.
+    pub precondition_index: usize,
+    /// The parameter named by a simple guard such as `nonzero(divisor)`.
+    pub parameter: Option<String>,
+    /// The evaluated argument for a false predicate. `None` means evaluation
+    /// could not resolve the requirement from the current KB.
+    pub actual: Option<f64>,
+    /// Exact rational identity of `actual` when arithmetic stayed exact.
+    pub actual_exact: Option<ExactRational>,
+    pub detail: Option<String>,
+    /// Ground facts consumed while evaluating the guard, preserving byte-level
+    /// input provenance for the CLI and future negative-witness replay.
+    pub fact_ids: Vec<FactId>,
+    /// Root-first, deduplicated identities of every derived computation consumed
+    /// by the guard. Empty for a direct observation or literal.
+    pub computation_ids: Vec<ComputationId>,
+    pub provenance: Provenance,
+    /// Complete ordered guard trace accumulated before the refusal. This keeps
+    /// earlier successful guards when a later direct or nested guard fails.
+    pub guards: Vec<FormulaGuardTrace>,
+    /// Formula applications reached before the refusal, outermost first.
+    pub formula_sequence: Vec<FormulaApplicationTrace>,
+}
+
+/// One formula application reached while expanding a query body.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaApplicationTrace {
+    pub formula: String,
+    pub provenance: Provenance,
+}
+
+/// The runtime result of evaluating one declared formula precondition.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FormulaGuardOutcome {
+    Passed,
+    Failed,
+    Unresolved,
+}
+
+/// Replayable runtime evidence for one executed formula precondition.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaGuardTrace {
+    pub formula: String,
+    pub predicate: String,
+    pub precondition_index: usize,
+    pub parameter: Option<String>,
+    pub outcome: FormulaGuardOutcome,
+    pub value: Option<f64>,
+    pub exact: Option<ExactRational>,
+    pub precision_loss: bool,
+    pub plan: Option<ComputeExpr>,
+    pub tree: Option<DerivationNode>,
+    pub scope: Option<ComputationScope>,
+    pub fact_ids: Vec<FactId>,
+    pub computation_ids: Vec<ComputationId>,
+    pub detail: Option<String>,
+    pub provenance: Provenance,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct FormulaGuardDependencies {
+    computation_ids: Vec<ComputationId>,
+    fact_ids: Vec<FactId>,
+}
+
+/// Whether a direct formula query published its body computation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FormulaBodyTrace {
+    Evaluated,
+    WithheldPreconditionFailed,
+}
+
+/// Ordered runtime evidence for one direct formula query.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaExecutionTrace {
+    pub export: String,
+    pub formula_sequence: Vec<FormulaApplicationTrace>,
+    pub guards: Vec<FormulaGuardTrace>,
+    pub body: FormulaBodyTrace,
+}
+
+/// Parser-derived formula expansion used by independent execution-audit replay.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaSourceReplay {
+    pub body: ExprAst,
+    pub preconditions: Vec<(String, Vec<ExprAst>)>,
+}
+
+/// Bind source formula parameters without consulting runtime execution traces.
+pub fn replay_formula_source(
+    formula: &FormulaDef,
+    arguments: &[ExprAst],
+) -> Result<FormulaSourceReplay, LowerError> {
+    if formula.params.len() != arguments.len() {
+        return Err(LowerError::FormulaArity {
+            formula: formula.name.clone(),
+            expected: formula.params.len(),
+            got: arguments.len(),
+        });
+    }
+    let substitution: HashMap<String, ExprAst> = formula
+        .params
+        .iter()
+        .cloned()
+        .zip(arguments.iter().cloned())
+        .collect();
+    let mut preconditions = Vec::with_capacity(formula.preconditions.len());
+    for precondition in &formula.preconditions {
+        let mut budget = 0;
+        let mut bound = Vec::with_capacity(precondition.arguments.len());
+        for argument in &precondition.arguments {
+            bound.push(substitute_expr(argument, &substitution, &mut budget, 0)?);
+        }
+        preconditions.push((precondition.predicate.clone(), bound));
+    }
+    let mut budget = 0;
+    let effective = effective_body(formula, &mut budget, 0)?;
+    let body = substitute_expr(&effective, &substitution, &mut budget, 0)?;
+    Ok(FormulaSourceReplay {
+        body,
+        preconditions,
+    })
+}
+
+/// One lowered RANGE / BRACKET lookup (ADJ-TABLES RS-5c) — the validated,
+/// index-resolved form of a `? lookup <table> <key_col> = <n> mode range give
+/// <value_col>` recall. The lowerer has already checked the table and columns
+/// exist and that the key column is numeric, so the runtime tactic (in the CLI)
+/// only has to: read the table's ground facts, convert the key cells and the
+/// query value to exact rationals, select the row whose key is the greatest
+/// `<= key_value`, and return its value cell **with that row's citation** (or
+/// abstain when the query is below the table's domain). Nothing here is `f64`;
+/// the comparison rides the engine's exact `CmpOp`/`BigRational` path.
+#[derive(Debug, Clone)]
+pub struct LoweredRangeLookup {
+    /// The table relation's functor (also the fact functor to scan).
+    pub table: String,
+    /// The relation arity (= the table's column count) — the fact arity to match.
+    pub arity: usize,
+    /// The 0-based position of the key column among the table's columns.
+    pub key_index: usize,
+    /// The 0-based position of the `give` value column among the table's columns.
+    pub value_index: usize,
+    /// The key column's declared name (for the answer's audit trail).
+    pub key_col: String,
+    /// The value column's declared name (the binding name in the answer).
+    pub value_col: String,
+    /// The concrete query value to classify, as a ground `Num` term (exact — no
+    /// digit lost) so the comparison is done on the exact numeric path.
+    pub key_value: CoreTerm,
+    /// The tactic named at the call site — `range` (the only mode this lowers).
+    pub mode: String,
+}
+
+/// One lowered `statemachine` (ADJ-STATEMACHINE RS-3b) — the validated,
+/// provenance-stamped STRUCTURE the RS-3c driver will read. Every guard/action has
+/// already been lowered to the *same* engine forms the rest of the language uses
+/// (a term, a `ComputeExpr`, an [`EngineCmpOp`]); no parallel evaluator is
+/// introduced here, and no execution happens at lowering — the driver (§3) is a
+/// later slice. The lowerer has already checked: the `initial` name and every
+/// transition `target` name a declared state, there is ≥ 1 exit, the budget is
+/// ≥ 1, and the `source` is non-empty.
+#[derive(Debug, Clone)]
+pub struct LoweredStateMachine {
+    /// The machine's name (its import/addressing handle).
+    pub name: String,
+    /// The entry state (a declared state name).
+    pub initial: String,
+    /// The states, in source order.
+    pub states: Vec<LoweredState>,
+    /// The exit criteria, in source order (checked before transitions each step).
+    pub exits: Vec<LoweredExit>,
+    /// The step budget (≥ 1) — the driver's termination guarantee.
+    pub budget: u64,
+    /// The machine's provenance envelope (`source`/`locator`/`trust`), lowered
+    /// through the shared `annotations_to_provenance`; each transition inherits it.
+    pub provenance: Provenance,
+}
+
+/// One lowered state — a labelled node with its outgoing [`LoweredTransition`]s,
+/// in source order (the driver's first-guard-wins selection order).
+#[derive(Debug, Clone)]
+pub struct LoweredState {
+    pub name: String,
+    pub transitions: Vec<LoweredTransition>,
+}
+
+/// One lowered transition — a guard, the target state name, and the ordered
+/// actions to apply on firing.
+#[derive(Debug, Clone)]
+pub struct LoweredTransition {
+    pub guard: LoweredGuard,
+    pub target: String,
+    pub actions: Vec<LoweredAction>,
+}
+
+/// One lowered exit — a guard and the (unevaluated) yield expression, lowered to a
+/// [`ComputeExpr`] the driver evaluates against the KB on halt.
+#[derive(Debug, Clone)]
+pub struct LoweredExit {
+    pub guard: LoweredGuard,
+    pub yield_expr: ComputeExpr,
+}
+
+/// A lowered guard: the subject as a ground engine [`CoreTerm`], plus an optional
+/// numeric comparison `(op, rhs)` with `op` an engine [`EngineCmpOp`] and `rhs` a
+/// [`ComputeExpr`]. `None` is a presence guard (the subject fact must be present);
+/// `Some(..)` compares the subject's value against `rhs`.
+#[derive(Debug, Clone)]
+pub struct LoweredGuard {
+    pub subject: CoreTerm,
+    pub comparison: Option<(EngineCmpOp, ComputeExpr)>,
+}
+
+/// Parser-owned identity and lowering attestation for one retained `let`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ComputationBinding {
+    pub origin: BindingOrigin,
+    pub source_plan: ComputeExpr,
+    pub source_dimension: String,
+}
+
+/// One lowered transition action (ADJ-STATEMACHINE §2). The RS-3b minimal subset
+/// is `assert <term>` — lowered to the ground [`CoreTerm`] the driver adds to the
+/// KB when the transition fires.
+#[derive(Debug, Clone)]
+pub enum LoweredAction {
+    Assert(CoreTerm),
 }
 
 /// The result of lowering — a populated KB, any queries to run, and the
@@ -159,20 +668,60 @@ pub enum LowerError {
 pub struct LoweredProgram {
     pub kb: KnowledgeBase,
     pub queries: Vec<CoreTerm>,
+    /// The RANGE / BRACKET lookups the program declared (ADJ-TABLES RS-5c),
+    /// resolved to relation + column indices + exact query value. Empty for a
+    /// program with no `? lookup … mode range …`. Run by the CLI's range tactic.
+    pub range_lookups: Vec<LoweredRangeLookup>,
+    /// The `statemachine`s the program declared (ADJ-STATEMACHINE RS-3b), lowered
+    /// to validated, provenance-stamped structures the RS-3c driver will run. Empty
+    /// for a program with no `statemachine`. RS-3b lowers the structure only — no
+    /// driver, no execution.
+    pub state_machines: Vec<LoweredStateMachine>,
     pub constraints: ConstraintSystem,
     /// The controlled vocabulary the program declared (MYCIN-2026): the
     /// `define`d findings + hypotheses, with their surface forms. Empty for a
     /// program with no dictionary. Used by the decomposer (surface forms) and
     /// enforced at compile time.
     pub dictionary: Vec<Define>,
+    /// Formula-domain refusals, in source execution order. A refusal publishes
+    /// no derived value and does not make an otherwise valid program fail to compile.
+    pub formula_abstentions: Vec<FormulaAbstention>,
+    /// Direct formula-query executions in source order. Unlike derived bindings,
+    /// this records both evaluated and withheld bodies.
+    pub formula_executions: Vec<FormulaExecutionTrace>,
+    /// Exact parser-owned source identity for each retained computation, aligned
+    /// by [`ComputationId`]. Non-`let` computations and non-import-aware callers
+    /// have `None`; a withheld `let` consumes its source identity but no slot.
+    pub computation_bindings: Vec<Option<ComputationBinding>>,
 }
 
 /// Lower an [`ast::Program`] to a populated KB + queries + constraint system.
 pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
+    lower_with_binding_origins(program, None)
+}
+
+pub(crate) fn lower_with_binding_origins(
+    program: &Program,
+    binding_origins: Option<&[BindingOrigin]>,
+) -> Result<LoweredProgram, LowerError> {
     let mut kb = KnowledgeBase::new();
     let mut queries = Vec::new();
     let mut constraints = ConstraintSystem::default();
     let mut dictionary: Vec<Define> = Vec::new();
+    let mut formula_abstentions = Vec::new();
+    let mut formula_executions = Vec::new();
+    let mut binding_cursor = 0usize;
+    let mut computation_bindings = HashMap::new();
+    let mut unavailable_bindings: HashMap<String, FormulaAbstention> = HashMap::new();
+    // ADJ-STATEMACHINE RS-3b: each `statemachine` lowers to a validated,
+    // provenance-stamped structure here (no driver yet — that is RS-3c).
+    let mut state_machines: Vec<LoweredStateMachine> = Vec::new();
+    // ADJ-RULE-SUBSTRATE RS-1: `contributes … from <formula-app> <op> <thr>` clauses
+    // whose gated LHS is a FORMULA APPLICATION are collected here and lowered in a
+    // second pass, after every statement (and therefore every `observe`) has been
+    // seen — see the `Evidence::Predicate` arm for why a library's branch precedes
+    // its consumer's observations.
+    let mut deferred_formula_predicates: Vec<DeferredFormulaPredicate> = Vec::new();
 
     // Flatten rulebooks (MYCIN-2026 M2): a `rulebook <name> { … }` is a named
     // container whose clauses lower into the KB exactly as if written at top
@@ -181,6 +730,48 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     // structure is used afterward to scope vocabulary enforcement per `use`.
     let mut flat: Vec<&Statement> = Vec::new();
     flatten_clauses(&program.statements, &mut flat)?;
+
+    // ADJ-FORMULA-LIBRARIES rung-0: register every `formula` from every
+    // `formulabook` into a name→definition map, up front (formulas are
+    // order-independent declarations). Each is validated as it is registered:
+    // parameter-scoping (no free identifier in the body) and the
+    // provenance-required lint (a shipped formula must be sourced). A later
+    // `? name(args)` looks the name up here and APPLIES it — a named, importable,
+    // reusable `let` (see the `Statement::Query` arm below).
+    let mut formulas: HashMap<&str, &FormulaDef> = HashMap::new();
+    for stmt in flat.iter().copied() {
+        if let Statement::Formulabook { formulas: defs, .. } = stmt {
+            for fd in defs {
+                validate_formula(fd)?;
+                if formulas.insert(fd.name.as_str(), fd).is_some() {
+                    return Err(LowerError::DuplicateFormula {
+                        formula: fd.name.clone(),
+                    });
+                }
+            }
+        }
+    }
+
+    // ADJ-TABLES RS-5c: register every `table`'s columns + rows into a name→table
+    // map, up front (like the formula map — tables are order-independent, and a
+    // `? lookup` may precede the table it reads, or read an imported one). A range
+    // lookup validates its table/columns against this map and needs the rows to
+    // check the key column is numeric.
+    #[allow(clippy::type_complexity)]
+    let mut tables: HashMap<&str, (&[String], &[crate::ast::TableRow])> = HashMap::new();
+    for stmt in flat.iter().copied() {
+        if let Statement::Table {
+            name,
+            columns,
+            rows,
+            ..
+        } = stmt
+        {
+            tables.insert(name.as_str(), (columns.as_slice(), rows.as_slice()));
+        }
+    }
+    // ADJ-TABLES RS-5c: the validated range/bracket lookups, run by the CLI tactic.
+    let mut range_lookups: Vec<LoweredRangeLookup> = Vec::new();
 
     for stmt in flat.iter().copied() {
         match stmt {
@@ -225,17 +816,44 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // Numeric predicate evidence → predicate-gated contribution.
                     // The comparison is evaluated on the CPU at decision time;
                     // a saturating `lr` makes the rule deterministic.
-                    Evidence::Predicate { slot, op, rhs } => {
-                        let clause = PredicateContributionClause::from_lr_expr(
-                            lower_term(conclusion),
-                            slot.clone(),
-                            lower_cmp_op(*op),
-                            lower_expr(rhs),
-                            *lr,
-                        )
-                        .with_provenance(prov);
-                        kb.add_predicate_contribution(clause);
-                    }
+                    Evidence::Predicate { lhs, op, rhs } => match lhs {
+                        // The ordinary case: the LHS is a bare slot identifier — an
+                        // observed value or a `let`-derived one. Gate on it directly;
+                        // the comparison runs on the CPU at decision time (a
+                        // saturating `lr` makes the rule deterministic). This slot is
+                        // read at DECISION time, so it needn't exist yet.
+                        ExprAst::Ref(slot) => {
+                            let clause = PredicateContributionClause::from_lr_expr(
+                                lower_term(conclusion),
+                                slot.clone(),
+                                lower_cmp_op(*op),
+                                lower_expr(rhs),
+                                *lr,
+                            )
+                            .with_provenance(prov);
+                            kb.add_predicate_contribution(clause);
+                        }
+                        // RS-1 BRANCH ON A FORMULA: the LHS is a formula application
+                        // (`bmi(body_mass, height) >= 30`). The formula reads observed
+                        // slots (`body_mass`/`height`) that a *consumer* supplies —
+                        // and, because a library declares the branch while the consumer
+                        // `observe`s the numbers, those observations arrive AFTER this
+                        // clause in lowering order. So we DEFER: record the branch now
+                        // and compute the formula once the KB is fully populated (see
+                        // the deferred-predicate pass after the statement loop). The
+                        // formula becomes a derived slot; the predicate then gates on
+                        // it exactly like any other derived value.
+                        _ => {
+                            deferred_formula_predicates.push(DeferredFormulaPredicate {
+                                lhs: lhs.clone(),
+                                op: *op,
+                                rhs: rhs.clone(),
+                                lr: *lr,
+                                conclusion: lower_term(conclusion),
+                                prov,
+                            });
+                        }
+                    },
                 }
             }
             Statement::Interacts {
@@ -254,8 +872,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 .with_provenance(prov);
                 kb.add_joint_contribution(clause);
             }
-            Statement::Observe { term } => {
-                kb.add_fact(Fact::certain(lower_term(term)));
+            Statement::Observe { term, annotations } => {
+                let prov = annotations_to_provenance(annotations)?;
+                if let AstTerm::Compound { functor, .. } = term {
+                    unavailable_bindings.remove(functor);
+                }
+                kb.add_fact(Fact::certain(lower_term(term)).with_provenance(prov));
             }
             Statement::Relate { edge, annotations } => {
                 // A ground relational edge → a Certain Fact carrying its citation
@@ -323,25 +945,271 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 kb.add_rule(rule);
             }
             Statement::Query { conclusion } => {
-                // Lower with a per-query variable scope so repeated `$Var`s in one
-                // goal share identity (Prolog clause-scope semantics). A ground
-                // hypothesis query lowers identically to before (no variables).
-                let mut vars = HashMap::new();
-                queries.push(lower_term_scoped(conclusion, &mut vars));
+                // ADJ-FORMULA-LIBRARIES rung-0: is this a FORMULA APPLICATION? If the
+                // goal's functor names a declared `formula` with matching arity
+                // (`? bmi(body_mass, height)`), APPLY it: bind each parameter to its
+                // argument, substitute into the formula body, and evaluate through the
+                // SAME `ComputeExpr` evaluator a `let` uses — a formula is a named,
+                // importable, reusable `let`. The result is bound as a derived value
+                // named after the formula, carrying the formula's cited provenance so
+                // the computed answer is auditable back to WHY its formula is trusted.
+                if let Some(fd) = formula_for_query(conclusion, &formulas)? {
+                    let primary = annotations_to_provenance(&fd.annotations)?;
+                    let mut applications = vec![FormulaApplicationTrace {
+                        formula: fd.name.clone(),
+                        provenance: primary.clone(),
+                    }];
+                    let mut guards = Vec::new();
+                    if let Some(mut abstention) =
+                        unavailable_query_argument(conclusion, &unavailable_bindings)
+                    {
+                        abstention.name = fd.name.clone();
+                        formula_executions.push(FormulaExecutionTrace {
+                            export: fd.name.clone(),
+                            formula_sequence: abstention.formula_sequence.clone(),
+                            guards: abstention.guards.clone(),
+                            body: FormulaBodyTrace::WithheldPreconditionFailed,
+                        });
+                        formula_abstentions.push(abstention);
+                        continue;
+                    }
+                    let substituted =
+                        match apply_formula(fd, conclusion, &kb, &applications, &mut guards) {
+                            Ok(value) => value,
+                            Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
+                                let mut abstention = *abstention;
+                                abstention.name = fd.name.clone();
+                                formula_executions.push(FormulaExecutionTrace {
+                                    export: fd.name.clone(),
+                                    formula_sequence: abstention.formula_sequence.clone(),
+                                    guards: abstention.guards.clone(),
+                                    body: FormulaBodyTrace::WithheldPreconditionFailed,
+                                });
+                                unavailable_bindings.insert(fd.name.clone(), abstention.clone());
+                                formula_abstentions.push(abstention);
+                                continue;
+                            }
+                            Err(error) => return Err(error),
+                        };
+                    // RS-1 composition: the substituted body may ITSELF apply other
+                    // formulas (`ratio(n, d) = quotient(n, d)`). Expand every nested
+                    // application recursively — with the depth guard — collecting the
+                    // provenance chain of each applied formula, then lower the
+                    // fully-expanded (application-free) expression through the SAME
+                    // `compute` path a `let` uses.
+                    let (expanded, chain) = match expand_applies_traced(
+                        &substituted,
+                        &formulas,
+                        &kb,
+                        0,
+                        &mut applications,
+                        &mut guards,
+                    ) {
+                        Ok(value) => value,
+                        Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
+                            let mut abstention = *abstention;
+                            abstention.name = fd.name.clone();
+                            formula_executions.push(FormulaExecutionTrace {
+                                export: fd.name.clone(),
+                                formula_sequence: abstention.formula_sequence.clone(),
+                                guards: abstention.guards.clone(),
+                                body: FormulaBodyTrace::WithheldPreconditionFailed,
+                            });
+                            unavailable_bindings.insert(fd.name.clone(), abstention.clone());
+                            formula_abstentions.push(abstention);
+                            continue;
+                        }
+                        Err(error) => return Err(error),
+                    };
+                    let cexpr = lower_expr(&expanded);
+                    let derived = compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
+                        LowerError::ComputationFailed {
+                            name: fd.name.clone(),
+                            detail: format!("{e:?}"),
+                        }
+                    })?;
+                    // The provenance-required lint already guaranteed a non-empty
+                    // source at registration; stamp the resolved envelope onto the
+                    // value — and COMPOSE the nested chain, so a value computed via
+                    // `quotient` carries BOTH `ratio`'s cite (primary) and
+                    // `quotient`'s (a corroboration). The derivation is auditable
+                    // back to every formula that produced it.
+                    let prov = compose_provenance(primary.clone(), &chain);
+                    let mut formula_sources = vec![primary];
+                    formula_sources.extend(chain.iter().cloned());
+                    unavailable_bindings.remove(&fd.name);
+                    kb.add_derived(
+                        derived
+                            .with_formula_sources(prov, formula_sources)
+                            .as_query_answer(),
+                    );
+                    formula_executions.push(FormulaExecutionTrace {
+                        export: fd.name.clone(),
+                        formula_sequence: applications,
+                        guards,
+                        body: FormulaBodyTrace::Evaluated,
+                    });
+                } else {
+                    // An ordinary query. Lower with a per-query variable scope so
+                    // repeated `$Var`s in one goal share identity (Prolog clause-scope
+                    // semantics). A ground hypothesis query lowers as before.
+                    let mut vars = HashMap::new();
+                    queries.push(lower_term_scoped(conclusion, &mut vars));
+                }
+            }
+            Statement::RangeLookup {
+                table,
+                key_col,
+                key_value,
+                mode,
+                value_col,
+            } => {
+                // ADJ-TABLES RS-5c: validate a `? lookup … mode range …` against the
+                // table registry and resolve the key/value columns to positional
+                // indices, so the runtime tactic never has to re-parse column names.
+                let (columns, rows) =
+                    tables
+                        .get(table.as_str())
+                        .ok_or_else(|| LowerError::LookupUnknownTable {
+                            table: table.clone(),
+                        })?;
+                // Mode: `range` reads the table as a step function (bracket
+                // lookup); `interpolated` reads it as a piecewise-linear function
+                // between breakpoints (RS-5d); `nearest` snaps the query to the
+                // closest key (nearest-neighbour, RS-5f). All three are built; any
+                // other word is not a tactic at all.
+                match mode.as_str() {
+                    "range" | "interpolated" | "nearest" => {}
+                    _ => return Err(LowerError::LookupUnknownMode { mode: mode.clone() }),
+                }
+                let key_index = columns.iter().position(|c| c == key_col).ok_or_else(|| {
+                    LowerError::LookupUnknownColumn {
+                        table: table.clone(),
+                        column: key_col.clone(),
+                    }
+                })?;
+                let value_index = columns.iter().position(|c| c == value_col).ok_or_else(|| {
+                    LowerError::LookupUnknownColumn {
+                        table: table.clone(),
+                        column: value_col.clone(),
+                    }
+                })?;
+                // The key column must be numeric in EVERY row — a `range` lookup
+                // compares the query against it on the exact numeric path, so an
+                // atom/string key cell is a compile error (never a silent skip).
+                for (i, row) in rows.iter().enumerate() {
+                    if !matches!(
+                        row.cells.get(key_index),
+                        Some(crate::ast::TableCell::Number(_))
+                    ) {
+                        return Err(LowerError::LookupNonNumericKeyColumn {
+                            table: table.clone(),
+                            column: key_col.clone(),
+                            row: i,
+                        });
+                    }
+                }
+                // `interpolated` additionally computes on the VALUE column, so it
+                // too must be numeric in every row (RS-5d). `range` returns the value
+                // cell verbatim (it may be a category label), so it skips this check.
+                if mode == "interpolated" {
+                    for (i, row) in rows.iter().enumerate() {
+                        if !matches!(
+                            row.cells.get(value_index),
+                            Some(crate::ast::TableCell::Number(_))
+                        ) {
+                            return Err(LowerError::LookupNonNumericValueColumn {
+                                table: table.clone(),
+                                column: value_col.clone(),
+                                row: i,
+                            });
+                        }
+                    }
+                }
+                range_lookups.push(LoweredRangeLookup {
+                    table: table.clone(),
+                    arity: columns.len(),
+                    key_index,
+                    value_index,
+                    key_col: key_col.clone(),
+                    value_col: value_col.clone(),
+                    key_value: lower_numlit(key_value),
+                    mode: mode.clone(),
+                });
             }
             Statement::Let { name, expr } => {
+                let binding_origin = match binding_origins {
+                    Some(origins) => {
+                        let origin = origins.get(binding_cursor).ok_or_else(|| {
+                            LowerError::BindingOriginMismatch {
+                                detail: format!("missing parser origin for let {name}"),
+                            }
+                        })?;
+                        if origin.binding.name != *name || origin.binding.expression != *expr {
+                            return Err(LowerError::BindingOriginMismatch {
+                                detail: format!(
+                                    "parser origin disagrees with lowered let {name}"
+                                ),
+                            });
+                        }
+                        Some(origin.clone())
+                    }
+                    None => None,
+                };
+                binding_cursor += 1;
                 // Evaluate the formula against the facts (and any earlier
                 // `let`s) seen so far — statements lower in source order, so a
                 // `let` sees every `observe` above it. The engine builds the
                 // derivation tree; the model never computed anything.
-                let cexpr = lower_expr(expr);
+                //
+                // RS-1: a `let` may itself APPLY a library formula
+                // (`let r = ratio(a, b)`); expand every nested application first,
+                // collecting the applied-formula provenance chain.
+                if let Some(mut abstention) = unavailable_expression(expr, &unavailable_bindings) {
+                    abstention.name = name.clone();
+                    unavailable_bindings.insert(name.clone(), abstention.clone());
+                    formula_abstentions.push(abstention);
+                    continue;
+                }
+                let (expanded, chain) = match expand_applies(expr, &formulas, &kb, 0) {
+                    Ok(value) => value,
+                    Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
+                        let mut abstention = *abstention;
+                        abstention.name = name.clone();
+                        unavailable_bindings.insert(name.clone(), abstention.clone());
+                        formula_abstentions.push(abstention);
+                        continue;
+                    }
+                    Err(error) => return Err(error),
+                };
+                let cexpr = lower_expr(&expanded);
                 let derived = compute(name.clone(), &cexpr, &kb).map_err(|e| {
                     LowerError::ComputationFailed {
                         name: name.clone(),
                         detail: format!("{e:?}"),
                     }
                 })?;
+                // A plain `let` over observed slots has an empty chain and no
+                // library provenance (its audit trail is the derivation tree). A
+                // `let` that applied formulas carries their composed cites.
+                let derived = match compose_chain(&chain) {
+                    Some(prov) => derived.with_formula_sources(prov, chain.clone()),
+                    None => derived,
+                };
+                unavailable_bindings.remove(name);
+                let computation_id = kb.derived_bindings().len();
+                let source_dimension = derived.dim.tag();
                 kb.add_derived(derived);
+                if let Some(origin) = binding_origin {
+                    computation_bindings.insert(
+                        computation_id,
+                        ComputationBinding {
+                            origin,
+                            source_plan: cexpr,
+                            source_dimension,
+                        },
+                    );
+                }
             }
             Statement::Uncertain {
                 domain,
@@ -390,6 +1258,263 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             // — `flatten_clauses` expanded it into its inner clauses already.
             Statement::Use(_) => {}
             Statement::Rulebook { .. } => {}
+            // A `formulabook` adds nothing to the KB itself — its formulas were
+            // registered (and validated) in the pre-pass above, ready to be
+            // APPLIED by a matching `? name(args)`. The inner `use <dict>`
+            // bindings are documentation of the vocabulary the formulas are typed
+            // against (rung-0 does not enforce dictionary typing of parameters).
+            Statement::Formulabook { .. } => {}
+            // ---- table (ADJ-TABLES RS-5) ----
+            // Each row lowers to a ground relation `name(cell1, …, celln)`
+            // carrying the table's provenance — byte-identical to how a `relate`
+            // edge lowers (above) — so EXACT lookup is just the existing SLD
+            // binding query, and a looked-up NUMBER feeds a `let`/`formula` via
+            // the existing arity-1 slot/`Ref` path. Two guards keep a table honest:
+            // (1) the arity of every row must match the declared `columns` (a wrong
+            // arity would silently never match, or shadow, a real lookup); and
+            // (2) the provenance-required lint — a shipped table must be sourced,
+            // exactly like `formula`/`relate` (the whole reason a table is
+            // first-class is to be the auditable home for a *cited* published table).
+            Statement::Table {
+                name,
+                uses: _,
+                columns,
+                rows,
+                annotations,
+            } => {
+                if columns.is_empty() {
+                    return Err(LowerError::TableNoColumns {
+                        table: name.clone(),
+                    });
+                }
+                let prov = annotations_to_provenance(annotations)?;
+                if prov.source.trim().is_empty() {
+                    return Err(LowerError::TableMissingProvenance {
+                        table: name.clone(),
+                    });
+                }
+                for (i, row) in rows.iter().enumerate() {
+                    if row.cells.len() != columns.len() {
+                        return Err(LowerError::TableArity {
+                            table: name.clone(),
+                            expected: columns.len(),
+                            row: i,
+                            got: row.cells.len(),
+                        });
+                    }
+                    let args: Vec<CoreTerm> = row.cells.iter().map(lower_cell).collect();
+                    // ADJ-TABLES RS-5e: each row already becomes its OWN `Fact`, and
+                    // every citation path (exact recall, range lookup, the proof
+                    // DAG's `via_facts`) cites *the fact that produced the answer* —
+                    // so stamping the ROW's provenance here is the whole fix, with no
+                    // renderer change. A row that wrote its own `{ … }` block
+                    // overrides the envelope field-by-field; a row without one gets
+                    // the envelope unchanged (pre-RS-5e behaviour).
+                    let row_prov = row_provenance(&prov, &row.annotations)?;
+                    kb.add_fact(Fact::certain(compound(name, args)).with_provenance(row_prov));
+                }
+            }
+            // ---- statemachine (ADJ-STATEMACHINE RS-3b) ----
+            // Lower the STRUCTURE to a provenanced record the driver (RS-3c) will
+            // read. No driver, no execution here. Five static well-formedness
+            // checks — the typed `Sm*` errors — keep a machine honest before it can
+            // enter a library:
+            //   (1) SmMissingProvenance — a shipped machine must be sourced (the
+            //       same write gate `formula`/`relate`/`table` enforce).
+            //   (2) SmBudgetNotPositive — the step budget is the termination
+            //       guarantee, so it must be ≥ 1.
+            //   (3) SmMissingInitial — a non-empty entry-state name is present.
+            //   (4) SmUnknownState — the initial name and every transition target
+            //       resolve to a declared `state`.
+            //   (5) SmMissingExit — at least one `exit when … yield …`, so a run
+            //       can halt on a criterion, not only on the budget.
+            // Guards and actions lower to the SAME term/compute forms the rest of
+            // the language uses (no parallel evaluator).
+            Statement::StateMachine {
+                name,
+                uses: _,
+                initial,
+                states,
+                exits,
+                budget,
+                annotations,
+            } => {
+                let prov = annotations_to_provenance(annotations)?;
+                if prov.source.trim().is_empty() {
+                    return Err(LowerError::SmMissingProvenance {
+                        machine: name.clone(),
+                    });
+                }
+                if *budget < 1 {
+                    return Err(LowerError::SmBudgetNotPositive {
+                        machine: name.clone(),
+                    });
+                }
+                if initial.trim().is_empty() {
+                    return Err(LowerError::SmMissingInitial {
+                        machine: name.clone(),
+                    });
+                }
+                // The declared state names — the universe every control-flow target
+                // (the initial state + every transition target) must resolve into.
+                let declared: std::collections::HashSet<&str> =
+                    states.iter().map(|s| s.name.as_str()).collect();
+                if !declared.contains(initial.as_str()) {
+                    return Err(LowerError::SmUnknownState {
+                        machine: name.clone(),
+                        state: initial.clone(),
+                    });
+                }
+                if exits.is_empty() {
+                    return Err(LowerError::SmMissingExit {
+                        machine: name.clone(),
+                    });
+                }
+                let mut lowered_states = Vec::with_capacity(states.len());
+                for st in states {
+                    let mut lowered_trs = Vec::with_capacity(st.transitions.len());
+                    for tr in &st.transitions {
+                        if !declared.contains(tr.target.as_str()) {
+                            return Err(LowerError::SmUnknownState {
+                                machine: name.clone(),
+                                state: tr.target.clone(),
+                            });
+                        }
+                        let actions = tr
+                            .actions
+                            .iter()
+                            .map(|a| match a {
+                                SmAction::Assert(t) => LoweredAction::Assert(lower_term(t)),
+                            })
+                            .collect();
+                        lowered_trs.push(LoweredTransition {
+                            guard: lower_sm_guard(&tr.guard),
+                            target: tr.target.clone(),
+                            actions,
+                        });
+                    }
+                    lowered_states.push(LoweredState {
+                        name: st.name.clone(),
+                        transitions: lowered_trs,
+                    });
+                }
+                let lowered_exits = exits
+                    .iter()
+                    .map(|ex| LoweredExit {
+                        guard: lower_sm_guard(&ex.guard),
+                        yield_expr: lower_expr(&ex.yield_expr),
+                    })
+                    .collect();
+                state_machines.push(LoweredStateMachine {
+                    name: name.clone(),
+                    initial: initial.clone(),
+                    states: lowered_states,
+                    exits: lowered_exits,
+                    budget: *budget,
+                    provenance: prov,
+                });
+            }
+            // ---- argument graph (ADJ-ARGUMENT-IR ADR-2) ----
+            // The argument DESUGARS AWAY into the existing substrate (§2.3): each
+            // premise → a provenanced ground `Fact`; each inference → a `Rule` whose
+            // body is the terms it cites `from`. After this arm there is no argument
+            // object left in the KB — the engine derives the thesis from the facts +
+            // rules, `--explain` renders that proof DAG as the argument, and `adj-verify`
+            // re-checks it, all via the machinery `relate`/`rule` already feed. We
+            // validate three things the surface cannot: known premise kinds, unique
+            // element names, and that every `from` reference resolves to a prior name.
+            Statement::Argument {
+                name,
+                premises,
+                inferences,
+            } => {
+                // name → the AST term this element binds (a premise's claim or an
+                // inference's conclusion), so a later `from` resolves to its term.
+                let mut bound: HashMap<&str, &AstTerm> = HashMap::new();
+                for p in premises {
+                    if !matches!(p.kind.as_str(), "extracted" | "imported" | "inferred") {
+                        return Err(LowerError::ArgUnknownPremiseKind {
+                            argument: name.clone(),
+                            kind: p.kind.clone(),
+                        });
+                    }
+                    if bound.contains_key(p.name.as_str()) {
+                        return Err(LowerError::ArgDuplicateName {
+                            argument: name.clone(),
+                            name: p.name.clone(),
+                        });
+                    }
+                    let prov = annotations_to_provenance(&p.annotations)?;
+                    // Structural grounding gate (ADJ-ARGUMENT-IR §3, ADR-3): a shipped
+                    // argument must be *sourced* — every premise cites the bytes it is
+                    // read from, the same "must be sourced" lint `table`/`statemachine`/
+                    // `formula` enforce. The deterministic byte-ANCHOR (is that cite a
+                    // verbatim slice of the pinned source?) is delivered by the ADR-4
+                    // `adj-verify` argument pass, which reuses `verify_quote`; this lint is
+                    // its precondition — an un-cited premise cannot even be anchored.
+                    if prov.source.trim().is_empty() {
+                        return Err(LowerError::ArgMissingProvenance {
+                            argument: name.clone(),
+                            element: p.name.clone(),
+                        });
+                    }
+                    kb.add_fact(Fact::certain(lower_term(&p.claim)).with_provenance(prov));
+                    bound.insert(p.name.as_str(), &p.claim);
+                }
+                for inf in inferences {
+                    if bound.contains_key(inf.name.as_str()) {
+                        return Err(LowerError::ArgDuplicateName {
+                            argument: name.clone(),
+                            name: inf.name.clone(),
+                        });
+                    }
+                    // Head and the (resolved) body share ONE variable scope, exactly
+                    // like a `rule { head when: … }`, so a `$Var` in the conclusion
+                    // unifies with the same `$Var` in a referenced premise term.
+                    let mut vars = HashMap::new();
+                    let head_term = lower_term_scoped(&inf.conclusion, &mut vars);
+                    let mut body_lits: Vec<BodyLiteral> = Vec::with_capacity(inf.from.len());
+                    for r in &inf.from {
+                        let ref_term: &AstTerm =
+                            bound.get(r.as_str()).copied().ok_or_else(|| {
+                                LowerError::ArgUnknownReference {
+                                    argument: name.clone(),
+                                    reference: r.clone(),
+                                }
+                            })?;
+                        body_lits.push(BodyLiteral::Pos(lower_term_scoped(ref_term, &mut vars)));
+                    }
+                    // AR-3 UNDERCUT — each `unless <defeater>` lowers to a NAF (`not`)
+                    // body literal, in the SAME variable scope as head+body, so the step
+                    // fires only WHILE its warrant is not defeated. Unlike a `from` ref,
+                    // a defeater is a raw proposition (derived by another step/fact), so it
+                    // does NOT resolve against `bound` — it is lowered as written.
+                    for u in &inf.unless {
+                        body_lits.push(BodyLiteral::Neg(lower_term_scoped(u, &mut vars)));
+                    }
+                    let prov = annotations_to_provenance(&inf.annotations)?;
+                    // Same structural grounding gate for the inference's WARRANT (§3): an
+                    // inference step must cite why its antecedents entail its conclusion —
+                    // an un-warranted step is exactly the un-grounded reasoning move this
+                    // gate exists to reject.
+                    if prov.source.trim().is_empty() {
+                        return Err(LowerError::ArgMissingProvenance {
+                            argument: name.clone(),
+                            element: inf.name.clone(),
+                        });
+                    }
+                    // AR-3 REBUT — tag the inference's grounding CONTEXT, exactly as
+                    // `rule { … context: … }` does (ADJ73 PR-B). With a `functional` thesis
+                    // and a `context_order`, a rival inference in an outranking context
+                    // defeats this one — the engine withdraws the loser.
+                    let mut rule = Rule::certain(head_term, body_lits).with_provenance(prov);
+                    if let Some(ctx) = &inf.context {
+                        rule = rule.with_context(ctx.clone());
+                    }
+                    kb.add_rule(rule);
+                    bound.insert(inf.name.as_str(), &inf.conclusion);
+                }
+            }
             // ---- import (MYCIN-2026 M3) ----
             // Imports are resolved away by `crate::resolve` before lowering; one
             // reaching here means `compile` was called on an unresolved program.
@@ -397,6 +1522,86 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 return Err(LowerError::UnresolvedImport { path: path.clone() })
             }
         }
+    }
+
+    // ADJ-RULE-SUBSTRATE RS-1 — deferred branch-on-formula pass. Every statement
+    // (and therefore every `observe`d input) is now in the KB, so we can compute
+    // each formula-application predicate LHS into a derived value and gate the
+    // contribution on it. This is what lets a *library* declare `contributes … from
+    // bmi(body_mass, height) >= 30 to obese` and a separate *consumer* supply the
+    // numbers: the branch and the observations meet here, in the completed KB.
+    for d in &deferred_formula_predicates {
+        // Expand the application (recursively; formula-calls-formula supported),
+        // collecting its provenance chain, then compute it against the full KB.
+        let (expanded, chain) = match expand_applies(&d.lhs, &formulas, &kb, 0) {
+            Ok(value) => value,
+            Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
+                let mut abstention = *abstention;
+                abstention.name = match &d.lhs {
+                    ExprAst::Apply(name, _) => name.clone(),
+                    _ => "__branch_lhs".to_string(),
+                };
+                unavailable_bindings.insert(abstention.name.clone(), abstention.clone());
+                formula_abstentions.push(abstention);
+                continue;
+            }
+            Err(error) => return Err(error),
+        };
+        let slot_name = match &d.lhs {
+            ExprAst::Apply(name, _) => name.clone(),
+            // A compound LHS expression that merely *contains* an application gets a
+            // stable synthesized slot name (direct applications are the common case).
+            _ => "__branch_lhs".to_string(),
+        };
+        let cexpr = lower_expr(&expanded);
+        let derived =
+            compute(slot_name.clone(), &cexpr, &kb).map_err(|e| LowerError::ComputationFailed {
+                name: slot_name.clone(),
+                detail: format!("{e:?}"),
+            })?;
+        // The derived slot carries the applied formula's composed provenance — so
+        // the audit trail for a fired `obese` verdict cites BOTH the WHO obesity
+        // threshold (on the contribution clause) AND the BMI definition (here).
+        let derived = match compose_chain(&chain) {
+            Some(prov) => derived.with_formula_sources(prov, chain.clone()),
+            None => derived,
+        };
+        // Most RHS expressions do not refer to the staged LHS and expand against
+        // the original KB. A self-dependent RHS uses the engine's one-binding
+        // transactional overlay, which removes the candidate and its plan before
+        // returning instead of cloning the complete KB.
+        let mut rhs_refs = Vec::new();
+        collect_refs(&d.rhs, &mut rhs_refs);
+        let (derived, rhs_result) = if rhs_refs.iter().any(|name| name == &slot_name) {
+            kb.with_staged_derived(derived, |view| expand_applies(&d.rhs, &formulas, view, 0))
+        } else {
+            (derived, expand_applies(&d.rhs, &formulas, &kb, 0))
+        };
+        let (rhs_expanded, rhs_chain) = match rhs_result {
+            Ok(value) => value,
+            Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
+                let mut abstention = *abstention;
+                abstention.name = match &d.rhs {
+                    ExprAst::Apply(name, _) => name.clone(),
+                    _ => "__branch_rhs".to_string(),
+                };
+                unavailable_bindings.insert(abstention.name.clone(), abstention.clone());
+                formula_abstentions.push(abstention);
+                continue;
+            }
+            Err(error) => return Err(error),
+        };
+        unavailable_bindings.remove(&slot_name);
+        kb.add_derived(derived);
+        let clause = PredicateContributionClause::from_lr_expr(
+            d.conclusion.clone(),
+            slot_name,
+            lower_cmp_op(d.op),
+            lower_expr(&rhs_expanded),
+            d.lr,
+        )
+        .with_provenance(compose_provenance(d.prov.clone(), &rhs_chain));
+        kb.add_predicate_contribution(clause);
     }
 
     // Compile-time vocabulary enforcement (MYCIN-2026 M1 + M2). Two modes:
@@ -439,7 +1644,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 .statements
                 .iter()
                 .filter(|s| !matches!(s, Statement::Rulebook { .. }));
-            enforce_vocabulary(top_clauses, defs)?;
+            enforce_vocabulary(top_clauses, defs, &formulas)?;
         }
         // Each rulebook is its own scope (its `use`, else the top-level `use`).
         for s in &program.statements {
@@ -448,20 +1653,50 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     let defs = resolve(d)?;
                     let mut clauses: Vec<&Statement> = Vec::new();
                     flatten_clauses(statements, &mut clauses)?;
-                    enforce_vocabulary(clauses.into_iter(), defs)?;
+                    enforce_vocabulary(clauses, defs, &formulas)?;
                 }
             }
         }
     } else if !dictionary.is_empty() {
-        enforce_vocabulary(flat.iter().copied(), &dictionary)?;
+        enforce_vocabulary(flat.iter().copied(), &dictionary, &formulas)?;
     }
 
+    if binding_origins.is_some_and(|origins| binding_cursor != origins.len()) {
+        return Err(LowerError::BindingOriginMismatch {
+            detail: format!(
+                "lowerer consumed {binding_cursor} parser binding origins, expected {}",
+                binding_origins.map_or(0, |origins| origins.len())
+            ),
+        });
+    }
+    let computation_bindings = (0..kb.derived_bindings().len())
+        .map(|index| computation_bindings.remove(&index))
+        .collect();
     Ok(LoweredProgram {
         kb,
         queries,
+        range_lookups,
+        state_machines,
         constraints,
         dictionary,
+        formula_abstentions,
+        formula_executions,
+        computation_bindings,
     })
+}
+
+/// Lower a surface [`SmGuard`] (ADJ-STATEMACHINE §2) to a [`LoweredGuard`]: the
+/// subject through the shared [`lower_term`], and the optional comparison through
+/// the shared [`lower_cmp_op`] + [`lower_expr`] — the SAME forms every predicate /
+/// compute lowers to, so a guard introduces no new evaluator.
+fn lower_sm_guard(g: &SmGuard) -> LoweredGuard {
+    LoweredGuard {
+        subject: lower_term(&g.subject),
+        comparison: g
+            .comparison
+            .as_ref()
+            .map(|(op, e)| (lower_cmp_op(*op), lower_expr(e))),
+    }
 }
 
 /// Expand `rulebook` blocks into their constituent clause statements, in source
@@ -532,6 +1767,7 @@ fn first_use(statements: &[Statement]) -> Option<&str> {
 fn enforce_vocabulary<'a>(
     statements: impl IntoIterator<Item = &'a Statement>,
     dictionary: &[Define],
+    formulas: &HashMap<&str, &FormulaDef>,
 ) -> Result<(), LowerError> {
     use std::collections::HashMap;
     let dict: HashMap<&str, &DefineKind> = dictionary
@@ -578,6 +1814,14 @@ fn enforce_vocabulary<'a>(
     // hypothesis.
     let check_query = |t: &AstTerm| -> Result<(), LowerError> {
         let (functor, _) = term_functor_value(t);
+        // A FORMULA APPLICATION query (`? bmi(body_mass, height)`) names a
+        // registered formula, not a hypothesis or relation — accept it here so
+        // the closed-vocabulary gate does not reject the very construct this
+        // feature introduces. The formula's own parameter-scoping was checked at
+        // registration.
+        if formulas.contains_key(functor) {
+            return Ok(());
+        }
         match dict.get(functor) {
             Some(DefineKind::Relation { .. }) => Ok(()),
             _ => check_hypothesis(t),
@@ -618,7 +1862,7 @@ fn enforce_vocabulary<'a>(
                     check_finding(t)?;
                 }
             }
-            Statement::Observe { term } => check_finding(term)?,
+            Statement::Observe { term, .. } => check_finding(term)?,
             _ => {}
         }
     }
@@ -657,10 +1901,31 @@ fn check_lr(lr: f64) -> Result<(), LowerError> {
     }
 }
 
+/// Lower a surface [`NumLit`] to the engine's ground [`CoreNumber`] **without an `f64` hop**
+/// (ADJ-EXACT-NUMBERS NX-2): `Int` becomes `Number::Int` (keeping the small-integer fast path),
+/// and `Exact` becomes `Number::Exact`, carrying every written digit into the stored value.
+fn lower_numlit(n: &NumLit) -> CoreTerm {
+    match n {
+        NumLit::Int(i) => core_int(*i),
+        NumLit::Exact(d) => CoreTerm::Num(CoreNumber::Exact(d.clone())),
+    }
+}
+
+/// Lower one [`crate::ast::TableCell`] (ADJ-TABLES RS-5) to a ground engine term.
+/// The three cell kinds map 1:1 onto the engine's three ground term kinds; a cell
+/// is never a variable or compound, so this is total and never fails.
+fn lower_cell(cell: &crate::ast::TableCell) -> CoreTerm {
+    match cell {
+        crate::ast::TableCell::Number(x) => lower_numlit(x),
+        crate::ast::TableCell::Atom(name) => core_atom(name),
+        crate::ast::TableCell::Text(s) => CoreTerm::Str(s.clone()),
+    }
+}
+
 fn lower_term(t: &AstTerm) -> CoreTerm {
     match t {
         AstTerm::Atom(name) => core_atom(name),
-        AstTerm::Num(x) => core_float(*x),
+        AstTerm::Num(x) => lower_numlit(x),
         // A bare `Var` outside a query goal (e.g. inside a `relate` ground edge)
         // is unusual — ground edges have no variables — but lower it to a fresh
         // logic variable rather than panicking, so the engine treats it as an
@@ -680,7 +1945,7 @@ fn lower_term(t: &AstTerm) -> CoreTerm {
 fn lower_term_scoped(t: &AstTerm, vars: &mut HashMap<String, LogicVar>) -> CoreTerm {
     match t {
         AstTerm::Atom(name) => core_atom(name),
-        AstTerm::Num(x) => core_float(*x),
+        AstTerm::Num(x) => lower_numlit(x),
         AstTerm::Var(name) => {
             let lv = vars
                 .entry(name.clone())
@@ -700,6 +1965,12 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
     match expr {
         ExprAst::Ref(slot) => ComputeExpr::Ref(slot.clone()),
         ExprAst::Lit(x) => ComputeExpr::Lit(*x),
+        ExprAst::ExactLit(NumLit::Int(value)) => {
+            ComputeExpr::ExactLit(ExactRational::from_i128(*value as i128))
+        }
+        ExprAst::ExactLit(NumLit::Exact(value)) => {
+            ComputeExpr::ExactLit(ExactRational::from_ratio(value.to_rational()))
+        }
         ExprAst::Bin(op, a, b) => ComputeExpr::Bin(
             lower_arith_op(*op),
             Box::new(lower_expr(a)),
@@ -712,12 +1983,61 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a))),
         ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a))),
         ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
+        // `round_to(x, n)` (NUM-6a): the precision-carrying narrowing. Lowers to the
+        // distinct engine `Round` node (not a unary `ComputeOp`) so the precision `n`
+        // and the default half-even mode ride along and the exact-path audit records
+        // them (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4). `n` was validated a non-negative
+        // integer by the adapter.
+        ExprAst::RoundTo(a, spec) => ComputeExpr::Round {
+            spec: *spec,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
+        // `to_scientific(x, figures)` (NUM-6c): the scientific-notation rendering. Lowers
+        // to the distinct engine `ToScientific` node so the significant-figure count and
+        // the default half-even mode ride along and the exact-path audit records both the
+        // exact source and the rendered string (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3).
+        // `figures` was validated (≥ 1, within the cap; default applied) by the adapter.
+        ExprAst::ToScientific(a, figures) => ComputeExpr::ToScientific {
+            figures: *figures,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
+        // `to_percent(x, places)` (NUM-6c): the percentage rendering. Lowers to the
+        // distinct engine `ToPercent` node so the decimal-place count and the default
+        // half-even mode ride along and the exact-path audit records both the exact
+        // source ratio and the rendered `d.dd%` string (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3).
+        ExprAst::ToPercent(a, places) => ComputeExpr::ToPercent {
+            places: *places,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
+        // `to_currency(x, code, places)` (NUM-6c): the money rendering. Lowers to the
+        // distinct engine `ToCurrency` node so the currency code, the decimal-place count,
+        // and the default half-even mode ride along and the exact-path audit records both
+        // the exact source amount and the rendered `CODE d.dd` string.
+        ExprAst::ToCurrency(a, code, places) => ComputeExpr::ToCurrency {
+            code: code.clone(),
+            places: *places,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
             Box::new(lower_expr(a)),
             Box::new(lower_expr(b)),
         ),
         ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+        // A formula application (RS-1) is never lowered directly: it is expanded
+        // away by [`expand_applies`] BEFORE `lower_expr` runs, so a fully-expanded
+        // expression contains no `Apply`. This arm exists only to keep the match
+        // total; should a lowering site ever forget to expand, it lowers to a
+        // reference on a poisoned slot name so `compute` fails cleanly with
+        // `UnknownSlot` rather than silently miscomputing — never a panic, never a
+        // wrong number.
+        ExprAst::Apply(name, _) => {
+            ComputeExpr::Ref(format!("<unexpanded formula application: {name}>"))
+        }
     }
 }
 
@@ -782,6 +2102,98 @@ fn lower_cmp_op(op: CmpOp) -> EngineCmpOp {
     }
 }
 
+/// Fold a table row's OWN `{ … }` provenance block over the table's envelope
+/// (ADJ-TABLES RS-5e), producing the provenance stamped on *that row's* fact.
+///
+/// ## Why a row needs its own provenance
+///
+/// A table carries one `source`/`locator`/`trust` envelope. With six bands and one
+/// envelope, **every** answer — in every band — quotes the same sentence. That is an
+/// accounting error: the audit trail asserts a fact and cites a span that does not
+/// defend it. A range lookup makes it glaring (the selected row is explicit in the
+/// audit), but it was equally wrong for exact lookup all along.
+///
+/// ## Override, don't replace
+///
+/// The row's fields are folded **over** the envelope rather than replacing it, so a
+/// row supplies only what differs — usually just the `source` span of its own cell —
+/// and inherits the shared `locator` and `trust`. That keeps the common case terse
+/// (one `source` per row, one `locator` for the page) and means an empty block is
+/// exactly the old behaviour. Corroborating `cites` are *appended* to the envelope's,
+/// since they are additional independent support, not a correction.
+///
+/// Duplicate keys **within one row block** are the same clean error they are anywhere
+/// else (`source` twice in one block is a typo, not an override of itself).
+fn row_provenance(
+    table: &Provenance,
+    row_annotations: &[Annotation],
+) -> Result<Provenance, LowerError> {
+    if row_annotations.is_empty() {
+        return Ok(table.clone());
+    }
+    let mut prov = table.clone();
+    let (mut saw_source, mut saw_locator, mut saw_trust) = (false, false, false);
+    for a in row_annotations {
+        match a {
+            Annotation::Source(s) => {
+                if saw_source {
+                    return Err(LowerError::DuplicateAnnotation { name: "source" });
+                }
+                saw_source = true;
+                prov.source = s.clone();
+            }
+            Annotation::Locator(s) => {
+                if saw_locator {
+                    return Err(LowerError::DuplicateAnnotation { name: "locator" });
+                }
+                saw_locator = true;
+                prov.locator = Some(s.clone());
+            }
+            Annotation::Trust(name) => {
+                if saw_trust {
+                    return Err(LowerError::DuplicateAnnotation { name: "trust" });
+                }
+                saw_trust = true;
+                prov.trust_tier = match name {
+                    TrustTierName::Consensus => TrustTier::Consensus,
+                    TrustTierName::Authoritative => TrustTier::Authoritative,
+                    TrustTierName::Empirical => TrustTier::Empirical,
+                    TrustTierName::Inferred => TrustTier::Inferred,
+                    TrustTierName::Unattributed => TrustTier::Unattributed,
+                };
+            }
+            Annotation::Cites { source, locator } => {
+                prov.corroborations
+                    .push(Citation::new(source.clone(), locator.clone()));
+            }
+            Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            } => {
+                // A row may pin its OWN span (RS-4 PR-D4). Same fail-closed
+                // well-formedness checks as the envelope path; a row that does
+                // not pin simply inherits whatever the table envelope pinned.
+                let hash = ContentHash::from_hex(snapshot_hex).ok_or({
+                    LowerError::MalformedQuotePin {
+                        reason: "snapshot must be a 64-character lowercase SHA-256 hex string",
+                    }
+                })?;
+                let with = prov
+                    .clone()
+                    .with_quote(text.clone(), Some(*byte_offset), Some(hash));
+                if with.quote.is_unmigrated() {
+                    return Err(LowerError::MalformedQuotePin {
+                        reason: "quote text has no visible content to anchor",
+                    });
+                }
+                prov = with;
+            }
+        }
+    }
+    Ok(prov)
+}
+
 fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, LowerError> {
     let mut source: Option<String> = None;
     let mut locator: Option<String> = None;
@@ -789,6 +2201,9 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     // ADJ-A9: corroborating citations are REPEATABLE — accumulate in source
     // order rather than rejecting duplicates.
     let mut corroborations: Vec<Citation> = Vec::new();
+    // RS-4 PR-D4: a single optional pinned quote (verbatim text, byte offset,
+    // snapshot hash). Applied after the base provenance is built.
+    let mut quote_pin: Option<(String, usize, String)> = None;
 
     for a in annotations {
         match a {
@@ -819,6 +2234,16 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
             Annotation::Cites { source, locator } => {
                 corroborations.push(Citation::new(source.clone(), locator.clone()));
             }
+            Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            } => {
+                if quote_pin.is_some() {
+                    return Err(LowerError::DuplicateAnnotation { name: "quote" });
+                }
+                quote_pin = Some((text.clone(), *byte_offset, snapshot_hex.clone()));
+            }
         }
     }
 
@@ -837,7 +2262,1294 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     // ADJ-A9: attach any corroborating citations (documentary only — they do
     // not change the LR arithmetic, only what the audit trail can list).
     prov.corroborations = corroborations;
+
+    // RS-4 PR-D4 (§E.3.1): apply a pinned quote, if one was written. The
+    // hex must parse to a 64-char SHA-256, and the text must carry visible
+    // content — both are FAIL-CLOSED here so a malformed pin never reaches the
+    // engine as a half-built `Verbatim` span. The *anchored* check (does the
+    // text really sit at `byte_offset` in the snapshot?) runs later, once the
+    // program's snapshot bundle is resolvable — a hand-authored offset that
+    // doesn't verify is caught there, not silently trusted.
+    if let Some((text, byte_offset, snapshot_hex)) = quote_pin {
+        let hash = ContentHash::from_hex(&snapshot_hex).ok_or(LowerError::MalformedQuotePin {
+            reason: "snapshot must be a 64-character lowercase SHA-256 hex string",
+        })?;
+        let with = prov.clone().with_quote(text, Some(byte_offset), Some(hash));
+        // `with_quote` degrades a blank/invisible span to `Unmigrated`. A pin
+        // that names a snapshot but carries no checkable text is malformed, not
+        // a silent partial — refuse it.
+        if with.quote.is_unmigrated() {
+            return Err(LowerError::MalformedQuotePin {
+                reason: "quote text has no visible content to anchor",
+            });
+        }
+        prov = with;
+    }
+
     Ok(prov)
+}
+
+/// Lower only a formula's provenance envelope, without registering or executing it.
+///
+/// Audit tooling uses this to join a parser-backed formula declaration to the
+/// exact provenance object retained by the computation plan. It deliberately
+/// shares the lowerer's validation path instead of reproducing annotation rules.
+pub(crate) fn formula_provenance(fd: &FormulaDef) -> Result<Provenance, LowerError> {
+    validate_formula(fd)?;
+    annotations_to_provenance(&fd.annotations)
+}
+
+// ---------------------------------------------------------------------------
+// Formula libraries (ADJ-FORMULA-LIBRARIES rung-0)
+// ---------------------------------------------------------------------------
+
+/// Validate a `formula` at registration time: (1) **parameter-scoping** — every
+/// identifier leaf in the body must name a declared parameter, so a stray
+/// identifier is a clean compile error rather than a silent mis-binding at apply
+/// time; and (2) the **provenance-required lint** — a shipped formula must carry
+/// a non-empty `source`, mirroring the recall-library adversarial write gate.
+fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
+    // Scope grows LEFT-TO-RIGHT (RS-2): the parameters are in scope everywhere;
+    // each `let`-step may reference the parameters plus any EARLIER step's name,
+    // and after a step it binds its own name; the final body may reference the
+    // parameters plus ALL step names. An identifier that resolves to none of
+    // these is a clean free-variable error.
+    let mut in_scope: std::collections::HashSet<String> = fd.params.iter().cloned().collect();
+    let check =
+        |expr: &ExprAst, scope: &std::collections::HashSet<String>| -> Result<(), LowerError> {
+            validate_formula_expr_depth(expr)?;
+            let mut refs = Vec::new();
+            collect_refs(expr, &mut refs);
+            for r in refs {
+                if !scope.contains(&r) {
+                    return Err(LowerError::FormulaFreeVariable {
+                        formula: fd.name.clone(),
+                        variable: r,
+                    });
+                }
+            }
+            Ok(())
+        };
+    for step in &fd.steps {
+        check(&step.expr, &in_scope)?;
+        in_scope.insert(step.name.clone());
+    }
+    check(&fd.body, &in_scope)?;
+    // Preconditions are gates over CALLER-BOUND PARAMETERS. Formula-local
+    // `let` names do not exist until body materialization and therefore are not
+    // in scope here. The surface shape is generic; execution is deliberately a
+    // closed set so an unknown predicate can never be treated as truthy.
+    let parameter_scope: std::collections::HashSet<String> = fd.params.iter().cloned().collect();
+    for precondition in &fd.preconditions {
+        match precondition.predicate.as_str() {
+            "nonzero" => {
+                if precondition.arguments.len() != 1 {
+                    return Err(LowerError::FormulaPreconditionArity {
+                        formula: fd.name.clone(),
+                        predicate: precondition.predicate.clone(),
+                        expected: 1,
+                        got: precondition.arguments.len(),
+                    });
+                }
+            }
+            _ => {
+                return Err(LowerError::FormulaUnknownPrecondition {
+                    formula: fd.name.clone(),
+                    predicate: precondition.predicate.clone(),
+                })
+            }
+        }
+        for argument in &precondition.arguments {
+            check(argument, &parameter_scope)?;
+            if contains_formula_application(argument) {
+                return Err(LowerError::FormulaPreconditionApplicationUnsupported {
+                    formula: fd.name.clone(),
+                    predicate: precondition.predicate.clone(),
+                });
+            }
+        }
+    }
+    // Reuse the shared provenance path (the same relate/rule/prior use), then
+    // enforce that the primary `source` span is non-empty.
+    let prov = annotations_to_provenance(&fd.annotations)?;
+    if prov.source.trim().is_empty() {
+        return Err(LowerError::FormulaMissingProvenance {
+            formula: fd.name.clone(),
+        });
+    }
+    Ok(())
+}
+
+fn contains_formula_application(expr: &ExprAst) -> bool {
+    let mut pending = vec![expr];
+    while let Some(node) = pending.pop() {
+        match node {
+            ExprAst::Apply(_, _) => return true,
+            ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+                pending.push(right);
+                pending.push(left);
+            }
+            ExprAst::Abs(inner)
+            | ExprAst::Floor(inner)
+            | ExprAst::Ceil(inner)
+            | ExprAst::Round(inner)
+            | ExprAst::RoundTo(inner, _)
+            | ExprAst::ToScientific(inner, _)
+            | ExprAst::ToPercent(inner, _)
+            | ExprAst::ToCurrency(inner, _, _)
+            | ExprAst::Trunc(inner)
+            | ExprAst::Sign(inner)
+            | ExprAst::Call(_, inner) => pending.push(inner),
+            ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {}
+        }
+    }
+    false
+}
+
+/// Collect every identifier leaf of an [`ExprAst`] — a [`ExprAst::Ref`] name or
+/// an [`ExprAst::Agg`] slot — into `out`. Used by [`validate_formula`] to check
+/// parameter-scoping. Numbers and operators contribute no identifiers.
+fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
+    let mut pending = vec![expr];
+    while let Some(expr) = pending.pop() {
+        match expr {
+            ExprAst::Ref(name) => out.push(name.clone()),
+            ExprAst::Agg(_, slot) => out.push(slot.clone()),
+            ExprAst::Lit(_) | ExprAst::ExactLit(_) => {}
+            ExprAst::Bin(_, a, b) | ExprAst::Call2(_, a, b) => {
+                pending.push(b);
+                pending.push(a);
+            }
+            ExprAst::Abs(a)
+            | ExprAst::Floor(a)
+            | ExprAst::Ceil(a)
+            | ExprAst::Round(a)
+            | ExprAst::RoundTo(a, _)
+            | ExprAst::ToScientific(a, _)
+            | ExprAst::ToPercent(a, _)
+            | ExprAst::ToCurrency(a, _, _)
+            | ExprAst::Trunc(a)
+            | ExprAst::Sign(a)
+            | ExprAst::Call(_, a) => pending.push(a),
+            // A formula application's callee NAME is a formula reference, not an
+            // identifier leaf — so it is NOT a candidate free variable (parameter
+            // scoping only constrains the value leaves). Only its ARGUMENTS carry
+            // identifier leaves that must resolve to declared parameters. (Whether the
+            // callee name resolves to a known formula is checked at APPLY time, not
+            // here, so a formula may legally reference a sibling declared later in the
+            // same book — forward references resolve in the expansion pass.)
+            ExprAst::Apply(_, args) => {
+                pending.extend(args.iter().rev());
+            }
+        }
+    }
+}
+
+fn validate_formula_expr_depth(expr: &ExprAst) -> Result<(), LowerError> {
+    let mut pending = vec![(expr, 0_usize)];
+    while let Some((node, depth)) = pending.pop() {
+        let child_depth = match node {
+            ExprAst::Bin(_, _, _)
+            | ExprAst::Call2(_, _, _)
+            | ExprAst::Abs(_)
+            | ExprAst::Floor(_)
+            | ExprAst::Ceil(_)
+            | ExprAst::Round(_)
+            | ExprAst::RoundTo(_, _)
+            | ExprAst::ToScientific(_, _)
+            | ExprAst::ToPercent(_, _)
+            | ExprAst::ToCurrency(_, _, _)
+            | ExprAst::Trunc(_)
+            | ExprAst::Sign(_)
+            | ExprAst::Call(_, _)
+            | ExprAst::Apply(_, _) => Some(descend(depth)?),
+            ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => None,
+        };
+        let Some(child_depth) = child_depth else {
+            continue;
+        };
+        match node {
+            ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+                pending.push((right, child_depth));
+                pending.push((left, child_depth));
+            }
+            ExprAst::Abs(inner)
+            | ExprAst::Floor(inner)
+            | ExprAst::Ceil(inner)
+            | ExprAst::Round(inner)
+            | ExprAst::RoundTo(inner, _)
+            | ExprAst::ToScientific(inner, _)
+            | ExprAst::ToPercent(inner, _)
+            | ExprAst::ToCurrency(inner, _, _)
+            | ExprAst::Trunc(inner)
+            | ExprAst::Sign(inner)
+            | ExprAst::Call(_, inner) => pending.push((inner, child_depth)),
+            ExprAst::Apply(_, arguments) => {
+                pending.extend(arguments.iter().rev().map(|arg| (arg, child_depth)));
+            }
+            ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {}
+        }
+    }
+    Ok(())
+}
+
+fn unavailable_expression(
+    expr: &ExprAst,
+    unavailable: &HashMap<String, FormulaAbstention>,
+) -> Option<FormulaAbstention> {
+    let mut refs = Vec::new();
+    collect_refs(expr, &mut refs);
+    refs.into_iter()
+        .find_map(|name| unavailable.get(&name).cloned())
+}
+
+fn unavailable_query_argument(
+    goal: &AstTerm,
+    unavailable: &HashMap<String, FormulaAbstention>,
+) -> Option<FormulaAbstention> {
+    let AstTerm::Compound { args, .. } = goal else {
+        return None;
+    };
+    args.iter().find_map(|argument| match argument {
+        AstTerm::Atom(name) => unavailable.get(name).cloned(),
+        _ => None,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Formula-application composition (ADJ-RULE-SUBSTRATE RS-1)
+// ---------------------------------------------------------------------------
+
+/// Maximum formula-application nesting depth. Mirrors the arithmetic evaluator's
+/// own [`logic_engine::compute::MAX_EVAL_DEPTH`] (=256): a genuine composed
+/// formula (`ratio = quotient(…)`, `cockcroft_gault = quotient(product(…), …)`)
+/// is a handful of applications deep, so this is a **safety backstop** — not a
+/// modelling constraint — against a self- or mutually-recursive formula
+/// (`formula f(x) = f(x)`) expanding forever. Exceeding it is a clean, typed
+/// [`LowerError::FormulaRecursionTooDeep`], never a stack overflow.
+const FORMULA_MAX_APPLY_DEPTH: usize = 256;
+
+/// Maximum TOTAL number of AST nodes a single formula application may expand into
+/// (ADJ-RULE-SUBSTRATE RS-1). This is the size guard that the depth guard
+/// ([`FORMULA_MAX_APPLY_DEPTH`]) cannot subsume: a body that names a parameter
+/// more than once (`g(x) = x * x`) duplicates the bound subtree on substitution,
+/// so composing such formulas grows the expanded tree exponentially (`2ⁿ`) while
+/// depth grows linearly. Charged on every substituted / emitted node and checked
+/// BEFORE a duplicated subtree is materialised, so an adversarial formulabook
+/// bails in microseconds instead of OOMing. 10_000 nodes is orders of magnitude
+/// more than any legitimate composed clinical formula needs (they are a handful of
+/// applications deep) yet a negligible fraction of the exponential blow-up.
+const FORMULA_MAX_EXPANSION_NODES: usize = 10_000;
+
+/// The largest `n` accepted by the `round_to(x, n)` built-in (NUM-6a). A DoS
+/// guard: rounding an exact rational to `n` decimal places materializes up to `n`
+/// digits, so an unbounded `n` (`round_to(x, 1000000000)`) would ask the exact
+/// path for a gigabyte-scale mantissa. 100 places is far beyond the engine's own
+/// default precision (256 bits ≈ 77 significant digits, ADJ-NUMERIC-SUBSTRATE §3)
+/// and any real measurement, so the cap constrains only pathological inputs.
+const MAX_ROUND_PLACES: u32 = 100;
+
+fn expression_literal_f64(expr: &ExprAst) -> Option<f64> {
+    match expr {
+        ExprAst::Lit(value) => Some(*value),
+        ExprAst::ExactLit(value) => Some(value.to_f64_lossy()),
+        _ => None,
+    }
+}
+
+fn bounded_precision_literal(expr: &ExprAst, minimum: f64) -> Option<u32> {
+    let value = expression_literal_f64(expr)?;
+    (value.fract() == 0.0 && value >= minimum && value <= MAX_ROUND_PLACES as f64)
+        .then_some(value as u32)
+}
+
+/// The significant-figure count `to_scientific(x)` uses when the surface omits it
+/// (NUM-6c). Six is the conventional default mantissa precision for scientific
+/// notation (`6.02214e23`) and comfortably inside [`MAX_ROUND_PLACES`]; an explicit
+/// `to_scientific(x, n)` overrides it. The default is applied here at lowering, so the
+/// engine node always carries a concrete `figures` count and the audit records what was
+/// used regardless of whether the writer stated it.
+const DEFAULT_SCI_FIGURES: u32 = 6;
+
+/// The decimal-place count `to_percent(x)` uses when the surface omits it (NUM-6c). Two
+/// is the conventional default for a formatted percentage (`"33.33%"`) and matches the
+/// precision-sensitive framing of §4 (the `$100M-per-point` case); an explicit
+/// `to_percent(x, n)` overrides it. Applied at lowering, so the engine node always carries
+/// a concrete `places` count and the audit records what was used. Unlike the significant-
+/// figure ops, `places = 0` is a valid explicit argument (`to_percent(x, 0) = "50%"`).
+const DEFAULT_PERCENT_PLACES: u32 = 2;
+
+/// The decimal-place count `to_currency(x, code)` uses when the surface omits it (NUM-6c).
+/// Two is the common minor-unit precision (cents, pence) and matches the ISO-4217 default
+/// for the major currencies; an explicit `to_currency(x, code, n)` overrides it (e.g. `0`
+/// for JPY, `3` for KWD). Applied at lowering, so the engine node always carries a concrete
+/// `places` count and the audit records what was used. `places = 0` is a valid argument.
+const DEFAULT_CURRENCY_PLACES: u32 = 2;
+
+/// Maximum AST-nesting depth the expansion/substitution/clone walkers may descend
+/// in a single expression (ADJ-RULE-SUBSTRATE RS-1). The node budget bounds total
+/// SIZE but not DEPTH: a left-leaning operator spine (`x + 0 + 0 + … + 0`) is one
+/// node wide per level yet arbitrarily deep, and the recursive walkers descend it
+/// frame-for-frame — so a deep spine would overflow the native stack (an uncatchable
+/// abort) before the node budget, which only trips at the bottom of the descent,
+/// could fire. This caps walker recursion so a pathological spine is a clean typed
+/// error, never a crash.
+///
+/// The value (96) stays below [`adapter`](crate::adapter)'s `SUBST_DEPTH_BUDGET`, chosen
+/// there for the identical reason: these walkers carry non-trivial per-frame state
+/// (a `HashMap` of substitutions, `Vec` accumulators), so a *few hundred* debug-build
+/// frames already approach the default ~2 MiB worker-thread stack. 96 keeps the walk
+/// comfortably within that budget on any stack the compiler might run on, while being
+/// far deeper than any legitimate formula body or bound expression (a handful of
+/// levels); anything deeper the evaluator's own `MAX_EVAL_DEPTH` would reject anyway.
+const FORMULA_MAX_NODE_DEPTH: usize = 96;
+
+/// Descend one AST level, failing with a clean [`LowerError::FormulaNestingTooDeep`]
+/// the moment the walker would exceed [`FORMULA_MAX_NODE_DEPTH`] frames. Returns the
+/// child depth to pass to the recursive call, so a walker reads
+/// `walk(child, …, descend(node_depth)?)` at every recursion — the check happens
+/// BEFORE the recursive call is made, so the stack never actually grows past the cap.
+fn descend(node_depth: usize) -> Result<usize, LowerError> {
+    if node_depth >= FORMULA_MAX_NODE_DEPTH {
+        Err(LowerError::FormulaNestingTooDeep {
+            limit: FORMULA_MAX_NODE_DEPTH,
+        })
+    } else {
+        Ok(node_depth + 1)
+    }
+}
+
+/// Charge one node against the expansion budget, failing with a clean
+/// [`LowerError::FormulaExpansionTooLarge`] the moment the cap is exceeded. Called
+/// on every node [`substitute_expr`] / [`charged_clone`] / [`expand_rec`]
+/// materialise, so the `2ⁿ` tree is never fully built — the guard trips partway
+/// through the first oversized clone and unwinds.
+fn charge(budget: &mut usize) -> Result<(), LowerError> {
+    *budget += 1;
+    if *budget > FORMULA_MAX_EXPANSION_NODES {
+        Err(LowerError::FormulaExpansionTooLarge {
+            limit: FORMULA_MAX_EXPANSION_NODES,
+        })
+    } else {
+        Ok(())
+    }
+}
+
+/// Deep-clone `expr`, charging the expansion [`budget`](charge) for every node.
+/// Used by [`substitute_expr`] when a parameter reference is replaced by its bound
+/// argument subtree: a naive `.clone()` would copy an arbitrarily large subtree in
+/// one unmetered step (the `g(x) = x * x` duplication vector), so cloning THROUGH
+/// the budget is what makes the exponential bail early — the clone of the second
+/// `x` trips the cap and unwinds before the doubled tree exists.
+fn charged_clone(
+    expr: &ExprAst,
+    budget: &mut usize,
+    node_depth: usize,
+) -> Result<ExprAst, LowerError> {
+    charge(budget)?;
+    // Bound the descent as well as the size: a bound argument subtree can itself be
+    // an arbitrarily deep operator spine, so cloning it must not recurse without a
+    // frame cap (see [`FORMULA_MAX_NODE_DEPTH`]).
+    let d = descend(node_depth)?;
+    Ok(match expr {
+        ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {
+            expr.clone()
+        }
+        ExprAst::Bin(op, a, b) => ExprAst::Bin(
+            *op,
+            Box::new(charged_clone(a, budget, d)?),
+            Box::new(charged_clone(b, budget, d)?),
+        ),
+        ExprAst::Call2(f, a, b) => ExprAst::Call2(
+            *f,
+            Box::new(charged_clone(a, budget, d)?),
+            Box::new(charged_clone(b, budget, d)?),
+        ),
+        ExprAst::Abs(a) => ExprAst::Abs(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Floor(a) => ExprAst::Floor(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Round(a) => ExprAst::Round(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::RoundTo(a, n) => ExprAst::RoundTo(Box::new(charged_clone(a, budget, d)?), *n),
+        ExprAst::ToScientific(a, n) => {
+            ExprAst::ToScientific(Box::new(charged_clone(a, budget, d)?), *n)
+        }
+        ExprAst::ToPercent(a, n) => ExprAst::ToPercent(Box::new(charged_clone(a, budget, d)?), *n),
+        ExprAst::ToCurrency(a, code, n) => {
+            ExprAst::ToCurrency(Box::new(charged_clone(a, budget, d)?), code.clone(), *n)
+        }
+        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Apply(name, args) => {
+            let mut out = Vec::with_capacity(args.len());
+            for a in args {
+                out.push(charged_clone(a, budget, d)?);
+            }
+            ExprAst::Apply(name.clone(), out)
+        }
+    })
+}
+
+/// A `contributes … from <formula-app> <op> <thr>` clause held for the deferred
+/// branch-on-formula pass (see [`lower`]). Its LHS formula must be computed after
+/// every `observe` is in the KB, so the branch (declared in a library) and the
+/// numbers (supplied by a consumer) can meet.
+struct DeferredFormulaPredicate {
+    /// The formula-application LHS (e.g. `bmi(body_mass, height)`).
+    lhs: ExprAst,
+    op: CmpOp,
+    /// The threshold expression (`30`); may itself apply a formula.
+    rhs: ExprAst,
+    /// The saturating likelihood ratio (already `check_lr`-validated).
+    lr: f64,
+    /// The verdict this branch supports (`obese`), already lowered.
+    conclusion: CoreTerm,
+    /// The branch clause's OWN provenance (e.g. WHO's obesity threshold) — distinct
+    /// from the applied formula's provenance, which rides on the derived slot.
+    prov: Provenance,
+}
+
+/// Recursively expand every [`ExprAst::Apply`] in `expr` into the applied
+/// formula's substituted body — the RS-1 composition core — returning the
+/// fully-expanded, application-free [`ExprAst`] ready for [`lower_expr`], PLUS the
+/// ordered provenance chain of every formula applied during expansion.
+///
+/// ## What "expand" means
+///
+/// `formula ratio(numerator, denominator) = quotient(numerator, denominator)`
+/// applied as `ratio(a, b)` first substitutes `numerator → a`, `denominator → b`
+/// to get `quotient(a, b)`; expanding THAT substitutes `quotient`'s own body
+/// (`dividend / divisor`) to get `a / b`. Both formulas' provenances are collected
+/// so the composed derivation cites each (see [`compose_provenance`]).
+///
+/// ## Totality — always halt or error, never hang
+///
+/// `depth` counts formula-body entries (not AST nodes): each time we descend into
+/// a callee's substituted body we recurse at `depth + 1`, and once it reaches
+/// [`FORMULA_MAX_APPLY_DEPTH`] a self/mutually-recursive formula returns a clean
+/// [`LowerError::FormulaRecursionTooDeep`] instead of overflowing the stack. This
+/// is the compute analogue of the resolver's recursion guard — the substrate is
+/// total by construction.
+fn expand_applies(
+    expr: &ExprAst,
+    formulas: &HashMap<&str, &FormulaDef>,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(ExprAst, Vec<Provenance>), LowerError> {
+    let mut applications = Vec::new();
+    let mut guards = Vec::new();
+    expand_applies_traced(expr, formulas, kb, depth, &mut applications, &mut guards)
+}
+
+fn expand_applies_traced(
+    expr: &ExprAst,
+    formulas: &HashMap<&str, &FormulaDef>,
+    kb: &KnowledgeBase,
+    depth: usize,
+    applications: &mut Vec<FormulaApplicationTrace>,
+    guards: &mut Vec<FormulaGuardTrace>,
+) -> Result<(ExprAst, Vec<Provenance>), LowerError> {
+    let mut chain = Vec::new();
+    // One shared node budget for the WHOLE expansion. The depth guard bounds
+    // recursion LEVELS; this bounds total expanded SIZE, so a body that reuses a
+    // parameter (`x * x`) composed n deep cannot balloon to 2^n nodes — the cap
+    // trips first, in O(cap) time, with a clean `FormulaExpansionTooLarge`.
+    // The names of the formulas currently OPEN on the expansion path (a stack). A
+    // formula that names itself — directly (`loop(x) = loop(x)`) or through a cycle
+    // (`a = b`, `b = a`) — reappears on this path at the moment it re-enters, so we
+    // reject it in O(1) at recursion depth 1 rather than letting `expand_rec` nest
+    // hundreds of frames deep and overflow the stack before the numeric depth guard
+    // trips. This is path-scoped: a formula legitimately applied twice in SIBLING
+    // positions (`f(x) = g(x) + g(x)`) is popped off the path between the two uses,
+    // so reuse is never mistaken for recursion.
+    let context = FormulaExpansionContext { formulas, kb };
+    let mut state = FormulaExpansionState {
+        chain: &mut chain,
+        applications,
+        guards,
+        active: Vec::new(),
+        budget: 0,
+    };
+    let expanded = expand_rec(expr, &context, depth, &mut state, 0)?;
+    Ok((expanded, chain))
+}
+
+struct FormulaExpansionContext<'context, 'formula> {
+    formulas: &'context HashMap<&'formula str, &'formula FormulaDef>,
+    kb: &'context KnowledgeBase,
+}
+
+struct FormulaExpansionState<'state> {
+    chain: &'state mut Vec<Provenance>,
+    applications: &'state mut Vec<FormulaApplicationTrace>,
+    guards: &'state mut Vec<FormulaGuardTrace>,
+    active: Vec<String>,
+    budget: usize,
+}
+
+/// The recursive worker for [`expand_applies`]. Walks the expression; at an
+/// [`ExprAst::Apply`] it resolves the callee, checks arity, expands the arguments
+/// (siblings, same depth), records the callee's provenance, substitutes into the
+/// callee body, and expands THAT body at `depth + 1`. Every other node is rebuilt
+/// with its children expanded at the same depth.
+#[inline(never)]
+fn expand_rec(
+    expr: &ExprAst,
+    context: &FormulaExpansionContext<'_, '_>,
+    depth: usize,
+    state: &mut FormulaExpansionState<'_>,
+    node_depth: usize,
+) -> Result<ExprAst, LowerError> {
+    // Charge one node for every node we visit/emit. This is the SIZE guard: the
+    // shared budget is threaded through the entire recursion, so an exponentially
+    // branching composition (`pₙ(x) = pₙ₋₁(x) * pₙ₋₁(x)`) trips the cap after
+    // `FORMULA_MAX_EXPANSION_NODES` visits — in O(cap) time — instead of building
+    // a 2ⁿ tree. The depth guard alone cannot bound this (depth grows linearly
+    // while size grows exponentially).
+    charge(&mut state.budget)?;
+    // The DEPTH guard, orthogonal to both the size budget and the formula-apply
+    // depth: this walker descends one native stack frame per AST level, so a deep
+    // operator spine (`x + 0 + 0 + …`) — small in size, huge in depth — would
+    // overflow the stack (an uncatchable abort) if only the size budget bounded it,
+    // because that budget trips only at the BOTTOM of the descent. `d` is the depth
+    // to pass to every child recursion; `descend` errors cleanly the moment the walk
+    // would exceed `FORMULA_MAX_NODE_DEPTH` frames (see there).
+    let d = descend(node_depth)?;
+    match expr {
+        ExprAst::Apply(name, args) => {
+            // NUM-6a/6b built-ins: `round_to(x, n)` (n decimal PLACES) and
+            // `round_sig(x, n)` (n significant FIGURES) — the precision narrowings.
+            // Recognised by NAME here, BEFORE the user-formula lookup, so they need no
+            // formula definition; they reuse the same comma-list application grammar as
+            // user formulas (`quotient(a, b)`), which is why no new grammar or LaTeX
+            // surface is required (ADJ-NUMERIC-SUBSTRATE §4.1). The value arg `x` is
+            // expanded (it may itself be an application); the precision `n` must be an
+            // INTEGER literal within the DoS cap [`MAX_ROUND_PLACES`] — non-negative for
+            // `round_to`, and ≥ 1 for `round_sig` (zero significant figures is
+            // meaningless). A variable, fraction, out-of-range, or oversized `n` is a
+            // clean compile error, never a silent mis-rounding.
+            if name == "round_to" || name == "round_sig" {
+                if args.len() != 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let min = if name == "round_sig" { 1.0 } else { 0.0 };
+                let n = bounded_precision_literal(&args[1], min).ok_or_else(|| {
+                    LowerError::FormulaBadArgument {
+                        formula: name.clone(),
+                    }
+                })?;
+                let spec = if name == "round_sig" {
+                    logic_engine::RoundSpec::SigFigures(n)
+                } else {
+                    logic_engine::RoundSpec::Places(n)
+                };
+                let value = expand_rec(&args[0], context, depth, state, d)?;
+                return Ok(ExprAst::RoundTo(Box::new(value), spec));
+            }
+            // NUM-6c built-in: `to_scientific(x [, figures])` — the scientific-notation
+            // rendering. Recognised by NAME here, before the user-formula lookup, on the
+            // same comma-list application grammar. `figures` is OPTIONAL: `to_scientific(x)`
+            // uses the default mantissa precision [`DEFAULT_SCI_FIGURES`]; a stated
+            // `to_scientific(x, n)` requires `n` a positive integer literal (`≥ 1`, since a
+            // scientific mantissa has at least one significant figure) within the precision
+            // cap [`MAX_ROUND_PLACES`]. A non-integer, zero, negative, oversized, or
+            // non-literal `n`, or the wrong number of arguments, is a clean compile error.
+            if name == "to_scientific" {
+                if args.is_empty() || args.len() > 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let figures = if args.len() == 2 {
+                    bounded_precision_literal(&args[1], 1.0).ok_or_else(|| {
+                        LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        }
+                    })?
+                } else {
+                    DEFAULT_SCI_FIGURES
+                };
+                let value = expand_rec(&args[0], context, depth, state, d)?;
+                return Ok(ExprAst::ToScientific(Box::new(value), figures));
+            }
+            // NUM-6c built-in: `to_percent(x [, places])` — the percentage rendering.
+            // Recognised by NAME here, before the user-formula lookup, on the same
+            // comma-list application grammar. `places` is OPTIONAL: `to_percent(x)` uses
+            // the default [`DEFAULT_PERCENT_PLACES`]; a stated `to_percent(x, n)` requires
+            // `n` a NON-NEGATIVE integer literal (`≥ 0` — zero places is meaningful,
+            // `"50%"`) within the precision cap [`MAX_ROUND_PLACES`]. A non-integer,
+            // negative, oversized, or non-literal `n`, or the wrong argument count, is a
+            // clean compile error.
+            if name == "to_percent" {
+                if args.is_empty() || args.len() > 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let places = if args.len() == 2 {
+                    bounded_precision_literal(&args[1], 0.0).ok_or_else(|| {
+                        LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        }
+                    })?
+                } else {
+                    DEFAULT_PERCENT_PLACES
+                };
+                let value = expand_rec(&args[0], context, depth, state, d)?;
+                return Ok(ExprAst::ToPercent(Box::new(value), places));
+            }
+            // NUM-6c built-in: `to_currency(x, code [, places])` — the money rendering.
+            // Recognised by NAME here, before the user-formula lookup. The SECOND argument
+            // is the currency CODE — a bare identifier (`USD`) taken verbatim: it parses as
+            // an `ExprAst::Ref` and is NOT resolved as a slot (we read its name directly and
+            // never expand it). `places` is OPTIONAL (3rd arg): default [`DEFAULT_CURRENCY_PLACES`];
+            // a stated count must be a NON-NEGATIVE integer literal (`≥ 0` — `to_currency(x,
+            // JPY, 0)`) within the precision cap [`MAX_ROUND_PLACES`]. A missing/non-identifier
+            // code, a non-integer/negative/oversized/non-literal `places`, or the wrong argument
+            // count is a clean compile error.
+            if name == "to_currency" {
+                if args.len() < 2 || args.len() > 3 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 3,
+                        got: args.len(),
+                    });
+                }
+                // The code is a bare identifier (an un-expanded `Ref`); anything else is a
+                // bad argument (a number, a formula application, an already-substituted value).
+                // Identifiers lex lowercase (`usd`), but currency codes are canonically the
+                // uppercase ISO-4217 form, so we normalize to uppercase for the rendered
+                // `CODE d.dd` string and the audit record — `usd` → `USD 33.33`.
+                let code = match &args[1] {
+                    ExprAst::Ref(c) if !c.is_empty() => c.to_uppercase(),
+                    _ => {
+                        return Err(LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        })
+                    }
+                };
+                let places = if args.len() == 3 {
+                    bounded_precision_literal(&args[2], 0.0).ok_or_else(|| {
+                        LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        }
+                    })?
+                } else {
+                    DEFAULT_CURRENCY_PLACES
+                };
+                let value = expand_rec(&args[0], context, depth, state, d)?;
+                return Ok(ExprAst::ToCurrency(Box::new(value), code, places));
+            }
+            // Resolve the callee against the SAME registry the top-level query path
+            // uses. An unknown name is a clean, specific error — distinct from an
+            // aggregation or built-in call, which never reach here (they are separate
+            // AST nodes recognised earlier in the grammar).
+            let fd = *context
+                .formulas
+                .get(name.as_str())
+                .ok_or_else(|| LowerError::FormulaUnknown { name: name.clone() })?;
+            if fd.params.len() != args.len() {
+                return Err(LowerError::FormulaArity {
+                    formula: name.clone(),
+                    expected: fd.params.len(),
+                    got: args.len(),
+                });
+            }
+            // Expand the ARGUMENTS first — an argument may itself be an application
+            // (`ratio(product(a, b), c)`). They are siblings of this call, so they
+            // expand at the SAME depth (they are not a deeper formula body).
+            let mut subst: HashMap<String, ExprAst> = HashMap::new();
+            for (param, arg) in fd.params.iter().zip(args.iter()) {
+                subst.insert(param.clone(), expand_rec(arg, context, depth, state, d)?);
+            }
+            let provenance = annotations_to_provenance(&fd.annotations)?;
+            state.applications.push(FormulaApplicationTrace {
+                formula: fd.name.clone(),
+                provenance: provenance.clone(),
+            });
+            enforce_preconditions(fd, &subst, context.kb, state.applications, state.guards)?;
+            // The cycle guard: if this formula is already OPEN on the expansion path,
+            // re-entering it is (directly or mutually) recursive. ADJ formulas have
+            // no base case, so a cycle can only diverge — reject it here, in O(1), at
+            // the moment of re-entry, so we never nest deep enough to overflow the
+            // stack.
+            if state.active.iter().any(|n| n == name) {
+                return Err(LowerError::FormulaRecursionTooDeep {
+                    formula: name.clone(),
+                    limit: FORMULA_MAX_APPLY_DEPTH,
+                });
+            }
+            // The depth guard: a belt-and-suspenders bound on a legitimately deep (but
+            // acyclic) composition. Entering the callee's body is one level deeper.
+            if depth + 1 >= FORMULA_MAX_APPLY_DEPTH {
+                return Err(LowerError::FormulaRecursionTooDeep {
+                    formula: name.clone(),
+                    limit: FORMULA_MAX_APPLY_DEPTH,
+                });
+            }
+            // Record this formula's provenance in the composition chain (outer
+            // formulas appear before the inner formulas they call).
+            state.chain.push(provenance);
+            // Bind params → expanded args, substitute into the callee body (charged
+            // against the same budget), and expand that body in turn
+            // (formula-calls-formula) at depth + 1. The callee is pushed onto the
+            // active path for the duration of its body expansion and popped after, so
+            // a later SIBLING application of the same formula is not seen as a cycle.
+            // Fold the callee's `let`-steps (RS-2) into its effective body FIRST
+            // so a multi-step callee composes correctly when called from another
+            // formula, then substitute the caller's args into it.
+            let callee_body = effective_body(fd, &mut state.budget, d)?;
+            let substituted = substitute_expr(&callee_body, &subst, &mut state.budget, d)?;
+            state.active.push(name.clone());
+            let expanded = expand_rec(&substituted, context, depth + 1, state, d);
+            state.active.pop();
+            expanded
+        }
+        // Leaves carry no application.
+        ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {
+            Ok(expr.clone())
+        }
+        // Binary nodes: expand both operands at the same depth.
+        ExprAst::Bin(op, a, b) => Ok(ExprAst::Bin(
+            *op,
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            Box::new(expand_rec(b, context, depth, state, d)?),
+        )),
+        ExprAst::Call2(f, a, b) => Ok(ExprAst::Call2(
+            *f,
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            Box::new(expand_rec(b, context, depth, state, d)?),
+        )),
+        // Unary nodes: expand the single operand.
+        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(
+            a, context, depth, state, d,
+        )?))),
+        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(
+            a, context, depth, state, d,
+        )?))),
+        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(
+            a, context, depth, state, d,
+        )?))),
+        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(
+            a, context, depth, state, d,
+        )?))),
+        ExprAst::RoundTo(a, n) => Ok(ExprAst::RoundTo(
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            *n,
+        )),
+        ExprAst::ToScientific(a, n) => Ok(ExprAst::ToScientific(
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            *n,
+        )),
+        ExprAst::ToPercent(a, n) => Ok(ExprAst::ToPercent(
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            *n,
+        )),
+        ExprAst::ToCurrency(a, code, n) => Ok(ExprAst::ToCurrency(
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            code.clone(),
+            *n,
+        )),
+        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(
+            a, context, depth, state, d,
+        )?))),
+        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(
+            a, context, depth, state, d,
+        )?))),
+        ExprAst::Call(f, a) => Ok(ExprAst::Call(
+            *f,
+            Box::new(expand_rec(a, context, depth, state, d)?),
+        )),
+    }
+}
+
+/// Compose a derived value's provenance from a `primary` envelope plus the chain
+/// of formulas applied to produce it (RS-1). The primary is the outer claim's own
+/// cite (e.g. `ratio`'s definition); each applied formula's primary span becomes a
+/// **corroborating** [`Citation`] (documentary only — it carries no LR weight, it
+/// just lets the audit trail list every formula that participated). So a value
+/// computed as `ratio` *via* `quotient` renders BOTH citations.
+fn compose_provenance(mut primary: Provenance, chain: &[Provenance]) -> Provenance {
+    for p in chain {
+        if !p.source.trim().is_empty() {
+            primary.corroborations.push(Citation::new(
+                p.source.clone(),
+                p.locator.clone().unwrap_or_default(),
+            ));
+        }
+        // Preserve any corroborations the applied formula itself carried.
+        for c in &p.corroborations {
+            primary.corroborations.push(c.clone());
+        }
+    }
+    primary
+}
+
+/// Compose provenance for a derivation that has NO claim of its own (a `let`, or a
+/// branch-on-formula derived slot) but applied one or more formulas. The first
+/// applied formula is the primary; the rest corroborate. Returns `None` when the
+/// chain is empty (a plain `let` over observed slots — no library claim to cite).
+fn compose_chain(chain: &[Provenance]) -> Option<Provenance> {
+    let (first, rest) = chain.split_first()?;
+    Some(compose_provenance(first.clone(), rest))
+}
+
+/// If the query `goal` is a FORMULA APPLICATION — its functor names a registered
+/// formula and its argument count matches that formula's parameter count —
+/// return the matching definition. A ground atom, a `$variable` goal, or an
+/// arity mismatch returns `None` (it is an ordinary query, not an application).
+fn formula_for_query<'a>(
+    goal: &AstTerm,
+    formulas: &HashMap<&str, &'a FormulaDef>,
+) -> Result<Option<&'a FormulaDef>, LowerError> {
+    if let AstTerm::Compound { functor, args } = goal {
+        if let Some(fd) = formulas.get(functor.as_str()) {
+            if fd.params.len() != args.len() {
+                return Err(LowerError::FormulaArity {
+                    formula: functor.clone(),
+                    expected: fd.params.len(),
+                    got: args.len(),
+                });
+            }
+            return Ok(Some(fd));
+        }
+    }
+    Ok(None)
+}
+
+/// APPLY a formula: bind each parameter to the correspondingly-positioned
+/// argument and substitute into the formula body, yielding a parameter-free
+/// [`ExprAst`] ready for the existing [`lower_expr`]/`compute` path. An argument
+/// that is a plain identifier binds the parameter to a like-named slot
+/// (`ExprAst::Ref`); a number literal binds it to that constant (`ExprAst::Lit`).
+/// Any other argument shape is a [`LowerError::FormulaBadArgument`].
+fn apply_formula(
+    fd: &FormulaDef,
+    goal: &AstTerm,
+    kb: &KnowledgeBase,
+    applications: &[FormulaApplicationTrace],
+    guards: &mut Vec<FormulaGuardTrace>,
+) -> Result<ExprAst, LowerError> {
+    let args: &[AstTerm] = match goal {
+        AstTerm::Compound { args, .. } => args,
+        _ => &[],
+    };
+    let mut subst: HashMap<String, ExprAst> = HashMap::new();
+    for (param, arg) in fd.params.iter().zip(args.iter()) {
+        let bound = match arg {
+            AstTerm::Atom(name) => ExprAst::Ref(name.clone()),
+            // Preserve a numeric argument through guard validation. The compute
+            // layer still consumes `f64`, so guarded calls reject a value-changing
+            // conversion before evaluation.
+            AstTerm::Num(x) => ExprAst::ExactLit(x.clone()),
+            _ => {
+                return Err(LowerError::FormulaBadArgument {
+                    formula: fd.name.clone(),
+                })
+            }
+        };
+        subst.insert(param.clone(), bound);
+    }
+    enforce_preconditions(fd, &subst, kb, applications, guards)?;
+    // A shallow, one-level substitution of leaf bindings (a query's args are atoms
+    // or numbers) — its own local budget guards a body that reuses a parameter; the
+    // deeper formula-calls-formula expansion of the resulting body runs later, in
+    // `expand_applies`, under that call's own shared budget. The `let`-steps
+    // (RS-2) are folded into a single effective body FIRST (so the param
+    // substitution below reaches into the inlined steps), then param-substituted.
+    let mut budget: usize = 0;
+    let effective = effective_body(fd, &mut budget, 0)?;
+    substitute_expr(&effective, &subst, &mut budget, 0)
+}
+
+/// Evaluate a formula's declared requirements against its bound arguments before
+/// materializing the body. A false or unresolved requirement is carried upward
+/// as structured abstention control flow; malformed requirements were already
+/// rejected by [`validate_formula`].
+#[inline(never)]
+fn enforce_preconditions(
+    fd: &FormulaDef,
+    subst: &HashMap<String, ExprAst>,
+    kb: &KnowledgeBase,
+    applications: &[FormulaApplicationTrace],
+    guards: &mut Vec<FormulaGuardTrace>,
+) -> Result<(), LowerError> {
+    for (
+        precondition_index,
+        FormulaPrecondition {
+            predicate,
+            arguments,
+        },
+    ) in fd.preconditions.iter().enumerate()
+    {
+        let provenance = annotations_to_provenance(&fd.annotations)?;
+        let parameter = match &arguments[0] {
+            ExprAst::Ref(name) => Some(name.clone()),
+            _ => None,
+        };
+        let mut budget = 0;
+        let argument = substitute_expr(&arguments[0], subst, &mut budget, 0)?;
+        let computed = match compute(
+            format!("__precondition_{}_{}", fd.name, predicate),
+            &lower_expr(&argument),
+            kb,
+        ) {
+            Ok(value) => value,
+            Err(error @ logic_engine::compute::ComputeError::UnknownSlot { .. })
+            | Err(error @ logic_engine::compute::ComputeError::EmptyAggregation { .. }) => {
+                let detail = format!("{error:?}");
+                guards.push(FormulaGuardTrace {
+                    formula: fd.name.clone(),
+                    predicate: predicate.clone(),
+                    precondition_index,
+                    parameter: parameter.clone(),
+                    outcome: FormulaGuardOutcome::Unresolved,
+                    value: None,
+                    exact: None,
+                    precision_loss: false,
+                    plan: None,
+                    tree: None,
+                    scope: None,
+                    fact_ids: Vec::new(),
+                    computation_ids: Vec::new(),
+                    detail: Some(detail.clone()),
+                    provenance: provenance.clone(),
+                });
+                return Err(LowerError::FormulaPreconditionAbstained {
+                    abstention: Box::new(FormulaAbstention {
+                        name: fd.name.clone(),
+                        formula: fd.name.clone(),
+                        predicate: predicate.clone(),
+                        precondition_index,
+                        parameter,
+                        actual: None,
+                        actual_exact: None,
+                        detail: Some(detail),
+                        fact_ids: Vec::new(),
+                        computation_ids: Vec::new(),
+                        provenance,
+                        guards: guards.clone(),
+                        formula_sequence: applications.to_vec(),
+                    }),
+                });
+            }
+            Err(error) => {
+                return Err(LowerError::ComputationFailed {
+                    name: format!("{} precondition {precondition_index}", fd.name),
+                    detail: format!("{error:?}"),
+                });
+            }
+        };
+        if computed.precision_loss {
+            return Err(LowerError::FormulaArgumentPrecisionLoss {
+                formula: fd.name.clone(),
+                parameter: parameter
+                    .clone()
+                    .unwrap_or_else(|| format!("precondition[{precondition_index}]")),
+            });
+        }
+        let is_zero = computed
+            .exact
+            .as_ref()
+            .map(|value| value.numerator().is_zero())
+            .unwrap_or(computed.value == 0.0);
+        let dependencies = precondition_dependencies(
+            &computed.tree,
+            computed.scope.fact_limit,
+            computed.scope.derived_limit,
+            kb,
+        )
+        .map_err(|detail| LowerError::ComputationFailed {
+            name: format!("{} precondition {precondition_index}", fd.name),
+            detail,
+        })?;
+        let failed = predicate == "nonzero" && is_zero;
+        guards.push(FormulaGuardTrace {
+            formula: fd.name.clone(),
+            predicate: predicate.clone(),
+            precondition_index,
+            parameter: parameter.clone(),
+            outcome: if failed {
+                FormulaGuardOutcome::Failed
+            } else {
+                FormulaGuardOutcome::Passed
+            },
+            value: Some(computed.value),
+            exact: computed.exact.clone(),
+            precision_loss: computed.precision_loss,
+            plan: Some(computed.expr.clone()),
+            tree: Some(computed.tree.clone()),
+            scope: Some(computed.scope),
+            fact_ids: dependencies.fact_ids.clone(),
+            computation_ids: dependencies.computation_ids.clone(),
+            detail: None,
+            provenance: provenance.clone(),
+        });
+        if failed {
+            return Err(LowerError::FormulaPreconditionAbstained {
+                abstention: Box::new(FormulaAbstention {
+                    name: fd.name.clone(),
+                    formula: fd.name.clone(),
+                    predicate: predicate.clone(),
+                    precondition_index,
+                    parameter,
+                    actual: Some(computed.value),
+                    actual_exact: computed.exact,
+                    detail: None,
+                    fact_ids: dependencies.fact_ids,
+                    computation_ids: dependencies.computation_ids,
+                    provenance,
+                    guards: guards.clone(),
+                    formula_sequence: applications.to_vec(),
+                }),
+            });
+        }
+    }
+    Ok(())
+}
+
+fn precondition_dependencies(
+    tree: &logic_engine::compute::DerivationNode,
+    fact_limit: u64,
+    derived_limit: usize,
+    kb: &KnowledgeBase,
+) -> Result<FormulaGuardDependencies, String> {
+    struct DependencyCollector<'a> {
+        kb: &'a KnowledgeBase,
+        visiting: HashSet<usize>,
+        completed: HashSet<usize>,
+        computation_ids: Vec<ComputationId>,
+        fact_ids: Vec<FactId>,
+    }
+
+    impl DependencyCollector<'_> {
+        fn collect_derived(&mut self, index: usize) -> Result<(), String> {
+            if self.completed.contains(&index) {
+                return Ok(());
+            }
+            if !self.visiting.insert(index) {
+                return Err("cycle in precondition derived references".to_string());
+            }
+            let derived = self.kb.derived_bindings().get(index).ok_or_else(|| {
+                format!("precondition derived index {index} is outside the KB")
+            })?;
+            let plan = self.kb.computation_plan_for(derived).ok_or_else(|| {
+                format!(
+                    "precondition derived value {} has no trusted plan",
+                    derived.name
+                )
+            })?;
+            let id = self.kb.computation_id_for(derived).ok_or_else(|| {
+                format!(
+                    "precondition derived value {} has no stable computation identity",
+                    derived.name
+                )
+            })?;
+            if id.0 != index {
+                return Err(format!(
+                    "precondition derived value {} has mismatched computation identity {}",
+                    derived.name, id.0
+                ));
+            }
+            self.computation_ids.push(id);
+            self.collect(
+                &derived.tree,
+                plan.scope.fact_limit,
+                plan.scope.derived_limit,
+            )?;
+            self.visiting.remove(&index);
+            self.completed.insert(index);
+            Ok(())
+        }
+
+        fn collect(
+            &mut self,
+            node: &logic_engine::compute::DerivationNode,
+            fact_limit: u64,
+            before: usize,
+        ) -> Result<(), String> {
+            use logic_engine::compute::DerivationNode as Node;
+            match node {
+                Node::Leaf { fact_id, .. } => {
+                    if fact_id.0 >= fact_limit {
+                        return Err(format!(
+                            "precondition fact {} is outside computation scope {fact_limit}",
+                            fact_id.0
+                        ));
+                    }
+                    if self.kb.fact(*fact_id).is_none() {
+                        return Err(format!(
+                            "precondition fact {} is absent from the KB",
+                            fact_id.0
+                        ));
+                    }
+                    if !self.fact_ids.contains(fact_id) {
+                        self.fact_ids.push(*fact_id);
+                    }
+                }
+                Node::Op { operands, .. } => {
+                    for operand in operands {
+                        self.collect(operand, fact_limit, before)?;
+                    }
+                }
+                Node::Round { operand, .. }
+                | Node::ToScientific { operand, .. }
+                | Node::ToPercent { operand, .. }
+                | Node::ToCurrency { operand, .. } => {
+                    self.collect(operand, fact_limit, before)?;
+                }
+                Node::DerivedRef { name, .. } => {
+                    let visible = self.kb.derived_bindings().get(..before).ok_or_else(|| {
+                        format!(
+                            "precondition derived scope {before} exceeds {} bindings",
+                            self.kb.derived_bindings().len()
+                        )
+                    })?;
+                    let dependency = visible
+                        .iter()
+                        .rposition(|candidate| candidate.name == *name)
+                        .ok_or_else(|| {
+                            format!("precondition derived reference {name} has no predecessor")
+                        })?;
+                    self.collect_derived(dependency)?;
+                }
+                Node::Lit { .. } => {}
+            }
+            Ok(())
+        }
+    }
+
+    let mut collector = DependencyCollector {
+        kb,
+        visiting: HashSet::new(),
+        completed: HashSet::new(),
+        computation_ids: Vec::new(),
+        fact_ids: Vec::new(),
+    };
+    collector.collect(tree, fact_limit, derived_limit)?;
+    Ok(FormulaGuardDependencies {
+        computation_ids: collector.computation_ids,
+        fact_ids: collector.fact_ids,
+    })
+}
+
+/// Fold a formula's multi-step `let`-bindings (RS-2) into a SINGLE effective
+/// body by in-order substitution: each step's expression is expanded against
+/// the already-expanded earlier steps, then the final body is expanded against
+/// all of them. The result names only the formula's parameters (plus numbers
+/// and nested formula applications), so the RS-1 param-substitution and
+/// formula-calls-formula expansion consume it unchanged — a multi-step body is
+/// surface sugar for the equivalent nested single expression. A formula with no
+/// steps returns its body verbatim. Every emitted node is charged against the
+/// shared `budget`, so an adversarial step chain (each step doubling the last)
+/// trips [`LowerError::FormulaExpansionTooLarge`] instead of exploding.
+fn effective_body(
+    fd: &FormulaDef,
+    budget: &mut usize,
+    node_depth: usize,
+) -> Result<ExprAst, LowerError> {
+    if fd.steps.is_empty() {
+        return Ok(fd.body.clone());
+    }
+    let mut step_subst: HashMap<String, ExprAst> = HashMap::new();
+    for step in &fd.steps {
+        // Expand this step against the already-inlined earlier steps, then bind
+        // its (now step-free) value under its name for the steps/body that follow.
+        let expanded = substitute_expr(&step.expr, &step_subst, budget, node_depth)?;
+        step_subst.insert(step.name.clone(), expanded);
+    }
+    substitute_expr(&fd.body, &step_subst, budget, node_depth)
+}
+
+/// Substitute parameter references in a formula body with their bound argument
+/// expressions. A [`ExprAst::Ref`] naming a parameter becomes the bound
+/// expression; a non-parameter identifier is left as-is (validation already
+/// proved every identifier is a parameter, so this branch is defensive). An
+/// [`ExprAst::Agg`] slot naming a parameter is rewritten to the bound slot name
+/// when the binding is itself a slot reference (an aggregation folds a named
+/// slot, so only a `Ref` binding is meaningful there).
+fn substitute_expr(
+    expr: &ExprAst,
+    subst: &HashMap<String, ExprAst>,
+    budget: &mut usize,
+    node_depth: usize,
+) -> Result<ExprAst, LowerError> {
+    // Charge for the node we are about to emit. Every substituted node counts
+    // against the shared expansion budget, so a body that duplicates a bound
+    // subtree (`x * x`) can only do so until the cap trips — the exponential tree
+    // is never fully materialised.
+    charge(budget)?;
+    // Bound the descent too: a formula body (or a bound argument) may be a deep
+    // operator spine, and the size budget alone only trips at the BOTTOM of the
+    // descent — too late to prevent a stack overflow (see [`FORMULA_MAX_NODE_DEPTH`]).
+    let d = descend(node_depth)?;
+    Ok(match expr {
+        // A parameter reference expands to its bound argument subtree — cloned
+        // THROUGH the budget so a large binding cannot be duplicated for free. This
+        // is the guarded version of the old `.clone()`; the second `x` in `x * x`
+        // is what trips the cap on an adversarial composition.
+        ExprAst::Ref(name) => match subst.get(name) {
+            Some(bound) => charged_clone(bound, budget, d)?,
+            None => expr.clone(),
+        },
+        ExprAst::Lit(_) | ExprAst::ExactLit(_) => expr.clone(),
+        ExprAst::Agg(op, slot) => match subst.get(slot) {
+            Some(ExprAst::Ref(bound)) => ExprAst::Agg(*op, bound.clone()),
+            _ => expr.clone(),
+        },
+        ExprAst::Bin(op, a, b) => ExprAst::Bin(
+            *op,
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            Box::new(substitute_expr(b, subst, budget, d)?),
+        ),
+        ExprAst::Call2(f, a, b) => ExprAst::Call2(
+            *f,
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            Box::new(substitute_expr(b, subst, budget, d)?),
+        ),
+        ExprAst::Abs(a) => ExprAst::Abs(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::RoundTo(a, n) => {
+            ExprAst::RoundTo(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
+        ExprAst::ToScientific(a, n) => {
+            ExprAst::ToScientific(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
+        ExprAst::ToPercent(a, n) => {
+            ExprAst::ToPercent(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
+        ExprAst::ToCurrency(a, code, n) => ExprAst::ToCurrency(
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            code.clone(),
+            *n,
+        ),
+        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst, budget, d)?)),
+        // Substitute into a formula application's ARGUMENTS, preserving the callee
+        // name. This is what makes `formula ratio(numerator, denominator) =
+        // quotient(numerator, denominator)` compose: applying `ratio(a, b)`
+        // substitutes `numerator → a`, `denominator → b` INSIDE the nested
+        // `quotient(numerator, denominator)`, yielding `quotient(a, b)` — which the
+        // expansion pass then resolves in turn.
+        ExprAst::Apply(name, args) => {
+            let mut out = Vec::with_capacity(args.len());
+            for a in args {
+                out.push(substitute_expr(a, subst, budget, d)?);
+            }
+            ExprAst::Apply(name.clone(), out)
+        }
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -849,6 +3561,261 @@ mod tests {
     use super::*;
     use crate::compile;
     use logic_engine::{enumerate_all, search, SearchMode, SearchResult};
+    use std::str::FromStr;
+
+    // ---- ADJ-FORMULA-LIBRARIES rung-0: formulabook / formula ----
+
+    #[test]
+    fn formula_applies_and_carries_its_cited_provenance() {
+        // A single-file program that DEFINES a provenanced formula, binds its
+        // variables from `observe`d facts, and APPLIES it — the whole rung-0 loop.
+        // The engine computes 70 / 1.75² = 22.857 on the CPU, and the derived value
+        // carries the formula's WHO citation (source non-empty, trust authoritative).
+        let src = r#"
+            dictionary bmi_vocab {
+                define body_mass : finding
+                define height    : finding
+                define bmi       : finding
+            }
+            formulabook body_metrics {
+                use bmi_vocab
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "BMI is weight in kilograms divided by the square of height in metres."
+                    locator "https://www.who.int/health-topics/obesity"
+                    trust authoritative
+            }
+            observe body_mass(70)
+            observe height(1.75)
+            ? bmi(body_mass, height)
+        "#;
+        let lowered = compile(src).unwrap();
+        // A formula application is a derived value, not a differential query.
+        assert!(
+            lowered.queries.is_empty(),
+            "formula query is not a hypothesis"
+        );
+        let d = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("the formula bound a derived `bmi`");
+        assert!(
+            (d.value - 22.857).abs() < 0.01,
+            "expected ≈22.857, got {}",
+            d.value
+        );
+        let prov = d
+            .provenance
+            .as_ref()
+            .expect("derivation carries provenance");
+        assert!(!prov.source.is_empty(), "the WHO source span is attached");
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+        assert_eq!(
+            prov.locator.as_deref(),
+            Some("https://www.who.int/health-topics/obesity")
+        );
+    }
+
+    #[test]
+    fn formula_rebinds_to_differently_named_arguments() {
+        // The parameters are FORMAL: applying `bmi(weight, stature)` substitutes
+        // param→argument, so the engine reads the `weight`/`stature` slots even
+        // though the formula was written over `body_mass`/`height`.
+        let src = r#"
+            formulabook m {
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "WHO BMI definition." trust authoritative
+            }
+            observe weight(80)
+            observe stature(2)
+            ? bmi(weight, stature)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("bmi").unwrap();
+        assert!(
+            (d.value - 20.0).abs() < 1e-9,
+            "80 / 2² = 20, got {}",
+            d.value
+        );
+    }
+
+    #[test]
+    fn formula_free_variable_is_a_clean_scoping_error() {
+        // `b` is not a declared parameter — a stray identifier must be rejected,
+        // never silently mis-bound to some observed slot at apply time.
+        let src = r#"
+            formulabook m {
+                formula f(a) = a + b
+                    source "x" trust authoritative
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaFreeVariable { ref variable, .. })
+                    if variable == "b"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn shipped_formula_without_provenance_is_rejected() {
+        // The provenance-required lint: a formula is a claim about the world and
+        // may not enter a library unsourced.
+        let src = r#"
+            formulabook m {
+                formula f(a) = a + a
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaMissingProvenance { ref formula })
+                    if formula == "f"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn three_parameter_formula_applies() {
+        // Arity > 2: a mean-arterial-pressure-shaped 3-parameter formula. Confirms
+        // parameters bind positionally and the body substitutes all three.
+        let src = r#"
+            formulabook hemo {
+                formula weighted3(a, b, c) = (a + b + c) / 3
+                    source "arithmetic mean of three readings" trust authoritative
+            }
+            observe a(3)
+            observe b(6)
+            observe c(9)
+            ? weighted3(a, b, c)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("weighted3").unwrap();
+        assert!(
+            (d.value - 6.0).abs() < 1e-9,
+            "(3+6+9)/3 = 6, got {}",
+            d.value
+        );
+    }
+
+    #[test]
+    fn formulabook_round_trips_through_the_parser() {
+        // Round-trip render: the surface `formulabook` parses to exactly the
+        // expected typed AST — name, parameters, body shape, and the provenance
+        // annotations — so a downstream consumer (formatter, doc-gen) can rebuild it.
+        let program = crate::parse(
+            "formulabook m {\n\
+               use v\n\
+               formula bmi(body_mass, height) = body_mass / (height * height)\n\
+                 source \"WHO\" locator \"loc\" trust authoritative\n\
+             }\n",
+        )
+        .unwrap();
+        let fb = program
+            .statements
+            .iter()
+            .find(|s| matches!(s, Statement::Formulabook { .. }))
+            .expect("a formulabook statement");
+        let Statement::Formulabook {
+            name,
+            uses,
+            formulas,
+        } = fb
+        else {
+            unreachable!()
+        };
+        assert_eq!(name, "m");
+        assert_eq!(uses, &vec!["v".to_string()]);
+        assert_eq!(formulas.len(), 1);
+        let f = &formulas[0];
+        assert_eq!(f.name, "bmi");
+        assert_eq!(
+            f.params,
+            vec!["body_mass".to_string(), "height".to_string()]
+        );
+        // body = body_mass / (height * height)
+        assert_eq!(
+            f.body,
+            ExprAst::Bin(
+                ArithOp::Div,
+                Box::new(ExprAst::Ref("body_mass".into())),
+                Box::new(ExprAst::Bin(
+                    ArithOp::Mul,
+                    Box::new(ExprAst::Ref("height".into())),
+                    Box::new(ExprAst::Ref("height".into())),
+                )),
+            )
+        );
+        assert_eq!(
+            f.annotations,
+            vec![
+                Annotation::Source("WHO".into()),
+                Annotation::Locator("loc".into()),
+                Annotation::Trust(TrustTierName::Authoritative),
+            ]
+        );
+    }
+
+    #[test]
+    fn formula_end_to_end_via_import_of_the_shipped_library() {
+        // The real consumer surface: `import "bmi.adj"` + bind + apply. Uses the
+        // SHIPPED library file (loaded from disk) through an in-memory provider, so
+        // this test also proves `code/specs/data/adj-formula-stdlib/clinical/bmi.adj`
+        // parses, lints (provenance-required), and computes.
+        use crate::{compile_with_imports, ImportLimits, ImportProvider};
+        use std::collections::HashMap;
+
+        struct Mem {
+            files: HashMap<String, String>,
+        }
+        impl ImportProvider for Mem {
+            fn resolve(&self, _importer: &str, literal: &str) -> Result<String, String> {
+                self.files
+                    .contains_key(literal)
+                    .then(|| literal.to_string())
+                    .ok_or_else(|| format!("no such file: {literal}"))
+            }
+            fn load(&self, canonical: &str) -> Result<String, String> {
+                self.files
+                    .get(canonical)
+                    .cloned()
+                    .ok_or_else(|| format!("no such file: {canonical}"))
+            }
+        }
+
+        let bmi_lib = include_str!("../../../../specs/data/adj-formula-stdlib/clinical/bmi.adj");
+        let consumer = "import \"bmi.adj\"\n\
+                        observe body_mass(70)\n\
+                        observe height(1.75)\n\
+                        ? bmi(body_mass, height)\n";
+        let mut files = HashMap::new();
+        files.insert("bmi.adj".to_string(), bmi_lib.to_string());
+        files.insert("consumer.adj".to_string(), consumer.to_string());
+        let provider = Mem { files };
+
+        let lowered =
+            compile_with_imports("consumer.adj", &provider, ImportLimits::default()).unwrap();
+        let d = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("applied imported formula");
+        assert!(
+            (d.value - 22.857).abs() < 0.01,
+            "expected ≈22.857, got {}",
+            d.value
+        );
+        let prov = d.provenance.as_ref().expect("carries the library citation");
+        assert!(
+            prov.source.contains("weight") || prov.source.contains("BMI"),
+            "WHO source span attached: {}",
+            prov.source
+        );
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+    }
 
     // ---- REL-2: relational recall (relate edges + binding queries) ----
 
@@ -937,6 +3904,133 @@ mod tests {
         assert!(
             dag.proofs.is_empty(),
             "must abstain, not fabricate an enzyme"
+        );
+    }
+
+    // ---- ADJ-TABLES RS-5: the `table` construct ----
+
+    #[test]
+    fn table_rows_lower_to_provenanced_relations() {
+        // Each `row` becomes a ground relation `length_to_metres(unit, metres)`
+        // carrying the table's provenance — so an exact lookup is the ordinary
+        // binding query, and the answer names the table's citation as its proof.
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048)
+                row (mile, 1609.344)
+                source "Defined with respect to meter"
+                locator "https://example.test/nist"
+                trust authoritative
+            }
+            ? length_to_metres(foot, $Metres)
+        "#;
+        let lowered = compile(src).unwrap();
+        // A table is data, not a hypothesis differential.
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(
+            dag.proofs.len(),
+            1,
+            "exactly one row matches the key `foot`"
+        );
+        // NX-2: a fractional cell binds as an EXACT decimal, not a lossy `f64` (a distinct
+        // `Number` variant). Preserving the exact value is the whole intent — `0.3048` is stored
+        // with every digit, and only the *rendering* falls back to the f64 form when it fits.
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            CoreTerm::Num(CoreNumber::Exact(
+                bignum_core::BigDecimal::from_str("0.3048").unwrap()
+            ))
+        );
+        // The answer's proof is a table row whose Fact carries the citation.
+        let fid = dag.proofs[0].via_facts[0];
+        let prov = &lowered.kb.fact(fid).expect("row fact exists").provenance;
+        assert_eq!(prov.source, "Defined with respect to meter");
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+    }
+
+    #[test]
+    fn table_absent_key_has_no_proof() {
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048)
+                source "Defined with respect to meter"
+                trust authoritative
+            }
+            ? length_to_metres(furlong, $Metres)
+        "#;
+        let lowered = compile(src).unwrap();
+        let dag = enumerate_all(&lowered.queries[0], &lowered.kb);
+        assert!(dag.proofs.is_empty(), "a key not in the table abstains");
+    }
+
+    #[test]
+    fn table_string_cell_lowers_to_a_string_term() {
+        // A quoted cell lowers to a Str term (not an atom), so a label column is
+        // representable alongside numeric factors.
+        let src = r#"
+            table unit_symbol {
+                columns unit, symbol
+                row (metre, "m")
+                source "SI base unit of length"
+                trust authoritative
+            }
+            ? unit_symbol(metre, $Symbol)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1);
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            CoreTerm::Str("m".into())
+        );
+    }
+
+    #[test]
+    fn table_row_arity_mismatch_is_a_clean_error() {
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048, extra)
+                source "Defined with respect to meter"
+                trust authoritative
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::TableArity {
+                    expected: 2,
+                    row: 0,
+                    got: 3,
+                    ..
+                })
+            ),
+            "a wrong-length row is a clean TableArity error, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn table_without_source_is_rejected() {
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048)
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::TableMissingProvenance { .. })
+            ),
+            "an unsourced table is rejected (the write gate), got {err:?}"
         );
     }
 
@@ -1288,12 +4382,26 @@ mod tests {
     }
 
     #[test]
-    fn non_finite_number_literal_is_rejected_at_parse() {
-        // 1e400 overflows f64 to +inf; reject it rather than flow inf on.
-        let err = compile("observe gross_income(1e400)").unwrap_err();
-        assert!(
-            matches!(err, crate::CompileError::Adapt(_)),
-            "expected an adapter BadToken error, got {err:?}"
+    fn large_magnitude_literal_is_stored_exactly_not_rejected() {
+        // Before NX-2, `1e400` overflowed `f64` to +inf and was rejected at parse. Now it is a
+        // perfectly good exact decimal (`10^400`) preserved with every digit — the whole point of
+        // the exact-numbers arc is that a written magnitude is stored as written, not truncated
+        // (or, here, saturated to inf) the instant it is parsed. The lossy `f64` view appears only
+        // if something later asks for one.
+        let src = r#"
+            observe gross_income(1e400)
+            ? gross_income($V)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1);
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            CoreTerm::Num(CoreNumber::Exact(
+                bignum_core::BigDecimal::from_str("1e400").unwrap()
+            ))
         );
     }
 
@@ -1511,7 +4619,7 @@ contributes 1000000 from answer == 3 / 10 to opt_a
         assert_eq!(cs.symbols[0].0, "premium");
         assert!(matches!(
             &cs.symbols[0].1,
-            core_compound_money @ _ if format!("{core_compound_money:?}").contains("money")
+            core_compound_money if format!("{core_compound_money:?}").contains("money")
         ));
         assert_eq!(cs.symbols[1].0, "months");
         assert_eq!(cs.constraints.len(), 3);
@@ -1556,6 +4664,60 @@ contributes 1000000 from answer == 3 / 10 to opt_a
     fn a_bare_define_outside_a_block_also_registers() {
         let lowered = compile("define dx : hypothesis\n? dx\n").unwrap();
         assert_eq!(lowered.dictionary.len(), 1);
+    }
+
+    #[test]
+    fn a_valid_pinned_quote_lowers_to_a_verbatim_span_and_snapshot() {
+        // RS-4 PR-D4a: quote/at/snapshot populates Provenance.quote + .snapshot.
+        let hex = "0".repeat(64);
+        let src = format!(
+            "relate inhibits(aspirin, cyclooxygenase)\n    \
+             quote \"Aspirin inhibits cyclooxygenase\" at 7 snapshot \"{hex}\"\n    \
+             source \"ref\"\n? inhibits(aspirin, $X)\n"
+        );
+        let lowered = compile(&src).unwrap();
+        let query = &lowered.queries[0];
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1, "the relate fact matches the query");
+        let fid = dag.proofs[0].via_facts[0];
+        let prov = &lowered.kb.fact(fid).expect("relate fact exists").provenance;
+        assert_eq!(
+            prov.quote.text(),
+            Some("Aspirin inhibits cyclooxygenase"),
+            "the verbatim span is carried through"
+        );
+        assert!(prov.snapshot.is_some(), "and the snapshot hash is pinned");
+    }
+
+    #[test]
+    fn a_malformed_snapshot_hash_is_a_fail_closed_compile_error() {
+        let src = "relate inhibits(a, b)\n    \
+                   quote \"hi\" at 0 snapshot \"nothex\"\n    source \"ref\"\n? inhibits(a, $X)\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::MalformedQuotePin { .. })
+            ),
+            "a non-SHA-256 snapshot must be a compile error, not a half-built pin: {err:?}"
+        );
+    }
+
+    #[test]
+    fn a_blank_quote_text_is_a_fail_closed_compile_error() {
+        let hex = "0".repeat(64);
+        let src = format!(
+            "relate inhibits(a, b)\n    quote \"   \" at 0 snapshot \"{hex}\"\n    \
+             source \"ref\"\n? inhibits(a, $X)\n"
+        );
+        let err = compile(&src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::MalformedQuotePin { .. })
+            ),
+            "a quote with no visible content cannot anchor anything: {err:?}"
+        );
     }
 
     #[test]
@@ -2403,7 +5565,10 @@ contributes 1000000 from answer == 60 to correct
         // more operands — so it is a clean, explicit error rather than a silent
         // mis-lowering. (Three-or-more args ARE now accepted; see the n-ary test.)
         let src = "observe a(3)\nlet answer = latex \"$\\min(a)$\"\n? answer\n";
-        assert!(compile(src).is_err(), "one-arg min must be rejected: {src:?}");
+        assert!(
+            compile(src).is_err(),
+            "one-arg min must be rejected: {src:?}"
+        );
     }
 
     #[test]
@@ -2548,8 +5713,7 @@ contributes 1000000 from answer == 60 to correct
         // TWO or more operands), so it is a clean, explicit error via the SAME
         // `latex_nary_fold` guard the `\min(a)` spelling hits — never a silent
         // mis-lowering into a bare product.
-        let src =
-            "observe a(3)\nlet answer = latex \"$\\operatorname{min}(a)$\"\n? answer\n";
+        let src = "observe a(3)\nlet answer = latex \"$\\operatorname{min}(a)$\"\n? answer\n";
         assert!(
             compile(src).is_err(),
             "one-arg operatorname min must be rejected: {src:?}"
@@ -2845,7 +6009,10 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\sum_{i=1}^{n} i$\"\n\
              ? answer\n",
         );
-        assert!(symbolic.is_err(), "symbolic-bound sum must reject: {symbolic:?}");
+        assert!(
+            symbolic.is_err(),
+            "symbolic-bound sum must reject: {symbolic:?}"
+        );
         // A definite integral is not a finite sum/product — must reject, never approximate.
         let integral = compile(
             "observe x(5)\n\
@@ -2932,7 +6099,10 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\binom{n}{k}$\"\n\
              ? answer\n",
         );
-        assert!(symbolic.is_err(), "symbolic binomial must reject: {symbolic:?}");
+        assert!(
+            symbolic.is_err(),
+            "symbolic binomial must reject: {symbolic:?}"
+        );
         // k > n is out of the supported domain (\binom{3}{5}) — reject rather than emit 0.
         let inverted = compile(
             "let answer = latex \"$\\binom{3}{5}$\"\n\
@@ -2945,13 +6115,19 @@ contributes 1000000 from answer == 60 to correct
             "let answer = latex \"$\\binom{60}{30}$\"\n\
              ? answer\n",
         );
-        assert!(too_large.is_err(), "too-large binomial must reject: {too_large:?}");
+        assert!(
+            too_large.is_err(),
+            "too-large binomial must reject: {too_large:?}"
+        );
         // An upper argument beyond BINOM_N_CAP is rejected before looping.
         let oversized = compile(
             "let answer = latex \"$\\binom{2000}{2}$\"\n\
              ? answer\n",
         );
-        assert!(oversized.is_err(), "oversized-n binomial must reject: {oversized:?}");
+        assert!(
+            oversized.is_err(),
+            "oversized-n binomial must reject: {oversized:?}"
+        );
     }
 
     #[test]
@@ -3207,5 +6383,990 @@ rule { head: r(a) when: x(t) }";
         assert!(lowered.kb.context_outranks("federal", "state"));
         assert!(lowered.kb.context_outranks("federal", "circuit"));
         assert!(!lowered.kb.context_outranks("state", "federal"));
+    }
+
+    // ---- ADJ-RULE-SUBSTRATE RS-1: formula application as a sub-expression ----
+
+    #[test]
+    fn formula_calls_formula_composes_and_carries_both_cites() {
+        // `ratio` applies `quotient` in its BODY (formula-calls-formula). The
+        // engine expands the application on the CPU and composes the provenance
+        // chain: ratio's own cite is primary; quotient's rides as a corroboration.
+        let src = r#"
+            formulabook f {
+                formula quotient(dividend, divisor) = dividend / divisor
+                    source "quotient def" locator "q-loc" trust authoritative
+                formula ratio(numerator, denominator) = quotient(numerator, denominator)
+                    source "ratio def" locator "r-loc" trust authoritative
+            }
+            observe numerator(3)
+            observe denominator(4)
+            ? ratio(numerator, denominator)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered
+            .kb
+            .derived_for("ratio")
+            .expect("ratio bound a derived value");
+        assert!((d.value - 0.75).abs() < 1e-9, "3/4 = 0.75, got {}", d.value);
+        let prov = d.provenance.as_ref().expect("carries composed provenance");
+        assert_eq!(prov.source, "ratio def", "ratio's cite is primary");
+        assert_eq!(
+            d.formula_sources
+                .iter()
+                .map(|source| source.source.as_str())
+                .collect::<Vec<_>>(),
+            vec!["ratio def", "quotient def"],
+            "lossless formula sources stay independently verifiable"
+        );
+        // quotient's cite composes in as a corroboration — both are auditable.
+        assert!(
+            prov.corroborations
+                .iter()
+                .any(|c| c.source == "quotient def"),
+            "quotient's cite composed as a corroboration: {:?}",
+            prov.corroborations
+        );
+    }
+
+    #[test]
+    fn nested_application_in_arguments_expands() {
+        // An application may appear in ANOTHER application's arguments:
+        // `ratio(product(a, b), c)` — the engine expands inside-out. 6*? no:
+        // product(2,3)=6, then ratio(6, 4) = 6/4 = 1.5.
+        let src = r#"
+            formulabook f {
+                formula quotient(dividend, divisor) = dividend / divisor
+                    source "q" trust authoritative
+                formula product(factor_one, factor_two) = factor_one * factor_two
+                    source "p" trust authoritative
+                formula ratio(numerator, denominator) = quotient(numerator, denominator)
+                    source "r" trust authoritative
+            }
+            observe a(2)
+            observe b(3)
+            observe c(4)
+            let composed = ratio(product(a, b), c)
+            ? composed
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("composed").unwrap();
+        assert!(
+            (d.value - 1.5).abs() < 1e-9,
+            "(2*3)/4 = 1.5, got {}",
+            d.value
+        );
+    }
+
+    #[test]
+    fn self_referential_formula_is_a_clean_recursion_error() {
+        // `loop(x) = loop(x)` would expand forever; the depth guard turns it into a
+        // clean typed error rather than a stack overflow or a hang.
+        let src = r#"
+            formulabook f {
+                formula loop(x) = loop(x)
+                    source "s" trust inferred
+            }
+            observe x(1)
+            ? loop(x)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaRecursionTooDeep { ref formula, .. })
+                    if formula == "loop"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn exponentially_branching_composition_trips_the_size_guard_not_the_stack() {
+        // ADVERSARIAL DoS REPRO. A formula whose body reuses its parameter twice
+        // (`pᵢ(x) = pᵢ₋₁(x) * pᵢ₋₁(x)`) doubles the expanded node count at every rung
+        // while depth grows only LINEARLY — so the depth guard alone would let ~14
+        // rungs balloon past 2¹⁴ nodes and, at higher rungs, exhaust memory. The
+        // shared node budget (`FORMULA_MAX_EXPANSION_NODES`) is the real defense: it
+        // bails the instant the cap is crossed, in O(cap) time, with a specific typed
+        // error — NOT a hang, an OOM, or a stack overflow. (Verified out-of-band:
+        // with the cap lifted, the 20-rung bomb takes ~4.6s and quadruples per added
+        // rung; with the cap in place it errors in well under a millisecond.)
+        //
+        // 22 rungs => the fully-expanded tree would hold ~2²² leaves; the guard must
+        // trip long before that. We only assert the *kind* of error, so the exact cap
+        // value can move without churning this test.
+        let mut src = String::from("formulabook bomb {\n");
+        src.push_str("    formula p0(x) = x * x\n        source \"s\" trust inferred\n");
+        for i in 1..=22 {
+            src.push_str(&format!(
+                "    formula p{i}(x) = p{prev}(x) * p{prev}(x)\n        source \"s\" trust inferred\n",
+                prev = i - 1
+            ));
+        }
+        src.push_str("}\nobserve x(1)\n? p22(x)\n");
+
+        let err = compile(&src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaExpansionTooLarge { .. })
+            ),
+            "exponential composition must trip the size guard, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn deep_operator_spine_trips_the_nesting_guard_not_the_stack() {
+        // ADVERSARIAL DoS REPRO #2 — the DEPTH vector the size budget cannot cover.
+        // A left-leaning operator spine (`x + 0 + 0 + … + 0`) is one node wide per
+        // level but arbitrarily DEEP; the expansion/substitution/clone walkers descend
+        // it one native stack frame per level. With ONLY the 10 000-node size budget,
+        // a deep spine builds thousands of stack frames before the budget (which trips
+        // at the BOTTOM of the descent) fires — a stack overflow / SIGABRT, not a
+        // catchable error. The nesting guard (`FORMULA_MAX_NODE_DEPTH`) caps the
+        // lowering walkers' recursion, so the spine becomes a clean typed error.
+        //
+        // We build the spine AS AN AST directly (not from source) to isolate the
+        // lowering guard: the upstream recursive-descent parser has its own, separate
+        // deep-expression limit — a pre-existing walker this rung does not touch —
+        // that would overflow the ~2 MiB test-thread stack on a spine this deep before
+        // lowering ever ran. Constructing the tree with an iterative loop and calling
+        // `expand_applies` directly exercises exactly the code RS-1 added, and proves
+        // it returns `FormulaNestingTooDeep` on a 2 MiB stack instead of aborting.
+        let mut spine = ExprAst::Ref("x".to_string());
+        for _ in 0..400 {
+            spine = ExprAst::Bin(ArithOp::Add, Box::new(spine), Box::new(ExprAst::Lit(0.0)));
+        }
+        let formulas: HashMap<&str, &FormulaDef> = HashMap::new();
+        let result = expand_applies(&spine, &formulas, &KnowledgeBase::new(), 0);
+        assert!(
+            matches!(result, Err(LowerError::FormulaNestingTooDeep { limit }) if limit == FORMULA_MAX_NODE_DEPTH),
+            "a deep operator spine must trip the nesting guard, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn source_operator_spine_is_rejected_during_adapter_construction() {
+        let expression = std::iter::repeat_n("0", 400)
+            .collect::<Vec<_>>()
+            .join(" + ");
+        let result = compile(&format!("let result = {expression}"));
+        assert!(
+            matches!(
+                result,
+                Err(crate::CompileError::Adapt(
+                    crate::adapter::AdapterError::ExpressionTooDeep { limit: 96 }
+                ))
+            ),
+            "a source spine must be bounded before a deep AST is constructed, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn precondition_dependencies_reject_out_of_scope_and_absent_leaves() {
+        use logic_engine::compute::DerivationNode;
+
+        let leaf = DerivationNode::Leaf {
+            slot: "value".to_string(),
+            value: 1.0,
+            fact_id: FactId(0),
+        };
+        let kb = KnowledgeBase::new();
+        let out_of_scope = precondition_dependencies(&leaf, 0, 0, &kb)
+            .expect_err("the snapshot excludes fact zero");
+        assert!(out_of_scope.contains("outside computation scope"));
+
+        let absent = precondition_dependencies(&leaf, 1, 0, &kb)
+            .expect_err("a visible ID still has to resolve to a stored fact");
+        assert!(absent.contains("absent from the KB"));
+    }
+
+    #[test]
+    fn unknown_formula_application_is_a_clean_error() {
+        // An `IDENT(args)` whose callee is no registered formula is a specific,
+        // typed error — distinct from an aggregation or a built-in call.
+        let src = r#"
+            formulabook f {
+                formula a(x) = nope(x)
+                    source "s" trust inferred
+            }
+            observe x(1)
+            ? a(x)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaUnknown { ref name })
+                    if name == "nope"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn arity_mismatch_in_application_is_a_clean_error() {
+        // Applying a 2-parameter formula to 1 argument is a clean arity error.
+        let src = r#"
+            formulabook f {
+                formula quotient(dividend, divisor) = dividend / divisor
+                    source "s" trust authoritative
+                formula bad(x) = quotient(x)
+                    source "s" trust inferred
+            }
+            observe x(1)
+            ? bad(x)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaArity {
+                    ref formula, expected: 2, got: 1
+                }) if formula == "quotient"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn rulebook_branches_on_a_formula_and_fires() {
+        // `contributes … from bmi(body_mass, height) >= 30 to obese` — a rulebook
+        // BRANCHING ON A FORMULA. The engine computes BMI on the CPU, gates the
+        // saturating LR on it, and the verdict fires for a high-BMI case.
+        let src = r#"
+            dictionary v { define obese : hypothesis }
+            formulabook m {
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "WHO BMI definition." trust authoritative
+            }
+            rulebook classify {
+                use v
+                prior 0.1 for obese trust inferred
+                contributes 1000000 from bmi(body_mass, height) >= 30 to obese
+                    source "WHO obesity threshold." trust authoritative
+            }
+            observe body_mass(100)
+            observe height(1.7)
+            ? obese
+        "#;
+        let lowered = compile(src).unwrap();
+        // The BMI was computed into a derived slot the predicate gates on.
+        let bmi = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("bmi computed for the branch");
+        assert!(
+            (bmi.value - 34.602).abs() < 0.01,
+            "bmi ≈ 34.6, got {}",
+            bmi.value
+        );
+        // The query saturates: the branch fired.
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(
+                    posterior > 0.9999,
+                    "obese fires (saturates), got {posterior}"
+                );
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rulebook_branch_on_formula_stays_at_prior_below_threshold() {
+        // The mirror: a sub-threshold BMI does NOT fire the branch; the posterior
+        // stays at the prior. Proves the branch is a real CPU comparison, not an
+        // always-on contribution.
+        let src = r#"
+            dictionary v { define obese : hypothesis }
+            formulabook m {
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "WHO BMI definition." trust authoritative
+            }
+            rulebook classify {
+                use v
+                prior 0.1 for obese trust inferred
+                contributes 1000000 from bmi(body_mass, height) >= 30 to obese
+                    source "WHO obesity threshold." trust authoritative
+            }
+            observe body_mass(65)
+            observe height(1.75)
+            ? obese
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(
+                    (posterior - 0.1).abs() < 1e-6,
+                    "obese stays at the 0.1 prior (branch did not fire), got {posterior}"
+                );
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn deferred_rhs_abstention_does_not_publish_the_lhs() {
+        let src = r#"
+            formulabook guarded {
+                formula identity(x) = x
+                    source "identity definition" trust authoritative
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            prior 0.1 for high
+            contributes 100 from identity(numerator) >= quotient(identity, denominator) to high
+                source "comparison rule" trust authoritative
+            observe numerator(8)
+            observe denominator(0)
+            ? high
+        "#;
+
+        let lowered = compile(src).expect("a failed RHS guard is a typed abstention");
+        assert!(
+            lowered.kb.derived_for("identity").is_none(),
+            "the staged LHS must not escape an incomplete branch"
+        );
+        assert_eq!(lowered.formula_abstentions.len(), 1);
+        assert_eq!(lowered.formula_abstentions[0].formula, "quotient");
+    }
+
+    #[test]
+    fn successful_deferred_rhs_formula_provenance_reaches_the_clause() {
+        let src = r#"
+            formulabook formulas {
+                formula identity(x) = x
+                    source "identity definition" trust authoritative
+                formula threshold_value(x) = x + 0
+                    source "threshold definition" trust authoritative
+            }
+            prior 0.1 for high
+            contributes 100 from identity(value) >= threshold_value(identity) to high
+                source "comparison rule" trust authoritative
+            observe value(8)
+            observe threshold(7.5)
+            ? high
+        "#;
+
+        let lowered = compile(src).expect("both deferred formula sides should expand");
+        let clauses = lowered.kb.predicate_contributions_for(&core_atom("high"));
+        assert_eq!(clauses.len(), 1);
+        assert_eq!(clauses[0].provenance.source, "comparison rule");
+        assert!(clauses[0]
+            .provenance
+            .corroborations
+            .iter()
+            .any(|citation| citation.source == "threshold definition"));
+    }
+
+    #[test]
+    fn formula_precondition_abstains_without_publishing_a_value() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            ? quotient(numerator, denominator)
+        "#;
+
+        let lowered = compile(src).expect("a false domain guard is not a compile error");
+        assert!(lowered.kb.derived_for("quotient").is_none());
+        assert_eq!(lowered.formula_abstentions.len(), 1);
+        let abstention = &lowered.formula_abstentions[0];
+        assert_eq!(abstention.formula, "quotient");
+        assert_eq!(abstention.predicate, "nonzero");
+        assert_eq!(abstention.actual, Some(0.0));
+    }
+
+    #[test]
+    fn unresolved_formula_precondition_abstains_distinctly() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            observe numerator(8)
+            ? quotient(numerator, denominator)
+        "#;
+
+        let lowered = compile(src).expect("an unresolved guard is a typed abstention");
+        let abstention = &lowered.formula_abstentions[0];
+        assert_eq!(abstention.actual, None);
+        assert!(abstention
+            .detail
+            .as_deref()
+            .is_some_and(|detail| detail.contains("UnknownSlot")));
+    }
+
+    #[test]
+    fn guard_trace_retains_exact_underflowing_direct_observation() {
+        let src = r#"
+            formulabook guarded {
+                formula identity(x) = x
+                    requires nonzero(x)
+                    source "identity domain" trust authoritative
+            }
+            observe tiny(1e-400)
+            ? identity(tiny)
+        "#;
+
+        let lowered = compile(src).expect("exact nonzero observation must pass");
+        let execution = &lowered.formula_executions[0];
+        assert_eq!(execution.body, FormulaBodyTrace::Evaluated);
+        assert_eq!(execution.guards.len(), 1);
+        let guard = &execution.guards[0];
+        assert_eq!(guard.outcome, FormulaGuardOutcome::Passed);
+        assert_eq!(guard.value, Some(0.0));
+        assert!(guard
+            .exact
+            .as_ref()
+            .is_some_and(|value| !value.numerator().is_zero()));
+        assert!(matches!(guard.plan.as_ref(), Some(ComputeExpr::Ref(slot)) if slot == "tiny"));
+        assert!(matches!(
+            guard.tree.as_ref(),
+            Some(DerivationNode::Leaf {
+                fact_id: FactId(0),
+                ..
+            })
+        ));
+    }
+
+    #[test]
+    fn guard_trace_keeps_earlier_pass_when_later_guard_fails() {
+        let src = r#"
+            formulabook guarded {
+                formula first(a, b) = a
+                    requires nonzero(a), nonzero(b)
+                    source "two-input domain" trust authoritative
+            }
+            observe left(2)
+            observe right(0)
+            ? first(left, right)
+        "#;
+
+        let lowered = compile(src).expect("false guard is a typed abstention");
+        let execution = &lowered.formula_executions[0];
+        assert_eq!(execution.body, FormulaBodyTrace::WithheldPreconditionFailed);
+        assert_eq!(
+            execution
+                .guards
+                .iter()
+                .map(|guard| guard.outcome)
+                .collect::<Vec<_>>(),
+            [FormulaGuardOutcome::Passed, FormulaGuardOutcome::Failed]
+        );
+        assert!(lowered.kb.derived_for("first").is_none());
+        assert_eq!(lowered.formula_abstentions[0].guards, execution.guards);
+    }
+
+    #[test]
+    fn nested_guard_trace_preserves_outer_pass_before_inner_failure() {
+        let src = r#"
+            formulabook guarded {
+                formula inner(a, b) = a / b
+                    requires nonzero(b)
+                    source "inner domain" trust authoritative
+                formula outer(a, b) = inner(a, b)
+                    requires nonzero(a)
+                    source "outer domain" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            ? outer(numerator, denominator)
+        "#;
+
+        let lowered = compile(src).expect("nested false guard is a typed abstention");
+        let execution = &lowered.formula_executions[0];
+        assert_eq!(
+            execution
+                .formula_sequence
+                .iter()
+                .map(|application| application.formula.as_str())
+                .collect::<Vec<_>>(),
+            ["outer", "inner"]
+        );
+        assert_eq!(
+            execution
+                .guards
+                .iter()
+                .map(|guard| (guard.formula.as_str(), guard.outcome))
+                .collect::<Vec<_>>(),
+            [
+                ("outer", FormulaGuardOutcome::Passed),
+                ("inner", FormulaGuardOutcome::Failed),
+            ]
+        );
+        assert!(lowered.kb.derived_for("outer").is_none());
+    }
+
+    #[test]
+    fn exact_nonzero_query_literal_uses_its_retained_rational_identity() {
+        let src = r#"
+            formulabook guarded {
+                formula identity(x) = x
+                    requires nonzero(x)
+                    source "identity domain" trust authoritative
+            }
+            ? identity(1e-400)
+        "#;
+
+        let lowered = compile(src).expect("an exact nonzero rational must not become zero");
+        let result = lowered.kb.derived_for("identity").unwrap();
+        assert_eq!(result.value, 0.0);
+        assert!(result
+            .exact
+            .as_ref()
+            .is_some_and(|value| !value.numerator().is_zero()));
+    }
+
+    #[test]
+    fn unguarded_formula_keeps_existing_literal_narrowing_behavior() {
+        let src = r#"
+            formulabook formulas {
+                formula identity(x) = x
+                    source "identity definition" trust authoritative
+            }
+            let result = identity(0.1)
+        "#;
+
+        let lowered = compile(src).expect("unguarded formulas do not run guard precision checks");
+        assert!((lowered.kb.derived_for("result").unwrap().value - 0.1).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn guard_precision_check_ignores_an_unconsumed_parameter() {
+        let src = r#"
+            formulabook formulas {
+                formula first(a, b) = a
+                    requires nonzero(a)
+                    source "first definition" trust authoritative
+            }
+            let result = first(1, 0.1)
+        "#;
+
+        let lowered = compile(src).expect("only literals consumed by a guard are checked");
+        assert_eq!(lowered.kb.derived_for("result").unwrap().value, 1.0);
+    }
+
+    #[test]
+    fn guard_accepts_exact_identity_carried_through_an_earlier_binding() {
+        let src = r#"
+            formulabook formulas {
+                formula identity(x) = x
+                    source "identity definition" trust authoritative
+                formula guarded(x) = x
+                    requires nonzero(x)
+                    source "guarded definition" trust authoritative
+            }
+            let narrowed = identity(1e-400)
+            let result = guarded(narrowed)
+        "#;
+
+        let lowered = compile(src).expect("identity preserves the exact rational sidecar");
+        assert!(lowered.formula_abstentions.is_empty());
+        assert!(lowered.kb.derived_for("result").is_some());
+    }
+
+    #[test]
+    fn guard_rejects_an_exact_observation_after_an_operation_discards_exactness() {
+        let src = r#"
+            formulabook formulas {
+                formula sine(x) = latex "$\sin(x)$"
+                    source "sine definition" trust authoritative
+                formula guarded(x) = x
+                    requires nonzero(x)
+                    source "guarded definition" trust authoritative
+            }
+            observe tiny(1e-400)
+            let transformed = sine(tiny)
+            let result = guarded(transformed)
+        "#;
+
+        assert!(matches!(
+            compile(src),
+            Err(crate::CompileError::Lower(
+                LowerError::FormulaArgumentPrecisionLoss { ref parameter, .. }
+            )) if parameter == "x"
+        ));
+    }
+
+    #[test]
+    fn observed_binding_shadows_an_unrelated_lossy_derived_marker() {
+        let src = r#"
+            formulabook formulas {
+                formula identity(x) = x
+                    source "identity definition" trust authoritative
+                formula guarded(x) = x
+                    requires nonzero(x)
+                    source "guarded definition" trust authoritative
+            }
+            let x = identity(1e-400)
+            observe x(1)
+            let result = guarded(x)
+        "#;
+
+        let lowered = compile(src).expect("guard resolution must match observed-first evaluation");
+        assert_eq!(lowered.kb.derived_for("result").unwrap().value, 1.0);
+    }
+
+    #[test]
+    fn exact_nonzero_expression_literal_uses_its_retained_rational_identity() {
+        let src = r#"
+            formulabook guarded {
+                formula identity(x) = x
+                    requires nonzero(x)
+                    source "identity domain" trust authoritative
+            }
+            let result = identity(1e-400)
+        "#;
+
+        let lowered = compile(src).expect("an exact nonzero rational must satisfy nonzero");
+        assert!(lowered.formula_abstentions.is_empty());
+        assert!(lowered.kb.derived_for("result").is_some());
+    }
+
+    #[test]
+    fn composed_guard_computes_from_exact_literals_before_narrowing() {
+        let src = r#"
+            formulabook guarded {
+                formula separation(x, y) = x
+                    requires nonzero(x - y)
+                    source "distinct values" trust authoritative
+            }
+            let result = separation(9007199254740993, 9007199254740992)
+        "#;
+
+        let lowered = compile(src).expect("exact subtraction is one, not rounded zero");
+        assert!(lowered.formula_abstentions.is_empty());
+        let result = lowered.kb.derived_for("result").unwrap();
+        assert_eq!(
+            result.exact.as_ref().unwrap().numerator().to_string(),
+            "9007199254740993"
+        );
+    }
+
+    #[test]
+    fn composed_guard_uses_exact_observed_values() {
+        let src = r#"
+            formulabook guarded {
+                formula separation(x, y) = x
+                    requires nonzero(x - y)
+                    source "distinct values" trust authoritative
+            }
+            observe x_value(9007199254740993)
+            observe y_value(9007199254740992)
+            let result = separation(x_value, y_value)
+        "#;
+
+        let lowered = compile(src).expect("observed exact values retain rational sidecars");
+        assert!(lowered.formula_abstentions.is_empty());
+        assert!(lowered.kb.derived_for("result").is_some());
+    }
+
+    #[test]
+    fn deeply_nested_precondition_hits_the_formula_depth_guard() {
+        let mut guard = ExprAst::Ref("x".to_string());
+        for _ in 0..150 {
+            guard = ExprAst::Bin(ArithOp::Add, Box::new(guard), Box::new(ExprAst::Lit(0.0)));
+        }
+        let formula = FormulaDef {
+            name: "identity".to_string(),
+            params: vec!["x".to_string()],
+            steps: Vec::new(),
+            body: ExprAst::Ref("x".to_string()),
+            preconditions: vec![FormulaPrecondition {
+                predicate: "nonzero".to_string(),
+                arguments: vec![guard],
+            }],
+            annotations: vec![
+                Annotation::Source("identity domain".to_string()),
+                Annotation::Trust(TrustTierName::Authoritative),
+            ],
+        };
+
+        assert!(matches!(
+            validate_formula(&formula),
+            Err(LowerError::FormulaNestingTooDeep { limit })
+                if limit == FORMULA_MAX_NODE_DEPTH
+        ));
+    }
+
+    #[test]
+    fn invalid_guard_arithmetic_is_an_execution_error_not_unresolved_input() {
+        let src = r#"
+            formulabook guarded {
+                formula identity(a, b) = a
+                    requires nonzero(a / b)
+                    source "guarded identity" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            ? identity(numerator, denominator)
+        "#;
+
+        assert!(matches!(
+            compile(src),
+            Err(crate::CompileError::Lower(LowerError::ComputationFailed {
+                ref detail, ..
+            })) if detail.contains("DivisionByZero")
+        ));
+    }
+
+    #[test]
+    fn dependent_lets_propagate_the_original_formula_abstention() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            let first = quotient(numerator, denominator)
+            let second = first + 1
+        "#;
+
+        let lowered = compile(src).expect("dependent unavailable values remain abstentions");
+        assert!(lowered.kb.derived_for("first").is_none());
+        assert!(lowered.kb.derived_for("second").is_none());
+        assert_eq!(
+            lowered
+                .formula_abstentions
+                .iter()
+                .map(|value| value.name.as_str())
+                .collect::<Vec<_>>(),
+            ["first", "second"]
+        );
+        assert!(lowered
+            .formula_abstentions
+            .iter()
+            .all(|value| value.formula == "quotient"));
+    }
+
+    #[test]
+    fn successful_let_rebinding_clears_a_cached_abstention() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            let result = quotient(numerator, denominator)
+            let result = numerator + 1
+            let downstream = result + 1
+        "#;
+
+        let lowered = compile(src).expect("a successful rebind restores availability");
+        assert_eq!(lowered.kb.derived_for("result").unwrap().value, 9.0);
+        assert_eq!(lowered.kb.derived_for("downstream").unwrap().value, 10.0);
+        assert_eq!(lowered.formula_abstentions.len(), 1);
+    }
+
+    #[test]
+    fn later_observation_clears_a_cached_abstention() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            let result = quotient(numerator, denominator)
+            observe result(7)
+            let downstream = result + 1
+        "#;
+
+        let lowered = compile(src).expect("an observation supersedes stale unavailability");
+        assert_eq!(lowered.kb.derived_for("downstream").unwrap().value, 8.0);
+        assert_eq!(lowered.formula_abstentions.len(), 1);
+    }
+
+    #[test]
+    fn successful_direct_rebinding_clears_a_cached_abstention() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            ? quotient(numerator, denominator)
+            observe denominator(2)
+            ? quotient(numerator, denominator)
+            let downstream = quotient + 1
+        "#;
+
+        let lowered = compile(src).expect("a successful query rebind restores availability");
+        assert_eq!(lowered.kb.derived_for("quotient").unwrap().value, 4.0);
+        assert_eq!(lowered.kb.derived_for("downstream").unwrap().value, 5.0);
+        assert_eq!(lowered.formula_abstentions.len(), 1);
+    }
+
+    #[test]
+    fn guard_fact_ids_respect_each_derived_predecessor_scope() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+            }
+            observe a(1)
+            observe b(0)
+            let x = a + b
+            let y = x + 1
+            let denominator = y - 2
+            let x = b + 2
+            ? quotient(a, denominator)
+        "#;
+
+        let lowered = compile(src).expect("a false guard remains a typed abstention");
+        assert_eq!(lowered.formula_abstentions.len(), 1);
+        assert_eq!(
+            lowered.formula_abstentions[0].fact_ids,
+            vec![FactId(0), FactId(1)],
+            "the old x binding consumed both a and b; the later x must not shadow it"
+        );
+        assert_eq!(
+            lowered.formula_abstentions[0]
+                .computation_ids
+                .iter()
+                .map(|id| id.0)
+                .collect::<Vec<_>>(),
+            vec![2, 1, 0],
+            "the root-first closure must retain the old x computation, not rebinding 3"
+        );
+    }
+
+    #[test]
+    fn nested_formula_precondition_propagates_to_the_outer_binding() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    requires nonzero(b)
+                    source "division domain" trust authoritative
+                formula ratio(a, b) = quotient(a, b)
+                    source "ratio definition" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            let result = ratio(numerator, denominator)
+        "#;
+
+        let lowered = compile(src).expect("nested guard failure is an abstention");
+        assert!(lowered.kb.derived_for("result").is_none());
+        assert_eq!(lowered.formula_abstentions.len(), 1);
+        assert_eq!(lowered.formula_abstentions[0].name, "result");
+        assert_eq!(lowered.formula_abstentions[0].formula, "quotient");
+    }
+
+    #[test]
+    fn nonzero_accepts_negative_values() {
+        let src = r#"
+            formulabook guarded {
+                formula identity(x) = x
+                    requires nonzero(x)
+                    source "identity domain" trust authoritative
+            }
+            observe input(-2)
+            ? identity(input)
+        "#;
+
+        let lowered = compile(src).expect("negative values are nonzero");
+        assert_eq!(lowered.kb.derived_for("identity").unwrap().value, -2.0);
+        assert!(lowered.formula_abstentions.is_empty());
+    }
+
+    #[test]
+    fn malformed_formula_preconditions_are_typed_errors() {
+        let unknown = r#"
+            formulabook guarded {
+                formula identity(x) = x requires positive(x)
+                    source "identity domain" trust authoritative
+            }
+        "#;
+        assert!(matches!(
+            compile(unknown),
+            Err(crate::CompileError::Lower(LowerError::FormulaUnknownPrecondition {
+                ref predicate, ..
+            })) if predicate == "positive"
+        ));
+
+        let arity = r#"
+            formulabook guarded {
+                formula identity(x) = x requires nonzero()
+                    source "identity domain" trust authoritative
+            }
+        "#;
+        assert!(matches!(
+            compile(arity),
+            Err(crate::CompileError::Lower(
+                LowerError::FormulaPreconditionArity {
+                    expected: 1,
+                    got: 0,
+                    ..
+                }
+            ))
+        ));
+
+        let nested_application = r#"
+            formulabook guarded {
+                formula identity(x) = x requires nonzero(identity(x))
+                    source "identity domain" trust authoritative
+            }
+        "#;
+        assert!(matches!(
+            compile(nested_application),
+            Err(crate::CompileError::Lower(
+                LowerError::FormulaPreconditionApplicationUnsupported { .. }
+            ))
+        ));
+    }
+
+    #[test]
+    fn duplicate_formula_exports_are_rejected() {
+        let src = r#"
+            formulabook first {
+                formula identity(x) = x source "first" trust authoritative
+            }
+            formulabook second {
+                formula identity(x) = x source "second" trust authoritative
+            }
+        "#;
+        assert!(matches!(
+            compile(src),
+            Err(crate::CompileError::Lower(LowerError::DuplicateFormula { ref formula }))
+                if formula == "identity"
+        ));
+    }
+
+    #[test]
+    fn top_level_formula_query_arity_mismatch_does_not_fall_through() {
+        let src = r#"
+            formulabook guarded {
+                formula quotient(a, b) = a / b
+                    source "division definition" trust authoritative
+            }
+            observe numerator(8)
+            ? quotient(numerator)
+        "#;
+        assert!(matches!(
+            compile(src),
+            Err(crate::CompileError::Lower(LowerError::FormulaArity {
+                ref formula, expected: 2, got: 1
+            })) if formula == "quotient"
+        ));
     }
 }

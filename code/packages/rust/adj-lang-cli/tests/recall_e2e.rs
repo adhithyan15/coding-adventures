@@ -4,7 +4,7 @@
 //! provenance, with 0 answer-time model calls. Abstention (no grounded edge) is
 //! an explicit empty answer set, not a fabricated value.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
 fn scratch(tag: &str) -> PathBuf {
@@ -14,11 +14,11 @@ fn scratch(tag: &str) -> PathBuf {
     dir
 }
 
-fn write(dir: &PathBuf, name: &str, src: &str) {
+fn write(dir: &Path, name: &str, src: &str) {
     std::fs::write(dir.join(name), src).unwrap();
 }
 
-fn run(program: &PathBuf) -> (bool, String) {
+fn run(program: &Path) -> (bool, String) {
     let out = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
         .arg(program)
         .output()

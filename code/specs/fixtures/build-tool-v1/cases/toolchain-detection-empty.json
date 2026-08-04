@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "toolchain-detection/empty-selects-none",
+  "domain": "toolchain_detection",
+  "summary": "An empty selection enables no package toolchains and still returns every registry key.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "toolchain_detection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "toolchain_detection",
+    "options": {
+      "packages": [
+        {
+          "name": "python/app",
+          "language": "python"
+        }
+      ],
+      "scheduled_packages": [],
+      "forced_toolchains": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "toolchain-detection/empty-selects-none",
+    "domain": "toolchain_detection",
+    "outcome": "ok",
+    "result": {
+      "toolchains": {
+        "cpp": false,
+        "dart": false,
+        "dotnet": false,
+        "elixir": false,
+        "go": false,
+        "haskell": false,
+        "java": false,
+        "kotlin": false,
+        "lua": false,
+        "ocaml": false,
+        "perl": false,
+        "python": false,
+        "ruby": false,
+        "rust": false,
+        "swift": false,
+        "typescript": false
+      }
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

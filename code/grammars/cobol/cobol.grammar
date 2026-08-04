@@ -1,0 +1,299 @@
+# COBOL-60 Parser Grammar
+# ============================================================
+#
+# The syntactic layer of the COBOL-60 frontend (see PL07-cobol-60.md).  It
+# consumes the token stream produced by cobol.tokens (after the lexer's
+# column-strip pre-tokenize hook) and builds a generic concrete syntax tree via
+# the shared `GrammarParser` (recursive-descent PEG with packrat memoization).
+# Nothing is hand-written.
+#
+# A COBOL program is exactly four divisions, always in order — IDENTIFICATION,
+# ENVIRONMENT, DATA, PROCEDURE — of which only IDENTIFICATION and PROCEDURE are
+# required.  Nearly every construct ends in a period (DOT).
+#
+# ------------------------------------------------------------
+# Grammar reminders (see grammar-format.md)
+# ------------------------------------------------------------
+#   * The FIRST rule (`program`) is the entry point; the whole token stream must
+#     be consumed.
+#   * UPPERCASE names (NAME, NUMBER, STRING, PIC_STRING, DOT, LPAREN, RPAREN)
+#     reference token TYPES.
+#   * "QUOTED" literals match a token's VALUE.  Reserved words are normalized to
+#     uppercase by the lexer, so literals here are uppercase.
+#   * `{ x }` = zero or more (greedy), `[ x ]` = optional, `( x )` = grouping,
+#     `|` = ordered choice.  No left recursion.
+#   * Level numbers arrive as NUMBER tokens (the lexer keeps no LEVEL token); a
+#     data entry is therefore `NUMBER NAME … DOT`.
+
+# @version 1
+
+# ============================================================
+# Program: the four divisions
+# ============================================================
+program = identification_division
+          [ environment_division ]
+          [ data_division ]
+          procedure_division ;
+
+# ============================================================
+# IDENTIFICATION DIVISION
+# ============================================================
+#
+# The header, the required PROGRAM-ID, then optional commentary paragraphs
+# (AUTHOR, DATE-WRITTEN, …) whose bodies are free text up to the next period.
+identification_division =
+    "IDENTIFICATION" "DIVISION" DOT
+    program_id
+    { id_paragraph } ;
+
+program_id = "PROGRAM-ID" DOT NAME DOT ;
+
+id_paragraph = id_keyword DOT { comment_word } DOT ;
+id_keyword   = "AUTHOR" | "INSTALLATION" | "DATE-WRITTEN"
+             | "DATE-COMPILED" | "SECURITY" | "REMARKS" ;
+# Commentary text is arbitrary words; we accept names, numbers, and literals.
+comment_word = NAME | NUMBER | STRING ;
+
+# ============================================================
+# ENVIRONMENT DIVISION (optional)
+# ============================================================
+#
+# A minimal but real subset: the CONFIGURATION SECTION (SOURCE/OBJECT-COMPUTER)
+# and the INPUT-OUTPUT SECTION (FILE-CONTROL / SELECT).  Richer FD descriptions
+# are future work.
+environment_division = "ENVIRONMENT" "DIVISION" DOT { env_section } ;
+env_section = configuration_section | input_output_section ;
+
+configuration_section =
+    "CONFIGURATION" "SECTION" DOT { config_paragraph } ;
+config_paragraph = ( "SOURCE-COMPUTER" | "OBJECT-COMPUTER" ) DOT NAME DOT ;
+
+input_output_section =
+    "INPUT-OUTPUT" "SECTION" DOT "FILE-CONTROL" DOT { select_sentence } ;
+select_sentence = "SELECT" NAME "ASSIGN" "TO" NAME DOT ;
+
+# ============================================================
+# DATA DIVISION (optional)
+# ============================================================
+#
+# The WORKING-STORAGE and FILE sections are lists of data entries.  A data entry
+# is a level number, a name (or FILLER), zero or more clauses, and a period.
+data_division = "DATA" "DIVISION" DOT { data_section } ;
+data_section  = working_storage_section | file_section ;
+
+working_storage_section = "WORKING-STORAGE" "SECTION" DOT { data_entry } ;
+file_section            = "FILE" "SECTION" DOT { file_or_data_entry } ;
+file_or_data_entry      = fd_entry | data_entry ;
+fd_entry                = "FD" NAME { comment_word } DOT ;
+
+data_entry  = NUMBER ( NAME | "FILLER" ) { data_clause } DOT ;
+data_clause = picture_clause | value_clause ;
+
+picture_clause = ( "PICTURE" | "PIC" ) PIC_STRING ;
+
+# A VALUE clause is one or more value-items.  A plain item's VALUE is a single
+# literal; a level-88 condition-name may list several values and `THRU` ranges
+# (`88 OK VALUE 1 THRU 5 9`).  The grammar is permissive — the interpreter and
+# compiler reject a multi/range VALUE on a non-88 item.
+value_clause = "VALUE" [ "IS" ] value_item { value_item } ;
+value_item   = literal [ ( "THRU" | "THROUGH" ) literal ] ;
+
+# ============================================================
+# PROCEDURE DIVISION
+# ============================================================
+#
+# Optional sections, then paragraphs (a name, then sentences).  A sentence is one
+# or more statements terminated by a period.  Statement verbs and paragraph names
+# never collide: a statement begins with a verb KEYWORD, a paragraph with a NAME.
+procedure_division = "PROCEDURE" "DIVISION" DOT { paragraph } ;
+paragraph = NAME DOT { sentence } ;
+sentence  = statement { statement } DOT ;
+
+statement = move_stmt | display_stmt | accept_stmt
+          | add_stmt | subtract_stmt | multiply_stmt | divide_stmt | compute_stmt
+          | perform_stmt | goto_stmt | if_stmt | set_stmt | evaluate_stmt
+          | string_stmt | unstring_stmt | inspect_stmt | stop_stmt ;
+
+move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
+# SET a level-88 condition-name TRUE: assign its conditional variable the value
+# that makes the name hold (its first VALUE).
+set_stmt      = "SET" NAME "TO" "TRUE" ;
+# EVALUATE: COBOL's case statement. Compare the subject against each WHEN's
+# value-list top-to-bottom; the FIRST branch that matches runs its statements (no
+# fall-through), else the WHEN OTHER branch. A WHEN may list several values and
+# inclusive `THRU` ranges (`WHEN 1 5 THRU 7 9`). `END-EVALUATE` closes the scope; a
+# WHEN's statement list ends at the next WHEN or END-EVALUATE (both keywords, so a
+# statement can't consume them). Numeric subject this cut.
+evaluate_stmt = "EVALUATE" operand { when_branch } "END-EVALUATE" ;
+when_branch   = "WHEN" ( "OTHER" | when_value { when_value } ) { statement } ;
+when_value    = operand [ ( "THRU" | "THROUGH" ) operand ] ;
+# STRING: concatenate several sending fields into one alphanumeric receiver.
+# First rung: `STRING s… DELIMITED BY SIZE INTO t` — each source (an alphanumeric
+# item or a literal) is taken in FULL (`DELIMITED BY SIZE`), the pieces are joined
+# left-to-right, and the result is stored LEFT-JUSTIFIED into `t`, truncated at
+# `t`'s width and — the COBOL surprise — WITHOUT space-filling the untouched tail
+# (bytes beyond what STRING wrote keep their prior content).
+#   The delimiter is parsed as `SIZE` OR a general `operand`; a real
+# (literal/identifier) delimiter needs a run-time scan and is rejected as a later
+# rung by the reader — the grammar accepts it so the rejection is a clean
+# "Unsupported", not a parse error.  `WITH POINTER` and the `ON OVERFLOW` /
+# `NOT ON OVERFLOW` handlers are likewise accepted-then-rejected this rung.
+# `END-STRING` closes the scope; like the simpler verbs the statement also ends at
+# a period.
+string_stmt   = "STRING" operand { operand } "DELIMITED" "BY" string_delim
+                        "INTO" NAME [ "WITH" "POINTER" NAME ]
+                        [ "ON" "OVERFLOW" { statement } ]
+                        [ "NOT" "ON" "OVERFLOW" { statement } ]
+                        [ "END-STRING" ] ;
+string_delim  = "SIZE" | operand ;
+# UNSTRING: the inverse of STRING — scan one alphanumeric source left-to-right and
+# split it on a single delimiter into successive receivers.  First rung:
+# `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — `delim` is a single-
+# character delimiter (a 1-char literal or a PIC X(1) item; the grammar takes a
+# general `operand` and the reader/compiler enforce the 1-char restriction).  Each
+# receiver (INCLUDING the last) gets the field up to the NEXT delimiter; extra
+# fields beyond the receiver count are dropped, and once the source is exhausted
+# the remaining receivers are left UNCHANGED.  `WITH POINTER`, `ON OVERFLOW`, and
+# `NOT ON OVERFLOW` are accepted here but rejected as later rungs by the
+# reader/compiler (a clean Unsupported, not a parse error).  `END-UNSTRING` closes
+# the scope; like the other verbs the statement also ends at a period.
+unstring_stmt = "UNSTRING" operand "DELIMITED" "BY" operand "INTO" NAME { NAME }
+                        [ "WITH" "POINTER" NAME ]
+                        [ "ON" "OVERFLOW" { statement } ]
+                        [ "NOT" "ON" "OVERFLOW" { statement } ]
+                        [ "END-UNSTRING" ] ;
+# INSPECT: scan an alphanumeric item to COUNT occurrences (TALLYING) or SUBSTITUTE
+# characters (REPLACING).  First rung: `INSPECT source TALLYING counter FOR ALL
+# delim` — ADD to `counter` the number of (non-overlapping, left-to-right)
+# occurrences of the single-character `delim` in `source`.
+#   The grammar is deliberately broad — it accepts the fuller INSPECT surface
+# (LEADING/CHARACTERS tallies, BEFORE/AFTER phrases, several counters and FOR
+# phrases, and every REPLACING form) — so the reader/compiler can reject
+# each unimplemented form as a friendly Unsupported instead of a bare parse
+# error, exactly as STRING/UNSTRING do for their later-rung options.  A bare
+# TALLYING form has a following `inspect_replacing` only when REPLACING is also
+# present; a lone REPLACING (no TALLYING) is the second alternative.  `END-INSPECT`
+# closes the scope; like the other verbs the statement also ends at a period.
+inspect_stmt  = "INSPECT" operand
+                        ( inspect_tallying [ inspect_replacing ]
+                        | inspect_replacing
+                        | inspect_converting )
+                        [ "END-INSPECT" ] ;
+inspect_tallying  = "TALLYING" tally_for { tally_for } ;
+tally_for         = NAME "FOR" tally_item { tally_item } ;
+tally_item        = ( "ALL" | "LEADING" ) operand { inspect_region }
+                  | "CHARACTERS" { inspect_region } ;
+inspect_replacing = "REPLACING" replace_item { replace_item } ;
+replace_item      = "CHARACTERS" "BY" operand { inspect_region }
+                  | ( "ALL" | "LEADING" ) operand "BY" operand { inspect_region } ;
+# CONVERTING translates each source character through a from→to translation table:
+# every character equal to the k-th character of `from` becomes the k-th character
+# of `to`.  First rung: `from`/`to` are equal-length string literals and the whole
+# source is converted.  The trailing `{ inspect_region }` accepts an optional
+# BEFORE/AFTER so a region-restricted CONVERTING parses and rejects cleanly as a
+# later rung (rather than a bare parse error).  CONVERTING is a standalone INSPECT
+# alternative — it is never combined with TALLYING/REPLACING in one statement.
+inspect_converting = "CONVERTING" operand "TO" operand { inspect_region } ;
+# A BEFORE/AFTER delimiter restricts the scan to part of the item — a later rung;
+# the grammar accepts it so it rejects cleanly. (COBOL's optional `INITIAL` word
+# after BEFORE/AFTER is itself a later rung, so it is not reserved yet.)
+inspect_region    = ( "BEFORE" | "AFTER" ) operand ;
+display_stmt  = "DISPLAY" operand { operand } ;
+accept_stmt   = "ACCEPT" NAME ;
+# The four arithmetic verbs share two optional trailing clauses with COMPUTE:
+# ROUNDED (round instead of truncate into the receiver) and ON SIZE ERROR.
+add_stmt      = "ADD" operand { operand } "TO" NAME [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
+subtract_stmt = "SUBTRACT" operand { operand } "FROM" NAME [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
+multiply_stmt = "MULTIPLY" operand "BY" operand [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
+divide_stmt   = "DIVIDE" operand "INTO" operand [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
+
+# COMPUTE evaluates a full arithmetic EXPRESSION and MOVEs the result into the
+# receiver — the one COBOL verb that takes operator symbols instead of
+# prepositions.  `ROUNDED` rounds instead of truncating; `ON SIZE ERROR`
+# supplies statements to run when the result overflows the receiver.  Both are
+# recognised here; their runtime semantics are a later PR.
+compute_stmt = "COMPUTE" NAME [ "ROUNDED" ] EQ arith_expr [ size_error ] ;
+size_error   = "ON" "SIZE" "ERROR" { statement } ;
+
+# Arithmetic expressions, layered so the grammar itself encodes COBOL's operator
+# precedence (a PEG has no left recursion, so each level is `head { op tail }`,
+# left-to-right).  Lowest precedence first:
+#   arith_expr    +  -            additive        (loosest binding)
+#   arith_term    *  /            multiplicative
+#   arith_factor  **              exponentiation
+#   arith_unary   leading + / -   unary sign      (binds tighter than **, so
+#                                                  `-2 ** 2` is `(-2) ** 2`, the
+#                                                  COBOL reading)
+#   arith_primary NUMBER | NAME | ( expr )        (tightest; parentheses recurse)
+# Exponentiation is right-associative in COBOL; the flat `{ POW arith_unary }`
+# repetition keeps every operand as a sibling, leaving the fold direction to the
+# evaluator.  Parenthesised sub-expressions recurse through `arith_primary`, so
+# deep nesting is bounded by the parser's recursion-depth cap (see cobol-parser).
+arith_expr    = arith_term   { ( PLUS | MINUS ) arith_term } ;
+arith_term    = arith_factor { ( STAR | SLASH ) arith_factor } ;
+arith_factor  = arith_unary  { POW arith_unary } ;
+arith_unary   = [ PLUS | MINUS ] arith_primary ;
+arith_primary = NUMBER | NAME | LPAREN arith_expr RPAREN ;
+perform_stmt  = "PERFORM" NAME [ "THROUGH" NAME | "THRU" NAME ]
+                        [ operand "TIMES" | "UNTIL" condition | perform_varying ] ;
+# VARYING id FROM start BY step UNTIL cond — a counted loop over an induction
+# variable (`id := start`; run while `cond` is false, stepping `id` by `step`).
+perform_varying = "VARYING" NAME "FROM" operand "BY" operand "UNTIL" condition ;
+goto_stmt     = "GO" [ "TO" ] NAME ;
+stop_stmt     = "STOP" ( "RUN" | NUMBER | STRING ) ;
+
+# IF: a relational condition or a level-88 condition-name, a then-branch of
+# statements, optional ELSE.  Nested sentences terminate at the enclosing
+# sentence's period.
+#
+# A `condition` combines *simple* conditions with `AND`/`OR` (and parentheses
+# for grouping). Precedence, tightest first: a simple condition, then `AND`, then
+# `OR` — so `A OR B AND C` parses as `A OR (B AND C)`. Each level is a PEG
+# `head { op tail }` list, folded left-associatively by the reader.
+#
+# A simple condition is a relation (`operand relop operand`), a bare level-88
+# condition-name, or a parenthesised condition. The ordered choice tries the
+# relation first; a bare condition-name has no relop after its NAME, so the
+# relation alternative fails and the parser falls back to `condition_name`; a `(`
+# starts neither, so the parenthesised alternative is reached.
+if_stmt          = "IF" condition { statement } [ "ELSE" { statement } ] ;
+condition        = disjunction ;
+disjunction      = conjunction { "OR" conjunction } ;
+conjunction      = negation { "AND" negation } ;
+# `NOT` negates the whole following simple condition (a relation, a
+# condition-name, or a parenthesised condition) — it binds tighter than `AND`.
+# A relation may *also* carry its own `NOT` inside the `relop` (`A IS NOT > B`);
+# the two never collide because the negation `NOT` precedes the first operand
+# while the relop `NOT` sits between the operands.
+negation         = [ "NOT" ] simple_condition ;
+simple_condition = relation | condition_name | LPAREN condition RPAREN ;
+relation         = operand relop operand ;
+condition_name   = NAME ;
+# The relation operator: a COBOL word form (`GREATER THAN`, …) or a symbol
+# (`>` `<` `=` `>=` `<=` `<>`). `>=`/`<=`/`<>` already encode a negation
+# (`>=` ≡ `NOT <`); a leading `NOT` composes with it (the readers XOR the two).
+relop          = [ "IS" ] [ "NOT" ]
+            ( "GREATER" [ "THAN" ] | "LESS" [ "THAN" ] | "EQUAL" [ "TO" ]
+            | GE | LE | NE | GT | LT | EQ ) ;
+
+# ============================================================
+# Operands and literals
+# ============================================================
+#
+# Reference modification — `NAME(start:len)` or `NAME(start:)` — selects a
+# substring of an alphanumeric item: `len` characters beginning at 1-based
+# position `start`, running to the end of the item when the length is omitted.
+# The suffix is optional so a bare NAME still parses exactly as before. The
+# inner `start`/`len` are themselves `operand`s (so an integer NUMBER literal
+# parses); the reader rejects non-literal start/length as a later rung.
+operand    = NAME [ LPAREN operand COLON [ operand ] RPAREN ] | literal ;
+literal    = NUMBER | STRING | figurative ;
+figurative = "ZERO" | "ZEROS" | "ZEROES"
+           | "SPACE" | "SPACES"
+           | "HIGH-VALUE" | "HIGH-VALUES"
+           | "LOW-VALUE" | "LOW-VALUES"
+           | "QUOTE" | "QUOTES" ;

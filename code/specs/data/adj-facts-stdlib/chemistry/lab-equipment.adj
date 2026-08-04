@@ -1,0 +1,96 @@
+% ============================================================================
+% equipment_use — what each common piece of chemistry-lab glassware/apparatus
+% is FOR (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% A middle/high-school chemistry-lab fact set: the first day in the lab you are
+% handed a bench full of glassware and asked "what is this one for?" This table
+% answers exactly that — it maps a piece of lab equipment to the ONE verb the
+% source uses for its job. Recall is a binding query:
+%
+%     ? equipment_use(beaker, $U)          % hold
+%
+% Like every FACTS library this is a native `table` (ADJ-TABLES RS-5): each
+% `row` lowers to a ground relation `equipment_use(equipment, purpose)` carrying
+% the table's citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the use WITH its source, on the CPU, with zero model calls,
+% and abstains on a tool that is not in the table. It also runs BACKWARD (bind a
+% use, recall the tool that has it):
+%
+%     ? equipment_use($E, heat)            % bunsen_burner — the heat source
+%
+% The value is an ATOM (a single verb copied out of the source sentence), not a
+% number, because "what is it for" is a categorical fact, not a measured
+% quantity. That keeps the axis clean: ONE tool, ONE use-verb, verbatim.
+%
+% The seven pieces of equipment, each with the verb its description uses (a
+% little truth table — read tool → what you do with it):
+%
+%     equipment            use          the job in one word
+%     ------------------   ----------   ----------------------------------
+%     beaker               hold         holds varying volumes of liquid
+%     graduated_cylinder   measuring    measures many different volumes
+%     bunsen_burner        heat         heats things (the open-flame source)
+%     test_tube            mix          holds AND mixes small samples
+%     funnel               transfer     aids the transfer of liquids
+%     buret                dispensing   dispenses specific volumes (titrations)
+%     watch_glass          evaporate    evaporates a liquid / heats a portion
+%
+% A tool that is not one of these seven — a stir rod, a ring stand, a crucible —
+% has no row, so a recall on it ABSTAINS rather than inventing a use. That
+% honest-abstention property is what makes the table safe to reason from.
+%
+% Note the two "measure-like" tools carry DISTINCT verbs, each verbatim from its
+% own sentence: the graduated cylinder is for `measuring` volumes, while the
+% buret's sentence is about `dispensing` specific volumes — the source's own
+% words, not a paraphrase collapsing them together.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every equipment→use pair was
+% read out of a fetched teaching-lab page, and any tool whose use could not be
+% copied verbatim from its sentence was dropped). All seven rows come from the
+% SAME source: the LibreTexts "Lab Equipment" page for Bethune-Cookman University
+% CHL-141 "General Chemistry 1 Lab", Laboratory 1: Basic Lab Techniques
+% (chem.libretexts.org). Each use-verb is copied character-for-character out of
+% that page's description sentence for the tool:
+%
+%   Beaker              → "Used to hold varying volumes of liquid"          → hold
+%   Graduated cylinder  → "Used for measuring many different volumes"       → measuring
+%   Bunsen burner       → "Used to heat things"                             → heat
+%   Test tube           → "Used to hold and mix small samples"             → mix
+%   Funnel              → "Used to aide in the transfer of liquids"        → transfer
+%   Buret               → "Often used for titrations or dispensing
+%                          specific volumes of liquids"                    → dispensing
+%   Watch glass         → "Used to evaporate a liquid, to heat small
+%                          portions of a substance"                        → evaporate
+%
+% (The Erlenmeyer flask, volumetric flask, pipet, and wash bottle appear on the
+% same page but were dropped: the flask's lead sentence is about stirring rather
+% than a single clean use, and pipet/wash-bottle duplicate the measuring /
+% dispensing verbs already covered — so they are omitted to keep one distinct
+% verb per row rather than padded in.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single page's title and three representative verbatim
+% sentences; every other row's verbatim span is listed above, so each use-verb
+% remains independently checkable. LibreTexts is a SECONDARY teaching reference
+% (a college course lab text, not a primary standards body), so `trust
+% consensus` — the honest tier for a teaching summary, per the standard-library
+% trust convention. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table equipment_use {
+    columns equipment, purpose
+
+    row (beaker, hold)
+    row (graduated_cylinder, measuring)
+    row (bunsen_burner, heat)
+    row (test_tube, mix)
+    row (funnel, transfer)
+    row (buret, dispensing)
+    row (watch_glass, evaporate)
+
+    source "Lab Equipment (Bethune-Cookman University CHL-141 General Chemistry 1 Lab, Laboratory 1: Basic Lab Techniques) — Beaker: \"Used to hold varying volumes of liquid\" … Bunsen burner: \"Used to heat things\" … Funnel: \"Used to aide in the transfer of liquids\""
+    locator "https://chem.libretexts.org/Courses/BethuneCookman_University/B-CU:_CHL-141_General_Chemistry_1_Lab/Labs/Laboratory_1:_Basic_Lab_Techniques/Lab_Equipment"
+    trust consensus
+}

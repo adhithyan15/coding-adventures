@@ -257,12 +257,12 @@ impl Cpu8086 {
 
     fn flags_low8(&self) -> u8 {
         let rf = &self.rf;
-        (rf.flag_cf << 0) | (1 << 1) | (rf.flag_pf << 2) |
+        rf.flag_cf | (1 << 1) | (rf.flag_pf << 2) |
         (rf.flag_af << 4) | (rf.flag_zf << 6) | (rf.flag_sf << 7)
     }
 
     fn load_flags_low8(&mut self, f: u8) {
-        self.rf.flag_cf = (f >> 0) & 1;
+        self.rf.flag_cf = f & 1;
         self.rf.flag_pf = (f >> 2) & 1;
         self.rf.flag_af = (f >> 4) & 1;
         self.rf.flag_zf = (f >> 6) & 1;
@@ -598,7 +598,7 @@ impl Cpu8086 {
     #[allow(clippy::cognitive_complexity)]
     fn exec_op(&mut self, op: u8, seg_override: Option<u8>, rep_prefix: Option<u8>) {
         // ── MOV r/m, reg or reg, r/m (88/89/8A/8B) ───────────────────────────
-        if matches!(op, 0x88 | 0x89 | 0x8A | 0x8B) {
+        if matches!(op, 0x88..=0x8B) {
             let word = (op & 1) != 0;
             let d = (op & 2) != 0;
             let modrm = self.fetch8();
@@ -836,7 +836,7 @@ impl Cpu8086 {
 
         // ── 80-group: r/m, imm ALU ─────────────────────────────────────────────
 
-        if matches!(op, 0x80 | 0x81 | 0x82 | 0x83) {
+        if matches!(op, 0x80..=0x83) {
             let word = op == 0x81 || op == 0x83;
             let modrm = self.fetch8();
             let ext = (modrm >> 3) & 7;
@@ -1161,7 +1161,7 @@ impl Cpu8086 {
 
         // ── Shifts / rotates (D0/D1/D2/D3) ───────────────────────────────────
 
-        if matches!(op, 0xD0 | 0xD1 | 0xD2 | 0xD3) {
+        if matches!(op, 0xD0..=0xD3) {
             let word = (op & 1) != 0;
             let count: u8 = if op < 0xD2 { 1 } else { (self.rf.cx & 0xFF) as u8 };
             let modrm = self.fetch8();

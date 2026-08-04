@@ -1,0 +1,85 @@
+% ============================================================================
+% hand-bones — the three groups of bones that build the human hand and the
+% part of the hand each group sits in (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% One of the first pictures a learner (or a MEDICINE agent reasoning UP from
+% the skeleton) needs of the hand: its 27 bones come in exactly THREE groups,
+% and each group has a characteristic place it lives. "The carpals are down at
+% the base of the hand where it meets the wrist; the metacarpals fan out across
+% the middle of the hand; the phalanges are the little bones of the fingers."
+% Before you can reason about a fracture, an X-ray, or a splint you must first
+% know WHICH of the three groups a bone belongs to. Recall is a binding query:
+%
+%     ? hand_bone_region(carpals, $Region)       % base_of_hand
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `hand_bone_region(group, region)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% region WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these three hand-bone groups (it never invents a
+% region).
+%
+% Each of the three hand-bone groups and the part of the hand the source states
+% it occupies, as a little truth table:
+%
+%     bone group    part of the hand      a beginner's cue
+%     -----------   -------------------   --------------------------------
+%     carpals       base_of_hand          8 wrist bones at the base of the hand
+%     metacarpals   middle_of_hand        5 bones fanning across the palm
+%     phalanges     fingers               14 finger bones
+%
+% The query also runs BACKWARD — bind a region and recall the group in it:
+%
+%     ? hand_bone_region($Group, fingers)         % phalanges
+%
+% A word that is NOT one of these three hand-bone groups — `femur` (a leg
+% bone), `radius` (a forearm bone), `skull` — is deliberately NOT a row, so a
+% hand-bone recall ABSTAINS on it rather than inventing a region. That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the group→region pairs it can ground, and only those.
+%
+% The `region` value of every row is a SINGLE lowercase atom, chosen to be the
+% part of the hand the source EXPLICITLY states for that group — using the
+% source's OWN words, so every value stays literally checkable against the
+% quoted span. (The source says the carpals are "in the base of the hand" and
+% the metacarpals are "in the middle part of the hand" — not "wrist" and
+% "palm" — so the atoms are `base_of_hand` and `middle_of_hand`, its own words;
+% it calls the phalanges "finger bones", so the atom is `fingers`.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every group→region pair
+% below was read out of a single fetched InformedHealth.org / NCBI Bookshelf
+% sentence, and any pair the sentence could not support would have been
+% dropped). All three pairs come from ONE verbatim span:
+%
+%   carpals → base_of_hand
+%   metacarpals → middle_of_hand
+%   phalanges → fingers
+%     https://www.ncbi.nlm.nih.gov/books/NBK279362/
+%     (InformedHealth.org, "In brief: How do hands work?" — IQWiG teaching
+%      summary hosted on the U.S. NIH / NCBI Bookshelf)
+%     "The human hand is made up of a total of 27 individual bones: 8 carpal
+%      bones (in the base of the hand), 5 metacarpal bones (in the middle part
+%      of the hand) and 14 phalanges (finger bones) are connected by joints and
+%      ligaments."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single sentence — the one span that fixes ALL three
+% rows at once. InformedHealth.org is a patient-education / teaching summary
+% (IQWiG), not a primary government anatomy authority, so `trust consensus`
+% (honestly one rung below `authoritative`).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table hand_bone_region {
+    columns group, region
+
+    row (carpals, base_of_hand)
+    row (metacarpals, middle_of_hand)
+    row (phalanges, fingers)
+
+    source "The human hand is made up of a total of 27 individual bones: 8 carpal bones (in the base of the hand), 5 metacarpal bones (in the middle part of the hand) and 14 phalanges (finger bones) are connected by joints and ligaments."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK279362/"
+    trust consensus
+}

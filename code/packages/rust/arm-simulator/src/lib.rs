@@ -103,11 +103,11 @@ impl ARMDecoder {
     fn decode_data_processing(&self, raw: u32) -> DecodeResult {
         let cond = ((raw >> 28) & 0xF) as i32;
         let i_bit = ((raw >> 25) & 0x1) as i32;
-        let opcode = ((raw >> 21) & 0xF) as u32;
+        let opcode = (raw >> 21) & 0xF;
         let s_bit = ((raw >> 20) & 0x1) as i32;
         let rn = ((raw >> 16) & 0xF) as i32;
         let rd = ((raw >> 12) & 0xF) as i32;
-        let operand2 = (raw & 0xFFF) as u32;
+        let operand2 = raw & 0xFFF;
 
         let mnemonic = match opcode {
             OPCODE_MOV => "mov".to_string(),
@@ -140,7 +140,7 @@ impl ARMDecoder {
 
             let imm_value = if shift > 0 {
                 // Circular right rotation (ROR).
-                (imm8 >> shift) | (imm8 << (32 - shift))
+                imm8.rotate_right(shift)
             } else {
                 imm8
             };
@@ -327,7 +327,6 @@ pub fn encode_mov_imm(rd: usize, imm: u32) -> u32 {
     let rotate = 0u32;
 
     (cond << 28)
-        | (0b00 << 26)
         | (i_bit << 25)
         | (opcode << 21)
         | (s_bit << 20)
@@ -339,11 +338,8 @@ pub fn encode_mov_imm(rd: usize, imm: u32) -> u32 {
 
 /// Encode `ADD Rd, Rn, Rm` with condition=AL, register mode.
 pub fn encode_add(rd: usize, rn: usize, rm: usize) -> u32 {
-    (COND_AL << 28)
-        | (0b00 << 26)
-        | (0 << 25)
-        | (OPCODE_ADD << 21)
-        | (0 << 20)
+    ((COND_AL << 28)
+        | (OPCODE_ADD << 21))
         | ((rn as u32) << 16)
         | ((rd as u32) << 12)
         | (rm as u32)
@@ -351,11 +347,8 @@ pub fn encode_add(rd: usize, rn: usize, rm: usize) -> u32 {
 
 /// Encode `SUB Rd, Rn, Rm` with condition=AL, register mode.
 pub fn encode_sub(rd: usize, rn: usize, rm: usize) -> u32 {
-    (COND_AL << 28)
-        | (0b00 << 26)
-        | (0 << 25)
-        | (OPCODE_SUB << 21)
-        | (0 << 20)
+    ((COND_AL << 28)
+        | (OPCODE_SUB << 21))
         | ((rn as u32) << 16)
         | ((rd as u32) << 12)
         | (rm as u32)

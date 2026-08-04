@@ -1,6 +1,6 @@
 [package]
 name = "moslayout-compiler"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Compiles .mll component layout files to a layout IR and part map"
 

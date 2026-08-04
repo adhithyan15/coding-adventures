@@ -1,0 +1,143 @@
+% Preamble for "Spanish, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only -- pdflatex will not work, this needs real Unicode/font
+% support that later tracks (Arabic, Devanagari, Dravidian scripts) require.
+
+\usepackage{fontspec}
+
+% Latin Modern ships with every standard TeX distribution (MiKTeX, TeX
+% Live) as OpenType fonts, so this compiles the same way on any machine --
+% no dependency on whatever system fonts happen to be installed locally.
+\setmainfont{Latin Modern Roman}[
+  SmallCapsFont={Latin Modern Roman Caps}
+]
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+% polyglossia loads bidi for Arabic, so color-related packages must come first.
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage{spanish}
+\setotherlanguage{arabic}
+
+% Chapter 22 preserves the Arabic source of azul. Use the repository's static
+% Naskh font so the source script is deterministic and never dropped in print.
+\newfontfamily\arabicfont[
+  Path=../../_fonts/,
+  Script=Arabic,
+  BoldFont=NotoNaskhArabic-Static.ttf,
+  ItalicFont=NotoNaskhArabic-Static.ttf,
+  BoldItalicFont=NotoNaskhArabic-Static.ttf
+]{NotoNaskhArabic-Static.ttf}
+\newcommand{\esar}[1]{\textarabic{#1}}
+
+% Micro-lessons end at natural pause points instead of stretching their
+% callout boxes to force every page to the same depth. The small reserve gives
+% prose and legacy tables a cleaner line break before they exceed the measure.
+\raggedbottom
+\emergencystretch=2em
+
+% Several legacy chapter and section titles are intentionally descriptive.
+% Keep the running heads useful and stable without forcing those full titles
+% into one unbreakable line at the top of every verso.
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection}}
+
+% book.cls inserts a verso before each open-right chapter. Preserve that print
+% layout while suppressing running heads and page numbers on the blank page.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
+
+\hypersetup{
+  pdftitle={Spanish, Step by Step, Root by Root},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven Spanish curriculum},
+  pdfkeywords={Spanish, etymology, Latin, language learning}
+}
+
+% Cousin Web callout: the root + the family of English cousins it lights up.
+% This is the signature box of the book -- every word lesson has one.
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart --- and its English cousins}
+}
+
+% Culture callout: why a phrase is said this way (idiomatic / cultural).
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+
+% Grammar Lens callout: plain-language grammar concept + English contrast.
+\newtcolorbox{grammarlens}[1][]{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}, #1
+}
+
+% Sounds callout: the pronunciation facts a single word needs.
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Sounds you'll need}
+}
+
+% legacy aliases (older chapters, pre-redesign) still reference these names.
+\newtcolorbox{etymology}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Etymology}
+}
+\newtcolorbox{morphologybox}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Morphology Spotlight}
+}
+
+% New-vocabulary table: word, gender (if a noun), translation.
+\newenvironment{vocabtable}{%
+  \begin{longtable}{@{}p{0.28\textwidth}p{0.10\textwidth}p{0.46\textwidth}@{}}
+  \toprule
+  \textbf{Spanish} & \textbf{Gender} & \textbf{English} \\
+  \midrule
+  \endhead
+}{%
+  \bottomrule
+  \end{longtable}
+}
+
+% Prefix-machine table: prefix | meaning | + root | = English word | literal.
+\newenvironment{prefixtable}{%
+  \begin{longtable}{@{}p{0.13\textwidth}p{0.18\textwidth}p{0.17\textwidth}p{0.18\textwidth}p{0.24\textwidth}@{}}
+  \toprule
+  \textbf{Prefix} & \textbf{Means} & \textbf{+ root} & \textbf{= English} & \textbf{= literally} \\
+  \midrule
+  \endhead
+}{%
+  \bottomrule
+  \end{longtable}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}

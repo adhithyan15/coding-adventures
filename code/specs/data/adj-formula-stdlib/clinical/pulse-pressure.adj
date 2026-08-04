@@ -1,0 +1,101 @@
+% ============================================================================
+% pulse-pressure.adj — the definition of pulse pressure (PP = SBP − DBP) in the
+% ADJ standard library.
+% ============================================================================
+% The pulse-pressure entry of the *clinical* track, a hemodynamics sibling of
+% `mean-arterial-pressure.adj` and `cardiac-output.adj`: the foundational
+% blood-pressure definition a first course states as PULSE PRESSURE IS THE DIFFERENCE
+% BETWEEN THE SYSTOLIC PRESSURE AND THE DIASTOLIC PRESSURE — as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements
+% (the systolic a pulse pressure implies for a diastolic, and the diastolic it implies
+% for a systolic). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured pressures from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero math
+% is performed by the model; the engine computes each value EXACTLY, carrying the
+% definition's citation.
+%
+%     import "pulse-pressure.adj"
+%     observe systolic_pressure(120)     % "…120 mmHg systolic…"  (span cited by the model)
+%     observe diastolic_pressure(80)     % "…80 mmHg diastolic…"  (span cited by the model)
+%     ? pulse_pressure(systolic_pressure, diastolic_pressure)
+%                                          % engine → 40, carrying PP = SBP − DBP
+%
+% All three formulas are EXACT over their parameters (a difference and two sums/
+% differences of measured quantities); there is no separately grounded physiological
+% constant, so every value the engine returns is exact. The three COMPOSE and invert
+% cleanly around the worked case SBP = 120 mmHg, DBP = 80 mmHg (PP = 120 − 80 = 40 mmHg):
+% the `pulse_pressure` a consumer computes from a systolic and diastolic is exactly the
+% `pulse_pressure` the `systolic_pressure` formula adds back to that diastolic to recover
+% the systolic, and exactly the `pulse_pressure` the `diastolic_pressure` formula
+% subtracts from that systolic to recover the diastolic.
+%
+%   pulse_pressure(systolic, diastolic)         = systolic - diastolic       % PP = SBP − DBP  (definition)
+%   systolic_pressure(pulse_pressure, diastolic) = pulse_pressure + diastolic  % SBP = PP + DBP  (same def, solved for SBP)
+%   diastolic_pressure(systolic, pulse_pressure) = systolic - pulse_pressure   % DBP = SBP − PP  (same def, solved for DBP)
+%
+% NOTE: the pressures must be in the same unit (millimetres of mercury, mmHg, by
+% clinical convention); the pulse pressure then comes out in that same unit. This
+% library computes the exact value over whatever consistent unit it is given.
+%
+% All three formulas are defended by the SAME definitional sentence — "As shown in
+% Figure 20.10, the difference between the systolic pressure and the diastolic pressure
+% is the pulse pressure." — because that one definition (pulse pressure IS the
+% systolic-minus-diastolic difference) sanctions the relation read every way (PP from
+% SBP and DBP, SBP from PP and DBP, or DBP from SBP and PP). The quote is transcribed
+% verbatim from the OpenStax Anatomy and Physiology 2e "Blood Flow, Blood Pressure, and
+% Resistance" chapter on Medicine LibreTexts (the same primary reference the
+% mean-arterial-pressure library draws on — pulse pressure is the very quantity MAP's
+% one-third term acts on), so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the definitional sentence is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable hemodynamic quantity the definition
+% ranges over, and each result is the derived quantity. `systolic_pressure`,
+% `diastolic_pressure` and `pulse_pressure` each appear BOTH as a derived result and as
+% an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the canonical
+% term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary pulse_pressure_vocab {
+    define systolic_pressure  : finding  surface "systolic pressure", "systolic BP", "SBP"   % millimetres of mercury (mmHg)
+    define diastolic_pressure : finding  surface "diastolic pressure", "diastolic BP", "DBP"  % millimetres of mercury (mmHg)
+    define pulse_pressure     : finding  surface "pulse pressure", "PP"                        % millimetres of mercury (mmHg)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote from
+% OpenStax A&P on LibreTexts (a quote is required on a shipped formula). One is a
+% difference and two are a sum and a difference, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook pulse_pressure_laws {
+    use pulse_pressure_vocab
+
+    % Pulse pressure — the difference between the systolic and diastolic pressures.
+    % OpenStax defines pulse pressure as the systolic-minus-diastolic difference, i.e.
+    % PP = SBP − DBP.
+    formula pulse_pressure(systolic_pressure, diastolic_pressure) = systolic_pressure - diastolic_pressure
+        source "As shown in Figure 20.10, the difference between the systolic pressure and the diastolic pressure is the pulse pressure."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/20:_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.03:_Blood_Flow_Blood_Pressure_and_Resistance"
+        trust authoritative
+
+    % Systolic pressure — the same definition solved for the systolic a pulse pressure
+    % implies for a diastolic (SBP = PP + DBP). Defended by the SAME definitional
+    % sentence, read the other way.
+    formula systolic_pressure(pulse_pressure, diastolic_pressure) = pulse_pressure + diastolic_pressure
+        source "As shown in Figure 20.10, the difference between the systolic pressure and the diastolic pressure is the pulse pressure."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/20:_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.03:_Blood_Flow_Blood_Pressure_and_Resistance"
+        trust authoritative
+
+    % Diastolic pressure — the same definition solved for the diastolic a pulse pressure
+    % implies for a systolic (DBP = SBP − PP). Again the SAME definitional sentence, read
+    % the third way.
+    formula diastolic_pressure(systolic_pressure, pulse_pressure) = systolic_pressure - pulse_pressure
+        source "As shown in Figure 20.10, the difference between the systolic pressure and the diastolic pressure is the pulse pressure."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/20:_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.03:_Blood_Flow_Blood_Pressure_and_Resistance"
+        trust authoritative
+}

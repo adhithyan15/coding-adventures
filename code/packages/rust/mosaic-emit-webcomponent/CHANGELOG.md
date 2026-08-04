@@ -4,6 +4,28 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - host-controlled shadow-DOM interpolation
+
+Generated pipeline components now encode dynamic text and quoted-attribute
+values before assigning their template to `shadowRoot.innerHTML`. Dynamic link
+targets reject executable `javascript:`, `data:`, and `vbscript:` schemes, and
+runtime column widths are constrained to finite numbers. Host props and loop
+items can no longer escape their intended text, attribute, URL, or numeric CSS
+contexts.
+
+### Fixed - project-shell named node-slot mounting
+
+Generated Web Component shells now recognize `node` and component props from
+`window.mosaicHost`, attach host-provided `Element` values to the component's
+light DOM with the declared `slot` name, and replace only the prior host-owned
+element on refresh. `HostSurface` named slots can now receive real content in a
+runnable shell instead of a stringified attribute.
+
+### Added - host-owned surface composition
+
+`HostSurface ( content: slot: ... )` now lowers through the platform-native
+named-slot mechanism, preserving the Mosaic-styled shadow-DOM container.
+
 ### Added — UI32-K-webcomp — `--emit-project` standalone-HTML shell
 
 L4 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309). `mosaic-compile --backend webcomponent --emit-project` now produces an `index.html` shell alongside the component `.js`:

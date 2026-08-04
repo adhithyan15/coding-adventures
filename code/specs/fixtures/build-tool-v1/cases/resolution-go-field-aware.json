@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "resolution/go-field-aware",
+  "domain": "resolution",
+  "summary": "Go resolution reads only require directives and ignores module metadata, comments, and replace-only aliases.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/go/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/go/alpha/go.mod",
+        "content_utf8": "module example.invalid/alpha\n\ngo 1.26\n\n// github.com/example/repo/gamma is documentation, not a dependency.\nrequire github.com/example/repo/beta-helper v0.0.0\n\nrequire (\n\tgithub.com/example/repo/delta_name v0.0.0 // indirect\n)\n\nreplace github.com/example/repo/beta-helper => ../beta-helper\nreplace github.com/example/repo/delta_name => ../delta_name\nreplace github.com/example/repo/gamma => ../gamma\nexclude github.com/example/repo/gamma v0.0.0\n"
+      },
+      {
+        "path": "code/packages/go/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/go/beta-helper/go.mod",
+        "content_utf8": "module github.com/example/repo/beta-helper\n\ngo 1.26\n"
+      },
+      {
+        "path": "code/packages/go/delta_name/BUILD",
+        "content_utf8": "echo build delta_name\n"
+      },
+      {
+        "path": "code/packages/go/delta_name/go.mod",
+        "content_utf8": "module github.com/example/repo/delta_name\n\ngo 1.26\n"
+      },
+      {
+        "path": "code/packages/go/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/go/gamma/go.mod",
+        "content_utf8": "module github.com/example/repo/gamma\n\ngo 1.26\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "go"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/go-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "go/beta-helper",
+          "go/alpha"
+        ],
+        [
+          "go/delta_name",
+          "go/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

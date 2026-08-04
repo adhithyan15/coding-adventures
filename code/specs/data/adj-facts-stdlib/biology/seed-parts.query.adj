@@ -1,0 +1,23 @@
+% ============================================================================
+% seed-parts.query.adj — a worked recall over the biology seed-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the cotyledon
+% for?" or "what does the seed coat do?": it states no botany fact of its own —
+% it only `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `seed_part_role` rows and returns the role + the
+% table's source/locator/trust. The fifth query runs the relation BACKWARD (bind
+% the role `food_storage`, recall its seed part — cotyledon). A word that is not
+% one of these seed parts abstains honestly — the engine never invents a role.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli seed-parts.query.adj
+% ============================================================================
+
+import "seed-parts.adj"
+
+? seed_part_role(seed_coat, $Role)     % expect covering
+? seed_part_role(cotyledon, $Role)     % expect food_storage
+? seed_part_role(embryo, $Role)        % expect miniature_plant
+? seed_part_role(radicle, $Role)       % expect rudimentary_root
+? seed_part_role($Part, food_storage)  % reverse bind — expect cotyledon
+? seed_part_role(petal, $Role)         % expect abstain — the petal is a flower part, not a part of the seed

@@ -35,6 +35,9 @@
 
 #![warn(rust_2018_idioms)]
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(clippy::type_complexity))]
+
 mod buffers;
 #[cfg(target_vendor = "apple")]
 pub mod dispatch;
@@ -659,8 +662,8 @@ pub fn local_transport() -> Result<LocalTransport, String> {
 
 #[cfg(target_vendor = "apple")]
 pub fn register(runtime: &mut Runtime) -> ExecutorId {
-    let id = runtime.register("metal", profile());
-    id
+    
+    runtime.register("metal", profile())
 }
 
 // ─────────────────────────── Non-Apple stub ───────────────────────────

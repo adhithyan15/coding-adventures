@@ -1,0 +1,24 @@
+% ============================================================================
+% circuit-parts.query.adj — a worked recall over the physics circuit-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the switch do in
+% a circuit?": it states no physics fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `circuit_part_role` rows and returns the role + the table's source/locator/
+% trust. The fifth query runs the relation BACKWARD (bind the role
+% `carries_current`, recall the part that does it — the wire). A capacitor is
+% not one of these basic parts, so a recall on it abstains honestly — the engine
+% never invents a role.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli circuit-parts.query.adj
+% ============================================================================
+
+import "circuit-parts.adj"
+
+? circuit_part_role(battery, $Role)          % expect provides_dc_power
+? circuit_part_role(switch, $Role)           % expect opens_or_closes
+? circuit_part_role(lamp, $Role)             % expect converts_to_light
+? circuit_part_role(resistor, $Role)         % expect slows_current
+? circuit_part_role($Part, carries_current)  % expect wire — reverse recall
+? circuit_part_role(capacitor, $Role)        % expect abstain — not a basic part here

@@ -1,0 +1,110 @@
+% ============================================================================
+% tissue-types — the four basic human tissue types and a representative
+% example / location each one is made of (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the first big ideas of histology, and a rung a MEDICINE agent reasons
+% UP from: every organ in the body is built out of just FOUR basic tissue
+% types, and each type has a characteristic place it lives or a characteristic
+% thing it is made of. "Epithelial tissue is the covering-and-lining tissue;
+% connective tissue includes bone and blood; muscle tissue is the cardiac and
+% skeletal muscle; nervous tissue is the brain and the nerves." Before you can
+% reason about an organ, a tumor, or a biopsy you must first know WHICH of the
+% four basic tissues you are looking at. Recall is a binding query:
+%
+%     ? tissue_example(muscle, $Example)      % cardiac_or_skeletal
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `tissue_example(tissue, example)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% example WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these four tissue types (it never invents an example).
+%
+% Each of the four basic tissue types and a representative example / location
+% the source states for it, as a little truth table:
+%
+%     tissue type   representative example / location   a beginner's cue
+%     -----------   ---------------------------------   ------------------------
+%     epithelial    covering_lining                     covers surfaces, lines cavities
+%     connective    bone_or_blood                       bone and blood are connective
+%     muscle        cardiac_or_skeletal                 heart muscle and skeletal muscle
+%     nervous       brain_and_nerves                    the brain, spinal cord, and nerves
+%
+% The query also runs BACKWARD — bind an example and recall its tissue type:
+%
+%     ? tissue_example($Tissue, bone_or_blood)   % connective
+%
+% A word that is NOT one of these four basic tissue types — `epidermis`,
+% `cartilage`, `rock` — is deliberately NOT a row, so a tissue recall ABSTAINS
+% on it rather than inventing an example. That honest-abstention property is
+% what makes the table safe to build a reasoner on: it answers exactly the
+% tissue→example pairs it can ground, and only those.
+%
+% The `example` value of every row is a SINGLE lowercase atom, chosen to be a
+% representative example / location the source EXPLICITLY states for that
+% tissue — never one the source does not support. (Where the everyday word
+% differs from the source's word — the source says "cardiac" muscle, not
+% "heart"; it says "covering"/"line", not "skin" — the atom uses the source's
+% own word, so every value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every tissue→example pair
+% below was read out of a fetched NCI SEER Training Modules page, and any pair
+% whose example could not be verified there would have been dropped). Each pair,
+% with the primary source it was copied from and the verbatim span that states
+% it:
+%
+%   epithelial → covering_lining
+%     https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/epithelial.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "They form the covering of all body surfaces, line body cavities and
+%      hollow organs, and are the major tissue in glands."
+%
+%   connective → bone_or_blood
+%     https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/connective.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The types of connective tissue include loose connective tissue, adipose
+%      tissue, dense fibrous connective tissue, elastic connective tissue,
+%      cartilage, osseous tissue (bone), and blood."
+%
+%   muscle → cardiac_or_skeletal
+%     https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Skeletal muscle fibers are cylindrical, multinucleated, striated, and
+%      under voluntary control." ... "Cardiac muscle has branching fibers, one
+%      nucleus per cell, striations, and intercalated disks." (skeletal and
+%      cardiac are two of the three named muscle-tissue types)
+%
+%   nervous → brain_and_nerves
+%     https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/nervous.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Nervous tissue is found in the brain, spinal cord, and nerves."
+%
+% (The four-type framing itself is stated on the parent SEER page,
+% https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/ —
+% "There are four main tissue types in the body: epithelial, connective,
+% muscle, and nervous." — another span of the same primary U.S. government
+% teaching resource.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the SEER statement that fixes the
+% first row (epithelial → covering_lining). Every OTHER row's per-fact source
+% and verbatim span is listed above, so each example remains independently
+% checkable. All sources are the NCI SEER Training Modules, a primary U.S.
+% government (National Cancer Institute) teaching resource, so `trust
+% authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table tissue_example {
+    columns tissue, example
+
+    row (epithelial, covering_lining)
+    row (connective, bone_or_blood)
+    row (muscle, cardiac_or_skeletal)
+    row (nervous, brain_and_nerves)
+
+    source "They form the covering of all body surfaces, line body cavities and hollow organs, and are the major tissue in glands."
+    locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/epithelial.html"
+    trust authoritative
+}

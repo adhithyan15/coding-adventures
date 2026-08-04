@@ -1,0 +1,319 @@
+# Changelog
+
+## [Unreleased]
+
+### Added
+
+- **`tests/oracle.rs`: the first oracle/golden test in the whole HML01
+  track (spec §7)** — for a small corpus of MATLAB programs, runs the SAME
+  computation through (a) `matlab-runtime` (this frontend's own sibling
+  interpreter, ground truth) and (b) `matlab_to_semantic_ir::compile_source`
+  → `semantic_ir::Module` → `semantic_ir_to_javascript::compile` → a real
+  `node` process, and asserts the two agree. Every prior `e2e_node.rs`-style
+  test anywhere in this track (this crate's own, plus
+  `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`'s) only proved the
+  compiled JS *runs without crashing* — none diffed it against the
+  language's own native runtime, which is the actual definition of "oracle
+  testing" per HML01 §7. Marks MATLAB's oracle test done in HML01 §5's
+  Stream A rollout summary (Octave/APL/J's remain open follow-ons).
+  - Corpus (7 cases, all passing, `node` genuinely invoked — not skipped):
+    literal arithmetic operator precedence, a bare comparison, `if`/`else`,
+    an `elseif` chain, a `for`-loop accumulator, matrix multiplication, and
+    elementwise scalar broadcast (the last two are real SIR22 array/matrix
+    cases, not just scalars — the actual point of Stream A).
+  - **Two confirmed bugs in `matlab-runtime` itself** (out of scope to fix
+    in this test-only PR), found because building the harness required
+    reading its output byte-for-byte: (1) its `disp` builtin
+    (`src/builtins.rs`) is a no-op that discards its argument and returns an
+    invisible empty array — `eval("disp(7)\n")` returns `"ans =\n\n\n\n"`,
+    never `"7"`; neither that crate's own tests nor `matlab-repl`'s ever
+    exercise `disp`, relying instead on MATLAB's other, working
+    implicit-display echo convention, which is what this oracle harness
+    uses for ground truth instead. (2) `eval.rs`'s statement dispatch has no
+    `func_def` arm at all — a program containing a `function ... end`
+    definition cannot be run by `matlab-runtime` even though this crate's
+    own `e2e_node.rs` already compiles and runs one. (3) indexed assignment
+    (`A(2) = 9;`) is rejected by `eval_expr_or_assign` ("assignment target
+    must be a variable") even though it is ordinary MATLAB and this crate's
+    own `e2e_node.rs` already round-trips it. (2) and (3) mean the
+    corresponding compiled-path constructs simply have no ground truth to
+    diff against yet, not that they are broken.
+  - **Three confirmed bugs/gaps surfaced in this crate and
+    `semantic-ir-to-javascript`** by cross-checking against real MATLAB
+    semantics (also out of scope to fix here — test infrastructure only;
+    see `tests/oracle.rs`'s module doc for full root-cause writeups):
+    (1) integer-literal division floors instead of true-dividing (`7 / 2`
+    compiles to `3`, not MATLAB's `3.5`) — `number_literal_expr` lowers a
+    decimal-point-free literal to `Expr::IntLit`, and the JS backend's
+    shared `divide()` helper (built for Ruby's `Integer#/`, which really
+    does floor) floors whenever both operands are integer-valued, with no
+    per-source-language override, and MATLAB has no integer type at all.
+    (2) unary minus on a power expression gives `NaN` instead of the
+    correct value (`-2 ^ 2` should be `-4`) — `^`/`.^` unconditionally
+    lower to the SIR22 array-domain `ElementwiseOp::Pow` (no literal-only
+    scalar fast path, unlike `+`/`-`/`*`), so even two literal operands
+    produce an NDArray-shaped object, and `neg`'s codegen applies a bare
+    native `-(...)` to it, which coerces to `NaN`. (3) `try_logical`
+    (`src/lower.rs`) never calls `self.observed.add(Feature::ShortCircuit)`
+    for `&&`/`||`/`&`/`|`, so any MATLAB program using them fails
+    `semantic_ir::validate()` outright.
+  - **One severe, previously-unnoticed correctness bug**, given its own
+    dedicated, always-informative test
+    (`known_bug_while_loop_accumulator_terminates_after_one_iteration`): a
+    `while` loop whose condition variable is also updated via non-literal
+    (variable-involving) arithmetic runs its body exactly **once** instead
+    of to convergence — a silent wrong *computation*, not merely a wrong
+    *display* like the bugs above. Root cause: the accumulator becomes an
+    NDArray-shaped object after its first `ElementwiseOp` update (same
+    root cause as the power/`neg` bug), and the loop's own condition then
+    compiles to a native `<`/`>` comparison against that object, which is
+    unconditionally `false` — so the loop silently stops after one
+    iteration with no error, no validator issue, and a plausible-looking
+    wrong answer. `for`-loop accumulators are not immune to the underlying
+    wrapping, they are just structurally shielded from it (their own
+    termination test is index-driven, never accumulator-driven).
+
+### Changed
+
+- **`semantic-ir-to-javascript` now accepts and correctly compiles the
+  SIR22 array/matrix modules this frontend produces** — no code change in
+  this crate; that backend gained real codegen for `NDArrays`/`MatrixOps`/
+  `ArrayColumnMajor` (previously deferred/rejected). Updated
+  `tests/test_validator.rs`'s three tests from "the backend rejects this"
+  to "the backend accepts this," and added four real `node`-execution
+  tests to `tests/e2e_node.rs` proving actual MATLAB source using matrix
+  multiplication, elementwise scalar broadcast (`A .* 2`), indexed
+  assignment, and range+transpose all compile and run correctly — not
+  just that the module passes validation.
+
+### Fixed
+
+- **Correctness: bare-numeric truthiness disagreed with MATLAB/Octave's
+  "logicals are doubles" convention.** Real MATLAB/Octave has no separate
+  boolean type — truthiness is "nonzero is true, zero is false" for ANY
+  number (`~0` is `1`, `~5` is `0`), not just the result of a comparison.
+  But `lower_unary` (`~`), `lower_if`, `lower_while`, and `try_logical`
+  (`&&`/`||`) all passed an already-lowered operand straight through to
+  `Expr::If`/`Stmt::While`/`Expr::LogicalAnd`/`Expr::LogicalOr`/
+  `BuiltinCall("not", ..)` unchanged, so a **bare numeric variable or
+  literal** reaching one of these boolean contexts fell through to the
+  shared JS/Python backends' `truthy()` runtime helper, which implements
+  SIR's OWN canonical truthiness instead (only `false`/`nil` are falsy —
+  the Ruby/Lisp convention `ruby-to-semantic-ir` genuinely depends on, per
+  the `sir-runtime` spec's own verification rule that Ruby `0 && x` must
+  yield `x`). So `n = 0; ~n` compiled to `false` — backwards; MATLAB's
+  `~0` is `1`. This was deliberately diagnosed-but-NOT-fixed by PR #8534/
+  #8535 (`octave-to-semantic-ir/tests/oracle.rs`'s `bang_negation_on_
+  comparison` case only ever negated a *comparison result*, which already
+  produces a genuine boolean regardless of convention, sidestepping the
+  bug rather than exercising it).
+  - **Root-cause investigation confirmed the fix belongs in THIS
+    frontend's lowering, not the shared runtime.** `sir-conformance`
+    proves real Ruby source's `&&`/`||`/`~`-equivalent semantics agree
+    across every backend end-to-end (`corpus_agrees_across_all_backends`,
+    still passing, unmodified) — Ruby's own frontend deliberately does NOT
+    wrap a bare numeric operand, because Ruby treats `0` as truthy too, so
+    changing the shared `truthy()` convention globally would silently
+    break every Ruby-sourced program. (Separately confirmed:
+    `python-to-semantic-ir` and `javascript-to-semantic-ir` do not wrap a
+    bare native-falsy operand — `0`/`""`/`[]`/`{}` — either, and appear to
+    share this exact class of latent bug for their own languages' native
+    truthiness; no existing test in either crate exercises it, so it is
+    flagged as a separate, unfixed, out-of-scope finding rather than
+    addressed here.) `apl-to-semantic-ir`/`j-to-semantic-ir` are NOT
+    affected: v0.1.0 of both has no `if`/`while`/`&&`/`||`/`~` lowering at
+    all yet (no boolean-context construct exists to have the bug).
+  - **First fix attempt had a HIGH-severity regression, caught by
+    `/security-review` before push and corrected in this same PR.** The
+    initial approach wrapped an operand in an explicit `!= 0` comparison
+    only when a new `expr_is_known_bool` predicate could NOT statically
+    prove the operand was already a genuine SIR boolean (matching only
+    `BoolLit`, `LogicalAnd`/`LogicalOr`, or a comparison/`not`
+    `BuiltinCall` by shape). That predicate cannot see through a `VarRef`:
+    a variable that *holds* a stored comparison result (`tf = (5 < 3); if
+    tf`) is indistinguishable, by static shape alone, from a variable
+    holding a bare number — so it fell into the "wrap in `!= 0`" branch
+    too. The shared JS runtime's `ne(a, b)` is `numOf(a) !== numOf(b)`
+    (strict), so `false != 0` evaluates to `true` unconditionally,
+    regardless of whether `tf` was really `true` or `false` — silently
+    inverting (or always-taking) the `if` branch for exactly this pattern.
+  - **Corrected fix:** the boolean-vs-number decision moved from
+    lowering-time static shape analysis to a RUNTIME intrinsic.
+    `to_matlab_condition` (`src/lower.rs`) now UNCONDITIONALLY wraps every
+    operand reaching a boolean context in a new `matlab_truthy`
+    `BuiltinCall`, which `semantic-ir-to-javascript` emits as
+    `__Sir.matlabTruthy(x)` — a runtime helper (`typeof x === "boolean" ?
+    x : numOf(x) !== 0`) that decides "already a genuine boolean, pass
+    through" vs. "a bare number, apply `!= 0`" using the ACTUAL value at
+    runtime, not a static guess. `expr_is_known_bool` is deleted entirely;
+    there is no shape check left to be wrong. Applied at all four call
+    sites unconditionally: `lower_if`'s and `lower_while`'s condition,
+    `lower_unary`'s `~` operand, and each operand `try_logical` folds into
+    `LogicalAnd`/`LogicalOr`.
+  - **Regression tests:** `tests/test_lower.rs` rewrote the structural
+    tests to assert the unconditional `matlab_truthy` wrap (bare-variable
+    and already-a-comparison operands both wrap, for `~`/`if`/`while`/
+    `&&`/`||`), and added the exact regression case that broke the first
+    attempt: `if_condition_on_a_variable_holding_a_stored_comparison_
+    still_wraps_in_matlab_truthy` (a `VarRef` holding a stored comparison
+    result). `tests/oracle.rs` adds two end-to-end cases cross-checked
+    against real `matlab-runtime` through `node`:
+    `if_condition_on_a_variable_holding_a_stored_false_comparison` and
+    `..._true_comparison` — a variable holding `(5 < 3)`/`(5 > 3)` takes
+    the correct `if`/`else` branch, which is the case the first fix
+    attempt got backwards. Plus the original 6 end-to-end oracle cases:
+    `~0` is `1`, `~5` is `0`, `if 0`/`if 5` take the correct branch, and
+    `0 && 1` / `0 || 5` resolve correctly through an `if` (observing the
+    branch taken rather than `disp`ing the raw short-circuit value
+    directly, which would hit an unrelated, already-documented
+    representational difference between this frontend's Ruby-style
+    "return the deciding operand" `&&`/`||` and `matlab-runtime`'s
+    coerced-0.0/1.0-double convention).
+  - `octave-to-semantic-ir/tests/oracle.rs`'s `bang_negation_on_comparison`
+    doc comment is updated to drop the "confirmed, excluded gap" framing,
+    and two new corpus cases (`bang_negation_on_bare_zero_is_true`,
+    `bang_negation_on_bare_nonzero_is_false`) exercise the fix through
+    Octave's own `!` spelling — this crate needed no change of its own
+    since it shares 100% of its lowering.
+
+- **Correctness: `Feature::Floats` was never observed for a `FloatLit`.**
+  `number_literal_expr` was a free function with no access to the
+  lowerer's feature-tracking state, so a module containing a float
+  literal never declared `Feature::Floats` in its manifest even though
+  `semantic-ir/src/validator.rs`'s `check_expr` requires it for every
+  `Expr::FloatLit` node — any MATLAB (and, transitively, Octave) program
+  with a float literal failed `semantic_ir::validate()`. Found while
+  implementing `macsyma-to-semantic-ir` (which cross-checked its own
+  `Feature::Floats` handling against every sibling frontend). Fixed by
+  converting `number_literal_expr` into an instance method that calls
+  `self.observed.add(Feature::Floats)` on every `FloatLit`-constructing
+  branch; added a regression test asserting a float-literal program both
+  validates and is accepted by the JS backend.
+
+- **Correctness: a `while` loop whose condition variable was also a
+  non-literal arithmetic accumulator ran its body exactly once, not to
+  convergence.** Found and diagnosed by `tests/oracle.rs`'s
+  `known_bug_while_loop_accumulator_terminates_after_one_iteration` (the
+  oracle test added just above, same PR). This was a silent wrong
+  *computation* — no error, no validator issue, no crash — and the most
+  severe finding of that oracle-harness effort. Root cause traced end to
+  end: `expr_is_known_scalar` (this crate's own scalar/array
+  disambiguation heuristic) only treats a *literal*-derived expression as
+  provably scalar, so `n = n + 1` (where `n` is a variable) always lowers
+  to the SIR22 `Expr::ElementwiseOp` path regardless of what `n` actually
+  holds; `semantic-ir-to-javascript`'s `ElementwiseOp` codegen always
+  returns an NDArray-shaped `{ shape, data }` object even for a
+  logically-scalar result; and that backend's shared `numOf` helper (used
+  by every comparison and by `neg`/`minus`/`mod`) only unwrapped a tagged
+  `SirFloat` box, not a scalar (`shape.length === 0`) NDArray — so `n < 10`
+  compiled to `__Sir.lt(n, 10)`, which coerced the wrapped `n` through
+  `ToPrimitive` to `NaN`, and `NaN < 10` is silently `false`. **Fixed in
+  `semantic-ir-to-javascript` (this crate's own `src/` needed no change):
+  `numOf` now also unwraps a scalar NDArray** — see that crate's own
+  0.40.0 CHANGELOG entry for the full write-up, including the
+  `numof_unwraps_scalar_ndarray_for_comparison_and_negation` regression
+  test and confirmation that the same fix also resolves the
+  unary-minus-on-power bug (`-2 ^ 2` giving `NaN`) documented below, for
+  free. `tests/oracle.rs`'s `known_bug_while_loop_accumulator_
+  terminates_after_one_iteration` is renamed to
+  `while_loop_accumulator_converges_correctly` and now asserts the correct
+  converged value (`10`), with its doc comment rewritten to describe the
+  fix instead of the bug; the corresponding bullet in that file's module
+  doc comment is updated to say FIXED.
+
+- **Correctness: unary minus on a power expression gave `NaN`, not the
+  correct value** (`-2 ^ 2` should be `-4`; documented alongside the
+  while-loop bug above, same root cause, same fix — see that entry and
+  `semantic-ir-to-javascript`'s 0.40.0 CHANGELOG entry). Confirmed fixed
+  end to end by re-running `compile_source("disp(-2 ^ 2)\n")` →
+  `semantic_ir_to_javascript::compile` → `node`: prints `-4`.
+
+- **`matlab-to-semantic-ir` never declared `Feature::ShortCircuit` for
+  `&&`/`||`/`&`/`|`.** `try_logical` (`src/lower.rs`) built
+  `Expr::LogicalAnd`/`Expr::LogicalOr` nodes without ever calling
+  `self.observed.add(Feature::ShortCircuit)`, so any MATLAB program using
+  those operators failed `semantic_ir::validate()` outright with
+  `"manifest does not declare feature short-circuit but module uses it"`
+  even though the lowering itself was otherwise correct (confirmed via
+  probe, `x > 3 && y > 5`; documented in `tests/oracle.rs`'s module doc,
+  same PR as the bugs above). Fixed with a one-line addition of
+  `self.observed.add(Feature::ShortCircuit)` in `try_logical`, right
+  alongside every sibling frontend's own convention for this feature
+  (e.g. `ruby-to-semantic-ir`'s `lower.rs`). Regression test:
+  `tests/test_validator.rs`'s
+  `a_logical_and_program_validates_and_declares_short_circuit`.
+
+## [0.1.0] - 2026-07-11
+
+### Added
+
+- Initial `matlab-to-semantic-ir` frontend crate (HML01 §3), the first to
+  target SIR22 (array/matrix domain): `compile`/`compile_source` lowering
+  `coding-adventures-matlab-parser`'s `GrammarASTNode` CST into a
+  `semantic_ir::Module`.
+- Supported: literals (int/float/string), assignment (`LetStarBinding` on
+  first occurrence, `Assign` on re-assignment), arithmetic
+  (`+ - * / \ ^` and their dotted elementwise forms), comparisons, logical
+  `&& || & &`, unary `+ - ~`, ranges (`a:b`, `a:step:b`), transpose (`'`
+  and `.'`), matrix literals (`ArrayLit`), indexing (read → `IndexGet`,
+  write → `Stmt::IndexSet`) with 1-based → 0-based translation at lowering
+  time, `if`/`elseif`/`else`, `while`, `for i = a:b`, single/zero-output
+  function definitions and calls, and `disp` (mapped onto the shared SIR
+  `print` builtin).
+- A conservative, purely syntactic scalar/array disambiguation heuristic
+  for MATLAB's shape-polymorphic operators (`expr_is_known_scalar`):
+  literal-derived operands take a plain `BuiltinCall`, everything else
+  takes the SIR22 `ElementwiseOp`/`MatMul` path.
+- Explicit, disclosed scope limits (each rejected with a clear
+  `MatlabLowerError`, never silently mis-lowered): stepped/matrix-valued
+  `for` loops, `end`-relative indexing, matrix division (`/`/`\` between
+  non-scalars — `array-runtime` has no linear-solve kernel), matrix power,
+  multi-output functions, nested function definitions,
+  `break`/`continue`/`return` (semantic-ir has no early-exit control-flow
+  node at all yet), `switch`/`try`/`global`/`persistent`, cell arrays,
+  anonymous functions, auto-vivification on indexed assignment, and
+  chained assignment.
+- 66 tests: 57 unit tests over lowering shapes, rejected constructs, and
+  the DoS-guard regressions below, 5 validator/capability-rejection tests
+  (mirroring the SIR22/SIR23 core verification pattern), 3 end-to-end
+  tests that actually execute lowered MATLAB through
+  `semantic-ir-to-javascript` and `node` (gated on `node` availability).
+- Marks `matlab-to-semantic-ir` done in `HML01-math-to-semantic-ir.md` §3.
+
+### Fixed (security review, before first push)
+
+- **DoS: unbounded native-stack recursion on a flat arithmetic chain.**
+  MATLAB's grammar collapses a flat run of `+`/`-`/`*`/... (no parens) into
+  one CST node with many children, so a long unparenthesized chain never
+  trips the ordinary grammar-nesting depth guard. Two compounding bugs,
+  both confirmed to crash (SIGABRT) on a 60,000-term chain during review:
+  (1) `build_additive`/`build_multiplicative` re-derived each operand's
+  scalar-ness by calling `expr_is_known_scalar` on the *entire
+  already-accumulated* left tree at every fold step — O(chain length)
+  stack on the final step alone — fixed by tracking scalar-ness
+  incrementally (O(1) per step) instead; (2) even with (1) fixed, folding
+  N operands left-associatively still builds an N-deep binary `Expr` tree,
+  and that depth is what every later recursive pass over it (the
+  validator, any backend, even `Drop`) pays for regardless of how cheaply
+  it was built — fixed by capping the operand *count* itself
+  (`check_chain_length`, applied to `additive`/`multiplicative`/
+  `comparison`/`logical_or`/`logical_and`) at `MAX_EXPR_DEPTH`, rejecting a
+  pathological chain before building anything. `expr_is_known_scalar` also
+  gained its own depth cap as defense in depth.
+- **DoS (masked, not yet independently exploitable): index/call arguments
+  reset the expression-depth counter instead of threading it.**
+  `lower_index_args`/`lower_call_args`/`lower_one_index_arg` called the
+  depth-*resetting* `lower_expr` instead of continuing the caller's depth,
+  so a chain of nested indexing/calls (`A(A(A(...))))`) never accumulated
+  against `MAX_EXPR_DEPTH` — each level silently restarted its own budget.
+  Currently masked by `coding-adventures-matlab-parser`'s own independent
+  nesting limit (which rejects sufficiently deep source first), but that
+  is a different crate's protection, not this one's — fixed by threading
+  `depth + 1` through all three functions via `lower_expr_d`, mirroring
+  `python-to-semantic-ir`'s `lower_expr_in` pattern.
+- **Test-only, LOW severity: predictable temp-file path in
+  `tests/e2e_node.rs`.** The end-to-end harness wrote to a predictable
+  path under the shared system temp directory via `std::fs::write`, which
+  follows an existing symlink; switched to
+  `OpenOptions::new().write(true).create_new(true)`, which fails instead
+  of following one.

@@ -1,0 +1,21 @@
+% ============================================================================
+% lung-lobes.query.adj — a worked recall over the anatomy lung-lobes library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many lobes does the
+% right lung have?": it states no anatomy fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `lung_lobe_count` rows and returns the count + the table's source/locator/trust.
+% The third query runs the relation BACKWARD (bind the count 3, recall the lung
+% that has it — the right lung). The trachea is not a lung, so a recall on it
+% abstains honestly — the engine never invents a lobe count.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli lung-lobes.query.adj
+% ============================================================================
+
+import "lung-lobes.adj"
+
+? lung_lobe_count(right_lung, $N)   % expect 3
+? lung_lobe_count(left_lung, $N)    % expect 2
+? lung_lobe_count($L, 3)            % expect right_lung — reverse recall
+? lung_lobe_count(trachea, $N)      % expect abstain — the trachea is not a lung

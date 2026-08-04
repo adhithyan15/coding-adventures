@@ -1,0 +1,20 @@
+% ============================================================================
+% blood-groups.query.adj — a worked recall over the ABO antigen library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which antigen does type A
+% carry?": it states no biology fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `blood_type_antigen` rows and returns the antigen + the table's
+% source/locator/trust. A label that is not one of the four ABO phenotypes
+% abstains honestly — the engine never invents an antigen.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli blood-groups.query.adj
+% ============================================================================
+
+import "blood-groups.adj"
+
+? blood_type_antigen(a, $Antigen)        % expect a_antigen
+? blood_type_antigen(ab, $Antigen)       % expect a_and_b_antigens
+? blood_type_antigen(o, $Antigen)        % expect no_antigens (universal donor cells)
+? blood_type_antigen(rh_positive, $Antigen)   % expect abstain — not an ABO phenotype

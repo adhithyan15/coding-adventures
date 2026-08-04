@@ -1,0 +1,89 @@
+% ============================================================================
+% fractional-shortening.adj — left ventricular fractional shortening
+% (FS = (LVIDd − LVIDs) / LVIDd × 100) in the ADJ standard library.
+% ============================================================================
+% The fractional-shortening entry of the *clinical* track — an M-mode echocardiographic measure of left
+% ventricular systolic function. It is the fractional (percentage) reduction in the left ventricular
+% internal diameter between diastole and systole: the diameter shrinks from its end-diastolic value
+% (LVIDd) to its end-systolic value (LVIDs) as the ventricle contracts, and FS reports that shrinkage as a
+% percentage of the diastolic diameter. It is not a direct measure of the ejection fraction but correlates
+% with it and gives a quick bedside estimate of systolic function (a normal FS is roughly 25–45%).
+% FRACTIONAL SHORTENING IS THE END-DIASTOLIC DIAMETER MINUS THE END-SYSTOLIC DIAMETER, DIVIDED BY THE
+% END-DIASTOLIC DIAMETER, TIMES 100 — i.e. (LVIDd − LVIDs) / LVIDd × 100. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the end-systolic
+% diameter a given FS implies at a known diastolic diameter, and the diastolic diameter a given FS implies
+% at a known systolic diameter). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the two measured diameters from its own byte-provenance decomposition, and
+% asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "fractional-shortening.adj"
+%     observe lvidd(50)   % "…LVIDd 50 mm…"   (span cited by the model)
+%     observe lvids(32)   % "…LVIDs 32 mm…"   (span cited by the model)
+%     ? fractional_shortening(lvidd, lvids)   % engine → 36 (%)
+%
+% This is the M-mode LINEAR-DIAMETER fractional shortening, a distinct entity from the VOLUMETRIC ejection
+% fraction (ejection-fraction.adj): fractional shortening contracts two one-dimensional diameters, while
+% the ejection fraction contracts two three-dimensional volumes. The × 100 turns the dimensionless ratio
+% into a percentage; the formula is otherwise an exact expression over the two diameters, so every value
+% the engine returns is exact. The three formulas COMPOSE and invert cleanly around the worked case
+% LVIDd = 50 mm, LVIDs = 32 mm (FS = (50 − 32) / 50 × 100 = 36%): the `fractional_shortening` a consumer
+% computes is exactly the value each inverse formula back-solves to recover its own measured input (32, 50).
+%
+%   fractional_shortening(lvidd, lvids) = (lvidd - lvids) / lvidd * 100    % (percentage)
+%   lvids(lvidd, fractional_shortening) = lvidd - lvidd * fractional_shortening / 100   % (solved for end-systolic diameter)
+%   lvidd(lvids, fractional_shortening) = 100 * lvids / (100 - fractional_shortening)   % (solved for end-diastolic diameter)
+%
+% NOTE ON UNITS AND MODELLING: the two diameters are in the same length unit (millimetres, as measured on
+% M-mode), FS is a plain percentage number (e.g. 36 for 36%, NOT 0.36). Because FS is a ratio of two
+% lengths the diameter unit cancels, so only the numeric magnitudes matter as long as both diameters share
+% a unit. This library only COMPUTES the percentage; the interpretation (normal ≈ 25–45%, reduced values
+% indicating impaired systolic function) is stated by the same page but is applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted fractional-shortening statement — because
+% that one equation ((LVIDd − LVIDs) / LVIDd × 100) sanctions the relation read every way. The quote is
+% transcribed verbatim from the StatPearls "Left Ventricular Ejection Fraction" article on the NCBI
+% Bookshelf (a current, non-archived article), so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored
+% — the formula is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `lvidd`, `lvids` and `fractional_shortening` each appear BOTH as a derived result and as an
+% input (of the other formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the trailing comment records the
+% intended unit.
+% ----------------------------------------------------------------------------
+dictionary fractional_shortening_vocab {
+    define lvidd                 : finding  surface "LVIDd", "LVEDD", "end-diastolic diameter", "left ventricular internal diameter in diastole"   % mm
+    define lvids                 : finding  surface "LVIDs", "LVESD", "end-systolic diameter", "left ventricular internal diameter in systole"      % mm
+    define fractional_shortening : finding  surface "fractional shortening", "FS", "LV fractional shortening"   % percent
+}
+
+% ----------------------------------------------------------------------------
+% Fractional shortening, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the fractional-shortening equation from the StatPearls
+% "Left Ventricular Ejection Fraction" article on the NCBI Bookshelf (a quote is required on a shipped
+% formula). Each is an exact expression in the measured diameters, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fractional_shortening_laws {
+    use fractional_shortening_vocab
+
+    % Fractional shortening — end-diastolic minus end-systolic diameter, over the end-diastolic diameter, times 100.
+    formula fractional_shortening(lvidd, lvids) = (lvidd - lvids) / lvidd * 100
+        source "FS (%) = (LVIDd − LVIDs) / LVIDd × 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459131/"
+        trust authoritative
+
+    % End-systolic diameter — the same equation solved for LVIDs. Defended by the SAME equation.
+    formula lvids(lvidd, fractional_shortening) = lvidd - lvidd * fractional_shortening / 100
+        source "FS (%) = (LVIDd − LVIDs) / LVIDd × 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459131/"
+        trust authoritative
+
+    % End-diastolic diameter — the same equation solved for LVIDd, the third reading of the one ratio.
+    formula lvidd(lvids, fractional_shortening) = 100 * lvids / (100 - fractional_shortening)
+        source "FS (%) = (LVIDd − LVIDs) / LVIDd × 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459131/"
+        trust authoritative
+}

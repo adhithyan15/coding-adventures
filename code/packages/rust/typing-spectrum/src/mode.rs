@@ -63,7 +63,7 @@ pub enum CompilationMode {
     /// - Input: `IIRModule` (with or without type hints)
     /// - Output: native binary statically linked against the runtime
     /// - Speed: ~3–10× tree-walking for dynamic languages,
-    ///          ~50–100× for fully-typed languages
+    ///   ~50–100× for fully-typed languages
     /// - Use: cold-start–sensitive CLIs, cross-compilation, programs without warmup budget
     /// - Deopt mechanism: **not required** — no speculation emitted
     AotNoProfile,
@@ -104,7 +104,7 @@ pub enum CompilationMode {
     /// - Input: `IIRModule` (run); `IIRModule + .ldp` (compile)
     /// - Speed: as good as Mode 3 on the profiled workload
     /// - Use: release builds of servers, libraries, and CLIs where
-    ///        cold-start *and* peak throughput matter
+    ///   cold-start *and* peak throughput matter
     JitThenAotWithPgo,
 }
 

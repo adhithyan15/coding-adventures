@@ -192,9 +192,7 @@ pub fn asl8(value: u8) -> (u8, u8) {
     let carry = bits[7]; // old MSB exits via carry
     // Shift: new bit[i] = old bit[i-1]; new bit[0] = 0
     let mut result_bits = vec![0u8; 8];
-    for i in 1..8 {
-        result_bits[i] = bits[i - 1];
-    }
+    result_bits[1..8].copy_from_slice(&bits[0..7]);
     result_bits[0] = 0;
     (bits_to_u8(&result_bits), carry)
 }
@@ -210,9 +208,7 @@ pub fn lsr8(value: u8) -> (u8, u8) {
     let bits = int_to_bits8(value);
     let carry = bits[0]; // old LSB exits via carry
     let mut result_bits = vec![0u8; 8];
-    for i in 0..7 {
-        result_bits[i] = bits[i + 1];
-    }
+    result_bits[..7].copy_from_slice(&bits[1..8]);
     result_bits[7] = 0;
     (bits_to_u8(&result_bits), carry)
 }
@@ -229,9 +225,7 @@ pub fn rol8(value: u8, carry_in: u8) -> (u8, u8) {
     let new_carry = bits[7];
     let mut result_bits = vec![0u8; 8];
     result_bits[0] = carry_in; // old carry enters at bit 0
-    for i in 1..8 {
-        result_bits[i] = bits[i - 1];
-    }
+    result_bits[1..8].copy_from_slice(&bits[0..7]);
     (bits_to_u8(&result_bits), new_carry)
 }
 
@@ -247,9 +241,7 @@ pub fn ror8(value: u8, carry_in: u8) -> (u8, u8) {
     let new_carry = bits[0];
     let mut result_bits = vec![0u8; 8];
     result_bits[7] = carry_in; // old carry enters at bit 7
-    for i in 0..7 {
-        result_bits[i] = bits[i + 1];
-    }
+    result_bits[..7].copy_from_slice(&bits[1..8]);
     (bits_to_u8(&result_bits), new_carry)
 }
 

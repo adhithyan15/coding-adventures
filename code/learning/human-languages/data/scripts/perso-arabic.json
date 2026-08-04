@@ -1,0 +1,22 @@
+{
+  "script": "perso-arabic",
+  "name": "Persian alphabet",
+  "font": "_fonts/NotoNaskhArabic-Static.ttf",
+  "direction": "rtl",
+  "system": "abjad",
+  "signature": "Right-to-left joined letters on a flowing baseline; most short vowels are understood rather than printed.",
+  "complete": false,
+  "combination": "Most letters join and change shape by position. Alif ا and vav و do not connect to the following letter. Short vowels are normally omitted. Persian adds پ چ ژ گ to the Arabic inventory as the course expands.",
+  "notes": "Starter inventory for the first Persian shared-spine lessons. Contextual shapes and stroke descriptions follow common Naskh handwriting; the course will grow toward the full Persian alphabet.",
+  "letters": [
+    { "glyph": "ا", "sound": "â / vowel carrier", "role": "letter", "forms": { "isolated": "ا", "initial": "ا", "medial": "ـا", "final": "ـا" }, "components": ["one tall vertical stroke"], "strokeOrder": ["downward vertical"], "strokeOrderNote": "common handwriting order", "notes": "Does not join to the following letter." },
+    { "glyph": "ب", "sound": "b", "role": "consonant", "forms": { "isolated": "ب", "initial": "بـ", "medial": "ـبـ", "final": "ـب" }, "components": ["shallow bowl", "one dot below"], "strokeOrder": ["bowl", "dot"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ت", "sound": "t", "role": "consonant", "forms": { "isolated": "ت", "initial": "تـ", "medial": "ـتـ", "final": "ـت" }, "components": ["shallow bowl", "two dots above"], "strokeOrder": ["bowl", "dots"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "س", "sound": "s", "role": "consonant", "forms": { "isolated": "س", "initial": "سـ", "medial": "ـسـ", "final": "ـس" }, "components": ["three teeth", "final bowl"], "strokeOrder": ["teeth", "bowl"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ل", "sound": "l", "role": "consonant", "forms": { "isolated": "ل", "initial": "لـ", "medial": "ـلـ", "final": "ـل" }, "components": ["tall upright", "base curve"], "strokeOrder": ["upright", "curve"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "م", "sound": "m", "role": "consonant", "forms": { "isolated": "م", "initial": "مـ", "medial": "ـمـ", "final": "ـم" }, "components": ["round head", "descending tail when final"], "strokeOrder": ["head", "tail"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ن", "sound": "n", "role": "consonant", "forms": { "isolated": "ن", "initial": "نـ", "medial": "ـنـ", "final": "ـن" }, "components": ["bowl", "one dot above"], "strokeOrder": ["bowl", "dot"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ه", "sound": "h / final e", "role": "consonant", "forms": { "isolated": "ه", "initial": "هـ", "medial": "ـهـ", "final": "ـه" }, "components": ["looping body"], "strokeOrder": ["loop"], "strokeOrderNote": "common handwriting order", "notes": "A final he can help write the vowel e." },
+    { "glyph": "و", "sound": "v / u / o", "role": "letter", "forms": { "isolated": "و", "initial": "و", "medial": "ـو", "final": "ـو" }, "components": ["small head", "curving tail"], "strokeOrder": ["head", "tail"], "strokeOrderNote": "common handwriting order", "notes": "Does not join to the following letter." }
+  ]
+}

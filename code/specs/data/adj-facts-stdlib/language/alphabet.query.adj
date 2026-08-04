@@ -1,0 +1,21 @@
+% ============================================================================
+% alphabet.query.adj — a worked recall over the English-alphabet library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where does this letter sit
+% in the alphabet?" — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `alphabet_position` rows and returns the position (or the letter, on a
+% reverse query) + the encyclopedia's source/locator/trust. Anything that is not
+% one of the 26 letters — a digit, a symbol — abstains honestly: the engine never
+% invents a position it cannot cite.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli alphabet.query.adj
+% ============================================================================
+
+import "alphabet.adj"
+
+? alphabet_position(a, $N)         % expect 1   (which position is a? the first)
+? alphabet_position(z, $N)         % expect 26  (z is the last letter)
+? alphabet_position($L, 3)         % expect c   (reverse: which letter is third?)
+? alphabet_position(3, $N)         % expect abstain — 3 is a digit, not a letter row

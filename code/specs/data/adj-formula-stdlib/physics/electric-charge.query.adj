@@ -1,0 +1,32 @@
+% ============================================================================
+% electric-charge.query.adj — worked examples over the physics electric-charge library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a charge/current/time
+% question: it states NO arithmetic and NO definition — it only `import`s the grounded
+% library, `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited
+% definition. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the definition's source/locator/trust.
+%
+% The three questions INVERT: 6 C of charge flowing in 2 s is a current of 3 A; that
+% 3 A current over the same 2 s is exactly what the charge formula multiplies to recover
+% the 6 C, and that 6 C at the same 3 A is exactly what the time formula divides to
+% recover the 2 s.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electric-charge.query.adj
+% ============================================================================
+
+import "electric-charge.adj"
+
+% 6 C of charge flowing in 2 s: current = 6 / 2.
+observe charge(6)
+observe time(2)
+? current(charge, time)      % expect 3   (definition: I = Q/t)
+
+% That 3 A current over the same 2 s: charge = 3 * 2.
+observe current(3)
+? charge(current, time)       % expect 6   (same definition, solved for Q = I·t)
+
+% That 6 C of charge at the same 3 A: time = 6 / 3.
+? time(charge, current)       % expect 2   (same definition, solved for t = Q/I)

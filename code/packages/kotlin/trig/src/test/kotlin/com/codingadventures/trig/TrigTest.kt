@@ -187,6 +187,16 @@ class TrigTest {
     }
 
     @Test
+    fun sqrtCoversFullBinary64Range() {
+        assertEquals(1e-50, Trig.sqrt(1e-100), 1e-62)
+        assertEquals(2.2227587494850775e-162, Trig.sqrt(Double.MIN_VALUE), 2.3e-174)
+        assertEquals(1.3407807929942596e154, Trig.sqrt(Double.MAX_VALUE), 1.4e142)
+        assertEquals(Long.MIN_VALUE, Trig.sqrt(-0.0).toRawBits())
+        assertEquals(Double.POSITIVE_INFINITY, Trig.sqrt(Double.POSITIVE_INFINITY))
+        assertTrue(Trig.sqrt(Double.NaN).isNaN())
+    }
+
+    @Test
     fun sqrtRoundtrip() {
         val s = Trig.sqrt(2.0)
         assertEquals(2.0, s * s, TOL)
@@ -291,6 +301,14 @@ class TrigTest {
 
     @Test
     fun atanZero() = assertEquals(0.0, Trig.atan(0.0), TOL)
+
+    @Test
+    fun atanPreservesTinyInputsAndNegativeZero() {
+        assertEquals(Long.MIN_VALUE, Trig.atan(-0.0).toRawBits())
+        assertEquals(Math.scalb(1.0, -30), Trig.atan(Math.scalb(1.0, -30)))
+        assertEquals(Double.MIN_VALUE, Trig.atan(Double.MIN_VALUE))
+        assertEquals(-Double.MIN_VALUE, Trig.atan(-Double.MIN_VALUE))
+    }
 
     @Test
     fun atanOne() = assertEquals(Trig.PI / 4, Trig.atan(1.0), TOL)

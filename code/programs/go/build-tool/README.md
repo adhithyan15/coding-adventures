@@ -66,16 +66,95 @@ On Windows, use the compiled `.exe`:
 | `-force` | false | Rebuild everything regardless of cache |
 | `-dry-run` | false | Show what would build without executing |
 | `-jobs` | NumCPU | Maximum parallel build jobs |
-| `-language` | all | Filter to: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, java, kotlin, haskell, dotnet, or all |
+| `-language` | all | Filter to any canonical discovery bucket, or `all` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
+
+## Metadata safety
+
+Text package metadata is decoded according to the language-neutral build-tool
+contract. In particular, Lua `.rockspec` files must be strict UTF-8. Invalid
+bytes stop resolution with `METADATA_INVALID_UTF8`, identify the package and
+repository-relative manifest, and return CLI exit code 2 without exposing the
+checkout path or silently replacing input.
+
+Cargo dependency resolution reads inline path dependencies from the top-level
+`[dependencies]` table. When a dependency uses a local source alias together
+with `package = "published-name"`, the published package name drives internal
+lookup. Package metadata, features, dev/build/target tables, and registry-only
+dependencies remain outside this graph contract.
+
+Ruby dependency resolution reads only `add_dependency` and
+`add_runtime_dependency` calls on the gem specification receiver. Development
+dependencies, metadata, and comments remain outside the graph. Declared gem
+names are registered alongside directory-derived aliases, so valid
+hyphen/underscore naming differences resolve deterministically. The shared
+field-boundary fixture and complete 301-package lane resolve exactly 454 edges.
+
+Perl dependency resolution reads only top-level runtime `requires`
+declarations from each root `cpanfile`. Requirements inside test or other
+phase blocks, `Makefile.PL` dependency tables, metadata, and comments remain
+outside the graph. Exact `Makefile.PL` `NAME` values and current and legacy
+distribution spellings are aliases only. The shared field-boundary fixture and
+complete 256-package lane resolve exactly 217 total edges: 216 from
+authoritative manifests and one qualified BUILD dependency.
+
+Elixir dependency resolution reads local dependency tuples only from direct
+project `deps:` lists and lists returned by block or shorthand `defp deps`
+functions. Multiline tuples are accepted when they contain a quoted `path:`
+option. Project and application metadata, source prose, comments, `mix.lock`,
+and non-path Hex or Git dependencies cannot invent graph edges. The shared
+field-boundary fixture covers direct, block, shorthand, multiline, comment,
+metadata, and external-dependency cases; the complete 282-package lane resolves
+exactly 472 edges.
+
+Dart dependency resolution reads only direct package keys under the root
+`dependencies:` and `dev_dependencies:` maps. Scalar constraints and nested
+source maps are both valid direct entries, while nested `path:`, `git:`,
+`url:`, `ref:`, and `sdk:` options, dependency overrides, comments, and
+unrelated YAML fields cannot invent graph edges. Root `name:` values and
+directory-derived snake-case aliases identify packages. The shared
+field-boundary fixture covers these boundaries, and the complete 82-package
+lane resolves exactly 67 edges.
+
+Java and Kotlin dependency resolution reads only `includeBuild("...")` calls
+from root `settings.gradle.kts` files. Calls may span lines; their quoted
+relative paths are normalized lexically and must exactly match a discovered
+package root in the same language lane. Comments, unrelated strings,
+`include(...)`, build-script coordinates, absolute paths, cross-lane paths,
+and unknown targets cannot invent graph edges. Referenced targets are never
+opened. Java/Kotlin source and Gradle settings/build files participate in the
+package hash. The two shared field-boundary fixtures cover direct and nested
+paths plus adversarial decoys; the complete Java and Kotlin lanes resolve
+exactly 186 and 166 edges respectively.
+
+## Canonical discovery identities
+
+Discovery uses only the exact bucket immediately below a `packages` or
+`programs` path component. It recognizes every established implementation
+lane, the emerging C, C++, and OCaml lanes, the WASM target, the Mosaic and
+Twig domain languages, the Starlark build language, and the retained shared
+`.NET` host bucket. Programs keep a `programs` segment, such as
+`go/programs/build-tool`, so they cannot collide with a library of the same
+name. Specification fixture trees are not buildable packages.
+
+Discovery fails closed when two directories normalize to the same identity:
+
+```text
+DUPLICATE_PACKAGE_IDENTITY: package=unknown/demo paths=code/packages/alpha/demo,code/packages/beta/demo
+```
+
+The diagnostic contains sorted repository-relative paths, never the checkout
+root, and the CLI returns exit code `2`.
 
 ## Architecture
 
 The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
 
 1. **discovery** -- Recursively walks for `BUILD` files to find packages
-2. **resolver** -- Parses `pyproject.toml`, `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, `mix.exs`, and `pubspec.yaml`
+2. **resolver** -- Parses ecosystem metadata including `pyproject.toml`,
+   `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, `mix.exs`, `.rockspec`,
+   `pubspec.yaml`, Cabal files, Gradle files, and .NET project references
 3. **hasher** -- SHA256 hashing for change detection
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore

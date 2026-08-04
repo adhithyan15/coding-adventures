@@ -1,0 +1,312 @@
+# semantic-ir-to-c
+
+Sixth backend for the narrow-waist [Semantic IR](../semantic-ir/).  Lowers a
+`semantic_ir::Module` into **self-contained ISO C99 source code** — every
+emitted `.c` file embeds the runtime it needs, so it builds with any C99
+compiler and runs, with no dependency beyond the C standard library.
+
+Implements [SIR24](../../../specs/SIR24-semantic-ir-to-c.md).
+
+Because every SIR frontend lowers to the same waist, this one backend gives
+**Ruby → C** (the driving goal) and Python / JavaScript / Twig → C for free.
+
+```text
+Ruby / Twig / … source
+   │  <lang>-to-semantic-ir
+   ▼
+semantic_ir::Module ──► semantic-ir-to-c ──► self-contained prog.c ──► cc ──► ./prog
+```
+
+## Portability — MSVC, GCC, and Clang
+
+The emitted C is **ISO C99 with no compiler-specific extensions** (no GNU
+statement-expressions, nested functions, `typeof`, VLAs, or compound-literal
+argument arrays).  It compiles on:
+
+- **MSVC** `cl /std:c11`
+- **GCC** (default C mode)
+- **Clang** (default C mode)
+
+The included `tests/compile_and_run.rs` compiles and runs every corpus program
+through a real compiler (see below); the design itself is verified against all
+three.
+
+**Linking**: the embedded runtime uses `<math.h>` functions (`floor`/`ceil`/
+`fabs`, backing Numeric methods like `floor`/`ceil`/`round`/`abs`). MSVC and
+Clang/GCC on macOS link these in automatically; **GCC/Clang on Linux need an
+explicit `-lm`** on the compile/link command (glibc ships libm as a separate
+archive) — e.g. `cc -std=c99 -o prog prog.c -lm`. Omitting it produces an
+`undefined reference to 'floor'`-style link error, not a compile error.
+
+## Usage
+
+```rust
+use semantic_ir_to_c::{compile, CBackend};
+use semantic_ir::Backend;
+
+let artifact = compile(&sir_module)?;          // convenience
+let artifact = CBackend::new().compile(&sir_module)?;  // via the trait
+std::fs::write("prog.c", &artifact.source)?;
+// $ cc prog.c -o prog && ./prog
+```
+
+Dump the C for a snippet during development:
+
+```bash
+cargo run -p semantic-ir-to-c --example dump_c -- ruby 'puts 2 + 3 * 4'
+cargo run -p semantic-ir-to-c --example dump_c -- twig '(print (+ 2 3))'
+```
+
+## How it works
+
+The emitter is **thin**; the semantics live in an inlined C runtime
+(`runtime.rs`), the same self-contained model the Go and Rust backends use.
+
+- **Value model** — a tagged union `SirValue` (the C analogue of Go's
+  `interface{}` / Rust's `enum Value`): `nil`, `bool`, `int` (`int64_t`),
+  `float`, interned `str`/`sym`, `pair`, `closure`.
+- **Memory** — arena / leak-on-exit: every box is `malloc`'d and never freed.
+  An emitted program is a batch program that runs and exits, so the OS reclaims
+  everything; this removes use-after-free / double-free from the surface.
+- **Block-as-expression** — portable C has no statement-expression, so the
+  emitter is statement-oriented: a value is produced into a `return`
+  (`emit_tail`) or an assignment (`emit_assign`); an `if` in tail position
+  becomes a returning `if`/`else`; a call with a control-flow argument hoists
+  its arguments into temporaries.
+- **Variadic builtins** — `(+ a b c)` → `_sir_plus(3, a, b, c)` (real C
+  variadic functions, not compound-literal arrays that older MSVC rejects).
+- **Closures** — a `MakeClosure` becomes `_sir_make_closure(thunk, ncap, …)`;
+  a per-function thunk adapts the body's fixed C signature to the uniform
+  closure calling convention; an indirect call is `_sir_apply(...)`.
+- **Display convention** — a single `__SIR_DISPLAY_RUBY__` placeholder is
+  substituted with a boolean-selected literal (`1` = Ruby `true`/`false`,
+  `0` = Lisp `#t`/`#f`) — never source-derived text.
+
+## Capability declaration (v0)
+
+**Accepts** `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
+`OptionalTypeAnnotations`, `MutualRecursion`, `Globals`; the SIR26 integer
+conversions (`Conversions`, `SizedIntegers`, `Unsigned`, `WrappingArithmetic`);
+SIR16 control flow and mutation (`Loops` — `While`, `ForRange`, `ForEach`; and
+`MutableBindings`); SIR16 `Sequences` — a `SIR_SEQ` heap array with
+`SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet` and structural equality; and SIR16 `Maps`
+— a `SIR_MAP` heap assoc-array with `MapLit`/`MapGet`/`MapSet`, structural
+composite keys, positional structural equality, and `{k: v}` display (matching
+the Go/Rust backends); SIR16 `Floats` — a `SIR_FLOAT` `FloatLit` (`7.0`
+stays a Float, not the Integer `7`; `Infinity`/`NaN` via `<math.h>`), with
+native float arithmetic, the division frontier (Float promotes, two Integers
+floor), and IEEE non-finite results; SIR16 `ShortCircuit` — `LogicalAnd`
+(`&&`) and `LogicalOr` (`||`) lowered to an `if (_sir_truthy(...))` overwrite
+that short-circuits the dead operand and yields the deciding operand (not a
+bool); SIR19 `DefaultParams` — a positional default via a `_sir_missing`
+sentinel: a `DirectCall` pads omitted trailing arguments and each function opens
+with an `if (_sir_is_missing(p)) { p = <default>; }` prologue (a later default
+may reference an earlier parameter); and SIR19 `KeywordParams` — a keyword
+argument resolved to its callee's parameter slot **by name** at emit time (KW6),
+producing a plain positional C call (omitted optional keywords filled with
+`_sir_missing()` and substituted by the same default prologue); and SIR17
+`Exceptions` — `begin/rescue/ensure` + `raise` lowered to a `setjmp`/`longjmp`
+handler stack (a `SIR_ERROR` value, a baked-in exception-class ancestry table
+for `rescue`-by-class matching, and a two-handler structure so `ensure` runs
+even when a rescue body raises). Rescue-type names are emitted as quoted string
+literals (no injection); `retry` is deferred, rejected cleanly. And the OOP
+mirror **slice 1** — `Classes` + `Constants`: an empty class
+(`class Foo; end` → a comment), construction (`Foo.new` → `_sir_new_instance`, a
+new `SIR_INSTANCE` box stored inline in the union that prints `#<Foo>`), and
+constants (`PI = 3` / `PI` → a runtime `_sir_const_set` / `_sir_const_get`
+table).  Class/constant names are quoted C string literals (no injection).  And
+**slice 2** — instance methods: `__def_method__` registers a `(class, method) →
+closure` into an explicit table (`_sir_def_method`), and `__method__` dispatches
+via `_sir_call_method` (resolve `(recv's class, method)`, apply the closure; miss
+→ `NoMethodError`).  Dispatch is an explicit data lookup — **never reflection** on
+a source string — so it is anti-RCE by construction; a dispatch to a built-in
+method the module never defined routes to the Collections runtime (below) or, if
+not lowered yet, is rejected cleanly.  And
+**slice 3** — `InstanceVars`: `@v = x` / `@v` (`Scope::Instance`) →
+`_sir_ivar_set` / `_sir_ivar_get` on the receiver's lazily-allocated `@name →
+value` map (an unset `@v` reads nil), and a bare `self` → `_sir_self()`.  The
+receiver is carried across the hoisted method body in `_sir_current_self` (saved
+and restored by `_sir_call_method`; an enclosing `begin`/`rescue` restores it on
+the unwind path).  The `@`-name is a quoted C string literal (no injection).  And
+**slice 4** — inheritance + `super`: `class Dog < Animal` emits
+`_sir_register_super("Dog", "Animal")` into a mutable user-ancestry table that
+`_sir_class_super` consults **before** the baked-in exception hierarchy (so ONE
+`super_of` drives both `rescue`-matching and method resolution); `_sir_call_method`
+resolves a method up the ancestry (`_sir_resolve_method`), so a subclass inherits
+its parent's methods; and `super` → `_sir_call_super`, resolving the method from
+the superclass of the defining class and applying it to the current `self`.  Every
+ancestry walk is bounded (`SIR_ANCESTRY_MAX`), so a cyclic hand-built hierarchy
+cannot hang.  Class / method / super-class names are all quoted C string literals
+(no injection).  And **slice 5** — class methods: `def self.m` →
+`_sir_def_class_method` into a SEPARATE class-method (singleton) table (so a class
+method and an instance method of the same name never collide), and `Class.m(args)`
+→ `_sir_call_class_method`, an ancestry-walking table lookup (class methods
+inherit) that binds `self` to nil (no instance receiver).  And **slice 6** —
+class variables: `@@x` → `_sir_cvar_get`/`_sir_cvar_set` on a `(class, @@name)`
+table shared down the hierarchy (owner resolved via the ancestry), the owning
+class taken from `_sir_current_class` (bound by dispatch); a class-body `@@x = 0`
+initializer seeds it with the class named explicitly (`_sir_cvar_set_in`).  And
+**slice 7** (the final OOP slice) — modules / mixins: a `module` is a name whose
+methods register like a class's, `include M` (`_sir_register_include`) folds M's
+methods into a class's instance-method resolution and `extend M`
+(`_sir_register_extend`) into its class-method resolution — completing the C
+OOP surface (**6-backend OOP parity**).
+
+And the **Collections** batch has begun: a `__method__` dispatch to a built-in
+name the module never defined routes to the runtime dispatcher
+`_sir_builtin_method`, which type-checks the receiver and applies the
+implementation.  Covered so far — **slice 1** (0-arity String): `length`/`size`,
+`upcase`, `downcase`, `reverse`, `empty?`, `to_s` (`length`/`size`/`empty?`
+polymorphic over String/Array/Hash); **slice 2** (1-arg String queries):
+`include?`, `start_with?`, `end_with?` → bool and `index` → Int/nil (the argument
+a String); **slice 3** (0-arg Array query/transform methods): `count`, `first`,
+`last`, `sort`, `min`, `max`, `sum`, `uniq`, `compact`, `flatten`, `to_a`, and
+`reverse` widens to accept an Array alongside its slice-1 String form — each
+returns a **fresh** sequence (or scalar), never mutating the receiver;
+ordering/equality reuse the runtime's own `<`/`>`/`==` (`_sir_lt`/`_sir_gt`/
+`_sir_value_eq`), and `flatten` shares the same recursion-depth cap as
+`_sir_fmt`/`_sir_value_eq` so a self-referential array (`a[0] = a`) terminates
+instead of overflowing the stack; **slice 5** (Array block methods): `each`,
+`map`, `select`, `reject`, `any?`, `all?`, `none?`, `sort_by`,
+`each_with_index`, `reduce`/`inject` — the block the Ruby frontend appends as
+the trailing `__method__` arg reaches this runtime as an ordinary `SIR_CLOSURE`
+value, so each element-wise call goes through the SAME `_sir_apply` a
+first-class closure call already uses (no new calling convention); **slice 4**
+(Array mutation + 1-arg queries): `push`/`pop`/`shift` — the FIRST methods
+that mutate a `SirSeq` after construction (`push` reallocates to grow,
+`pop`/`shift` shrink `len` in place) — plus `fetch`/`values_at`/`rotate`/
+`zip`, and `include?`/`index` widen to accept an Array alongside their
+slice-2 String forms.  Because a block can now grow/shrink the very receiver
+it's iterating, every block-taking helper (slice 3/5) snapshots BOTH the
+array's length AND its items pointer once before its loop/allocation instead
+of re-reading either — length alone isn't enough, since `push` reallocates
+relative to the CURRENT length, which can be smaller than an outer snapshot
+after a `pop`/`shift` — the same "iterate a snapshot" convention
+`_sir_seq_iter`'s `ForEach` already uses; **slice 6** (Hash non-block
+methods): `keys`/`values`/`to_a`/`to_h`/`dig`/`merge`/`invert` (all
+non-mutating), plus `delete`/`clear` — the FIRST Hash methods that mutate
+the receiver (`delete` removes an entry; `clear` resets `len` in place like
+`Array#pop`).  `fetch`/`to_a` widen to accept a Hash receiver alongside
+their Array forms; `dig` is polymorphic over Hash/Array from the start;
+**slice 7** (Hash block methods): `each_key`/`each_value`/`group_by`/
+`partition`, plus `each`/`map`/`select`/`reject`/`sort_by`/`sum` widening to
+accept a Hash receiver (`map`/`sort_by` return an Array, `select`/`reject`
+return a Hash — matching Ruby's `Enumerable`-over-Hash semantics).  Both
+`delete` and `Array#shift` now REALLOCATE a fresh, smaller buffer instead of
+compacting in place — an in-place compact mutates the SAME memory a
+block-taking helper's pointer snapshot points into, silently corrupting an
+in-flight outer iteration; reallocating (like `push` already did) leaves any
+outer snapshot reading unmodified memory, restoring the safe invariant.  A
+wrong-type receiver or argument raises `NoMethodError`; a built-in method not
+lowered yet is still rejected cleanly.  **Bracket-index** (`recv[k]` /
+`recv[k] = v`, Ruby's `[]`/`[]=`) rides the same `__method__` dispatch:
+`"[]"`/`"[]="` branch on the RECEIVER's actual `SIR_SEQ`/`SIR_MAP` tag at
+runtime and delegate to the existing index/get and set helpers — never a
+compile-time guess from the index's syntactic shape, so a Hash with a
+non-string key (an int or symbol key) can never be mis-routed to the Array
+path.  **Slice 8** (remaining String methods): `capitalize`, `swapcase`,
+`strip`/`lstrip`/`rstrip`, `chomp`, `chars`/`bytes`/`each_char` (UTF-8-
+CHARACTER-aware — a multi-byte sequence is one `chars`/`each_char` element,
+unlike `bytes`, which is byte-naive by design), `split`, `replace`, `sub`/
+`gsub` (literal, non-regex — an empty pattern is a no-op, not an infinite
+scan), `to_i`/`to_f`, `to_sym`, `tr`.  Semantics are matched against the
+Python/TS `sir-runtime-oop` reference catalog (this cascade's cross-backend
+golden source), not always byte-for-byte true Ruby; the `*`/`+` String
+operators stay explicitly deferred (the Ruby frontend has no lowering path
+for them at all — see `code/specs/sir-collection-methods.md`'s "C backend
+lane" addendum).
+
+Slice 8's OTHER deferral — char-set methods (`count(charset, ...)`,
+`delete(charset, ...)`, `squeeze(charset=nil)`) and padding methods
+(`ljust`/`rjust`/`center(width, pad=" ")`) — later landed as its own
+follow-up. Char-set arguments are treated LITERALLY (Ruby's char-range
+(`"a-z"`)/negation (`"^abc"`) forms stay deferred, same precedent as
+`tr`/`sub`/`gsub`); multiple charset arguments INTERSECT. `squeeze` with no
+charset collapses every run; with a charset, only matching runs collapse.
+Padding pads to `width` BYTES with `pad` repeated cyclically (`center`
+puts any odd leftover byte on the RIGHT, Ruby's rule); the deficit is
+clamped at 100,000,000 bytes so a hostile width can't exhaust memory, and
+the width argument avoids the UB-prone bare float→int64 cast `to_i` was
+fixed for in slice 9.
+**Slice 9** (Numeric methods): `abs`, `even?`/`odd?`/`pred` (Integer-only,
+matching true Ruby), `zero?`/`positive?`/`negative?`, `floor`/`ceil`/`round`
+(0-arg form), `divmod` (raises a catchable `ZeroDivisionError` on a zero
+divisor), `fdiv` (never raises — returns `Infinity`/`-Infinity`/`NaN`
+instead), `clamp`/`between?`, `gcd`, `digits` (naturally bounded — no bignum
+DoS cap needed, since this runtime's integer is a fixed `int64_t`), and the
+BLOCK-taking `times`/`upto`/`downto`/`step` (a zero `step` stride is a
+documented no-op, never a hang); `to_i`/`to_f` widen to accept a numeric
+receiver alongside their slice-8 String forms.
+`round` was later widened past its slice-9 0-arg form to also accept a
+single `ndigits` argument (matching real Ruby's full dispatch): Integer
+`ndigits >= 0` is a no-op, Integer `ndigits < 0` rounds to the nearest
+`10^(-ndigits)` half-away-from-zero (`1234.round(-2) == 1200`), Float
+`ndigits > 0` rounds to that many decimal places and stays a Float
+(`3.14159.round(2) == 3.14`), and Float `ndigits <= 0` rounds and CONVERTS
+to an Integer (`1234.5.round(-2) == 1200`), each confirmed against a live
+`ruby -e` interpreter. Every path is bounds-capped (19 decimal digits for
+Integer, `double`'s ~17 significant digits for Float) and a round-up carry
+that would need one more digit than `int64_t` holds saturates at
+`INT64_MAX`/`INT64_MIN` rather than wrapping.
+**Slice 10** (Symbol + universal Object/Bool methods): Symbol widens
+`to_s`/`length`/`size`/`empty?`/`upcase`/`downcase`/`to_sym` from the
+slice-1/8 String helpers (`upcase`/`downcase` re-intern as a fresh Symbol,
+not a String) and adds Symbol-only `inspect` (`:name`); universal `Object`
+methods `nil?`/`equal?`/`itself`/`frozen?` (`equal?` is pointer identity,
+distinct from `==`'s structural equality; `frozen?` is a fixed,
+receiver-TYPE-only answer — no per-object mutability tracking in this v0);
+`TrueClass`/`FalseClass`'s eager (non-short-circuit) `&`/`|`/`^`, reachable
+only via an explicit dot-call (`true.&(x)`) since `&&`/`||` lower to `If`
+and never reach a method dispatch.
+
+`<<` (Ruby's shift operator) is a top-level `BuiltinCall`, not a
+`__method__` dispatch, so it's wired through `variadic_helper` alongside
+`+`/`-`/`*`/`/` rather than `_sir_builtin_method_v`. Polymorphic over
+Array (push in place, returns self, chains — reuses the slice-4 `push`
+growth helper), Integer (bitwise shift; a negative amount REVERSES
+direction, and an out-of-range left shift SATURATES rather than growing a
+bignum or hitting C's shift-amount-exceeds-width UB), and String
+(concatenates and returns a NEW string — a documented divergence, since
+this runtime's `SIR_STR` has no shared pointer identity to mutate in
+place, unlike `SIR_SEQ`). Only the C backend has a `<<` runtime
+implementation so far; Python/JS/Go/Rust/Ruby accept it at emit time but
+raise a clean runtime error (the same shape of gap as `[]`/`[]=`),
+tracked as its own follow-up.
+
+**Rejects** (cleanly, with a source-positioned error): `TailCalls`,
+`Intrinsics`, a `class << self` singleton, and
+every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
+until a bignum runtime ships — a module needing arbitrary precision is refused,
+never silently truncated.
+
+## Roadmap to parity
+
+This crate is the **v0 core**.  Later feature batches land incrementally,
+mirroring the Go backend's landed order, each proven by the cross-backend
+[`sir-conformance`](../sir-conformance/) harness:
+
+1. v0 core (this release)
+2. SIR16 — floats, short-circuit, mutable bindings, loops, sequences, maps
+3. default & keyword parameters
+4. the collection-method catalog (`String`/`Array`/`Hash`/…)
+5. exceptions (`setjmp`/`longjmp`) + typed runtime errors
+6. OOP — classes, modules (mixins / MRO)
+7. optional — `Bignum`; SIR21 sized-integer native lowering (`int64_t` /
+   `uint32_t` from the IR's `IntSpec`)
+
+## Testing
+
+```bash
+cargo test -p semantic-ir-to-c
+```
+
+- `tests/emit.rs` — asserts the *text* of the emitted C (shape, determinism,
+  identifier sanitisation, capability rejection).  Runs with no C compiler.
+- `tests/compile_and_run.rs` — **compiles and runs** each corpus program and
+  asserts stdout.  It finds a compiler from `SIR_CC` (an absolute path works),
+  then `cc`/`clang`/`gcc` on `PATH`; if none is present it **skips** rather than
+  failing.  Point it at a specific compiler with, e.g.:
+
+  ```bash
+  SIR_CC=clang cargo test -p semantic-ir-to-c
+  ```

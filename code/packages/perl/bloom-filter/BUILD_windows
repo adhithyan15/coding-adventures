@@ -1,0 +1,1 @@
+set PERL5LIB=..\hash-functions\lib && perl -Ilib t/00-load.t && perl -Ilib t/01-bloom-filter.t

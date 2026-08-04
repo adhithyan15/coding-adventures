@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "resolution/elixir-field-aware",
+  "domain": "resolution",
+  "summary": "Elixir resolution reads multiline local path tuples only from the deps function and ignores comments and unrelated metadata.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/elixir/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/elixir/alpha/mix.exs",
+        "content_utf8": "defmodule Alpha.MixProject do\n  use Mix.Project\n\n  # {:gamma, path: \"../gamma\"} is documentation, not a dependency.\n  def project do\n    [\n      app: :gamma,\n      version: \"0.1.0\",\n      description: \"{:gamma, path: \\\"../gamma\\\"} is prose\",\n      deps: deps()\n    ]\n  end\n\n  def application do\n    [extra_applications: [:gamma]]\n  end\n\n  defp deps do\n    [\n      {:coding_adventures_beta_helper,\n       path: \"../beta-helper\"},\n      {:delta_name,\n       path: \"../delta_name\",\n       only: :test},\n      {:external_hex, \"~> 1.0\"},\n      {:external_git, git: \"https://example.invalid/gamma.git\"}\n      # {:gamma, path: \"../gamma\"}\n    ]\n  end\nend\n"
+      },
+      {
+        "path": "code/packages/elixir/alpha/mix.lock",
+        "content_utf8": "%{\"gamma\" => {:hex, :gamma, \"1.0.0\"}}\n"
+      },
+      {
+        "path": "code/packages/elixir/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/elixir/beta-helper/mix.exs",
+        "content_utf8": "defmodule BetaHelper.MixProject do\n  use Mix.Project\n  def project, do: [app: :coding_adventures_beta_helper, version: \"0.1.0\", deps: []]\nend\n"
+      },
+      {
+        "path": "code/packages/elixir/delta_name/BUILD",
+        "content_utf8": "echo build delta_name\n"
+      },
+      {
+        "path": "code/packages/elixir/delta_name/mix.exs",
+        "content_utf8": "defmodule DeltaName.MixProject do\n  use Mix.Project\n  def project, do: [app: :delta_name, version: \"0.1.0\", deps: deps()]\n  defp deps, do: [{:gamma, path: \"../gamma\"}]\nend\n"
+      },
+      {
+        "path": "code/packages/elixir/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/elixir/gamma/mix.exs",
+        "content_utf8": "defmodule Gamma.MixProject do\n  use Mix.Project\n  def project, do: [app: :gamma, version: \"0.1.0\", deps: []]\nend\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "elixir"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/elixir-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "elixir/beta-helper",
+          "elixir/alpha"
+        ],
+        [
+          "elixir/delta_name",
+          "elixir/alpha"
+        ],
+        [
+          "elixir/gamma",
+          "elixir/delta_name"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

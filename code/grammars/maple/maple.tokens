@@ -1,0 +1,222 @@
+# Maple Token Grammar
+# ============================================================================
+#
+# Tokenizes the MP-1-scoped subset of Maple (Keith Geddes & Gaston Gonnet,
+# University of Waterloo, 1980-82; still actively developed and sold by
+# Maplesoft) — see code/specs/MA09-maple-language.md §1/§3 for the full
+# surface-grammar derivation. On the surface Maple reads like a close
+# cousin of REDUCE (the same `:=` assignment spelling, the same
+# `and`/`or`/`not` keywords) but it is genuinely NOT "REDUCE again": Maple
+# has THREE aggregate literal types where REDUCE/Derive each have one, and
+# its own `f(x) := expr` spelling means something narrower (a remember-table
+# patch onto an existing procedure, MA09 §1) than REDUCE's/Derive's own
+# general-definition idiom of the same shape — real Maple's general
+# function definition is the arrow/functional operator, `f := (x, y) -> e`
+# (Help page `operators/functional`), which is why this grammar has an
+# ARROW token REDUCE's/Derive's own `.tokens` files do not.
+#
+# Maple is CASE-SENSITIVE, and — like REDUCE, unlike Derive's uppercase
+# `AND`/`OR`/`NOT` — its word operators and statement keywords are spelled
+# in LOWERCASE (`and`, `or`, `not`, `if`, `then`, `elif`, `else`, `end`,
+# `fi`, `true`, `false` — MA09 §3, citing the Maple Programming Guide
+# §3.10/§5.6 and the `if`/`type/truefalseFAIL` Help pages), so the
+# `keywords:` block below lists the lowercase spellings, mirroring
+# reduce.tokens's own case rule exactly (the mirror image of
+# derive.tokens's uppercase convention).
+#
+# Statement separation is `;` or `:` (MA09 §3, citing Programming Guide
+# §5.3 "Statement Separators" — `;` displays the result, `:` suppresses
+# it), never a significant newline: Maple's own interactive session has no
+# `#n:`/`In[n]:=` numbered-worksheet-prompt convention either (MA09 §5), so
+# (unlike derive.tokens/wolfram.tokens) this file has no NEWLINE token and
+# needs no bracket-interior-newline post-tokenize hook — every newline is
+# ordinary whitespace, exactly mirroring reduce.tokens's/macsyma.tokens's
+# identical `;`/`$`(or `:`)-terminated statement model. `;` and `:` are
+# kept as two DISTINCT token types (SEMI/COLON) even though a later parser
+# may treat both as statement terminators — the same discipline
+# reduce.tokens documents for its own SEMI/DOLLAR split ("the parser, not
+# this lexer, is where the two spellings collapse onto one production").
+#
+# @version 1
+
+# Strings and comments are out of this subset's scope entirely (no STRING
+# token, no comment skip pattern) — MA09 §4 explicitly excludes both:
+# "`#` line comments, `(* ... *)` nestable block comments ... are not part
+# of this grammar" and "this subset's programs are a flat sequence of
+# `;`/`:`-terminated expression statements, assignments, arrow-operator
+# definitions, and `if` statements."
+escapes: none
+
+# ============================================================================
+# SECTION 1: Multi-character operators
+#
+# Longest-match-first: every multi-character operator is listed before any
+# shorter operator it begins with, so `:=` wins over bare `:` (COLON,
+# SECTION 2 — unlike reduce.tokens, this subset genuinely needs a bare `:`
+# token, since Maple's `:` is the result-suppressing statement separator,
+# MA09 §3), `->` wins over bare `-` (MINUS), `<>` wins over bare `<`
+# (LESS), and `<=`/`>=` win over bare `<`/`>` (LESS/GREATER) — the same
+# defensive convention reduce.tokens/derive.tokens use for their own
+# `:=`/`<=`/`>=` pairs.
+# ============================================================================
+
+# Maple's one assignment operator (Programming Guide §5.5 "Assignments") —
+# identical spelling to REDUCE's/Derive's own, per MA09 §1, though (per
+# MA09 §3/§4) `f(x) := expr` in real Maple is the narrower remember-table
+# mechanism, not general definition; that distinction is a parser/runtime
+# concern (MP-3/MP-4), invisible to this lexer, which just emits ASSIGN for
+# every `:=` regardless of what precedes it.
+ASSIGN      = ":="
+
+# The arrow/functional operator (Help page `operators/functional`, "A
+# functional operator... written using arrow notation") — Maple's real
+# general-purpose function-definition spelling, `f := (x, y) -> e` / `f :=
+# x -> e` (MA09 §3). REDUCE's and Derive's `.tokens` files have no ARROW
+# token at all, because neither language uses this construct; Maple
+# genuinely does, which is why this token is new to this repo's CAS-family
+# lexers.
+ARROW       = "->"
+
+# Maple's own not-equal spelling (`equation` Help page; MA09 §3) — NOT
+# REDUCE's word-spelled `neq` keyword, and NOT Wolfram's `!=`. A symbolic
+# two-character operator, grouped here with the other relational operators
+# rather than in the `keywords:` section (SECTION 5) since it is spelled
+# with punctuation, not a word.
+NEQ         = "<>"
+
+LE          = "<="
+GE          = ">="
+
+# ============================================================================
+# SECTION 2: Single-character operators and delimiters
+# ============================================================================
+
+PLUS        = "+"
+MINUS       = "-"
+TIMES       = "*"
+SLASH       = "/"
+
+# Power (Programming Guide §3.9 "Arithmetic Expressions"; MA09 §3) — `^`
+# ONLY. Real Maple documents no `**` synonym the way REDUCE's manual lists
+# `^`/`**` as one tier, so (deliberately, per MA09 §3's own note) there is
+# no POW token here mirroring reduce.tokens's `CARET`/`POW` pair — adding
+# one "for completeness" would invent a Maple operator that does not exist.
+CARET       = "^"
+
+# `=` is Maple's equation/relational operator (Programming Guide §3.10
+# "Boolean and Relational Expressions") — NEVER assignment; the same
+# `=`-is-equation / `:=`-is-assignment split every sibling CAS-family
+# grammar in this repo already draws (REDUCE, Derive, Macsyma, Wolfram).
+EQ          = "="
+LESS        = "<"
+GREATER     = ">"
+
+LPAREN      = "("
+RPAREN      = ")"
+
+# List literals use SQUARE brackets (`[a, b, c]`, ordered, duplicates
+# preserved — Programming Guide §4.3 "Immutable Data Structures"; MA09 §3).
+# This is the OPPOSITE bracket choice from Derive's `[a,b,c]` *vector*
+# literal (same brackets, different meaning, MA09 §1) and from REDUCE's
+# curly-brace *list* literal — Maple is the first language in this repo
+# that needs both a list bracket and a set bracket (SECTION below), since
+# it has three aggregate types where every prior CAS sibling here has one
+# (MA09 §1/§2).
+LBRACKET    = "["
+RBRACKET    = "]"
+
+# Set literals use CURLY braces (`{a, b, c}`, unordered, duplicates
+# silently removed — same §4.3, and the `set` Help page's own worked
+# example: `{x, y, y}` and `{y, x, y}` both produce `{x, y}`; MA09 §3).
+# This is the same bracket REDUCE uses for its *list* literal — same
+# spelling, different meaning (MA09 §1) — which is exactly the
+# family-resemblance trap MA09 §1 calls out by name; this lexer only
+# assigns the token a name (LBRACE/RBRACE), the Set-vs-List *meaning* is
+# carried entirely by which bracket (square vs. curly) was used, resolved
+# by the parser/runtime (MP-3/MP-4).
+LBRACE      = "{"
+RBRACE      = "}"
+
+# The comma separator plays its usual dual role — list/set element
+# separator (`[a, b, c]`, `{a, b, c}`) and function-call argument
+# separator (`f(a, b)`) — exactly the same overload every sibling
+# CAS-family grammar's comma already has (MA09 §3).
+COMMA       = ","
+
+# Statement separators (Programming Guide §5.3 "Statement Separators";
+# MA09 §3): `;` displays the result of the statement, `:` suppresses it.
+# The same *shape* as Macsyma's/REDUCE's own `;`/`$` pair — a
+# display-vs-suppress distinction the parser (MP-3), not this lexer,
+# unifies into one statement-terminator production — just spelled `;`/`:`
+# here instead of `;`/`$`. Kept as two distinct token types (SEMI/COLON),
+# mirroring reduce.tokens's SEMI/DOLLAR split and macsyma.tokens's
+# identical SEMI/DOLLAR split.
+SEMI        = ";"
+COLON       = ":"
+
+# ============================================================================
+# SECTION 3: Literal value tokens
+#
+# NUMBER requires a leading digit, so a bare `.5` is not a number (matches
+# every sibling symbolic-family lexer's convention — reduce.tokens,
+# derive.tokens, macsyma.tokens, wolfram.tokens). NAME is a case-sensitive
+# identifier; built-in names conventionally spelled lowercase (`sin`,
+# `diff`, `int` — MA09 §3, "unlike Derive's uppercase convention") are
+# ordinary NAMEs resolved later by the runtime (MP-4), exactly like
+# REDUCE's `df`/`log`/`first` — so, aside from the `keywords:` block below,
+# there is no reserved-word list here.
+# ============================================================================
+
+NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
+NAME   = /[a-zA-Z][a-zA-Z0-9]*/
+
+# ============================================================================
+# SECTION 4: Skip patterns
+#
+# Maple newlines are NOT significant — statements end with `;` or `:`
+# (Programming Guide §5.3), exactly mirroring reduce.tokens's/
+# macsyma.tokens's identical rationale — so newlines are just whitespace
+# here, and (unlike derive.tokens/wolfram.tokens) this file declares no
+# NEWLINE token and needs no bracket-interior-newline post-tokenize hook in
+# maple-lexer.
+# ============================================================================
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+
+# ============================================================================
+# SECTION 5: Keywords
+#
+# These words are NAMEs at the lexer level but are reclassified to their
+# own KEYWORD token by the grammar-driven lexer, matched by EXACT
+# lowercase spelling (MA09 §3) — uppercase spellings (`AND`, `IF`, ...) lex
+# as ordinary NAMEs here, mirroring reduce.tokens's identical case rule
+# (the mirror image of derive.tokens's uppercase keywords).
+#
+# `and`/`or`/`not` — logical operators (Programming Guide §3.10).
+# `if`/`then`/`elif`/`else`/`end` — conditional-statement keywords
+# (Programming Guide §5.6 "Flow Control"). Real Maple closes an `if` with
+# either `end if` (two words — `end` here, and `if` itself already exists
+# as a keyword above, so the parser (MP-3) recognizes the two-keyword
+# sequence `end if`; this lexer just emits them as two ordinary KEYWORD
+# tokens in a row, exactly as it would any other keyword pair) or the
+# standalone `fi` keyword ("if" reversed — the `if` Help page confirms
+# `fi` is short for `end if`; MA09 §3).
+# `fi` — short form of `end if` (`if` Help page).
+# `true`/`false` — boolean literals (`type/truefalseFAIL` Help page; MA09
+# §3 — Maple's boolean logic is really three-valued with `FAIL`, but `FAIL`
+# is out of scope, MA09 §4).
+# ============================================================================
+
+keywords:
+  and
+  or
+  not
+  if
+  then
+  elif
+  else
+  end
+  fi
+  true
+  false

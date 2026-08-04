@@ -89,13 +89,32 @@ lowering is direct.
 | `ClassVars` (O3)                |                                          |
 | `Modules` (MX4 mixins)          |                                          |
 | `Constants`                     |                                          |
+| `SymbolicExpr` (SIR23)          |                                          |
+| `PatternMatching` (SIR23)       |                                          |
+| `Rationals` (shared w/ SIR22)   |                                          |
+| `NDArrays` (SIR22 base cut)     |                                          |
+| `MatrixOps` (SIR22 base cut)    |                                          |
+| `ArrayColumnMajor` (SIR22)      |                                          |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
 *before* lowering rather than mis-compiled — and every accepted feature
 has a real emit arm (the residual `panic!` guards cover only the
 still-deferred SIR18 nodes — `SingletonClassDef` OOP dispatch and string
-interpolation).
+interpolation — plus the still-unimplemented SIR22 "APL addendum" nodes,
+one caveat below).
+
+**One caveat on `NDArrays`/`MatrixOps`/`ArrayColumnMajor`**: the SIR22
+*base cut* (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
+`IndexGet`/`IndexSet`) has real codegen against an inlined `__Sir.Array`
+runtime (a plain-JS port of the published `sir-runtime-array` package —
+see `runtime.rs`). The SIR22 *addendum* nodes (`Reduce`/`Scan`/
+`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
+`Catenate`) share these same three features and remain deferred, so this
+backend adds a dedicated tree-walk check inside `compile()` (beyond the
+ordinary feature-flag capability check) that cleanly rejects a module
+using any of the nine rather than let it slip through and panic in
+`emit` — see `find_unimplemented_sir22_addendum_node` in `lib.rs`.
 
 `Classes` now covers **full user-defined-class OOP (O3)**: a `ClassDef`
 supplies its `superclass` *ancestry edge* (so `raise MyErr; rescue
@@ -337,6 +356,189 @@ are treated strictly as data. The mutable map is `Object.create(null)`
 (prototype-less), so a user class named `constructor`/`__proto__` cannot
 poison the lookup, and a cyclic user map terminates via a `seen` guard.
 
+### Symbolic expressions + pattern/rewrite (SIR23)
+
+The inlined `__Sir` also carries `Symbolic` — a plain-JS port of the
+published `@coding-adventures/symbolic-ir` (term-tree type + constructors),
+`@coding-adventures/cas-pattern-matching` (the structural matcher/
+substitution algorithm), and `@coding-adventures/sir-runtime-symbolic`
+(`replaceAll`/`replaceRepeated`/`unwrap`) TypeScript packages, so the
+artifact stays self-contained:
+
+| SIR                               | JavaScript emitted                              |
+|------------------------------------|-------------------------------------------------|
+| `SymSymbol("f")`                   | `__Sir.Symbolic.sym("f")`                       |
+| `SymRational(1, 3)`                 | `__Sir.Symbolic.rational(1, 3)`                 |
+| `SymApply(f, [x])`                  | `__Sir.Symbolic.apply(sym(f), [x])`             |
+| `SymPatternBlank(None)`             | `__Sir.Symbolic.blank()`                        |
+| `SymPatternBlank(Some(Integer))`    | `__Sir.Symbolic.blankTyped("Integer")`          |
+| `SymPatternNamed("x", pat)`         | `__Sir.Symbolic.named("x", pat)`                |
+| `SymRule(lhs, rhs, delayed: false)` | `__Sir.Symbolic.rule(lhs, rhs)`                 |
+| `SymRule(lhs, rhs, delayed: true)`  | `__Sir.Symbolic.ruleDelayed(lhs, rhs)`          |
+| `SymReplaceAll(e, r, repeated: false)` | `unwrap(replaceAll(e, r))`                   |
+| `SymReplaceAll(e, r, repeated: true)`  | `unwrap(replaceRepeated(e, r))`              |
+
+A term is a plain, frozen `{ kind, … }` object (`"symbol"` / `"integer"` /
+`"rational"` / `"float"` / `"string"` / `"apply"`) — never a class instance,
+so it never collides with `Sym`/`Pair`/`Closure`/`SirInstance` above. A bare
+`IntLit`/`FloatLit`/`StrLit` operand is wrapped through `int`/`numberNode`/
+`stringNode` (`emit_sym_operand`) before it can sit inside a term tree, since
+a raw JS number/string is never a valid term.
+
+**Deliberate divergence from the TypeScript sibling:** terms use plain JS
+`number` for `integer`/`rational` values rather than `bigint` — matching how
+every other numeric value in this backend already works (`IntLit` emits a
+bare JS number literal; there is no `bigint` anywhere else in this runtime).
+
+**Security.** `matchPattern`/`substitute`/`applyRule` recurse only as deep as
+a single rule's own (author-written) pattern/RHS shape, never the target
+expression's depth, so they need no cap. `replaceAll`/`replaceRepeated` walk
+the *entire* target expression, which ordinary program data can build
+unboundedly deep — `MAX_TERM_DEPTH = 512` caps that walk (CWE-674). A rule
+firing inside `replaceRepeated` loops at the *same* call frame rather than
+recursing on the fresh replacement, so a caller-supplied `maxIterations`
+(default 100) bounds only CPU time, never native stack depth — carrying
+forward the fix the TypeScript sibling package's own `/security-review`
+found.
+
+`print`/`puts` render a Symbolic term via `Symbolic.toDisplayString`
+(`f(x, 1/3)`-style — Derive-sourced modules get a different, own-language
+convention instead; see "Derive's own SIR23 display convention" below),
+reached from `formatSeen` by checking for a plain object carrying a
+`.kind` tag.
+
+**`Symbolic.evalTerm` (SIR23 addendum, item 1 of 4 — arithmetic/
+comparison/logic folding only).** Every top-level SIR23 statement
+(`emit.rs`'s `Stmt::ExprStmt` arm, for a bare `SymApply`/`SymSymbol`/
+`SymRational`, or the same shape as `print`'s sole argument) is wrapped
+in `__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(...))` — a direct JS
+port of `symbolic-vm`'s `VM::eval`/`eval_apply` per-head dispatch (see
+`code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s own "Addendum" for
+the full design). `Expr::SymApply`'s own codegen is unchanged (still a
+bare, unevaluated `apply(head, args)`); `evalTerm` recurses into
+`head`/args itself, so wrapping happens exactly once per statement, not
+once per nested `SymApply`.
+
+This item's scope is intentionally narrow:
+
+- **Wired up:** arithmetic (`Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`/`Inv`/
+  `Abs`, with exact-rational results — `1/3` stays `1/3`, `10/2` folds
+  to the integer `5`), comparison (`Equal`/`NotEqual`/`Less`/`Greater`/
+  `LessEqual`/`GreaterEqual`, folding to the `True`/`False` **symbol**,
+  never a JS boolean), logic (`And`/`Or`/`Not`, N-ARY).
+- **Declared but inert:** `Assign`/`Define`/`If` (`HELD_HEADS`) have no
+  handler yet, so they stay byte-for-byte the same unevaluated data
+  today's codegen already produces — no environment, no user-function
+  dispatch, no branching. That is item 2's job.
+- **Not wired up at all:** calculus/elementary functions (`Sin`, `D`,
+  `Integrate`, … — item 3; held-form execution — `Assign`/`Define`/`If`
+  dispatch — is item 2, above). `List` needs no handler ever:
+  applicative-order argument evaluation alone folds `List(Add(1,1),
+  Mul(2,3))` into `List(2, 6)` for free.
+- `MAX_EVAL_DEPTH = 2000` is `evalTerm`'s own empirically-measured
+  recursion-depth cap (CWE-674) — deliberately not a reuse of
+  `MAX_TERM_DEPTH` above, which guards a different function
+  (`replaceAll`/`replaceRepeated`'s tree walk) with a different
+  per-frame cost. See `runtime.rs`'s own doc comment on the constant for
+  the full measurement writeup, and `tests/sir23_eval_depth_guard.rs`
+  for the executable proof.
+
+**Derive's own SIR23 display convention (SIR23 addendum, item 4 of 4 —
+display only, scoped to Derive).** `Symbolic.toDisplayString` branches,
+at its own top, on a fourth `SIR_DISPLAY_*` flag — `SIR_DISPLAY_DERIVE`,
+computed from `m.metadata.source_language == "derive"` exactly like the
+existing `SIR_DISPLAY_RUBY`/`SIR_DISPLAY_APL_HIGH_MINUS`/
+`SIR_DISPLAY_J_UNDERSCORE` flags (see the "Array/matrix domain" section
+below for those) — to a separate function family (`deriveRender`/
+`derivePrintAt`/`deriveRenderApply`/`deriveRenderList`) that is a direct,
+byte-for-byte JS port of `derive-runtime::printer::print_derive`'s own
+precedence-based renderer, rather than the generic `head(args, …)` form
+every other source language still gets:
+
+- Infix `Add`/`Sub`/`Mul`/`Div` and comparisons `Equal`/`Less`/`Greater`/
+  `LessEqual`/`GreaterEqual`, n-ary `And`/`Or`, prefix `Neg`/`Not`, and
+  right-associative `Pow` (`a^b^c`), each parenthesised exactly where
+  `printer.rs`'s own 9-level precedence ladder says a looser child needs
+  it.
+- Derive's own `List` bracket convention (D-5): a flat vector prints
+  `[a, b, c]`; a "list of lists" prints as a `;`-row-separated matrix,
+  `[a, b; c, d]`.
+- Case-bridging a fixed table of builtin heads back to Derive's own
+  UPPERCASE surface spelling (`D` → `"DIF"`, `Sin` → `"SIN"`, …); any
+  other head (a user-defined function) renders as-typed.
+- `True`/`False` and `Assign`/`Define` need **no** special-casing: the
+  former already renders identically under both conventions (a bare
+  `Symbol` term's verbatim name); the latter never reach the display path
+  at all once items 2/3 land (their handlers return the bound value, not
+  an `Assign(...)`/`Define(...)` term) — see `runtime.rs`'s own
+  `SIR_DISPLAY_DERIVE` doc comment for the full writeup.
+
+This item has no code dependency on items 2/3 (it touches only
+`toDisplayString`, a different function than `evalTerm`/`evalApply`) and
+is scoped to Derive only — `derive-to-semantic-ir` is the only Stream B
+frontend with an oracle corpus proving it today; Wolfram/Macsyma/Reduce/
+Maple's own conventions are separate future work following the identical
+recipe (one more `SIR_DISPLAY_*` flag + printer port).
+
+**Axiom's three reserved heads (MA13/Wave 7 close-out): `__axiom_declare`/
+`__axiom_coerce`/`__axiom_has` + a sixth display flag.** `axiom-to-
+semantic-ir` lowers Axiom's `:` (declaration), `::` (coercion), and `has`
+(category-membership query) — a fixed, non-extensible domain/category type
+system with no analogue in any other CAS-family language here (MA13 §2/§3) —
+to three reserved `SymApply` head names, never added to shared
+`semantic-ir`/`symbolic-ir`. `HELD_HEADS`/`HANDLERS`/`HELD_HANDLERS` gain a
+matching JS-side port of `axiom-runtime::domains`'s fixed
+`AxiomDomain`/`AxiomCategory` table (`axiomDeclareHandler`/
+`axiomCoerceHandler`/`axiomHasHandler`), plus a SIXTH, independent
+`SIR_DISPLAY_AXIOM_BOOLEAN` flag — much narrower than `SIR_DISPLAY_DERIVE`
+above: it gates only the `True`/`False` symbol's lowercase spelling inside
+the generic `toDisplayString` branch (Axiom still has no full infix/bracket
+printer of its own). `assignHandler` also gains one small, disclosed
+addition: it consults a new `axiomDeclaredDomains` map (populated only by
+`axiomDeclareHandler`) so a `:`-declared domain constraint is enforced
+against a later `:=` — a no-op for every other source language. See
+`axiom-to-semantic-ir/tests/oracle.rs` for the full end-to-end diff against
+`axiom-runtime` and `runtime.rs`'s own comments for the complete design.
+
+### Array/matrix domain (SIR22 base cut)
+
+The inlined `__Sir` also carries `Array` — a plain-JS port of the
+published `@coding-adventures/sir-runtime-array` TypeScript package, so
+the artifact stays self-contained:
+
+| SIR                                    | JavaScript emitted                                                       |
+|------------------------------------------|---------------------------------------------------------------------------|
+| `ArrayLit([[1, 2], [3, 4]])`             | `__Sir.Array.fromRows([[1, 2], [3, 4]])`                                 |
+| `Range(1, Some(2), 10)`                  | `__Sir.Array.range(1, 10, 2)` — note the argument ORDER: `stop` before `step` |
+| `MatMul(a, b)`                           | `__Sir.Array.matmul(a, b)`                                               |
+| `ElementwiseOp(Mul, a, b)`               | `__Sir.Array.elementwise("Mul", a, b)`                                   |
+| `Transpose(a, conjugate: true)`         | `__Sir.Array.transpose(a, true)`                                         |
+| `IndexGet(a, [Scalar(0), Whole])`        | `__Sir.Array.indexGet(a, [{ kind: "scalar", value: 0 }, { kind: "whole" }])` |
+| `IndexSet(a, [Scalar(0)], v)` (a `Stmt`) | `__Sir.Array.indexSet(a, [{ kind: "scalar", value: 0 }], v);`            |
+
+`NDArray` is `{ shape: number[], data: Float64Array }` — dense,
+COLUMN-MAJOR storage (Fortran/MATLAB order), mirroring
+`array_runtime::value::Array` field-for-field. `elementwise` coerces a
+bare JS `number` operand into a scalar `NDArray` (`toArrayValue`) because
+`matlab-to-semantic-ir`'s lowerer emits a mixed number/`NDArray` operand
+pair whenever exactly one side of `.* ./ .\`/`* /` is provably scalar
+(`A .* 2` passes `2` through unwrapped, not as an `ArrayLit`).
+
+**Not implemented**: the SIR22 "APL addendum" nodes (`Reduce`/`Scan`/
+`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
+`Catenate`) — see the capability table's caveat above for why a module
+using one of these fails cleanly rather than through the ordinary
+feature-flag check.
+
+**Security.** Every factory that computes an output size from
+caller-supplied numbers (`matmul`'s `[m, n]`, `indexGet`'s two
+independently-bounded row/column selections, `range`'s element count, ...)
+validates via `checkedShapeSize`/an explicit `MAX_ELEMENTS` (2^26) check
+*before* allocating a `Float64Array`, matching `matlab-runtime`'s own
+`MAX_RANGE` bound — an unbounded or malformed shape fails with a
+catchable `Error`, not an uncaught `RangeError` or a stalled huge
+allocation.
+
 ## Output format
 
 - 2-space indentation, semicolons always (no ASI reliance).
@@ -386,3 +588,12 @@ cargo test -p semantic-ir-to-javascript
   counter, a for-range accumulator (and a descending step), for-each, and
   mutable reassignment (`42`). When `node` is not on PATH the execution is
   skipped and the syntactic checks still run.
+- `tests/sir23_symbolic.rs`: real `node`-execution tests for the SIR23
+  symbolic domain — `replaceRepeated` reduces `Add(Add(z, 0), 0)` to the bare
+  symbol `z` via `x_ + 0 -> x_`, `replaceAll`'s single-pass (no-retry)
+  contract, and a head-typed blank (`x_Integer`) matching selectively.
+- `tests/sir22_array.rs`: real `node`-execution tests for the SIR22
+  array/matrix base cut — matrix multiplication, the bare-scalar-operand
+  `elementwise` coercion fix, transpose, MATLAB-colon range semantics,
+  in-place `indexSet` (including whole-column broadcast), and a
+  non-conformable-matmul clean-error-exit case.

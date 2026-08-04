@@ -1,0 +1,11 @@
+[package]
+name = "task-app"
+version = "0.1.0"
+description = "A to-do app with automatic scheduling, built on the shared task-core engine."
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["TaskApp"]
+
+[kernel]
+version = "1"

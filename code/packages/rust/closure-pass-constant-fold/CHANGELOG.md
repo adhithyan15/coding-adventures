@@ -2,6 +2,716 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.111.0] - 2026-07-28
+
+### Added - flatten a spread of an array literal inside an array literal
+
+A `...[…]` whose argument is an array LITERAL is inlined into the enclosing
+array literal, matching the reference Closure Compiler at SIMPLE:
+
+```text
+  [...[1, 2], 3]     ->  [1, 2, 3]
+  [0, ...[1, 2], 3]  ->  [0, 1, 2, 3]
+  [...[]]            ->  []
+```
+
+A spread over an array literal produces exactly that array's elements, in
+order, so inlining them is behaviour-preserving. Nesting is handled by the
+fixed-point pass (`[...[...[1]]]` -> `[1]`).
+
+HOLE GUARD: a spread uses the array ITERATOR, which yields `undefined` for an
+elision, so `[...[1, , 3]]` is `[1, undefined, 3]` -- observably different from
+`[1, , 3]` (a hole, testable via `in`). We therefore inline ONLY a hole-free
+inner literal; a spread whose argument has a hole, or is a string / identifier /
+call (`[..."ab"]`, `[...y]`), is left intact.
+
+Object spread (`{...{a: 1}}`) and call-argument spread (`f(...[1, 2])`) are
+separate transforms, not handled here.
+
+## [0.110.0] - 2026-07-24
+
+### Added - Math.fround(n) at a float32 fixed point
+
+`Math.fround(x)` (ECMAScript §21.3.2.19) rounds `x` to the nearest float32 and
+widens back to a double — exactly Rust's `x as f32 as f64`, so the round-trip is
+bit-for-bit reproducible (no `powf`-style last-ULP hazard). The reference
+compiler folds `Math.fround(x)` ONLY when `x` is already an exact float32 — a
+fixed point where `fround(x) === x` and the fold changes nothing:
+
+```text
+  Math.fround(1.5)      -> 1.5      (exactly a float32)
+  Math.fround(-2.5)     -> -2.5
+  Math.fround(0)        -> 0
+  Math.fround(1.1)      -> Math.fround(1.1)      (rounds; DECLINED)
+  Math.fround(16777217) -> Math.fround(16777217) (2^24+1; rounds; DECLINED)
+```
+
+We mirror that: fold only when `x.is_finite() && (x as f32 as f64) == x`, and
+DECLINE a `-0` fixed point (`-0` has no numeric-literal token — the same
+negative-zero care as the Math.abs/floor block). `NaN`/`Infinity` are
+identifiers, never numeric literals, so they never reach the numeric-literal
+handler; the `is_finite` guard is defense-in-depth. Only the bare-global
+`Math.fround` callee with exactly one numeric-literal argument folds.
+
+This closes the `fround` half of the Math static-fold task; `Math.pow` remains
+declined (unsound to fold via `powf`; a safe pow needs integer-exponent-only
+exact arithmetic).
+
+## [0.109.0] - 2026-07-22
+
+### Added - fold `Math.clz32(n)` and `Math.imul(a, b)` on numeric literals
+
+Two more static `Math` folds, verified byte-identical to the reference Closure
+Compiler (`closure-compiler-v20260712.jar`, SIMPLE) across a 95-case
+differential probe:
+
+- `Math.clz32(n)` -> leading zero bits of `ToUint32(n)` (`0..=32`): `clz32(0)`
+  -> 32, `clz32(1)` -> 31, `clz32(256)` -> 23, `clz32(-1)` -> 0.
+- `Math.imul(a, b)` -> 32-bit signed product of `ToUint32(a)·ToUint32(b)`:
+  `imul(3, 4)` -> 12, `imul(-1, 5)` -> -5, `imul(65536, 65536)` -> 0.
+
+Both compute their result by pure modular arithmetic via the existing
+`to_uint32` helper (`ToUint32`/`ToInt32` semantics) - NO libm - so they are
+bit-exact independent of the platform math library. Each folds only on the bare
+global `Math` with exactly its argument count (clz32/1, imul/2), all numeric
+literals; other arities and non-literal args decline (leaving the call intact is
+always safe). Results are always finite 32-bit integers, never `-0`, so no
+negative-zero gate is needed. clz32 is handled outside the shared single-argument
+`-0` gate because a negative input mapping to a `0` result (`clz32(-1)`) is a
+legitimate `+0` that must still fold.
+
+Not modelled: `Math.pow` - a differential probe showed Rust's `f64::powf`
+diverges from the reference's `Math.pow` in the last ULP for fractional/negative
+exponents (e.g. `pow(2, 1.5)`, `pow(7, -2)`), so folding it via `powf` would emit
+different bytes; a safe pow fold would need integer-exponent-only exact
+arithmetic (tracked separately). The wrong-arity `Math.imul` cases the reference
+folds (`imul(2)` -> 0, `imul(2, 3, 4)` -> 6) are declined here (rare; tracked).
+
+## [0.108.0] - 2026-07-22
+
+### Added - fold `Math.trunc(n)` and `Math.sign(n)` on a numeric literal
+
+Extended the existing single-argument `Math` fold (which already handled
+`abs`/`floor`/`ceil`/`round`) to two more static methods, verified byte-identical
+to the reference Closure Compiler (`closure-compiler-v20260712.jar`, SIMPLE):
+
+- `Math.trunc(4.9)` -> `4`, `Math.trunc(-4.9)` -> `-4` (round toward zero).
+- `Math.sign(7)` -> `1`, `Math.sign(-3)` -> `-1`, `Math.sign(0)` -> `0`.
+
+Both reuse the handler's existing safety gates: fold only when the single
+argument is a numeric literal, and DECLINE any result that is negative zero
+(`Math.trunc(-0.5)` === -0, `Math.sign(-0)` === -0) — the same conservative
+policy already applied to `Math.ceil(-0.5)`, since `-0` has no faithful
+numeric-literal spelling. `js_math_sign` implements the ECMAScript §21.3.2.34
+sign (which preserves signed zero and maps NaN to NaN) rather than Rust's
+`f64::signum`, whose `+-0 -> +-1` mapping would be wrong.
+
+The reference compiler does NOT fold the transcendental `Math` methods
+(`sqrt`/`cbrt`/`hypot`/`exp`/`log*`/`sin`/`cos`/`tan`/`atan`) even when the
+result is exact, so those remain declined and unchanged. `Math.pow`, `clz32`,
+`imul`, and the conditional `fround` are tracked separately.
+
+## [0.107.0] - 2026-07-18
+
+### Fixed — keep `a / b` unfolded past 7 fractional digits (match Closure)
+
+Division folding now mirrors Closure's numeric byte-cost heuristic: `a / b`
+folds to a numeric literal only when the exact quotient has **at most seven
+digits after the decimal point**; otherwise the source `a / b` is kept. The old
+behavior folded every finite non-zero division, so `1/3` became the 16-digit
+`.3333333333333333` (longer than `1/3`, and diverging from the reference jar,
+which keeps `1/3`).
+
+The cut is on the *fractional*-digit count of the result's shortest round-trip
+decimal, not its total length — `811/128` → `6.3359375` (7 fractional digits)
+still folds even though it is longer than `811/128`, while `1/256` → `.00390625`
+(8) and every non-terminating quotient (`1/3`, `2/3`, `1/7`, …) stay as
+`1/256` / `1/3`. Integers and short fractions fold as before (`6/3` → `2`,
+`1/128` → `.0078125`). A new `fractional_digit_count` helper derives the count
+from the JS-exact `format_js_number` (0.105.0), normalizing exponential forms
+(`9.53…e-7` → 20 fractional digits, a huge integer `1e30` → 0). Applies to `/`
+only; `%` results are integral or short. `division/modulo`-by-zero handling is
+unchanged.
+
+Oracle-verified byte-identical to the real Closure jar across 25+ division
+shapes; new `division_with_over_seven_fractional_digits_is_kept_unfolded` and
+`fractional_digit_count_normalizes_exponential_forms` unit tests plus a
+`division-fold-threshold` closurec e2e fixture.
+
+## [0.106.0] - 2026-07-18
+
+### Fixed — numeric object-key quoting now matches Closure across the full range
+
+The object-literal transform decides whether a numeric property key is emitted
+bare (`{100:0}`) or quoted with its `ToString` (`{"1.5":0}`). The old predicate
+only quoted **non-integers in `[1e-6, 1e21)`**, leaving several key classes bare
+that Closure quotes. Oracle-probing the reference jar revealed the actual rule:
+a numeric key stays bare in exactly one case — **a non-negative integer strictly
+below `2^53`** (the safe-integer bound) — and is quoted otherwise.
+
+Newly quoted (previously emitted bare, diverging from Closure):
+
+- integers `>= 2^53`: `{1e20:0}` → `{"100000000000000000000":0}`,
+  `{9007199254740992:0}` → `{"9007199254740992":0}`
+- integers rendered exponentially: `{1e21:0}` → `{"1e+21":0}`
+- non-integers outside `[1e-6, 1e21)`: `{1e-7:0}` → `{"1e-7":0}`
+
+Still bare (safe integers): `{0:_}`, `{100:_}`, `{4294967296:_}`,
+`{9007199254740991:_}` (2^53 − 1); the printer independently minifies them
+(`{4e9:_}` → `{4E9:_}`), matching Closure. A `+Infinity` key (overflow literal
+like `1e400`) stays bare as `Infinity`, also matching. The quoted name comes
+from the now-JS-exact `format_js_number` (0.105.0), so exponential and huge-
+integer keys get their precise V8 spelling.
+
+A new `numeric_object_key_quoting_matches_closure_safe_integer_rule` unit test
+and a `numeric-key-quote` closurec e2e fixture verify byte-identity with the
+real jar.
+
+## [0.105.0] - 2026-07-18
+
+### Fixed — `format_js_number` now matches V8's `Number.prototype.toString` exactly
+
+The number-to-string helper (used by every fold that materializes a number as a
+string — `String(n)`, template substitutions, `(n).toString()`, and object
+property keys) is now a faithful implementation of the ECMAScript
+`Number::toString` algorithm rather than a thin wrapper over Rust's formatting.
+Two concrete bugs are fixed:
+
+- **`i64` saturation.** The old integral path used `n as i64` guarded only by
+  `|n| < 1e21`. But `i64::MAX ≈ 9.2e18`, so an integral value in
+  `[2^63, 1e21)` — e.g. `1e20` or `123456789012345680000` — saturated to
+  `9223372036854775807`, a completely different number. These now render
+  correctly (`1e20` → `"100000000000000000000"`).
+- **Exponential-notation thresholds.** Values with `|n| ≥ 1e21` or `|n| < 1e-6`
+  fell through to Rust's `to_string()`, whose positional-vs-exponential choice
+  differs from JS (`"1000000000000000000000"` vs V8's `"1e+21"`). The
+  ECMAScript positional rules are now applied directly: `1e21` → `"1e+21"`,
+  `1e-7` → `"1e-7"`, `1e-6` → `"0.000001"`, `5e-324` → `"5e-324"`, and the
+  exponent sign is always explicit (`e+21`, `e-7`).
+
+The algorithm takes the shortest round-tripping digits and base-10 exponent from
+Rust's `{:e}` and reformats per the spec's four positional cases. A new
+`format_js_number_matches_v8_tostring` table cross-checks 30+ values against
+`String(n)` output captured from Node/V8. No behavior change for the small
+integers and simple decimals that dominate real code; the fix only touches the
+large/small/exponential tails that were previously mis-rendered. This unblocks
+correct quoting of out-of-range numeric object keys.
+
+## [0.104.1] - 2026-07-18
+
+### Fixed — flaky stack-overflow in the deep-chain regression test (CI reliability)
+
+`deeply_nested_binary_chain_folds_without_stack_overflow` built a 20 000-deep
+left-nested `1+1+…` chain and folded it on the 128 MiB `FOLD_STACK_SIZE` worker.
+At that depth (~6-7 KiB per `fold_binary` frame × 20 000 ≈ the full 128 MiB) the
+recursion sat right at the worker's edge, so on CI runners — fatter debug frames
+and higher memory pressure under parallel tests — it aborted with an uncatchable
+`fatal runtime error: stack overflow` on roughly two-thirds of runs, while
+passing locally.
+
+Lowered the depth to `N = 6_000`. This is a regression *guard* that the
+large-stack worker exists and is used (a few thousand levels already overflow
+the caller's ~2 MiB stack by an order of magnitude), not a measurement of the
+maximum foldable depth, so the smaller `N` keeps ~4× headroom under the worker
+while still proving the property. No library behavior changes — test-only.
+(Truly bounding *production* recursion against a hostile deep input is a
+separate, larger transform — a recursion-depth limit that declines to fold
+rather than a bigger stack — tracked apart from this reliability fix.)
+
+## [0.104.0] - 2026-07-18
+
+### Added — impure-test equal-branch ternary collapses to a comma sequence
+
+Extends the equal-branch ternary collapse (0.101.0, `t?X:X`→`X` for a pure test)
+to the impure-test case. When both arms are the same expression `X` but the test
+`t` is side-effectful, the value is still `X` regardless of how `t` decides — but
+`t`'s effect must be preserved. Closure rewrites this to the comma sequence
+`(t, X)`, which evaluates `t` first, then `X`, and yields `X` — the exact same
+evaluation order as the ternary (`t` once, `X` once, left to right, so no
+`valueOf`/`ToNumber` coercion re-ordering hazard):
+
+- `f() ? b : b`   → `(f(), b)`
+- `(a = 1) ? c : c` → `(a = 1, c)`
+- `h() ? a.b : a.b` → `(h(), a.b)`
+
+The emitter parenthesises a sequence in argument / sub-expression position, so
+`w(f()?x:x)` prints `w((f(),x))`. Oracle-verified byte-identical. The pure-test
+case continues to collapse straight to `X`.
+
+## [0.103.0] - 2026-07-17
+
+### Fixed — do not fold division / modulo BY ZERO
+
+`x / 0` and `x % 0` were being folded to the numeric literal of their result —
+`1/0` → `Infinity`, `-1/0` → `-Infinity`, `0/0` → `NaN`, `1%0` → `NaN`. The
+reference Closure Compiler does **not** fold these; it keeps the source
+operation. This release matches that:
+
+- `1/0` stays `1/0` (not `Infinity`)
+- `-1/0` stays `-1/0` (not `-Infinity`)
+- `0/0` stays `0/0` (not `NaN`)
+- `1%0` stays `1%0` (not `NaN`)
+
+Two reasons, both of which Closure honours: the folded literal is **longer**
+than the source, and `Infinity` / `NaN` are ordinary **global identifiers that
+can be shadowed** in scope, so emitting them where the source computed the value
+arithmetically is not even sound. Declining keeps closurec byte-identical *and*
+avoids a latent miscompile.
+
+A **non-zero** divisor still folds exactly as before — `6/3` → `2`, `5/2` →
+`2.5`, `1/8` → `.125`. The guard is scoped to the `Div` and `Mod` operators
+with a literal-zero right operand (`±0`); all other arithmetic is untouched.
+
+**Known remaining divergence (filed as a follow-up):** Closure also keeps a
+NON-terminating quotient — `1/3` stays `1/3` rather than the 16-digit
+`.3333333333333333` — governed by its numeric byte-cost heuristic. That is a
+separate, subtler transform and is not addressed here.
+## [0.102.0] - 2026-07-17
+
+### Added — idempotent double-negation collapse: `!!!x` → `!x`
+
+A logical-NOT whose operand is itself a `!!y` (double negation) drops that
+inner `!!` pair, matching the reference Closure Compiler at `SIMPLE`
+byte-for-byte:
+
+- `!!!x` → `!x`, `!!!!!x` → `!x` (odd count → one `!`)
+- `!!!!x` → `!!x`, `!!!!!!x` → `!!x` (even count → `!!`)
+- works over any operand — `!!!(a+b)` → `!(a+b)`, `!!!f()` → `!f()`,
+  `!!!a.b` → `!a.b`
+- a lone `!!y` is **preserved** — it is the minified spelling of `Boolean(y)`,
+  and dropping it would change the value (`!!5` is `true`, `5` is `5`)
+
+Sound for **any** operand with **no side-effect gate**: `!` never
+re-evaluates its operand, so the operand is evaluated exactly once no matter
+how many `!` wrap it, and `ToBoolean` invokes no user coercion (unlike the
+`ToNumber`/`valueOf` reordering that makes bitwise re-association unsound).
+`!!!x` computes `¬¬¬ToBoolean(x)` = `¬ToBoolean(x)` = `!x`. Folding is
+bottom-up, so the even/odd cascade converges in a single pass (`!!!!x`'s inner
+`!!!x` collapses to `!x` first, then the outer `!` yields `!!x`).
+## [0.101.0] - 2026-07-17
+
+### Added — ternary equal-branch collapse: `t ? X : X` → `X`
+
+A conditional expression whose two arms are the **same** expression now
+collapses to that expression, when the test is side-effect-free:
+
+- `a ? b : b` → `b`
+- `a ? 1 : 1` → `1`, `a ? "s" : "s"` → `"s"`
+- `a ? b.c : b.c` → `b.c`, `a ? b() : b()` → `b()`
+- `a.p ? b : b` → `b` (a member READ is free under the crate contract)
+
+Because both arms are identical, the selected value is `X` regardless of how
+the test decides — the branch is dead. The only thing the rewrite must not
+drop is the **test's own evaluation**, so it fires only when the test is
+`is_side_effect_free` (identifier / literal / member read; a call, assignment,
+or `++`/`--` is not). This matches the reference Closure Compiler at `SIMPLE`
+byte-for-byte. Branch equality is structural (derived `==`); under
+`--correlation_vector` the two arms may carry distinct minted CVs, in which
+case the collapse conservatively declines (a sound miss, never a miscompile).
+
+**Declined (filed as follow-up):** when the test is *impure* Closure rewrites
+to the comma sequence `f() ? b : b` → `(f(), b)` to preserve the effect. That
+is a larger transform (build a `SequenceExpression`, reason about result
+position); this pass leaves the impure-test ternary intact — sound — rather
+than ship a partial version.
+## [0.100.0] - 2026-07-17
+
+### Added — left-associativity normalization for `&&` / `||`
+
+A right-nested same-operator logical is re-associated left:
+`a && (b && c)` → `(a && b) && c`, and likewise for `||`. Both operators are
+**fully associative** — the two groupings yield the same value, short-circuit at
+the same point, and evaluate `a`, `b`, `c` strictly left-to-right in the same
+order — so the rewrite is behaviour-preserving. The payoff is byte-identity with
+the reference compiler: a right-nested same-operator logical must be
+parenthesised on emit (`a&&(b&&c)`), whereas the left-nested form prints bare
+(`a&&b&&c`).
+
+- `a && (b && c)` → `a && b && c`   `a || (b || c)` → `a || b || c`
+- `a && (b && c) && d` → `a && b && c && d`
+- deep nests fully flatten under the pass's fixed-point iteration:
+  `a && (b && (c && d))` → `a && b && c && d` (one step per node, re-run to fixpoint)
+- also normalises the output of the `if (a) if (b) c();` → `a && (b && c())`
+  control-flow fold, giving `a && b && c()`
+
+`??` is intentionally excluded (it cannot legally mix with `&&`/`||` without
+parens, and warrants its own case). A **mixed-operator** right nest
+(`a && (b || c)`) is left alone — the parens carry real grouping there.
+
+Additive; MINOR bump 0.96.0 → 0.100.0 (0.97 = numeric-object-key, 0.98 = `new Error` drop,
+0.99 = `new Object`/`new Array` drop, all in flight).
+## [0.99.0] - 2026-07-17
+
+### Added — standard-constructor `new`-drop extended to `Object` / `Array`
+
+Extends the `new Error(…)` → `Error(…)` fold to the other two standard
+constructors the reference Closure Compiler rewrites. Calling `Object`/`Array`
+as an ordinary function constructs the same value as `new` for every argument
+list, so these are spec-safe:
+
+- `new Object(x)` → `Object(x)`   `new Object()` → `{}`
+- `new Array(x)` → `Array(x)` — a lone argument is a *length* (`Array(3)` builds
+  a length-3 array), so the call form is kept, **not** `[x]`
+- `new Array()` → `[]`
+- `new Array(a, b, …)` → `[a, b, …]` — 2+ **non-spread** arguments become an
+  array literal (the static count is the element count)
+
+A 2+-argument `new Array(…)` that contains a **spread** keeps the call form
+(`new Array(a, ...xs)` → `Array(a, ...xs)`) rather than an array literal: a
+spread of unknown runtime length can collapse the construction to a single
+argument — the *length* form — so `new Array(5, ...[])` is a length-5 array
+whereas `[5, ...[]]` is `[5]`. The reference compiler folds to `[a, ...xs]`
+anyway (unsound); we decline to the always-equivalent call form to avoid the
+miscompile (matching Closure's literal spelling there is a byte-identity
+follow-up). This soundness gate was surfaced by the pre-push security review.
+
+A new `fold_standard_constructor` helper backs the `NewExpression` arm, gated to
+a **bare** `Object`/`Array` identifier callee (a member callee `obj.Array`, a
+user constructor, or any other name is untouched); like Closure at SIMPLE it
+assumes the globals are not shadowed.
+
+`RegExp` is still declined (`RegExp(r)` aliases a regex argument instead of
+copying — a potential miscompile).
+
+Byte-identical to the reference compiler at `SIMPLE` in every context **except**
+where a folded `{}`/`[]` literal lands immediately after `throw`/`return`: the
+emitter emits a redundant space there (`throw {}` vs Closure's `throw{}`), a
+**separate, pre-existing** keyword-before-punctuation emitter gap that also
+affects hand-written `throw {…}` / `throw "…"` and is filed as a follow-up. The
+fold itself is correct and valid everywhere; this is a net improvement over the
+prior un-folded `throw new Object()`.
+
+Additive; MINOR bump 0.96.0 → 0.99.0 (0.97.0 = numeric-object-key, 0.98.0 =
+`new Error` drop, both in flight).
+## [0.98.0] - 2026-07-17
+
+### Added — standard-constructor `new`-drop: `new Error(…)` → `Error(…)`
+
+The reference Closure Compiler rewrites `new Error(args)` to a plain call
+`Error(args)` (saving four bytes). Calling the built-in `Error` as an ordinary
+function constructs an Error object *identically* to `new` — ECMAScript
+§20.5.1.1: the `Error` constructor's `[[Call]]` and `[[Construct]]` paths
+converge, so `Error(m)` and `new Error(m)` both yield a fresh Error with the
+same `.message`. The drop is therefore semantics-preserving for **every**
+argument list, including the no-arg form:
+
+- `throw new Error("x")` → `throw Error("x")`
+- `x = new Error(y)` → `x = Error(y)`, `g(new Error("x"))` → `g(Error("x"))`
+- `new Error` / `new Error()` → `Error()`
+
+Byte-identical to the reference compiler at `SIMPLE` across all of the above.
+
+**Scope — deliberately `Error` only.** Gated to a *bare* `Error` identifier
+callee (a member callee `obj.Error` or any other name is untouched); like
+Closure at SIMPLE this assumes the global `Error` is not shadowed. Three
+adjacent folds are intentionally **excluded**:
+
+- **`RegExp`** — `RegExp(r)` returns its argument unchanged when `r` is already
+  a regex, whereas `new RegExp(r)` always makes a fresh copy, so
+  `new RegExp(x)` → `RegExp(x)` would be an observable change (a potential
+  miscompile). The reference compiler does it anyway; we decline to stay sound.
+- **`Object` / `Array`** — also spec-safe to drop, but Closure folds their
+  *no-arg* forms further to `{}` / `[]` literals, a larger transform.
+- **Error subtypes** (`TypeError`, `RangeError`, …) — the reference compiler
+  does not fold them, so neither do we.
+
+All three are follow-ups. Additive; MINOR bump 0.96.0 → 0.98.0 (0.97.0 is the
+in-flight numeric-object-key PR).
+## [0.97.0] - 2026-07-17
+
+### Added — a non-integer numeric object key is quoted (`{0.5:1}` → `{"0.5":1}`)
+
+An object-literal key that is a **non-integer** `NumericLiteral` now folds to a
+quoted `StringLiteral` key, matching the reference Closure Compiler at `SIMPLE`
+byte-for-byte:
+
+- `{0.5:1}` → `{"0.5":1}`, `{.5:1}` → `{"0.5":1}`, `{1.5:2,2:3}` → `{"1.5":2,2:3}`,
+  `{0.1:1}` → `{"0.1":1}`, `{3.14:1}` → `{"3.14":1}`
+
+A numeric key's property name is the ECMAScript `ToString` of its value, so
+`0.5` names the property `"0.5"`; Closure prints it as a string key, never the
+bare number. (An **integer** key stays numeric — the emitter prints `{1:1}` /
+`{1E3:1}` / `{31:1}` unquoted, which is already correct.) The `NumericLiteral`
+key at `fold_expression`'s object-literal arm is converted via `property_key_for`
+using `format_js_number` — whose shortest-round-trip output equals JS `ToString`
+exactly in the plain-decimal range.
+
+**Scope.** Converted only for a finite non-integer whose magnitude is in JS's
+plain-decimal `ToString` range `[1e-6, 1e21)`, where `format_js_number` matches
+`ToString`. Outside that range the string forms diverge — a tiny value takes
+exponent notation (`{1e-7:1}` → Closure `{"1e-7":1}`) and a large integer past
+`2^53` takes a precision-quoted decimal (`{123…680:1}` → `{"123…680":1}`) — so
+those keep their numeric key for now (valid output, byte-identical follow-up).
+This is purely a key-quoting normalization: `{0.5:1}` and `{"0.5":1}` name the
+same own property, so no runtime semantics change.
+
+## [0.96.0] - 2026-07-16
+
+### Added — computed string-key member → dot member: `o["foo"]` → `o.foo`
+
+A computed member access whose key is a string literal that is a valid,
+**non-reserved ASCII identifier name** now folds to a dot member, matching the
+reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `o["foo"]` → `o.foo`, `o["$x"]` → `o.$x`, `o["_y"]` → `o._y`, `o["a1"]` → `o.a1`
+- `o["let"]` / `o["yield"]` / `o["await"]` / `o["of"]` / `o["undefined"]` → dot
+  (none is an ES3 keyword)
+- `o.foo["bar"]` → `o.foo.bar` (chains), `o["foo"]=1` → `o.foo=1` (assignment target)
+
+A key that is an **ES3 reserved word** stays bracketed — `o["class"]`,
+`o["static"]`, `o["delete"]`, `o["int"]`, `o["boolean"]`, `o["enum"]`,
+`o["super"]`, `o["true"]`, `o["null"]`, … — because Closure keeps ES3-unsafe keys
+quoted so the output parses under an ES3 target. The reserved set is the classic
+Rhino `TokenStream.isKeyword` list (ES3 keywords + the Java-flavoured
+future-reserved words + `null`/`true`/`false`), captured in the new
+`is_es3_reserved_word` helper. A non-identifier key also stays bracketed:
+`o["1a"]` (leading digit), `o[""]`, `o["a b"]`, `o["a-b"]`, `o["é"]` (non-ASCII).
+
+The rewrite composes with the existing string-method / `.length` folds through
+the pipeline fixed point: `"abc"["toUpperCase"]()` → `"abc".toUpperCase()` →
+`"ABC"`, and `"abc"["length"]` → `"abc".length` → `3`. It also generalises the
+string-index fold's `["foo"]` case — an array-literal member with a
+non-numeric identifier key (`[a,b,c]["foo"]`) now dots to `[a,b,c].foo` instead
+of declining. Additive; MINOR bump 0.95.0 → 0.96.0.
+
+## [0.95.0] - 2026-07-16
+
+### Added — computed **string-key** access into an array literal: `[…]["K"]`
+
+Extends the CLOC12.196 / .196b integer-index fold to computed **string** keys.
+The reference Closure Compiler coerces the string key with the SAME full JS
+`ToNumber` used by `Number("…")` (this crate's `fold_number`) and then applies
+the integer-index fold, so every spelling `ToNumber` maps to an integer selects
+that element — **including the non-canonical ones**. Verified byte-identical at
+`SIMPLE` against `closure-compiler-v20260712.jar`:
+
+| access                   | ToNumber | result   |
+|--------------------------|----------|----------|
+| `[a,b,c]["0"]`           | `0`      | `a`      |
+| `[a,b,c]["01"]`          | `1`      | `b`      (leading zero) |
+| `[a,b,c]["1.0"]`         | `1`      | `b`      (trailing `.0`) |
+| `[a,b,c][" 1"]` / `["1 "]`| `1`     | `b`      (whitespace trimmed) |
+| `[a,b,c]["0x1"]`         | `1`      | `b`      (hex) |
+| `[a,b,c]["1e0"]`         | `1`      | `b`      (exponent) |
+| `[a,b,c][""]`            | `+0`     | `a`      (`ToNumber("")` is `0`) |
+| `[a,b,c]["3"]`           | `3`      | `void 0` (out of bounds) |
+| `[a,b,c]["-1"]`          | `-1`     | `void 0` (negative) |
+| `[a,b,c]["1.5"]`         | `1.5`    | declines (fractional — an ordinary absent-property read) |
+| `[a,b,c]["foo"]`         | `NaN`    | declines (see below) |
+| `[a,b,c]["length"]`      | —        | `3`      (the length property) |
+
+This is a deliberate match to Closure's behaviour even where it is
+technically unsound — `["01"]`/`["1.0"]` are not canonical array indices in the
+language, yet Closure folds them, so byte-identity requires we do too.
+
+Two keys `fold_number` can't express get special handling: `"length"` is the
+length property (routes to the same element-count fold as `.length`, with the
+same no-spread / all-elements-pure guard); and a key whose `ToNumber` is `NaN`
+(`"foo"`) declines here — Closure rewrites `["foo"]` to `.foo`, a member-access
+*normalisation* that is a separate slice, so the bracket access is left intact.
+
+The logic lives in a new `#[inline(never)]` `fold_array_string_key_access`
+helper (mirroring `fold_array_index_access`) so `fold_member`'s recursive frame
+stays small. Soundness is inherited from the integer-index fold: a present
+element keeps its own side effect while the others must be pure; a `void 0` /
+`length` result drops the whole literal, so every element must be pure.
+
+Additive; MINOR bump 0.94.0 → 0.95.0.
+
+## [0.94.0] - 2026-07-15
+
+### Added — array-index out-of-bounds / negative / hole → `void 0` — CLOC12.196b
+
+Extends the CLOC12.196 computed array-index fold (`[a, b, c][K]` → the K-th
+element) to cover the cases that read as `undefined`, which the emitter spells
+`void 0`:
+
+- **out of bounds** — `K ≥ len`: `[1,2,3][5]` → `void 0`, `[1,2][2]` → `void 0`,
+  `[][0]` → `void 0`;
+- **negative index** — `[1,2,3][-1]` → `void 0` (post-fold a negative index is a
+  `NumericLiteral` with a negative `value`, so it flows through the same
+  out-of-range path);
+- **in-bounds hole** — `[1,,3][1]` → `void 0` (an elided slot reads as
+  `undefined`).
+
+All rows are verified byte-identical against the reference Closure Compiler
+(`SIMPLE`). Two guards keep the fold sound:
+
+- a **fractional** index (`[1,2,3][1.5]`) is an ordinary absent-property read,
+  not an element pick, so it declines — matching Closure;
+- a `void 0` result drops the *whole* array literal, so **every** element must be
+  side-effect-free: `[f(),2][5]` declines even though the index is out of bounds
+  (this is stricter than the in-bounds present-element fold, which preserves the
+  selected element and so only requires the *other* elements to be pure).
+
+The computed-index logic moved into a dedicated `#[inline(never)]`
+`fold_array_index_access` helper so the recursive `fold_member` stack frame stays
+small (deeply-nested expressions must not overflow the stack — the frame-size
+lesson).
+
+## [0.93.0] - 2026-07-15
+
+### Added — contract compound self-assignment `x = x OP E` → `x OP= E` — CLOC12.198
+
+`fold_expression` now contracts a plain-`=` assignment whose right-hand side is a
+binary expression on the same target into the compound-assignment form:
+`x = x + 1` → `x += 1`, `n = n - 2` → `n -= 2`, `k = k * 2` → `k *= 2`,
+`a = a + b` → `a += b`, `s = s + "b"` → `s += "b"`. The rewrite fires for every
+arithmetic / bitwise operator that has a compound counterpart
+(`+ - * / % ** << >> >>> & | ^`); the relational, equality, `in`, and
+`instanceof` operators have no `OP=` form and decline. Verified byte-identical to
+the reference Closure Compiler (`SIMPLE`), which performs the same contraction.
+
+The contraction is matched on the binary's **left** operand only, so `x = x + 1`
+folds but `x = 1 + x` does **not** — for non-commutative operators (`-`, `/`,
+`**`, the shifts) `x = x - 1` (→ `x -= 1`) and `x = 1 - x` are different
+computations, and the reference compiler likewise only contracts the
+left-operand shape. A different left identifier (`x = y + 1`) also declines.
+
+**Scope:** identifier targets only. A member target such as `o[f()] = o[f()] + 1`
+is a deliberate follow-up (CLOC12.198b): its expanded form evaluates the
+reference sub-expressions (`f()`) twice while the compound form evaluates them
+once, so contracting it is only sound once the object/property is proven
+side-effect-free. For a bare identifier binding the reference `x` has no
+observable side effect, so `x = x OP E` and `x OP= E` are always interchangeable.
+
+The contraction body lives in an `#[inline(never)]` `fold_assignment` helper so
+its locals don't inflate the shared recursive `fold_expression` frame (the same
+DoS-guard discipline the member / optional / template arms follow).
+
+## [0.92.0] - 2026-07-15
+
+### Added — fold template literal → string when every substitution is constant — CLOC12.197
+
+`fold_expression` now collapses a `TemplateLiteral` to a `StringLiteral` when
+every `${…}` substitution is a stringifiable constant (number / string / boolean
+/ null / undefined) and every quasi carries a cooked value: `` `a${1}b` `` →
+`"a1b"`, `` `${1}-${2}-${3}` `` → `"1-2-3"`, `` `hello` `` → `"hello"`, `` `` `` →
+`""`. Recursion handles nested templates (`` `a${`b${1}c`}d` `` → `"ab1cd"`) and
+constant sub-expressions (`` `a${1+2}b` `` → `"a3b"`, the `1+2` folds first).
+Verified byte-identical to the reference Closure Compiler; no emitter work is
+needed because closurec's string emitter already matches its quote choice
+(single-quote when the value contains a `"`) and escaping (`\n`, `\t`, `\\`). A
+non-constant substitution (`` `a${x}b` ``, `` `a${f()}b` ``) or an illegal-escape
+(tagged-only) quasi declines.
+
+The fold body lives in an `#[inline(never)]` `fold_template_literal` helper so its
+`Vec`/`String` locals don't inflate the shared recursive `fold_expression` frame
+(that frame is walked once per AST depth level; bloating it lowers the nesting
+depth the pass survives — the `deeply_nested_*` stack-safety tests pin this).
+
+Adds a `stringify_const_operand` predicate + four unit tests. NOTE: end-to-end at
+SIMPLE this currently only fires on **no-substitution** templates (`` `hello` `` →
+`"hello"`) — *substituted* templates (`` `a${x}b` ``) do not yet parse in
+closurec's grammar, so the fold, though correct and unit-tested, can't receive one
+until that separate grammar/bridge arc lands. Additive; MINOR 0.91.0 → 0.92.0.
+
+## [0.91.0] - 2026-07-15
+
+### Added — fold array-literal index access `[a, b, c][K]` → element — CLOC12.196
+
+`fold_member`'s computed-access path (`arr[K]`) now folds a constant integer index
+into the selected element, the companion to the CLOC12.193 array-`.length` fold.
+`[1,2,3][1]` → `2`, `[a,b,c][1]` → `b`, nested `[[1,2],[3,4]][1][0]` → `3`. Guards
+keep it byte-identical to the reference Closure Compiler (verified against the real
+jar): no spread anywhere (`[1,...x][0]` declines — indices are runtime-unknown); the
+index is a non-negative integer literal in range (a NumericLiteral is never negative
+in the AST, and a fractional / out-of-range index is not a canonical array index, so
+`[1,2,3][1.5]` / `[1,2,3][5]` / `[1,2,3][-1]` are left intact); the element at `K` is
+present (a hole is left, pending the `void 0` follow-up); and every element EXCEPT
+the selected one is side-effect-free — the SELECTED element is preserved verbatim, so
+`[a, b()][1]` folds to `b()` (its call still runs) while `[a, b()][0]` declines (it
+would drop `b()`). CV provenance recorded per fold. Three unit tests (fold cases +
+selected-side-effect preservation + each decline). Out of scope for this PR (a tight
+follow-up needing `void 0` construction): out-of-bounds / selected-hole → `void 0`,
+and canonical string-index keys (`[1,2,3]["0"]` → `1`). Additive; MINOR 0.90.0 → 0.91.0.
+
+## [0.90.0] - 2026-07-14
+
+### Added — fold array-literal `.length` → element count — CLOC12.193
+
+`fold_member` now folds `[e0, e1, …].length` to the element count, mirroring the existing string-literal
+`.length` fold. Two guards keep it byte-identical to the reference Closure Compiler (verified against the
+real jar): a spread element (`[...x]`) makes the length statically unknown, so it declines; and an element
+with a side effect must not be dropped (evaluating the array literal runs it), so it declines unless every
+present element is side-effect-free. Holes (`[,,]`) evaluate nothing but still count toward the length
+(`[,,].length === 2`). Adds a conservative `is_side_effect_free` predicate (literals, identifier, property
+read, and pure operators over pure operands are free; call/new/assignment/`++`/`--`/await/yield/tagged-
+template/dynamic-import/spread/object-literal/class-expression are not). Truth table matched byte-for-byte:
+`[1,2,3]`→3, `[]`→0, `[,,]`→2, `[a,b]`→2, `[a+b,c]`→2, `[x.y]`→1 FOLD; `[a=1]`, `[g()]`, `[1,2,...x]` DON’T.
+Additive; MINOR.
+
+## [0.89.0] - 2026-07-14
+
+### Added — fold default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. New `fold_params` helper folds each `FunctionParam::AssignmentPattern`
+default `right` through the same `fold_expression` path a function body uses, so `function f(a = 1 + 2){}`
+shrinks to `function f(a = 3){}`. Applied at all four param-list sites (function declaration/expression,
+class method, arrow). Plain and rest params clone verbatim (no default expression).
+
+## [0.88.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration rebuild arms clone each export verbatim
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+rebuild arms clone each export verbatim. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.87.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` rebuild arm
+
+Exhaustive-match arm for the new `Declaration::ImportDeclaration` variant — an
+import binds foreign-linked names and has no foldable body, so the rebuild clones
+it unchanged.
+
+## [0.86.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: fold through `WithStatement`
+
+New `TaggedStatement::WithStatement` arm folds the object expression and recurses
+into the body (mirroring the `while` arm). Picks up javascript-ast 0.38.0.
+
+## [0.85.17] - 2026-07-11
+
+### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arms
+
+`javascript-ast` 0.36.0 added the `PropertyKey::PrivateName` variant. The three
+exhaustive `PropertyKey` matches gain an arm: the object-literal key rebuild
+passes a private name through unchanged (unreachable in valid input — an object
+literal never holds a private key — but the match must stay exhaustive), and the
+two `Object.keys`/`Object.entries` key-name extractors decline the fold on a
+private name (same as a computed key). PATCH.
+
+## [0.85.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added a `StaticBlock` arm to `fold_class_body`: each statement of the block is folded (rebuilding the `BlockStatement`), mirroring the method-body fold. Reachable once the PR2 bridge produces the node.
+
+## [0.85.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: fold class-field initializers
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added a `Field` arm to the
+class-body member map: a field's initializer (and computed key) is folded with
+`fold_expression`, mirroring how a method value is folded. Reachable once the
+CLOC12.175 PR2 bridge produces the node.
+
+## [0.85.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` fold arm
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant, making
+this crate's exhaustive `Declaration` match non-exhaustive. Added a
+`fold_class_declaration` arm that folds inside the `extends` operand and each
+method body — identical to `fold_class` for the expression form. The shared
+member-folding logic was factored into a new `#[inline(never)] fold_class_body`
+helper used by both. Reachable once the CLOC12.174 PR2 bridge produces the node.
+
 ## [0.85.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: fold inside a `ClassExpression`

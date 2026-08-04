@@ -47,7 +47,7 @@ fn cv_ndjson_sidecar_is_line_delimited_json_with_meta_footer() {
     let input_path = "tests/diff/cv-ndjson-streaming/input/a.js";
 
     let res = Command::new(BINARY)
-        .args(&[
+        .args([
             "--correlation_vector",
             "--correlation_vector_format",
             "NDJSON",

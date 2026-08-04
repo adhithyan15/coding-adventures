@@ -25,6 +25,17 @@ This spec defines the target behavior and the migration plan. The
 implementation lives in `code/programs/go/build-tool/internal/executor/`
 and `code/programs/go/build-tool/main.go`.
 
+The observable precedence, quoting, failure, timeout, and process-tree behavior
+is tested by the language-neutral fixtures defined in
+[`build-tool-conformance.md`](build-tool-conformance.md). Until those fixtures
+pass, `cmd /C` and Starlark-first plan loading remain known gaps rather than
+reference semantics for other ports.
+
+Repository reality note: the current Go tool detects Starlark syntax in the
+canonical `BUILD` file. References below to `BUILD.lark` preserve the older
+migration design; `BUILD.lark` is not a recognized package marker in
+conformance v1.
+
 ---
 
 ## §1 Problem 1 — `cmd.exe` argument mangling

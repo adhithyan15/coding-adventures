@@ -302,3 +302,440 @@ fn rows_round_trip_through_our_reader() {
         "the overflow row must have been reassembled in full"
     );
 }
+
+/// Phase E4: the public schema API should expose the same table root pages the
+/// low-level E3 tests hand-extracted from `sqlite_schema`.
+#[test]
+fn public_schema_api_finds_table_root_pages() {
+    let db = build_sqlite_db(&[
+        "CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)",
+        "CREATE TABLE u (x INTEGER, y INTEGER)",
+        "CREATE VIEW v AS SELECT name FROM t",
+        "INSERT INTO t VALUES (1, 'Ada'), (2, 'Grace')",
+        "INSERT INTO u VALUES (10, 20), (30, 40)",
+    ]);
+
+    let schema = sqlite_file::read_schema(&db).expect("schema should decode");
+    assert!(
+        schema.iter().any(|entry| entry.object_type == "table"
+            && entry.name == "t"
+            && entry.table_name == "t"
+            && entry.root_page.is_some()
+            && entry
+                .sql
+                .as_deref()
+                .unwrap_or("")
+                .contains("CREATE TABLE t")),
+        "table t should appear in decoded sqlite_schema"
+    );
+    assert!(
+        schema.iter().any(|entry| entry.object_type == "view"
+            && entry.name == "v"
+            && entry.root_page.is_none()),
+        "view v should appear without a root page"
+    );
+
+    let t_root = sqlite_file::table_root_page(&db, "t").expect("table t root");
+    let u_root = sqlite_file::table_root_page(&db, "u").expect("table u root");
+    assert_ne!(t_root, 0);
+    assert_ne!(u_root, 0);
+
+    static COUNTER4: AtomicU64 = AtomicU64::new(3_000_000);
+    let unique = COUNTER4.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!(
+        "sqlite_file_schema_api_{}_{}",
+        std::process::id(),
+        unique
+    ));
+    std::fs::create_dir(&dir).unwrap();
+    let path = dir.join("oracle.db");
+    std::fs::write(&path, &db).unwrap();
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let theirs: Vec<(String, i64)> = conn
+        .prepare("SELECT name, rootpage FROM sqlite_schema WHERE type = 'table' ORDER BY name")
+        .unwrap()
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    assert!(theirs.contains(&("t".to_string(), i64::from(t_root))));
+    assert!(theirs.contains(&("u".to_string(), i64::from(u_root))));
+}
+
+/// Phase E4: callers should be able to read a table by name without knowing how
+/// to walk `sqlite_schema` manually. This also keeps the overflow row gate on
+/// the public API path.
+#[test]
+fn read_table_api_decodes_named_table_rows() {
+    let big = "public api overflow ".repeat(400);
+    assert!(big.len() > 5000, "the large row must exceed one page");
+    let ins2 = format!("INSERT INTO t VALUES (2, '{big}', 2.5, x'cafe', 'kept')");
+    let db = build_sqlite_db(&[
+        "CREATE TABLE t (id INTEGER PRIMARY KEY, body TEXT, score REAL, payload BLOB, note TEXT)",
+        "INSERT INTO t VALUES (1, 'short one', 1.25, x'dead', NULL)",
+        &ins2,
+        "INSERT INTO t VALUES (3, 'short three', NULL, NULL, 'tail')",
+    ]);
+
+    let rows = sqlite_file::read_table(&db, "t").expect("read table t");
+    assert_eq!(rows.len(), 3);
+    assert_eq!(rows[0].0, 1);
+    assert_eq!(rows[0].1[0], sqlite_file::SqlValue::Null);
+    assert_eq!(
+        rows[0].1[1],
+        sqlite_file::SqlValue::Text("short one".to_string())
+    );
+    assert_eq!(rows[0].1[2], sqlite_file::SqlValue::Real(1.25));
+    assert_eq!(rows[0].1[3], sqlite_file::SqlValue::Blob(vec![0xde, 0xad]));
+    assert_eq!(rows[0].1[4], sqlite_file::SqlValue::Null);
+
+    assert_eq!(rows[1].0, 2);
+    assert_eq!(rows[1].1[1], sqlite_file::SqlValue::Text(big.clone()));
+    assert_eq!(rows[1].1[2], sqlite_file::SqlValue::Real(2.5));
+    assert_eq!(rows[1].1[3], sqlite_file::SqlValue::Blob(vec![0xca, 0xfe]));
+    assert!(
+        matches!(&rows[2].1[2], sqlite_file::SqlValue::Null),
+        "NULL REAL values should decode as SqlValue::Null"
+    );
+}
+
+#[test]
+fn read_table_reports_missing_tables() {
+    let db = build_sqlite_db(&["CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)"]);
+    assert_eq!(
+        sqlite_file::read_table(&db, "missing"),
+        Err(sqlite_file::SqliteError::NoSuchTable("missing".to_string()))
+    );
+}
+
+/// Write-path cross-check: bytes produced by OUR writer — including an overflow
+/// chain for a large row — are accepted and correctly read back by the real
+/// bundled-C SQLite. This is the inverse of the reader gates above:
+/// `write_single_table_db` → open with `rusqlite` → `PRAGMA integrity_check` +
+/// `SELECT`. `integrity_check` returning "ok" means real SQLite validated the
+/// page count, b-tree framing, and overflow chain we emitted.
+#[test]
+fn our_writer_output_reads_in_real_sqlite_with_overflow() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    let big = "overflow-payload ".repeat(500); // ~8500 bytes, ≫ the inline limit
+    let rows = vec![
+        (1i64, vec![SqlValue::Int(10), SqlValue::Text("alpha".into())]),
+        (2, vec![SqlValue::Int(20), SqlValue::Text(big.clone())]),
+        (3, vec![SqlValue::Int(30), SqlValue::Text("gamma".into())]),
+    ];
+    let db = write_single_table_db(4096, "docs", "CREATE TABLE docs(n, body)", &rows).unwrap();
+    assert!(
+        db.len() / 4096 > 2,
+        "the big row must have spilled into overflow pages"
+    );
+
+    static COUNTER_W: AtomicU64 = AtomicU64::new(9_000_000);
+    let unique = COUNTER_W.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_writer_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(
+        integrity, "ok",
+        "real SQLite's integrity_check must pass on our written file"
+    );
+
+    let mut got: Vec<(i64, i64, String)> = conn
+        .prepare("SELECT rowid, n, body FROM docs")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get::<_, String>(2)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    got.sort();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    assert_eq!(
+        got,
+        vec![
+            (1, 10, "alpha".to_string()),
+            (2, 20, big),
+            (3, 30, "gamma".to_string()),
+        ],
+        "real SQLite must read back every row our writer emitted"
+    );
+}
+
+/// Page-1 `sqlite_schema` overflow cross-check: a database whose CREATE
+/// statement is too long to sit inline on page 1 spills onto overflow pages, and
+/// real bundled-C SQLite both validates it (`PRAGMA integrity_check` → "ok") and
+/// reassembles the full DDL from the schema overflow chain (`SELECT sql FROM
+/// sqlite_master`). This is the strongest gate that the writer's page-1 overflow
+/// framing — offset-100 leaf, overflow pointer, and chained pages — is
+/// byte-correct.
+#[test]
+fn our_writer_page1_schema_overflow_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    // A CREATE with hundreds of columns → several KiB of DDL, well past the
+    // 4096-byte page's inline limit (max_local = 4096 − 35 = 4061), so the
+    // sqlite_schema row must overflow off page 1.
+    let cols = (0..600)
+        .map(|i| format!("column_{i}"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let create_sql = format!("CREATE TABLE big({cols})");
+    assert!(
+        create_sql.len() > 4061,
+        "test needs a schema row that overflows page 1"
+    );
+    let rows = vec![
+        (1i64, vec![SqlValue::Int(10), SqlValue::Int(11)]),
+        (2, vec![SqlValue::Int(20), SqlValue::Int(21)]),
+    ];
+    let db = write_single_table_db(4096, "big", &create_sql, &rows).unwrap();
+    assert!(
+        db.len() / 4096 > 2,
+        "the schema row must have spilled into overflow pages"
+    );
+
+    static COUNTER_S: AtomicU64 = AtomicU64::new(9_500_000);
+    let unique = COUNTER_S.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_schemaovf_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(
+        integrity, "ok",
+        "real SQLite's integrity_check must pass on a page-1 schema-overflow file"
+    );
+    // Real SQLite reassembles the full DDL from the overflow chain.
+    let sql: String = conn
+        .query_row(
+            "SELECT sql FROM sqlite_master WHERE name = 'big'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap();
+    assert_eq!(sql, create_sql, "the overflowed DDL must round-trip in full");
+    // And the table itself is queryable (its root page precedes the schema
+    // overflow pages, so nothing shifted).
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM big", [], |r| r.get(0))
+        .unwrap();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(count, 2, "real SQLite must read the table's rows");
+}
+
+/// Multi-table write-path cross-check: a database our writer assembles with
+/// several tables — one carrying an overflow row — is accepted by real
+/// bundled-C SQLite (`PRAGMA integrity_check` → "ok") and every table reads
+/// back over SQL.
+#[test]
+fn our_multi_table_writer_output_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::{write_multi_table_db, TableSpec};
+    use sqlite_file::SqlValue;
+
+    let big = "multi-overflow ".repeat(600); // ~9000 bytes → overflow chain
+    let notes = vec![
+        (1i64, vec![SqlValue::Int(1), SqlValue::Text("alpha".into())]),
+        (2, vec![SqlValue::Int(2), SqlValue::Text(big.clone())]),
+    ];
+    let cards = vec![
+        (1i64, vec![SqlValue::Int(10)]),
+        (2, vec![SqlValue::Int(20)]),
+        (3, vec![SqlValue::Int(30)]),
+    ];
+    let tables: &[TableSpec] = &[
+        ("notes", "CREATE TABLE notes(nid, body)", &notes),
+        ("cards", "CREATE TABLE cards(cid)", &cards),
+    ];
+    let db = write_multi_table_db(4096, tables).unwrap();
+
+    static COUNTER_M: AtomicU64 = AtomicU64::new(11_000_000);
+    let unique = COUNTER_M.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_multi_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on our multi-table file");
+
+    // sqlite_schema lists both tables.
+    let mut schema_names: Vec<String> = conn
+        .prepare("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name")
+        .unwrap()
+        .query_map([], |r| r.get::<_, String>(0))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    schema_names.sort();
+    assert_eq!(schema_names, vec!["cards".to_string(), "notes".to_string()]);
+
+    // Each table's rows read back, including the overflow row.
+    let notes_body: Vec<(i64, String)> = conn
+        .prepare("SELECT nid, body FROM notes ORDER BY nid")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get::<_, String>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    let cids: Vec<i64> = conn
+        .prepare("SELECT cid FROM cards ORDER BY cid")
+        .unwrap()
+        .query_map([], |r| r.get::<_, i64>(0))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    assert_eq!(
+        notes_body,
+        vec![(1, "alpha".to_string()), (2, big)],
+        "notes (incl. overflow row) must read back"
+    );
+    assert_eq!(cids, vec![10, 20, 30], "cards must read back");
+}
+
+/// Tree-growth write-path cross-check: a table with more rows than fit on one
+/// leaf produces an interior-rooted b-tree that real bundled-C SQLite accepts
+/// (`PRAGMA integrity_check` → "ok") and reads back in full and in order.
+#[test]
+fn our_multi_leaf_btree_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    // 500 rows on a 512-byte page span many leaves under an interior root.
+    let rows: Vec<(i64, Vec<SqlValue>)> = (1..=500)
+        .map(|n| (n, vec![SqlValue::Int(n * 3), SqlValue::Text(format!("row-{n}"))]))
+        .collect();
+    let db = write_single_table_db(512, "items", "CREATE TABLE items(v, name)", &rows).unwrap();
+    assert!(
+        db.len() / 512 > 5,
+        "500 rows on a 512-byte page must span several leaves"
+    );
+
+    static COUNTER_T: AtomicU64 = AtomicU64::new(13_000_000);
+    let unique = COUNTER_T.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_tree_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on our multi-leaf tree");
+
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM items", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(count, 500);
+
+    // Full ordered readback matches what we wrote.
+    let got: Vec<(i64, i64, String)> = conn
+        .prepare("SELECT rowid, v, name FROM items ORDER BY rowid")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get::<_, String>(2)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    let want: Vec<(i64, i64, String)> = (1..=500).map(|n| (n, n * 3, format!("row-{n}"))).collect();
+    assert_eq!(got, want, "real SQLite must read every row of the tree in order");
+}
+
+/// Multi-level tree write-path cross-check: enough rows that the *interior*
+/// level itself overflows one page, so the writer stacks a second interior
+/// level under the root. Real bundled-C SQLite must still accept the file
+/// (`PRAGMA integrity_check` → "ok") and read back every row in order — proof
+/// the deeper divider/right-most-child wiring matches the on-disk format.
+#[test]
+fn our_multi_level_btree_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    // 3000 rows on a 512-byte page → ~90 leaves, more than one 512-byte interior
+    // page can index, forcing a root-over-interiors-over-leaves tree.
+    let rows: Vec<(i64, Vec<SqlValue>)> = (1..=3000)
+        .map(|n| (n, vec![SqlValue::Int(n * 3), SqlValue::Text(format!("row-{n}"))]))
+        .collect();
+    let db = write_single_table_db(512, "items", "CREATE TABLE items(v, name)", &rows).unwrap();
+
+    // Confirm the tree is genuinely multi-level (root interior child is interior)
+    // so this test can't silently degrade into the single-interior-level case.
+    let schema = sqlite_file::schema::read_schema(&db).unwrap();
+    let root = schema[0].root_page.unwrap() as usize;
+    let root_off = (root - 1) * 512;
+    assert_eq!(db[root_off], 0x05, "root must be interior");
+    let first_ptr = u16::from_be_bytes([db[root_off + 12], db[root_off + 13]]) as usize;
+    let first_child = u32::from_be_bytes([
+        db[root_off + first_ptr],
+        db[root_off + first_ptr + 1],
+        db[root_off + first_ptr + 2],
+        db[root_off + first_ptr + 3],
+    ]) as usize;
+    assert_eq!(
+        db[(first_child - 1) * 512],
+        0x05,
+        "expected a multi-level tree (root's child is also interior)"
+    );
+
+    static COUNTER_ML: AtomicU64 = AtomicU64::new(14_000_000);
+    let unique = COUNTER_ML.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_mltree_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on our multi-level tree");
+
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM items", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(count, 3000);
+
+    let got: Vec<(i64, i64, String)> = conn
+        .prepare("SELECT rowid, v, name FROM items ORDER BY rowid")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get::<_, String>(2)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    let want: Vec<(i64, i64, String)> = (1..=3000).map(|n| (n, n * 3, format!("row-{n}"))).collect();
+    assert_eq!(got, want, "real SQLite must read every row of the multi-level tree in order");
+}

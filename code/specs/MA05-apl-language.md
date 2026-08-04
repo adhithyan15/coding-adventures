@@ -189,27 +189,205 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
   patterns, 8 rules, zero cross-validation warnings — every declared token
   is referenced). Files: `code/grammars/apl/apl.tokens`,
   `code/grammars/apl/apl.grammar`.
-- **MA-4c — `apl-lexer`.** Single-codepoint glyph tokens, `⍝` line comments.
-- **MA-4d — `apl-parser`.** The `value_expr`/`function_expr` grammar,
-  monadic/dyadic application, reduce/scan/outer-product operator
-  productions. **Acceptance criteria includes a recursion-depth cap**: §3's
-  right-recursive `value_expr = term | term function_expr value_expr` rule
-  recurses once per chained dyadic primitive with no bound as specified, so
-  a long unbroken chain (`1+2+3+4+…`, thousands deep) is a stack-overflow
-  DoS on a naive recursive-descent implementation — the same class of issue
-  already found in this repo's shared grammar parser for another frontend
-  (the `closurec` deep-recursion crash, which lives in the shared parser,
-  not the language-specific bridge). Fix once in the shared `GrammarParser`
-  if not already capped, so every grammar-driven frontend benefits, not
-  just APL.
-- **MA-4e — `apl-runtime` + `apl-repl` + the `apl` binary.** A working REPL:
-  right-to-left evaluation, the primitives in §4, `⍴`/`⍳` array
-  construction, reduce/scan/outer-product lowered onto AR-2.
-- **MA-4f — `apl-to-semantic-ir`**, per [`HML01`](HML01-math-to-semantic-ir.md)
-  §2 — built in this same wave rather than as a later retrofit.
-- **Next**: J (shares APL's function/operator grammar shape almost
-  wholesale, ASCII-spelled instead of glyph-spelled — the R/S-style "second
-  frontend, same shared grammar shape" reuse), then K/Q per
+- **MA-4c — `apl-lexer`** (✅ done): a thin wrapper crate over the shared
+  `GrammarLexer`, mirroring `macsyma-lexer`'s shape exactly (no pre/post-
+  tokenize hooks needed — every glyph in this subset is single-codepoint and
+  unambiguous, per §3 bullet 4). Statically compiles
+  `code/grammars/apl/apl.tokens` at build time via `grammar-tools
+  generate-rust-compiled-grammars`. 10 tests cover every primitive function
+  glyph, the reduce/scan/outer-product operators, assignment/grouping,
+  vector-stranded numeric literals, high-minus (`¯`) negative literals kept
+  distinct from the `MINUS` function token, and `⍝` line comments.
+- **MA-4d — `apl-parser`** (✅ done): the `value_expr`/`function_expr`
+  grammar, monadic/dyadic application, reduce/scan/outer-product operator
+  productions — `create_apl_parser`/`parse_apl`/`try_parse_apl`, mirroring
+  every sibling parser crate's shape exactly. **Shipped with its recursion-
+  depth cap from day one** (the shared `GrammarParser`'s guard is per-caller
+  opt-in, not a single global fix — a lone constant can't be safe for every
+  grammar at once, since rule-chain depth per source-nesting level varies
+  wildly; see `macsyma-parser`/`matlab-parser`/`wolfram-parser`'s own
+  retrofitted caps, task #12/PR #7928). `apl-parser`'s original (`0.1.0`)
+  empirically-derived `MAX_RULE_DEPTH = 150` (72 real `(...)` nesting levels)
+  produced a genuinely counter-intuitive finding: despite APL's much
+  shallower one-precedence-tier grammar (no cascade to climb, ~3 rule calls
+  per nesting level versus MACSYMA/MATLAB/Wolfram's 13-20), its raw
+  native-stack crash floor for *parenthesised* nesting (209 frames) measured
+  *lower* than theirs (~275-280) — the opposite of the natural "fewer
+  frames per level → higher floor" prediction.
+  **Corrected in `0.1.1`** (found while building MA-4e on top of this
+  crate): parenthesised nesting is not the only way to drive `value_expr`
+  deep — a flat, *unparenthesised* dyadic chain (`1+1+1+…+1`) also recurses
+  through `value_expr`'s own right-recursive continuation, and that shape's
+  native-stack crash floor (~136) is considerably *lower* than the
+  parenthesised-nesting floor (209) — meaning the original `150` was
+  actually unsafe (inputs at depth ~137, still nominally under the
+  configured cap, could crash the process). `MAX_RULE_DEPTH` is now `100`
+  (safe against the lower, binding flat-chain floor), with 4 new regression
+  tests covering the flat-chain shape specifically. See
+  `apl-parser/src/lib.rs`'s `MAX_RULE_DEPTH` doc comment and the crate's
+  `CHANGELOG.md` for the full derivation and incident writeup.
+- **MA-4e — `apl-runtime` + `apl-repl` + the `apl` binary** (✅ done): a
+  working REPL — right-to-left evaluation (falls straight out of walking the
+  grammar's right-recursive `value_expr`, no precedence climbing anywhere in
+  the evaluator), every §4 primitive (monadic + dyadic), `⍴`/`⍳`/`,` array
+  construction and reshaping, and reduce/scan/outer-product lowered onto
+  AR-2's `ops::{reduce, scan, outer}`. 64 unit tests in `apl-runtime` + 6 in
+  `apl-repl`, covering every primitive (monadic and dyadic), all three
+  operators over 2+ distinct `BinOp`s each, right-to-left/grouping/stranding,
+  chained assignment, session persistence, comments/blank-line no-ops, and
+  the full error surface (undefined variable, non-conformable shapes, empty-
+  vector reduce, out-of-range `⍳`, over-rank reshape target, mismatched-row
+  `,`, monadic comparison). Design notes and real findings from building this
+  layer:
+  - **`AplFn`, the runtime's derived-function representation** (`eval.rs`):
+    the 12 atoms that map onto `array_runtime::ops::BinOp` (`+ - × ÷ ⌈ ⌊
+    = ≠ < ≤ ≥ >`) carry *just* the `BinOp` — there is exactly one glyph per
+    `BinOp` variant (only `⌈` produces `Max`, only `⌊` produces `Min`, etc.),
+    so `BinOp` alone is enough to recover the glyph for monadic dispatch,
+    with no separate tag needed. `⍴`/`⍳`/`,` get their own `NonScalar`
+    variant instead of being forced through `BinOp`, exactly as this spec's
+    own §4 already anticipated ("Keep RHO/IOTA/RAVEL's monadic+dyadic
+    bespoke logic as direct match arms").
+  - **Reduce/scan are inherently monadic derived functions; outer product is
+    inherently dyadic** — this is a real semantic distinction the grammar
+    itself does *not* enforce (`value_expr`'s "function_expr value_expr"
+    monadic alternative grammatically accepts *any* `function_expr`,
+    including one with `∘.` applied, and the dyadic alternative similarly
+    accepts one with `/`/`\` applied). The evaluator rejects the "wrong
+    arity" combination — `∘.` applied monadically, or `/`/`\` applied
+    dyadically — with a clean, explicit error rather than a silent
+    misinterpretation, since the grammar alone can't rule those shapes out.
+  - **Row-major vs. column-major is the one place a bug actually appeared
+    during implementation**: `array_runtime::Array` stores data
+    **column**-major, but APL's `,` (ravel) and `⍴`'s cyclic-fill semantics
+    are defined in **row**-major terms. An initial `reshape` cut filled the
+    raw column-major buffer directly from the row-major cycle sequence
+    (`data[i] = source[i % len]`), which is silently wrong for any non-square
+    fill — caught by a matrix-reshape unit test whose expected element order
+    was worked out independently from `array_runtime::value::Array`'s own
+    documented row-major/column-major example, not copied from the (buggy)
+    implementation. Fixed by filling a row-major staging buffer first, then
+    transposing it into column-major storage before handing it to
+    `Array::from_shape`.
+  - **APL-style display is genuinely different from `Array`'s own `Display`**
+    (`value.rs`): high-minus `¯` instead of ASCII `-` (the same glyph
+    `apl.tokens`'s `NUMBER` rule uses for negative literals, so a printed
+    value round-trips as valid input), no `name =`/`ans =` prefix (real APL
+    auto-print is bare), and a single-space cell separator instead of
+    `Array`'s own 2-space gutter.
+  - **The REPL's continuation scanner reduces to plain paren-balance
+    tracking** (`apl-repl`), much simpler than `matlab-repl`'s (which also
+    tracks block keywords and `"`-strings) — this language cut has neither.
+    One real wrinkle: `apl.tokens` does not drop newlines inside `(...)` in
+    this first cut, so a naive line-buffer join (MATLAB's approach) would
+    hand the parser a real `NEWLINE` token mid-expression and fail; `apl-repl`
+    joins continuation lines with a space instead of a literal `\n` so the
+    accumulated source stays syntactically one logical line.
+  - No discrepancies found against this spec's grammar/CST description —
+    `apl-parser`'s tree shapes matched the design exactly. While starting
+    this crate, an adversarial probe of `apl-parser` itself (a flat,
+    unparenthesised dyadic chain) surfaced a real, separate DoS gap in that
+    already-merged crate's own recursion-depth cap — shipped independently
+    as its own fix (`apl-parser` 0.1.1), not part of this PR.
+  - **Two rounds of `/security-review` found 4 real DoS gaps before this
+    crate's first push**: dyadic `,` (catenate) and `∘.` (outer product) can
+    each produce a result *larger* than either input, so capping only the
+    operands (as `⍳`/dyadic `⍴` already did) wasn't enough — `A←A,A` could
+    double a variable's size every line with no ceiling, and `∘.` inherited
+    `array_runtime::ops::outer`'s own `checked_mul` (which only guards
+    `usize` overflow, not an excessive-but-representable product) with no
+    cap of its own. Dyadic `⍳` (index-of) is O(len(a)×len(b)) with no
+    complexity bound. A follow-up re-review round then found a fourth,
+    more fundamental gap: stranded numeric literals (`1 1 1 …`) never go
+    through `builtins.rs` at all — `term`'s repetition is flat, not
+    recursive, so `apl-parser`'s own depth cap never bounds the *count* of
+    stranded numbers either — bypassing every one of the first three fixes
+    via plain literal syntax. All four fixed by capping the actual output
+    size / work product at its construction site (not just each operand's
+    own length), verified adversarially (guard disabled → regression test
+    fails → restored → passes) per this repo's standing DoS-guard-
+    verification discipline. See `apl-runtime/CHANGELOG.md` for the full
+    writeup.
+- **MA-4f — `apl-to-semantic-ir`** (✅ done), per
+  [`HML01`](HML01-math-to-semantic-ir.md) §2 — built in this same wave rather
+  than as a later retrofit, and the first frontend to actually *consume* the
+  SIR22 addendum (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+  `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) `semantic-ir` shipped
+  specifically for APL ahead of this crate landing. `compile`/
+  `compile_source` lower `apl-parser`'s CST into a `semantic_ir::Module`; 44
+  tests (40 unit + 3 capability-rejection + 1 doctest). Design notes:
+  - **No scalar/array disambiguation needed, unlike MATLAB.**
+    `matlab-to-semantic-ir` has to guess, per operator use, whether `*`/`/`/
+    `\` mean scalar arithmetic or a matrix operation, because MATLAB's `*`
+    genuinely has two different meanings depending on operand shape — that
+    guess (`expr_is_known_scalar`) is real machinery this frontend simply
+    does not need. None of APL's 12 scalar dyadic atoms (`+ - × ÷ ⌈ ⌊ = ≠ <
+    ≤ ≥ >`) have a non-elementwise reading: every one is always elementwise/
+    broadcast, full stop, mirroring `array_runtime::BinOp`'s own one-meaning-
+    per-variant design. So `3+4` and `A+B` lower to the *exact same* node
+    shape (`Expr::ElementwiseOp`) — there is deliberately no "fold two
+    known-scalar literals into a bare `BuiltinCall`" fast path the way
+    MATLAB's frontend has, since writing one would only reintroduce, for
+    zero semantic benefit, the exact heuristic APL's own semantics make
+    unnecessary.
+  - **Chained assignment (`A←B←3`) unrolls via a recursive
+    `(Vec<Stmt>, Expr)` return.** The grammar's right-recursive `assignment =
+    NAME ARROW assignment | value_expr` parses `A←B←3` as `A ← (B ← 3)`, one
+    CST node nested inside another. The lowerer mirrors that shape exactly:
+    it lowers the *inner* assignment first, then appends **one more**
+    statement binding the outer name to the value just bound — returning an
+    `Expr::VarRef` to that name (not a re-lowered copy of the RHS) so the
+    caller above can reuse it without duplicating a potentially large
+    sub-tree. Because the recursion descends into the inner assignment
+    *before* the outer one appends its own statement, the emitted sequence
+    comes out in correct dependency order despite the "outer calls inner
+    first" recursion shape: `[LetStarBinding(B, 3), LetStarBinding(A,
+    VarRef(B))]` — `B` is always bound before anything references it.
+  - **Auto-print reuses the existing `"print"` builtin, and is a real
+    language semantic here, not a REPL nicety.** A bare top-level
+    `value_expr` (an `assignment` node that never reaches the `NAME ARROW …`
+    production) is wrapped in `Expr::BuiltinCall { name: "print", .. }` —
+    the exact builtin name `matlab-to-semantic-ir` already maps its own
+    `disp(x)` call onto, so no backend needs an APL-specific change to
+    support it. This is a deliberately different design choice from
+    MATLAB's own frontend, which does not attempt to model `;`-suppression
+    as a language semantic at all (MATLAB scripts have no auto-print
+    concept to preserve). APL's auto-print, by contrast, genuinely is part
+    of the language (MA05 §4: "assignment is silent, a bare `value_expr`
+    result auto-prints" — the same rule `apl-runtime::eval::run`'s own doc
+    comment already states), so this frontend models it explicitly.
+  - **Five new well-known `BuiltinCall` names, plus two reused from
+    existing frontends.** Of the six atoms with a monadic meaning, `+`
+    (conjugate) needs no wrapper at all — a genuine identity in a cut with
+    no complex numbers, so the operand passes through unchanged rather than
+    being wrapped in a synthetic no-op node. `-` (negate) reuses the *exact*
+    `"neg"` name `matlab-to-semantic-ir`'s own unary negate already
+    established, confirming that a `BuiltinCall` name is a generic
+    operation any backend must implement polymorphically over whatever
+    value flows through it (SIR10's "types carry, don't verify") — it is
+    fine and expected that `"neg"` may receive an array-typed value here
+    even though MATLAB only ever proves it a scalar. `×` (sign), `÷`
+    (reciprocal), `⌈` (ceiling), and `⌊` (floor) introduce four genuinely
+    new well-known names: `"sign"`/`"recip"`/`"ceil"`/`"floor"`. The
+    top-level auto-print wrapper reuses the existing `"print"` name (see
+    above) rather than introducing a sixth.
+  - No discrepancies found against `semantic-ir`'s own `nodes.rs`/
+    `validator.rs` for the SIR22 addendum's field names or `Feature` splits
+    — every design point (`Reshape.shape`/`.target`, `IndexOf.haystack`/
+    `.needle`, the `MatrixOps`+`ArrayColumnMajor` pairing for
+    `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`Ravel`/`Catenate`, and
+    `NDArrays`-alone for `IndexGenerator`/`IndexOf`) matched the validator's
+    ground truth exactly on the first read. One genuine surprise: `ArrayLit`
+    itself requires **both** `NDArrays` *and* `ArrayColumnMajor` (not
+    `NDArrays` alone, as an early design note for this crate assumed) —
+    confirmed against `validator.rs`'s own `ArrayLit` arm and
+    `matlab-to-semantic-ir`'s identical existing comment on that exact
+    point; this crate's stranded-literal lowering declares both.
+- **Next**: J — kickoff spec [`MA06`](MA06-j-language.md) (shares APL's
+  function/operator grammar shape almost wholesale, ASCII-spelled instead
+  of glyph-spelled, plus one genuinely new grammar production for tacit
+  hook/fork trains that this spec's own function/operator split did not
+  need), then K/Q per
   [`HML00`](HML00-historical-math-languages-roadmap.md) Wave 6.
 
 ## §7 References

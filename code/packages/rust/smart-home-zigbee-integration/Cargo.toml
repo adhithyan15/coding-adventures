@@ -1,0 +1,14 @@
+[package]
+name = "smart-home-zigbee-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Zigbee APS and ZCL adapter for the normalized smart-home runtime"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+zigbee-aps = { path = "../zigbee-aps" }
+zigbee-nwk = { path = "../zigbee-nwk" }
+zigbee-zcl = { path = "../zigbee-zcl" }
+zigbee-zdo = { path = "../zigbee-zdo" }

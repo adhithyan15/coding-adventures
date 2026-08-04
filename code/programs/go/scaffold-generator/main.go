@@ -44,6 +44,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"unicode"
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
@@ -53,11 +54,57 @@ import (
 // =========================================================================
 
 // validLanguages lists all supported target languages.
-var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "java", "kotlin"}
+var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "ocaml", "java", "kotlin", "c", "cpp"}
+
+const requiredCapabilitiesSchemaURL = "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json"
 
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
 var kebabCaseRe = regexp.MustCompile(`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`)
+
+func isSafeDescription(description string) bool {
+	if strings.Contains(description, "*/") ||
+		strings.Contains(description, "*)") ||
+		strings.Contains(description, "%{") {
+		return false
+	}
+	for _, char := range description {
+		if unicode.IsControl(char) || char == '\u2028' || char == '\u2029' {
+			return false
+		}
+	}
+	return true
+}
+
+type requiredCapabilitiesManifest struct {
+	Schema        string               `json:"$schema"`
+	Version       int                  `json:"version"`
+	Package       string               `json:"package"`
+	Capabilities  []requiredCapability `json:"capabilities"`
+	Justification string               `json:"justification"`
+}
+
+type requiredCapability struct {
+	Category      string `json:"category"`
+	Action        string `json:"action"`
+	Target        string `json:"target"`
+	Justification string `json:"justification"`
+}
+
+func requiredCapabilitiesJSON(language, packageName string) (string, error) {
+	manifest := requiredCapabilitiesManifest{
+		Schema:        requiredCapabilitiesSchemaURL,
+		Version:       1,
+		Package:       language + "/" + packageName,
+		Capabilities:  []requiredCapability{},
+		Justification: "Pure computation. No filesystem, network, process, or environment access needed.",
+	}
+	encoded, err := json.MarshalIndent(manifest, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("encoding required capabilities manifest: %w", err)
+	}
+	return string(encoded) + "\n", nil
+}
 
 func intFromFloatFlag(value float64) (int, error) {
 	if math.IsNaN(value) || math.IsInf(value, 0) {
@@ -155,10 +202,19 @@ func readDeps(pkgDir, lang string) ([]string, error) {
 		return readSwiftDeps(pkgDir)
 	case "haskell":
 		return readHaskellDeps(pkgDir)
+	case "ocaml":
+		return readOcamlDeps(pkgDir)
 	case "java":
 		return readJavaDeps(pkgDir)
 	case "kotlin":
 		return readKotlinDeps(pkgDir)
+	case "c", "cpp":
+		// C and C++ packages have no package manifest; their dependencies are
+		// declared inline in the BUILD file via a `# build-tool: deps=…` comment.
+		// The scaffold does not auto-discover inter-package C/C++ deps — a fresh
+		// package starts with just the iso-harness toolchain dep (baked into the
+		// generated BUILD), and any further deps are added to that comment by hand.
+		return nil, nil
 	default:
 		return nil, fmt.Errorf("unknown language: %s", lang)
 	}
@@ -425,27 +481,196 @@ func readSwiftDeps(pkgDir string) ([]string, error) {
 	return deps, nil
 }
 
-// readHaskellDeps reads cabal file for build-depends entries targeting coding-adventures-* packages.
+// readHaskellDeps reads the local package paths from cabal.project. Modern
+// Haskell packages in this repository use plain Cabal names, and cabal.project
+// is the authoritative list of sibling packages needed to build them.
+//
+// The Cabal-file fallback keeps older prefixed packages discoverable when they
+// predate the cabal.project convention.
 func readHaskellDeps(pkgDir string) ([]string, error) {
-	cabalPath := filepath.Join(pkgDir, "coding-adventures-"+filepath.Base(pkgDir)+".cabal")
-	data, err := os.ReadFile(cabalPath)
-	if err != nil {
-		return nil, nil // no cabal file = no deps
-	}
-	re := regexp.MustCompile(`coding-adventures-([a-zA-Z0-9-]+)`)
-	selfName := filepath.Base(pkgDir)
-	var deps []string
-	for _, line := range strings.Split(string(data), "\n") {
-		m := re.FindStringSubmatch(line)
-		if len(m) == 2 {
-			// Ignore metadata lines and the package's own test-suite self-reference.
-			if strings.Contains(line, "name:") || strings.Contains(line, "executable") || strings.Contains(line, "library") || m[1] == selfName {
+	projectPath := filepath.Join(pkgDir, "cabal.project")
+	if data, err := os.ReadFile(projectPath); err == nil {
+		re := regexp.MustCompile(`\.\.[/\\]([a-zA-Z0-9-]+)`)
+		seen := make(map[string]bool)
+		var deps []string
+		inPackages := false
+		for _, rawLine := range strings.Split(string(data), "\n") {
+			line := strings.TrimSpace(strings.SplitN(rawLine, "--", 2)[0])
+			lowerLine := strings.ToLower(line)
+			if strings.HasPrefix(lowerLine, "packages:") {
+				inPackages = true
+				line = strings.TrimSpace(line[len("packages:"):])
+			} else if inPackages &&
+				line != "" &&
+				len(rawLine) > 0 &&
+				rawLine[0] != ' ' &&
+				rawLine[0] != '\t' {
+				inPackages = false
+			}
+			if !inPackages {
 				continue
 			}
-			deps = append(deps, m[1])
+
+			for _, match := range re.FindAllStringSubmatch(line, -1) {
+				if len(match) != 2 || seen[match[1]] {
+					continue
+				}
+				siblingPath := filepath.Join(filepath.Dir(pkgDir), match[1])
+				if info, statErr := os.Stat(siblingPath); statErr != nil || !info.IsDir() {
+					continue
+				}
+				seen[match[1]] = true
+				deps = append(deps, match[1])
+			}
+		}
+		return deps, nil
+	}
+
+	cabalFiles, err := filepath.Glob(filepath.Join(pkgDir, "*.cabal"))
+	if err != nil || len(cabalFiles) == 0 {
+		return nil, nil
+	}
+	data, err := os.ReadFile(cabalFiles[0])
+	if err != nil {
+		return nil, nil
+	}
+
+	selfName := filepath.Base(pkgDir)
+	siblingEntries, _ := os.ReadDir(filepath.Dir(pkgDir))
+	knownSiblings := make(map[string]bool)
+	for _, entry := range siblingEntries {
+		if entry.IsDir() {
+			knownSiblings[strings.ToLower(entry.Name())] = true
+		}
+	}
+
+	nameRe := regexp.MustCompile(`^([a-zA-Z0-9][a-zA-Z0-9-]*)`)
+	fieldRe := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9-]*\s*:`)
+	seen := make(map[string]bool)
+	var deps []string
+	inBuildDepends := false
+	for _, rawLine := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(strings.SplitN(rawLine, "--", 2)[0])
+		lowerLine := strings.ToLower(line)
+		if strings.HasPrefix(lowerLine, "build-depends:") {
+			inBuildDepends = true
+			line = strings.TrimSpace(line[len("build-depends:"):])
+		} else if inBuildDepends &&
+			(line == "" || fieldRe.MatchString(line) ||
+				(len(rawLine) > 0 && rawLine[0] != ' ' && rawLine[0] != '\t')) {
+			inBuildDepends = false
+		}
+		if !inBuildDepends {
+			continue
+		}
+
+		for _, piece := range strings.Split(line, ",") {
+			match := nameRe.FindStringSubmatch(strings.TrimSpace(piece))
+			if len(match) != 2 {
+				continue
+			}
+			name := strings.ToLower(match[1])
+			name = strings.TrimPrefix(name, "coding-adventures-")
+			if name == selfName || !knownSiblings[name] || seen[name] {
+				continue
+			}
+			seen[name] = true
+			deps = append(deps, name)
 		}
 	}
 	return deps, nil
+}
+
+// readOcamlDeps reads checked-in opam metadata and returns only local
+// coding-adventures package names. External opam dependencies are ignored.
+func readOcamlDeps(pkgDir string) ([]string, error) {
+	metadataPath := filepath.Join(
+		pkgDir,
+		"coding-adventures-"+filepath.Base(pkgDir)+".opam",
+	)
+	// #nosec G304 -- scaffold dependency directories are lstat-checked and contained before this fixed-name read.
+	data, err := os.ReadFile(metadataPath)
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	dependsRe := regexp.MustCompile(`(?ms)^depends[ \t]*:\s*\[(.*?)\]`)
+	depends := dependsRe.FindStringSubmatch(string(data))
+	if len(depends) != 2 {
+		return nil, nil
+	}
+	re := regexp.MustCompile(`"coding-adventures-([a-z][a-z0-9]*(?:-[a-z0-9]+)*)"`)
+	matches := re.FindAllStringSubmatch(depends[1], -1)
+	seen := map[string]bool{}
+	deps := make([]string, 0, len(matches))
+	for _, match := range matches {
+		dep := match[1]
+		if !seen[dep] {
+			seen[dep] = true
+			deps = append(deps, dep)
+		}
+	}
+	return deps, nil
+}
+
+// resolveDepDir locates a dependency in either the packages or programs tree.
+// Packages are preferred because they are the standard reusable module location.
+func resolveDepDir(repoRoot, lang, dep string) string {
+	dName := dirName(dep, lang)
+	pkgDir := filepath.Join(repoRoot, "code", "packages", lang, dName)
+	if info, err := os.Stat(pkgDir); err == nil && info.IsDir() {
+		return pkgDir
+	}
+	programDir := filepath.Join(repoRoot, "code", "programs", lang, dName)
+	if info, err := os.Stat(programDir); err == nil && info.IsDir() {
+		return programDir
+	}
+	return pkgDir
+}
+
+func validateDependencyDir(repoRoot, depDir string) error {
+	info, err := os.Lstat(depDir)
+	if err != nil {
+		return err
+	}
+	if info.Mode()&os.ModeSymlink != 0 {
+		return fmt.Errorf("dependency directory must not be a symlink: %s", depDir)
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("dependency path is not a directory: %s", depDir)
+	}
+
+	realRoot, err := filepath.EvalSymlinks(repoRoot)
+	if err != nil {
+		return fmt.Errorf("resolving repository root: %w", err)
+	}
+	realDep, err := filepath.EvalSymlinks(depDir)
+	if err != nil {
+		return fmt.Errorf("resolving dependency directory: %w", err)
+	}
+	relative, err := filepath.Rel(realRoot, realDep)
+	if err != nil ||
+		filepath.IsAbs(relative) ||
+		relative == ".." ||
+		strings.HasPrefix(relative, ".."+string(os.PathSeparator)) {
+		return fmt.Errorf("dependency directory escapes repository root: %s", depDir)
+	}
+	return nil
+}
+
+func validateResolvedDependency(
+	depDir string,
+	validators []func(string) error,
+) error {
+	for _, validate := range validators {
+		if err := validate(depDir); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // jvmDepRe matches local composite-build dependency coordinates in Gradle.
@@ -488,6 +713,17 @@ func readJVMDeps(pkgDir string) ([]string, error) {
 // the given direct dependencies. Returns the full set (not including the
 // package itself).
 func transitiveClosure(directDeps []string, lang, baseDir string) ([]string, error) {
+	return transitiveClosureWithResolver(directDeps, lang, func(dep string) string {
+		return filepath.Join(baseDir, dirName(dep, lang))
+	})
+}
+
+func transitiveClosureWithResolver(
+	directDeps []string,
+	lang string,
+	resolve func(string) string,
+	validators ...func(string) error,
+) ([]string, error) {
 	visited := make(map[string]bool)
 	queue := make([]string, len(directDeps))
 	copy(queue, directDeps)
@@ -500,7 +736,10 @@ func transitiveClosure(directDeps []string, lang, baseDir string) ([]string, err
 		}
 		visited[dep] = true
 
-		depDir := filepath.Join(baseDir, dirName(dep, lang))
+		depDir := resolve(dep)
+		if err := validateResolvedDependency(depDir, validators); err != nil {
+			return nil, fmt.Errorf("validating dependency %s: %w", dep, err)
+		}
 		depDeps, err := readDeps(depDir, lang)
 		if err != nil {
 			return nil, fmt.Errorf("reading deps of %s: %w", dep, err)
@@ -524,6 +763,17 @@ func transitiveClosure(directDeps []string, lang, baseDir string) ([]string, err
 // that have no dependencies of their own come first). This is the install
 // order needed for BUILD files.
 func topologicalSort(allDeps []string, lang, baseDir string) ([]string, error) {
+	return topologicalSortWithResolver(allDeps, lang, func(dep string) string {
+		return filepath.Join(baseDir, dirName(dep, lang))
+	})
+}
+
+func topologicalSortWithResolver(
+	allDeps []string,
+	lang string,
+	resolve func(string) string,
+	validators ...func(string) error,
+) ([]string, error) {
 	// Build adjacency: dep -> its deps (within the allDeps set)
 	depSet := make(map[string]bool)
 	for _, d := range allDeps {
@@ -538,8 +788,14 @@ func topologicalSort(allDeps []string, lang, baseDir string) ([]string, error) {
 	}
 
 	for _, dep := range allDeps {
-		depDir := filepath.Join(baseDir, dirName(dep, lang))
-		depDeps, _ := readDeps(depDir, lang)
+		depDir := resolve(dep)
+		if err := validateResolvedDependency(depDir, validators); err != nil {
+			return nil, fmt.Errorf("validating dependency %s: %w", dep, err)
+		}
+		depDeps, err := readDeps(depDir, lang)
+		if err != nil {
+			return nil, fmt.Errorf("reading deps of %s: %w", dep, err)
+		}
 		for _, dd := range depDeps {
 			if depSet[dd] {
 				graph[dep] = append(graph[dep], dd)
@@ -1693,57 +1949,81 @@ final class %sTests: XCTestCase {
 // =========================================================================
 
 func generateHaskell(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
-	pkgNameHaskell := "coding-adventures-" + pkgName
 	moduleName := toCamelCase(pkgName)
+	qualifiedModuleName := "CodingAdventures." + moduleName
+	capabilityManifest, err := requiredCapabilitiesJSON("haskell", pkgName)
+	if err != nil {
+		return err
+	}
 
 	cabal := fmt.Sprintf(`cabal-version: 3.0
 name:          %s
 version:       0.1.0
 synopsis:      %s
+description:   %s. This package is generated as a publishable library in the coding-adventures monorepo.
+category:      Development
 license:       MIT
 author:        Adhithya Rajasekaran
 maintainer:    Adhithya Rajasekaran
 build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
 
 library
     exposed-modules:  %s
-    build-depends:    base >=4.14
-`, pkgNameHaskell, description, moduleName)
+    build-depends:    base >=4.14 && <5
+`, pkgName, description, description, qualifiedModuleName)
 
-	for _, dep := range orderedDeps {
-		cabal += fmt.Sprintf("                      , coding-adventures-%s\n", dep)
+	for _, dep := range directDeps {
+		cabal += fmt.Sprintf("                    , %s >=0.1 && <0.2\n", dep)
 	}
-	cabal += `    hs-source-dirs:   src
+	cabal += fmt.Sprintf(`    hs-source-dirs:   src
+    ghc-options:      -Wall
     default-language: Haskell2010
 
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
-    build-depends:    base >=4.14
+    other-modules:    %sSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
                     , %s
-`
-	for _, dep := range orderedDeps {
-		cabal += fmt.Sprintf("                    , coding-adventures-%s\n", dep)
-	}
-	cabal = fmt.Sprintf(cabal, pkgNameHaskell, pkgNameHaskell)
-	cabal += `    hs-source-dirs:   test
+                    , hspec ==2.*
+    ghc-options:      -Wall
     default-language: Haskell2010
-`
+`, moduleName, pkgName)
 
-	libHs := fmt.Sprintf(`module %s where
-
--- | %s
+	libHs := fmt.Sprintf(`-- | %s
+--
 -- %s
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
-`, moduleName, description, layerCtx)
+module %s
+  ( version
+  ) where
 
-	specHs := fmt.Sprintf(`import %s
+-- | Package version shared across implementation languages.
+version :: String
+version = "0.1.0"
+`, description, layerCtx, qualifiedModuleName)
+
+	specHs := fmt.Sprintf(`import %sSpec (spec)
+import Test.Hspec (hspec)
 
 main :: IO ()
-main = do
-    putStrLn "Test suite not yet implemented."
+main = hspec spec
 `, moduleName)
+
+	packageSpecHs := fmt.Sprintf(`module %sSpec (spec) where
+
+import %s (version)
+import Test.Hspec
+
+spec :: Spec
+spec =
+  describe "package metadata" $
+    it "reports version 0.1.0" $
+      shouldBe version "0.1.0"
+`, moduleName, qualifiedModuleName)
 
 	cabalProject := "packages: ."
 	for _, dep := range orderedDeps {
@@ -1751,15 +2031,15 @@ main = do
 	}
 	cabalProject += "\n"
 
-	// BUILD
-	build := "cabal test all\n"
-
 	files := map[string]string{
-		fmt.Sprintf("%s.cabal", pkgNameHaskell): cabal,
-		"cabal.project":                         cabalProject,
-		"src/" + moduleName + ".hs":             libHs,
-		"test/Spec.hs":                          specHs,
-		"BUILD":                                 build,
+		fmt.Sprintf("%s.cabal", pkgName):             cabal,
+		"cabal.project":                              cabalProject,
+		"src/CodingAdventures/" + moduleName + ".hs": libHs,
+		"test/Spec.hs":                               specHs,
+		"test/" + moduleName + "Spec.hs":             packageSpecHs,
+		"BUILD":                                      "cabal test\n",
+		"BUILD_windows":                              "echo \"haskell support not enabled in windows CI yet -- skipping\"\n",
+		"required_capabilities.json":                 capabilityManifest,
 	}
 
 	for path, content := range files {
@@ -1777,6 +2057,202 @@ main = do
 // =========================================================================
 // File generation — Java
 // =========================================================================
+
+func quoteOcamlString(value string) string {
+	escaped := strings.NewReplacer(
+		`\`, `\\`,
+		`"`, `\"`,
+	).Replace(value)
+	return `"` + escaped + `"`
+}
+
+func generateOcaml(
+	targetDir, pkgName, pkgType, description, layerCtx string,
+	directDeps, orderedDeps []string,
+	depDirs map[string]string,
+) error {
+	if !kebabCaseRe.MatchString(pkgName) {
+		return fmt.Errorf("invalid OCaml package name %q", pkgName)
+	}
+	if pkgType != "library" && pkgType != "program" {
+		return fmt.Errorf("invalid OCaml package type %q", pkgType)
+	}
+	if !isSafeDescription(description) {
+		return fmt.Errorf("description must be one printable line without control characters or structural delimiters")
+	}
+	for _, dep := range append(append([]string{}, directDeps...), orderedDeps...) {
+		if !kebabCaseRe.MatchString(dep) {
+			return fmt.Errorf("invalid OCaml dependency name %q", dep)
+		}
+	}
+
+	testBase := toSnakeCase(pkgName)
+	moduleBase := "coding_adventures_" + testBase
+	moduleRef := strings.ToUpper(moduleBase[:1]) + moduleBase[1:]
+	publicName := "coding-adventures-" + pkgName
+	quotedDescription := quoteOcamlString(description)
+
+	duneProject := fmt.Sprintf(`(lang dune 3.16)
+(name %s)
+(generate_opam_files false)
+(package
+ (name %s)
+ (synopsis %s)
+ (description %s))
+`, publicName, publicName, quotedDescription, quotedDescription)
+
+	var opam strings.Builder
+	fmt.Fprintf(&opam, `opam-version: "2.0"
+name: %s
+version: "0.1.0"
+synopsis: %s
+description: %s
+maintainer: "Adhithya Rajasekaran"
+authors: "Adhithya Rajasekaran"
+license: "MIT"
+homepage: "https://github.com/adhithyan15/coding-adventures"
+bug-reports: "https://github.com/adhithyan15/coding-adventures/issues"
+dev-repo: "git+https://github.com/adhithyan15/coding-adventures.git"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "dune" {= "3.17.2"}
+  "alcotest" {with-test & = "1.9.0"}
+  "bisect_ppx" {with-test & = "2.8.3"}
+  "ocamlformat" {with-dev-setup & = "0.27.0"}
+`, quoteOcamlString(publicName), quotedDescription, quotedDescription)
+	sortedDirect := append([]string{}, directDeps...)
+	sort.Strings(sortedDirect)
+	for _, dep := range sortedDirect {
+		fmt.Fprintf(&opam, "  %s {= \"0.1.0\"}\n", quoteOcamlString("coding-adventures-"+dep))
+	}
+	opam.WriteString(`]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+`)
+
+	srcDune := fmt.Sprintf(`(library
+ (name %s)
+ (public_name %s)
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))
+`, moduleBase, publicName)
+	source := fmt.Sprintf(`let version () = "0.1.0"
+let package_name = %s
+`, quoteOcamlString(publicName))
+	if layerCtx != "" {
+		source += fmt.Sprintf("let layer = Some %s\n", quoteOcamlString(layerCtx))
+	} else {
+		source += "let layer = None\n"
+	}
+	iface := `val version : unit -> string
+val package_name : string
+val layer : string option
+`
+	testDune := fmt.Sprintf(`(test
+ (name test_%s)
+ (libraries alcotest %s))
+`, testBase, moduleBase)
+	testSource := fmt.Sprintf(`let () =
+  Alcotest.run %s
+    [
+      ( "metadata",
+        [
+          Alcotest.test_case "version" `+"`Quick"+` (fun () ->
+              Alcotest.(check string)
+                "version" "0.1.0"
+                (%s.version ()));
+        ] );
+    ]
+`, quoteOcamlString(publicName), moduleRef)
+
+	build := ""
+	buildWindows := ""
+	for _, dep := range orderedDeps {
+		pinPath := filepath.ToSlash(filepath.Join("..", dep))
+		if depDir, ok := depDirs[dep]; ok {
+			relative, err := filepath.Rel(targetDir, depDir)
+			if err != nil {
+				return fmt.Errorf("resolving OCaml dependency path for %s: %w", dep, err)
+			}
+			pinPath = filepath.ToSlash(relative)
+		}
+		build += fmt.Sprintf("opam pin add --no-action -y coding-adventures-%s %s\n", dep, pinPath)
+		buildWindows += fmt.Sprintf("opam pin add --no-action -y coding-adventures-%s %s\n", dep, pinPath)
+	}
+	build += fmt.Sprintf(`opam install . --deps-only --with-test --with-dev-setup -y
+opam exec -- dune build @fmt
+BISECT_FILE="$PWD/bisect" opam exec -- dune runtest --force --instrument-with bisect_ppx
+opam exec -- bisect-ppx-report summary --per-file --expect src/%s.ml bisect*.coverage
+`, moduleBase)
+	buildWindows += fmt.Sprintf(`opam install . --deps-only --with-test --with-dev-setup -y
+opam exec -- dune build @fmt
+set BISECT_FILE=%%CD%%\bisect&& opam exec -- dune runtest --force --instrument-with bisect_ppx
+for %%f in (bisect*.coverage) do opam exec -- bisect-ppx-report summary --per-file --expect src/%s.ml %%f
+`, moduleBase)
+
+	capabilityManifest, err := requiredCapabilitiesJSON("ocaml", pkgName)
+	if err != nil {
+		return err
+	}
+	if pkgType == "program" {
+		manifest := requiredCapabilitiesManifest{
+			Schema:  requiredCapabilitiesSchemaURL,
+			Version: 1,
+			Package: "ocaml/" + pkgName,
+			Capabilities: []requiredCapability{{
+				Category:      "stdout",
+				Action:        "write",
+				Target:        "*",
+				Justification: "The generated command prints its deterministic package identity.",
+			}},
+			Justification: "The command only writes its deterministic result to standard output.",
+		}
+		encoded, marshalErr := json.MarshalIndent(manifest, "", "  ")
+		if marshalErr != nil {
+			return marshalErr
+		}
+		capabilityManifest = string(encoded) + "\n"
+	}
+
+	files := map[string]string{
+		".gitignore":                    "_build/\n_opam/\nbisect*.coverage\n",
+		".ocamlformat":                  "version = 0.27.0\nprofile = default\nocaml-version = 5.2\n",
+		"BUILD":                         build,
+		"BUILD_windows":                 buildWindows,
+		publicName + ".opam":            opam.String(),
+		"dune-project":                  duneProject,
+		"required_capabilities.json":    capabilityManifest,
+		"src/" + moduleBase + ".ml":     source,
+		"src/" + moduleBase + ".mli":    iface,
+		"src/dune":                      srcDune,
+		"test/dune":                     testDune,
+		"test/test_" + testBase + ".ml": testSource,
+	}
+	if pkgType == "program" {
+		files["bin/dune"] = fmt.Sprintf(`(executable
+ (name main)
+ (public_name %s)
+ (libraries %s))
+`, pkgName, moduleBase)
+		files["bin/main.ml"] = fmt.Sprintf("let () = print_endline %s.package_name\n", moduleRef)
+	}
+	for path, content := range files {
+		fullPath := filepath.Join(targetDir, path)
+		// #nosec G301 -- generated source trees intentionally use conventional 0755 directories.
+		if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
+			return err
+		}
+		// #nosec G306 -- generated source and metadata files intentionally use conventional 0644 permissions.
+		if err := os.WriteFile(fullPath, []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 func generateJava(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
 	camel := toCamelCase(pkgName)
@@ -1993,6 +2469,219 @@ class %sTest {
 // Common files (README, CHANGELOG)
 // =========================================================================
 
+// =========================================================================
+// File generation — C and C++ (pure ISO, multi-compiler via iso-harness)
+// =========================================================================
+//
+// C and C++ packages have no package manifest. They declare their toolchain
+// dependency on the shared iso-harness inline in BUILD (`# build-tool: deps=…`)
+// and build through it, so the generated sources are compiled by GCC, Clang,
+// AND MSVC under strict ISO conformance flags. See
+// code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md.
+//
+// The generated tools/run.sh and tools/run.ps1 locate the harness by walking up
+// to the repo directory that contains code/packages/c/iso-harness, so the same
+// template works whether the package lives under code/packages/ or code/programs/
+// and regardless of the C-vs-C++ subdirectory depth.
+
+// isoRunSh renders the POSIX run script shared by C and C++ packages. `lang` is
+// "c" or "cpp"; `sources` is the space-separated source list passed to the
+// harness (e.g. "tests/foo_test.c src/foo.c").
+func isoRunSh(pkgName, symbol, lang, sources string) string {
+	return fmt.Sprintf(`#!/bin/sh
+# Build and run the %s tests under EVERY available C/C++ compiler (pure ISO),
+# via the shared iso-harness (code/packages/c/iso-harness).
+set -e
+SELF=$(cd "$(dirname "$0")/.." && pwd)
+cd "$SELF"
+
+# Locate the iso-harness by walking up to the repo dir that contains it.
+d="$SELF"
+while [ "$d" != "/" ] && [ ! -d "$d/code/packages/c/iso-harness" ]; do
+    d=$(dirname "$d")
+done
+HARNESS="$d/code/packages/c/iso-harness"
+if [ ! -f "$HARNESS/lib/iso-lib.sh" ]; then
+    echo "iso-harness not found (searched upward from $SELF)" >&2
+    exit 1
+fi
+
+# Include both this package's headers and the harness's (for iso_test.h).
+ISO_INCLUDE="include $HARNESS/include"
+export ISO_INCLUDE
+
+# On Linux CI both gcc and clang are installed — require both so the pure-ISO
+# guarantee is firm rather than best-effort. Locally, use whatever is present.
+if [ "${CI:-}" = "true" ] && [ "$(uname)" = "Linux" ]; then
+    ISO_REQUIRE="gcc clang"
+    export ISO_REQUIRE
+fi
+
+. "$HARNESS/lib/iso-lib.sh"
+iso_build_and_run %s %s-tests %s
+`, pkgName, lang, symbol, sources)
+}
+
+// isoRunPs1 renders the Windows/MSVC run script shared by C and C++ packages.
+// `sources` is a comma-separated, quoted PowerShell array body (e.g.
+// `"tests\foo_test.c", "src\foo.c"`).
+func isoRunPs1(pkgName, symbol, lang, sources string) string {
+	return fmt.Sprintf(`# Build and run the %s tests under MSVC (cl.exe) — pure ISO C/C++ — via the
+# shared iso-harness (code\packages\c\iso-harness).
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$self = Split-Path -Parent $PSScriptRoot
+Set-Location $self
+
+# Locate the iso-harness by walking up to the repo dir that contains it.
+$d = $self
+while ($d -and -not (Test-Path (Join-Path $d 'code\packages\c\iso-harness'))) {
+    $d = Split-Path -Parent $d
+}
+if (-not $d) { throw 'iso-harness not found (searched upward from ' + $self + ')' }
+$harness = Join-Path $d 'code\packages\c\iso-harness'
+
+$env:ISO_INCLUDE = "include $harness\include"
+. (Join-Path $harness 'lib\iso-lib.ps1')
+Iso-BuildAndRun -Lang %s -Name %s-tests -Sources @(%s)
+`, pkgName, lang, symbol, sources)
+}
+
+// generateC scaffolds a pure-ISO C17 library: a header, a source file, and a
+// test built through the iso-harness under gcc, clang, and MSVC.
+func generateC(targetDir, pkgName, description, layerCtx string) error {
+	symbol := toSnakeCase(pkgName)
+	guard := strings.ToUpper(symbol) + "_H"
+
+	header := fmt.Sprintf(`/*
+ * %s.h — %s
+ *
+ * Part of the coding-adventures monorepo.%s
+ *
+ * This is pure ISO C17: it compiles under GCC, Clang, and MSVC with
+ * -pedantic-errors / /permissive- and warnings-as-errors. Keep it that way —
+ * no compiler extensions.
+ */
+#ifndef %s
+#define %s
+
+/* Returns a friendly, non-zero value — proof the library links and runs.
+ * Replace this with the package's real API. */
+int %s_answer(void);
+
+#endif /* %s */
+`, symbol, description, layerCtx, guard, guard, symbol, guard)
+
+	source := fmt.Sprintf(`#include "%s.h"
+
+int %s_answer(void) {
+    return 42;
+}
+`, symbol, symbol)
+
+	test := fmt.Sprintf(`/* Tests for %s, using the header-only iso_test.h harness (pure ISO). */
+#include "iso_test.h"
+
+#include "%s.h"
+
+int main(void) {
+    ISO_CHECK_EQ_INT(%s_answer(), 42);
+    return ISO_TEST_RESULT();
+}
+`, pkgName, symbol, symbol)
+
+	build := "# build-tool: deps=c/iso-harness\nsh tools/run.sh\n"
+	buildWin := "powershell -NoProfile -ExecutionPolicy Bypass -File tools\\run.ps1\n"
+	runSh := isoRunSh(pkgName, symbol, "c", fmt.Sprintf("tests/%s_test.c src/%s.c", symbol, symbol))
+	runPs1 := isoRunPs1(pkgName, symbol, "c", fmt.Sprintf("\"tests\\%s_test.c\", \"src\\%s.c\"", symbol, symbol))
+
+	return writeCFamilyFiles(targetDir, map[string]string{
+		filepath.Join("include", symbol+".h"):    header,
+		filepath.Join("src", symbol+".c"):        source,
+		filepath.Join("tests", symbol+"_test.c"): test,
+		"BUILD":                                  build,
+		"BUILD_windows":                           buildWin,
+		filepath.Join("tools", "run.sh"):          runSh,
+		filepath.Join("tools", "run.ps1"):         runPs1,
+		".gitignore":                              "_build/\n",
+	})
+}
+
+// generateCpp scaffolds a pure-ISO C++17 header-only library plus a test built
+// through the iso-harness under g++, clang++, and MSVC.
+func generateCpp(targetDir, pkgName, description, layerCtx string) error {
+	symbol := toSnakeCase(pkgName)
+	guard := strings.ToUpper(symbol) + "_HPP"
+
+	header := fmt.Sprintf(`// %s.hpp — %s
+//
+// Part of the coding-adventures monorepo.%s
+//
+// This is pure ISO C++17: it compiles under GCC, Clang, and MSVC with
+// -pedantic-errors / /permissive- and warnings-as-errors. Keep it that way —
+// no compiler extensions.
+#ifndef %s
+#define %s
+
+namespace %s {
+
+// Returns a friendly value — proof the header compiles and links.
+// Replace this with the package's real API.
+inline int answer() {
+    return 42;
+}
+
+}  // namespace %s
+
+#endif  // %s
+`, symbol, description, layerCtx, guard, guard, symbol, symbol, guard)
+
+	test := fmt.Sprintf(`// Tests for %s, using the header-only iso_test.h harness (pure ISO).
+#include "iso_test.h"
+
+#include "%s.hpp"
+
+int main() {
+    ISO_CHECK_EQ_INT(%s::answer(), 42);
+    return ISO_TEST_RESULT();
+}
+`, pkgName, symbol, symbol)
+
+	build := "# build-tool: deps=c/iso-harness\nsh tools/run.sh\n"
+	buildWin := "powershell -NoProfile -ExecutionPolicy Bypass -File tools\\run.ps1\n"
+	runSh := isoRunSh(pkgName, symbol, "cpp", fmt.Sprintf("tests/%s_test.cpp", symbol))
+	runPs1 := isoRunPs1(pkgName, symbol, "cpp", fmt.Sprintf("\"tests\\%s_test.cpp\"", symbol))
+
+	return writeCFamilyFiles(targetDir, map[string]string{
+		filepath.Join("include", symbol+".hpp"):    header,
+		filepath.Join("tests", symbol+"_test.cpp"): test,
+		"BUILD":                           build,
+		"BUILD_windows":                            buildWin,
+		filepath.Join("tools", "run.sh"):           runSh,
+		filepath.Join("tools", "run.ps1"):           runPs1,
+		".gitignore":                               "_build/\n",
+	})
+}
+
+// writeCFamilyFiles creates each file's parent directory and writes it. Scripts
+// under tools/ are made executable; everything else is 0644.
+func writeCFamilyFiles(targetDir string, files map[string]string) error {
+	for path, content := range files {
+		full := filepath.Join(targetDir, path)
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			return err
+		}
+		mode := os.FileMode(0o644)
+		if strings.HasSuffix(path, ".sh") {
+			mode = 0o755
+		}
+		if err := os.WriteFile(full, []byte(content), mode); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func generateCommonFiles(targetDir, pkgName, description, lang string, layer int, directDeps []string) error {
 	today := time.Now().Format("2006-01-02")
 
@@ -2123,28 +2812,49 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 	dName := dirName(cfg.packageName, lang)
 	targetDir := filepath.Join(baseDir, dName)
 
-	// Check target doesn't exist
-	if _, err := os.Stat(targetDir); err == nil {
+	// Refuse existing directories and every symlink, including dangling links.
+	if _, err := os.Lstat(targetDir); err == nil {
 		return fmt.Errorf("directory already exists: %s", targetDir)
+	} else if !os.IsNotExist(err) {
+		return fmt.Errorf("checking target directory: %w", err)
 	}
 
-	// Validate dependencies exist
+	// Validate dependencies exist.
+	resolver := func(dep string) string {
+		return filepath.Join(baseDir, dirName(dep, lang))
+	}
+	if lang == "ocaml" {
+		resolver = func(dep string) string {
+			return resolveDepDir(cfg.repoRoot, lang, dep)
+		}
+	}
+	resolvedDepDirs := make(map[string]string)
 	for _, dep := range cfg.directDeps {
-		depDir := filepath.Join(baseDir, dirName(dep, lang))
+		depDir := resolver(dep)
 		if _, err := os.Stat(depDir); os.IsNotExist(err) {
 			return fmt.Errorf("dependency %q not found for %s at %s", dep, lang, depDir)
 		}
+		if err := validateDependencyDir(cfg.repoRoot, depDir); err != nil {
+			return fmt.Errorf("dependency %q is unsafe: %w", dep, err)
+		}
+		resolvedDepDirs[dep] = depDir
 	}
 
 	// Compute transitive closure and topological sort
-	allDeps, err := transitiveClosure(cfg.directDeps, lang, baseDir)
+	validateDep := func(depDir string) error {
+		return validateDependencyDir(cfg.repoRoot, depDir)
+	}
+	allDeps, err := transitiveClosureWithResolver(cfg.directDeps, lang, resolver, validateDep)
 	if err != nil {
 		return fmt.Errorf("resolving transitive deps for %s: %w", lang, err)
 	}
 
-	orderedDeps, err := topologicalSort(allDeps, lang, baseDir)
+	orderedDeps, err := topologicalSortWithResolver(allDeps, lang, resolver, validateDep)
 	if err != nil {
 		return fmt.Errorf("topological sort for %s: %w", lang, err)
+	}
+	for _, dep := range orderedDeps {
+		resolvedDepDirs[dep] = resolver(dep)
 	}
 
 	layerCtx := ""
@@ -2207,12 +2917,33 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		if err := generateHaskell(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps, orderedDeps); err != nil {
 			return err
 		}
+	case "ocaml":
+		if err := generateOcaml(
+			targetDir,
+			cfg.packageName,
+			cfg.pkgType,
+			cfg.description,
+			layerCtx,
+			cfg.directDeps,
+			orderedDeps,
+			resolvedDepDirs,
+		); err != nil {
+			return err
+		}
 	case "java":
 		if err := generateJava(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
 			return err
 		}
 	case "kotlin":
 		if err := generateKotlin(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
+			return err
+		}
+	case "c":
+		if err := generateC(targetDir, cfg.packageName, cfg.description, layerCtx); err != nil {
+			return err
+		}
+	case "cpp":
+		if err := generateCpp(targetDir, cfg.packageName, cfg.description, layerCtx); err != nil {
 			return err
 		}
 	}
@@ -2241,6 +2972,8 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		fmt.Fprintf(stdout, "  After other packages depend on this, run go mod tidy in those too\n")
 	case "java", "kotlin":
 		fmt.Fprintf(stdout, "  Run: cd %s && gradle test\n", targetDir)
+	case "ocaml":
+		fmt.Fprintf(stdout, "  Run: cd %s && opam exec -- dune runtest\n", targetDir)
 	}
 
 	return nil
@@ -2297,8 +3030,8 @@ func run(specPath string, argv []string, stdout, stderr io.Writer) int {
 		// Validate description: no newlines or control characters that could
 		// corrupt generated source files (e.g. Swift block-comment terminators
 		// or JSON escape sequences).
-		if strings.ContainsAny(description, "\n\r") {
-			fmt.Fprintf(stderr, "scaffold-generator: description must not contain newline characters\n")
+		if !isSafeDescription(description) {
+			fmt.Fprintf(stderr, "scaffold-generator: description must be one printable line without control characters or structural delimiters\n")
 			return 1
 		}
 

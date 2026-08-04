@@ -1,0 +1,53 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 119622,
+      "reason": "publisher markup and textbook material outside the reviewed proportion definition and cross-products paragraphs",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.proportion.definition",
+          "end": 120450,
+          "quote": "<p id=\"fs-id1166492018126\">A proportion is an equation of the form <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac><mo>=</mo><mfrac><mi>c</mi><mi>d</mi></mfrac><mo>,</mo></mrow></mrow><annotation-xml encoding=\"MathML-Content\"><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac><mo>=</mo><mfrac><mi>c</mi><mi>d</mi></mfrac><mo>,</mo></mrow></annotation-xml></semantics></math></span> where <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mrow><mi>b</mi><mo>\u2260</mo><mn>0</mn><mo>,</mo></mrow><mrow><mi>d</mi><mo>\u2260</mo><mn>0</mn><mo>.</mo></mrow></mrow><annotation-xml encoding=\"MathML-Content\"><mrow><mi>b</mi><mo>\u2260</mo><mn>0</mn><mo>,</mo></mrow><mrow><mi>d</mi><mo>\u2260</mo><mn>0</mn><mo>.</mo></mrow></annotation-xml></semantics></math></span></p>",
+          "quote_sha256": "6e8ba327b8243a7551b915592b7a5bbe2762519f459c935c27754f2ee87d97eb",
+          "start": 119622
+        }
+      ],
+      "disposition": "represented",
+      "end": 120450,
+      "start": 119622
+    },
+    {
+      "disposition": "discarded",
+      "end": 140181,
+      "reason": "publisher markup and textbook material outside the reviewed proportion definition and cross-products paragraphs",
+      "start": 120450
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.proportion",
+          "end": 141024,
+          "quote": "<p id=\"fs-id1517408\">For any proportion of the form <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac><mo>=</mo><mfrac><mi>c</mi><mi>d</mi></mfrac><mo>,</mo></mrow></mrow><annotation-xml encoding=\"MathML-Content\"><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac><mo>=</mo><mfrac><mi>c</mi><mi>d</mi></mfrac><mo>,</mo></mrow></annotation-xml></semantics></math></span> where <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mrow><mi>b</mi><mo>\u2260</mo><mn>0</mn><mo>,</mo></mrow><mrow><mi>d</mi><mo>\u2260</mo><mn>0</mn><mo>,</mo></mrow></mrow><annotation-xml encoding=\"MathML-Content\"><mrow><mi>b</mi><mo>\u2260</mo><mn>0</mn><mo>,</mo></mrow><mrow><mi>d</mi><mo>\u2260</mo><mn>0</mn><mo>,</mo></mrow></annotation-xml></semantics></math></span> its cross products are equal.</p>",
+          "quote_sha256": "83d559c98b29544cd5140145b609e1dbceae346f0737b5b48a4d4f1452bbc9ff",
+          "start": 140181
+        }
+      ],
+      "disposition": "represented",
+      "end": 141024,
+      "start": 140181
+    },
+    {
+      "disposition": "discarded",
+      "end": 536280,
+      "reason": "publisher markup and textbook material outside the reviewed proportion definition and cross-products paragraphs",
+      "start": 141024
+    }
+  ],
+  "source_sha256": "a35bcb922594fce55973d557eed3f4ea33160b3be1e6c6c80dca59ac80586f25",
+  "source_size": 536280
+}

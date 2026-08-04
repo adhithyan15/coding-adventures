@@ -972,6 +972,9 @@ impl<'a> NetworkDnsExchangeUdpRetryProgram<'a> {
 }
 
 impl<'a> NetworkDnsExchangeUdpFallbackProgram<'a> {
+    // Each parameter is an independent DNS-exchange configuration knob; a builder
+    // or config struct would only relocate the same eight fields.
+    #[allow(clippy::too_many_arguments)]
     pub const fn new(
         interface: u8,
         primary_resolver_ipv4: u32,

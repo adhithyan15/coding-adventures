@@ -42,29 +42,46 @@ pub mod govern;
 pub mod lr_aggregate;
 pub mod proof_dag;
 pub mod provenance;
+pub mod verify;
 pub mod wmc;
 
 use std::collections::{HashMap, HashSet};
 
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
-pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
+/// Re-exported so consumers can name the rounding mode of a
+/// [`ComputeExpr::Round`]/[`DerivationNode::Round`] without depending on
+/// `bignum-core` directly (NUM-6a).
+pub use bignum_core::RoundingMode;
+pub use compute::{
+    compute, recheck_narrowing, recheck_narrowings, ApproxReal, ComputationId, ComputationPlanRef,
+    ComputationScope, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived, ExactRational,
+    NarrowingCheck, RealCompanion, RoundSpec,
+};
 pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
     after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,
 };
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
-pub use enumerate::enumerate_all;
-pub use govern::{enumerate_governing, GovernStatus, GovernedAnswer, GovernedResult};
+pub use enumerate::{enumerate_all, ResolutionLimitExceeded, MAX_SLD_DEPTH};
+pub use govern::{
+    enumerate_governing, ConflictStatus, GovernStatus, GovernedAnswer, GovernedResult,
+};
 pub use lr_aggregate::{
-    counterfactual, lr_aggregate, sigmoid, source_disagreements,
+    comparison_requires_lossy_fallback, counterfactual, lr_aggregate, sigmoid, source_disagreements,
     source_disagreements_with_threshold, CmpOp, ContributionClause, JointContributionClause,
     KbError, KickbackReport, LRAggregateResult, LrAggregateWarning, PredicateContributionClause,
     PriorClause, SourceDisagreementReport, SourceLogitDelta, UncertaintyMarker, UncertaintyReport,
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
-pub use provenance::{Citation, Provenance, TrustTier};
+pub use provenance::{Citation, ContentHash, Provenance, Quote, TrustTier, VerbatimSpan};
+pub use verify::{
+    verify_derived, verify_proof, verify_quote, verify_step, ComputationFailure, ComputationStatus,
+    DerivedVerification, InputQuoteVerification, LogicFailure, LogicStatus, MemorySnapshots,
+    NoSnapshots, QuoteMiss, QuoteStatus, SnapshotStore, StepVerification, TraceVerification,
+    UnverifiedReason,
+};
 pub use wmc::weighted_model_count;
 
 // ---------------------------------------------------------------------------
@@ -377,6 +394,46 @@ pub struct ObservedEvidence {
     pub confidence: f64,
 }
 
+/// The working precision, in mantissa bits, for `BigDouble`-backed `Real` audit companions
+/// (NUM-7 — see [`compute::RealCompanion`]) computed within a [`KnowledgeBase`]. Wrapped in its
+/// own type, rather than a bare `u32` field, purely so a non-1 default can be expressed via
+/// `#[derive(Default)]` on `KnowledgeBase`.
+///
+/// This is `KnowledgeBase`'s **first** per-KB configuration field — previously every field was
+/// data (facts/rules/derived values/etc), with no settings knob. Always in `[1,
+/// bignum_core::MAX_PRECISION]`: `BigDouble`'s internal precision guard *panics* outside that
+/// range, so every constructor here clamps rather than passing an unchecked value through.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RealPrecisionBits(u32);
+
+impl Default for RealPrecisionBits {
+    /// 256 bits ≈ 77 significant decimal digits — ADJ-NUMERIC-SUBSTRATE §3's stated default.
+    fn default() -> Self {
+        RealPrecisionBits(256)
+    }
+}
+
+impl RealPrecisionBits {
+    fn clamped(bits: u32) -> Self {
+        RealPrecisionBits(bits.clamp(1, bignum_core::MAX_PRECISION))
+    }
+
+    pub fn get(self) -> u32 {
+        self.0
+    }
+}
+
+/// A numeric slot resolution together with the evidence needed by discrete
+/// consumers to decide whether the value is safe to compare.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ResolvedNumeric {
+    pub value: f64,
+    pub exact: Option<crate::compute::ExactRational>,
+    /// True when the value crossed a lossy boundary after originating from an
+    /// exact source. Predicate and state-machine guards must fail closed on it.
+    pub precision_loss: bool,
+}
+
 /// A collection of Facts and Rules, indexed for clause selection by
 /// the head's functor/arity. Per LP19e, also stores prior /
 /// contribution / joint-contribution clauses in parallel maps; the
@@ -410,6 +467,9 @@ pub struct KnowledgeBase {
     /// [`observed_value`](Self::observed_value) falls back to this table so a
     /// predicate fires over a computed value exactly as over an observed one.
     derived: Vec<crate::compute::Derived>,
+    /// Trusted compiler plans, stored separately from result artifacts so the
+    /// verifier never takes an artifact's own expression as authority.
+    computation_plans: Vec<crate::compute::ComputationPlan>,
     /// LP19e + ADJ47-D: uncertainty markers attached to conclusions.
     /// Each marker carries a domain of candidate evidence terms; if
     /// none of them is observed, the aggregator emits an
@@ -433,6 +493,8 @@ pub struct KnowledgeBase {
     /// the two so both feed [`crate::govern::enumerate_governing`], which consults the order
     /// BEFORE the priority tier (lex superior). Transitive reach is computed cycle-safely.
     context_order: Vec<(String, String)>,
+    /// NUM-7: the working precision for this KB's `Real`/`BigDouble` audit companions.
+    real_precision_bits: RealPrecisionBits,
     next_fact_id: u64,
     next_rule_id: u64,
     next_prior_id: u64,
@@ -445,6 +507,26 @@ pub struct KnowledgeBase {
 impl KnowledgeBase {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// Consuming builder for [`RealPrecisionBits`] (NUM-7), matching the `with_*` naming
+    /// convention `Fact`/`Rule` already use for their own (per-clause) builders — this is the
+    /// first per-KB one. Clamped to `[1, bignum_core::MAX_PRECISION]`.
+    pub fn with_real_precision_bits(mut self, bits: u32) -> Self {
+        self.set_real_precision_bits(bits);
+        self
+    }
+
+    /// In-place setter for [`RealPrecisionBits`] (NUM-7), for a KB already under construction.
+    /// Clamped to `[1, bignum_core::MAX_PRECISION]`.
+    pub fn set_real_precision_bits(&mut self, bits: u32) {
+        self.real_precision_bits = RealPrecisionBits::clamped(bits);
+    }
+
+    /// This KB's working precision, in mantissa bits, for `Real`/`BigDouble` audit companions
+    /// (NUM-7). Defaults to 256 (ADJ-NUMERIC-SUBSTRATE §3).
+    pub fn real_precision_bits(&self) -> u32 {
+        self.real_precision_bits.get()
     }
 
     /// Insert a Fact, assigning it a fresh `FactId`.
@@ -836,18 +918,25 @@ impl KnowledgeBase {
     /// rational sidecar when one is available. This is used by equality-heavy
     /// predicate gates such as `answer == 3 / 10`: the public magnitude remains
     /// `f64`, but exact integer/rational arithmetic can avoid float artifacts.
-    pub fn observed_numeric(
-        &self,
-        slot: &str,
-    ) -> Option<(f64, Option<crate::compute::ExactRational>)> {
+    pub fn observed_numeric(&self, slot: &str) -> Option<ResolvedNumeric> {
         self.observed_value_with_fact(slot)
             .map(|(v, id)| {
                 let exact = self
                     .observed_exact_value_with_fact(slot)
                     .and_then(|(x, exact_id)| if exact_id == id { Some(x) } else { None });
-                (v, exact)
+                ResolvedNumeric {
+                    value: v,
+                    exact,
+                    precision_loss: false,
+                }
             })
-            .or_else(|| self.derived_for(slot).map(|d| (d.value, d.exact)))
+            .or_else(|| {
+                self.derived_for(slot).map(|d| ResolvedNumeric {
+                    value: d.value,
+                    exact: d.exact.clone(),
+                    precision_loss: d.precision_loss,
+                })
+            })
     }
 
     /// Like [`observed_value`](Self::observed_value) but also returns the
@@ -934,11 +1023,75 @@ impl KnowledgeBase {
         out
     }
 
+    /// Every observed numeric value plus its exact sidecar, in fact-insertion
+    /// order. Aggregations use this paired view so exact observations cannot be
+    /// reduced through `f64` and then presented as untainted values.
+    pub fn observed_numerics_all(&self, slot: &str) -> Vec<(ResolvedNumeric, FactId)> {
+        let mut out: Vec<(ResolvedNumeric, FactId)> = self
+            .facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    numeric_magnitude(&args[0]).map(|value| {
+                        (
+                            ResolvedNumeric {
+                                value,
+                                exact: numeric_exact_magnitude(&args[0]),
+                                precision_loss: false,
+                            },
+                            f.id,
+                        )
+                    })
+                }
+                _ => None,
+            })
+            .collect();
+        out.sort_by_key(|(_, id)| id.0);
+        out
+    }
+
     /// Bind a `let`-computed [`Derived`](crate::compute::Derived) value into the
     /// KB. A later [`observed_value`](Self::observed_value) of its name returns
     /// the computed value, and a formula can reference it by name.
-    pub fn add_derived(&mut self, derived: crate::compute::Derived) {
+    pub fn add_derived(&mut self, mut derived: crate::compute::Derived) {
+        let id = crate::compute::ComputationId(self.computation_plans.len());
+        derived.computation_id = Some(id);
+        self.computation_plans
+            .push(crate::compute::ComputationPlan {
+                expr: derived.expr.clone(),
+                scope: derived.scope,
+                formula_sources: derived.formula_sources.clone(),
+                is_query_answer: derived.is_query_answer,
+            });
         self.derived.push(derived);
+    }
+
+    /// Make one derived candidate visible for an owned-result computation, then
+    /// remove both the candidate and its trusted plan before returning. This is
+    /// the transactional overlay used when a branch RHS may refer to its staged
+    /// LHS; it avoids cloning the complete KB and removes the staging state even
+    /// when the callback unwinds.
+    pub fn with_staged_derived<R>(
+        &mut self,
+        derived: crate::compute::Derived,
+        operation: impl FnOnce(&KnowledgeBase) -> R,
+    ) -> (crate::compute::Derived, R) {
+        self.add_derived(derived);
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| operation(self)));
+        let mut derived = self
+            .derived
+            .pop()
+            .expect("staged derived binding must remain present during callback");
+        self.computation_plans
+            .pop()
+            .expect("staged computation plan must remain paired with its binding");
+        derived.computation_id = None;
+        match result {
+            Ok(result) => (derived, result),
+            Err(payload) => std::panic::resume_unwind(payload),
+        }
     }
 
     /// Look up a bound derived value by name (most-recently-bound wins, so a
@@ -956,6 +1109,69 @@ impl KnowledgeBase {
     /// the renderer keeps the most-recent per name to mirror that rule.
     pub fn derived_bindings(&self) -> &[crate::compute::Derived] {
         &self.derived
+    }
+
+    /// Return the separately retained compiler plan for this exact KB artifact.
+    pub fn computation_plan_for(
+        &self,
+        derived: &crate::compute::Derived,
+    ) -> Option<crate::compute::ComputationPlanRef<'_>> {
+        let id = self.computation_id_for(derived)?;
+        let plan = self.computation_plans.get(id.0)?;
+        Some(crate::compute::ComputationPlanRef {
+            expr: &plan.expr,
+            formula_sources: &plan.formula_sources,
+            is_query_answer: plan.is_query_answer,
+            scope: plan.scope,
+        })
+    }
+
+    /// Return the stable compiler-owned identity for this exact stored result.
+    /// Clones and similarly named bindings are rejected so audit consumers cannot
+    /// attach a trusted plan to an artifact that the KB did not retain.
+    pub fn computation_id_for(
+        &self,
+        derived: &crate::compute::Derived,
+    ) -> Option<crate::compute::ComputationId> {
+        let id = derived.computation_id?;
+        let stored = self.derived.get(id.0)?;
+        if !std::ptr::eq(stored, derived) || self.computation_plans.get(id.0).is_none() {
+            return None;
+        }
+        Some(id)
+    }
+
+    pub(crate) fn computation_scope(&self) -> crate::compute::ComputationScope {
+        crate::compute::ComputationScope {
+            fact_limit: self.next_fact_id,
+            derived_limit: self.derived.len(),
+        }
+    }
+
+    /// Reconstruct the fact and derived prefix visible to an earlier compute.
+    pub(crate) fn at_computation_scope(
+        &self,
+        scope: crate::compute::ComputationScope,
+    ) -> Option<Self> {
+        if scope.fact_limit > self.next_fact_id || scope.derived_limit > self.derived.len() {
+            return None;
+        }
+        let mut view = self.clone();
+        for facts in view.facts.values_mut() {
+            facts.retain(|fact| fact.id.0 < scope.fact_limit);
+        }
+        view.facts.retain(|_, facts| !facts.is_empty());
+        view.derived.truncate(scope.derived_limit);
+        view.computation_plans.truncate(scope.derived_limit);
+        view.next_fact_id = scope.fact_limit;
+        Some(view)
+    }
+
+    pub(crate) fn computation_plan(
+        &self,
+        id: crate::compute::ComputationId,
+    ) -> Option<&crate::compute::ComputationPlan> {
+        self.computation_plans.get(id.0)
     }
 
     /// True iff at least one contribution (single or joint) names
@@ -1090,30 +1306,49 @@ pub fn numeric_magnitude(value: &Term) -> Option<f64> {
     match value {
         Term::Num(Number::Int(i)) => Some(*i as f64),
         Term::Num(Number::Float(x)) => Some(*x),
+        // An exactly-stored decimal (ADJ-EXACT-NUMBERS NX-2) reads out as its labeled-lossy `f64`
+        // magnitude here — the same value the old `Float(f64)` path yielded, since a valued fact's
+        // magnitude flows into the inherently-`f64` compute layer. (Exact-rational ingestion of the
+        // decimal, with no `f64` hop, is NX-3.)
+        Term::Num(Number::Exact(d)) => Some(d.to_f64()),
         // Typed wrapper: the magnitude is the leading numeric argument.
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => Some(*i as f64),
             Some(Term::Num(Number::Float(x))) => Some(*x),
+            Some(Term::Num(Number::Exact(d))) => Some(d.to_f64()),
             _ => None,
         },
         _ => None,
     }
 }
 
-/// Exact counterpart to [`numeric_magnitude`]. It intentionally returns `None`
-/// for non-integral floats; exact decimal parsing belongs at the language
-/// adapter layer, while this engine helper only trusts values that arrived as
-/// integer terms or integer-valued floats.
+/// Exact counterpart to [`numeric_magnitude`]. `Int` and `Exact(BigDecimal)` values ingest
+/// **exactly** — the decimal is `mantissa × 10^(-scale)`, converted to its true `BigRational`
+/// with no `f64` hop (NX-3). A `Float` term is the one inexact ingress: it captures only
+/// *integer-valued* floats (via [`from_integer_f64`](crate::compute::ExactRational::from_integer_f64))
+/// and returns `None` for a fractional binary float, whose intended exact form belongs to the
+/// base-10 literal string handled by the language adapter, not to the rounded `f64`.
 pub fn numeric_exact_magnitude(value: &Term) -> Option<crate::compute::ExactRational> {
     match value {
         Term::Num(Number::Int(i)) => Some(crate::compute::ExactRational::from_i128(*i as i128)),
         Term::Num(Number::Float(x)) => crate::compute::ExactRational::from_integer_f64(*x),
+        // NX-3 ingests an exactly-stored decimal at *full precision* — `BigDecimal` is
+        // `mantissa × 10^(-scale)`, an exact ratio, so `to_rational()` hands the compute layer the
+        // true value with **no `f64` hop**. A stored 39-digit pi therefore stays exact through
+        // arithmetic (`pi * 2`), instead of collapsing to the ~16-digit nearest float the NX-2
+        // stopgap produced. `Int` above is already exact; `Float` remains the one inexact ingress.
+        Term::Num(Number::Exact(d)) => {
+            Some(crate::compute::ExactRational::from_ratio(d.to_rational()))
+        }
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => {
                 Some(crate::compute::ExactRational::from_i128(*i as i128))
             }
             Some(Term::Num(Number::Float(x))) => {
                 crate::compute::ExactRational::from_integer_f64(*x)
+            }
+            Some(Term::Num(Number::Exact(d))) => {
+                Some(crate::compute::ExactRational::from_ratio(d.to_rational()))
             }
             _ => None,
         },
@@ -1287,10 +1522,27 @@ fn rename_literal(lit: &BodyLiteral, renames: &mut HashMap<u64, LogicVar>) -> Bo
 /// Backtracking is implicit in the iteration: when a clause's body fails,
 /// we drop the substitution and try the next clause.
 pub fn find_first(query: &Term, kb: &KnowledgeBase) -> Option<Substitution> {
-    find_first_with(query, kb, &Substitution::empty())
+    // A depth-capped search that gives up reports "no proof" to this API's
+    // `Option` return. That is the SAFE direction here: `find_first` is a
+    // "can you prove it?" question, and answering "I could not" after an
+    // exhausted budget is honest. The danger is entirely on the NEGATION side,
+    // where "could not prove" is read as "is false" — see `prove_body`, which
+    // consumes the `Result` directly and refuses to make that inference.
+    find_first_with(query, kb, &Substitution::empty(), 0).unwrap_or(None)
 }
 
-fn find_first_with(query: &Term, kb: &KnowledgeBase, subst: &Substitution) -> Option<Substitution> {
+fn find_first_with(
+    query: &Term,
+    kb: &KnowledgeBase,
+    subst: &Substitution,
+    depth: usize,
+) -> Result<Option<Substitution>, ResolutionLimitExceeded> {
+    // Same guard, same reason, as the enumeration resolver: without it a
+    // self-recursive rule descends until the process aborts on a stack
+    // overflow, which is a SIGABRT an embedding process cannot catch.
+    if depth >= MAX_SLD_DEPTH {
+        return Err(ResolutionLimitExceeded);
+    }
     let resolved = subst.walk(query);
 
     // Try facts first — they have no body, so success is immediate.
@@ -1298,7 +1550,7 @@ fn find_first_with(query: &Term, kb: &KnowledgeBase, subst: &Substitution) -> Op
         let mut renames = HashMap::new();
         let renamed = rename_term(&fact.term, &mut renames);
         if let Some(s) = unify(&resolved, &renamed, subst) {
-            return Some(s);
+            return Ok(Some(s));
         }
     }
 
@@ -1313,34 +1565,45 @@ fn find_first_with(query: &Term, kb: &KnowledgeBase, subst: &Substitution) -> Op
             .collect();
 
         if let Some(mut s) = unify(&resolved, &renamed_head, subst) {
-            if prove_body(&renamed_body, kb, &mut s) {
-                return Some(s);
+            if prove_body(&renamed_body, kb, &mut s, depth + 1)? {
+                return Ok(Some(s));
             }
         }
     }
 
-    None
+    Ok(None)
 }
 
 /// Prove every literal in `body` under the substitution `s`, threading
 /// each successful subgoal's resulting substitution forward to the next.
-fn prove_body(body: &[BodyLiteral], kb: &KnowledgeBase, s: &mut Substitution) -> bool {
+fn prove_body(
+    body: &[BodyLiteral],
+    kb: &KnowledgeBase,
+    s: &mut Substitution,
+    depth: usize,
+) -> Result<bool, ResolutionLimitExceeded> {
     for literal in body {
         match literal {
-            BodyLiteral::Pos(t) => match find_first_with(t, kb, s) {
+            BodyLiteral::Pos(t) => match find_first_with(t, kb, s, depth)? {
                 Some(next) => *s = next,
-                None => return false,
+                None => return Ok(false),
             },
             BodyLiteral::Neg(t) => {
-                if find_first_with(t, kb, s).is_some() {
+                // `?` IS LOAD-BEARING. If the negated goal's own search hit the
+                // depth cap we must propagate, not observe `None`. Reading an
+                // exhausted budget as "not provable" would make `not G` succeed
+                // because we STOPPED LOOKING — turning a resource limit into a
+                // positive claim about the world. Same hazard, and same fix, as
+                // the enumeration resolver's negation branch.
+                if find_first_with(t, kb, s, depth)?.is_some() {
                     // The negated goal is provable — negation-as-failure fails.
-                    return false;
+                    return Ok(false);
                 }
                 // Goal not provable; negation succeeds; substitution unchanged.
             }
         }
     }
-    true
+    Ok(true)
 }
 
 // ---------------------------------------------------------------------------
@@ -1354,6 +1617,31 @@ mod tests {
 
     fn empty_kb() -> KnowledgeBase {
         KnowledgeBase::new()
+    }
+
+    // ---- NUM-7a: per-KB real_precision_bits --------------------------------
+
+    #[test]
+    fn real_precision_bits_defaults_to_256() {
+        assert_eq!(empty_kb().real_precision_bits(), 256);
+    }
+
+    #[test]
+    fn with_real_precision_bits_is_clamped_to_the_bignum_core_budget() {
+        assert_eq!(empty_kb().with_real_precision_bits(0).real_precision_bits(), 1);
+        assert_eq!(
+            empty_kb().with_real_precision_bits(u32::MAX).real_precision_bits(),
+            bignum_core::MAX_PRECISION
+        );
+        assert_eq!(empty_kb().with_real_precision_bits(512).real_precision_bits(), 512);
+    }
+
+    #[test]
+    fn set_real_precision_bits_mutates_an_existing_kb() {
+        let mut kb = empty_kb();
+        assert_eq!(kb.real_precision_bits(), 256);
+        kb.set_real_precision_bits(64);
+        assert_eq!(kb.real_precision_bits(), 64);
     }
 
     #[test]
@@ -1386,6 +1674,67 @@ mod tests {
         kb.add_derived(a2);
         assert_eq!(kb.derived_bindings().len(), 3);
         assert_eq!(kb.derived_for("a").unwrap().value, 9.0);
+    }
+
+    #[test]
+    fn computation_plan_view_only_accepts_the_exact_stored_artifact() {
+        let mut kb = KnowledgeBase::new();
+        let derived = compute::compute("answer", &compute::ComputeExpr::Lit(7.0), &kb)
+            .expect("literal computes");
+        kb.add_derived(derived);
+
+        let stored = &kb.derived_bindings()[0];
+        assert_eq!(
+            kb.computation_id_for(stored),
+            Some(compute::ComputationId(0))
+        );
+        let plan = kb
+            .computation_plan_for(stored)
+            .expect("stored artifact has a plan");
+        assert_eq!(plan.expr, &compute::ComputeExpr::Lit(7.0));
+        assert_eq!(plan.scope.fact_limit, 0);
+        assert_eq!(plan.scope.derived_limit, 0);
+
+        let clone = stored.clone();
+        assert!(kb.computation_id_for(&clone).is_none());
+        assert!(kb.computation_plan_for(&clone).is_none());
+    }
+
+    #[test]
+    fn staged_derived_is_visible_only_during_the_callback_and_can_be_committed() {
+        let mut kb = KnowledgeBase::new();
+        let candidate = compute::compute("candidate", &compute::ComputeExpr::Lit(7.0), &kb)
+            .expect("literal computes");
+
+        let (candidate, (visible, planned)) = kb.with_staged_derived(candidate, |view| {
+            let staged = view.derived_for("candidate").expect("candidate is staged");
+            (
+                staged.value == 7.0,
+                view.computation_plan_for(staged).is_some(),
+            )
+        });
+        assert!(visible);
+        assert!(planned);
+        assert!(kb.derived_for("candidate").is_none());
+        assert!(kb.derived_bindings().is_empty());
+
+        kb.add_derived(candidate);
+        let committed = kb.derived_for("candidate").expect("candidate commits");
+        assert!(kb.computation_plan_for(committed).is_some());
+    }
+
+    #[test]
+    fn staged_derived_is_removed_when_the_callback_unwinds() {
+        let mut kb = KnowledgeBase::new();
+        let candidate = compute::compute("candidate", &compute::ComputeExpr::Lit(7.0), &kb)
+            .expect("literal computes");
+
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            kb.with_staged_derived(candidate, |_view| panic!("deliberate callback failure"));
+        }));
+        assert!(result.is_err());
+        assert!(kb.derived_for("candidate").is_none());
+        assert!(kb.derived_bindings().is_empty());
     }
 
     #[test]

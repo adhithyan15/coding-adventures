@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Redacted debug output and drop-time application-key zeroization for Hue
+  client configuration and credential-bearing HTTP requests.
 - Hue snapshot summaries for compact resource-family, relationship-ref, scene
   action, and state-projection coverage over typed CLIP v2 snapshots, plus
   relationship, scene-state, projectable-surface, and partial-lighting

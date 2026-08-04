@@ -273,6 +273,790 @@ fn end_to_end_typed_twig_arithmetic_and_branches() {
     }
 }
 
+/// AOT00-T1 increment B: a program whose `main` **calls a helper** exercises the
+/// real `__gc_init_stackmaps` at start-up.
+///
+/// `main` has a call → a safepoint record → the injected `__gc_init_stackmaps`
+/// materialises `main`'s `func_start` (an `ADR`), loads its embedded
+/// `pc_offsets`/`slot_counts`/`slots_flat` arrays via `adr`, and calls
+/// `__gc_register_stackmap` — all before `main` runs. If the *structure* of that
+/// codegen were malformed (unbalanced frame, bad ABI marshalling, a data word decoded
+/// as an instruction, an `adr` whose target is executed) the image would fault at
+/// start-up and never return, so a correct exit code proves the registration path
+/// runs in production. (It does NOT by itself prove `func_start` is numerically
+/// correct — the registry only *stores* it — that is pinned by the byte-decoding unit
+/// test `func_start_adr_resolves_to_target_offset` and, end to end, by increment C's
+/// precise-collection differential.)
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_init_registers_and_runs() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    // helper() -> u64 { 7 }   (no calls → no records → not registered)
+    let helper = IIRFunction::new(
+        "helper", vec![], "u64",
+        vec![
+            IIRInstr::new("const", Some("h".into()), vec![Operand::Int(7)], "u64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "u64"),
+        ],
+    );
+    // main() -> u64 { helper() }   (one call → one safepoint record → registered)
+    let main = IIRFunction::new(
+        "main", vec![], "u64",
+        vec![
+            IIRInstr::new("call", Some("r".into()), vec![Operand::Var("helper".into())], "u64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u64"),
+        ],
+    );
+    let mut module = IIRModule::new("gc_init_smoke", "twig");
+    module.add_or_replace(helper);
+    module.add_or_replace(main);
+    module.entry_point = Some("main".into());
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe = dir.path().join("gc_init_smoke");
+    twig_aot::compile_module_to_macos_executable(&module, &exe)
+        .expect("module with GC stack-map registration compiles + links");
+
+    let out = Command::new(&exe).output().expect("launch generated executable");
+    assert_eq!(
+        out.status.code(), Some(7),
+        "expected main→helper()==7 after __gc_init_stackmaps ran; got {:?}, stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// AOT00-T1 increment C — the **GC-stress `live_bytes` differential**: the headline
+/// proof that precise roots are load-bearing in production.
+///
+/// The program allocates one heap object and keeps its address **only in an `i64`
+/// slot** — a non-reference "look-alike" that holds a real heap pointer. Nothing else
+/// references the object, so it is garbage. Then it collects and reports
+/// `__gc_live_bytes` as its exit code:
+///
+/// ```text
+///   main() -> i64:
+///       a  = gc_alloc(64)        ; i64 slot — a heap-address look-alike (only ref)
+///       <collect>                ; gc_collect  (conservative) | gc_collect_precise
+///       lb = gc_live_bytes()
+///       ret lb                   ; exit code = live payload bytes
+/// ```
+///
+/// - **Conservative** (`__gc_collect`) scans the whole stack, sees the look-alike, and
+///   *pins* the object → `live_bytes == 64`.
+/// - **Precise** (`__gc_collect_precise`) walks `main`'s frame through its registered
+///   stack map, which names only *reference* slots — the `i64` look-alike is **not**
+///   among them — so the object is unrooted and reclaimed → `live_bytes == 0`.
+///
+/// The gap (64 → 0) is the whole precise-roots feature made observable: registration
+/// (increment B) fired, `func_start` resolved `main`'s return address to the right map,
+/// and the map correctly excluded the non-reference slot. If any link in that chain
+/// were wrong the two columns would be equal.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_stress_live_bytes_differential() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    // Build `main` for a given collect builtin. `collect_returns` picks the dest shape
+    // the backend requires (a returning builtin needs a dest; a void one must not).
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        let mut body = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            // The allocation's address lives only here, in an i64 (non-ref) slot.
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+        ];
+        body.push(if collect_returns {
+            IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(collect.into())],
+                "i64",
+            )
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        let mut m = IIRModule::new("gc_stress", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, collect_returns: bool| -> i32 {
+        let m = build(collect, collect_returns);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    // Diagnostic: a program that just returns __gc_stackmap_count() — proves the
+    // start-up registration actually ran in the linked image (increment B).
+    {
+        let mut m = IIRModule::new("gc_count", "twig");
+        m.add_or_replace(IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("c".into()),
+                    vec![Operand::Var("gc_stackmap_count".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+            ],
+        ));
+        m.entry_point = Some("main".into());
+        let exe = dir.path().join("gc_count");
+        twig_aot::compile_module_to_macos_executable(&m, &exe).expect("count compiles");
+        let code = Command::new(&exe).output().expect("count runs").status.code().unwrap();
+        eprintln!("DIAG __gc_stackmap_count() = {code}");
+        assert!(code > 0, "registration must have run at start-up (count={code})");
+    }
+
+    let conservative = run("gc_stress_cons", "gc_collect", false);
+    let precise = run("gc_stress_prec", "gc_collect_precise", true);
+
+    // Conservative pins the look-alike-referenced 64-byte object; precise reclaims it.
+    assert_eq!(
+        conservative, 64,
+        "conservative collect must retain the 64-byte look-alike-pinned object \
+         (live_bytes={conservative})",
+    );
+    assert_eq!(
+        precise, 0,
+        "precise collect must reclaim the object reachable only via a non-reference \
+         i64 slot (live_bytes={precise}); conservative kept {conservative}",
+    );
+}
+
+/// **Twig strings are now managed by the collector** (gc-core convergence): a runtime string
+/// block, previously `calloc`'d and leaked, is allocated through `__gc_alloc_kind` (a
+/// no-reference "blob" kind) by `__twig_alloc_bytes`. A leaking `calloc` block was invisible to
+/// the collector and never freed; a gc-core block is **counted in `live_bytes`** and reclaimed
+/// when unreachable.
+///
+/// ```text
+///   main() -> i64:
+///       a = str_const "AB"
+///       b = str_const "CDE"
+///       c = str_concat(a, b)     ; a FRESH gc-managed [len][bytes] block
+///       [gc_collect_precise]     ; optional
+///       lb = gc_live_bytes()
+///       ret lb
+/// ```
+///
+/// Every runtime string block goes through `__twig_alloc_bytes` → gc-core: the two literals
+/// ("AB" = 8+2 = 10 B, "CDE" = 8+3 = 11 B) and the concatenation ("ABCDE" = 8+5 = 13 B), so
+/// `live_bytes == 34`.
+///
+/// - **No collect:** `live_bytes == 34` — all three string blocks are counted by the collector,
+///   proving strings go through gc-core at all (leaking `calloc` blocks would report `0`).
+/// - **Precise collect:** `live_bytes == 13` — the two literals `a`/`b`, **dead** after the
+///   concatenation, are reclaimed (34 → 13, freeing "AB" + "CDE" = 21 B), while the still-live
+///   concatenation `c` is kept (its `str` handle is a reference the precise walk roots). So a
+///   Twig string is genuinely **reclaimed when it dies**, not leaked — the headline of the
+///   gc-core convergence, proven end-to-end through the native path.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_manages_runtime_strings() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+            // A fresh runtime string → __twig_str_concat → __twig_alloc_bytes → __gc_alloc_kind.
+            IIRInstr::new(
+                "call_builtin",
+                Some("c".into()),
+                vec![Operand::Var("str_concat".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                "str",
+            ),
+        ];
+        if let Some(collect) = collect {
+            body.push(IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(collect.into())],
+                "i64",
+            ));
+        }
+        body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        let mut m = IIRModule::new("gc_strings", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let tracked = run("gc_str_tracked", None);
+    let after_precise = run("gc_str_kept", Some("gc_collect_precise"));
+
+    assert_eq!(
+        tracked, 34,
+        "every runtime string block must be a gc-core allocation counted in live_bytes: \
+         \"AB\"(10) + \"CDE\"(11) + \"ABCDE\"(13) = 34; leaking calloc blocks would report 0 \
+         (invisible to the collector). got {tracked}",
+    );
+    assert_eq!(
+        after_precise, 13,
+        "a precise collect must reclaim the two literals dead after the concat (freeing 21 B) and \
+         keep the live concatenation \"ABCDE\"(13); a Twig string is reclaimed when it dies, not \
+         leaked. got live_bytes={after_precise}",
+    );
+}
+
+/// AOT00-T1 — the **complete** precise-roots correctness statement: precise roots must
+/// *keep* a genuine heap reference AND *reclaim* a non-reference look-alike, in one run.
+///
+/// The prior differential proves only the reclaim half (its program keeps no live
+/// object, so precise `live_bytes` is 0). This program holds **both**:
+///
+/// ```text
+///   main() -> i64:
+///       z = dyn_box_int(0)       ; any  — a tagged value to build a cell from
+///       b = dyn_cons(z, z)       ; any  — a REAL heap cons cell → a live reference
+///       a = gc_alloc(64)         ; i64  — a heap-address look-alike (garbage)
+///       <collect>
+///       lb = gc_live_bytes()
+///       ret lb
+/// ```
+///
+/// `b` is an `any`-typed slot, so the stack map *names* it → the cons cell survives a
+/// precise collect. `a` is an `i64` slot, *not* named → its 64-byte object is reclaimed.
+/// So `precise == sizeof(cons cell)` and `conservative == sizeof(cons cell) + 64`: the
+/// map both roots the real reference and excludes the look-alike. A precise result of 0
+/// would mean a live reference was wrongly dropped (a UAF); an equal result would mean
+/// the look-alike was wrongly pinned.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_precise_keeps_ref_reclaims_lookalike() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        let mut body = vec![
+            // A real, live heap reference in an `any` slot: box a tagged int, then
+            // cons it — `dyn_cons` allocates a cell through the GC and returns a
+            // tagged `any` pointer, which the stack map names as a root.
+            IIRInstr::new("const", Some("z0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("z".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("z0".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("b".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("z".into()), Operand::Var("z".into())],
+                "any",
+            ),
+            // A non-reference look-alike (garbage) in an `i64` slot.
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+        ];
+        body.push(if collect_returns {
+            IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var(collect.into())], "i64")
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        let mut m = IIRModule::new("gc_keepref", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, collect_returns: bool| -> i32 {
+        let m = build(collect, collect_returns);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let conservative = run("gc_keepref_cons", "gc_collect", false);
+    let precise = run("gc_keepref_prec", "gc_collect_precise", true);
+
+    // The cons cell (the live `any` reference) must survive the precise collect …
+    assert!(
+        precise > 0,
+        "precise collect must KEEP the live cons cell referenced by an `any` slot \
+         (live_bytes={precise})",
+    );
+    // … and the 64-byte i64 look-alike garbage must be reclaimed by precise but pinned
+    // by conservative — so the two columns differ by exactly the look-alike's size.
+    assert_eq!(
+        conservative - precise,
+        64,
+        "the i64 look-alike (64 bytes) must be reclaimed by precise and pinned by \
+         conservative (conservative={conservative}, precise={precise})",
+    );
+}
+
+/// AOT00-T3 §5 — a native frontend triggers a **compacting** collection end to end.
+///
+/// Reuses the keep-ref program but drives `gc_collect_compacting` (the moving-collector
+/// C-ABI entry, via the `__twig_gc_collect_compacting` alias). The compacting collect is a
+/// strict generalisation of the precise collect: it keeps every live reference and reclaims
+/// every look-alike, then *additionally* relocates the objects it can prove movable.
+///
+/// Today every frontend heap object is allocated **kind 0** (`__dyn_cons` → `__twig_gc_alloc`
+/// → `__gc_alloc`), which the collector traces *conservatively* and therefore **pins** — so
+/// nothing is movable yet and the compacting collect degrades to exactly the precise one.
+/// This test pins that guarantee: `gc_collect_compacting` keeps the live cons cell and
+/// reclaims the i64 look-alike, giving the **identical** `live_bytes` to `gc_collect_precise`
+/// — proving the frontend can invoke a compaction, that it runs safely on a real thread
+/// stack, and that it never drops a live reference or pins a look-alike differently. (A true
+/// address-relocation differential is gated on frontend kind-registration — `__gc_alloc_kind`
+/// with a ref-field map — so an object becomes movable; a separate follow-up.)
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_compacting_matches_precise() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str) -> IIRModule {
+        let body = vec![
+            // A real, live heap reference in an `any` slot (the stack map names it).
+            IIRInstr::new("const", Some("z0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("z".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("z0".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("b".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("z".into()), Operand::Var("z".into())],
+                "any",
+            ),
+            // A non-reference look-alike (garbage) in an `i64` slot.
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+            // The collect under test (both entries return the freed count).
+            IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var(collect.into())], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("lb".into()),
+                vec![Operand::Var("gc_live_bytes".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"),
+        ];
+        let mut m = IIRModule::new("gc_compact", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let precise = run("gc_compact_prec", "gc_collect_precise");
+    let compacting = run("gc_compact_comp", "gc_collect_compacting");
+
+    // The compacting collect keeps the live cons cell (a UAF would show live_bytes == 0)…
+    assert!(
+        compacting > 0,
+        "compacting collect must KEEP the live cons cell (live_bytes={compacting})",
+    );
+    // …and matches the precise collect's live_bytes exactly. The cons cell is now MOVABLE
+    // (a registered kind), so the compacting collect *relocates* it — but `live_bytes` counts
+    // surviving payload bytes, which a move conserves, so the two columns stay equal. (That
+    // the relocation actually happens and its pointers are fixed up is proven by
+    // `end_to_end_gc_compacting_relocates_and_preserves` below.)
+    assert_eq!(
+        compacting, precise,
+        "compaction must conserve live_bytes vs precise: \
+         compacting={compacting}, precise={precise}",
+    );
+}
+
+/// AOT00-T3 — **the real relocation payoff**: a native program triggers a compaction that
+/// *moves* a live heap object, and the program keeps working through the moved reference.
+///
+/// A cons cell is now allocated under a registered kind (`__dyn_cons` → `__gc_alloc_kind`
+/// with the ref-field map `{0, 8}`), so it is **movable**: precise-reachable via its `any`
+/// slot (a stack-map root), a registered kind, and — its fields being immediate boxed ints —
+/// with no conservative in-edge to pin it. So:
+///
+/// ```text
+///   main() -> i64:
+///       v    = dyn_box_int(42)            ; immediate 42
+///       cell = dyn_cons(v, dyn_box_int(7)); a MOVABLE heap cell, held in an `any` slot
+///       _    = gc_collect_compacting()    ; EVACUATES cell → new arena address;
+///                                         ;   the `any` root slot is rewritten in place
+///       car  = dyn_car(cell)              ; reads the NEW location (slot was fixed up)
+///       ret dyn_unbox_int(car)            ; 42
+/// ```
+///
+/// Returning **42** proves the cell relocated *and* every reference to it was fixed up: had
+/// the compacting collect moved the cell without rewriting the `any` root slot, `dyn_car`
+/// would dereference the freed from-space block — reading garbage or faulting, not 42. The
+/// same program under `gc_collect_precise` (non-moving) also returns 42 (the cell stays put),
+/// so the two agree on the *value* while differing on *where the cell lives*.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_compacting_relocates_and_preserves() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str) -> IIRModule {
+        let body = vec![
+            IIRInstr::new("const", Some("k42".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("v".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k42".into())],
+                "any",
+            ),
+            IIRInstr::new("const", Some("k7".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("w".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k7".into())],
+                "any",
+            ),
+            // A MOVABLE cons cell, held live in an `any` slot the stack map names.
+            IIRInstr::new(
+                "call_builtin",
+                Some("cell".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("v".into()), Operand::Var("w".into())],
+                "any",
+            ),
+            // Trigger the collection: under compaction the cell relocates + its root is fixed.
+            IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var(collect.into())], "i64"),
+            // Deref through the (possibly rewritten) reference and unbox → 42.
+            IIRInstr::new(
+                "call_builtin",
+                Some("car".into()),
+                vec![Operand::Var("dyn_car".into()), Operand::Var("cell".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("car".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ];
+        let mut m = IIRModule::new("gc_relocate", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let compacting = run("gc_relocate_comp", "gc_collect_compacting");
+    let precise = run("gc_relocate_prec", "gc_collect_precise");
+
+    assert_eq!(
+        compacting, 42,
+        "car of the RELOCATED cell must be 42 — a wrong value/crash means the move left a \
+         dangling reference (got {compacting})",
+    );
+    assert_eq!(
+        precise, 42,
+        "the same program under a non-moving precise collect must also return 42 (got {precise})",
+    );
+}
+
+/// AOT00-T4 §6 — a native program drives a **bounded-pause incremental** collection end to
+/// end. The three-call cycle (`gc_collect_incremental_start` → `step(budget)` → `finish`) is
+/// invoked from compiled code around a live cons cell held in an `any` slot; the cell must
+/// survive and `car` must still read 42.
+///
+/// ```text
+///   main() -> i64:
+///       v    = dyn_box_int(42)
+///       cell = dyn_cons(v, dyn_box_int(7))     ; live cons in an `any` slot (a precise root)
+///       gc_collect_incremental_start()         ; snapshot roots, shade them grey
+///       _    = gc_collect_incremental_step(1e6) ; one big-budget step completes the mark
+///       _    = gc_collect_incremental_finish()  ; sweep the unreachable
+///       ret dyn_unbox_int(dyn_car(cell))       ; 42 — the live cell was kept
+/// ```
+///
+/// A single large-budget `step` finishes marking in one call, so the program needs no IIR
+/// loop; the mutator does no stores between start and the step, so the write barrier isn't
+/// exercised here (that is the gc-core load-bearing test's job — this proves the *native
+/// wiring* end to end). Returning 42 proves the incremental collect kept the live reference.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_incremental_keeps_live_ref() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    let body = vec![
+        IIRInstr::new("const", Some("k42".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            Some("v".into()),
+            vec![Operand::Var("dyn_box_int".into()), Operand::Var("k42".into())],
+            "any",
+        ),
+        IIRInstr::new("const", Some("k7".into()), vec![Operand::Int(7)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            Some("w".into()),
+            vec![Operand::Var("dyn_box_int".into()), Operand::Var("k7".into())],
+            "any",
+        ),
+        IIRInstr::new(
+            "call_builtin",
+            Some("cell".into()),
+            vec![Operand::Var("dyn_cons".into()), Operand::Var("v".into()), Operand::Var("w".into())],
+            "any",
+        ),
+        // Drive the incremental cycle: start → one big-budget step → finish.
+        IIRInstr::new("call_builtin", None, vec![Operand::Var("gc_collect_incremental_start".into())], "void"),
+        IIRInstr::new("const", Some("budget".into()), vec![Operand::Int(1_000_000)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            Some("done".into()),
+            vec![Operand::Var("gc_collect_incremental_step".into()), Operand::Var("budget".into())],
+            "i64",
+        ),
+        IIRInstr::new(
+            "call_builtin",
+            Some("freed".into()),
+            vec![Operand::Var("gc_collect_incremental_finish".into())],
+            "i64",
+        ),
+        // The live cell must have survived: read its car and unbox → 42.
+        IIRInstr::new(
+            "call_builtin",
+            Some("car".into()),
+            vec![Operand::Var("dyn_car".into()), Operand::Var("cell".into())],
+            "any",
+        ),
+        IIRInstr::new(
+            "call_builtin",
+            Some("r".into()),
+            vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("car".into())],
+            "i64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ];
+    let mut m = IIRModule::new("gc_incremental", "twig");
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+    m.entry_point = Some("main".into());
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe = dir.path().join("gc_incremental");
+    twig_aot::compile_module_to_macos_executable(&m, &exe)
+        .unwrap_or_else(|e| panic!("gc_incremental compiles+links: {e}"));
+    let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("gc_incremental runs: {e}"));
+    let code = out.status.code().unwrap_or_else(|| panic!("exited by signal: {out:?}"));
+    assert_eq!(
+        code, 42,
+        "car of the cons cell must be 42 after a native incremental collect — a wrong \
+         value/crash means the live reference was lost (got {code})",
+    );
+}
+
+/// AOT00-T1 (x86_64 PR-x4 / PR-x5) — precise roots reach through a **self-recursive**
+/// frame, not just the entry frame.
+///
+/// The plain `gc_stress` differential proves precise roots work for `main`'s own frame.
+/// This one proves they work for an *intermediate* frame in a recursion chain — the case
+/// that, on x86-64, is precise only because a self-recursive `call` is now a registered
+/// safepoint (PR-x4). Two functions:
+///
+/// ```text
+///   rec(stop) -> i64:
+///       a = gc_alloc(64)          ; i64 look-alike, one per active frame
+///       if stop != 0 goto base
+///       r = rec(1)                ; SELF-RECURSIVE call — a0 sits in this frame across it
+///       ret r
+///     base:
+///       <collect>                 ; gc_collect | gc_collect_precise  (fires here)
+///       ret gc_live_bytes()
+///   main() -> i64: ret rec(0)
+/// ```
+///
+/// `main → rec(0) → rec(1)`. The collect fires inside `rec(1)`; when the collector walks
+/// out it passes through **`rec(0)`**, an intermediate self-recursive frame holding a
+/// 64-byte look-alike (`a0`) in an `i64` (non-reference) slot.
+///
+/// - **Conservative** scans every frame's stack, sees both look-alikes (`a0`, `a1`), and
+///   pins both objects → `live_bytes == 128`.
+/// - **Precise** walks each frame through its registered map. The return address live on
+///   `rec(0)`'s frame at collect time is the **self-recursive-call site**, so that frame is
+///   precise only if that PC is a mapped safepoint (aarch64 has always mapped it — it
+///   post-scans `BL`; x86-64 does so as of PR-x4). The `i64` slots are not references, so
+///   both objects are unrooted and reclaimed → `live_bytes == 0`.
+///
+/// A `precise` of `64` instead of `0` would mean the intermediate recursive frame fell
+/// back to a conservative scan — exactly the gap PR-x4 closes on x86-64. Here on aarch64
+/// it validates the program shape + GC semantics on a locally-runnable target; the
+/// identical module runs on the x86-64 CI runner (`linux_x86_64_smoke`).
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_recursive_frame_live_bytes_differential() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        // rec(stop: i64) -> i64
+        let mut rec_body = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            // The allocation's address lives only in this i64 (non-ref) slot.
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+            // stop != 0 → base case; else fall through to the recursive path.
+            IIRInstr::new(
+                "jmp_if_true",
+                None,
+                vec![Operand::Var("stop".into()), Operand::Var("base".into())],
+                "i64",
+            ),
+            // Recursive path (stop == 0): recurse exactly once with stop = 1.
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("rec".into()), Operand::Var("one".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            // Base path (stop != 0): collect, then return live payload bytes.
+            IIRInstr::new("label", None, vec![Operand::Var("base".into())], "i64"),
+        ];
+        rec_body.push(if collect_returns {
+            IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(collect.into())],
+                "i64",
+            )
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        rec_body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        rec_body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        // main() -> i64  { ret rec(0) }
+        let main_body = vec![
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("rec".into()), Operand::Var("z".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ];
+
+        let mut m = IIRModule::new("gc_recur", "twig");
+        m.add_or_replace(IIRFunction::new(
+            "rec",
+            vec![("stop".to_string(), "i64".to_string())],
+            "i64",
+            rec_body,
+        ));
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", main_body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, ret: bool| -> i32 {
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&build(collect, ret), &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let conservative = run("gc_recur_cons", "gc_collect", false);
+    let precise = run("gc_recur_prec", "gc_collect_precise", true);
+
+    assert_eq!(
+        conservative, 128,
+        "conservative must pin both recursive frames' 64-byte look-alikes (got {conservative})",
+    );
+    assert_eq!(
+        precise, 0,
+        "precise must reclaim BOTH look-alikes, including a0 in the intermediate \
+         self-recursive frame — which requires that frame be precisely mapped at the \
+         recursive-call return address (got {precise}, conservative={conservative})",
+    );
+}
+
 /// Sanity check that the AArch64Backend trait wiring goes end-to-end
 /// for a hand-built CIR-shaped function.
 #[test]
@@ -304,4 +1088,355 @@ fn backend_pipeline_produces_bytes_for_simple_function() {
     let bytes = AArch64Backend.compile_function(&ctx, &cir).expect("ok");
     assert!(!bytes.is_empty());
     assert_eq!(bytes.len() % 4, 0, "ARM64 instructions are 4-byte aligned");
+}
+
+/// AOT00 closures-under-the-GC capstone — a **native closure's captured
+/// environment survives a garbage collection and the closure remains callable**.
+///
+/// This ties the two halves of the Twig-native-GC directive together. Native
+/// closures already compile via `iir-builtin-lowering::lower_closures_to_heap`
+/// (E6d-7a): `alloc_closure(fn, cap0, …)` lowers to a cons chain
+/// `(box(idx) . (cap0 . … . nil))` built with `__dyn_cons` — the *same*
+/// GC-managed, kind-`{0,8}`, precise-and-movable cons cell every list uses — and
+/// `call_closure` lowers to a `call` into a synthesized `__dyn_call_closure`
+/// dispatcher that `car`/`cdr`-walks the captured environment and directly calls
+/// the statically-known body. So a closure's captured values already live *in the
+/// GC heap*. What this test proves end to end on real hardware is that a collection
+/// occurring **while a closure is live** neither frees nor corrupts that captured
+/// environment: the closure is still invocable afterwards and returns the value it
+/// captured *before* the collect.
+///
+/// ```text
+///   __cap_id(x, y) -> any: ret x        ; captures x, ignores its arg, returns x
+///
+///   main() -> i64:
+///       cap = dyn_box_int(41)           ; the captured value, boxed → `any`
+///       clo = alloc_closure(__cap_id, cap)   ; a closure capturing 41
+///       a   = gc_alloc(64)              ; an unrooted i64 look-alike (reclaimable)
+///       <collect>                       ; runs while `clo` is a live precise root
+///       arg = dyn_box_int(0)            ; the (ignored) call argument
+///       r   = call_closure(clo, arg)    ; __cap_id(41, 0) = 41 — reads the CAPTURE
+///       ret dyn_to_exit_code(r)         ; 41
+/// ```
+///
+/// After `lower_closures_to_heap`, `clo` is a `ref<any>` cons chain held live
+/// across the collect call, so the precise stack map names it as a root and the
+/// whole `(idx . (cap . nil))` structure — including the captured `41` — must
+/// survive. Returning **41** proves it did *and* that the dispatcher still resolves
+/// the captured value at its (possibly relocated) address. A wrong value or a crash
+/// would mean the collect dropped or mangled the live captured environment — a
+/// closure-specific use-after-free that the bare-cons-cell survival tests above do
+/// not exercise (they never build or *call* a closure). Run under both the
+/// non-moving precise collect and the moving compacting collect; a no-collect
+/// baseline pins the expected value independently of the GC.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_closure_captured_env_survives_collect() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    // The lambda body: two params in lambda-lifting order (capture first, then the
+    // call arg); returns the captured param, ignoring the argument. Kept
+    // arithmetic-free so the test isolates *capture survival*, not dynamic `+`.
+    fn cap_id() -> IIRFunction {
+        IIRFunction::new(
+            "__cap_id",
+            vec![("x".into(), "any".into()), ("y".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")],
+        )
+    }
+
+    // `collect`: Some(builtin) inserts that collection while the closure is live;
+    // None is the no-collect baseline.
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = vec![
+            // The captured value 41, boxed into an `any`.
+            IIRInstr::new("const", Some("k41".into()), vec![Operand::Int(41)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("cap".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k41".into())],
+                "any",
+            ),
+            // A closure capturing 41. `lower_closures_to_heap` turns this into a
+            // cons chain `(box(idx) . (cap . nil))` built with `__dyn_cons`.
+            IIRInstr::new(
+                "alloc_closure",
+                Some("clo".into()),
+                vec![Operand::Str("__cap_id".into()), Operand::Var("cap".into())],
+                "closure",
+            ),
+            // An unrooted i64 look-alike: garbage a precise/compacting collect frees.
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("garbage".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+        ];
+        // Collect while `clo` (and, through it, the captured 41) is live.
+        if let Some(c) = collect {
+            body.push(IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(c.into())],
+                "i64",
+            ));
+        }
+        body.extend([
+            // Call the closure. The (ignored) argument is a boxed 0.
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("arg".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("z".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("clo".into()), Operand::Var("arg".into())],
+                "any",
+            ),
+            // Coerce the polymorphic closure result to the process exit code.
+            IIRInstr::new(
+                "call_builtin",
+                Some("e".into()),
+                vec![Operand::Var("dyn_to_exit_code".into()), Operand::Var("r".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("e".into())], "i64"),
+        ]);
+
+        let mut m = IIRModule::new("gc_closure_capture", "twig");
+        m.add_or_replace(cap_id());
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    // Baseline: no collection — the closure round-trips its captured 41.
+    let baseline = run("gc_clo_base", None);
+    assert_eq!(baseline, 41, "baseline: a native closure must return its captured value (got {baseline})");
+
+    // Precise (non-moving) collect while the closure is live: the captured
+    // environment must survive and the closure must still return 41.
+    let precise = run("gc_clo_prec", Some("gc_collect_precise"));
+    assert_eq!(
+        precise, 41,
+        "a precise collect while the closure is live must KEEP its captured environment \
+         — the closure still returns 41 (got {precise}); a wrong value/crash is a \
+         closure-capture use-after-free",
+    );
+
+    // Compacting (moving) collect: the closure's cons cells may relocate; every
+    // reference — including the dispatcher's walk of the captured env — must be
+    // fixed up, so the closure still returns 41.
+    let compacting = run("gc_clo_comp", Some("gc_collect_compacting"));
+    assert_eq!(
+        compacting, 41,
+        "a compacting collect must relocate the closure's captured environment and fix up \
+         every reference — the closure still returns 41 (got {compacting})",
+    );
+}
+
+/// AOT00 records-under-the-GC capstone — a Twig **record** cell is now a precise,
+/// **movable** heap object: its reference fields are traced, and a compacting
+/// collect relocates it *and the child it holds*, fixing up every pointer.
+///
+/// A Twig record `(Point f0 f1)` erases (via `emit_record_def`) to the generic
+/// `alloc` + `field_store` ops — a two-word `ref<LispyPair>` cell of boxed `any`
+/// fields. The native backends now lower that `alloc` to `__twig_gc_alloc_pair`,
+/// which allocates under the MOVABLE `{0,8}` pair kind (both words are reference
+/// slots), instead of the kind-0 conservative `__twig_gc_alloc` (aarch64) /
+/// no-reference-blob `__twig_alloc_bytes` (x86_64, which since twig-aot 0.48.0
+/// would have left the fields **untraced**). So a record is now traced + relocated
+/// exactly like a cons cell.
+///
+/// ```text
+///   main() -> i64:
+///       v42   = dyn_box_int(42)
+///       child = dyn_cons(v42, nil)      ; a heap child; its car is boxed 42
+///       rec   = alloc  (ref<LispyPair>) ; a MOVABLE record cell
+///       field_store rec, 0, child       ; field 0 = the heap child (a reference)
+///       field_store rec, 1, nil
+///       <compacting collect>            ; EVACUATES rec AND child to the arena;
+///                                       ;   rec's root slot and rec's field 0 are
+///                                       ;   both rewritten to the new addresses
+///       c0    = field_load rec, 0       ; the child, at its NEW location
+///       ret dyn_unbox_int(dyn_car(c0))  ; 42
+/// ```
+///
+/// Returning **42** proves three things at once: the record's field 0 was **traced**
+/// (a no-reference-blob record would let `child` be reclaimed → garbage/crash), the
+/// record and its child were **relocated**, and the record's field 0 was **fixed up**
+/// to the child's new address (the `alloc` cell is a *raw*, untagged pointer — a
+/// different root-fixup path than the tagged cons-cell tests above exercise). The
+/// same program under the non-moving precise collect (and a no-collect baseline)
+/// also returns 42.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_record_field_traced_and_relocated() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn bx(dest: &str, k: i64, kconst: &str) -> Vec<IIRInstr> {
+        vec![
+            IIRInstr::new("const", Some(kconst.into()), vec![Operand::Int(k)], "i64"),
+            IIRInstr::new("call_builtin", Some(dest.into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var(kconst.into())], "any"),
+        ]
+    }
+
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = bx("v42", 42, "k42");
+        body.extend([
+            // A heap child whose car is boxed 42, held (once its own slot dies)
+            // only through the record's field 0.
+            IIRInstr::new("const", Some("nil".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
+            IIRInstr::new("call_builtin", Some("child".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
+            // The record cell (generic `alloc` → movable `{0,8}` pair) + its fields.
+            {
+                let mut a = IIRInstr::new("alloc", Some("rec".into()), vec![], "ref<LispyPair>");
+                a.may_alloc = true;
+                a
+            },
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("rec".into()), Operand::Int(0), Operand::Var("child".into())], "void"),
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("rec".into()), Operand::Int(1), Operand::Var("nil".into())], "void"),
+        ]);
+        if let Some(c) = collect {
+            body.push(IIRInstr::new("call_builtin", Some("freed".into()),
+                vec![Operand::Var(c.into())], "i64"));
+        }
+        body.extend([
+            // Read the child back THROUGH the (possibly relocated + fixed-up) record.
+            IIRInstr::new("field_load", Some("c0".into()),
+                vec![Operand::Var("rec".into()), Operand::Int(0)], "any"),
+            IIRInstr::new("call_builtin", Some("car".into()),
+                vec![Operand::Var("dyn_car".into()), Operand::Var("c0".into())], "any"),
+            IIRInstr::new("call_builtin", Some("r".into()),
+                vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("car".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ]);
+
+        let mut m = IIRModule::new("gc_record", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    assert_eq!(run("gc_rec_base", None), 42, "baseline: record round-trips its child's value");
+    assert_eq!(
+        run("gc_rec_prec", Some("gc_collect_precise")), 42,
+        "precise collect must keep the record + its traced child",
+    );
+    assert_eq!(
+        run("gc_rec_comp", Some("gc_collect_compacting")), 42,
+        "compacting collect must relocate the record + child and fix up field 0 (a raw-pointer \
+         root); a wrong value/crash means the record's reference field was untraced or mis-fixed",
+    );
+}
+
+/// AOT00 records/unions — a **raw non-reference word** in a `{0,8}` movable cell is
+/// left untouched by compaction, even when its bit pattern *looks* heap-tagged.
+///
+/// `emit_union_def` stores a synthesized integer **discriminant** in word 0 of the
+/// same generic-`alloc` `{0,8}` cell records use — a word that is NOT one of the
+/// constructor's boxed `any` params. This test pins the guarantee that the `{0,8}`
+/// precise kind is nonetheless sound for it: gc-core traces + relocates a ref slot
+/// *only* when its value resolves to a real live block (`find_header`) / is a key in
+/// the compaction forwarding map. A small integer never is, so it is never followed
+/// or rewritten — no matter its low bits.
+///
+/// The discriminant here is **23** = `0b10111`: its low three bits are `0b111`, the
+/// exact `TAG_HEAP` pattern, and its stripped value (`23 & !7 == 16`) is the kind of
+/// tiny address a naive tag-only tracer might try to relocate. Word 1 holds a real
+/// heap child, so the cell genuinely relocates under compaction. Returning **23**
+/// proves the raw discriminant survived verbatim (a mis-relocation would rewrite it
+/// to a moved address); the live child in word 1 forces the relocation the
+/// discriminant must survive.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_raw_discriminant_word_not_relocated() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = vec![
+            // Word 1: a real heap child, so the cell has a genuine reference to fix up
+            // → it actually relocates under compaction.
+            IIRInstr::new("const", Some("k42".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("call_builtin", Some("v42".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k42".into())], "any"),
+            IIRInstr::new("const", Some("nil".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
+            IIRInstr::new("call_builtin", Some("child".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
+            // The {0,8} cell.
+            {
+                let mut a = IIRInstr::new("alloc", Some("cell".into()), vec![], "ref<LispyPair>");
+                a.may_alloc = true;
+                a
+            },
+            // Word 0: a RAW discriminant 23 (0b10111) — low bits 0b111 look heap-tagged.
+            IIRInstr::new("const", Some("tag".into()), vec![Operand::Int(23)], "i64"),
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("cell".into()), Operand::Int(0), Operand::Var("tag".into())], "void"),
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("cell".into()), Operand::Int(1), Operand::Var("child".into())], "void"),
+        ];
+        if let Some(c) = collect {
+            body.push(IIRInstr::new("call_builtin", Some("freed".into()),
+                vec![Operand::Var(c.into())], "i64"));
+        }
+        body.extend([
+            // Read the raw discriminant back — must be 23, verbatim.
+            IIRInstr::new("field_load", Some("got".into()),
+                vec![Operand::Var("cell".into()), Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+        ]);
+        let mut m = IIRModule::new("gc_discriminant", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    assert_eq!(run("gc_disc_base", None), 23, "baseline: raw discriminant round-trips");
+    assert_eq!(run("gc_disc_prec", Some("gc_collect_precise")), 23, "precise: discriminant untouched");
+    assert_eq!(
+        run("gc_disc_comp", Some("gc_collect_compacting")), 23,
+        "compacting: the raw `0b111`-low-bits discriminant must NOT be relocated even though the \
+         cell (via its live word-1 child) moves — provenance filtering leaves non-block words alone",
+    );
 }

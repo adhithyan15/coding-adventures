@@ -26048,9 +26048,9 @@ pub fn parse_berkeley_syntax(text: &str) -> BerkeleySyntaxDeck {
         if trimmed.is_empty() {
             continue;
         }
-        if trimmed.starts_with('*') {
+        if let Some(after_star) = trimmed.strip_prefix('*') {
             if !saw_content && title.is_none() {
-                let candidate = trimmed[1..].trim();
+                let candidate = after_star.trim();
                 if !candidate.is_empty() {
                     title = Some(candidate.to_string());
                 }

@@ -1,0 +1,65 @@
+% ============================================================================
+% pressure-conversions — pressure-unit → pascal factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `energy-conversions.adj` / `time-conversions.adj`: a native
+% tabular relation ingested VERBATIM from a published NIST conversion table. Each
+% row states the factor converting one pressure (or stress) unit to the SI unit of
+% pressure, the pascal (Pa = N/m²):
+%
+%     ? pressure_to_pascals(atmosphere_standard, $Pa)   % 101325   (the standard atmosphere)
+%     ? pressure_to_pascals(bar, $Pa)                   % 100000   (a bar)
+%
+% Why a `table` and not several hand-written `relate` clauses: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; every
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors
+% for units listed alphabetically"), and the whole table is defended by one
+% provenance envelope rather than repeating `source`/`locator`/`trust` on every
+% row. Each `row` lowers to a ground relation `pressure_to_pascals(unit, pascals)`,
+% so the exact lookup above is the ordinary SLD binding query — the engine returns
+% the factor WITH this table's citation as its proof, on the CPU, with zero model
+% calls. A looked-up factor is a number, so it can feed a `let`/`formula`
+% downstream (e.g. multiply a pressure quantity by it) through the existing slot path.
+%
+% HONESTY NOTE (like energy-conversions, these are EXACT defined factors, not
+% rounded ones): NIST SP 811 B.9 prints these six "Pressure or stress" factors in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed
+% here as the plain decimal number of pascals each unit names:
+%
+%     atmosphere, standard (atm)                  1.013 25 E+05   →  101325
+%     bar                                         1.0     E+05   →  100000
+%     millibar (mbar)                             1.0     E+02   →  100
+%     dyne per square centimeter (dyn/cm²)        1.0     E-01   →  0.1
+%     kilogram-force per square centimeter        9.806 65 E+04   →  98066.5
+%     kilogram-force per square meter (kgf/m²)    9.806 65 E+00   →  9.80665
+%
+% These six are exact: the standard atmosphere IS defined as exactly 101325 Pa, a
+% bar as exactly 100000 Pa, and the kilogram-force factors derive from the exact
+% standard gravity 9.80665 m/s². (NIST also lists the technical atmosphere, at =
+% kgf/cm² = 9.80665 E+04 Pa — the SAME value as the kilogram_force_per_square_centimeter
+% row here — so it is not repeated under a second name.) Deliberately OMITTED: the
+% torr and the conventional millimeter of mercury (both 1.333224 E+02, rounded
+% seven-figure measured factors, NOT boldface) and the pound-force per square inch
+% / psi (6.894757 E+03, likewise rounded) — none is a single EXACT defined factor,
+% so a `? pressure_to_pascals(torr, $Pa)` (etc.) ABSTAINS rather than committing to
+% a rounded value. The only claim this table makes is "these are the exact factors
+% NIST SP 811 B.9 prints" — which is exactly what a byte-check against the cited
+% table verifies. `trust authoritative` — a primary, re-fetchable standards
+% reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — every factor
+% is a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table pressure_to_pascals {
+    columns unit, pascals
+
+    row (atmosphere_standard, 101325)
+    row (bar, 100000)
+    row (millibar, 100)
+    row (dyne_per_square_centimeter, 0.1)
+    row (kilogram_force_per_square_centimeter, 98066.5)
+    row (kilogram_force_per_square_meter, 9.80665)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

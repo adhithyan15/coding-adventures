@@ -1,0 +1,33 @@
+[package]
+name = "j-to-semantic-ir"
+version = "0.1.2"
+edition = "2021"
+description = "J CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-6e."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-j-parser = { path = "../j-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly. Note this
+# crate deliberately does NOT depend on `coding-adventures-j-runtime` --
+# lowering only needs the parse tree shape (`j-parser`), not the tree-walking
+# evaluator, mirroring `apl-to-semantic-ir`'s identical choice.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# See `apl-to-semantic-ir`'s identical dev-dependency. `semantic-ir-to-
+# javascript` now implements real codegen for the SIR22 addendum array
+# domain's `Reduce`/`Scan`/etc. (this crate's `+/` lowers to `Reduce`), so
+# `tests/test_validator.rs`'s `Backend::check_module`/`compile()` calls now
+# exercise real acceptance, not just the capability-rejection path they
+# originally verified.
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# `tests/oracle.rs`'s ground truth: the same tree-walking interpreter this
+# frontend's own CST comes from (HML01 §7's oracle/golden testing), mirroring
+# `apl-to-semantic-ir`'s identical use of `coding-adventures-apl-runtime` as
+# its own oracle ground truth. Note the OTHER, non-dev `[dependencies]`
+# section above still deliberately does NOT depend on this crate -- lowering
+# itself only needs the parse-tree shape, never the evaluator; only this test
+# file needs it, for comparison purposes only.
+coding-adventures-j-runtime = { path = "../j-runtime" }

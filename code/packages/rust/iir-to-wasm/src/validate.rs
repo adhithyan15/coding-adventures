@@ -80,6 +80,10 @@ pub fn is_supported_ref_type(type_hint: &str) -> bool {
 // These opcodes are accepted when paired with an appropriate type hint.
 // They lower to WasmGC instructions (`struct.new`, `struct.get`, etc.).
 
+// Scaffolding: documents the WasmGC opcode set this validator is being built out
+// to accept. Not yet referenced by the validation tables, kept for the upcoming
+// WasmGC path.
+#[allow(dead_code)]
 const GC_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
 
 // ---------------------------------------------------------------------------
@@ -285,8 +289,8 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // direct string producers (`str_const`, `str_concat`, `str_slice`). `str_len`,
             // `str_index`, `str_eq`, and `str_cmp` produce integers, not string values.
             // E4-dyn (E4d-3b): a `str` value is an i32 **handle**, so it may also
-            // flow through a `call` (a `str` return / call result) and a `ret` (a
-            // `str`-returning function) — both carry the handle as an i32.
+            // flow through calls, returns, and typed module globals — all carry
+            // the handle as an i32.
             // Richer dynamic string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
@@ -307,11 +311,12 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                     //   `array<str>` block (see `wasm_array_elem` in lower.rs).
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret"
                         | "call_builtin" | "mov" | "array_get" | "array_set"
+                        | "global_load" | "global_store"
                 )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const + str_concat + str_slice + str_len + str_index + str_eq + str_cmp + print_str literal output is supported in this WASM backend",
+                     unsupported string operation in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -465,7 +470,9 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         ],
                         "i64" | "i32",
                     ) => {
-                        // Accepted — lower.rs materialises literal ordering.
+                        // Accepted — lower.rs folds a literal ordering to a
+                        // constant, or emits a `$__str_cmp` call for runtime
+                        // operands (the two Vars may be runtime string handles).
                     }
                     _ => {
                         errors.push(format!(
@@ -878,6 +885,8 @@ mod tests {
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
     }
 
+    // 3.14 is arbitrary float test input; not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_type_accepted() {
         // Float types are valid WASM — unlike the BEAM backend, we do NOT

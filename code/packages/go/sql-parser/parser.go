@@ -49,89 +49,41 @@
 package sqlparser
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	sqllexer "github.com/adhithyan15/coding-adventures/code/packages/go/sql-lexer"
 )
 
-// getGrammarPath computes the absolute path to the sql.grammar file.
-//
-// This uses runtime.Caller(0) to locate the source file at compile/run time
-// and navigates up 3 levels to the grammars/ directory.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    sql.grammar      <-- this is what we want
-//	  packages/
-//	    go/
-//	      sql-parser/
-//	        parser.go    <-- we are here (3 levels below code/)
-func getGrammarPath() string {
-	// runtime.Caller(0) returns the file path of this source file at runtime.
-	_, filename, _, _ := runtime.Caller(0)
-
-	// Get the directory containing this file
-	parent := filepath.Dir(filename)
-
-	// Navigate up 3 levels to code/, then down to grammars/
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	return filepath.Join(root, "sql", "sql.grammar")
-}
-
-// CreateSQLParser tokenizes the SQL text using the SQL lexer, then loads the
-// SQL parser grammar and returns a configured GrammarParser ready to produce
-// an AST.
+// CreateSQLParser tokenizes the SQL text using the SQL lexer, then returns a
+// GrammarParser configured with the SQL parser grammar, ready to produce an AST.
 //
 // The two-step process:
 //  1. TokenizeSQL(source) -- produces a token stream with case-normalized keywords
-//  2. Load sql.grammar and create a GrammarParser from the tokens
+//  2. Create a GrammarParser from the tokens using the embedded parser grammar
+//
+// The parser grammar is embedded at compile time as native Go in grammar_data.go
+// (ParserGrammarData); nothing is read from disk at run time, so the parser needs
+// no filesystem capability and works when built standalone.
 //
 // The GrammarParser uses recursive descent with packrat memoization. Each
 // grammar rule becomes a parsing function. The memoization cache ensures that
 // no (rule, position) pair is computed more than once, giving O(n) parsing
 // for most practical inputs.
 //
-// Returns an error if lexing fails or the grammar file cannot be read/parsed.
+// Returns an error only when lexing fails; it is otherwise nil.
 func CreateSQLParser(source string) (*parser.GrammarParser, error) {
 	// Step 1: Tokenize the source using the SQL lexer.
-	// Case-insensitive keyword mode is active (from `# @case_insensitive true`
-	// in sql.tokens), so SELECT/select/Select all produce KEYWORD("SELECT").
+	// Case-insensitive keyword mode is active (the embedded token grammar was
+	// built with CaseInsensitive=true), so SELECT/select/Select all produce
+	// KEYWORD("SELECT").
 	tokens, err := sqllexer.TokenizeSQL(source)
 	if err != nil {
 		return nil, err
 	}
 
-	// Steps 2–4 run inside a capability-scoped Operation so that all file I/O
-	// is audited against the declared allowlist in required_capabilities.json.
-	return StartNew[*parser.GrammarParser]("sqlparser.CreateSQLParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the parser grammar file.
-			// This file defines the SQL syntax rules in EBNF notation, including
-			// statement types, expression precedence hierarchy, and DDL/DML forms.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar file into a structured ParserGrammar object.
-			// This extracts all rules (select_stmt, where_clause, expr, etc.) and
-			// builds a rule lookup table for the recursive descent parser.
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the grammar-driven parser.
-			// The first rule in sql.grammar ("program") becomes the entry point.
-			// The packrat memoization cache is initialized here.
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	// Step 2: Create the grammar-driven parser from the embedded parser grammar.
+	// The first rule in the grammar ("program") becomes the entry point, and the
+	// packrat memoization cache is initialized here.
+	return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 }
 
 // ParseSQL is a convenience function that parses SQL text into an AST in a

@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-agent-manifest && cargo clippy -p chief-of-staff-agent-manifest --all-targets -- -D warnings

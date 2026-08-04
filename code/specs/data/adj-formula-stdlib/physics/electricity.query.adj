@@ -1,0 +1,27 @@
+% ============================================================================
+% electricity.query.adj — worked examples over the physics electricity library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a circuits
+% question: it states NO arithmetic and NO law — it only `import`s the grounded
+% library, `observe`s the electrical quantities it decomposed from the prompt
+% (each a byte-provenanced span, elided here), and asks the engine to APPLY the
+% cited law. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the law's source/locator/trust.
+%
+% The two questions COMPOSE: Ohm's law gives the voltage across the resistor,
+% which is exactly the voltage the power law then multiplies by the current.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electricity.query.adj
+% ============================================================================
+
+import "electricity.adj"
+
+% A 2 A current through a 3 Ω resistor: voltage = 2 * 3.
+observe current(2)
+observe resistance(3)
+? voltage(current, resistance)     % expect 6   (Ohm's law: V = I·R)
+
+% That 6 V across the resistor, carrying 2 A: power = 6 * 2.
+observe voltage(6)
+? power(voltage, current)          % expect 12  (electric power: P = V·I)

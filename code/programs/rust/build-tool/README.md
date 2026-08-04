@@ -4,7 +4,7 @@ A **Rust port** of the Go build tool for the coding-adventures monorepo. It disc
 
 ## What it does
 
-This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel.
+This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Discovery uses the repository's canonical language registry, and programs retain a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
 
 ## Building
 
@@ -52,7 +52,7 @@ The release binary is at `target/release/build-tool` (or `build-tool.exe` on Win
 | `--force` | false | Rebuild everything regardless of cache |
 | `--dry-run` | false | Show what would build without executing |
 | `--jobs` | CPU count | Maximum parallel build jobs |
-| `--language` | all | Filter to: python, ruby, go, rust, or all |
+| `--language` | all | Filter to one canonical discovery language or use `all` |
 | `--cache-file` | .build-cache.json | Path to the build cache file |
 
 ## Architecture
@@ -61,7 +61,7 @@ The tool is organized into eight modules, each responsible for one aspect of the
 
 1. **graph** — Directed graph data structure with topological sort and affected-node queries
 2. **discovery** — Recursively walks for `BUILD` files to find packages
-3. **resolver** — Parses pyproject.toml, .gemspec, go.mod, Cargo.toml for dependencies
+3. **resolver** — Parses supported package metadata, including strict UTF-8 Lua rockspecs, into dependency edges
 4. **hasher** — SHA256 hashing for change detection
 5. **cache** — JSON-based build cache (read/write with atomic saves)
 6. **executor** — Parallel execution with Rayon thread pool
@@ -98,6 +98,42 @@ This is equivalent to the Go implementation's goroutine + semaphore pattern, but
 ```bash
 cargo test -- --nocapture
 ```
+
+## Discovery and metadata diagnostics
+
+Discovery rejects any residual qualified-name collision before dependency
+resolution. The diagnostic contains the shared identity and sorted
+repository-relative paths without exposing the checkout root:
+
+```text
+DUPLICATE_PACKAGE_IDENTITY: package=unknown/demo paths=code/packages/alpha/demo,code/packages/beta/demo
+```
+
+The shared `discovery/language-registry` fixture covers the canonical buckets
+that were previously omitted, while `discovery/duplicate-identity` verifies
+the stable CLI exit-code-2 failure path.
+
+Lua `.rockspec` metadata is decoded as strict UTF-8 before dependency parsing.
+Invalid bytes stop resolution, return exit code `2`, and emit a stable diagnostic
+without the checkout root:
+
+```text
+METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec encoding=UTF-8
+```
+
+The resolver and real CLI tests materialize the language-neutral
+`resolution/lua-utf8` and `resolution/lua-invalid-utf8` fixtures.
+
+A resolved dependency self-edge also fails closed with exit code `2` instead
+of reaching the embedded graph assertion:
+
+```text
+DEPENDENCY_SELF_EDGE: package=elixir/pkg manifest=code/packages/elixir/pkg/mix.exs dependency=elixir/pkg
+```
+
+The shared `resolution/elixir-program-package` fixture verifies that the
+`grammar_tools` package and program remain distinct, while
+`resolution/elixir-self-edge` verifies the stable error path.
 
 ## How it fits in the stack
 

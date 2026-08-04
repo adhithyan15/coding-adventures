@@ -427,9 +427,13 @@ mod tests {
 
     #[test]
     fn moderate_nesting_still_evaluates() {
-        // The cap is far above realistic input: a modestly nested expression
-        // well under the limit still evaluates normally.
-        let depth = 40;
+        // A modestly nested expression comfortably under the parser's
+        // recursion-depth guard still evaluates normally. The guard
+        // (macsyma-parser's `MAX_RULE_DEPTH`) trips at ~14 real `(...)`
+        // grouping levels because each source level costs ~13 named-rule
+        // calls, so we stay well beneath that with 10 levels of grouping —
+        // far more than any hand-written MACSYMA expression needs.
+        let depth = 10;
         let src = format!("{}1 + 2{};", "(".repeat(depth), ")".repeat(depth));
         let out = eval(&src).unwrap();
         assert!(out.contains('3'), "((…1 + 2…)) should fold to 3: {out:?}");

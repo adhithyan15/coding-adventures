@@ -1,5 +1,256 @@
 # Changelog — vm-core
 
+## [0.22.0] — 2026-08-03 (Twig GC completion: `alloc`/`field_store`/`field_load`/`is_null` reroute onto the real heap)
+
+A harder verification pass ("it cannot be leaking, we cannot assume
+something is working") found that 0.20.0/0.21.x's GC wiring, while real,
+was never actually exercised: `gc_alloc`/`gc_field_load`/`gc_field_store`
+were wired to opcode strings (`"gc_alloc"` etc.) that nothing in
+`twig-ir-compiler`/`iir-builtin-lowering` ever emits. Every real Twig
+cons/record/union/closure cell still went through `alloc`/`field_store`/
+`field_load`, which allocate on `ctx.arrays` — a plain `Vec<Vec<Value>>` bump
+arena, never collected. The additive 0.20.0 landing closed nothing for a
+real Twig program.
+
+- **`"alloc"`/`"field_store"`/`"field_load"` are now direct dispatch-table
+  aliases for `handle_gc_alloc`/`handle_gc_field_store`/`handle_gc_field_load`.**
+  Every `alloc` emission site in the whole pipeline
+  (`twig-ir-compiler::compiler`, `iir-builtin-lowering::heap`) already
+  passes zero operands with `type_hint = "ref<LispyPair>"` — always the
+  16-byte/2-word default both allocators already agreed on — so this is a
+  like-for-like swap, no adapter needed. The old, never-collected
+  `handle_alloc`/`ctx.arrays`-backed implementation is deleted; only
+  `alloc_array`/`array_get`/`array_set` (E5 arrays — a separate, still
+  uncollected heap, not an oversight) remain on `ctx.arrays`.
+- **A 3-bit tag in the raw word disambiguates `Int` from `HeapRef` in a
+  dynamically-typed field** — the one real blocker found during
+  implementation. A cons cell's car/cdr is typed `ref<any>` (either field
+  can hold a nested pair or a plain integer depending on runtime data, and
+  both accessors use the same generic hint), so `gc_field_load`'s previous
+  `type_hint`-based decode (`"ref..." → HeapRef, else → Int`) silently
+  misread every plain integer stored in such a field as a bogus `HeapRef` —
+  caught by `vm-core/tests/heap_objects.rs`'s existing round-trip tests
+  failing immediately after the reroute. Fixed by tagging the word itself at
+  store time (`HeapRef` → low bits `111`, address masked; `Int` → low bits
+  `000`, value shifted left 3) and decoding purely from those bits at load
+  time, ignoring `type_hint` — mirrors `iir-builtin-lowering::dyn_repr`'s
+  NaN-boxing convention for the native backends, adapted to vm-core's own,
+  independent `FlatHeap` object layout (nothing else reads vm-core's heap,
+  so there's no cross-backend bit-layout constraint to match).
+  `FlatHeap::alloc`'s existing 16-byte-aligned-payload guarantee makes the
+  tag sound with no allocator changes. Costs 3 bits of integer range for
+  values that pass through a dynamically-typed field (rejected, not
+  truncated, if out of `[i64::MIN >> 3, i64::MAX >> 3]`) — parity with what
+  `dyn_repr`'s boxing already costs native lisp integers, not a new
+  limitation. `Value::Float`/`Bool`/`Str` stay rejected in a raw GC field —
+  none fits the tag scheme, and no Twig lowering pass stores one directly
+  into a record/union/closure field on any backend today (confirmed by
+  investigation) — pre-existing unsupported territory, not a regression.
+- **`is_null` also recognizes `HeapRef::NULL` as null, defensively.** Nil
+  itself is still `const Int(0)`, and now round-trips through a field as
+  `Int(0)` too (the tag-based decode reads its tag as plain-int, not a heap
+  ref, regardless of type_hint) — so this arm isn't reachable through any
+  path `dispatch.rs` itself exercises today (nothing here ever constructs or
+  stores a null `HeapRef`), but is kept so `is_null` stays correct if a
+  future caller ever produces one directly.
+- **Security-review fixes, before this landed:**
+  - `handle_gc_alloc` (now also `alloc`'s handler) only capped the *count*
+    of live objects, not any single allocation's size — unlike the old
+    `handle_alloc`, which also bounded a running total-element count. Since
+    `alloc`/`gc_alloc` take an explicit, IR-controlled byte-count operand, a
+    handful of huge single allocations would clear the count cap outright.
+    Fixed with a new `VMCore::max_gc_heap_bytes` field (default 64 MiB),
+    checked against `FlatHeap::live_bytes()` before every allocation — its
+    own dedicated field rather than a derived multiple of
+    `max_memory_entries`, since bytes and object-count are different units.
+  - The tag scheme's soundness depends on every live `HeapRef`'s address
+    having its low 3 bits clear (`FlatHeap::alloc`'s 16-byte-alignment
+    guarantee) — initially enforced only by a `debug_assert_eq!`, which
+    compiles out in release, the exact build that runs untrusted Twig
+    programs. Promoted to a real runtime check returning `VMError` on
+    mismatch, so a future cross-crate alignment regression in `gc-core`
+    fails loudly instead of silently corrupting an address via the tag OR.
+  - Noted (not fixed — not currently reachable): `gc_field_load`/
+    `gc_field_store`'s bounds check is only correct because a `HeapRef` is
+    always a block's *base* address; `FlatHeap::payload_size` resolves an
+    interior address to the whole block's size, not the remaining bytes to
+    its end. No op here ever produces an interior `HeapRef` today, but a
+    future one would need to re-derive the bound from the block's real
+    start rather than reuse this check as-is.
+  - Tests: `gc_alloc_is_capped_by_aggregate_byte_budget_independent_of_object_count`.
+- Tests: `vm-core/tests/heap_objects.rs` —
+  `field_load_disambiguates_int_and_nested_pair_from_the_same_dynamically_typed_field`
+  (the headline regression proof), `field_store_rejects_an_integer_too_large_for_the_tag_scheme`,
+  `is_null_recognizes_nil_stored_and_reloaded_through_a_field`; all
+  pre-existing round-trip/aliasing/`is_null` tests re-verified against the
+  real collector. `lang-aot/tests/vm_gc_reclamation.rs` (new file) compiles
+  and runs a genuine 100-cons-cell Twig program through the real frontend +
+  lowering pipeline and proves the collector reclaims all of it once
+  unreachable — not just that hand-built IIR round-trips. Full
+  `lang-aot/tests/lang_matrix.rs` Vm/Jit column (every E6d-1 through E6d-4
+  cons/list/record/union/closure case) re-verified green.
+
+## [0.21.1] — 2026-08-02 (security fix: cap live `gc_alloc` count to bound `gc_field_load`/`gc_field_store` cost)
+
+A security review of the 0.20.0/0.21.0 GC work found that `gc_field_load`/
+`gc_field_store`'s bounds check (`FlatHeap::payload_size`) is O(live object
+count) — it walks the block list, the same cost `FlatHeap::kind_of`'s own
+docs already flag as unsuitable for a hot per-instruction loop. Without a
+cap on live `gc_alloc`'d objects, a program allocating N objects then
+performing M field accesses against the oldest one could cost O(N·M)
+wall-clock time while an instruction budget (`max_instructions`, vm-core's
+existing sandbox-mode guard) only charges O(N+M) — a quadratic blowup
+defeating the budget's intended linear bound.
+
+Fixed by adding `VMCore::gc_object_count` — an O(1)-maintained live count
+(incremented on `gc_alloc`, decremented by each collection's `freed` count;
+a compacted survivor is not freed, so it stays counted) — and enforcing
+`max_memory_entries` against it in `handle_gc_alloc`, exactly mirroring the
+aggregate ceiling `handle_alloc`/`handle_alloc_array` already enforce
+against `ctx.arrays.len()`. New test
+`gc_alloc_is_capped_and_collection_frees_room_under_the_cap`.
+
+## [0.21.0] — 2026-08-02 (`safepoint` upgrades to automatic compaction via the shared `should_compact` policy)
+
+`safepoint`'s paced collection now also relocates objects (`collect_compacting`
+instead of `collect_mixed`) whenever `gc_core::FlatHeap::should_compact` says
+fragmentation warrants it — the exact same policy `gc-core-capi`'s
+`__gc_safepoint` now consults (gc-core-capi 0.23.0), so both automatic-collection
+call sites share one cadence and can't drift apart. `collect_compacting`'s
+root-slot rewrite transparently updates every live `Value::HeapRef` in
+vm-core's own root set in place (registers/globals/memory/arrays) — no
+vm-core-side pointer-fixup code needed, since the roots passed in ARE those
+values' own storage addresses.
+
+New test `safepoint_over_threshold_collects_and_reclaims`: one `gc_alloc`
+bigger than `FlatHeap`'s 1 MiB adaptive threshold crosses it outright, so the
+very next `safepoint` must run a real (currently non-moving — a fresh heap's
+`should_compact` is always false for the first several cycles) cycle,
+reclaiming the now-unrooted block while the kept object's field survives —
+proving the paced dispatch collects for real, not just that `gc_collect`
+(the unconditional path) does.
+
+## [0.20.0] — 2026-08-02 (a real, shared GC — `gc_alloc`/`gc_field_load`/`gc_field_store`/`safepoint`/`gc_collect`)
+
+vm-core gets a real garbage collector, sharing the exact engine (`gc-core`'s
+`FlatHeap`) the native-AOT backends already use via `gc-core-capi` — linked
+directly as a Rust dependency instead of through the C ABI, since vm-core is
+already Rust. This closes a real gap: `gc-core`'s only prior interpreter-facing
+design (`GcCore`/`GcAdapter`, over a separate `garbage-collector` crate) was
+never actually wired into vm-core despite its own doc comments claiming
+otherwise — see `gc-core`'s 0.25.0 changelog entry, which removes it.
+
+This is **additive**, not a replacement for the existing heap model: `alloc`/
+`alloc_array`/`field_store`/`field_load` still allocate on `ctx.arrays` (a
+plain Rust bump arena, never collected) exactly as before. The new ops are:
+
+- **`gc_alloc [<size_bytes>] -> dest`** — allocates on the shared `FlatHeap`
+  (kind 0, conservative), returning a `Value::HeapRef`.
+- **`gc_field_load dest <- obj, idx`** / **`gc_field_store obj, idx, val`** —
+  read/write the `idx`-th 8-byte word of a `gc_alloc`'d object's payload, raw
+  words with no NaN-boxing (mirroring the native cons-cell convention).
+  Bounds-checked against the object's *actual* allocated size via the new
+  `FlatHeap::payload_size` (see `gc-core` 0.25.0) — which also rejects a null
+  or invalid `HeapRef` for free, since it reads `0` for any non-live address.
+  `gc_field_store` runs the generational write barrier when storing a nested
+  `Value::HeapRef`.
+- **`safepoint`** — a **paced** collection point: collects only if `FlatHeap`
+  is over its adaptive threshold. The dispatch loop also checks every 4096
+  instructions automatically, so a long-running loop with no explicit
+  `safepoint` still gets collected under allocation pressure.
+- **`gc_collect`** — an **unconditional** collection, mirroring
+  `gc-core-capi`'s split between its paced `__gc_safepoint` and its
+  unconditional `__gc_collect_precise`/`__gc_collect_compacting` builtins.
+
+Root-finding is **precise by construction**, with no conservative stack scan
+at all: `dispatch::collect_now` walks every `Value::HeapRef` vm-core itself
+can see — every register across every active frame, every global, every
+`memory` slot, and every array element — and hands their exact storage
+addresses to `FlatHeap::collect_mixed`. An interpreter always knows exactly
+where every reference lives, so there is nothing to scan conservatively.
+
+New `Value::HeapRef(gc_core::HeapRef)` variant (`iir_type_name() == "ref"`,
+falsy iff null, `Display` via `HeapRef`'s own). `vm-runtime`'s
+`VmResult::from_value` gained the corresponding `Value::HeapRef -> VmResult::Ref`
+arm (LANG16's `VmResultTag::Ref`/`from_ref` already anticipated this).
+
+Tests: `tests/gc_heap.rs` (9 new integration tests), including the headline
+proof — `gc_collect_frees_an_object_whose_only_root_was_overwritten` — that a
+collection genuinely reclaims an object once its only root is gone, while
+`gc_collect_reclaims_unreachable_and_preserves_reachable` proves a live
+object's field data survives intact.
+
+## [0.19.0] — 2026-07-14 (E6d list `null?` on the generic VM — `is_null` + nil-handle reservation)
+
+Completes the E6d dynamic features on the generic VM: Twig **list** builtins
+(`cons`/`car`/`cdr`/`null?`/`list`/`length`/`list-ref`/`append`/`reverse`/`assoc`)
+now run on the VM (and the JIT), so E6d runs on **all seven engines**.
+
+`cons`/`car`/`cdr` already lowered to the `alloc`/`field_load` heap ops the VM
+gained in 0.17.0; the one missing piece was `null?` → the `is_null` opcode:
+
+- **`is_null d <- x`** — `d = (x == Int(0))`. The E6d nil sentinel is
+  `const Int(0) : ref<LispyPair>` → `Value::Int(0)`.
+- **`reserve_nil_handle`** — every allocation path (`alloc`, `alloc_array`) now
+  reserves heap handle `0` as a permanent empty sentinel, so a real cons cell
+  always gets a handle ≥ 1 and can never be mistaken for nil. This is the
+  nil-handle disambiguation the earlier records slice deferred; it costs one empty
+  `Vec` per program that allocates, and leaves array-handle *semantics* unchanged
+  (handles are opaque indices).
+
+Verified: `(null? (list))` → true, `(null? (list 1))` → false, plus
+length/list-ref/append/reverse/assoc → 42, and a `vm-core` unit test that a
+freshly-allocated object is not nil while `Int(0)` is. All 178 `Vm` + 178 `Jit`
+matrix cells pass under the reservation (no array regression from the handle shift).
+
+## [0.18.0] — 2026-07-14 (E6d union `match` on the generic VM — `box` + dynamic builtins)
+
+Builds on 0.17.0 (heap objects): union `match` now runs on the generic VM (and
+the JIT via its VM fallback), so E6d union `match` runs on **all seven engines**.
+
+- **`box` / `unbox` opcodes** — the **identity** on the VM: its `Value` is already
+  the dynamic value (no separate boxed form), so both are a register copy. The
+  union constructor `emit_union_def` emits `box` on the variant tag + fields; that
+  op reaches the generic VM, where it is a no-op copy.
+- **Dynamic-dispatch builtins `=` / `+` / `-` / `*`** (registered by default) —
+  the `any`-typed primitives the frontend emits as `call_builtin` when an
+  operand's static type is `any` (a `match`-bound field, a value read from a cons
+  cell). `=` is a direct `Value` compare → boolean (the tag test); the arithmetic
+  ops compute on same-kind operands (integers wrap on overflow — the i64 tagged
+  model; floats in `f64`), with a clean type error otherwise. This also unblocks
+  E6d-2 dynamic integer arithmetic on the VM.
+
+Verified: both union `match` cells run on the `Vm` + `Jit` matrix columns (Some →
+42, None → 42), plus new `builtins` unit tests (`=`, `+`/`-`/`*` incl. overflow
+wrap + arity/type errors). `match` needs no `is_null`, so no nil-handle
+disambiguation is required here. Closures (`alloc_closure`/`call_closure`) and list
+builtins (`cons`/`car`/…) on the generic VM remain follow-ups.
+
+## [0.17.0] — 2026-07-14 (E6d heap objects — `alloc`/`field_store`/`field_load` on the generic VM)
+
+The dispatcher now executes the word-granular heap ops that Twig
+records/unions/closures build their `(car . cdr)` cons cells from — so the E6d
+dynamic features, previously runnable only on the five code-gen backends and the
+Twig-specific interpreter, now also run on the **generic `vm-core`** engine (and
+the JIT via its VM fallback).
+
+- `alloc [<size_bytes>] -> dest` allocates a fixed-size object on the existing
+  bounds-checked array heap (`ctx.arrays`), returning its integer handle; a field
+  is one 8-byte word, so the element count is `size_bytes / 8` (default 16 bytes =
+  a 2-word `LispyPair`, matching the native `__twig_gc_alloc` default). It shares
+  the array heap's `max_memory_entries` aggregate cap, so no crafted `alloc` can
+  OOM the process.
+- `field_store` / `field_load` reuse the `array_set` / `array_get` handlers
+  verbatim — identical handle+index model — so they inherit the same bounds
+  checking.
+
+First slice: **records** (verified on the `Vm` + `Jit` matrix columns — `point-x`/
+`point-y` = 42, and three `vm-core` unit tests). Purely additive: these three
+opcodes were previously unsupported (`_ => None`). Unions/`match` (which test the
+nil sentinel via `is_null`, and a nil `Int(0)` is presently indistinguishable from
+the first-allocated object handle `0`) are a follow-up needing nil-handle
+disambiguation; records never dereference nil, so they are sound today.
+
 ## [0.16.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` VM dispatch handler)
 
 Added `handle_f64_pow` to the dispatch table.  The handler extracts two source

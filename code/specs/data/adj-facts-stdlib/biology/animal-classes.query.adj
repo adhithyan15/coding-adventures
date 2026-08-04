@@ -1,0 +1,20 @@
+% ============================================================================
+% animal-classes.query.adj — a worked recall over the animal-class library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what class does a cat
+% belong to?": it states no biology fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `animal_class` rows and returns the class + the table's source/locator/trust.
+% A word that is not a recorded animal abstains honestly — the engine never
+% invents a class.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli animal-classes.query.adj
+% ============================================================================
+
+import "animal-classes.adj"
+
+? animal_class(cat, $Class)        % expect mammal
+? animal_class(snake, $Class)      % expect reptile
+? animal_class(shark, $Class)      % expect fish
+? animal_class(rock, $Class)       % expect abstain — a rock is not an animal

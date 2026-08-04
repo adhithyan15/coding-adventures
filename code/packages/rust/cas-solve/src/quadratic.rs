@@ -128,12 +128,7 @@ fn isqrt(n: u64) -> Option<u64> {
     }
     let r = (n as f64).sqrt() as u64;
     // Bracket-search to handle float-rounding edge cases for large n.
-    for cand in r.saturating_sub(1)..=r + 1 {
-        if cand * cand == n {
-            return Some(cand);
-        }
-    }
-    None
+    (r.saturating_sub(1)..=r + 1).find(|&cand| cand * cand == n)
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,29 @@
+% ============================================================================
+% vital-capacity.query.adj — worked applications of the vital-capacity definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a pulmonary-function vignette into observed
+% lung volumes: it `import`s the grounded formulabook, `observe`s the tidal volume, the inspiratory
+% reserve volume and the expiratory reserve volume, and asks the engine to APPLY the cited definition.
+% No arithmetic is stated by the consumer; the engine computes each value EXACTLY (over exact
+% rationals) and carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (tidal volume = 1 L, inspiratory reserve volume = 3 L, expiratory reserve volume = 2 L):
+% vital capacity = 1 + 3 + 2 = 6 L. Each query below fixes three of the four quantities and asks the
+% engine to recover the fourth; every answer is exact and the four COMPOSE (each inversion recovers
+% exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli vital-capacity.query.adj
+% ============================================================================
+
+import "vital-capacity.adj"
+
+% --- Definition: the vital capacity the three volumes imply (expect 6). ------------------------
+observe tidal_volume(1)
+observe inspiratory_reserve_volume(3)
+observe expiratory_reserve_volume(2)
+? vital_capacity(tidal_volume, inspiratory_reserve_volume, expiratory_reserve_volume)   % expect 6
+
+% --- Inverse: the tidal volume a VC of 6 implies given the two reserves (expect 1). ------------
+observe vital_capacity(6)
+? tidal_volume(vital_capacity, inspiratory_reserve_volume, expiratory_reserve_volume)   % expect 1

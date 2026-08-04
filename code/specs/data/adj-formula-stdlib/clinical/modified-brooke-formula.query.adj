@@ -1,0 +1,29 @@
+% ============================================================================
+% modified-brooke-formula.query.adj — worked applications of the modified Brooke burn formula.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a burn vignette into a body weight and a burned
+% surface area: it `import`s the grounded formulabook, `observe`s the two values, and asks the engine to
+% APPLY the cited modified-Brooke formula. No arithmetic is stated by the consumer; the engine computes
+% each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU,
+% with zero model calls.
+%
+% Worked case (weight = 80 kg, TBSA = 30%): total 24-hour fluid = 2 × 80 × 30 = 4800 mL — half (2400 mL)
+% over the first 8 hours, the remaining 2400 mL over the next 16, and exactly HALF the Parkland volume
+% (9600 mL) for the same patient. Each query fixes two of the three quantities and asks the engine to
+% recover the third; every answer is exact and the three COMPOSE (each inversion recovers exactly the
+% worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli modified-brooke-formula.query.adj
+% ============================================================================
+
+import "modified-brooke-formula.adj"
+
+% --- Fluid: the 24-hour resuscitation volume the weight and burn size imply (expect 4800). ----------
+observe weight(80)
+observe tbsa(30)
+? total_fluid(weight, tbsa)   % expect 4800
+
+% --- Inverse: the weight a total volume of 4800 implies at a 30% burn (expect 80). ------------------
+observe total_fluid(4800)
+? weight(total_fluid, tbsa)   % expect 80

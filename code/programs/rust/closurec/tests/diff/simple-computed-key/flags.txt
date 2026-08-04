@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-computed-key/input/a.js
+--compilation_level
+SIMPLE

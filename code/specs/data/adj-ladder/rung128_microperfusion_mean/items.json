@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 128 \u2014 capillary-microperfusion windowed mean from four stated quantities (a NEW panel: capillary microperfusion, and the NUMERATOR sibling of rungs 126/127 \u2014 the quotient moves OUT of the denominator and INTO the numerator). From a loaded uptake (a base uptake PLUS a per-unit surge_charge/surge_spread quotient) averaged over the sample windows, compute the windowed mean ((base_uptake+surge_charge/surge_spread)/sample_windows), the loaded uptake (base_uptake+surge_charge/surge_spread), or the per-spread surge (surge_charge/surge_spread). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, an ADD-A-QUOTIENT THREE-TERM NUMERATOR OVER A LONE DENOMINATOR (a+b/c)/d (divide the surge charge by the surge spread, add that to the base uptake, then divide that whole loaded-uptake numerator by the sample windows, so (a+b/c)/d = ((a+(b/c))/d); the numerator sibling of rung-126's a/(b+c/d), with its subtract twin (a-b/c)/d queued as rung-129 exactly as 126->127 paired add->subtract). The precedence-and-grouping slips ride alongside as distractors. The harness matches the scalar to the printed options. The windowed mean is a mean (loaded uptake averaged per window), framed as a MEAN so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via + and / \u2014 no constant leaks, and neither the loaded uptake, the per-spread quotient, nor the windowed mean ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so the sample windows divide only the per-spread quotient (a+b/c/d, evaluating a+(b/c)/d = a+b/(c*d), a wrong grouping) and adding before forming the quotient ((a+b)/c/d = (a+b)/(c*d), breaking the b/c-binds-first precedence, a wrong grouping). The core confusion tested is that (a+b/c)/d is ((a+(b/c))/d), not a+b/c/d and not (a+b)/c/d. This rung uses only + and / over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed (unlike rung-127) \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r128wma-01",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 10 plus a surge charge of 6 over a surge spread of 3, all averaged over a sample-window count of 4. What is the windowed mean (the loaded uptake averaged over the sample windows)?",
+      "program": "observe base_uptake(10)\nobserve surge_charge(6)\nobserve surge_spread(3)\nobserve sample_windows(4)\nlet answer = (base_uptake + surge_charge / surge_spread) / sample_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r128wma-02",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 10 plus a surge charge of 6 over a surge spread of 3, all averaged over a sample-window count of 4. What is the the loaded uptake (the base uptake plus the per-spread surge, the numerator that is averaged over the sample windows)?",
+      "program": "observe base_uptake(10)\nobserve surge_charge(6)\nobserve surge_spread(3)\nobserve sample_windows(4)\nlet answer = base_uptake + surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r128wma-03",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 10 plus a surge charge of 6 over a surge spread of 3, all averaged over a sample-window count of 4. What is the the per-spread surge (the surge charge spread over the surge spread, before it is added to the base uptake)?",
+      "program": "observe base_uptake(10)\nobserve surge_charge(6)\nobserve surge_spread(3)\nobserve sample_windows(4)\nlet answer = surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r128wma-04",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 13 plus a surge charge of 5 over a surge spread of 2, all averaged over a sample-window count of 3. What is the windowed mean (the loaded uptake averaged over the sample windows)?",
+      "program": "observe base_uptake(13)\nobserve surge_charge(5)\nobserve surge_spread(2)\nobserve sample_windows(3)\nlet answer = (base_uptake + surge_charge / surge_spread) / sample_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.833333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.166666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r128wma-05",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 13 plus a surge charge of 5 over a surge spread of 2, all averaged over a sample-window count of 3. What is the the loaded uptake (the base uptake plus the per-spread surge, the numerator that is averaged over the sample windows)?",
+      "program": "observe base_uptake(13)\nobserve surge_charge(5)\nobserve surge_spread(2)\nobserve sample_windows(3)\nlet answer = base_uptake + surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.166666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.833333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r128wma-06",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 13 plus a surge charge of 5 over a surge spread of 2, all averaged over a sample-window count of 3. What is the the per-spread surge (the surge charge spread over the surge spread, before it is added to the base uptake)?",
+      "program": "observe base_uptake(13)\nobserve surge_charge(5)\nobserve surge_spread(2)\nobserve sample_windows(3)\nlet answer = surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.166666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.833333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r128wma-07",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 14 plus a surge charge of 9 over a surge spread of 3, all averaged over a sample-window count of 2. What is the windowed mean (the loaded uptake averaged over the sample windows)?",
+      "program": "observe base_uptake(14)\nobserve surge_charge(9)\nobserve surge_spread(3)\nobserve sample_windows(2)\nlet answer = (base_uptake + surge_charge / surge_spread) / sample_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.8333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r128wma-08",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 14 plus a surge charge of 9 over a surge spread of 3, all averaged over a sample-window count of 2. What is the the loaded uptake (the base uptake plus the per-spread surge, the numerator that is averaged over the sample windows)?",
+      "program": "observe base_uptake(14)\nobserve surge_charge(9)\nobserve surge_spread(3)\nobserve sample_windows(2)\nlet answer = base_uptake + surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.8333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r128wma-09",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 14 plus a surge charge of 9 over a surge spread of 3, all averaged over a sample-window count of 2. What is the the per-spread surge (the surge charge spread over the surge spread, before it is added to the base uptake)?",
+      "program": "observe base_uptake(14)\nobserve surge_charge(9)\nobserve surge_spread(3)\nobserve sample_windows(2)\nlet answer = surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.8333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r128wma-10",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 8 plus a surge charge of 3 over a surge spread of 2, all averaged over a sample-window count of 5. What is the windowed mean (the loaded uptake averaged over the sample windows)?",
+      "program": "observe base_uptake(8)\nobserve surge_charge(3)\nobserve surge_spread(2)\nobserve sample_windows(5)\nlet answer = (base_uptake + surge_charge / surge_spread) / sample_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r128wma-11",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 8 plus a surge charge of 3 over a surge spread of 2, all averaged over a sample-window count of 5. What is the the loaded uptake (the base uptake plus the per-spread surge, the numerator that is averaged over the sample windows)?",
+      "program": "observe base_uptake(8)\nobserve surge_charge(3)\nobserve surge_spread(2)\nobserve sample_windows(5)\nlet answer = base_uptake + surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r128wma-12",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 8 plus a surge charge of 3 over a surge spread of 2, all averaged over a sample-window count of 5. What is the the per-spread surge (the surge charge spread over the surge spread, before it is added to the base uptake)?",
+      "program": "observe base_uptake(8)\nobserve surge_charge(3)\nobserve surge_spread(2)\nobserve sample_windows(5)\nlet answer = surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r128wma-13",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 11 plus a surge charge of 8 over a surge spread of 2, all averaged over a sample-window count of 4. What is the windowed mean (the loaded uptake averaged over the sample windows)?",
+      "program": "observe base_uptake(11)\nobserve surge_charge(8)\nobserve surge_spread(2)\nobserve sample_windows(4)\nlet answer = (base_uptake + surge_charge / surge_spread) / sample_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r128wma-14",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 11 plus a surge charge of 8 over a surge spread of 2, all averaged over a sample-window count of 4. What is the the loaded uptake (the base uptake plus the per-spread surge, the numerator that is averaged over the sample windows)?",
+      "program": "observe base_uptake(11)\nobserve surge_charge(8)\nobserve surge_spread(2)\nobserve sample_windows(4)\nlet answer = base_uptake + surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r128wma-15",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 11 plus a surge charge of 8 over a surge spread of 2, all averaged over a sample-window count of 4. What is the the per-spread surge (the surge charge spread over the surge spread, before it is added to the base uptake)?",
+      "program": "observe base_uptake(11)\nobserve surge_charge(8)\nobserve surge_spread(2)\nobserve sample_windows(4)\nlet answer = surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r128wma-16",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 17 plus a surge charge of 7 over a surge spread of 2, all averaged over a sample-window count of 3. What is the windowed mean (the loaded uptake averaged over the sample windows)?",
+      "program": "observe base_uptake(17)\nobserve surge_charge(7)\nobserve surge_spread(2)\nobserve sample_windows(3)\nlet answer = (base_uptake + surge_charge / surge_spread) / sample_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.833333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.166666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r128wma-17",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 17 plus a surge charge of 7 over a surge spread of 2, all averaged over a sample-window count of 3. What is the the loaded uptake (the base uptake plus the per-spread surge, the numerator that is averaged over the sample windows)?",
+      "program": "observe base_uptake(17)\nobserve surge_charge(7)\nobserve surge_spread(2)\nobserve sample_windows(3)\nlet answer = base_uptake + surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.833333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.166666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r128wma-18",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 17 plus a surge charge of 7 over a surge spread of 2, all averaged over a sample-window count of 3. What is the the per-spread surge (the surge charge spread over the surge spread, before it is added to the base uptake)?",
+      "program": "observe base_uptake(17)\nobserve surge_charge(7)\nobserve surge_spread(2)\nobserve sample_windows(3)\nlet answer = surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.833333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.166666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r128wma-19",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 25 plus a surge charge of 10 over a surge spread of 2, all averaged over a sample-window count of 5. What is the windowed mean (the loaded uptake averaged over the sample windows)?",
+      "program": "observe base_uptake(25)\nobserve surge_charge(10)\nobserve surge_spread(2)\nobserve sample_windows(5)\nlet answer = (base_uptake + surge_charge / surge_spread) / sample_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r128wma-20",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 25 plus a surge charge of 10 over a surge spread of 2, all averaged over a sample-window count of 5. What is the the loaded uptake (the base uptake plus the per-spread surge, the numerator that is averaged over the sample windows)?",
+      "program": "observe base_uptake(25)\nobserve surge_charge(10)\nobserve surge_spread(2)\nobserve sample_windows(5)\nlet answer = base_uptake + surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r128wma-21",
+      "qtype": "windowed_mean",
+      "stem": "A capillary-microperfusion study records a base uptake of 25 plus a surge charge of 10 over a surge spread of 2, all averaged over a sample-window count of 5. What is the the per-spread surge (the surge charge spread over the surge spread, before it is added to the base uptake)?",
+      "program": "observe base_uptake(25)\nobserve surge_charge(10)\nobserve surge_spread(2)\nobserve sample_windows(5)\nlet answer = surge_charge / surge_spread\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

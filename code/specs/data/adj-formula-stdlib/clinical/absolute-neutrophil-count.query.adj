@@ -1,0 +1,30 @@
+% ============================================================================
+% absolute-neutrophil-count.query.adj — worked applications of the ANC.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a complete-blood-count-with-differential into a
+% white cell count and the segmented and band neutrophil percentages: it `import`s the grounded
+% formulabook, `observe`s the three values, and asks the engine to APPLY the cited ANC formula. No
+% arithmetic is stated by the consumer; the engine computes each value EXACTLY (over exact rationals) and
+% carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (WBC = 5000 cells/microL, segmented neutrophils = 40%, bands = 10%):
+% ANC = 5000 × (40 + 10) / 100 = 5000 × 50 / 100 = 2500 cells/microL — a normal count (neutropenia is
+% below 1500, severe below 500). Each query fixes two of the three quantities and asks the engine to
+% recover the third; every answer is exact and the inversions COMPOSE (each recovers exactly the worked
+% value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli absolute-neutrophil-count.query.adj
+% ============================================================================
+
+import "absolute-neutrophil-count.adj"
+
+% --- ANC: the absolute neutrophil count the white count and percentages imply (expect 2500). --------
+observe wbc(5000)
+observe pmns(40)
+observe bands(10)
+? anc(wbc, pmns, bands)   % expect 2500
+
+% --- Inverse: the white count an ANC of 2500 implies at the same percentages (expect 5000). ---------
+observe anc(2500)
+? wbc(anc, pmns, bands)   % expect 5000

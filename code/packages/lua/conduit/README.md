@@ -104,13 +104,17 @@ Or just run the `BUILD` script via the repo build tool.
 - `tests/test_request.lua` — Request accessor methods
 - `tests/test_handler_context.lua` — Response helpers
 - `tests/test_application.lua` — Route registration and settings
-- `tests/test_server.lua` — Full E2E via real TCP (requires luasocket)
+- `tests/test_server.lua` — Full E2E via real TCP, with the foreground server
+  isolated in a child process (requires luasocket)
 
 ## Threading model
 
 Lua 5.4 is single-threaded. `web-core` dispatches requests on background Rust
 I/O threads. Every dispatch closure acquires an `Arc<Mutex<()>>` (the "Lua lock")
-before calling `lua_pcall`, serialising all Lua re-entries to a single OS thread.
+before calling `lua_pcall`, serialising native callbacks with each other. The
+lock does not guard ordinary execution on the Lua process's main thread, so
+tests run the foreground server in a dedicated child process while Busted
+drives it over TCP.
 
 ## Dependencies
 

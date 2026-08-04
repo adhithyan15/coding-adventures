@@ -6,6 +6,9 @@
 //! forwards readable bytes to a handler, buffers replies, and flushes queued
 //! writes when the backend reports writable readiness.
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![allow(unused_imports)]  // some test-support imports are used only under specific target cfgs
+
 use native_event_core::{
     EventBackend, Interest, NativeEventLoop, PollTimeout, SourceKind, SourceRef, Token,
 };

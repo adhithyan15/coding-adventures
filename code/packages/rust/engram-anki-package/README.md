@@ -21,8 +21,10 @@ temporary files.
 It also parses legacy/V11 SQLite collection files into an owned Anki
 representation. `read_v11_collection` accepts APKG bytes, extracts
 `collection.anki2` or `collection.anki21`, and reads the `col`, `notes`,
-`cards`, `revlog`, and `graves` tables. `parse_v11_collection_bytes` exposes
-the same parser for raw SQLite collection bytes.
+`cards`, `revlog`, and `graves` tables through the repo `sqlite-file`
+byte-reader rather than opening SQLite through `rusqlite`.
+`parse_v11_collection_bytes` exposes the same parser for raw SQLite collection
+bytes.
 `read_v11_collection_as_engram_state` and `v11_collection_to_engram_state`
 map that parsed representation into `engram-core::AppState` while preserving
 Anki IDs as deterministic Engram IDs. Cloze note types render

@@ -1,0 +1,100 @@
+% ============================================================================
+% forces — a named common force and the everyday EXAMPLE a NASA education
+% poster uses to illustrate it (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% An elementary/middle-school physics fact on the way to mechanics: a FORCE is
+% a push or a pull, and the way a learner first meets each kind of force is
+% through a familiar everyday scene — water falling, a thrown ball, a swing, a
+% car's wheels, a launching rocket. This little table pairs each named force
+% with the concrete example NASA's Newton's-Second-Law classroom poster uses to
+% show it. Recall is a binding query:
+%
+%     ? force_example(gravity, $Ex)   % waterfall
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `force_example(force, example)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% everyday example WITH its source, on the CPU, with zero model calls, and
+% abstains on anything the poster does not illustrate.
+%
+% The forces, as a little truth table (force → the everyday scene NASA uses to
+% illustrate it):
+%
+%     force      what it is (a push/pull that…)        NASA's everyday example
+%     --------   -----------------------------------   -----------------------
+%     gravity    pulls things downward                  waterfall (falling water)
+%     applied    a push/pull you exert on an object     ball (a girl throwing it)
+%     tension    pull carried along a rope/string       ropes (of a swing)
+%     friction   opposes motion between surfaces        wheels (of a car)
+%     booster    thrust that pushes a rocket up         rocket (at launch)
+%
+% This is the concrete rung a physics learner reasons UP from: before reasoning
+% about F = ma, net force, or free-body diagrams, a student first learns to NAME
+% a force and point to it in a scene they already know. The query also runs
+% BACKWARD — bind the example and recall the force it illustrates:
+%
+%     ? force_example($F, ropes)   % tension — reverse recall
+%
+% A force the poster never illustrates — magnetism, the normal force, air
+% resistance — has no row, so a recall on it ABSTAINS rather than inventing an
+% example. That honest-abstention property is what makes the table safe to
+% reason from: the table claims ONLY the five force→example pairings NASA's
+% document explicitly states, not the whole of physics.
+%
+% Each `example` value is a SINGLE lowercase snake_case atom, chosen to be a
+% faithful short paraphrase of the everyday object the source names for that
+% force — never a scene the source does not use.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every force→example pair
+% was read out of a fetched NASA education document this session, and any force
+% that could not be grounded there was dropped). All five spans come from the
+% SAME primary U.S. government source, NASA Goddard's Swift mission education
+% poster "Newton's Second Law: Force, Velocity and Acceleration"
+% (imagine.gsfc.nasa.gov/observatories/learning/swift/classroom/docs/law2_guide.pdf),
+% each quoted here character-for-character so any reader can re-check it. The
+% poster illustrates each force with an everyday scene:
+%
+%   gravity → waterfall
+%     "As the water flows over the edge of the rocks, gravity, which exerts a
+%      downward force on it, causes it to accelerate downward: the water moves
+%      faster the longer it falls."
+%
+%   applied → ball
+%     "When the girl throws the ball, she is applying a force to it and
+%      accelerating it."
+%
+%   tension → ropes
+%     "the force of the tension in the ropes makes her move in an arc upwards"
+%
+%   friction → wheels
+%     "When a driver hits the gas, the wheels apply a force on the ground due to
+%      friction."
+%
+%   booster → rocket
+%     "F_booster is the force from the rocket boosters, and it pushes the rocket
+%      away from the Earth."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the NASA sentence that fixes the
+% first row (gravity → waterfall). Every OTHER row's per-fact source and verbatim
+% span is listed above, so each example remains independently checkable. The
+% source is a primary U.S. government NASA (Goddard Space Flight Center)
+% education page (gsfc.nasa.gov), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table force_example {
+    columns force, example
+
+    row (gravity, waterfall)
+    row (applied, ball)
+    row (tension, ropes)
+    row (friction, wheels)
+    row (booster, rocket)
+
+    source "As the water flows over the edge of the rocks, gravity, which exerts a downward force on it, causes it to accelerate downward: the water moves faster the longer it falls."
+    locator "https://imagine.gsfc.nasa.gov/observatories/learning/swift/classroom/docs/law2_guide.pdf"
+    trust authoritative
+}

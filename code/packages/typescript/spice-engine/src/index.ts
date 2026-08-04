@@ -6,6 +6,15 @@ const BOLTZMANN = 1.380_649e-23;
 const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18;
+const OXIDE_PERMITTIVITY = 3.453133e-11;
+const SILICON_PERMITTIVITY = 11.70 * 8.854_214_871e-12;
+const INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER = 1.45e16;
+const CUBIC_CENTIMETERS_PER_CUBIC_METER = 1.0e6;
+
+function siliconBandGapElectronVolts(temperatureKelvin: number): number {
+  return 1.16 - (7.02e-4 * temperatureKelvin * temperatureKelvin) / (temperatureKelvin + 1108.0);
+}
+
 const SPICE_SUFFIX_FACTORS: Readonly<Record<string, number>> = Object.freeze({
   t: 1.0e12,
   g: 1.0e9,
@@ -1671,6 +1680,14 @@ export interface Diode {
   readonly breakdownCurrent: number;
   readonly junctionCapacitance: number;
   readonly transitTime: number;
+  readonly junctionPotential: number;
+  readonly gradingCoefficient: number;
+  readonly forwardBiasDepletionCoefficient: number;
+  readonly saturationCurrentTemperatureExponent: number;
+  readonly energyGapElectronVolts: number;
+  readonly seriesResistance: number;
+  readonly flickerNoiseCoefficient: number;
+  readonly flickerNoiseExponent: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -1687,6 +1704,23 @@ export interface Jfet {
   readonly channelLengthModulation: number;
   readonly gateSourceCapacitance: number;
   readonly gateDrainCapacitance: number;
+  readonly flickerNoiseCoefficient: number;
+  readonly flickerNoiseExponent: number;
+  readonly junctionPotential: number;
+  readonly forwardBiasDepletionCoefficient: number;
+  readonly gateSaturationCurrent: number;
+  readonly gateSaturationCurrentTemperatureExponent: number;
+  readonly bandgapVoltage: number;
+  readonly dopingTailParameter: number;
+  readonly noiseEquationLevel: number;
+  readonly channelNoiseCoefficient: number;
+  readonly drainResistance: number;
+  readonly sourceResistance: number;
+  readonly thresholdVoltageTemperatureCoefficient: number;
+  readonly alternativeThresholdVoltageTemperatureCoefficient?: number;
+  readonly nominalTemperatureKelvin?: number;
+  readonly mobilityTemperatureExponent: number;
+  readonly mobilityTemperatureCoefficient?: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -1705,6 +1739,38 @@ export interface Bjt {
   readonly baseCollectorCapacitance: number;
   readonly forwardTransitTime: number;
   readonly reverseTransitTime: number;
+  readonly saturationCurrentTemperatureExponent: number;
+  readonly energyGapElectronVolts: number;
+  readonly forwardEarlyVoltage: number;
+  readonly reverseEarlyVoltage: number;
+  readonly forwardEmissionCoefficient: number;
+  readonly reverseEmissionCoefficient: number;
+  readonly baseEmitterJunctionPotential: number;
+  readonly baseEmitterGradingCoefficient: number;
+  readonly baseCollectorJunctionPotential: number;
+  readonly baseCollectorGradingCoefficient: number;
+  readonly forwardBiasDepletionCoefficient: number;
+  readonly forwardBetaRolloffCurrent: number;
+  readonly baseEmitterLeakageSaturationCurrent: number;
+  readonly baseEmitterLeakageEmissionCoefficient: number;
+  readonly baseCollectorLeakageSaturationCurrent: number;
+  readonly baseCollectorLeakageEmissionCoefficient: number;
+  readonly forwardBetaTemperatureExponent: number;
+  readonly reverseBeta: number;
+  readonly reverseBetaRolloffCurrent: number;
+  readonly nominalTemperatureKelvin: number | undefined;
+  readonly flickerNoiseCoefficient: number;
+  readonly flickerNoiseExponent: number;
+  readonly forwardExcessPhaseDegrees: number;
+  readonly forwardTransitTimeBiasCoefficient: number;
+  readonly forwardTransitTimeCurrent: number;
+  readonly forwardTransitTimeVoltage: number;
+  readonly emitterResistance: number;
+  readonly collectorResistance: number;
+  readonly baseResistance: number;
+  readonly minimumBaseResistance: number | undefined;
+  readonly baseResistanceHalfCurrent: number;
+  readonly baseCollectorCapacitanceFraction: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -1717,7 +1783,22 @@ export interface MosfetLevel1Params {
   readonly PHI: number;
   readonly W: number;
   readonly L: number;
+  readonly LD: number;
+  readonly TOX: number;
+  readonly U0: number;
+  readonly RD: number;
+  readonly RS: number;
+  readonly RSH: number;
+  readonly NRD: number;
+  readonly NRS: number;
+  readonly AD: number;
+  readonly AS: number;
+  readonly PD: number;
+  readonly PS: number;
+  readonly CJ: number;
+  readonly CJSW: number;
   readonly IS: number;
+  readonly JS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
   readonly CGSO: number;
@@ -1727,6 +1808,10 @@ export interface MosfetLevel1Params {
   readonly CBD: number;
   readonly PB: number;
   readonly MJ: number;
+  readonly MJSW: number;
+  readonly FC: number;
+  readonly KF: number;
+  readonly AF: number;
 }
 
 export interface Mosfet {
@@ -1981,13 +2066,13 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
 const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
-  D: [7, 11, 3, 3],
-  NPN: [7, 15, 4, 4],
-  PNP: [7, 15, 4, 4],
-  NJF: [5, 11, 5, 3],
-  PJF: [5, 11, 5, 3],
-  NMOS: [18, 25, 6, 3],
-  PMOS: [18, 25, 6, 3],
+  D: [15, 21, 5, 3],
+  NPN: [41, 58, 13, 4],
+  PNP: [41, 58, 13, 4],
+  NJF: [22, 30, 7, 3],
+  PJF: [22, 30, 7, 3],
+  NMOS: [33, 41, 7, 3],
+  PMOS: [33, 41, 7, 3],
 };
 
 export interface Vccs {
@@ -2263,7 +2348,7 @@ export interface CornerSParameterResult {
   readonly points: readonly CornerSParameterPoint[];
 }
 
-export type NoiseType = "thermal" | "shot";
+export type NoiseType = "thermal" | "shot" | "flicker";
 
 export interface NoiseEntry {
   readonly elementName: string;
@@ -3569,11 +3654,11 @@ function cloneSubcktElement(
     case "custom-model":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.gateSaturationCurrentTemperatureExponent, element.bandgapVoltage, element.dopingTailParameter, element.noiseEquationLevel, element.channelNoiseCoefficient, element.drainResistance, element.sourceResistance, element.thresholdVoltageTemperatureCoefficient, element.alternativeThresholdVoltageTemperatureCoefficient, element.nominalTemperatureKelvin, element.mobilityTemperatureExponent, element.mobilityTemperatureCoefficient);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance, element.minimumBaseResistance, element.baseResistanceHalfCurrent, element.baseCollectorCapacitanceFraction);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7526,6 +7611,14 @@ export function diode(
   breakdownCurrent = 1.0e-3,
   junctionCapacitance = 0.0,
   transitTime = 0.0,
+  junctionPotential = 1.0,
+  gradingCoefficient = 0.5,
+  forwardBiasDepletionCoefficient = 0.5,
+  saturationCurrentTemperatureExponent = 3.0,
+  energyGapElectronVolts = 1.11,
+  seriesResistance = 0.0,
+  flickerNoiseCoefficient = 0.0,
+  flickerNoiseExponent = 1.0,
 ): Diode {
   return {
     kind: "diode",
@@ -7539,6 +7632,14 @@ export function diode(
     breakdownCurrent,
     junctionCapacitance,
     transitTime,
+    junctionPotential,
+    gradingCoefficient,
+    forwardBiasDepletionCoefficient,
+    saturationCurrentTemperatureExponent,
+    energyGapElectronVolts,
+    seriesResistance,
+    flickerNoiseCoefficient,
+    flickerNoiseExponent,
   };
 }
 
@@ -7560,13 +7661,20 @@ export function diodeAtTemperature(
   if (!Number.isFinite(element.emissionCoefficient) || element.emissionCoefficient <= 0.0) {
     throw invalidElement(element.name, "emission coefficient must be finite and positive");
   }
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(
+      element.name,
+      "saturation-current temperature exponent must be finite",
+    );
+  }
   const ratio = temperatureKelvin / nominalTemperatureKelvin;
   const exponent =
     (energyGapElectronVolts * ELECTRON_CHARGE) /
     (element.emissionCoefficient * BOLTZMANN) *
     (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
   const saturationScale =
-    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
+    ratio ** element.saturationCurrentTemperatureExponent *
+    Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
   return {
     ...element,
     saturationCurrent: element.saturationCurrent * saturationScale,
@@ -7583,6 +7691,7 @@ export function bjtAtTemperature(
   if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "temperature must be finite and positive");
   }
+  nominalTemperatureKelvin = element.nominalTemperatureKelvin ?? nominalTemperatureKelvin;
   if (!Number.isFinite(nominalTemperatureKelvin) || nominalTemperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "nominal temperature must be finite and positive");
   }
@@ -7594,11 +7703,27 @@ export function bjtAtTemperature(
     (energyGapElectronVolts * ELECTRON_CHARGE) /
     BOLTZMANN *
     (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(element.name, "saturation-current temperature exponent must be finite");
+  }
+  if (!Number.isFinite(element.forwardBetaTemperatureExponent)) {
+    throw invalidElement(element.name, "beta temperature exponent must be finite");
+  }
+  if (Number.isNaN(element.reverseBeta) || element.reverseBeta <= 0.0) {
+    throw invalidElement(element.name, "reverse beta must be positive");
+  }
   const saturationScale =
-    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
+    ratio ** element.saturationCurrentTemperatureExponent *
+    Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
   return {
     ...element,
     saturationCurrent: element.saturationCurrent * saturationScale,
+    baseEmitterLeakageSaturationCurrent:
+      element.baseEmitterLeakageSaturationCurrent * saturationScale,
+    baseCollectorLeakageSaturationCurrent:
+      element.baseCollectorLeakageSaturationCurrent * saturationScale,
+    forwardBeta: element.forwardBeta * ratio ** element.forwardBetaTemperatureExponent,
+    reverseBeta: element.reverseBeta * ratio ** element.forwardBetaTemperatureExponent,
     thermalVoltage: element.thermalVoltage * ratio,
   };
 }
@@ -7607,6 +7732,7 @@ export function mosfetAtTemperature(
   element: Mosfet,
   temperatureKelvin: number,
   nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
 ): Mosfet {
   if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "temperature must be finite and positive");
@@ -7614,16 +7740,193 @@ export function mosfetAtTemperature(
   if (!Number.isFinite(nominalTemperatureKelvin) || nominalTemperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "nominal temperature must be finite and positive");
   }
-  const ratio = temperatureKelvin / nominalTemperatureKelvin;
-  const thresholdShift = -2.0e-3 * (temperatureKelvin - nominalTemperatureKelvin);
+  if (!Number.isFinite(energyGapElectronVolts) || energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
+  }
+  const referenceTemperatureKelvin = 300.15;
+  const nominalTemperature =
+    element.params.T_NOM !== referenceTemperatureKelvin
+      ? element.params.T_NOM
+      : nominalTemperatureKelvin;
+  if (!Number.isFinite(nominalTemperature) || nominalTemperature <= 0.0) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  const ratio = temperatureKelvin / nominalTemperature;
+  const potentialCorrection = (temperature: number): number => {
+    const thermalVoltage = (BOLTZMANN * temperature) / ELECTRON_CHARGE;
+    const argument =
+      (-siliconBandGapElectronVolts(temperature) * ELECTRON_CHARGE) /
+        (2.0 * BOLTZMANN * temperature) +
+      (1.115_087_7 * ELECTRON_CHARGE) /
+        (2.0 * BOLTZMANN * referenceTemperatureKelvin);
+    return (
+      -2.0 *
+      thermalVoltage *
+      (1.5 * Math.log(temperature / referenceTemperatureKelvin) + argument)
+    );
+  };
+  const nominalFactor = nominalTemperature / referenceTemperatureKelvin;
+  const temperatureFactor = temperatureKelvin / referenceTemperatureKelvin;
+  const nominalPhi =
+    (element.params.PHI - potentialCorrection(nominalTemperature)) / nominalFactor;
+  const temperaturePhi =
+    temperatureFactor * nominalPhi + potentialCorrection(temperatureKelvin);
+  const nominalBulkJunctionPotential =
+    (element.params.PB - potentialCorrection(nominalTemperature)) / nominalFactor;
+  const temperatureBulkJunctionPotential =
+    temperatureFactor * nominalBulkJunctionPotential +
+    potentialCorrection(temperatureKelvin);
+  const nominalBulkPotentialShift =
+    (element.params.PB - nominalBulkJunctionPotential) / nominalBulkJunctionPotential;
+  const temperatureBulkPotentialShift =
+    (temperatureBulkJunctionPotential - nominalBulkJunctionPotential) /
+    nominalBulkJunctionPotential;
+  const capacitanceScale = (gradingCoefficient: number): number => {
+    const nominalScale =
+      1.0 /
+      (1.0 +
+        gradingCoefficient *
+          (4.0e-4 * (nominalTemperature - referenceTemperatureKelvin) -
+            nominalBulkPotentialShift));
+    const temperatureScale =
+      1.0 +
+      gradingCoefficient *
+        (4.0e-4 * (temperatureKelvin - referenceTemperatureKelvin) -
+          temperatureBulkPotentialShift);
+    return nominalScale * temperatureScale;
+  };
+  const bottomCapacitanceScale = capacitanceScale(element.params.MJ);
+  const sidewallCapacitanceScale = capacitanceScale(element.params.MJSW);
+  const polarity = element.type === "NMOS" ? 1.0 : -1.0;
+  const temperatureVbi =
+    element.params.VT0 -
+    polarity * element.params.GAMMA * Math.sqrt(element.params.PHI) +
+    0.5 *
+      (siliconBandGapElectronVolts(nominalTemperature) -
+        siliconBandGapElectronVolts(temperatureKelvin)) +
+    polarity * 0.5 * (temperaturePhi - element.params.PHI);
+  const temperatureVt0 =
+    temperatureVbi + polarity * element.params.GAMMA * Math.sqrt(temperaturePhi);
+  const saturationExponent =
+    (energyGapElectronVolts * ELECTRON_CHARGE) /
+    BOLTZMANN *
+    (1.0 / nominalTemperature - 1.0 / temperatureKelvin);
+  const saturationScale =
+    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, saturationExponent)));
   return {
     ...element,
     params: {
       ...element.params,
-      VT0: element.params.VT0 + thresholdShift,
+      VT0: temperatureVt0,
+      PHI: temperaturePhi,
+      PB: temperatureBulkJunctionPotential,
+      CJ: element.params.CJ * bottomCapacitanceScale,
+      CBS: element.params.CBS * bottomCapacitanceScale,
+      CBD: element.params.CBD * bottomCapacitanceScale,
+      CJSW: element.params.CJSW * sidewallCapacitanceScale,
       KP: element.params.KP * ratio ** -1.5,
+      U0: element.params.U0 * ratio ** -1.5,
+      IS: element.params.IS * saturationScale,
+      JS: element.params.JS * saturationScale,
       T_NOM: temperatureKelvin,
     },
+  };
+}
+
+export function jfetAtTemperature(
+  element: Jfet,
+  temperatureKelvin: number,
+  nominalTemperatureKelvin = 300.15,
+): Jfet {
+  if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
+    throw invalidElement(element.name, "temperature must be finite and positive");
+  }
+  const nominalTemperature =
+    element.nominalTemperatureKelvin ?? nominalTemperatureKelvin;
+  if (!Number.isFinite(nominalTemperature) || nominalTemperature <= 0.0) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  if (!Number.isFinite(element.thresholdVoltageTemperatureCoefficient)) {
+    throw invalidElement(
+      element.name,
+      "threshold-voltage temperature coefficient must be finite",
+    );
+  }
+  if (
+    element.alternativeThresholdVoltageTemperatureCoefficient !== undefined &&
+    !Number.isFinite(element.alternativeThresholdVoltageTemperatureCoefficient)
+  ) {
+    throw invalidElement(
+      element.name,
+      "alternative threshold-voltage temperature coefficient must be finite",
+    );
+  }
+  if (!Number.isFinite(element.mobilityTemperatureExponent)) {
+    throw invalidElement(element.name, "mobility temperature exponent must be finite");
+  }
+  if (!Number.isFinite(element.gateSaturationCurrentTemperatureExponent)) {
+    throw invalidElement(
+      element.name,
+      "gate saturation-current temperature exponent must be finite",
+    );
+  }
+  if (!Number.isFinite(element.bandgapVoltage) || element.bandgapVoltage <= 0.0) {
+    throw invalidElement(element.name, "bandgap voltage must be finite and positive");
+  }
+  if (!Number.isFinite(element.dopingTailParameter)) {
+    throw invalidElement(element.name, "doping-tail parameter must be finite");
+  }
+  if (
+    !Number.isFinite(element.noiseEquationLevel) ||
+    element.noiseEquationLevel < 1.0 ||
+    !Number.isInteger(element.noiseEquationLevel)
+  ) {
+    throw invalidElement(
+      element.name,
+      "noise equation level must be a finite integer greater than or equal to 1",
+    );
+  }
+  if (
+    !Number.isFinite(element.channelNoiseCoefficient) ||
+    element.channelNoiseCoefficient < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "channel noise coefficient must be finite and non-negative",
+    );
+  }
+  if (
+    element.mobilityTemperatureCoefficient !== undefined &&
+    !Number.isFinite(element.mobilityTemperatureCoefficient)
+  ) {
+    throw invalidElement(element.name, "mobility temperature coefficient must be finite");
+  }
+  const temperatureRatio = temperatureKelvin / nominalTemperature;
+  const saturationExponent =
+    (element.bandgapVoltage * ELECTRON_CHARGE) /
+    BOLTZMANN *
+    (1.0 / nominalTemperature - 1.0 / temperatureKelvin);
+  const saturationScale =
+    temperatureRatio ** element.gateSaturationCurrentTemperatureExponent *
+    Math.exp(Math.max(-100.0, Math.min(100.0, saturationExponent)));
+  const betaScale =
+    element.mobilityTemperatureCoefficient !== undefined
+      ? 1.01 **
+        (element.mobilityTemperatureCoefficient *
+          (temperatureKelvin - nominalTemperature))
+      : temperatureRatio ** element.mobilityTemperatureExponent;
+  return {
+    ...element,
+    beta: element.beta * betaScale,
+    gateSaturationCurrent: element.gateSaturationCurrent * saturationScale,
+    thresholdVoltage:
+      element.alternativeThresholdVoltageTemperatureCoefficient !== undefined
+        ? element.thresholdVoltage +
+          element.alternativeThresholdVoltageTemperatureCoefficient *
+            (temperatureKelvin - nominalTemperature)
+        : element.thresholdVoltage -
+          element.thresholdVoltageTemperatureCoefficient *
+            (temperatureKelvin - nominalTemperature),
   };
 }
 
@@ -7644,7 +7947,7 @@ export function circuitAtTemperature(
           element,
           temperatureKelvin,
           nominalTemperatureKelvin,
-          energyGapElectronVolts,
+          element.energyGapElectronVolts,
         ),
       );
     } else if (element.kind === "bjt") {
@@ -7653,11 +7956,20 @@ export function circuitAtTemperature(
           element,
           temperatureKelvin,
           nominalTemperatureKelvin,
+          element.energyGapElectronVolts,
+        ),
+      );
+    } else if (element.kind === "jfet") {
+      adjusted.add(jfetAtTemperature(element, temperatureKelvin, nominalTemperatureKelvin));
+    } else if (element.kind === "mosfet") {
+      adjusted.add(
+        mosfetAtTemperature(
+          element,
+          temperatureKelvin,
+          nominalTemperatureKelvin,
           energyGapElectronVolts,
         ),
       );
-    } else if (element.kind === "mosfet") {
-      adjusted.add(mosfetAtTemperature(element, temperatureKelvin, nominalTemperatureKelvin));
     } else {
       adjusted.add(element);
     }
@@ -7676,6 +7988,23 @@ export function jfet(
   channelLengthModulation = 0.0,
   gateSourceCapacitance = 0.0,
   gateDrainCapacitance = 0.0,
+  flickerNoiseCoefficient = 0.0,
+  flickerNoiseExponent = 1.0,
+  junctionPotential = 1.0,
+  forwardBiasDepletionCoefficient = 0.5,
+  gateSaturationCurrent = 1.0e-14,
+  gateSaturationCurrentTemperatureExponent = 3.0,
+  bandgapVoltage = 1.11,
+  dopingTailParameter = 1.0,
+  noiseEquationLevel = 1.0,
+  channelNoiseCoefficient = 1.0,
+  drainResistance = 0.0,
+  sourceResistance = 0.0,
+  thresholdVoltageTemperatureCoefficient = 0.0,
+  alternativeThresholdVoltageTemperatureCoefficient: number | undefined = undefined,
+  nominalTemperatureKelvin: number | undefined = undefined,
+  mobilityTemperatureExponent = 0.0,
+  mobilityTemperatureCoefficient: number | undefined = undefined,
 ): Jfet {
   return {
     kind: "jfet",
@@ -7689,6 +8018,23 @@ export function jfet(
     channelLengthModulation,
     gateSourceCapacitance,
     gateDrainCapacitance,
+    flickerNoiseCoefficient,
+    flickerNoiseExponent,
+    junctionPotential,
+    forwardBiasDepletionCoefficient,
+    gateSaturationCurrent,
+    gateSaturationCurrentTemperatureExponent,
+    bandgapVoltage,
+    dopingTailParameter,
+    noiseEquationLevel,
+    channelNoiseCoefficient,
+    drainResistance,
+    sourceResistance,
+    thresholdVoltageTemperatureCoefficient,
+    alternativeThresholdVoltageTemperatureCoefficient,
+    nominalTemperatureKelvin,
+    mobilityTemperatureExponent,
+    mobilityTemperatureCoefficient,
   };
 }
 
@@ -7705,6 +8051,38 @@ export function bjt(
   baseCollectorCapacitance = 0.0,
   forwardTransitTime = 0.0,
   reverseTransitTime = 0.0,
+  saturationCurrentTemperatureExponent = 3.0,
+  energyGapElectronVolts = 1.11,
+  forwardEarlyVoltage = 0.0,
+  forwardEmissionCoefficient = 1.0,
+  reverseEmissionCoefficient = 1.0,
+  baseEmitterJunctionPotential = 0.75,
+  baseEmitterGradingCoefficient = 0.33,
+  baseCollectorJunctionPotential = 0.75,
+  baseCollectorGradingCoefficient = 0.33,
+  forwardBiasDepletionCoefficient = 0.5,
+  reverseEarlyVoltage = 0.0,
+  forwardBetaRolloffCurrent = 0.0,
+  baseEmitterLeakageSaturationCurrent = 0.0,
+  baseEmitterLeakageEmissionCoefficient = 1.0,
+  baseCollectorLeakageSaturationCurrent = 0.0,
+  baseCollectorLeakageEmissionCoefficient = 2.0,
+  forwardBetaTemperatureExponent = 0.0,
+  reverseBeta = Number.POSITIVE_INFINITY,
+  reverseBetaRolloffCurrent = 0.0,
+  nominalTemperatureKelvin: number | undefined = undefined,
+  flickerNoiseCoefficient = 0.0,
+  flickerNoiseExponent = 1.0,
+  forwardExcessPhaseDegrees = 0.0,
+  forwardTransitTimeBiasCoefficient = 0.0,
+  forwardTransitTimeCurrent = 0.0,
+  forwardTransitTimeVoltage = 0.0,
+  emitterResistance = 0.0,
+  collectorResistance = 0.0,
+  baseResistance = 0.0,
+  minimumBaseResistance: number | undefined = undefined,
+  baseResistanceHalfCurrent = 0.0,
+  baseCollectorCapacitanceFraction = 1.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7720,6 +8098,38 @@ export function bjt(
     baseCollectorCapacitance,
     forwardTransitTime,
     reverseTransitTime,
+    saturationCurrentTemperatureExponent,
+    energyGapElectronVolts,
+    forwardEarlyVoltage,
+    reverseEarlyVoltage,
+    forwardEmissionCoefficient,
+    reverseEmissionCoefficient,
+    baseEmitterJunctionPotential,
+    baseEmitterGradingCoefficient,
+    baseCollectorJunctionPotential,
+    baseCollectorGradingCoefficient,
+    forwardBiasDepletionCoefficient,
+    forwardBetaRolloffCurrent,
+    baseEmitterLeakageSaturationCurrent,
+    baseEmitterLeakageEmissionCoefficient,
+    baseCollectorLeakageSaturationCurrent,
+    baseCollectorLeakageEmissionCoefficient,
+    forwardBetaTemperatureExponent,
+    reverseBeta,
+    reverseBetaRolloffCurrent,
+    nominalTemperatureKelvin,
+    flickerNoiseCoefficient,
+    flickerNoiseExponent,
+    forwardExcessPhaseDegrees,
+    forwardTransitTimeBiasCoefficient,
+    forwardTransitTimeCurrent,
+    forwardTransitTimeVoltage,
+    emitterResistance,
+    collectorResistance,
+    baseResistance,
+    minimumBaseResistance,
+    baseResistanceHalfCurrent,
+    baseCollectorCapacitanceFraction,
   };
 }
 
@@ -7732,7 +8142,22 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     PHI: 0.84,
     W: 1.0e-6,
     L: 130.0e-9,
+    LD: 0.0,
+    TOX: 1.0e-7,
+    U0: 600.0,
+    RD: 0.0,
+    RS: 0.0,
+    RSH: 0.0,
+    NRD: 1.0,
+    NRS: 1.0,
+    AD: 0.0,
+    AS: 0.0,
+    PD: 0.0,
+    PS: 0.0,
+    CJ: 0.0,
+    CJSW: 0.0,
     IS: 1.0e-15,
+    JS: 0.0,
     N_SUB: 1.4,
     T_NOM: 300.15,
     CGSO: 0.0,
@@ -7742,6 +8167,10 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     CBD: 0.0,
     PB: 0.8,
     MJ: 0.5,
+    MJSW: 0.33,
+    FC: 0.5,
+    KF: 0.0,
+    AF: 1.0,
   };
 }
 
@@ -7786,6 +8215,7 @@ const MODEL_TYPE_ALIASES: Readonly<Record<string, ModelCardKind>> = {
 
 const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   IS: "IS",
+  XTI: "XTI",
   JS: "IS",
   VT: "VT",
   V_T: "VT",
@@ -7796,6 +8226,15 @@ const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CJ: "CJO",
   CJ0: "CJO",
   TT: "TT",
+  VJ: "VJ",
+  PB: "VJ",
+  M: "M",
+  MJ: "M",
+  FC: "FC",
+  EG: "EG",
+  RS: "RS",
+  KF: "KF",
+  AF: "AF",
 };
 
 const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -7814,6 +8253,49 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CBC: "CJC",
   TF: "TF",
   TR: "TR",
+  XTI: "XTI",
+  EG: "EG",
+  VAF: "VAF",
+  VA: "VAF",
+  VAR: "VAR",
+  VB: "VAR",
+  IKF: "IKF",
+  IK: "IKF",
+  IKR: "IKR",
+  TNOM: "TNOM",
+  T_NOM: "TNOM",
+  KF: "KF",
+  AF: "AF",
+  PTF: "PTF",
+  XTF: "XTF",
+  ITF: "ITF",
+  VTF: "VTF",
+  RE: "RE",
+  RC: "RC",
+  RB: "RB",
+  RBM: "RBM",
+  IRB: "IRB",
+  XCJC: "XCJC",
+  ISE: "ISE",
+  C2: "C2",
+  NE: "NE",
+  ISC: "ISC",
+  C4: "C4",
+  NC: "NC",
+  XTB: "XTB",
+  BR: "BR",
+  BETA_R: "BR",
+  NF: "NF",
+  NR: "NR",
+  VJE: "VJE",
+  PE: "VJE",
+  MJE: "MJE",
+  ME: "MJE",
+  VJC: "VJC",
+  PC: "VJC",
+  MJC: "MJC",
+  MC: "MJC",
+  FC: "FC",
 };
 
 const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -7828,6 +8310,25 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CGS0: "CGS",
   CGD: "CGD",
   CGD0: "CGD",
+  KF: "KF",
+  AF: "AF",
+  PB: "PB",
+  VJ: "PB",
+  FC: "FC",
+  IS: "IS",
+  XTI: "XTI",
+  EG: "EG",
+  B: "B",
+  NLEV: "NLEV",
+  GDSNOI: "GDSNOI",
+  RD: "RD",
+  RS: "RS",
+  TNOM: "TNOM",
+  T_NOM: "TNOM",
+  TCV: "TCV",
+  VTOTC: "VTOTC",
+  BEX: "BEX",
+  BETATCE: "BETATCE",
 };
 
 const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -7842,9 +8343,19 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   PHI: "PHI",
   W: "W",
   L: "L",
+  LD: "LD",
+  TOX: "TOX",
+  U0: "U0",
+  UO: "U0",
+  RD: "RD",
+  RS: "RS",
+  RSH: "RSH",
   IS: "IS",
+  JS: "JS",
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
+  NSS: "NSS",
+  TPG: "TPG",
   TNOM: "T_NOM",
   T_NOM: "T_NOM",
   CGSO: "CGSO",
@@ -7854,8 +8365,14 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CJS: "CBS",
   CBD: "CBD",
   CJD: "CBD",
+  CJ: "CJ",
+  CJSW: "CJSW",
   PB: "PB",
   MJ: "MJ",
+  MJSW: "MJSW",
+  FC: "FC",
+  KF: "KF",
+  AF: "AF",
 };
 
 function modelTypeKey(text: string): string {
@@ -7907,12 +8424,134 @@ export function normalizeModelCard(
     }
     const value = Number(rawValue);
     if (canonical === "LEVEL") {
-      if (Math.abs(value - 1.0) > 1.0e-12) {
+      if (!Number.isFinite(value) || Math.abs(value - 1.0) > 1.0e-12) {
         throw invalidElement(name, "only MOS LEVEL=1 model cards are supported");
       }
       normalized[canonical] = 1.0;
+    } else if (canonical === "TPG" && value !== -1.0 && value !== 0.0 && value !== 1.0) {
+      throw invalidElement(name, "MOSFET TPG must be -1, 0, or 1");
+    } else if (canonical === "NSS" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET NSS must be finite and non-negative");
+    } else if (canonical === "T_NOM" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET TNOM must be finite and positive");
+    } else if (canonical === "N_SUB" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET NSUB must be finite and positive");
+    } else if (canonical === "TOX" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET TOX must be finite and positive");
+    } else if (canonical === "U0" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET U0 must be finite and non-negative");
+    } else if (canonical === "RD" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET RD must be finite and non-negative");
+    } else if (canonical === "RS" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET RS must be finite and non-negative");
+    } else if (canonical === "RSH" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET RSH must be finite and non-negative");
+    } else if (canonical === "KF" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET KF must be finite and non-negative");
+    } else if (canonical === "AF" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET AF must be finite and non-negative");
+    } else if (canonical === "KP" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET KP must be finite and positive");
+    } else if (canonical === "W" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET W must be finite and positive");
+    } else if (canonical === "L" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET L must be finite and positive");
+    } else if (canonical === "VT0" && !Number.isFinite(value)) {
+      throw invalidElement(name, "MOSFET VT0 must be finite");
+    } else if (canonical === "LAMBDA" && !Number.isFinite(value)) {
+      throw invalidElement(name, "MOSFET LAMBDA must be finite");
+    } else if (
+      canonical === "PHI" &&
+      (!Number.isFinite(value) || value <= 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET PHI must be finite and positive");
+    } else if (
+      canonical === "GAMMA" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET GAMMA must be finite and non-negative");
+    } else if (
+      canonical === "PB" &&
+      (!Number.isFinite(value) || value <= 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET PB must be finite and positive");
+    } else if (
+      canonical === "MJ" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET MJ must be finite and non-negative");
+    } else if (
+      canonical === "FC" &&
+      (!Number.isFinite(value) || value < 0.0 || value >= 1.0)
+    ) {
+      throw invalidElement(name, "MOSFET FC must be finite and in [0, 1)");
+    } else if (
+      canonical === "MJSW" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET MJSW must be finite and non-negative");
+    } else if (
+      canonical === "CJ" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET CJ must be finite and non-negative");
+    } else if (
+      canonical === "CJSW" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET CJSW must be finite and non-negative");
+    } else if (
+      canonical === "CBS" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET CBS must be finite and non-negative");
+    } else if (
+      canonical === "CBD" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET CBD must be finite and non-negative");
+    } else if (
+      canonical === "CGSO" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET CGSO must be finite and non-negative");
+    } else if (
+      canonical === "CGDO" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET CGDO must be finite and non-negative");
+    } else if (
+      canonical === "CGBO" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET CGBO must be finite and non-negative");
+    } else if (
+      canonical === "IS" &&
+      (!Number.isFinite(value) || value <= 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET IS must be finite and positive");
+    } else if (
+      canonical === "JS" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET JS must be finite and non-negative");
     } else {
       normalized[canonical] = value;
+    }
+  }
+  if (kind === "NMOS" || kind === "PMOS") {
+    const defaults = defaultMosfetLevel1Params();
+    const length = normalized.L ?? defaults.L;
+    const lateralDiffusionLength = normalized.LD ?? defaults.LD;
+    if (
+      !Number.isFinite(lateralDiffusionLength) ||
+      lateralDiffusionLength < 0.0 ||
+      length - 2.0 * lateralDiffusionLength <= 0.0
+    ) {
+      throw invalidElement(
+        name,
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+      );
     }
   }
   return { name, kind, parameters: normalized, unsupportedParameters: unsupported };
@@ -8278,6 +8917,14 @@ export function diodeFromModelCard(
     p.IBV ?? 1.0e-3,
     p.CJO ?? 0.0,
     p.TT ?? 0.0,
+    p.VJ ?? 1.0,
+    p.M ?? 0.5,
+    p.FC ?? 0.5,
+    p.XTI ?? 3.0,
+    p.EG ?? 1.11,
+    p.RS ?? 0.0,
+    p.KF ?? 0.0,
+    p.AF ?? 1.0,
   );
 }
 
@@ -8292,19 +8939,52 @@ export function bjtFromModelCard(
     throw invalidElement(name, `expected BJT model card, got ${model.kind}`);
   }
   const p = model.parameters;
+  const saturationCurrent = p.IS ?? 1.0e-14;
   return bjt(
     name,
     collector,
     base,
     emitter,
     model.kind,
-    p.IS ?? 1.0e-14,
+    saturationCurrent,
     p.BF ?? 100.0,
     p.VT ?? 0.02585,
     p.CJE ?? 0.0,
     p.CJC ?? 0.0,
     p.TF ?? 0.0,
     p.TR ?? 0.0,
+    p.XTI ?? 3.0,
+    p.EG ?? 1.11,
+    p.VAF ?? 0.0,
+    p.NF ?? 1.0,
+    p.NR ?? 1.0,
+    p.VJE ?? 0.75,
+    p.MJE ?? 0.33,
+    p.VJC ?? 0.75,
+    p.MJC ?? 0.33,
+    p.FC ?? 0.5,
+    p.VAR ?? 0.0,
+    p.IKF ?? 0.0,
+    p.ISE ?? (p.C2 ?? 0.0) * saturationCurrent,
+    p.NE ?? 1.0,
+    p.ISC ?? (p.C4 ?? 0.0) * saturationCurrent,
+    p.NC ?? 2.0,
+    p.XTB ?? 0.0,
+    p.BR ?? 1.0,
+    p.IKR ?? 0.0,
+    p.TNOM !== undefined ? p.TNOM + 273.15 : undefined,
+    p.KF ?? 0.0,
+    p.AF ?? 1.0,
+    p.PTF ?? 0.0,
+    p.XTF ?? 0.0,
+    p.ITF ?? 0.0,
+    p.VTF ?? 0.0,
+    p.RE ?? 0.0,
+    p.RC ?? 0.0,
+    p.RB ?? 0.0,
+    p.RBM,
+    p.IRB ?? 0.0,
+    p.XCJC ?? 1.0,
   );
 }
 
@@ -8330,6 +9010,23 @@ export function jfetFromModelCard(
     p.LAMBDA ?? 0.0,
     p.CGS ?? 0.0,
     p.CGD ?? 0.0,
+    p.KF ?? 0.0,
+    p.AF ?? 1.0,
+    p.PB ?? 1.0,
+    p.FC ?? 0.5,
+    p.IS ?? 1.0e-14,
+    p.XTI ?? 3.0,
+    p.EG ?? 1.11,
+    p.B ?? 1.0,
+    p.NLEV ?? 1.0,
+    p.GDSNOI ?? 1.0,
+    p.RD ?? 0.0,
+    p.RS ?? 0.0,
+    p.TCV ?? 0.0,
+    p.VTOTC,
+    p.TNOM !== undefined ? p.TNOM + 273.15 : undefined,
+    p.BEX ?? 0.0,
+    p.BETATCE,
   );
 }
 
@@ -8345,15 +9042,87 @@ export function mosfetFromModelCard(
     throw invalidElement(name, `expected MOSFET model card, got ${model.kind}`);
   }
   const p = model.parameters;
+  const surfaceMobility = p.U0 ?? 600.0;
+  const transconductance =
+    p.KP ??
+    (p.TOX !== undefined && p.TOX > 0.0
+      ? surfaceMobility * 1.0e-4 * OXIDE_PERMITTIVITY / p.TOX
+      : undefined);
+  let surfacePotential = p.PHI;
+  let bodyEffectCoefficient = p.GAMMA;
+  if (p.N_SUB !== undefined && p.TOX !== undefined) {
+    const substrateDopingPerCubicMeter =
+      p.N_SUB * CUBIC_CENTIMETERS_PER_CUBIC_METER;
+    if (substrateDopingPerCubicMeter <= INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER) {
+      throw invalidElement(name, "MOSFET NSUB must exceed the intrinsic carrier density");
+    }
+    if (p.TOX > 0.0) {
+      if (surfacePotential === undefined) {
+        const nominalTemperature = p.T_NOM ?? 300.15;
+        const thermalVoltage = BOLTZMANN * nominalTemperature / ELECTRON_CHARGE;
+        surfacePotential = Math.max(
+          0.1,
+          2.0 *
+            thermalVoltage *
+            Math.log(
+              substrateDopingPerCubicMeter /
+                INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER,
+            ),
+        );
+      }
+      if (bodyEffectCoefficient === undefined) {
+        const oxideCapacitance = OXIDE_PERMITTIVITY / p.TOX;
+        bodyEffectCoefficient =
+          Math.sqrt(
+            2.0 *
+              SILICON_PERMITTIVITY *
+              ELECTRON_CHARGE *
+              substrateDopingPerCubicMeter,
+          ) / oxideCapacitance;
+      }
+    }
+  }
+  const nominalTemperature = p.T_NOM ?? 300.15;
+  const polarity = model.kind === "NMOS" ? 1.0 : -1.0;
+  const bandGap = siliconBandGapElectronVolts(nominalTemperature);
+  const gateType = p.TPG ?? 1.0;
+  const substrateFermiPotential = polarity * 0.5 * (surfacePotential ?? 0.0);
+  const gateWorkFunction =
+    gateType === 0.0
+      ? 3.2
+      : 3.25 + 0.5 * bandGap - polarity * gateType * 0.5 * bandGap;
+  const gateSubstrateWorkFunction =
+    gateWorkFunction - (3.25 + 0.5 * bandGap + substrateFermiPotential);
+  const surfaceStateShift =
+    p.TOX !== undefined && p.TOX > 0.0
+      ? ((p.NSS ?? 0.0) * 1.0e4 * ELECTRON_CHARGE) /
+        (OXIDE_PERMITTIVITY / p.TOX)
+      : 0.0;
+  const thresholdVoltage =
+    p.VT0 ??
+    (p.N_SUB !== undefined && p.TOX !== undefined && p.TOX > 0.0
+      ? gateSubstrateWorkFunction -
+        surfaceStateShift +
+        polarity *
+          ((bodyEffectCoefficient ?? 0.0) * Math.sqrt(surfacePotential ?? 0.0) +
+            (surfacePotential ?? 0.0))
+      : undefined);
   const params: Partial<MosfetLevel1Params> = {
-    ...(p.VT0 !== undefined ? { VT0: p.VT0 } : {}),
-    ...(p.KP !== undefined ? { KP: p.KP } : {}),
+    ...(thresholdVoltage !== undefined ? { VT0: thresholdVoltage } : {}),
+    ...(transconductance !== undefined ? { KP: transconductance } : {}),
     ...(p.LAMBDA !== undefined ? { LAMBDA: p.LAMBDA } : {}),
-    ...(p.GAMMA !== undefined ? { GAMMA: p.GAMMA } : {}),
-    ...(p.PHI !== undefined ? { PHI: p.PHI } : {}),
+    ...(bodyEffectCoefficient !== undefined ? { GAMMA: bodyEffectCoefficient } : {}),
+    ...(surfacePotential !== undefined ? { PHI: surfacePotential } : {}),
     ...(p.W !== undefined ? { W: p.W } : {}),
     ...(p.L !== undefined ? { L: p.L } : {}),
+    ...(p.LD !== undefined ? { LD: p.LD } : {}),
+    ...(p.TOX !== undefined ? { TOX: p.TOX } : {}),
+    U0: surfaceMobility,
+    ...(p.RD !== undefined ? { RD: p.RD } : {}),
+    ...(p.RS !== undefined ? { RS: p.RS } : {}),
+    ...(p.RSH !== undefined ? { RSH: p.RSH } : {}),
     ...(p.IS !== undefined ? { IS: p.IS } : {}),
+    ...(p.JS !== undefined ? { JS: p.JS } : {}),
     ...(p.N_SUB !== undefined ? { N_SUB: p.N_SUB } : {}),
     ...(p.T_NOM !== undefined ? { T_NOM: p.T_NOM } : {}),
     ...(p.CGSO !== undefined ? { CGSO: p.CGSO } : {}),
@@ -8361,8 +9130,14 @@ export function mosfetFromModelCard(
     ...(p.CGBO !== undefined ? { CGBO: p.CGBO } : {}),
     ...(p.CBS !== undefined ? { CBS: p.CBS } : {}),
     ...(p.CBD !== undefined ? { CBD: p.CBD } : {}),
+    ...(p.CJ !== undefined ? { CJ: p.CJ } : {}),
+    ...(p.CJSW !== undefined ? { CJSW: p.CJSW } : {}),
     ...(p.PB !== undefined ? { PB: p.PB } : {}),
     ...(p.MJ !== undefined ? { MJ: p.MJ } : {}),
+    ...(p.MJSW !== undefined ? { MJSW: p.MJSW } : {}),
+    ...(p.FC !== undefined ? { FC: p.FC } : {}),
+    ...(p.KF !== undefined ? { KF: p.KF } : {}),
+    ...(p.AF !== undefined ? { AF: p.AF } : {}),
   };
   return mosfet(name, drain, gate, source, body, model.kind, params);
 }
@@ -8551,7 +9326,7 @@ function deviceModelTemperatureBehavior(name: string): string {
   const behaviors: Record<string, string> = {
     "diode-forward-bias": "diode saturation current and thermal voltage scale with temperature",
     "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
-    "jfet-source-bias": "JFET temperature scaling is intentionally invariant until a policy lands",
+    "jfet-source-bias": "JFET temperature scaling defaults to invariant; VTOTC overrides TCV for threshold-voltage scaling; BETATCE overrides BEX for beta scaling",
     "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
   };
   const behavior = behaviors[name];
@@ -14610,7 +15385,12 @@ export function noiseAc(
 
   const points = frequenciesHz.map((frequencyHz) => {
     if (outputIndex === undefined || matrixSize === 0) {
-      return makeNoisePoint(frequencyHz, 0.0, 0.0, zeroNoiseEntries(noiseSources));
+      return makeNoisePoint(
+        frequencyHz,
+        0.0,
+        0.0,
+        zeroNoiseEntries(noiseSources, frequencyHz),
+      );
     }
 
     const matrix = buildAcMatrix(
@@ -14632,7 +15412,7 @@ export function noiseAc(
           frequencyHz,
           0.0,
           0.0,
-          zeroNoiseEntries(noiseSources),
+          zeroNoiseEntries(noiseSources, frequencyHz),
         );
       }
       throw error;
@@ -14644,11 +15424,12 @@ export function noiseAc(
       const hNegative =
         source.negative === undefined ? complex(0.0, 0.0) : adjoint[source.negative];
       const transfer = complexSub(hPositive, hNegative);
+      const sourcePsd = source.sourcePsd / frequencyHz ** source.frequencyExponent;
       return {
         elementName: source.elementName,
         noiseType: source.noiseType,
-        sourcePsd: source.sourcePsd,
-        outputPsd: complexAbs(transfer) ** 2 * source.sourcePsd,
+        sourcePsd,
+        outputPsd: complexAbs(transfer) ** 2 * sourcePsd,
       };
     });
     entries.sort(
@@ -16590,6 +17371,7 @@ interface NoiseSource {
   readonly positive: number | undefined;
   readonly negative: number | undefined;
   readonly sourcePsd: number;
+  readonly frequencyExponent: number;
 }
 
 type InputSource = VoltageSource | CurrentSource;
@@ -17624,15 +18406,24 @@ function buildSmallSignalMatrix(
         break;
       case "diode":
         validateDiode(element);
-        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.anode)) -
+        const diodeAnode = diodeIntrinsicAnodeNode(element);
+        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, diodeAnode)) -
           vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.cathode));
         const [, diodeConductance] = diodeCurrentConductance(element, diodeVoltage);
         stampConductance(
           matrix,
-          nodeIndex(nodeIndices, element.anode),
+          nodeIndex(nodeIndices, diodeAnode),
           nodeIndex(nodeIndices, element.cathode),
           diodeConductance,
         );
+        if (element.seriesResistance > 0.0) {
+          stampConductance(
+            matrix,
+            nodeIndex(nodeIndices, element.anode),
+            nodeIndex(nodeIndices, diodeAnode),
+            1.0 / element.seriesResistance,
+          );
+        }
         break;
       case "jfet":
         stampJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
@@ -17806,16 +18597,25 @@ function buildAcMatrix(
         break;
       case "diode":
         validateDiode(element);
-        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.anode)) -
+        const diodeAnode = diodeIntrinsicAnodeNode(element);
+        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, diodeAnode)) -
           vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.cathode));
         const [, diodeConductance] = diodeCurrentConductance(element, diodeVoltage);
-        const diffusionCapacitance = element.transitTime * diodeConductance;
+        const diodeCapacitance = diodeDynamicCapacitance(element, diodeVoltage);
         stampComplexConductance(
           matrix,
-          nodeIndex(nodeIndices, element.anode),
+          nodeIndex(nodeIndices, diodeAnode),
           nodeIndex(nodeIndices, element.cathode),
-          complex(diodeConductance, omega * (element.junctionCapacitance + diffusionCapacitance)),
+          complex(diodeConductance, omega * diodeCapacitance),
         );
+        if (element.seriesResistance > 0.0) {
+          stampComplexConductance(
+            matrix,
+            nodeIndex(nodeIndices, element.anode),
+            nodeIndex(nodeIndices, diodeAnode),
+            complex(1.0 / element.seriesResistance, 0.0),
+          );
+        }
         break;
       case "jfet":
         stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
@@ -18060,22 +18860,46 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
       case "diode":
         insertNode(names, element.anode);
         insertNode(names, element.cathode);
+        if (element.seriesResistance > 0.0) {
+          insertNode(names, diodeIntrinsicAnodeNode(element));
+        }
         break;
       case "jfet":
         insertNode(names, element.drain);
         insertNode(names, element.gate);
         insertNode(names, element.source);
+        if (element.drainResistance > 0.0) {
+          insertNode(names, jfetIntrinsicDrainNode(element));
+        }
+        if (element.sourceResistance > 0.0) {
+          insertNode(names, jfetIntrinsicSourceNode(element));
+        }
         break;
       case "bjt":
         insertNode(names, element.collector);
         insertNode(names, element.base);
         insertNode(names, element.emitter);
+        if (element.emitterResistance > 0.0) {
+          insertNode(names, bjtIntrinsicEmitterNode(element));
+        }
+        if (element.collectorResistance > 0.0) {
+          insertNode(names, bjtIntrinsicCollectorNode(element));
+        }
+        if (element.baseResistance > 0.0) {
+          insertNode(names, bjtIntrinsicBaseNode(element));
+        }
         break;
       case "mosfet":
         insertNode(names, element.drain);
         insertNode(names, element.gate);
         insertNode(names, element.source);
         insertNode(names, element.body);
+        if (mosfetDrainResistance(element) > 0.0) {
+          insertNode(names, mosfetIntrinsicDrainNode(element));
+        }
+        if (mosfetSourceResistance(element) > 0.0) {
+          insertNode(names, mosfetIntrinsicSourceNode(element));
+        }
         break;
       case "vccs":
         insertNode(names, element.positive);
@@ -18188,6 +19012,35 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
   throw invalidElement(inputSource, "input source was not found");
 }
 
+function jfetChannelNoiseConductance(
+  element: Jfet,
+  vgs: number,
+  vds: number,
+  gm: number,
+): number {
+  if (element.noiseEquationLevel < 3.0) {
+    return MOSFET_CHANNEL_NOISE_GAMMA * Math.abs(gm);
+  }
+  const normalizedVgs = element.polarity === "NJF" ? vgs : -vgs;
+  const normalizedVds = element.polarity === "NJF" ? vds : -vds;
+  const thresholdVoltage =
+    element.polarity === "NJF" ? element.thresholdVoltage : -element.thresholdVoltage;
+  const overdrive = normalizedVgs - thresholdVoltage;
+  if (overdrive <= 0.0 || normalizedVds < 0.0) {
+    return 0.0;
+  }
+  const alpha =
+    overdrive >= normalizedVds ? 1.0 - normalizedVds / overdrive : 0.0;
+  return (
+    MOSFET_CHANNEL_NOISE_GAMMA *
+    element.beta *
+    overdrive *
+    (1.0 + alpha + alpha * alpha) /
+    (1.0 + alpha) *
+    element.channelNoiseCoefficient
+  );
+}
+
 function collectNoiseSources(
   circuit: Circuit,
   nodeIndices: ReadonlyMap<string, number>,
@@ -18206,10 +19059,12 @@ function collectNoiseSources(
         positive: nodeIndex(nodeIndices, element.n1),
         negative: nodeIndex(nodeIndices, element.n2),
         sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.resistanceOhms,
+        frequencyExponent: 0.0,
       });
     } else if (element.kind === "diode") {
       validateDiode(element);
-      const anode = nodeIndex(nodeIndices, element.anode);
+      const intrinsicAnode = diodeIntrinsicAnodeNode(element);
+      const anode = nodeIndex(nodeIndices, intrinsicAnode);
       const cathode = nodeIndex(nodeIndices, element.cathode);
       const anodeVoltage = vectorVoltage(operatingPoint, anode);
       const cathodeVoltage = vectorVoltage(operatingPoint, cathode);
@@ -18220,31 +19075,139 @@ function collectNoiseSources(
         positive: anode,
         negative: cathode,
         sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(current),
+        frequencyExponent: 0.0,
       });
+      if (element.flickerNoiseCoefficient > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "flicker",
+          positive: anode,
+          negative: cathode,
+          sourcePsd:
+            element.flickerNoiseCoefficient *
+            Math.abs(current) ** element.flickerNoiseExponent,
+          frequencyExponent: 1.0,
+        });
+      }
+      if (element.seriesResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RS`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.anode),
+          negative: anode,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.seriesResistance,
+          frequencyExponent: 0.0,
+        });
+      }
     } else if (element.kind === "bjt") {
       validateBjt(element);
-      const base = nodeIndex(nodeIndices, element.base);
-      const emitter = nodeIndex(nodeIndices, element.emitter);
+      const emitterNode = bjtIntrinsicEmitterNode(element);
+      const collectorNode = bjtIntrinsicCollectorNode(element);
+      const baseNode = bjtIntrinsicBaseNode(element);
+      const base = nodeIndex(nodeIndices, baseNode);
+      const emitter = nodeIndex(nodeIndices, emitterNode);
+      const collector = nodeIndex(nodeIndices, collectorNode);
       const baseVoltage = vectorVoltage(operatingPoint, base);
       const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+      const collectorVoltage = vectorVoltage(operatingPoint, collector);
+      if (element.emitterResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RE`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.emitter),
+          negative: nodeIndex(nodeIndices, emitterNode),
+          sourcePsd:
+            4.0 * BOLTZMANN * temperatureKelvin / element.emitterResistance,
+          frequencyExponent: 0.0,
+        });
+      }
+      if (element.collectorResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RC`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.collector),
+          negative: nodeIndex(nodeIndices, collectorNode),
+          sourcePsd:
+            4.0 * BOLTZMANN * temperatureKelvin / element.collectorResistance,
+          frequencyExponent: 0.0,
+        });
+      }
+      if (element.baseResistance > 0.0) {
+        const baseResistance = bjtEffectiveBaseResistance(
+          element,
+          baseVoltage,
+          emitterVoltage,
+          collectorVoltage,
+        );
+        sources.push({
+          elementName: `${element.name}:RB`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.base),
+          negative: nodeIndex(nodeIndices, baseNode),
+          sourcePsd:
+            4.0 * BOLTZMANN * temperatureKelvin / baseResistance,
+          frequencyExponent: 0.0,
+        });
+      }
       const junctionVoltage =
         element.polarity === "NPN"
           ? baseVoltage - emitterVoltage
           : emitterVoltage - baseVoltage;
-      const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
-      const collectorCurrent = element.saturationCurrent * (Math.exp(exponent) - 1.0);
+      const reverseJunctionVoltage = element.polarity === "NPN"
+        ? baseVoltage - collectorVoltage
+        : collectorVoltage - baseVoltage;
+      const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+      const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
+      const outputVoltage = element.polarity === "NPN"
+        ? collectorVoltage - emitterVoltage
+        : emitterVoltage - collectorVoltage;
+      const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
+      const expValue = Math.exp(exponent);
+      const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
+      const baseTransconductance =
+        element.saturationCurrent / forwardThermalVoltage * expValue;
+      const collectorCurrent = bjtForwardTransport(
+        element,
+        baseCollectorCurrent,
+        baseTransconductance,
+        earlyFactor,
+      ).collectorCurrent;
+      const leakageCurrent = bjtBaseEmitterLeakage(element, junctionVoltage).current;
+      const collectorLeakageCurrent =
+        bjtBaseCollectorLeakage(element, reverseJunctionVoltage).current;
+      const reverseBaseCurrent =
+        bjtReverseBaseCurrent(element, reverseJunctionVoltage).current;
       sources.push({
         elementName: element.name,
         noiseType: "shot",
         positive: element.polarity === "NPN" ? base : emitter,
         negative: element.polarity === "NPN" ? emitter : base,
-        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(collectorCurrent),
+        sourcePsd:
+          2.0 * ELECTRON_CHARGE *
+          (Math.abs(collectorCurrent) + Math.abs(leakageCurrent) +
+            Math.abs(collectorLeakageCurrent) + Math.abs(reverseBaseCurrent)),
+        frequencyExponent: 0.0,
       });
+      if (element.flickerNoiseCoefficient > 0.0) {
+        const baseCurrent =
+          baseCollectorCurrent / element.forwardBeta + leakageCurrent;
+        sources.push({
+          elementName: element.name,
+          noiseType: "flicker",
+          positive: element.polarity === "NPN" ? base : emitter,
+          negative: element.polarity === "NPN" ? emitter : base,
+          sourcePsd:
+            element.flickerNoiseCoefficient * Math.abs(baseCurrent) ** element.flickerNoiseExponent,
+          frequencyExponent: 1.0,
+        });
+      }
     } else if (element.kind === "jfet") {
       validateJfet(element);
-      const drain = nodeIndex(nodeIndices, element.drain);
+      const intrinsicDrain = jfetIntrinsicDrainNode(element);
+      const intrinsicSource = jfetIntrinsicSourceNode(element);
+      const drain = nodeIndex(nodeIndices, intrinsicDrain);
       const gate = nodeIndex(nodeIndices, element.gate);
-      const source = nodeIndex(nodeIndices, element.source);
+      const source = nodeIndex(nodeIndices, intrinsicSource);
       const drainVoltage = vectorVoltage(operatingPoint, drain);
       const gateVoltage = vectorVoltage(operatingPoint, gate);
       const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -18254,20 +19217,85 @@ function collectNoiseSources(
         drainVoltage - sourceVoltage,
       );
       const gm = Math.max(0.0, result.gm);
-      if (gm > 0.0) {
+      const noiseConductance = jfetChannelNoiseConductance(
+        element,
+        gateVoltage - sourceVoltage,
+        drainVoltage - sourceVoltage,
+        gm,
+      );
+      if (noiseConductance > 0.0) {
         sources.push({
           elementName: element.name,
           noiseType: "thermal",
           positive: drain,
           negative: source,
-          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * MOSFET_CHANNEL_NOISE_GAMMA * gm,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * noiseConductance,
+          frequencyExponent: 0.0,
+        });
+      }
+      const [gateSourceCurrent] = jfetGateJunctionCurrentConductance(
+        element,
+        gateVoltage - sourceVoltage,
+      );
+      const [gateDrainCurrent] = jfetGateJunctionCurrentConductance(
+        element,
+        gateVoltage - drainVoltage,
+      );
+      sources.push({
+        elementName: `${element.name}:IGS`,
+        noiseType: "shot",
+        positive: gate,
+        negative: source,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(gateSourceCurrent),
+        frequencyExponent: 0.0,
+      });
+      sources.push({
+        elementName: `${element.name}:IGD`,
+        noiseType: "shot",
+        positive: gate,
+        negative: drain,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(gateDrainCurrent),
+        frequencyExponent: 0.0,
+      });
+      if (element.flickerNoiseCoefficient > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "flicker",
+          positive: drain,
+          negative: source,
+          sourcePsd:
+            element.flickerNoiseCoefficient *
+            Math.abs(result.drainCurrent) ** element.flickerNoiseExponent,
+          frequencyExponent: 1.0,
+        });
+      }
+      if (element.drainResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RD`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.drain),
+          negative: drain,
+          sourcePsd:
+            4.0 * BOLTZMANN * temperatureKelvin / element.drainResistance,
+          frequencyExponent: 0.0,
+        });
+      }
+      if (element.sourceResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RS`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.source),
+          negative: source,
+          sourcePsd:
+            4.0 * BOLTZMANN * temperatureKelvin / element.sourceResistance,
+          frequencyExponent: 0.0,
         });
       }
     } else if (element.kind === "mosfet") {
       validateMosfet(element);
-      const drain = nodeIndex(nodeIndices, element.drain);
+      const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
       const gate = nodeIndex(nodeIndices, element.gate);
-      const source = nodeIndex(nodeIndices, element.source);
+      const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
       const body = nodeIndex(nodeIndices, element.body);
       const drainVoltage = vectorVoltage(operatingPoint, drain);
       const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -18287,6 +19315,70 @@ function collectNoiseSources(
           positive: drain,
           negative: source,
           sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * MOSFET_CHANNEL_NOISE_GAMMA * gm,
+          frequencyExponent: 0.0,
+        });
+      }
+      if (element.params.KF > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "flicker",
+          positive: drain,
+          negative: source,
+          sourcePsd:
+            element.params.KF *
+            Math.abs(result.drainCurrent) ** element.params.AF,
+          frequencyExponent: 1.0,
+        });
+      }
+      const [sourceBulkCurrent] = mosfetBulkJunctionCurrentConductance(
+        element,
+        sourceVoltage,
+        bodyVoltage,
+        element.params.AS,
+      );
+      const [drainBulkCurrent] = mosfetBulkJunctionCurrentConductance(
+        element,
+        drainVoltage,
+        bodyVoltage,
+        element.params.AD,
+      );
+      const isNmos = element.type === "NMOS";
+      sources.push({
+        elementName: `${element.name}:IBS`,
+        noiseType: "shot",
+        positive: isNmos ? body : source,
+        negative: isNmos ? source : body,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(sourceBulkCurrent),
+        frequencyExponent: 0.0,
+      });
+      sources.push({
+        elementName: `${element.name}:IBD`,
+        noiseType: "shot",
+        positive: isNmos ? body : drain,
+        negative: isNmos ? drain : body,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(drainBulkCurrent),
+        frequencyExponent: 0.0,
+      });
+      const drainResistance = mosfetDrainResistance(element);
+      if (drainResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RD`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.drain),
+          negative: drain,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / drainResistance,
+          frequencyExponent: 0.0,
+        });
+      }
+      const sourceResistance = mosfetSourceResistance(element);
+      if (sourceResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RS`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.source),
+          negative: source,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / sourceResistance,
+          frequencyExponent: 0.0,
         });
       }
     }
@@ -18294,11 +19386,14 @@ function collectNoiseSources(
   return sources;
 }
 
-function zeroNoiseEntries(sources: readonly NoiseSource[]): NoiseEntry[] {
+function zeroNoiseEntries(
+  sources: readonly NoiseSource[],
+  frequencyHz: number,
+): NoiseEntry[] {
   return sources.map((source) => ({
     elementName: source.elementName,
     noiseType: source.noiseType,
-    sourcePsd: source.sourcePsd,
+    sourcePsd: source.sourcePsd / frequencyHz ** source.frequencyExponent,
     outputPsd: 0.0,
   }));
 }
@@ -18622,7 +19717,8 @@ function stampDiode(
   operatingPoint: readonly number[],
 ): void {
   validateDiode(element);
-  const anode = nodeIndex(nodeIndices, element.anode);
+  const intrinsicAnode = diodeIntrinsicAnodeNode(element);
+  const anode = nodeIndex(nodeIndices, intrinsicAnode);
   const cathode = nodeIndex(nodeIndices, element.cathode);
   const voltage =
     (anode === undefined ? 0.0 : operatingPoint[anode]) -
@@ -18636,6 +19732,14 @@ function stampDiode(
   }
   if (cathode !== undefined) {
     rhs[cathode] += equivalentCurrent;
+  }
+  if (element.seriesResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.anode),
+      anode,
+      1.0 / element.seriesResistance,
+    );
   }
   stampDiodeCharge(element, capacitorStates, nodeIndices, matrix, rhs);
 }
@@ -18671,7 +19775,7 @@ function stampDiodeCharge(
           (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
           (2.0 * state.timeStep)
         : conductance * state.previousVoltage;
-  const anode = nodeIndex(nodeIndices, element.anode);
+  const anode = nodeIndex(nodeIndices, diodeIntrinsicAnodeNode(element));
   const cathode = nodeIndex(nodeIndices, element.cathode);
   stampConductance(matrix, anode, cathode, conductance);
   if (anode !== undefined) {
@@ -18680,6 +19784,191 @@ function stampDiodeCharge(
   if (cathode !== undefined) {
     rhs[cathode] -= historyCurrent;
   }
+}
+
+function bjtEarlyFactor(
+  element: Bjt,
+  junctionVoltage: number,
+  outputVoltage: number,
+): number {
+  const forwardTerm = element.forwardEarlyVoltage === 0.0
+    ? 0.0
+    : outputVoltage / element.forwardEarlyVoltage;
+  const reverseTerm = element.reverseEarlyVoltage === 0.0
+    ? 0.0
+    : junctionVoltage / element.reverseEarlyVoltage;
+  return 1.0 + forwardTerm - reverseTerm;
+}
+
+function bjtForwardTransconductance(
+  element: Bjt,
+  baseCollectorCurrent: number,
+  baseTransconductance: number,
+  earlyFactor: number,
+): number {
+  const reverseEarlyConductance = element.reverseEarlyVoltage === 0.0
+    ? 0.0
+    : baseCollectorCurrent / element.reverseEarlyVoltage;
+  return baseTransconductance * earlyFactor - reverseEarlyConductance;
+}
+
+function bjtForwardTransport(
+  element: Bjt,
+  baseCollectorCurrent: number,
+  baseTransconductance: number,
+  earlyFactor: number,
+): { collectorCurrent: number; transconductance: number; chargeFactor: number } {
+  const lowCurrentTransconductance = bjtForwardTransconductance(
+    element,
+    baseCollectorCurrent,
+    baseTransconductance,
+    earlyFactor,
+  );
+  if (element.forwardBetaRolloffCurrent === 0.0 || baseCollectorCurrent <= 0.0) {
+    return {
+      collectorCurrent: baseCollectorCurrent * earlyFactor,
+      transconductance: lowCurrentTransconductance,
+      chargeFactor: 1.0,
+    };
+  }
+  const root = Math.sqrt(
+    1.0 + 4.0 * baseCollectorCurrent / element.forwardBetaRolloffCurrent,
+  );
+  const chargeFactor = 0.5 * (1.0 + root);
+  const chargeDerivative =
+    baseTransconductance / (element.forwardBetaRolloffCurrent * root);
+  return {
+    collectorCurrent: baseCollectorCurrent * earlyFactor / chargeFactor,
+    transconductance:
+      lowCurrentTransconductance / chargeFactor
+      - baseCollectorCurrent * earlyFactor * chargeDerivative / chargeFactor ** 2,
+    chargeFactor,
+  };
+}
+
+function bjtBaseEmitterLeakage(
+  element: Bjt,
+  junctionVoltage: number,
+): { current: number; conductance: number } {
+  if (element.baseEmitterLeakageSaturationCurrent === 0.0) {
+    return { current: 0.0, conductance: 0.0 };
+  }
+  const thermalVoltage =
+    element.thermalVoltage * element.baseEmitterLeakageEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / thermalVoltage));
+  const expValue = Math.exp(exponent);
+  return {
+    current: element.baseEmitterLeakageSaturationCurrent * (expValue - 1.0),
+    conductance:
+      element.baseEmitterLeakageSaturationCurrent / thermalVoltage * expValue,
+  };
+}
+
+function bjtBaseCollectorLeakage(
+  element: Bjt,
+  junctionVoltage: number,
+): { current: number; conductance: number } {
+  if (element.baseCollectorLeakageSaturationCurrent === 0.0) {
+    return { current: 0.0, conductance: 0.0 };
+  }
+  const thermalVoltage =
+    element.thermalVoltage * element.baseCollectorLeakageEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / thermalVoltage));
+  const expValue = Math.exp(exponent);
+  return {
+    current: element.baseCollectorLeakageSaturationCurrent * (expValue - 1.0),
+    conductance:
+      element.baseCollectorLeakageSaturationCurrent / thermalVoltage * expValue,
+  };
+}
+
+function bjtReverseBaseCurrent(
+  element: Bjt,
+  junctionVoltage: number,
+): { current: number; conductance: number } {
+  if (element.reverseBeta === Number.POSITIVE_INFINITY) {
+    return { current: 0.0, conductance: 0.0 };
+  }
+  const thermalVoltage = element.thermalVoltage * element.reverseEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / thermalVoltage));
+  const expValue = Math.exp(exponent);
+  const diffusionCurrent = element.saturationCurrent * (expValue - 1.0);
+  const diffusionConductance = element.saturationCurrent / thermalVoltage * expValue;
+  if (element.reverseBetaRolloffCurrent === 0.0 || diffusionCurrent <= 0.0) {
+    return {
+      current: diffusionCurrent / element.reverseBeta,
+      conductance: diffusionConductance / element.reverseBeta,
+    };
+  }
+  const root = Math.sqrt(
+    1.0 + 4.0 * diffusionCurrent / element.reverseBetaRolloffCurrent,
+  );
+  const chargeFactor = 0.5 * (1.0 + root);
+  const chargeDerivative =
+    diffusionConductance / (element.reverseBetaRolloffCurrent * root);
+  return {
+    current: diffusionCurrent * chargeFactor / element.reverseBeta,
+    conductance:
+      (diffusionConductance * chargeFactor + diffusionCurrent * chargeDerivative)
+      / element.reverseBeta,
+  };
+}
+
+function bjtEffectiveBaseResistance(
+  element: Bjt,
+  baseVoltage: number,
+  emitterVoltage: number,
+  collectorVoltage: number,
+): number {
+  const minimum = element.minimumBaseResistance ?? element.baseResistance;
+  if (minimum === element.baseResistance) {
+    return element.baseResistance;
+  }
+  const junctionVoltage = element.polarity === "NPN"
+    ? baseVoltage - emitterVoltage
+    : emitterVoltage - baseVoltage;
+  const reverseVoltage = element.polarity === "NPN"
+    ? baseVoltage - collectorVoltage
+    : collectorVoltage - baseVoltage;
+  const outputVoltage = element.polarity === "NPN"
+    ? collectorVoltage - emitterVoltage
+    : emitterVoltage - collectorVoltage;
+  const forwardThermalVoltage =
+    element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(
+    -40.0,
+    Math.min(40.0, junctionVoltage / forwardThermalVoltage),
+  );
+  const expValue = Math.exp(exponent);
+  const diffusionCurrent = element.saturationCurrent * (expValue - 1.0);
+  const diffusionConductance =
+    element.saturationCurrent / forwardThermalVoltage * expValue;
+  const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
+  const transport = bjtForwardTransport(
+    element,
+    diffusionCurrent,
+    diffusionConductance,
+    earlyFactor,
+  );
+  const leakage = bjtBaseEmitterLeakage(element, junctionVoltage);
+  const collectorLeakage = bjtBaseCollectorLeakage(element, reverseVoltage);
+  const reverseBase = bjtReverseBaseCurrent(element, reverseVoltage);
+  const baseCurrent = diffusionCurrent / element.forwardBeta
+    + leakage.current
+    + collectorLeakage.current
+    + reverseBase.current;
+  const variableResistance = element.baseResistance - minimum;
+  if (element.baseResistanceHalfCurrent === 0.0) {
+    return minimum + variableResistance / transport.chargeFactor;
+  }
+  const ratio = Math.max(baseCurrent / element.baseResistanceHalfCurrent, 1.0e-9);
+  const angle =
+    (-1.0 + Math.sqrt(1.0 + 14.59025 * ratio))
+    / (2.4317 * Math.sqrt(ratio));
+  const tangent = Math.tan(angle);
+  const transition =
+    3.0 * (tangent - angle) / (angle * tangent * tangent);
+  return minimum + variableResistance * transition;
 }
 
 function stampBjt(
@@ -18691,39 +19980,124 @@ function stampBjt(
   operatingPoint: readonly number[],
 ): void {
   validateBjt(element);
+  const chargeElement = element;
+  if (element.emitterResistance > 0.0) {
+    const intrinsicEmitter = bjtIntrinsicEmitterNode(element);
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.emitter),
+      nodeIndex(nodeIndices, intrinsicEmitter),
+      1.0 / element.emitterResistance,
+    );
+    element = { ...element, emitter: intrinsicEmitter, emitterResistance: 0.0 };
+  }
+  if (element.collectorResistance > 0.0) {
+    const intrinsicCollector = bjtIntrinsicCollectorNode(element);
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.collector),
+      nodeIndex(nodeIndices, intrinsicCollector),
+      1.0 / element.collectorResistance,
+    );
+    element = { ...element, collector: intrinsicCollector, collectorResistance: 0.0 };
+  }
+  if (element.baseResistance > 0.0) {
+    const intrinsicBase = bjtIntrinsicBaseNode(element);
+    const intrinsicBaseIndex = nodeIndex(nodeIndices, intrinsicBase);
+    const baseVoltage = vectorVoltage(operatingPoint, intrinsicBaseIndex);
+    const emitterVoltage = vectorVoltage(
+      operatingPoint,
+      nodeIndex(nodeIndices, element.emitter),
+    );
+    const collectorVoltage = vectorVoltage(
+      operatingPoint,
+      nodeIndex(nodeIndices, element.collector),
+    );
+    const baseResistance = bjtEffectiveBaseResistance(
+      element,
+      baseVoltage,
+      emitterVoltage,
+      collectorVoltage,
+    );
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.base),
+      intrinsicBaseIndex,
+      1.0 / baseResistance,
+    );
+    element = {
+      ...element,
+      base: intrinsicBase,
+      baseResistance: 0.0,
+      minimumBaseResistance: undefined,
+      baseResistanceHalfCurrent: 0.0,
+    };
+  }
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
   const baseVoltage = base === undefined ? 0.0 : operatingPoint[base];
   const emitterVoltage = emitter === undefined ? 0.0 : operatingPoint[emitter];
+  const collectorVoltage = collector === undefined ? 0.0 : operatingPoint[collector];
 
   const junctionVoltage =
     element.polarity === "NPN"
       ? baseVoltage - emitterVoltage
       : emitterVoltage - baseVoltage;
-  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const reverseJunctionVoltage = element.polarity === "NPN"
+    ? baseVoltage - collectorVoltage
+    : collectorVoltage - baseVoltage;
+  const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
   const expValue = Math.exp(exponent);
-  const collectorCurrent = element.saturationCurrent * (expValue - 1.0);
-  const transconductance = element.saturationCurrent / element.thermalVoltage * expValue;
-  const junctionConductance = transconductance / element.forwardBeta;
-  const baseCurrent = collectorCurrent / element.forwardBeta;
+  const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
+  const baseTransconductance = element.saturationCurrent / forwardThermalVoltage * expValue;
+  const outputVoltage = element.polarity === "NPN"
+    ? collectorVoltage - emitterVoltage
+    : emitterVoltage - collectorVoltage;
+  const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
+  const transport = bjtForwardTransport(
+    element,
+    baseCollectorCurrent,
+    baseTransconductance,
+    earlyFactor,
+  );
+  const outputConductance = element.forwardEarlyVoltage === 0.0
+    ? 0.0
+    : baseCollectorCurrent / element.forwardEarlyVoltage / transport.chargeFactor;
+  const collectorCurrent = transport.collectorCurrent;
+  const transconductance = transport.transconductance;
+  const leakage = bjtBaseEmitterLeakage(element, junctionVoltage);
+  const junctionConductance =
+    baseTransconductance / element.forwardBeta + leakage.conductance;
+  const baseCurrent = baseCollectorCurrent / element.forwardBeta + leakage.current;
   const equivalentCollectorCurrent =
-    collectorCurrent - transconductance * junctionVoltage;
+    collectorCurrent - transconductance * junctionVoltage - outputConductance * outputVoltage;
   const equivalentBaseCurrent =
     baseCurrent - junctionConductance * junctionVoltage;
+  const collectorLeakage = bjtBaseCollectorLeakage(element, reverseJunctionVoltage);
+  const reverseBase = bjtReverseBaseCurrent(element, reverseJunctionVoltage);
+  const baseCollectorJunctionCurrent = collectorLeakage.current + reverseBase.current;
+  const baseCollectorConductance = collectorLeakage.conductance + reverseBase.conductance;
+  const equivalentCollectorLeakageCurrent =
+    baseCollectorJunctionCurrent - baseCollectorConductance * reverseJunctionVoltage;
 
+  stampConductance(matrix, collector, emitter, outputConductance);
+  stampConductance(matrix, base, collector, baseCollectorConductance);
   if (element.polarity === "NPN") {
     stampConductance(matrix, base, emitter, junctionConductance);
     stampTransconductance(matrix, collector, emitter, base, emitter, transconductance);
     stampCurrentSourceEquivalent(rhs, base, emitter, equivalentBaseCurrent);
     stampCurrentSourceEquivalent(rhs, collector, emitter, equivalentCollectorCurrent);
+    stampCurrentSourceEquivalent(rhs, base, collector, equivalentCollectorLeakageCurrent);
   } else {
     stampConductance(matrix, emitter, base, junctionConductance);
     stampTransconductance(matrix, emitter, collector, emitter, base, transconductance);
     stampCurrentSourceEquivalent(rhs, emitter, base, equivalentBaseCurrent);
     stampCurrentSourceEquivalent(rhs, emitter, collector, equivalentCollectorCurrent);
+    stampCurrentSourceEquivalent(rhs, collector, base, equivalentCollectorLeakageCurrent);
   }
-  stampBjtCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+  stampBjtCharge(chargeElement, capacitorStates, nodeIndices, matrix, rhs);
 }
 
 function stampBjtCharge(
@@ -18733,12 +20107,21 @@ function stampBjtCharge(
   matrix: number[][],
   rhs: number[],
 ): void {
+  const reverseJunctionVoltage =
+    capacitorStates.find(
+      (state) => state.name === bjtBaseCollectorChargeStateName(element),
+    )?.previousVoltage ?? 0.0;
   for (const spec of bjtChargeStateSpecs(element)) {
     const state = capacitorStates.find((candidate) => candidate.name === spec.name);
     if (state === undefined) {
       continue;
     }
-    const capacitance = bjtChargeDynamicCapacitance(element, spec.kind, state.previousVoltage);
+    const capacitance = bjtChargeDynamicCapacitance(
+      element,
+      spec.kind,
+      state.previousVoltage,
+      reverseJunctionVoltage,
+    );
     if (capacitance <= 0.0) {
       continue;
     }
@@ -18785,6 +20168,7 @@ function mosfetBulkJunctionCapacitance(
   junctionVoltage: number,
   junctionPotential: number,
   gradingCoefficient: number,
+  forwardBiasCoefficient: number,
 ): number {
   if (zeroBiasCapacitance <= 0.0) {
     return zeroBiasCapacitance;
@@ -18792,8 +20176,16 @@ function mosfetBulkJunctionCapacitance(
   if (junctionPotential <= 0.0 || gradingCoefficient === 0.0) {
     return zeroBiasCapacitance;
   }
-  const reverseScale = Math.max(0.0, -junctionVoltage) / junctionPotential;
-  return zeroBiasCapacitance / ((1.0 + reverseScale) ** gradingCoefficient);
+  const normalizedVoltage = junctionVoltage / junctionPotential;
+  if (normalizedVoltage < forwardBiasCoefficient) {
+    return zeroBiasCapacitance / ((1.0 - normalizedVoltage) ** gradingCoefficient);
+  }
+  const denominator = (1.0 - forwardBiasCoefficient) ** (1.0 + gradingCoefficient);
+  const continuation =
+    1.0 -
+    forwardBiasCoefficient * (1.0 + gradingCoefficient) +
+    gradingCoefficient * normalizedVoltage;
+  return zeroBiasCapacitance * continuation / denominator;
 }
 
 interface JfetDcResult {
@@ -18818,6 +20210,158 @@ function validateJfet(element: Jfet): void {
   if (!Number.isFinite(element.gateDrainCapacitance) || element.gateDrainCapacitance < 0.0) {
     throw invalidElement(element.name, "gate-drain capacitance must be finite and non-negative");
   }
+  if (!Number.isFinite(element.flickerNoiseCoefficient) || element.flickerNoiseCoefficient < 0.0) {
+    throw invalidElement(
+      element.name,
+      "flicker-noise coefficient must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.flickerNoiseExponent) || element.flickerNoiseExponent < 0.0) {
+    throw invalidElement(
+      element.name,
+      "flicker-noise exponent must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.junctionPotential) || element.junctionPotential <= 0.0) {
+    throw invalidElement(element.name, "junction potential must be finite and positive");
+  }
+  if (!Number.isFinite(element.forwardBiasDepletionCoefficient) ||
+      element.forwardBiasDepletionCoefficient < 0.0 ||
+      element.forwardBiasDepletionCoefficient >= 1.0) {
+    throw invalidElement(
+      element.name,
+      "forward-bias depletion coefficient must be finite and in [0, 1)",
+    );
+  }
+  if (!Number.isFinite(element.gateSaturationCurrent) ||
+      element.gateSaturationCurrent < 0.0) {
+    throw invalidElement(
+      element.name,
+      "gate saturation current must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.gateSaturationCurrentTemperatureExponent)) {
+    throw invalidElement(
+      element.name,
+      "gate saturation-current temperature exponent must be finite",
+    );
+  }
+  if (!Number.isFinite(element.bandgapVoltage) || element.bandgapVoltage <= 0.0) {
+    throw invalidElement(element.name, "bandgap voltage must be finite and positive");
+  }
+  if (!Number.isFinite(element.dopingTailParameter)) {
+    throw invalidElement(element.name, "doping-tail parameter must be finite");
+  }
+  if (
+    !Number.isFinite(element.noiseEquationLevel) ||
+    element.noiseEquationLevel < 1.0 ||
+    !Number.isInteger(element.noiseEquationLevel)
+  ) {
+    throw invalidElement(
+      element.name,
+      "noise equation level must be a finite integer greater than or equal to 1",
+    );
+  }
+  if (
+    !Number.isFinite(element.channelNoiseCoefficient) ||
+    element.channelNoiseCoefficient < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "channel noise coefficient must be finite and non-negative",
+    );
+  }
+  const effectiveThreshold =
+    element.polarity === "NJF" ? element.thresholdVoltage : -element.thresholdVoltage;
+  if (
+    element.dopingTailParameter !== 1.0 &&
+    element.junctionPotential === effectiveThreshold
+  ) {
+    throw invalidElement(
+      element.name,
+      "junction potential minus effective threshold voltage must be non-zero when doping-tail parameter differs from 1",
+    );
+  }
+  if (!Number.isFinite(element.drainResistance) || element.drainResistance < 0.0) {
+    throw invalidElement(
+      element.name,
+      "drain resistance must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.sourceResistance) || element.sourceResistance < 0.0) {
+    throw invalidElement(
+      element.name,
+      "source resistance must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.thresholdVoltageTemperatureCoefficient)) {
+    throw invalidElement(
+      element.name,
+      "threshold-voltage temperature coefficient must be finite",
+    );
+  }
+  if (element.nominalTemperatureKelvin !== undefined &&
+      (!Number.isFinite(element.nominalTemperatureKelvin) ||
+       element.nominalTemperatureKelvin <= 0.0)) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  if (
+    element.alternativeThresholdVoltageTemperatureCoefficient !== undefined &&
+    !Number.isFinite(element.alternativeThresholdVoltageTemperatureCoefficient)
+  ) {
+    throw invalidElement(
+      element.name,
+      "alternative threshold-voltage temperature coefficient must be finite",
+    );
+  }
+  if (!Number.isFinite(element.mobilityTemperatureExponent)) {
+    throw invalidElement(element.name, "mobility temperature exponent must be finite");
+  }
+  if (
+    element.mobilityTemperatureCoefficient !== undefined &&
+    !Number.isFinite(element.mobilityTemperatureCoefficient)
+  ) {
+    throw invalidElement(element.name, "mobility temperature coefficient must be finite");
+  }
+}
+
+const JFET_THERMAL_VOLTAGE = 0.02585;
+
+function jfetGateJunctionCurrentConductance(
+  element: Jfet,
+  gateVoltage: number,
+): readonly [number, number] {
+  const junctionVoltage = element.polarity === "NJF" ? gateVoltage : -gateVoltage;
+  const exponent = Math.max(
+    -40.0,
+    Math.min(40.0, junctionVoltage / JFET_THERMAL_VOLTAGE),
+  );
+  const expValue = Math.exp(exponent);
+  return [
+    element.gateSaturationCurrent * (expValue - 1.0),
+    element.gateSaturationCurrent / JFET_THERMAL_VOLTAGE * expValue,
+  ];
+}
+
+function stampJfetGateJunction(
+  element: Jfet,
+  gate: number | undefined,
+  terminal: number | undefined,
+  gateVoltage: number,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  const [current, conductance] =
+    jfetGateJunctionCurrentConductance(element, gateVoltage);
+  const junctionVoltage = element.polarity === "NJF" ? gateVoltage : -gateVoltage;
+  const equivalentCurrent = current - conductance * junctionVoltage;
+  if (element.polarity === "NJF") {
+    stampConductance(matrix, gate, terminal, conductance);
+    stampCurrentSourceEquivalent(rhs, gate, terminal, equivalentCurrent);
+  } else {
+    stampConductance(matrix, terminal, gate, conductance);
+    stampCurrentSourceEquivalent(rhs, terminal, gate, equivalentCurrent);
+  }
 }
 
 function stampJfet(
@@ -18829,9 +20373,11 @@ function stampJfet(
   operatingPoint: readonly number[],
 ): void {
   validateJfet(element);
-  const drain = nodeIndex(nodeIndices, element.drain);
+  const intrinsicDrain = jfetIntrinsicDrainNode(element);
+  const intrinsicSource = jfetIntrinsicSourceNode(element);
+  const drain = nodeIndex(nodeIndices, intrinsicDrain);
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, intrinsicSource);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
   const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -18844,7 +20390,39 @@ function stampJfet(
   stampConductance(matrix, drain, source, result.gds);
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+  stampJfetGateJunction(
+    element,
+    gate,
+    source,
+    gateVoltage - sourceVoltage,
+    matrix,
+    rhs,
+  );
+  stampJfetGateJunction(
+    element,
+    gate,
+    drain,
+    gateVoltage - drainVoltage,
+    matrix,
+    rhs,
+  );
   stampJfetCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+  if (element.drainResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.drain),
+      drain,
+      1.0 / element.drainResistance,
+    );
+  }
+  if (element.sourceResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / element.sourceResistance,
+    );
+  }
 }
 
 function stampJfetCharge(
@@ -18859,17 +20437,22 @@ function stampJfetCharge(
     if (state === undefined || spec.capacitance <= 0.0) {
       continue;
     }
+    const capacitance = jfetChargeDynamicCapacitance(
+      element,
+      spec.capacitance,
+      state.previousVoltage,
+    );
     const conductance =
       state.method === "trap"
-        ? (2.0 * spec.capacitance) / state.timeStep
+        ? (2.0 * capacitance) / state.timeStep
         : state.method === "gear2"
-          ? (3.0 * spec.capacitance) / (2.0 * state.timeStep)
-          : spec.capacitance / state.timeStep;
+          ? (3.0 * capacitance) / (2.0 * state.timeStep)
+          : capacitance / state.timeStep;
     const historyCurrent =
       state.method === "trap"
         ? conductance * state.previousVoltage + state.previousCurrent
         : state.method === "gear2"
-          ? (spec.capacitance *
+          ? (capacitance *
               (4.0 * state.previousVoltage - state.previousPreviousVoltage)) /
             (2.0 * state.timeStep)
           : conductance * state.previousVoltage;
@@ -18893,6 +20476,8 @@ function evaluateJfet(element: Jfet, vgs: number, vds: number): JfetDcResult {
       -element.thresholdVoltage,
       element.beta,
       element.channelLengthModulation,
+      element.junctionPotential,
+      element.dopingTailParameter,
     );
     return {
       drainCurrent: -result.drainCurrent,
@@ -18906,6 +20491,8 @@ function evaluateJfet(element: Jfet, vgs: number, vds: number): JfetDcResult {
     element.thresholdVoltage,
     element.beta,
     element.channelLengthModulation,
+    element.junctionPotential,
+    element.dopingTailParameter,
   );
 }
 
@@ -18915,27 +20502,42 @@ function evaluateNjf(
   thresholdVoltage: number,
   beta: number,
   channelLengthModulation: number,
+  junctionPotential: number,
+  dopingTailParameter: number,
 ): JfetDcResult {
   const overdrive = vgs - thresholdVoltage;
   if (overdrive <= 0.0 || vds < 0.0) {
     return { drainCurrent: 0.0, gm: 0.0, gds: 0.0 };
   }
+  const tailFactor =
+    dopingTailParameter === 1.0
+      ? 0.0
+      : (1.0 - dopingTailParameter) / (junctionPotential - thresholdVoltage);
+  const modulation = 1.0 + channelLengthModulation * vds;
   if (vds < overdrive) {
-    const channel = 2.0 * overdrive * vds - vds * vds;
-    const modulation = 1.0 + channelLengthModulation * vds;
+    const slope =
+      2.0 * dopingTailParameter + 3.0 * tailFactor * (overdrive - vds);
+    const channel =
+      vds *
+      (vds * (tailFactor * vds - dopingTailParameter) + overdrive * slope);
     return {
       drainCurrent: beta * channel * modulation,
-      gm: 2.0 * beta * vds * modulation,
+      gm: beta * modulation * vds * (slope + 3.0 * tailFactor * overdrive),
       gds:
-        beta * (2.0 * overdrive - 2.0 * vds) * modulation +
+        beta * modulation * (overdrive - vds) * slope +
         beta * channel * channelLengthModulation,
     };
   }
+  const channel =
+    overdrive * overdrive * (dopingTailParameter + overdrive * tailFactor);
   return {
-    drainCurrent:
-      beta * overdrive * overdrive * (1.0 + channelLengthModulation * vds),
-    gm: 2.0 * beta * overdrive * (1.0 + channelLengthModulation * vds),
-    gds: beta * overdrive * overdrive * channelLengthModulation,
+    drainCurrent: beta * channel * modulation,
+    gm:
+      beta *
+      modulation *
+      overdrive *
+      (2.0 * dopingTailParameter + 3.0 * overdrive * tailFactor),
+    gds: beta * channel * channelLengthModulation,
   };
 }
 
@@ -18948,9 +20550,9 @@ function stampMosfet(
   operatingPoint: readonly number[],
 ): void {
   validateMosfet(element);
-  const drain = nodeIndex(nodeIndices, element.drain);
+  const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
   const body = nodeIndex(nodeIndices, element.body);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -18967,7 +20569,104 @@ function stampMosfet(
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampTransconductance(matrix, drain, source, body, source, result.gmb);
   stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+  stampMosfetBulkJunction(
+    element,
+    source,
+    body,
+    sourceVoltage,
+    bodyVoltage,
+    element.params.AS,
+    matrix,
+    rhs,
+  );
+  stampMosfetBulkJunction(
+    element,
+    drain,
+    body,
+    drainVoltage,
+    bodyVoltage,
+    element.params.AD,
+    matrix,
+    rhs,
+  );
   stampMosfetCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+  const drainResistance = mosfetDrainResistance(element);
+  if (drainResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.drain),
+      drain,
+      1.0 / drainResistance,
+    );
+  }
+  const sourceResistance = mosfetSourceResistance(element);
+  if (sourceResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / sourceResistance,
+    );
+  }
+}
+
+function mosfetBulkJunctionCurrentConductance(
+  element: Mosfet,
+  terminalVoltage: number,
+  bodyVoltage: number,
+  terminalArea: number,
+): readonly [number, number] {
+  const saturationCurrent =
+    element.params.JS > 0.0 && element.params.AD > 0.0 && element.params.AS > 0.0
+      ? element.params.JS * terminalArea
+      : element.params.IS;
+  const junctionVoltage =
+    element.type === "NMOS"
+      ? bodyVoltage - terminalVoltage
+      : terminalVoltage - bodyVoltage;
+  const thermalVoltage = BOLTZMANN * element.params.T_NOM / ELECTRON_CHARGE;
+  const normalizedVoltage = junctionVoltage / thermalVoltage;
+  const limitedExp = Math.exp(Math.max(-40.0, Math.min(40.0, normalizedVoltage)));
+  const currentFactor =
+    normalizedVoltage > 40.0
+      ? limitedExp * (1.0 + normalizedVoltage - 40.0)
+      : limitedExp;
+  const conductanceFactor = limitedExp;
+  return [
+    saturationCurrent * (currentFactor - 1.0),
+    (saturationCurrent / thermalVoltage) * conductanceFactor,
+  ];
+}
+
+function stampMosfetBulkJunction(
+    element: Mosfet,
+    terminal: number | undefined,
+    body: number | undefined,
+    terminalVoltage: number,
+    bodyVoltage: number,
+    terminalArea: number,
+    matrix: number[][],
+    rhs: number[],
+): void {
+  const [current, conductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    terminalVoltage,
+    bodyVoltage,
+    terminalArea,
+  );
+  const isNmos = element.type === "NMOS";
+  const junctionVoltage = isNmos
+    ? bodyVoltage - terminalVoltage
+    : terminalVoltage - bodyVoltage;
+  const positive = isNmos ? body : terminal;
+  const negative = isNmos ? terminal : body;
+  stampConductance(matrix, positive, negative, conductance);
+  stampCurrentSourceEquivalent(
+    rhs,
+    positive,
+    negative,
+    current - conductance * junctionVoltage,
+  );
 }
 
 function stampMosfetCharge(
@@ -19041,15 +20740,29 @@ function evaluateNmosLevel1(
   vds: number,
   vbs: number,
 ): MosfetDcResult {
-  const beta = params.KP * (params.W / params.L);
+  const effectiveLength = params.L - 2.0 * params.LD;
+  const beta = params.KP * (params.W / effectiveLength);
   const cgsOverlap = params.CGSO * params.W;
   const cgdOverlap = params.CGDO * params.W;
-  const cgbOverlap = params.CGBO * params.L;
-  const cgsIntrinsic = (2.0 / 3.0) * params.W * params.L * params.KP;
-  const cbsBulk = mosfetBulkJunctionCapacitance(params.CBS, vbs, params.PB, params.MJ);
-  const cbdBulk = mosfetBulkJunctionCapacitance(params.CBD, vbs - vds, params.PB, params.MJ);
+  const cgbOverlap = params.CGBO * effectiveLength;
+  const channelCapacitance =
+    params.W * effectiveLength * (OXIDE_PERMITTIVITY / params.TOX);
+  const cbsBulk = mosfetBulkJunctionCapacitance(
+    params.CBS + params.CJ * params.AS,
+    vbs, params.PB, params.MJ, params.FC,
+  ) + mosfetBulkJunctionCapacitance(
+    params.CJSW * params.PS,
+    vbs, params.PB, params.MJSW, params.FC,
+  );
+  const cbdBulk = mosfetBulkJunctionCapacitance(
+    params.CBD + params.CJ * params.AD,
+    vbs - vds, params.PB, params.MJ, params.FC,
+  ) + mosfetBulkJunctionCapacitance(
+    params.CJSW * params.PD,
+    vbs - vds, params.PB, params.MJSW, params.FC,
+  );
   const capacitances = {
-    cgs: cgsOverlap + cgsIntrinsic,
+    cgs: cgsOverlap + channelCapacitance,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
     cbs: cbsBulk,
@@ -19076,7 +20789,7 @@ function evaluateNmosLevel1(
       gm,
       gds: beta * (overdrive - vds) * modulation + beta * channel * params.LAMBDA,
       gmb: gm * bodyFactor,
-      cgs: cgsOverlap + cgsIntrinsic / 2.0,
+      cgs: cgsOverlap + channelCapacitance / 2.0,
       cgd: cgdOverlap,
       cgb: cgbOverlap,
       cbs: cbsBulk,
@@ -19090,7 +20803,7 @@ function evaluateNmosLevel1(
     gm,
     gds: 0.5 * beta * overdrive * overdrive * params.LAMBDA,
     gmb: gm * bodyFactor,
-    cgs: cgsOverlap + (2.0 / 3.0) * cgsIntrinsic,
+    cgs: cgsOverlap + (2.0 / 3.0) * channelCapacitance,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
     cbs: cbsBulk,
@@ -19129,6 +20842,27 @@ function validateReactiveElements(circuit: Circuit): void {
 }
 
 function validateDiode(element: Diode): void {
+  if (
+    !Number.isFinite(element.flickerNoiseExponent) ||
+    element.flickerNoiseExponent < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "flicker-noise exponent must be finite and non-negative",
+    );
+  }
+  if (
+    !Number.isFinite(element.flickerNoiseCoefficient) ||
+    element.flickerNoiseCoefficient < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "flicker-noise coefficient must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.seriesResistance) || element.seriesResistance < 0.0) {
+    throw invalidElement(element.name, "series resistance must be finite and non-negative");
+  }
   if (!Number.isFinite(element.saturationCurrent) || element.saturationCurrent <= 0.0) {
     throw invalidElement(element.name, "saturation current must be finite and positive");
   }
@@ -19149,6 +20883,31 @@ function validateDiode(element: Diode): void {
   }
   if (!Number.isFinite(element.junctionCapacitance) || element.junctionCapacitance < 0.0) {
     throw invalidElement(element.name, "junction capacitance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.junctionPotential) || element.junctionPotential <= 0.0) {
+    throw invalidElement(element.name, "junction potential must be finite and positive");
+  }
+  if (!Number.isFinite(element.gradingCoefficient) || element.gradingCoefficient < 0.0) {
+    throw invalidElement(element.name, "grading coefficient must be finite and non-negative");
+  }
+  if (
+    !Number.isFinite(element.forwardBiasDepletionCoefficient) ||
+    element.forwardBiasDepletionCoefficient < 0.0 ||
+    element.forwardBiasDepletionCoefficient >= 1.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "forward-bias depletion coefficient must be finite and in [0, 1)",
+    );
+  }
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(
+      element.name,
+      "saturation-current temperature exponent must be finite",
+    );
+  }
+  if (!Number.isFinite(element.energyGapElectronVolts) || element.energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
   }
   if (!Number.isFinite(element.transitTime) || element.transitTime < 0.0) {
     throw invalidElement(element.name, "transit time must be finite and non-negative");
@@ -19182,20 +20941,46 @@ function diodeChargeStateName(element: Diode): string {
   return `_D_${element.name}_charge`;
 }
 
+function diodeIntrinsicAnodeNode(element: Diode): string {
+  return element.seriesResistance === 0.0
+    ? element.anode
+    : `_D_${element.name}_anode`;
+}
+
 function diodeHasChargeStorage(element: Diode): boolean {
   return element.junctionCapacitance > 0.0 || element.transitTime > 0.0;
 }
 
 function diodeDynamicCapacitance(element: Diode, voltage: number): number {
   const [, conductance] = diodeCurrentConductance(element, voltage);
-  return element.junctionCapacitance + element.transitTime * conductance;
+  return diodeDepletionCapacitance(element, voltage) + element.transitTime * conductance;
+}
+
+function diodeDepletionCapacitance(element: Diode, voltage: number): number {
+  if (element.junctionCapacitance <= 0.0 || element.gradingCoefficient === 0.0) {
+    return element.junctionCapacitance;
+  }
+  const normalizedVoltage = voltage / element.junctionPotential;
+  if (normalizedVoltage < element.forwardBiasDepletionCoefficient) {
+    return element.junctionCapacitance /
+      ((1.0 - normalizedVoltage) ** element.gradingCoefficient);
+  }
+  const coefficient = element.forwardBiasDepletionCoefficient;
+  const transitionScale = (1.0 - coefficient) ** (1.0 + element.gradingCoefficient);
+  const continuation = 1.0 - coefficient * (1.0 + element.gradingCoefficient) +
+    element.gradingCoefficient * normalizedVoltage;
+  return element.junctionCapacitance * continuation / transitionScale;
 }
 
 function diodeChargeVoltage(element: Diode, nodeVoltages: ReadonlyMap<string, number>): number {
-  return voltageAt(nodeVoltages, element.anode) - voltageAt(nodeVoltages, element.cathode);
+  return voltageAt(nodeVoltages, diodeIntrinsicAnodeNode(element)) -
+    voltageAt(nodeVoltages, element.cathode);
 }
 
-type BjtChargeStateKind = "base-emitter" | "base-collector";
+type BjtChargeStateKind =
+  | "base-emitter"
+  | "base-collector"
+  | "external-base-collector";
 
 interface BjtChargeStateSpec {
   readonly name: string;
@@ -19212,30 +20997,139 @@ function bjtBaseCollectorChargeStateName(element: Bjt): string {
   return `_Q_${element.name}_bc_charge`;
 }
 
-function bjtJunctionTransconductance(element: Bjt, voltage: number): number {
-  const exponent = Math.max(-40.0, Math.min(40.0, voltage / element.thermalVoltage));
-  return (element.saturationCurrent / element.thermalVoltage) * Math.exp(exponent);
+function bjtExternalBaseCollectorChargeStateName(element: Bjt): string {
+  return `_Q_${element.name}_bx_charge`;
+}
+
+function bjtIntrinsicEmitterNode(element: Bjt): string {
+  return element.emitterResistance === 0.0
+    ? element.emitter
+    : `__spice_${element.name}_emitter`;
+}
+
+function bjtIntrinsicCollectorNode(element: Bjt): string {
+  return element.collectorResistance === 0.0
+    ? element.collector
+    : `__spice_${element.name}_collector`;
+}
+
+function bjtIntrinsicBaseNode(element: Bjt): string {
+  return element.baseResistance === 0.0
+    ? element.base
+    : `__spice_${element.name}_base`;
+}
+
+function bjtJunctionTransconductance(
+  element: Bjt,
+  voltage: number,
+  emissionCoefficient: number,
+): number {
+  const effectiveThermalVoltage = element.thermalVoltage * emissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / effectiveThermalVoltage));
+  return (element.saturationCurrent / effectiveThermalVoltage) * Math.exp(exponent);
+}
+
+function bjtForwardTransitTimeScale(
+  element: Bjt,
+  voltage: number,
+  reverseJunctionVoltage: number,
+): number {
+  const effectiveThermalVoltage =
+    element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / effectiveThermalVoltage));
+  const forwardCurrent = Math.max(
+    element.saturationCurrent * (Math.exp(exponent) - 1.0),
+    0.0,
+  );
+  let currentFactor = 1.0;
+  if (element.forwardTransitTimeCurrent > 0.0) {
+    const ratio = forwardCurrent / (forwardCurrent + element.forwardTransitTimeCurrent);
+    currentFactor = ratio * ratio;
+  }
+  const voltageFactor = element.forwardTransitTimeVoltage === 0.0
+    ? 1.0
+    : Math.exp(Math.max(
+        -40.0,
+        Math.min(40.0, reverseJunctionVoltage / (1.44 * element.forwardTransitTimeVoltage)),
+      ));
+  return 1.0 +
+    element.forwardTransitTimeBiasCoefficient * currentFactor * voltageFactor;
 }
 
 function bjtChargeDynamicCapacitance(
   element: Bjt,
   kind: BjtChargeStateKind,
   voltage: number,
+  reverseJunctionVoltage: number,
 ): number {
-  const conductance = bjtJunctionTransconductance(element, voltage);
   if (kind === "base-emitter") {
-    return element.baseEmitterCapacitance + element.forwardTransitTime * conductance;
+    const conductance = bjtJunctionTransconductance(
+      element,
+      voltage,
+      element.forwardEmissionCoefficient,
+    );
+    return bjtBaseEmitterDepletionCapacitance(element, voltage) +
+      element.forwardTransitTime *
+        bjtForwardTransitTimeScale(element, voltage, reverseJunctionVoltage) *
+        conductance;
   }
-  return element.baseCollectorCapacitance + element.reverseTransitTime * conductance;
+  const depletionCapacitance = bjtBaseCollectorDepletionCapacitance(element, voltage);
+  if (kind === "external-base-collector") {
+    return (1.0 - element.baseCollectorCapacitanceFraction) * depletionCapacitance;
+  }
+  const conductance = bjtJunctionTransconductance(
+    element,
+    voltage,
+    element.reverseEmissionCoefficient,
+  );
+  return element.baseCollectorCapacitanceFraction * depletionCapacitance +
+    element.reverseTransitTime * conductance;
+}
+
+function bjtBaseEmitterDepletionCapacitance(element: Bjt, voltage: number): number {
+  if (element.baseEmitterCapacitance <= 0.0 || element.baseEmitterGradingCoefficient === 0.0) {
+    return element.baseEmitterCapacitance;
+  }
+  const normalizedVoltage = voltage / element.baseEmitterJunctionPotential;
+  const coefficient = element.forwardBiasDepletionCoefficient;
+  if (normalizedVoltage < coefficient) {
+    return element.baseEmitterCapacitance /
+      ((1.0 - normalizedVoltage) ** element.baseEmitterGradingCoefficient);
+  }
+  const transitionScale = (1.0 - coefficient) **
+    (1.0 + element.baseEmitterGradingCoefficient);
+  const continuation = 1.0 - coefficient * (1.0 + element.baseEmitterGradingCoefficient) +
+    element.baseEmitterGradingCoefficient * normalizedVoltage;
+  return element.baseEmitterCapacitance * continuation / transitionScale;
+}
+
+function bjtBaseCollectorDepletionCapacitance(element: Bjt, voltage: number): number {
+  if (element.baseCollectorCapacitance <= 0.0 || element.baseCollectorGradingCoefficient === 0.0) {
+    return element.baseCollectorCapacitance;
+  }
+  const normalizedVoltage = voltage / element.baseCollectorJunctionPotential;
+  const coefficient = element.forwardBiasDepletionCoefficient;
+  if (normalizedVoltage < coefficient) {
+    return element.baseCollectorCapacitance /
+      ((1.0 - normalizedVoltage) ** element.baseCollectorGradingCoefficient);
+  }
+  const transitionScale = (1.0 - coefficient) **
+    (1.0 + element.baseCollectorGradingCoefficient);
+  const continuation = 1.0 - coefficient * (1.0 + element.baseCollectorGradingCoefficient) +
+    element.baseCollectorGradingCoefficient * normalizedVoltage;
+  return element.baseCollectorCapacitance * continuation / transitionScale;
 }
 
 function bjtChargeStateSpecs(element: Bjt): BjtChargeStateSpec[] {
   const specs: BjtChargeStateSpec[] = [];
+  const emitter = bjtIntrinsicEmitterNode(element);
+  const collector = bjtIntrinsicCollectorNode(element);
+  const base = bjtIntrinsicBaseNode(element);
   if (element.baseEmitterCapacitance > 0.0 || element.forwardTransitTime > 0.0) {
     const [positive, negative] =
       element.polarity === "NPN"
-        ? [element.base, element.emitter]
-        : [element.emitter, element.base];
+        ? [base, emitter]
+        : [emitter, base];
     specs.push({
       name: bjtBaseEmitterChargeStateName(element),
       positive,
@@ -19243,16 +21137,39 @@ function bjtChargeStateSpecs(element: Bjt): BjtChargeStateSpec[] {
       kind: "base-emitter",
     });
   }
-  if (element.baseCollectorCapacitance > 0.0 || element.reverseTransitTime > 0.0) {
+  if (
+    element.baseCollectorCapacitance > 0.0 ||
+    element.reverseTransitTime > 0.0 ||
+    (
+      element.forwardTransitTime > 0.0 &&
+      element.forwardTransitTimeBiasCoefficient > 0.0 &&
+      element.forwardTransitTimeVoltage > 0.0
+    )
+  ) {
     const [positive, negative] =
       element.polarity === "NPN"
-        ? [element.base, element.collector]
-        : [element.collector, element.base];
+        ? [base, collector]
+        : [collector, base];
     specs.push({
       name: bjtBaseCollectorChargeStateName(element),
       positive,
       negative,
       kind: "base-collector",
+    });
+  }
+  if (
+    element.baseCollectorCapacitance > 0.0 &&
+    element.baseCollectorCapacitanceFraction < 1.0
+  ) {
+    const [positive, negative] =
+      element.polarity === "NPN"
+        ? [element.base, collector]
+        : [collector, element.base];
+    specs.push({
+      name: bjtExternalBaseCollectorChargeStateName(element),
+      positive,
+      negative,
+      kind: "external-base-collector",
     });
   }
   return specs;
@@ -19286,7 +21203,7 @@ function jfetChargeStateSpecs(element: Jfet): JfetChargeStateSpec[] {
     specs.push({
       name: jfetGateSourceChargeStateName(element),
       positive: element.gate,
-      negative: element.source,
+      negative: jfetIntrinsicSourceNode(element),
       capacitance: element.gateSourceCapacitance,
     });
   }
@@ -19294,11 +21211,49 @@ function jfetChargeStateSpecs(element: Jfet): JfetChargeStateSpec[] {
     specs.push({
       name: jfetGateDrainChargeStateName(element),
       positive: element.gate,
-      negative: element.drain,
+      negative: jfetIntrinsicDrainNode(element),
       capacitance: element.gateDrainCapacitance,
     });
   }
   return specs;
+}
+
+function jfetIntrinsicDrainNode(element: Jfet): string {
+  return element.drainResistance === 0.0
+    ? element.drain
+    : `__spice_${element.name}_drain`;
+}
+
+function jfetIntrinsicSourceNode(element: Jfet): string {
+  return element.sourceResistance === 0.0
+    ? element.source
+    : `__spice_${element.name}_source`;
+}
+
+function mosfetIntrinsicDrainNode(element: Mosfet): string {
+  const drainResistance = mosfetDrainResistance(element);
+  return !Number.isFinite(drainResistance) || drainResistance <= 0.0
+    ? element.drain
+    : `__spice_${element.name}_drain`;
+}
+
+function mosfetIntrinsicSourceNode(element: Mosfet): string {
+  const sourceResistance = mosfetSourceResistance(element);
+  return !Number.isFinite(sourceResistance) || sourceResistance <= 0.0
+    ? element.source
+    : `__spice_${element.name}_source`;
+}
+
+function mosfetDrainResistance(element: Mosfet): number {
+  return element.params.RD > 0.0
+    ? element.params.RD
+    : element.params.RSH * element.params.NRD;
+}
+
+function mosfetSourceResistance(element: Mosfet): number {
+  return element.params.RS > 0.0
+    ? element.params.RS
+    : element.params.RSH * element.params.NRS;
 }
 
 function jfetChargeStateVoltage(
@@ -19306,6 +21261,26 @@ function jfetChargeStateVoltage(
   nodeVoltages: ReadonlyMap<string, number>,
 ): number {
   return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
+function jfetChargeDynamicCapacitance(
+  element: Jfet,
+  zeroBiasCapacitance: number,
+  junctionVoltage: number,
+): number {
+  const gradingCoefficient = 0.5;
+  const orientedVoltage = element.polarity === "PJF" ? -junctionVoltage : junctionVoltage;
+  const normalizedVoltage = orientedVoltage / element.junctionPotential;
+  if (normalizedVoltage < element.forwardBiasDepletionCoefficient) {
+    return zeroBiasCapacitance / ((1.0 - normalizedVoltage) ** gradingCoefficient);
+  }
+  const transitionScale =
+    (1.0 - element.forwardBiasDepletionCoefficient) ** (1.0 + gradingCoefficient);
+  const continuation =
+    1.0 -
+    element.forwardBiasDepletionCoefficient * (1.0 + gradingCoefficient) +
+    gradingCoefficient * normalizedVoltage;
+  return (zeroBiasCapacitance * continuation) / transitionScale;
 }
 
 interface MosfetChargeStateSpec {
@@ -19341,13 +21316,19 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
   const gateSourceCapacitance = element.params.CGSO * element.params.W;
   const gateDrainCapacitance = element.params.CGDO * element.params.W;
   const gateBodyCapacitance = element.params.CGBO * element.params.L;
-  const sourceBodyCapacitance = element.params.CBS;
-  const drainBodyCapacitance = element.params.CBD;
+  const sourceBodyCapacitance =
+    element.params.CBS
+    + element.params.CJ * element.params.AS
+    + element.params.CJSW * element.params.PS;
+  const drainBodyCapacitance =
+    element.params.CBD
+    + element.params.CJ * element.params.AD
+    + element.params.CJSW * element.params.PD;
   if (gateSourceCapacitance > 0.0) {
     specs.push({
       name: mosfetGateSourceChargeStateName(element),
       positive: element.gate,
-      negative: element.source,
+      negative: mosfetIntrinsicSourceNode(element),
       capacitance: gateSourceCapacitance,
       kind: "gate-overlap",
     });
@@ -19356,7 +21337,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
     specs.push({
       name: mosfetGateDrainChargeStateName(element),
       positive: element.gate,
-      negative: element.drain,
+      negative: mosfetIntrinsicDrainNode(element),
       capacitance: gateDrainCapacitance,
       kind: "gate-overlap",
     });
@@ -19373,7 +21354,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
   if (sourceBodyCapacitance > 0.0) {
     specs.push({
       name: mosfetSourceBodyChargeStateName(element),
-      positive: element.source,
+      positive: mosfetIntrinsicSourceNode(element),
       negative: element.body,
       capacitance: sourceBodyCapacitance,
       kind: "source-body",
@@ -19382,7 +21363,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
   if (drainBodyCapacitance > 0.0) {
     specs.push({
       name: mosfetDrainBodyChargeStateName(element),
-      positive: element.drain,
+      positive: mosfetIntrinsicDrainNode(element),
       negative: element.body,
       capacitance: drainBodyCapacitance,
       kind: "drain-body",
@@ -19407,11 +21388,24 @@ function mosfetChargeDynamicCapacitance(
     return spec.capacitance;
   }
   const junctionVoltage = element.type === "PMOS" ? stateVoltage : -stateVoltage;
+  const bottomCapacitance = spec.kind === "source-body"
+    ? element.params.CBS + element.params.CJ * element.params.AS
+    : element.params.CBD + element.params.CJ * element.params.AD;
+  const sidewallCapacitance = spec.kind === "source-body"
+    ? element.params.CJSW * element.params.PS
+    : element.params.CJSW * element.params.PD;
   return mosfetBulkJunctionCapacitance(
-    spec.capacitance,
+    bottomCapacitance,
     junctionVoltage,
     element.params.PB,
     element.params.MJ,
+    element.params.FC,
+  ) + mosfetBulkJunctionCapacitance(
+    sidewallCapacitance,
+    junctionVoltage,
+    element.params.PB,
+    element.params.MJSW,
+    element.params.FC,
   );
 }
 
@@ -19424,6 +21418,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.forwardBeta) || element.forwardBeta <= 0.0) {
     throw invalidElement(element.name, "forward beta must be finite and positive");
+  }
+  if (Number.isNaN(element.reverseBeta) || element.reverseBeta <= 0.0) {
+    throw invalidElement(element.name, "reverse beta must be positive");
   }
   if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
     throw invalidElement(element.name, "thermal voltage must be finite and positive");
@@ -19439,6 +21436,119 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.reverseTransitTime) || element.reverseTransitTime < 0.0) {
     throw invalidElement(element.name, "reverse transit time must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(element.name, "saturation-current temperature exponent must be finite");
+  }
+  if (!Number.isFinite(element.forwardBetaTemperatureExponent)) {
+    throw invalidElement(element.name, "forward-beta temperature exponent must be finite");
+  }
+  if (!Number.isFinite(element.energyGapElectronVolts) || element.energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
+  }
+  if (!Number.isFinite(element.forwardEarlyVoltage) || element.forwardEarlyVoltage < 0.0) {
+    throw invalidElement(element.name, "forward Early voltage must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.reverseEarlyVoltage) || element.reverseEarlyVoltage < 0.0) {
+    throw invalidElement(element.name, "reverse Early voltage must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardBetaRolloffCurrent) || element.forwardBetaRolloffCurrent < 0.0) {
+    throw invalidElement(element.name, "forward beta roll-off current must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.reverseBetaRolloffCurrent) || element.reverseBetaRolloffCurrent < 0.0) {
+    throw invalidElement(element.name, "reverse beta roll-off current must be finite and non-negative");
+  }
+  if (element.nominalTemperatureKelvin !== undefined &&
+      (!Number.isFinite(element.nominalTemperatureKelvin) || element.nominalTemperatureKelvin <= 0.0)) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  if (!Number.isFinite(element.flickerNoiseCoefficient) || element.flickerNoiseCoefficient < 0.0) {
+    throw invalidElement(element.name, "flicker noise coefficient must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.flickerNoiseExponent) || element.flickerNoiseExponent < 0.0) {
+    throw invalidElement(element.name, "flicker noise exponent must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardExcessPhaseDegrees) || element.forwardExcessPhaseDegrees < 0.0) {
+    throw invalidElement(element.name, "forward excess phase must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardTransitTimeBiasCoefficient) || element.forwardTransitTimeBiasCoefficient < 0.0) {
+    throw invalidElement(element.name, "forward transit-time bias coefficient must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardTransitTimeCurrent) || element.forwardTransitTimeCurrent < 0.0) {
+    throw invalidElement(element.name, "forward transit-time current must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardTransitTimeVoltage) || element.forwardTransitTimeVoltage < 0.0) {
+    throw invalidElement(element.name, "forward transit-time voltage must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.emitterResistance) || element.emitterResistance < 0.0) {
+    throw invalidElement(element.name, "emitter resistance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.collectorResistance) || element.collectorResistance < 0.0) {
+    throw invalidElement(element.name, "collector resistance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.baseResistance) || element.baseResistance < 0.0) {
+    throw invalidElement(element.name, "base resistance must be finite and non-negative");
+  }
+  if (element.minimumBaseResistance !== undefined &&
+      (!Number.isFinite(element.minimumBaseResistance) || element.minimumBaseResistance < 0.0)) {
+    throw invalidElement(
+      element.name,
+      "minimum base resistance must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.baseResistanceHalfCurrent) ||
+      element.baseResistanceHalfCurrent < 0.0) {
+    throw invalidElement(
+      element.name,
+      "base-resistance half-current must be finite and non-negative",
+    );
+  }
+  if (!Number.isFinite(element.baseCollectorCapacitanceFraction) ||
+      element.baseCollectorCapacitanceFraction < 0.0 ||
+      element.baseCollectorCapacitanceFraction > 1.0) {
+    throw invalidElement(
+      element.name,
+      "base-collector capacitance fraction must be between zero and one",
+    );
+  }
+  if (!Number.isFinite(element.baseEmitterLeakageSaturationCurrent) || element.baseEmitterLeakageSaturationCurrent < 0.0) {
+    throw invalidElement(element.name, "base-emitter leakage saturation current must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.baseEmitterLeakageEmissionCoefficient) || element.baseEmitterLeakageEmissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "base-emitter leakage emission coefficient must be finite and positive");
+  }
+  if (!Number.isFinite(element.baseCollectorLeakageSaturationCurrent) || element.baseCollectorLeakageSaturationCurrent < 0.0) {
+    throw invalidElement(element.name, "base-collector leakage saturation current must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.baseCollectorLeakageEmissionCoefficient) || element.baseCollectorLeakageEmissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "base-collector leakage emission coefficient must be finite and positive");
+  }
+  if (!Number.isFinite(element.forwardEmissionCoefficient) || element.forwardEmissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "forward emission coefficient must be finite and positive");
+  }
+  if (!Number.isFinite(element.reverseEmissionCoefficient) || element.reverseEmissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "reverse emission coefficient must be finite and positive");
+  }
+  if (!Number.isFinite(element.baseEmitterJunctionPotential) || element.baseEmitterJunctionPotential <= 0.0) {
+    throw invalidElement(element.name, "base-emitter junction potential must be finite and positive");
+  }
+  if (!Number.isFinite(element.baseEmitterGradingCoefficient) ||
+      element.baseEmitterGradingCoefficient < 0.0 ||
+      element.baseEmitterGradingCoefficient >= 1.0) {
+    throw invalidElement(element.name, "base-emitter grading coefficient must be finite and in [0, 1)");
+  }
+  if (!Number.isFinite(element.baseCollectorJunctionPotential) || element.baseCollectorJunctionPotential <= 0.0) {
+    throw invalidElement(element.name, "base-collector junction potential must be finite and positive");
+  }
+  if (!Number.isFinite(element.baseCollectorGradingCoefficient) ||
+      element.baseCollectorGradingCoefficient < 0.0 ||
+      element.baseCollectorGradingCoefficient >= 1.0) {
+    throw invalidElement(element.name, "base-collector grading coefficient must be finite and in [0, 1)");
+  }
+  if (!Number.isFinite(element.forwardBiasDepletionCoefficient) ||
+      element.forwardBiasDepletionCoefficient < 0.0 ||
+      element.forwardBiasDepletionCoefficient >= 1.0) {
+    throw invalidElement(element.name, "forward-bias depletion coefficient must be finite and in [0, 1)");
   }
 }
 
@@ -19458,14 +21568,71 @@ function validateMosfet(element: Mosfet): void {
   if (params.W <= 0.0 || params.L <= 0.0) {
     throw invalidElement(element.name, "MOSFET W and L must be positive");
   }
+  if (params.LD < 0.0 || params.L - 2.0 * params.LD <= 0.0) {
+    throw invalidElement(element.name, "MOSFET LD must be non-negative with L - 2*LD > 0");
+  }
+  if (params.RD < 0.0) {
+    throw invalidElement(element.name, "MOSFET RD must be non-negative");
+  }
+  if (params.RS < 0.0) {
+    throw invalidElement(element.name, "MOSFET RS must be non-negative");
+  }
+  if (params.RSH < 0.0) {
+    throw invalidElement(element.name, "MOSFET RSH must be non-negative");
+  }
+  if (params.NRD < 0.0) {
+    throw invalidElement(element.name, "MOSFET NRD must be non-negative");
+  }
+  if (params.NRS < 0.0) {
+    throw invalidElement(element.name, "MOSFET NRS must be non-negative");
+  }
+  if (params.AD < 0.0) {
+    throw invalidElement(element.name, "MOSFET AD must be non-negative");
+  }
+  if (params.AS < 0.0) {
+    throw invalidElement(element.name, "MOSFET AS must be non-negative");
+  }
+  if (params.CJ < 0.0) {
+    throw invalidElement(element.name, "MOSFET CJ must be non-negative");
+  }
+  if (params.PD < 0.0) {
+    throw invalidElement(element.name, "MOSFET PD must be non-negative");
+  }
+  if (params.PS < 0.0) {
+    throw invalidElement(element.name, "MOSFET PS must be non-negative");
+  }
+  if (params.CJSW < 0.0) {
+    throw invalidElement(element.name, "MOSFET CJSW must be non-negative");
+  }
+  if (params.TOX <= 0.0) {
+    throw invalidElement(element.name, "MOSFET TOX must be positive");
+  }
+  if (params.U0 < 0.0) {
+    throw invalidElement(element.name, "MOSFET U0 must be non-negative");
+  }
   if (params.PHI <= 0.0) {
     throw invalidElement(element.name, "MOSFET PHI must be positive");
   }
   if (params.IS <= 0.0 || params.N_SUB <= 0.0 || params.T_NOM <= 0.0) {
     throw invalidElement(element.name, "MOSFET IS, N_SUB, and T_NOM must be positive");
   }
+  if (params.JS < 0.0) {
+    throw invalidElement(element.name, "MOSFET JS must be non-negative");
+  }
   if (params.PB <= 0.0 || params.MJ < 0.0) {
     throw invalidElement(element.name, "MOSFET PB must be positive and MJ must be non-negative");
+  }
+  if (params.MJSW < 0.0) {
+    throw invalidElement(element.name, "MOSFET MJSW must be non-negative");
+  }
+  if (params.FC < 0.0 || params.FC >= 1.0) {
+    throw invalidElement(element.name, "MOSFET FC must be in [0, 1)");
+  }
+  if (params.KF < 0.0) {
+    throw invalidElement(element.name, "MOSFET KF must be non-negative");
+  }
+  if (params.AF < 0.0) {
+    throw invalidElement(element.name, "MOSFET AF must be non-negative");
   }
   if (
     params.CGSO < 0.0 ||
@@ -19820,6 +21987,9 @@ function updateCapacitorStates(
   nodeVoltages: ReadonlyMap<string, number>,
   capacitorStates: CapacitorState[],
 ): void {
+  const previousVoltages = new Map(
+    capacitorStates.map((state) => [state.name, state.previousVoltage]),
+  );
   for (const state of capacitorStates) {
     const capacitorElement = circuit
       .elements()
@@ -19908,9 +22078,18 @@ function updateCapacitorStates(
         : diodeElement !== undefined
           ? diodeDynamicCapacitance(diodeElement, previousVoltage)
           : bjtSpec !== undefined
-            ? bjtChargeDynamicCapacitance(bjtElement!, bjtSpec.kind, previousVoltage)
+            ? bjtChargeDynamicCapacitance(
+                bjtElement!,
+                bjtSpec.kind,
+                previousVoltage,
+                previousVoltages.get(bjtBaseCollectorChargeStateName(bjtElement!)) ?? 0.0,
+              )
             : jfetSpec !== undefined
-              ? jfetSpec.capacitance
+              ? jfetChargeDynamicCapacitance(
+                  jfetElement!,
+                  jfetSpec.capacitance,
+                  state.previousVoltage,
+                )
               : mosfetChargeDynamicCapacitance(
                   mosfetElement!,
                   mosfetSpec!,
@@ -20739,18 +22918,102 @@ function stampBjtSmallSignal(
   operatingPoint: readonly number[],
 ): void {
   validateBjt(element);
+  if (element.emitterResistance > 0.0) {
+    const intrinsicEmitter = bjtIntrinsicEmitterNode(element);
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.emitter),
+      nodeIndex(nodeIndices, intrinsicEmitter),
+      1.0 / element.emitterResistance,
+    );
+    element = { ...element, emitter: intrinsicEmitter, emitterResistance: 0.0 };
+  }
+  if (element.collectorResistance > 0.0) {
+    const intrinsicCollector = bjtIntrinsicCollectorNode(element);
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.collector),
+      nodeIndex(nodeIndices, intrinsicCollector),
+      1.0 / element.collectorResistance,
+    );
+    element = { ...element, collector: intrinsicCollector, collectorResistance: 0.0 };
+  }
+  if (element.baseResistance > 0.0) {
+    const intrinsicBase = bjtIntrinsicBaseNode(element);
+    const intrinsicBaseIndex = nodeIndex(nodeIndices, intrinsicBase);
+    const baseVoltage = vectorVoltage(operatingPoint, intrinsicBaseIndex);
+    const emitterVoltage = vectorVoltage(
+      operatingPoint,
+      nodeIndex(nodeIndices, element.emitter),
+    );
+    const collectorVoltage = vectorVoltage(
+      operatingPoint,
+      nodeIndex(nodeIndices, element.collector),
+    );
+    const baseResistance = bjtEffectiveBaseResistance(
+      element,
+      baseVoltage,
+      emitterVoltage,
+      collectorVoltage,
+    );
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.base),
+      intrinsicBaseIndex,
+      1.0 / baseResistance,
+    );
+    element = {
+      ...element,
+      base: intrinsicBase,
+      baseResistance: 0.0,
+      minimumBaseResistance: undefined,
+      baseResistanceHalfCurrent: 0.0,
+    };
+  }
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
   const baseVoltage = vectorVoltage(operatingPoint, base);
   const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+  const collectorVoltage = vectorVoltage(operatingPoint, collector);
   const junctionVoltage =
     element.polarity === "NPN"
       ? baseVoltage - emitterVoltage
       : emitterVoltage - baseVoltage;
-  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
-  const transconductance = element.saturationCurrent / element.thermalVoltage * Math.exp(exponent);
-  const junctionConductance = transconductance / element.forwardBeta;
+  const reverseJunctionVoltage = element.polarity === "NPN"
+    ? baseVoltage - collectorVoltage
+    : collectorVoltage - baseVoltage;
+  const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
+  const expValue = Math.exp(exponent);
+  const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
+  const baseTransconductance = element.saturationCurrent / forwardThermalVoltage * expValue;
+  const outputVoltage = element.polarity === "NPN"
+    ? collectorVoltage - emitterVoltage
+    : emitterVoltage - collectorVoltage;
+  const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
+  const transport = bjtForwardTransport(
+    element,
+    baseCollectorCurrent,
+    baseTransconductance,
+    earlyFactor,
+  );
+  const outputConductance = element.forwardEarlyVoltage === 0.0
+    ? 0.0
+    : baseCollectorCurrent / element.forwardEarlyVoltage / transport.chargeFactor;
+  const transconductance = transport.transconductance;
+  const leakage = bjtBaseEmitterLeakage(element, junctionVoltage);
+  const junctionConductance =
+    baseTransconductance / element.forwardBeta + leakage.conductance;
+  const collectorLeakage = bjtBaseCollectorLeakage(element, reverseJunctionVoltage);
+  const reverseBase = bjtReverseBaseCurrent(element, reverseJunctionVoltage);
+  stampConductance(matrix, collector, emitter, outputConductance);
+  stampConductance(
+    matrix,
+    base,
+    collector,
+    collectorLeakage.conductance + reverseBase.conductance,
+  );
   if (element.polarity === "NPN") {
     stampConductance(matrix, base, emitter, junctionConductance);
     stampTransconductance(matrix, collector, emitter, base, emitter, transconductance);
@@ -20767,9 +23030,9 @@ function stampMosfetSmallSignal(
   operatingPoint: readonly number[],
 ): void {
   validateMosfet(element);
-  const drain = nodeIndex(nodeIndices, element.drain);
+  const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
   const body = nodeIndex(nodeIndices, element.body);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -20781,9 +23044,41 @@ function stampMosfetSmallSignal(
     drainVoltage - sourceVoltage,
     bodyVoltage - sourceVoltage,
   );
+  const [, sourceBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    sourceVoltage,
+    bodyVoltage,
+    element.params.AS,
+  );
+  const [, drainBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    drainVoltage,
+    bodyVoltage,
+    element.params.AD,
+  );
   stampConductance(matrix, drain, source, result.gds);
+  stampConductance(matrix, body, source, sourceBulkConductance);
+  stampConductance(matrix, body, drain, drainBulkConductance);
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampTransconductance(matrix, drain, source, body, source, result.gmb);
+  const drainResistance = mosfetDrainResistance(element);
+  if (drainResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.drain),
+      drain,
+      1.0 / drainResistance,
+    );
+  }
+  const sourceResistance = mosfetSourceResistance(element);
+  if (sourceResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / sourceResistance,
+    );
+  }
 }
 
 function stampJfetSmallSignal(
@@ -20793,9 +23088,11 @@ function stampJfetSmallSignal(
   operatingPoint: readonly number[],
 ): void {
   validateJfet(element);
-  const drain = nodeIndex(nodeIndices, element.drain);
+  const intrinsicDrain = jfetIntrinsicDrainNode(element);
+  const intrinsicSource = jfetIntrinsicSourceNode(element);
+  const drain = nodeIndex(nodeIndices, intrinsicDrain);
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, intrinsicSource);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
   const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -20804,8 +23101,30 @@ function stampJfetSmallSignal(
     gateVoltage - sourceVoltage,
     drainVoltage - sourceVoltage,
   );
+  const [, gateSourceConductance] =
+    jfetGateJunctionCurrentConductance(element, gateVoltage - sourceVoltage);
+  const [, gateDrainConductance] =
+    jfetGateJunctionCurrentConductance(element, gateVoltage - drainVoltage);
   stampConductance(matrix, drain, source, result.gds);
+  stampConductance(matrix, gate, source, gateSourceConductance);
+  stampConductance(matrix, gate, drain, gateDrainConductance);
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
+  if (element.drainResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.drain),
+      drain,
+      1.0 / element.drainResistance,
+    );
+  }
+  if (element.sourceResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / element.sourceResistance,
+    );
+  }
 }
 
 function stampAcResistor(
@@ -21302,6 +23621,59 @@ function stampAcBjtSmallSignal(
   omega: number,
 ): void {
   validateBjt(element);
+  const externalBase = nodeIndex(nodeIndices, element.base);
+  if (element.emitterResistance > 0.0) {
+    const intrinsicEmitter = bjtIntrinsicEmitterNode(element);
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.emitter),
+      nodeIndex(nodeIndices, intrinsicEmitter),
+      complex(1.0 / element.emitterResistance, 0.0),
+    );
+    element = { ...element, emitter: intrinsicEmitter, emitterResistance: 0.0 };
+  }
+  if (element.collectorResistance > 0.0) {
+    const intrinsicCollector = bjtIntrinsicCollectorNode(element);
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.collector),
+      nodeIndex(nodeIndices, intrinsicCollector),
+      complex(1.0 / element.collectorResistance, 0.0),
+    );
+    element = { ...element, collector: intrinsicCollector, collectorResistance: 0.0 };
+  }
+  if (element.baseResistance > 0.0) {
+    const intrinsicBase = bjtIntrinsicBaseNode(element);
+    const intrinsicBaseIndex = nodeIndex(nodeIndices, intrinsicBase);
+    const baseVoltage = vectorVoltage(operatingPoint, intrinsicBaseIndex);
+    const emitterVoltage = vectorVoltage(
+      operatingPoint,
+      nodeIndex(nodeIndices, element.emitter),
+    );
+    const collectorVoltage = vectorVoltage(
+      operatingPoint,
+      nodeIndex(nodeIndices, element.collector),
+    );
+    const baseResistance = bjtEffectiveBaseResistance(
+      element,
+      baseVoltage,
+      emitterVoltage,
+      collectorVoltage,
+    );
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.base),
+      intrinsicBaseIndex,
+      complex(1.0 / baseResistance, 0.0),
+    );
+    element = {
+      ...element,
+      base: intrinsicBase,
+      baseResistance: 0.0,
+      minimumBaseResistance: undefined,
+      baseResistanceHalfCurrent: 0.0,
+    };
+  }
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
@@ -21316,25 +23688,77 @@ function stampAcBjtSmallSignal(
     element.polarity === "NPN"
       ? baseVoltage - collectorVoltage
       : collectorVoltage - baseVoltage;
-  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
+  const reverseThermalVoltage = element.thermalVoltage * element.reverseEmissionCoefficient;
   const reverseExponent = Math.max(
     -40.0,
-    Math.min(40.0, reverseJunctionVoltage / element.thermalVoltage),
+    Math.min(40.0, reverseJunctionVoltage / reverseThermalVoltage),
   );
-  const transconductance = element.saturationCurrent / element.thermalVoltage * Math.exp(exponent);
-  const junctionConductance = transconductance / element.forwardBeta;
-  const diffusionCapacitance = element.forwardTransitTime * transconductance;
+  const expValue = Math.exp(exponent);
+  const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
+  const baseTransconductance = element.saturationCurrent / forwardThermalVoltage * expValue;
+  const outputVoltage = element.polarity === "NPN"
+    ? collectorVoltage - emitterVoltage
+    : emitterVoltage - collectorVoltage;
+  const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
+  const transport = bjtForwardTransport(
+    element,
+    baseCollectorCurrent,
+    baseTransconductance,
+    earlyFactor,
+  );
+  const outputConductance = element.forwardEarlyVoltage === 0.0
+    ? 0.0
+    : baseCollectorCurrent / element.forwardEarlyVoltage / transport.chargeFactor;
+  const transconductance = transport.transconductance;
+  const leakage = bjtBaseEmitterLeakage(element, junctionVoltage);
+  const collectorLeakage = bjtBaseCollectorLeakage(element, reverseJunctionVoltage);
+  const reverseBase = bjtReverseBaseCurrent(element, reverseJunctionVoltage);
+  const junctionConductance =
+    baseTransconductance / element.forwardBeta + leakage.conductance;
+  const diffusionCapacitance =
+    element.forwardTransitTime *
+    bjtForwardTransitTimeScale(element, junctionVoltage, reverseJunctionVoltage) *
+    transconductance;
+  const excessPhase =
+    omega * element.forwardTransitTime * element.forwardExcessPhaseDegrees * Math.PI / 180.0;
+  const acTransconductance = complex(
+    transconductance * Math.cos(excessPhase),
+    -transconductance * Math.sin(excessPhase),
+  );
   const reverseTransconductance =
-    element.saturationCurrent / element.thermalVoltage * Math.exp(reverseExponent);
+    element.saturationCurrent / reverseThermalVoltage * Math.exp(reverseExponent);
   const reverseDiffusionCapacitance = element.reverseTransitTime * reverseTransconductance;
   const baseEmitterAdmittance = complex(
     junctionConductance,
-    omega * (element.baseEmitterCapacitance + diffusionCapacitance),
+    omega * (
+      bjtBaseEmitterDepletionCapacitance(element, junctionVoltage) + diffusionCapacitance
+    ),
   );
+  const baseCollectorDepletion =
+    bjtBaseCollectorDepletionCapacitance(element, reverseJunctionVoltage);
   const baseCollectorAdmittance = complex(
-    0.0,
-    omega * (element.baseCollectorCapacitance + reverseDiffusionCapacitance),
+    collectorLeakage.conductance + reverseBase.conductance,
+    omega * (
+      element.baseCollectorCapacitanceFraction * baseCollectorDepletion +
+      reverseDiffusionCapacitance
+    ),
   );
+  const externalBaseCollectorAdmittance = complex(
+    0.0,
+    omega * (1.0 - element.baseCollectorCapacitanceFraction) *
+      baseCollectorDepletion,
+  );
+  stampComplexConductance(matrix, collector, emitter, complex(outputConductance, 0.0));
+  if (externalBaseCollectorAdmittance.imag !== 0.0) {
+    stampComplexConductance(
+      matrix,
+      externalBase,
+      collector,
+      externalBaseCollectorAdmittance,
+    );
+  }
   if (element.polarity === "NPN") {
     stampComplexConductance(
       matrix,
@@ -21349,7 +23773,7 @@ function stampAcBjtSmallSignal(
       emitter,
       base,
       emitter,
-      complex(transconductance, 0.0),
+      acTransconductance,
     );
   } else {
     stampComplexConductance(
@@ -21365,7 +23789,7 @@ function stampAcBjtSmallSignal(
       collector,
       emitter,
       base,
-      complex(transconductance, 0.0),
+      acTransconductance,
     );
   }
 }
@@ -21378,9 +23802,9 @@ function stampAcMosfetSmallSignal(
   omega: number,
 ): void {
   validateMosfet(element);
-  const drain = nodeIndex(nodeIndices, element.drain);
+  const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
   const body = nodeIndex(nodeIndices, element.body);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -21391,6 +23815,18 @@ function stampAcMosfetSmallSignal(
     gateVoltage - sourceVoltage,
     drainVoltage - sourceVoltage,
     bodyVoltage - sourceVoltage,
+  );
+  const [, sourceBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    sourceVoltage,
+    bodyVoltage,
+    element.params.AS,
+  );
+  const [, drainBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    drainVoltage,
+    bodyVoltage,
+    element.params.AD,
   );
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
   stampComplexTransconductance(
@@ -21404,8 +23840,18 @@ function stampAcMosfetSmallSignal(
   stampComplexConductance(matrix, gate, source, complex(0.0, omega * result.cgs));
   stampComplexConductance(matrix, gate, drain, complex(0.0, omega * result.cgd));
   stampComplexConductance(matrix, gate, body, complex(0.0, omega * result.cgb));
-  stampComplexConductance(matrix, body, source, complex(0.0, omega * result.cbs));
-  stampComplexConductance(matrix, body, drain, complex(0.0, omega * result.cbd));
+  stampComplexConductance(
+    matrix,
+    body,
+    source,
+    complex(sourceBulkConductance, omega * result.cbs),
+  );
+  stampComplexConductance(
+    matrix,
+    body,
+    drain,
+    complex(drainBulkConductance, omega * result.cbd),
+  );
   stampComplexTransconductance(
     matrix,
     drain,
@@ -21414,6 +23860,24 @@ function stampAcMosfetSmallSignal(
     source,
     complex(result.gmb, 0.0),
   );
+  const drainResistance = mosfetDrainResistance(element);
+  if (drainResistance > 0.0) {
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.drain),
+      drain,
+      complex(1.0 / drainResistance, 0.0),
+    );
+  }
+  const sourceResistance = mosfetSourceResistance(element);
+  if (sourceResistance > 0.0) {
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      complex(1.0 / sourceResistance, 0.0),
+    );
+  }
 }
 
 function stampAcJfetSmallSignal(
@@ -21424,9 +23888,11 @@ function stampAcJfetSmallSignal(
   omega: number,
 ): void {
   validateJfet(element);
-  const drain = nodeIndex(nodeIndices, element.drain);
+  const intrinsicDrain = jfetIntrinsicDrainNode(element);
+  const intrinsicSource = jfetIntrinsicSourceNode(element);
+  const drain = nodeIndex(nodeIndices, intrinsicDrain);
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, intrinsicSource);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
   const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -21435,18 +23901,32 @@ function stampAcJfetSmallSignal(
     gateVoltage - sourceVoltage,
     drainVoltage - sourceVoltage,
   );
+  const gateSourceCapacitance = jfetChargeDynamicCapacitance(
+    element,
+    element.gateSourceCapacitance,
+    gateVoltage - sourceVoltage,
+  );
+  const gateDrainCapacitance = jfetChargeDynamicCapacitance(
+    element,
+    element.gateDrainCapacitance,
+    gateVoltage - drainVoltage,
+  );
+  const [, gateSourceConductance] =
+    jfetGateJunctionCurrentConductance(element, gateVoltage - sourceVoltage);
+  const [, gateDrainConductance] =
+    jfetGateJunctionCurrentConductance(element, gateVoltage - drainVoltage);
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
   stampComplexConductance(
     matrix,
     gate,
     source,
-    complex(0.0, omega * element.gateSourceCapacitance),
+    complex(gateSourceConductance, omega * gateSourceCapacitance),
   );
   stampComplexConductance(
     matrix,
     gate,
     drain,
-    complex(0.0, omega * element.gateDrainCapacitance),
+    complex(gateDrainConductance, omega * gateDrainCapacitance),
   );
   stampComplexTransconductance(
     matrix,
@@ -21456,6 +23936,22 @@ function stampAcJfetSmallSignal(
     source,
     complex(result.gm, 0.0),
   );
+  if (element.drainResistance > 0.0) {
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.drain),
+      drain,
+      complex(1.0 / element.drainResistance, 0.0),
+    );
+  }
+  if (element.sourceResistance > 0.0) {
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      complex(1.0 / element.sourceResistance, 0.0),
+    );
+  }
 }
 
 function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {

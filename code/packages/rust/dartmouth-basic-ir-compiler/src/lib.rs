@@ -973,7 +973,7 @@ impl Compiler {
                 }
                 ASTNodeOrToken::Token(tok)
                     if tok.effective_type_name() == "KEYWORD"
-                       && tok.value.to_ascii_uppercase() == "STEP" =>
+                       && tok.value.eq_ignore_ascii_case("STEP") =>
                 {
                     has_step = true;
                 }

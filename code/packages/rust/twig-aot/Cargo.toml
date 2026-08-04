@@ -1,14 +1,15 @@
 [package]
 name = "twig-aot"
-version = "0.30.0"
+version = "0.50.0"
 edition = "2021"
-description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source. v0.28.0 (E4d-4 fix): strip_dead_aot_string_allocs now keeps EVERY buffer bound to a live string alias — a branch-selected (multi-block) str var aliases several buffers, and the old alias-keyed map dropped all but the last, so a not-last branch read a freed/empty buffer at run time. v0.27.0 (E4-dyn E4d-4): runtime (branch-selected) strings on the native aarch64 + x86_64 columns — a str var assigned by str_const in >1 basic block is kept out of the compile-time literal map so print_str/str_len read the length from the [i64 len][bytes] buffer header at run time (field_load) instead of folding one branch's static length; the var's stack slot already carries the buffer address. v0.26.0 (E4-dyn E4d-1): runtime string helpers __twig_str_concat/_slice/_index/_len/_cmp in twig_runtime.c on the E5 length-prefixed heap block; bounds-trap on slice/index; C-driver unit tests."
+description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source. v0.49.0 (E4-dyn): runtime `str_cmp` lowers to `call_builtin str_cmp`, routing procedure results and branch-selected locals to the shared -1/0/1 C helper. v0.28.0 (E4d-4 fix): strip_dead_aot_string_allocs now keeps EVERY buffer bound to a live string alias — a branch-selected (multi-block) str var aliases several buffers, and the old alias-keyed map dropped all but the last, so a not-last branch read a freed/empty buffer at run time. v0.27.0 (E4-dyn E4d-4): runtime (branch-selected) strings on the native aarch64 + x86_64 columns — a str var assigned by str_const in >1 basic block is kept out of the compile-time literal map so print_str/str_len read the length from the [i64 len][bytes] buffer header at run time (field_load) instead of folding one branch's static length; the var's stack slot already carries the buffer address. v0.26.0 (E4-dyn E4d-1): runtime string helpers __twig_str_concat/_slice/_index/_len/_cmp in twig_runtime.c on the E5 length-prefixed heap block; bounds-trap on slice/index; C-driver unit tests."
 
 [dependencies]
 twig-ir-compiler     = { path = "../twig-ir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 aot-core              = { path = "../aot-core" }
 aarch64-backend       = { path = "../aarch64-backend" }
+aarch64-encoder       = { path = "../aarch64-encoder" }
 x86_64-backend        = { path = "../x86_64-backend" }
 x86_64-encoder        = { path = "../x86_64-encoder" }
 jit-core              = { path = "../jit-core" }
@@ -16,6 +17,14 @@ code-packager         = { path = "../code-packager" }
 cli-builder           = { path = "../cli-builder" }
 iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
 iir-refinement-pass   = { path = "../iir-refinement-pass" }
+# gc-core-capi provides the native GC (`__gc_*` ABI + the `__twig_gc_*` compat
+# aliases). Depending on it as an *rlib* (the default `lib` crate-type) makes
+# rustc pass gc-core-capi's object code to the final linker for twig-aot's own
+# binary + test binaries, so the C runtime archive's undefined `__twig_gc_alloc`
+# reference resolves without dragging in a second copy of Rust std (which linking
+# the staticlib would). The staticlib form is embedded separately by build.rs
+# and linked only into AOT-*emitted* executables. See #118b-2b.
+gc-core-capi          = { path = "../gc-core-capi" }
 tempfile             = "3"
 
 [[bin]]
@@ -26,9 +35,8 @@ path = "bin/twig_aot.rs"
 cc = "1"
 
 [dev-dependencies]
-aarch64-encoder  = { path = "../aarch64-encoder" }
-# Golden divergence guard (LANG77): the `lispy_runtime_golden` test pins the
-# C runtime's tag constants and encodings against lispy-runtime's canonical
+# Golden divergence guard (LANG77): the `dynval_runtime_golden` test pins the
+# C runtime's tag constants and encodings against dynval-runtime's canonical
 # `pub const`s and constructors, so the two implementations cannot silently
 # drift.  Dev-only — the AOT binary itself never links the Rust crate.
-lispy-runtime    = { path = "../lispy-runtime" }
+dynval-runtime    = { path = "../dynval-runtime" }

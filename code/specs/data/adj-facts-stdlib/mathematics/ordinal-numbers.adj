@@ -1,0 +1,54 @@
+% ============================================================================
+% ordinal-numbers — each counting number's ordinal word (adj-facts-stdlib, MATHEMATICS).
+% ============================================================================
+% One of the very first ordering facts a kindergartner learns: after you can
+% COUNT (one, two, three...) you learn to say WHICH ONE comes where in a line —
+% the FIRST in line, the SECOND, the THIRD, and so on. Counting tells you HOW
+% MANY; the ordinal word tells you the POSITION. This little library maps each
+% cardinal number to the word for its place in order:
+%
+%     ? ordinal_number(1, $Word)          % first
+%     ? ordinal_number(3, $Word)          % third
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `ordinal_number(number, ordinal)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% ordinal word WITH its source, on the CPU, with zero model calls. It abstains
+% on any number the source does not list (e.g. 0, which has no ordinal here, or
+% 11): the engine never invents a word, it just says "I don't have that."
+%
+% Because the `number` column is a NUMBER, this composes with counting: count a
+% row of blocks to get how many (say 5), and the ordinal of the last one is the
+% recalled word for 5 — `fifth`. That is the bridge from COUNTING to ORDERING.
+%
+% Provenance: the number→ordinal pairs are copied from the cardinal/ordinal
+% number table quoted in `source`, taken verbatim from EF Education First's
+% "Numbers in English" grammar reference at the `locator`, which lists the
+% ordinals `first` through `tenth`. `trust consensus` — EF is an educational
+% reference (a secondary source), not a primary/official standards body; the
+% `authoritative` tier is reserved for primary authorities (a standards body, a
+% .gov/NIST publication). Ordinal-number words are an ordinary convention of
+% English with no single governing standards body, so a consensus educational
+% reference is the honest tier for this fact. Nothing here is asserted from
+% memory; every word traces to that table.
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ordinal_number {
+    columns number, ordinal
+
+    row (1, first)
+    row (2, second)
+    row (3, third)
+    row (4, fourth)
+    row (5, fifth)
+    row (6, sixth)
+    row (7, seventh)
+    row (8, eighth)
+    row (9, ninth)
+    row (10, tenth)
+
+    source "1 one first, 2 two second, 3 three third, 4 four fourth, 5 five fifth"
+    locator "https://www.ef.edu/english-resources/english-grammar/numbers-english/"
+    trust consensus
+}

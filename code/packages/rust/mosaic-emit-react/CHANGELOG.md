@@ -4,6 +4,161 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - host-owned surface composition
+
+`HostSurface ( content: slot: ... )` now mounts the supplied `ReactNode` in a
+shared MSL-styled container, enabling the same Venture browser package in both
+React and Electron shells.
+
+### Fixed - two styles that were silently discarded
+
+Both were found while polishing the task-app UI, and both had the same shape: the
+emitter accepted the author's input and then produced nothing, with no diagnostic.
+
+- **`align: center-vertical` emitted `align: "center-vertical"`** — which is not a CSS
+  property, so browsers dropped it. **Nothing using it was ever actually centred.** It
+  is now translated to `alignItems: "center"` (with `center-horizontal`, `center`,
+  `start`, `end`, `space-between` mapped alongside). An unrecognised value still falls
+  through to the escaped generic path rather than being dropped.
+- **`Text ( content : "literal" )` rendered `<span></span>`** — a literal `content:`
+  returned `None`, and the doc comment claimed the "standard Text walker" handled it
+  instead. There was no such path. It is now emitted as a JS string expression, so the
+  text appears *and* is escaped. This went unnoticed because no `.mll` in the repo used
+  a literal `content:` until the task-app rail needed a static wordmark and a section
+  heading — both of which came out blank.
+
+4 new tests (196 total).
+
+**Worth knowing:** nothing in the pipeline validates mosstyle property names, which is
+exactly how `align` survived. A sweep of all 109 `.msl` files (4 026 declarations, 44
+distinct property names) found `align` to be the *only* non-CSS name in the repo, so
+there is no second instance today — but a typo in any `.msl` still becomes a dead
+declaration with no warning. A validation pass in `mosaic-analyzer` is the durable fix
+for the class and is not attempted here.
+
+
+### Added - UI36 data-driven sizing (`width` / `height` from a slot or expression)
+
+The size props `width`, `height`, `min-width`, `max-width`, `min-height` and
+`max-height` now accept a **slot binding or an expression**, not just a literal number,
+and lower into the emitted component's style object. See
+`code/specs/UI36-data-driven-sizing.md`.
+
+This closes a hole in the layout/style split. mosstyle deliberately bakes its values at
+compile time, which is right for almost everything — but some sizes are only knowable
+at run time: the length of a Gantt bar, a progress fill, a proportional column. No
+authored CSS can say *"as wide as this row's data"*.
+
+Worse, the obvious attempt **failed silently**: `width: slot: bar-width` parsed fine and
+was then discarded, because the only reader was `find_number_prop`, which matches a
+literal number and nothing else. An author had no way to distinguish a working binding
+from an ignored one. A binding the grammar accepts must now either take effect or be
+reported — never be dropped on the floor.
+
+| author writes | emitted |
+|---|---|
+| `width: 120` | `width: 120` (CSS px) |
+| `width: "50%"` | `width: "50%"` |
+| `width: auto` | `width: "auto"` |
+| `width: slot: bar-width` | `width: barWidth` |
+| `width: ( row[2] )` | `width: row[2]` |
+
+- **A bound size is emitted last** — after the base part style *and* after any state
+  spreads — because data outranks decoration. Otherwise a `state hover { width: … }`
+  would silently clobber the host's value, reintroducing the original complaint in a
+  subtler form.
+- **Additive only:** a layout that binds no size emits byte-identical output, pinned by
+  a test, so no existing Mosaic app is affected.
+- Escaping is unchanged per shape: a slot goes through `validate_slot_or_field_name`, a
+  string and a keyword through `js_string_literal`, and an expression is verbatim — the
+  same trust model already applied to `content:`, `label:`, `If`, and `For`.
+- Rejected loudly: a non-size value (an emit ref), and a non-finite numeric literal that
+  would otherwise emit a bare `inf` identifier.
+- 11 new tests (192 total).
+
+## [Unreleased]
+
+### Added - UI35 drag-and-drop lowering (`HostDraggable` / `HostDropTarget`)
+
+The React backend now lowers the kernel's two new drag primitives (see
+`code/specs/UI35-host-drag-drop.md`). Before this, a kanban board — "drag a card
+to another column" — was simply not expressible in Mosaic; every app had to drop
+to hand-written host code.
+
+The lowering deliberately does **not** use the HTML5 drag-and-drop API. Three
+contracts from the spec drive the design:
+
+- **Touch works.** HTML5 `dragstart`/`dragover` never fire on touch devices, so
+  the emitted code uses **pointer events** (`onPointerDown` / `onPointerEnter` /
+  `onPointerUp`), which are unified across mouse, pen, and touch.
+- **Keyboard is equivalent, not an afterthought.** Every draggable is
+  `tabIndex={0}` with `role="button"` and `aria-roledescription="draggable"`.
+  Space/Enter grabs, arrows move the cursor across `[data-mosaic-drop-key]`
+  targets, Space/Enter drops, Escape cancels — and a keyboard drop dispatches
+  the *same* event as a pointer drop, so the app cannot accidentally support one
+  and not the other.
+- **Screen readers are told what happened.** A visually-hidden
+  `aria-live="polite"` region is emitted alongside the tree and updated on grab,
+  move, drop, and cancel.
+
+Implementation notes, following the `HostDialog` precedent:
+
+- `layout_contains_drag` is a presence check, not a node table — the drag
+  controller is *shared* by every draggable in a component, so one flag is all
+  the emitter needs. It gates the `useState`/`useRef` imports and the controller
+  block, so a layout with no drag emits byte-identical output to before (pinned
+  by a test).
+- `emit_drag_controller_hooks` emits the one controller: the grabbed payload
+  (`useRef`), the hovered target (`useState`), the live region (`useRef`), and
+  the `mosaicPosition` helper that turns a pointer's Y within the target's bounds
+  into `before` / `after` / `into` by thirds.
+- **Drops are proposals, not mutations.** The emitted handler dispatches
+  `{ key, kind, targetKey, position }` and does nothing else; the engine decides
+  whether the move is legal. The emitter never reorders anything itself.
+- **Keyboard equivalence is structural, not duplicated.** A keyboard drop does
+  not re-implement the pointer drop — it dispatches a real `pointerup` at the
+  hovered target so the target's own handler runs. There is exactly one drop
+  path, so the two can never drift into dispatching different payloads. A
+  release with no target under the cursor degrades to a cancel rather than
+  leaving the drag stuck in flight.
+- **Target lookup is scoped to the component instance** with `useId`: drop targets
+  are stamped with the instance id and lookup filters on it. A document-wide query
+  would let arrow keys in one mounted board walk onto — and announce — a drop
+  target belonging to a different one. Scoping deliberately does *not* wrap the
+  tree in an element: a wrapper is invalid inside `<tbody>`/`<ul>`/`<select>`
+  (the parser hoists non-table content out of a table), and this emitter lowers
+  components into exactly those contexts. It also would not have worked — a
+  *child* component'''s targets sit inside the wrapper'''s subtree too.
+- **`onDragEnd { dropped }` reports the real outcome.** A keyboard release returns
+  whether the target actually accepted, not merely that an event was dispatched:
+  a disabled target bails out of its own handler, and reporting success there
+  would leave the drag stuck in flight (so the next Space releases instead of
+  grabbing) while claiming the card had landed. Disabled targets also drop their
+  key attribute entirely, so the keyboard cursor cannot land on a target the
+  pointer could never hover.
+- **The hovered target lives in a ref**, mirrored into state only to drive
+  re-render. Keyboard auto-repeat fires far faster than React commits, so reading
+  the state value would recompute the same next position repeatedly and the
+  cursor would stall while an arrow key is held.
+- **The keyboard drop survives jsdom.** `PointerEvent` has no constructor there,
+  so the emitted code feature-tests and falls back to `MouseEvent` — otherwise the
+  standard React test environment would throw on the very path that proves the
+  keyboard contract.
+- An unhandled shape on `drag-key`/`drop-key` is now an **error**, not a silent
+  degradation to an empty key (which would still register and match other keyless
+  targets — cards landing in the wrong column rather than a build failure).
+- **Generated names live in a `mosaic$…` namespace.** Slot identifiers are
+  camel-cased from kebab-case and validated against `^[_A-Za-z][_A-Za-z0-9]*$`,
+  so they can never contain `$`. A slot innocently named `mosaic-drag` therefore
+  cannot collide with the controller — without the namespace it would emit a
+  parameter and a `const` of the same name and fail to compile.
+- Controller helpers are emitted **per half used**: a drop-target-only component
+  does not get the grab/cancel/step helpers, and vice versa, because an unused
+  local trips `noUnusedLocals` (TS6133) under a strict host tsconfig.
+
+12 new tests cover each contract, the scoping, the namespace collision, and the
+absence case (a layout with no drag emits byte-identical output to before).
+
 ### Fixed - destructure only the props the component body references
 
 The generated component previously destructured *every* slot in its parameter

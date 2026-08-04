@@ -414,7 +414,7 @@ impl BrainfuckVM {
                         self.tape[self.dp], target
                     )
                 } else {
-                    format!("LOOP_END: cell is 0, exiting loop")
+                    "LOOP_END: cell is 0, exiting loop".to_string()
                 }
             }
 

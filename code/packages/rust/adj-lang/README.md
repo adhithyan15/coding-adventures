@@ -81,6 +81,35 @@ The frontend parses the string with the repo's LaTeX `MathFrontend` and lowers
 the supported arithmetic subset into the same expression tree as ASCII ADJ.
 Unsupported math is a compile error, not a guessed rewrite.
 
+### Parser-backed formula source maps
+
+Provenance tooling can call `formula_source_map(source)` to inventory every formula with the
+same grammar and typed adapter used for execution. Each entry carries its `FormulaDef` plus
+half-open UTF-8 byte spans for the complete declaration and final executable body. Multi-step
+formulas point at the final expression, quoted math retains its exact source spelling, and any
+formula-boundary, order, count, or name disagreement is an error rather than a best-effort match.
+The source map is structural: import resolution, lowering, derivation replay, and execution
+coverage remain separate gates.
+
+### Formula domain requirements
+
+A formula may declare ordered requirements after its body and before its provenance annotations:
+
+```adj
+formula divide(dividend, divisor) = dividend / divisor
+    requires nonzero(divisor)
+    source "division definition" trust authoritative
+```
+
+Requirement predicates use a generic AST, but execution is a closed set: an unknown predicate,
+wrong arity, out-of-scope reference, or nested formula/built-in application is a compile error.
+The first slice accepts ordinary arithmetic expressions over bound parameters. `nonzero(expr)` is
+evaluated on the CPU after arguments are bound and before the body runs, including inside nested
+formula calls. Exact observed and derived values use rational sidecars; a literal consumed by a
+guard that cannot cross the current compute IR's `f64` boundary unchanged is rejected explicitly.
+A false or unresolved requirement emits a structured abstention and no derived value. Formula
+source maps expose the exact declaration and argument byte spans for every requirement.
+
 ### Constraints — `symbol` / `constrain` / `solve` / `check` (v0.7)
 
 The model extracts the policy's **unknowns and constraints**; the engine solves

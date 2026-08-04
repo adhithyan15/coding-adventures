@@ -1,0 +1,22 @@
+% ============================================================================
+% cell-organelles.query.adj — a worked recall over the biology organelles library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the mitochondrion
+% do?": it states no biology fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `organelle_function`
+% rows and returns the function atom + the table's source/locator/trust. The
+% fourth query runs the relation BACKWARD (bind the function, recall the
+% organelle). An organelle (or non-organelle) not in the table abstains honestly —
+% the engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli cell-organelles.query.adj
+% ============================================================================
+
+import "cell-organelles.adj"
+
+? organelle_function(mitochondrion, $F)   % expect produces_energy
+? organelle_function(ribosome, $F)        % expect makes_protein
+? organelle_function(nucleus, $F)         % expect maintains_dna
+? organelle_function($O, photosynthesis)  % expect chloroplast — the reverse recall
+? organelle_function(smartphone, $F)      % expect abstain — not a cell organelle

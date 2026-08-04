@@ -1,0 +1,28 @@
+% ============================================================================
+% pf-ratio.query.adj — worked applications of the P/F-ratio definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a critical-care oxygenation vignette into an
+% observed PaO2 and FiO2: it `import`s the grounded formulabook, `observe`s the arterial oxygen
+% partial pressure and the fraction of inspired oxygen, and asks the engine to APPLY the cited
+% definition. No arithmetic is stated by the consumer; the engine computes each value EXACTLY (over
+% exact rationals) and carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (PaO2 = 200 mmHg, FiO2 = 0.5): P/F ratio = 200 ÷ 0.5 = 400 mmHg — a normal ratio (well
+% above the ARDS cut-off of 300). Each query below fixes two of the three quantities and asks the
+% engine to recover the third; every answer is exact and the three COMPOSE (each inversion recovers
+% exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pf-ratio.query.adj
+% ============================================================================
+
+import "pf-ratio.adj"
+
+% --- Definition: the P/F ratio the two oxygen values imply (expect 400). ----------------------
+observe arterial_oxygen_partial_pressure(200)
+observe fraction_of_inspired_oxygen(0.5)
+? pf_ratio(arterial_oxygen_partial_pressure, fraction_of_inspired_oxygen)   % expect 400
+
+% --- Inverse: the PaO2 a P/F ratio of 400 implies at that FiO2 (expect 200). ------------------
+observe pf_ratio(400)
+? arterial_oxygen_partial_pressure(pf_ratio, fraction_of_inspired_oxygen)   % expect 200

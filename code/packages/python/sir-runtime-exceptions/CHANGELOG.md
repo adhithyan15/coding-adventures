@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 — `ancestry_chain` accessor for module-aware `is_a?`
+
+Exposes `ancestry_chain(class_name)`: the exception's class followed by each of
+its registered ancestors, in order (`"ArgumentError"` →
+`["ArgumentError", "StandardError", "Exception"]`). Cycle-safe — a malformed
+self- or mutual edge terminates, and each class appears at most once.
+
+The ancestry table stays private (`_ANCESTRY`); this is a read-only *view* of
+it. The OOP runtime's `is_a?` needs to visit every link to ask whether a
+module was `include`d there — a per-link question that `rescue_matches` (a
+boolean name-walk over the whole chain) cannot answer. Added because a
+security review found `Exception#is_a?` on the sibling `sir-runtime-oop`
+package ignored included modules where the Rust/Go/JavaScript backends honour
+them, so `retry unless e.is_a?(Recoverable)` took the opposite branch on
+Python alone.
+
 ## 0.2.0 — user-defined exception-class ancestry (E2)
 
 Adds `register_ancestry(mapping)`: the SIR backend threads user

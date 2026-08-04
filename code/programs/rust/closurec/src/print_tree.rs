@@ -455,7 +455,7 @@ mod tests {
             .map(|(i, _)| i)
             .collect();
         assert!(
-            unescaped_quote_positions.len() % 2 == 0,
+            unescaped_quote_positions.len().is_multiple_of(2),
             "balanced quotes: {out}"
         );
     }

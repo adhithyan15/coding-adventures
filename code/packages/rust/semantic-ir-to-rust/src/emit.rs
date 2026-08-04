@@ -64,7 +64,10 @@ pub fn emit_module(m: &Module) -> String {
     // source-controlled field — so this substitution can never inject into the
     // emitted Rust.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
+    out.push_str(&RUNTIME.replace(
+        "__SIR_DISPLAY_RUBY__",
+        if display_ruby { "true" } else { "false" },
+    ));
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -516,7 +519,29 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::MatMul { .. }
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
-        | Expr::IndexGet { .. } => {}
+        | Expr::IndexGet { .. }
+        // SIR22 addendum: APL primitive operators — same rationale as the
+        // base SIR22 nodes above.
+        | Expr::Reduce { .. }
+        | Expr::Scan { .. }
+        | Expr::OuterProduct { .. }
+        | Expr::Shape { .. }
+        | Expr::Reshape { .. }
+        | Expr::IndexGenerator { .. }
+        | Expr::IndexOf { .. }
+        | Expr::Ravel { .. }
+        | Expr::Catenate { .. }
+        | Expr::Convert { .. } => {}
+        // SIR23 symbolic-expression/pattern nodes: same rationale as the
+        // SIR22 nodes above — rejected before emit, so none of these carry
+        // a reachable `Assign` for this backend.
+        Expr::SymSymbol { .. }
+        | Expr::SymRational { .. }
+        | Expr::SymApply { .. }
+        | Expr::SymPatternBlank { .. }
+        | Expr::SymPatternNamed { .. }
+        | Expr::SymRule { .. }
+        | Expr::SymReplaceAll { .. } => {}
     }
 }
 
@@ -889,7 +914,10 @@ fn emit_try_catch(
                 dpad, kw, types
             );
             let bpad = indent_str(arm + 2);
-            // `rescue Foo => e` binds the caught exception's message value.
+            // `rescue Foo => e` binds the caught exception ITSELF — a
+            // `Value::Exception` carrying the class tag and message, so
+            // `e.class` / `e.is_a?` / `e.message` all answer.  It used to bind
+            // the message STRING (see `exc_value`).
             if let Some(bind) = &r.binding {
                 let _ = writeln!(
                     out,
@@ -1099,9 +1127,42 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::MatMul { span, .. }
         | Expr::ElementwiseOp { span, .. }
         | Expr::Transpose { span, .. }
-        | Expr::IndexGet { span, .. } => {
+        | Expr::IndexGet { span, .. }
+        // SIR22 addendum: APL primitive operators — same deferral rationale
+        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
+        // features, not in this backend's accepted-features list either).
+        | Expr::Reduce { span, .. }
+        | Expr::Scan { span, .. }
+        | Expr::OuterProduct { span, .. }
+        | Expr::Shape { span, .. }
+        | Expr::Reshape { span, .. }
+        | Expr::IndexGenerator { span, .. }
+        | Expr::IndexOf { span, .. }
+        | Expr::Ravel { span, .. }
+        | Expr::Catenate { span, .. }
+        // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
+        // validated module.
+        | Expr::Convert { span, .. } => {
             panic!(
-                "rust backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                "rust backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                span
+            );
+        }
+        // SIR23 symbolic-expression/pattern nodes — `Feature::SymbolicExpr` /
+        // `Feature::PatternMatching` are not in this backend's accepted-
+        // features list, so `check_module` rejects any module using them
+        // before it ever reaches emit.  Defensive panic covers internal
+        // bugs only (matches the SIR22/SIR26 arm above).
+        Expr::SymSymbol { span, .. }
+        | Expr::SymRational { span, .. }
+        | Expr::SymApply { span, .. }
+        | Expr::SymPatternBlank { span, .. }
+        | Expr::SymPatternNamed { span, .. }
+        | Expr::SymRule { span, .. }
+        | Expr::SymReplaceAll { span, .. } => {
+            panic!(
+                "rust backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 span
             );
@@ -1562,6 +1623,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "case_eq" => ("__sir::case_eq", false),
         "<" => ("__sir::lt", false),
         ">" => ("__sir::gt", false),
+        // The Ruby frontend lowers `a == b`/`a != b`/`a <= b`/`a >= b` to these
+        // operator-spelling builtins (`lower_comparison_chain`).  `==` is a
+        // synonym for the `=` handled above; the other three route to the new
+        // `ne`/`le`/`ge` runtime helpers.  Without these arms `puts(1 == 1)`
+        // hit the `_` fallback and emitted a call to a nonexistent function.
+        "==" => ("__sir::eq", false),
+        "!=" => ("__sir::ne", false),
+        "<=" => ("__sir::le", false),
+        ">=" => ("__sir::ge", false),
         "cons" => ("__sir::cons", false),
         "car" => ("__sir::car", false),
         "cdr" => ("__sir::cdr", false),
@@ -1638,7 +1708,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if name == "global_set" {
         // Two args; pass first by reference, second by value.
         out.push_str("(__sir::global_set(&(");
-        if args.len() >= 1 {
+        if !args.is_empty() {
             emit_expr(out, &args[0], indent);
         }
         out.push_str("), ");
@@ -1762,13 +1832,13 @@ fn emit_make_closure(
         emit_expr(out, &c.value, indent + 1);
         out.push_str(";\n");
     }
-    let _ = write!(
+    let _ = writeln!(
         out,
-        "{}__sir::Value::Closure(::std::rc::Rc::new(__sir::Closure {{ fun: Box::new(move |__args: Vec<__sir::Value>| {{\n",
+        "{}__sir::Value::Closure(::std::rc::Rc::new(__sir::Closure {{ fun: Box::new(move |__args: Vec<__sir::Value>| {{",
         pad
     );
     let inner_pad = indent_str(indent + 2);
-    let _ = write!(out, "{}let mut __it = __args.into_iter();\n", inner_pad);
+    let _ = writeln!(out, "{}let mut __it = __args.into_iter();", inner_pad);
     let _ = write!(out, "{}{}(", inner_pad, function_emit_name(fn_name));
     let mut first = true;
     for n in &cap_names {
@@ -1830,7 +1900,7 @@ fn emit_make_closure(
         out.push_str("__it.next().unwrap_or(__sir::Value::Nil)");
     }
     out.push_str(")\n");
-    let _ = write!(out, "{}}}) }}))\n", pad);
+    let _ = writeln!(out, "{}}}) }}))", pad);
     let _ = write!(out, "{}}}", indent_str(indent));
 }
 
@@ -2264,11 +2334,15 @@ pub fn sanitize_ident(s: &str) -> String {
     if is_valid_rust_ident(s) && !is_rust_keyword(s) {
         return s.to_string();
     }
-    if is_rust_keyword(s) {
+    if is_rust_keyword(s) && !is_raw_incompatible_keyword(s) {
         // Raw-identifier syntax — keeps the original spelling
         // visible in tooling.
         return format!("r#{}", s);
     }
+    // Either not a valid identifier shape, or a keyword that raw-identifier
+    // syntax cannot represent (`self` / `Self` / `super` / `crate` — rustc
+    // rejects `r#self` etc. outright with "cannot be a raw identifier",
+    // verified against rustc 1.97), so hex-encode instead.
     let mut out = String::with_capacity(s.len() + 4);
     out.push('_'); // prefix so the result never starts with a digit
     out.push('_');
@@ -2280,6 +2354,15 @@ pub fn sanitize_ident(s: &str) -> String {
         }
     }
     out
+}
+
+/// The subset of `is_rust_keyword` that raw-identifier syntax cannot
+/// represent. rustc special-cases these because they carry path-resolution
+/// meaning `r#` can't override — `r#self`, `r#Self`, `r#super`, and
+/// `r#crate` are all hard compile errors ("cannot be a raw identifier"),
+/// unlike ordinary keywords (e.g. `r#extern`, `r#fn`) which raw-encode fine.
+fn is_raw_incompatible_keyword(s: &str) -> bool {
+    matches!(s, "self" | "Self" | "super" | "crate")
 }
 
 fn is_valid_rust_ident(s: &str) -> bool {
@@ -2300,19 +2383,21 @@ fn is_valid_rust_ident(s: &str) -> bool {
 }
 
 fn is_rust_keyword(s: &str) -> bool {
-    // 2021-edition keywords + reserved.  `r#` raw-identifier
-    // syntax can wrap most of these; some (`crate`, `self`,
-    // `super`, `extern`) cannot — for those we fall back to the
-    // underscore-encoded form below by ALSO returning `false`
-    // here.  In v0 we accept the `r#` form for all common
-    // keywords; the few un-raw-able ones get encoded.
+    // 2021-edition strict + reserved keywords (The Rust Reference,
+    // "Keywords" chapter). `r#` raw-identifier syntax can wrap most of
+    // these; `self`/`Self`/`super`/`crate` cannot (verified against
+    // rustc 1.97 — see `is_raw_incompatible_keyword`, which routes those
+    // four to the underscore-encoded fallback in `sanitize_ident`
+    // instead of `r#`.
     matches!(
         s,
         "as" | "break"
             | "const"
             | "continue"
+            | "crate"
             | "else"
             | "enum"
+            | "extern"
             | "false"
             | "fn"
             | "for"
@@ -2328,8 +2413,11 @@ fn is_rust_keyword(s: &str) -> bool {
             | "pub"
             | "ref"
             | "return"
+            | "self"
+            | "Self"
             | "static"
             | "struct"
+            | "super"
             | "trait"
             | "true"
             | "type"
@@ -2412,6 +2500,41 @@ mod tests {
     }
 
     #[test]
+    fn is_rust_keyword_flags_path_keywords_missing_from_the_original_list() {
+        // `crate`, `extern`, `self`, `Self`, and `super` are genuine Rust
+        // keywords (a bare `let self = 5;` etc. is a compile error under
+        // rustc 1.97) but were missing from `is_rust_keyword`, so
+        // `sanitize_ident` passed them through completely unmodified
+        // (`is_valid_rust_ident(s) && !is_rust_keyword(s)` was true for
+        // all five).
+        assert!(is_rust_keyword("crate"));
+        assert!(is_rust_keyword("extern"));
+        assert!(is_rust_keyword("self"));
+        assert!(is_rust_keyword("Self"));
+        assert!(is_rust_keyword("super"));
+
+        // `extern` raw-encodes fine, like the pre-existing entries.
+        assert_eq!(sanitize_ident("extern"), "r#extern");
+
+        // `self`/`Self`/`super`/`crate` cannot be raw identifiers (rustc
+        // rejects `r#self` etc. outright), so they must fall back to the
+        // underscore-encoded form instead of `r#`.
+        assert_eq!(sanitize_ident("self"), "__self");
+        assert_eq!(sanitize_ident("Self"), "__Self");
+        assert_eq!(sanitize_ident("super"), "__super");
+        assert_eq!(sanitize_ident("crate"), "__crate");
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_rust_keyword("crate_name"));
+        assert!(!is_rust_keyword("myself"));
+        assert!(!is_rust_keyword("superclass"));
+        assert_eq!(sanitize_ident("crate_name"), "crate_name");
+        assert_eq!(sanitize_ident("myself"), "myself");
+        assert_eq!(sanitize_ident("superclass"), "superclass");
+    }
+
+    #[test]
     fn sanitize_rewrites_invalid_chars() {
         let r = sanitize_ident("null?");
         assert!(r.starts_with("__"));
@@ -2446,7 +2569,7 @@ mod tests {
         let injected = "x\n// pwn();";
         let safe = sanitize_comment(injected);
         assert!(!safe.contains('\n'));
-        let s_ls = format!("a\u{2028}b\u{2029}c\u{0085}d");
+        let s_ls = "a\u{2028}b\u{2029}c\u{0085}d".to_string();
         let safe2 = sanitize_comment(&s_ls);
         for c in &['\u{2028}', '\u{2029}', '\u{0085}'] {
             assert!(!safe2.contains(*c));

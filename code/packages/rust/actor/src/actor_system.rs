@@ -472,7 +472,7 @@ mod tests {
     use crate::actor::{ActorResult, ActorSpec};
 
     /// Helper: create a simple no-op behavior.
-    fn noop_behavior() -> Box<dyn Fn(Box<dyn Any>, &Message) -> ActorResult> {
+    fn noop_behavior() -> Behavior {
         Box::new(|state, _msg| ActorResult {
             new_state: state,
             messages_to_send: vec![],
@@ -482,7 +482,7 @@ mod tests {
     }
 
     /// Helper: create a counter behavior that increments a u64 state.
-    fn counter_behavior() -> Box<dyn Fn(Box<dyn Any>, &Message) -> ActorResult> {
+    fn counter_behavior() -> Behavior {
         Box::new(|state, _msg| {
             let count = *state.downcast::<u64>().unwrap();
             ActorResult {
@@ -495,7 +495,7 @@ mod tests {
     }
 
     /// Helper: create an echo behavior that sends the message back.
-    fn echo_behavior() -> Box<dyn Fn(Box<dyn Any>, &Message) -> ActorResult> {
+    fn echo_behavior() -> Behavior {
         Box::new(|state, msg| {
             let reply = Message::text("echo", &format!("echo: {}", msg.payload_text()));
             ActorResult {

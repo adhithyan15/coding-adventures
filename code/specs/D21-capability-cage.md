@@ -237,8 +237,13 @@ time        read, sleep                      "*" (time is not scoped)
 
 stdin       read                             "*" (stdin is not scoped)
 
-stdout      write                            "*" (stdout is not scoped)
+stdout      write                            "*" (stdout and stderr share this
+                                             unified output category)
 ```
+
+The wire category remains `stdout` for both process output streams. A write to
+standard error therefore requires `stdout:write:*`; no separate `stderr`
+category exists in the eight-category taxonomy.
 
 **The `*` target:** Within a specific `category:action` pair, the target `*` means "any
 resource of this type." For example, `fs:read:*` means "can read any file." This is

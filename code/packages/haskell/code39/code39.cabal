@@ -1,0 +1,39 @@
+cabal-version: 3.0
+name:          code39
+version:       0.1.0
+synopsis:      Pure Code 39 barcode encoder
+description:   Validated Code 39 symbols, narrow and wide runs, and backend-neutral paint scenes.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.Code39
+    build-depends:    aeson >=2.0 && <3
+                    , base >=4.14 && <5
+                    , barcode-layout-1d >=0.1 && <0.2
+                    , containers >=0.6 && <0.8
+                    , paint-instructions >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Code39Spec
+    hs-source-dirs:   test
+    build-depends:    aeson >=2.0 && <3
+                    , base >=4.14 && <5
+                    , barcode-layout-1d >=0.1 && <0.2
+                    , code39
+                    , containers >=0.6 && <0.8
+                    , hspec ==2.*
+                    , paint-instructions >=0.1 && <0.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

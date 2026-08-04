@@ -1,0 +1,28 @@
+% ============================================================================
+% oxygen-delivery.query.adj — worked applications of global oxygen delivery.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a haemodynamic assessment into a cardiac output and
+% an arterial oxygen content: it `import`s the grounded formulabook, `observe`s the two values, and asks the
+% engine to APPLY the cited oxygen-delivery formula. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the
+% CPU, with zero model calls.
+%
+% Worked case (cardiac output = 5 L/min, arterial oxygen content = 20 mL/dL):
+% oxygen delivery = 5 × 20 × 10 = 1000 mL/min — a normal global oxygen delivery. Each query fixes two of
+% the three quantities and asks the engine to recover the third; every answer is exact and the inversions
+% COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli oxygen-delivery.query.adj
+% ============================================================================
+
+import "oxygen-delivery.adj"
+
+% --- DO2: the oxygen delivery the cardiac output and content imply (expect 1000). -------------------
+observe cardiac_output(5)
+observe arterial_oxygen_content(20)
+? do2(cardiac_output, arterial_oxygen_content)   % expect 1000
+
+% --- Inverse: the cardiac output a DO2 of 1000 implies at the same content (expect 5). --------------
+observe do2(1000)
+? cardiac_output(do2, arterial_oxygen_content)   % expect 5

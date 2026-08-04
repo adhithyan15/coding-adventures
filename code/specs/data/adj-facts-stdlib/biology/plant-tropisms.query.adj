@@ -1,0 +1,23 @@
+% ============================================================================
+% plant-tropisms.query.adj — a worked recall over the biology plant-tropisms
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a phototropism
+% respond to?": it states no botany fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `tropism_stimulus` rows and returns the stimulus + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the stimulus
+% `gravity`, recall its tropism — gravitropism). A word that is not one of these
+% tropisms abstains honestly — the engine never invents a stimulus.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli plant-tropisms.query.adj
+% ============================================================================
+
+import "plant-tropisms.adj"
+
+? tropism_stimulus(phototropism, $Stimulus)   % expect light
+? tropism_stimulus(thigmotropism, $Stimulus)  % expect touch
+? tropism_stimulus(hydrotropism, $Stimulus)   % expect water
+? tropism_stimulus($Tropism, gravity)         % reverse bind — expect gravitropism
+? tropism_stimulus(sound, $Stimulus)          % expect abstain — there is no "soundtropism" row; sound is not one of these tropisms

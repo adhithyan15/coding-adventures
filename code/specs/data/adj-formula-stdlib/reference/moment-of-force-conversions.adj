@@ -1,0 +1,66 @@
+% ============================================================================
+% moment-of-force-conversions — moment-of-force (torque) unit → newton-metre factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, area, volume, energy, the
+% electric-EMU family, wave number, linear mass density, temperature interval, mass density, and the
+% rest): a native tabular relation ingested VERBATIM from a published NIST conversion table. Each row
+% states the factor converting a common non-SI unit of MOMENT OF FORCE (a.k.a. TORQUE: the turning
+% effect of a force applied at a distance from a pivot) to the SI coherent derived unit, the newton
+% metre (N·m):
+%
+%     ? moment_of_force_to_newton_metre(dyne_centimetre, $v)        % 0.0000001
+%     ? moment_of_force_to_newton_metre(kilogram_force_metre, $v)   % 9.80665
+%
+% This opens a NEW dimension — MOMENT OF FORCE / TORQUE (force times the perpendicular lever-arm
+% distance) — alongside the already-tabulated length/mass/area/volume/time/speed/energy/pressure/
+% force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/magnetic-flux/
+% illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent/exposure/power/wave-number/
+% linear-mass-density/temperature-interval/mass-density tables and the electric charge/potential/
+% resistance/capacitance/inductance/conductance/current tables. Torque has the SAME dimensions as
+% ENERGY (force times distance) but is a DIFFERENT physical quantity, so it keeps its OWN SI unit name,
+% the newton metre (N·m), and is NEVER written in joules; do NOT confuse MOMENT OF FORCE (a turning
+% effect → the newton metre) with plain FORCE (the newton, N) or with ENERGY/work (the joule, J).
+% A quantity given in dyn·cm or kgf·m must be put into SI first, then reasoned over
+% (write-once-use-many). Why a `table` and not hand-written `relate` clauses: this is exactly the shape
+% reference data comes in — a published table, not prose. The citable artifact IS the NIST
+% conversion-factors table at the `locator` below; each factor here is a CELL of NIST Special
+% Publication 811, Appendix B.9, defended by one provenance envelope. Each `row` lowers to a ground
+% relation `moment_of_force_to_newton_metre(unit, v)`, so the exact lookups above are the ordinary SLD
+% binding query — the engine returns the factor WITH this table's citation as its proof, on the CPU,
+% with zero model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factors get rows): NIST SP 811 B.9
+% prints both moment-of-force factors below in BOLDFACE, its convention for factors that are EXACT by
+% definition, transcribed here as the plain decimal number of newton metres each names:
+%
+%     dyne centimeter (dyn·cm)        1.0 E-07     →  0.0000001
+%     kilogram-force meter (kgf·m)    9.806 65 E+00 →  9.80665
+%
+% Both are exact. The dyne centimetre is exact because the CGS definitions relate the dyne/centimetre
+% to the newton/metre by exact powers of ten: 1 dyn·cm = (10⁻⁵ N)(10⁻² m) = 10⁻⁷ N·m. The
+% kilogram-force metre is exact because the kilogram-force is defined by the exact standard gravity
+% g = 9.80665 m/s² (1 kgf = 9.80665 N, so 1 kgf·m = 9.80665 N·m). Both terminate; nothing here is a
+% rounded measurement. (NIST SP 811 B.9 also lists the pound-force foot, pound-force inch, and
+% ounce-force inch torque units, but their newton-metre factors are NON-terminating — they carry the
+% inch/foot's exact 2.54-based length through a division that leaves a factor of 127 in the
+% denominator — so, per the exact-only rule, they get no row here.) This table is SPECIFIC to moment of
+% force: a unit of a DIFFERENT quantity — e.g. the "pound", which NIST SP 811 B.9 lists separately as a
+% MASS unit converting to the kilogram, NOT the newton metre — therefore gets no row here, and a
+% `? moment_of_force_to_newton_metre(pound, $v)` ABSTAINS rather than mis-converting a mass unit as if
+% it were a torque unit. The only claim this table makes is "these are the exact factors NIST SP 811
+% B.9 prints for the dyne centimetre's and kilogram-force metre's conversions to the newton metre" —
+% which is exactly what a byte-check against the cited table verifies. `trust authoritative` — a
+% primary, re-fetchable standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored —
+% each factor is a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table moment_of_force_to_newton_metre {
+    columns unit, newton_metre
+
+    row (dyne_centimetre, 0.0000001)
+    row (kilogram_force_metre, 9.80665)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

@@ -15,10 +15,13 @@ import {
   acSweep,
   dcOp,
   dcSweep,
+  defaultMosfetLevel1Params,
   inductorWithInitialCurrent,
   jfet,
   mosfet,
+  mosfetFromModelCard,
   mutualInductor,
+  normalizeModelCard,
   resistor,
   transmissionLine,
   vccs,
@@ -1145,10 +1148,543 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   if (paramsText.startsWith("(") && paramsText.endsWith(")")) {
     paramsText = paramsText.slice(1, -1);
   }
+  const kind = match[1].toUpperCase();
+  const params = parseModelParams(paramsText);
+  const diodeSaturationCurrent = params.get("IS") ?? params.get("JS");
+  if (
+    kind === "D" &&
+    diodeSaturationCurrent !== undefined &&
+    (!Number.isFinite(diodeSaturationCurrent) || diodeSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("diode IS must be finite and positive");
+  }
+  const diodeThermalVoltage = params.get("VT") ?? params.get("V_T");
+  if (
+    kind === "D" &&
+    diodeThermalVoltage !== undefined &&
+    (!Number.isFinite(diodeThermalVoltage) || diodeThermalVoltage <= 0.0)
+  ) {
+    throw new NetlistParseError("diode VT must be finite and positive");
+  }
+  const diodeEmissionCoefficient = params.get("N");
+  if (
+    kind === "D" &&
+    diodeEmissionCoefficient !== undefined &&
+    (!Number.isFinite(diodeEmissionCoefficient) || diodeEmissionCoefficient <= 0.0)
+  ) {
+    throw new NetlistParseError("diode N must be finite and positive");
+  }
+  const diodeBreakdownVoltage = params.get("BV");
+  if (
+    kind === "D" &&
+    diodeBreakdownVoltage !== undefined &&
+    (!Number.isFinite(diodeBreakdownVoltage) || diodeBreakdownVoltage <= 0.0)
+  ) {
+    throw new NetlistParseError("diode BV must be finite and positive");
+  }
+  const diodeBreakdownCurrent = params.get("IBV");
+  if (
+    kind === "D" &&
+    diodeBreakdownCurrent !== undefined &&
+    (!Number.isFinite(diodeBreakdownCurrent) || diodeBreakdownCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("diode IBV must be finite and positive");
+  }
+  const diodeJunctionCapacitance =
+    params.get("CJO") ?? params.get("CJ") ?? params.get("CJ0");
+  if (
+    kind === "D" &&
+    diodeJunctionCapacitance !== undefined &&
+    (!Number.isFinite(diodeJunctionCapacitance) || diodeJunctionCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("diode CJO must be finite and non-negative");
+  }
+  const diodeTransitTime = params.get("TT");
+  if (
+    kind === "D" &&
+    diodeTransitTime !== undefined &&
+    (!Number.isFinite(diodeTransitTime) || diodeTransitTime < 0.0)
+  ) {
+    throw new NetlistParseError("diode TT must be finite and non-negative");
+  }
+  const diodeSeriesResistance = params.get("RS");
+  if (
+    kind === "D" &&
+    diodeSeriesResistance !== undefined &&
+    (!Number.isFinite(diodeSeriesResistance) || diodeSeriesResistance < 0.0)
+  ) {
+    throw new NetlistParseError("diode RS must be finite and non-negative");
+  }
+  const diodeJunctionPotential = params.get("VJ") ?? params.get("PB");
+  if (
+    kind === "D" &&
+    diodeJunctionPotential !== undefined &&
+    (!Number.isFinite(diodeJunctionPotential) || diodeJunctionPotential <= 0.0)
+  ) {
+    throw new NetlistParseError("diode VJ must be finite and positive");
+  }
+  const diodeGradingCoefficient = params.get("M") ?? params.get("MJ");
+  if (
+    kind === "D" &&
+    diodeGradingCoefficient !== undefined &&
+    (!Number.isFinite(diodeGradingCoefficient) || diodeGradingCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("diode M must be finite and non-negative");
+  }
+  const diodeDepletionCoefficient = params.get("FC");
+  if (
+    kind === "D" &&
+    diodeDepletionCoefficient !== undefined &&
+    (!Number.isFinite(diodeDepletionCoefficient) ||
+      diodeDepletionCoefficient < 0.0 ||
+      diodeDepletionCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("diode FC must be finite and in [0, 1)");
+  }
+  const diodeTemperatureExponent = params.get("XTI");
+  if (
+    kind === "D" &&
+    diodeTemperatureExponent !== undefined &&
+    !Number.isFinite(diodeTemperatureExponent)
+  ) {
+    throw new NetlistParseError("diode XTI must be finite");
+  }
+  const diodeEnergyGap = params.get("EG");
+  if (
+    kind === "D" &&
+    diodeEnergyGap !== undefined &&
+    (!Number.isFinite(diodeEnergyGap) || diodeEnergyGap <= 0.0)
+  ) {
+    throw new NetlistParseError("diode EG must be finite and positive");
+  }
+  const diodeFlickerNoiseCoefficient = params.get("KF");
+  if (
+    kind === "D" &&
+    diodeFlickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(diodeFlickerNoiseCoefficient) || diodeFlickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("diode KF must be finite and non-negative");
+  }
+  const diodeFlickerNoiseExponent = params.get("AF");
+  if (
+    kind === "D" &&
+    diodeFlickerNoiseExponent !== undefined &&
+    (!Number.isFinite(diodeFlickerNoiseExponent) || diodeFlickerNoiseExponent < 0.0)
+  ) {
+    throw new NetlistParseError("diode AF must be finite and non-negative");
+  }
+  const bjtForwardBeta =
+    params.get("BF") ??
+    params.get("BETA") ??
+    params.get("BETA_F") ??
+    params.get("HFE");
+  const bjtSaturationCurrent = params.get("IS");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtSaturationCurrent !== undefined &&
+    (!Number.isFinite(bjtSaturationCurrent) || bjtSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT IS must be finite and positive");
+  }
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtForwardBeta !== undefined &&
+    (!Number.isFinite(bjtForwardBeta) || bjtForwardBeta <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT BF must be finite and positive");
+  }
+  const bjtThermalVoltage = params.get("VT") ?? params.get("V_T");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtThermalVoltage !== undefined &&
+    (!Number.isFinite(bjtThermalVoltage) || bjtThermalVoltage <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT VT must be finite and positive");
+  }
+  const bjtBaseEmitterCapacitance =
+    params.get("CJE") ?? params.get("CJE0") ?? params.get("CBE");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseEmitterCapacitance !== undefined &&
+    (!Number.isFinite(bjtBaseEmitterCapacitance) || bjtBaseEmitterCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("BJT CJE must be finite and non-negative");
+  }
+  const bjtBaseCollectorCapacitance =
+    params.get("CJC") ?? params.get("CJC0") ?? params.get("CBC");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseCollectorCapacitance !== undefined &&
+    (!Number.isFinite(bjtBaseCollectorCapacitance) || bjtBaseCollectorCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("BJT CJC must be finite and non-negative");
+  }
+  for (const name of ["TF", "TR"] as const) {
+    const transitTime = params.get(name);
+    if (
+      (kind === "NPN" || kind === "PNP") &&
+      transitTime !== undefined &&
+      (!Number.isFinite(transitTime) || transitTime < 0.0)
+    ) {
+      throw new NetlistParseError(`BJT ${name} must be finite and non-negative`);
+    }
+  }
+  const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    gateSourceCapacitance !== undefined &&
+    (!Number.isFinite(gateSourceCapacitance) || gateSourceCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("JFET CGS must be finite and non-negative");
+  }
+  const gateDrainCapacitance = params.get("CGD") ?? params.get("CGD0");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    gateDrainCapacitance !== undefined &&
+    (!Number.isFinite(gateDrainCapacitance) || gateDrainCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("JFET CGD must be finite and non-negative");
+  }
+  const jfetFlickerNoiseCoefficient = params.get("KF");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetFlickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(jfetFlickerNoiseCoefficient) || jfetFlickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("JFET KF must be finite and non-negative");
+  }
+  const jfetFlickerNoiseExponent = params.get("AF");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetFlickerNoiseExponent !== undefined &&
+    (!Number.isFinite(jfetFlickerNoiseExponent) || jfetFlickerNoiseExponent < 0.0)
+  ) {
+    throw new NetlistParseError("JFET AF must be finite and non-negative");
+  }
+  const jfetJunctionPotential = params.get("PB") ?? params.get("VJ");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetJunctionPotential !== undefined &&
+    (!Number.isFinite(jfetJunctionPotential) || jfetJunctionPotential <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET PB must be finite and positive");
+  }
+  const jfetDepletionCoefficient = params.get("FC");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetDepletionCoefficient !== undefined &&
+    (!Number.isFinite(jfetDepletionCoefficient) ||
+      jfetDepletionCoefficient < 0.0 ||
+      jfetDepletionCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("JFET FC must be finite and in [0, 1)");
+  }
+  const jfetSaturationCurrent = params.get("IS");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetSaturationCurrent !== undefined &&
+    (!Number.isFinite(jfetSaturationCurrent) || jfetSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET IS must be finite and positive");
+  }
+  const jfetTemperatureExponent = params.get("XTI");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetTemperatureExponent !== undefined &&
+    !Number.isFinite(jfetTemperatureExponent)
+  ) {
+    throw new NetlistParseError("JFET XTI must be finite");
+  }
+  const jfetEnergyGap = params.get("EG");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetEnergyGap !== undefined &&
+    (!Number.isFinite(jfetEnergyGap) || jfetEnergyGap <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET EG must be finite and positive");
+  }
+  const jfetNoiseLevel = params.get("NLEV");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetNoiseLevel !== undefined &&
+    (!Number.isFinite(jfetNoiseLevel) ||
+      jfetNoiseLevel < 1.0 ||
+      !Number.isInteger(jfetNoiseLevel))
+  ) {
+    throw new NetlistParseError(
+      "JFET NLEV must be a finite integer greater than or equal to 1",
+    );
+  }
+  const jfetChannelNoiseCoefficient = params.get("GDSNOI");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetChannelNoiseCoefficient !== undefined &&
+    (!Number.isFinite(jfetChannelNoiseCoefficient) ||
+      jfetChannelNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("JFET GDSNOI must be finite and non-negative");
+  }
+  const jfetDrainResistance = params.get("RD");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetDrainResistance !== undefined &&
+    (!Number.isFinite(jfetDrainResistance) || jfetDrainResistance < 0.0)
+  ) {
+    throw new NetlistParseError("JFET RD must be finite and non-negative");
+  }
+  const level = params.get("LEVEL");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    level !== undefined &&
+    (!Number.isFinite(level) || Math.abs(level - 1.0) > 1.0e-12)
+  ) {
+    throw new NetlistParseError("only MOS LEVEL=1 model cards are supported");
+  }
+  const oxideThickness = params.get("TOX");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    oxideThickness !== undefined &&
+    (!Number.isFinite(oxideThickness) || oxideThickness <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET TOX must be finite and positive");
+  }
+  const substrateDoping = params.get("N_SUB") ?? params.get("NSUB") ?? params.get("N");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    substrateDoping !== undefined &&
+    (!Number.isFinite(substrateDoping) || substrateDoping <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET NSUB must be finite and positive");
+  }
+  const surfaceStateDensity = params.get("NSS");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    surfaceStateDensity !== undefined &&
+    (!Number.isFinite(surfaceStateDensity) || surfaceStateDensity < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET NSS must be finite and non-negative");
+  }
+  const gateType = params.get("TPG");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    gateType !== undefined &&
+    gateType !== -1.0 &&
+    gateType !== 0.0 &&
+    gateType !== 1.0
+  ) {
+    throw new NetlistParseError("MOSFET TPG must be -1, 0, or 1");
+  }
+  const surfaceMobility = params.get("U0") ?? params.get("UO");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    surfaceMobility !== undefined &&
+    (!Number.isFinite(surfaceMobility) || surfaceMobility < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET U0 must be finite and non-negative");
+  }
+  const transconductance = params.get("KP");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    transconductance !== undefined &&
+    (!Number.isFinite(transconductance) || transconductance <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET KP must be finite and positive");
+  }
+  const thresholdVoltage = params.get("VT0") ?? params.get("VTO") ?? params.get("VTH");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    thresholdVoltage !== undefined &&
+    !Number.isFinite(thresholdVoltage)
+  ) {
+    throw new NetlistParseError("MOSFET VT0 must be finite");
+  }
+  const channelModulation = params.get("LAMBDA") ?? params.get("LAM");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    channelModulation !== undefined &&
+    !Number.isFinite(channelModulation)
+  ) {
+    throw new NetlistParseError("MOSFET LAMBDA must be finite");
+  }
+  const bodyEffect = params.get("GAMMA");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    bodyEffect !== undefined &&
+    (!Number.isFinite(bodyEffect) || bodyEffect < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET GAMMA must be finite and non-negative");
+  }
+  const surfacePotential = params.get("PHI");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    surfacePotential !== undefined &&
+    (!Number.isFinite(surfacePotential) || surfacePotential <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET PHI must be finite and positive");
+  }
+  const width = params.get("W");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    width !== undefined &&
+    (!Number.isFinite(width) || width <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET W must be finite and positive");
+  }
+  const length = params.get("L");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    length !== undefined &&
+    (!Number.isFinite(length) || length <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET L must be finite and positive");
+  }
+  const lateralDiffusion = params.get("LD");
+  if (kind === "NMOS" || kind === "PMOS") {
+    const effectiveLength = length ?? defaultMosfetLevel1Params().L;
+    if (
+      lateralDiffusion !== undefined &&
+      (!Number.isFinite(lateralDiffusion) ||
+        lateralDiffusion < 0.0 ||
+        effectiveLength - 2.0 * lateralDiffusion <= 0.0)
+    ) {
+      throw new NetlistParseError(
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+      );
+    }
+  }
+  const saturationCurrent = params.get("IS");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    saturationCurrent !== undefined &&
+    (!Number.isFinite(saturationCurrent) || saturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET IS must be finite and positive");
+  }
+  const drainResistance = params.get("RD");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    drainResistance !== undefined &&
+    (!Number.isFinite(drainResistance) || drainResistance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET RD must be finite and non-negative");
+  }
+  const sourceResistance = params.get("RS");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    sourceResistance !== undefined &&
+    (!Number.isFinite(sourceResistance) || sourceResistance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET RS must be finite and non-negative");
+  }
+  const sheetResistance = params.get("RSH");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    sheetResistance !== undefined &&
+    (!Number.isFinite(sheetResistance) || sheetResistance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET RSH must be finite and non-negative");
+  }
+  const junctionCapacitance = params.get("CJ");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    junctionCapacitance !== undefined &&
+    (!Number.isFinite(junctionCapacitance) || junctionCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET CJ must be finite and non-negative");
+  }
+  const sidewallCapacitance = params.get("CJSW");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    sidewallCapacitance !== undefined &&
+    (!Number.isFinite(sidewallCapacitance) || sidewallCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET CJSW must be finite and non-negative");
+  }
+  for (const [name, canonical] of [
+    ["CBS", "CBS"],
+    ["CJS", "CBS"],
+    ["CBD", "CBD"],
+    ["CJD", "CBD"],
+  ] as const) {
+    const capacitance = params.get(name);
+    if (
+      (kind === "NMOS" || kind === "PMOS") &&
+      capacitance !== undefined &&
+      (!Number.isFinite(capacitance) || capacitance < 0.0)
+    ) {
+      throw new NetlistParseError(`MOSFET ${canonical} must be finite and non-negative`);
+    }
+  }
+  const junctionCurrent = params.get("JS");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    junctionCurrent !== undefined &&
+    (!Number.isFinite(junctionCurrent) || junctionCurrent < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET JS must be finite and non-negative");
+  }
+  const bulkPotential = params.get("PB");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    bulkPotential !== undefined &&
+    (!Number.isFinite(bulkPotential) || bulkPotential <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET PB must be finite and positive");
+  }
+  const gradingCoefficient = params.get("MJ");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    gradingCoefficient !== undefined &&
+    (!Number.isFinite(gradingCoefficient) || gradingCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET MJ must be finite and non-negative");
+  }
+  const sidewallGradingCoefficient = params.get("MJSW");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    sidewallGradingCoefficient !== undefined &&
+    (!Number.isFinite(sidewallGradingCoefficient) || sidewallGradingCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET MJSW must be finite and non-negative");
+  }
+  const forwardBiasCoefficient = params.get("FC");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    forwardBiasCoefficient !== undefined &&
+    (!Number.isFinite(forwardBiasCoefficient) ||
+      forwardBiasCoefficient < 0.0 ||
+      forwardBiasCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("MOSFET FC must be finite and in [0, 1)");
+  }
+  const flickerNoiseCoefficient = params.get("KF");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    flickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(flickerNoiseCoefficient) || flickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET KF must be finite and non-negative");
+  }
+  const flickerNoiseExponent = params.get("AF");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    flickerNoiseExponent !== undefined &&
+    (!Number.isFinite(flickerNoiseExponent) || flickerNoiseExponent < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET AF must be finite and non-negative");
+  }
+  const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    nominalTemperature !== undefined &&
+    (!Number.isFinite(nominalTemperature) || nominalTemperature <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET TNOM must be finite and positive");
+  }
   return {
     name: fields[1],
-    kind: match[1].toUpperCase(),
-    params: parseModelParams(paramsText),
+    kind,
+    params,
   };
 }
 
@@ -1185,20 +1721,38 @@ function parseElementParams(tokens: readonly string[], label: string): ReadonlyM
 
 const MOSFET_PARAM_ALIASES = new Map<string, keyof MosfetLevel1Params>([
   ["VTO", "VT0"],
+  ["VTH", "VT0"],
+  ["LAM", "LAMBDA"],
   ["NSUB", "N_SUB"],
   ["N", "N_SUB"],
   ["TNOM", "T_NOM"],
+  ["UO", "U0"],
+  ["CJS", "CBS"],
+  ["CJD", "CBD"],
 ]);
 
 function mosfetParams(
-  modelParams: ReadonlyMap<string, number>,
+  model: ModelCard,
   instanceParams: ReadonlyMap<string, number>,
 ): Partial<MosfetLevel1Params> {
+  const modelParams = model.params;
   const params: Record<string, number> = {};
   for (const [name, value] of [...modelParams, ...instanceParams]) {
     const key = MOSFET_PARAM_ALIASES.get(name) ?? (name as keyof MosfetLevel1Params);
     if (isMosfetParam(key)) {
       params[key] = value;
+    }
+  }
+  const canonicalParams = new Set(
+    [...modelParams, ...instanceParams].map(([name]) => MOSFET_PARAM_ALIASES.get(name) ?? name),
+  );
+  if (modelParams.has("TOX")) {
+    const derivationParams = Object.fromEntries(modelParams);
+    derivationParams.U0 = params.U0 ?? 600.0;
+    const normalized = normalizeModelCard(model.name, model.kind, derivationParams);
+    const derived = mosfetFromModelCard("M", "d", "g", "s", "b", normalized).params;
+    for (const key of ["KP", "VT0", "GAMMA", "PHI"] as const) {
+      if (!canonicalParams.has(key)) params[key] = derived[key];
     }
   }
   return params;
@@ -1213,6 +1767,27 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "PHI",
     "W",
     "L",
+    "LD",
+    "TOX",
+    "U0",
+    "RD",
+    "RS",
+    "RSH",
+    "NRD",
+    "NRS",
+    "AD",
+    "AS",
+    "PD",
+    "PS",
+    "CJ",
+    "CJSW",
+    "JS",
+    "PB",
+    "MJ",
+    "MJSW",
+    "FC",
+    "KF",
+    "AF",
     "IS",
     "N_SUB",
     "T_NOM",
@@ -1358,18 +1933,28 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "D"`,
       );
     }
-    return diode(
-      name,
-      fields[1],
-      fields[2],
-      model.params.get("IS") ?? 1.0e-15,
-      model.params.get("VT") ?? 0.02585,
-      model.params.get("N") ?? 1.0,
-      model.params.get("BV"),
-      model.params.get("IBV") ?? 1.0e-3,
-      model.params.get("CJO") ?? model.params.get("CJ0") ?? 0.0,
-      model.params.get("TT") ?? 0.0,
-    );
+    return {
+      ...diode(
+        name,
+        fields[1],
+        fields[2],
+        model.params.get("IS") ?? model.params.get("JS") ?? 1.0e-15,
+        model.params.get("VT") ?? model.params.get("V_T") ?? 0.02585,
+        model.params.get("N") ?? 1.0,
+        model.params.get("BV"),
+        model.params.get("IBV") ?? 1.0e-3,
+        model.params.get("CJO") ?? model.params.get("CJ") ?? model.params.get("CJ0") ?? 0.0,
+        model.params.get("TT") ?? 0.0,
+      ),
+      junctionPotential: model.params.get("VJ") ?? model.params.get("PB") ?? 1.0,
+      gradingCoefficient: model.params.get("M") ?? model.params.get("MJ") ?? 0.5,
+      forwardBiasDepletionCoefficient: model.params.get("FC") ?? 0.5,
+      saturationCurrentTemperatureExponent: model.params.get("XTI") ?? 3.0,
+      energyGapElectronVolts: model.params.get("EG") ?? 1.11,
+      seriesResistance: model.params.get("RS") ?? 0.0,
+      flickerNoiseCoefficient: model.params.get("KF") ?? 0.0,
+      flickerNoiseExponent: model.params.get("AF") ?? 1.0,
+    };
   }
   if (prefix === "Q") {
     requireFields(fields, 5, "BJT");
@@ -1391,10 +1976,20 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[3],
       model.kind,
       model.params.get("IS") ?? 1.0e-14,
-      model.params.get("BF") ?? model.params.get("BETA_F") ?? 100.0,
-      model.params.get("VT") ?? 0.02585,
-      model.params.get("CJE") ?? model.params.get("CBE") ?? 0.0,
-      model.params.get("CJC") ?? model.params.get("CBC") ?? 0.0,
+      model.params.get("BF") ??
+        model.params.get("BETA") ??
+        model.params.get("BETA_F") ??
+        model.params.get("HFE") ??
+        100.0,
+      model.params.get("VT") ?? model.params.get("V_T") ?? 0.02585,
+      model.params.get("CJE") ??
+        model.params.get("CJE0") ??
+        model.params.get("CBE") ??
+        0.0,
+      model.params.get("CJC") ??
+        model.params.get("CJC0") ??
+        model.params.get("CBC") ??
+        0.0,
       model.params.get("TF") ?? 0.0,
       model.params.get("TR") ?? 0.0,
     );
@@ -1422,6 +2017,19 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("BETA") ?? model.params.get("B") ?? 1.0e-4,
       model.params.get("VTO") ?? (polarity === "NJF" ? -2.0 : 2.0),
       model.params.get("LAMBDA") ?? 0.0,
+      model.params.get("CGS") ?? model.params.get("CGS0") ?? 0.0,
+      model.params.get("CGD") ?? model.params.get("CGD0") ?? 0.0,
+      model.params.get("KF") ?? 0.0,
+      model.params.get("AF") ?? 1.0,
+      model.params.get("PB") ?? model.params.get("VJ") ?? 1.0,
+      model.params.get("FC") ?? 0.5,
+      model.params.get("IS") ?? 1.0e-14,
+      model.params.get("XTI") ?? 3.0,
+      model.params.get("EG") ?? 1.11,
+      1.0,
+      model.params.get("NLEV") ?? 1.0,
+      model.params.get("GDSNOI") ?? 1.0,
+      model.params.get("RD") ?? 0.0,
     );
   }
   if (prefix === "M") {
@@ -1437,6 +2045,40 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "NMOS" or "PMOS"`,
       );
     }
+    const instanceParams = parseElementParams(fields.slice(6), "MOSFET");
+    const drainSquares = instanceParams.get("NRD");
+    if (drainSquares !== undefined && (!Number.isFinite(drainSquares) || drainSquares < 0.0)) {
+      throw new NetlistParseError("MOSFET NRD must be finite and non-negative");
+    }
+    const sourceSquares = instanceParams.get("NRS");
+    if (
+      sourceSquares !== undefined &&
+      (!Number.isFinite(sourceSquares) || sourceSquares < 0.0)
+    ) {
+      throw new NetlistParseError("MOSFET NRS must be finite and non-negative");
+    }
+    const drainArea = instanceParams.get("AD");
+    if (drainArea !== undefined && (!Number.isFinite(drainArea) || drainArea < 0.0)) {
+      throw new NetlistParseError("MOSFET AD must be finite and non-negative");
+    }
+    const sourceArea = instanceParams.get("AS");
+    if (sourceArea !== undefined && (!Number.isFinite(sourceArea) || sourceArea < 0.0)) {
+      throw new NetlistParseError("MOSFET AS must be finite and non-negative");
+    }
+    const drainPerimeter = instanceParams.get("PD");
+    if (
+      drainPerimeter !== undefined &&
+      (!Number.isFinite(drainPerimeter) || drainPerimeter < 0.0)
+    ) {
+      throw new NetlistParseError("MOSFET PD must be finite and non-negative");
+    }
+    const sourcePerimeter = instanceParams.get("PS");
+    if (
+      sourcePerimeter !== undefined &&
+      (!Number.isFinite(sourcePerimeter) || sourcePerimeter < 0.0)
+    ) {
+      throw new NetlistParseError("MOSFET PS must be finite and non-negative");
+    }
     return mosfet(
       name,
       fields[1],
@@ -1444,7 +2086,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[3],
       fields[4],
       model.kind,
-      mosfetParams(model.params, parseElementParams(fields.slice(6), "MOSFET")),
+      mosfetParams(model, instanceParams),
     );
   }
   if (prefix === "G") {

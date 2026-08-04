@@ -36,6 +36,7 @@ use warnings;
 use Cwd ();
 use File::Spec ();
 use List::Util qw(any);
+use Scalar::Util qw(blessed);
 
 use CodingAdventures::BuildTool::Discovery  ();
 use CodingAdventures::BuildTool::Resolver   ();
@@ -110,7 +111,20 @@ sub run {
 
     # Step 3: Resolve dependencies.
     my $resolver = CodingAdventures::BuildTool::Resolver->new();
-    my $graph    = $resolver->resolve(\@all_packages);
+    my $graph;
+    my $resolved = eval {
+        $graph = $resolver->resolve(\@all_packages);
+        1;
+    };
+    if (!$resolved) {
+        my $error = $@;
+        if (blessed($error)
+            && $error->isa('CodingAdventures::BuildTool::MetadataEncodingError')) {
+            warn "$error\n";
+            return 2;
+        }
+        die $error;
+    }
 
     # Step 4: Determine which packages need building.
     my @to_build;

@@ -56,6 +56,53 @@ struct ProfileCardView: View {
 }
 ```
 
+## Native style transitions
+
+MSL transitions remain backend-neutral through `StyleDef` and lower to native
+SwiftUI animations:
+
+```msl
+part card {
+  opacity: 1 ;
+  transition opacity $duration-normal $easing-out ;
+
+  state disabled {
+    opacity: $opacity-disabled ;
+    transition opacity $duration-slow linear ;
+  }
+}
+```
+
+When the matching layout node declares `state-when-disabled`, the generated
+view observes the final opacity value with `.animation(_:value:)`. The local
+linear curve is selected while entering `disabled`; leaving uses the part-level
+ease-out curve. Standard ease curves and `cubic-bezier(...)` lower to native
+`Animation` constructors. Transitions for style properties that the SwiftUI
+backend does not yet lower are intentionally omitted.
+
+UI15's built-in `state hover` needs no matching layout predicate. When a styled
+part declares it, the generated view is wrapped in a native SwiftUI hover-state
+view whose local `@State` drives the same modifier and animation lowering.
+Wrappers are instantiated inside `ForEach`, so repeated rows retain independent
+hover state. An explicit `state-when-hover` remains available when hover-like
+styling is intentionally driven by application state instead of the pointer.
+
+UI15's built-in `state focused` is likewise native for focus-capable host
+controls (`HostInput`, `HostNumberInput`, `HostButton`, `HostCheckbox`,
+`HostRadio`, and `HostLink`). The generated wrapper owns a local SwiftUI
+`@FocusState`, applies `.focused(...)` to the native control, and drives the
+authored state properties and transitions from that binding. Repeated controls
+retain independent focus state. An explicit `state-when-focused` continues to
+override automatic focus tracking for application-controlled styling.
+
+UI15's built-in `state pressed` is native for pressable host controls
+(`HostButton`, `HostCheckbox`, `HostRadio`, and `HostLink`). The generated
+wrapper owns a row-local `@GestureState` and observes the control's pointer or
+touch press through a simultaneous zero-distance drag gesture, so the authored
+state properties and transitions activate without replacing the control's
+native action. An explicit `state-when-pressed` remains author-controlled and
+does not install automatic press tracking.
+
 ## Primitive lowering
 
 | Mosaic primitive | SwiftUI                                       |
@@ -69,20 +116,21 @@ struct ProfileCardView: View {
 | `Divider`        | `Divider()`                                   |
 | `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
 | `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
-| `HostInput`      | `TextField(placeholder, text: .constant(value))` *(v0.2.0; UI29 kernel)* |
+| `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
+| `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |
 | `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
 | `HostDialog`     | `Color.clear.frame(width: 0, height: 0).sheet(...)` / `.popover(...)` *(v0.5.0; UI29-1 kernel)* |
 
-### `HostInput` binding choice — `.constant(value)`
+### `HostInput` binding choice
 
 SwiftUI `TextField` requires `text: Binding<String>`, but Mosaic components
-receive slots as immutable `let` properties. We thread the slot through
-`.constant(value)`, which means **inline typing does not echo back through
-the slot** — the host's flux dispatch loop owns updates via
-`dispatch(.commit(value: ...))`. This matches UI24's dispatch-driven
-pattern. A future revision will offer a `@State`-proxy lowering that
-dispatches per-keystroke.
+receive slots as immutable `let` properties. When `onChange` is wired, the
+generated binding reads the slot and dispatches the new value from its setter;
+the host's flux loop then supplies the updated slot. Inputs without an
+`onChange` handler use `.constant(value)` as an intentionally read-only
+display. This preserves UI24's dispatch-driven ownership without freezing
+editable fields.
 
 ### `HostInput` platform note — `.onExitCommand`
 
@@ -104,6 +152,19 @@ future enhancement.
 | `list<T>`          | `[<inner Swift type>]`      |
 | `<Component>`      | `AnyView`                   |
 
+Generated project shells ask the optional `MosaicHostBridgeObject` for native
+node slots by Mosaic name. A returned macOS `NSView` or iOS `UIView` is wrapped
+in the matching SwiftUI representable and passed as `AnyView`; a missing hook,
+unknown slot, or wrong object type stays an `EmptyView`. This lets a generated
+Venture shell mount a Metal-backed content view without recreating its chrome
+in AppKit.
+
+Native host surfaces can also implement the optional
+`setPropsChangedHandler(_:)` bridge method. Calling the registered handler asks
+the generated `MosaicHostState` to fetch `applyProps()` again on the main queue,
+so host-owned interactions can reproject shared state into Mosaic slots without
+manually updating SwiftUI controls.
+
 ## Event dispatch
 
 Each component carries a single `dispatch: (NameEvent) -> Void` closure
@@ -124,10 +185,6 @@ business logic.
   Per UI28 §4.4 the SwiftUI lowering is
   `Grid → SwiftUI.Table { TableColumn(...) }` with each `Column` becoming
   a `TableColumn` definition.
-- `If`, `For` — UI29 kernel primitives that wait on the moslayout
-  grammar additions (U29-G3). Until those land, this crate returns
-  `UnknownPrimitive` for them so authors get a clear "not yet supported"
-  diagnostic.
 - `HostTable` lowers to a structural `VStack` of `HStack` rows (see
   primitive table above); the data-driven `SwiftUI.Table` form waits on
   a follow-up that wires `For`-inside-table.
@@ -135,7 +192,8 @@ business logic.
   `UnknownPrimitive` errors today; each lands in its own follow-up.
 - `connects` wiring (gesture / event modifiers beyond what `HostButton` /
   `HostInput` already wire).
-- `mosstyle::StyleDef` inlining (accepted in the signature so callers can
-  build against the stable interface, not yet applied).
+- Automatic activation of UI15 interaction states not listed above. Hover,
+  focused, and pressed states are native for the supported Host controls;
+  slot- or expression-driven states continue to use `state-when-*`.
 
 See the crate doc-comment for the full deferred list.

@@ -2,6 +2,12 @@
 
 Pure HTML static snapshot backend for the Mosaic compiler.
 
+In `--emit-project` mode, the generated runtime hydrates ordinary `{{slot}}`
+markers as escaped text. Typed node-slot `{{{slot}}}` markers accept either an
+actual DOM `Node`, which is moved into the stable `HostSurface` mount point, or
+trusted host-owned markup. The raw string form is reserved for composition
+seams; application data should remain in ordinary escaped slots.
+
 ## What it does
 
 `mosaic-emit-html` takes a Mosaic component IR (produced by `mosaic-analyzer`)

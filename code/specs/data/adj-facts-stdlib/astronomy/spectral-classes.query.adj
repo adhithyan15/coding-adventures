@@ -1,0 +1,24 @@
+% ============================================================================
+% spectral-classes.query.adj — a worked recall over the astronomy spectral-classes
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what color is a G star?":
+% it states no astrophysics fact of its own — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `spectral_class_color` rows and returns the color + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% color `red`, recall its spectral class — m). A letter that is not one of the
+% seven main-sequence classes abstains honestly — the engine never invents a
+% color.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli spectral-classes.query.adj
+% ============================================================================
+
+import "spectral-classes.adj"
+
+? spectral_class_color(o, $Color)      % expect blue    (hottest, bluest class)
+? spectral_class_color(g, $Color)      % expect yellow  (our Sun's class)
+? spectral_class_color(m, $Color)      % expect red     (coolest, reddest class)
+? spectral_class_color($Class, red)    % reverse bind — expect m
+? spectral_class_color(z, $Color)      % expect abstain — Z is not one of the seven main-sequence spectral classes

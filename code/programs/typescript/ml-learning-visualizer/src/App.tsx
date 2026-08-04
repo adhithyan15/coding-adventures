@@ -1,8 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
+import { AttentionWorkbench } from "./AttentionWorkbench.js";
+import { BackwardOptimizerLoweringWorkbench } from "./BackwardOptimizerLoweringWorkbench.js";
+import { BackendParityWorkbench } from "./BackendParityWorkbench.js";
+import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { CrossLanguageConsumerWorkbench } from "./CrossLanguageConsumerWorkbench.js";
+import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
+import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
+import { ForwardLoweringWorkbench } from "./ForwardLoweringWorkbench.js";
+import { GradientAccumulationWorkbench } from "./GradientAccumulationWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
+import { ImplementationCoverageWorkbench } from "./ImplementationCoverageWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
+import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { PrecisionResidencyWorkbench } from "./PrecisionResidencyWorkbench.js";
+import { ReferenceValidationWorkbench } from "./ReferenceValidationWorkbench.js";
+import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
+import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
+import { ResidualWorkbench } from "./ResidualWorkbench.js";
+import { RustCAbiWorkbench } from "./RustCAbiWorkbench.js";
+import { StructuredWorkbench } from "./StructuredWorkbench.js";
+import { TensorBroadcastingWorkbench } from "./TensorBroadcastingWorkbench.js";
+import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
   loss,
   meanAbsoluteError,
@@ -166,7 +187,9 @@ function groupColor(group: string | undefined, groups: string[]): string {
 }
 
 export function App() {
-  const [workbench, setWorkbench] = useState<"linear" | "hidden">("linear");
+  const [workbench, setWorkbench] = useState<
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency" | "reference-validation" | "language-consumers" | "rust-c-abi" | "implementation-coverage"
+  >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
   const [activationKind, setActivationKind] = useState<ActivationKind>("linear");
@@ -267,11 +290,71 @@ export function App() {
     <div className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">{workbench === "linear" ? "100-lab foundation" : "Hidden-layer playground"}</p>
+          <p className="eyebrow">
+            {workbench === "microscope"
+              ? "No hidden magic"
+              : workbench === "optimization"
+                ? "Trust, then independently verify"
+              : workbench === "convolution"
+                ? "One detector, every position"
+              : workbench === "image-cnn"
+                ? "Channels become features"
+              : workbench === "residual"
+                ? "Deep route, short route"
+              : workbench === "recurrent"
+                ? "Memory becomes an input"
+              : workbench === "attention"
+                ? "Every token asks and matches"
+              : workbench === "representation"
+                ? "Compress, then reconstruct"
+              : workbench === "structured"
+                ? "Structure shapes computation"
+              : workbench === "deep"
+                ? "Scale shapes forward and backward signals"
+              : workbench === "tensor"
+                ? "Forward reuses, backward sums"
+              : workbench === "autograd"
+                ? "Record what ran, then reverse it"
+              : workbench === "gradient-buffer"
+                ? "Backward adds, zero clears"
+              : workbench === "forward-lowering"
+                ? "One graph, two executable IRs"
+              : workbench === "training-lowering"
+                ? "Reverse and update become schedules"
+              : workbench === "backend-parity"
+                ? "One graph can cross execution engines"
+              : workbench === "precision-residency"
+                ? "Representation and movement are separate choices"
+              : workbench === "reference-validation"
+                ? "Every stored answer needs an independent witness"
+              : workbench === "language-consumers"
+                ? "One fixture can cross language boundaries"
+              : workbench === "rust-c-abi"
+                ? "One stable seam can cross runtime boundaries"
+              : workbench === "implementation-coverage"
+                ? "Coverage should reveal who owns the arithmetic"
+              : workbench === "linear"
+                ? "100-lab foundation"
+                : "Hidden-layer playground"}
+          </p>
           <h1>ML Learning Lab</h1>
         </div>
         <div className="header-actions">
           <div className="mode-toggle" aria-label="Workbench mode">
+            <button
+              className={workbench === "microscope" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("microscope")}
+            >
+              Microscope
+            </button>
+            <button
+              className={workbench === "optimization" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("optimization")}
+            >
+              Optimization
+            </button>
             <button
               className={workbench === "linear" ? "mode-button mode-button--active" : "mode-button"}
               type="button"
@@ -286,9 +369,184 @@ export function App() {
             >
               Hidden Layer
             </button>
+            <button
+              className={workbench === "convolution" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("convolution")}
+            >
+              Spatial
+            </button>
+            <button
+              className={workbench === "image-cnn" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("image-cnn")}
+            >
+              Image CNN
+            </button>
+            <button
+              className={workbench === "residual" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("residual")}
+            >
+              Residual
+            </button>
+            <button
+              className={workbench === "recurrent" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("recurrent")}
+            >
+              Recurrent
+            </button>
+            <button
+              className={workbench === "attention" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("attention")}
+            >
+              Attention
+            </button>
+            <button
+              className={workbench === "representation" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("representation")}
+            >
+              Representation
+            </button>
+            <button
+              className={workbench === "structured" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("structured")}
+            >
+              Structured
+            </button>
+            <button
+              className={workbench === "deep" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("deep")}
+            >
+              Deep Training
+            </button>
+            <button
+              className={workbench === "tensor" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("tensor")}
+            >
+              Tensor + Autograd
+            </button>
+            <button
+              className={workbench === "autograd" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("autograd")}
+            >
+              Autograd Graph
+            </button>
+            <button
+              className={workbench === "gradient-buffer" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("gradient-buffer")}
+            >
+              Grad Buffers
+            </button>
+            <button
+              className={workbench === "forward-lowering" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("forward-lowering")}
+            >
+              IR Lowering
+            </button>
+            <button
+              className={workbench === "training-lowering" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("training-lowering")}
+            >
+              Train Lowering
+            </button>
+            <button
+              className={workbench === "backend-parity" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("backend-parity")}
+            >
+              Backend Parity
+            </button>
+            <button
+              className={workbench === "precision-residency" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("precision-residency")}
+            >
+              Precision + Residency
+            </button>
+            <button
+              className={workbench === "reference-validation" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("reference-validation")}
+            >
+              Reference Catalog
+            </button>
+            <button
+              className={workbench === "language-consumers" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("language-consumers")}
+            >
+              Language Consumers
+            </button>
+            <button
+              className={workbench === "rust-c-abi" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("rust-c-abi")}
+            >
+              Rust C ABI
+            </button>
+            <button
+              className={workbench === "implementation-coverage" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("implementation-coverage")}
+            >
+              Implementation Coverage
+            </button>
           </div>
           <div className="formula">
-            {workbench === "linear" ? (
+            {workbench === "microscope" ? (
+              <>forward {"->"} <strong>loss</strong> {"->"} gradients {"->"} update</>
+            ) : workbench === "optimization" ? (
+              <>loss surface {"->"} <strong>gradient check</strong> {"->"} batch strategy</>
+            ) : workbench === "convolution" ? (
+              <>window × <strong>shared kernel</strong> {"->"} feature</>
+            ) : workbench === "image-cnn" ? (
+              <>channels {"->"} <strong>normalize + ReLU</strong> {"->"} pool</>
+            ) : workbench === "residual" ? (
+              <>local layers + <strong>identity skip</strong> {"->"} wider field</>
+            ) : workbench === "recurrent" ? (
+              <>input + <strong>previous state</strong> {"->"} next state</>
+            ) : workbench === "attention" ? (
+              <>2 heads {"->"} <strong>join</strong> {"->"} add + norm</>
+            ) : workbench === "representation" ? (
+              <>encode {"->"} <strong>constrained latent</strong> {"->"} reconstruct</>
+            ) : workbench === "structured" ? (
+              <>connections {"->"} <strong>shared rule</strong> {"->"} updated state</>
+            ) : workbench === "deep" ? (
+              <>initialize {"->"} <strong>gradient flow</strong> {"->"} stabilize</>
+            ) : workbench === "tensor" ? (
+              <>align shapes {"->"} <strong>reuse coordinates</strong> {"->"} reduce gradients</>
+            ) : workbench === "autograd" ? (
+              <>record operations {"->"} <strong>save values</strong> {"->"} reverse graph</>
+            ) : workbench === "gradient-buffer" ? (
+              <>backward adds {"->"} <strong>step reads</strong> {"->"} zero clears</>
+            ) : workbench === "forward-lowering" ? (
+              <>graph meaning {"->"} <strong>NeuralIR schedule</strong> {"->"} MatrixIR fusion</>
+            ) : workbench === "training-lowering" ? (
+              <>saved values {"->"} <strong>backward IR</strong> {"->"} optimizer IR</>
+            ) : workbench === "backend-parity" ? (
+              <>same graph {"->"} <strong>CPU · Rust · WebGPU</strong> {"->"} equal output</>
+            ) : workbench === "precision-residency" ? (
+              <>number grid + <strong>buffer placement</strong> {"->"} accuracy + transfers</>
+            ) : workbench === "reference-validation" ? (
+              <>catalog {"->"} <strong>inspect registrations</strong> {"->"} CLI evidence</>
+            ) : workbench === "language-consumers" ? (
+              <>one fixture {"->"} <strong>registered CLI contracts</strong> {"->"} expected receipts</>
+            ) : workbench === "rust-c-abi" ? (
+              <>caller buffers {"->"} <strong>stable Rust C ABI</strong> {"->"} status + outputs</>
+            ) : workbench === "implementation-coverage" ? (
+              <>same fixture {"->"} <strong>native or Rust-core owner</strong> {"->"} verified lane count</>
+            ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
               <>inputs {"->"} <strong>hidden</strong> {"->"} prediction</>
@@ -297,7 +555,49 @@ export function App() {
         </div>
       </header>
 
-      {workbench === "hidden" ? <HiddenLayerWorkbench /> : (
+      {workbench === "microscope" ? (
+        <TrainingStepMicroscope />
+      ) : workbench === "optimization" ? (
+        <OptimizationWorkbench />
+      ) : workbench === "convolution" ? (
+        <ConvolutionWorkbench />
+      ) : workbench === "image-cnn" ? (
+        <ImageCnnWorkbench />
+      ) : workbench === "residual" ? (
+        <ResidualWorkbench />
+      ) : workbench === "recurrent" ? (
+        <RecurrentWorkbench />
+      ) : workbench === "attention" ? (
+        <AttentionWorkbench />
+      ) : workbench === "representation" ? (
+        <RepresentationWorkbench />
+      ) : workbench === "structured" ? (
+        <StructuredWorkbench />
+      ) : workbench === "deep" ? (
+        <DeepTrainingWorkbench />
+      ) : workbench === "tensor" ? (
+        <TensorBroadcastingWorkbench />
+      ) : workbench === "autograd" ? (
+        <DynamicAutogradWorkbench />
+      ) : workbench === "gradient-buffer" ? (
+        <GradientAccumulationWorkbench />
+      ) : workbench === "forward-lowering" ? (
+        <ForwardLoweringWorkbench />
+      ) : workbench === "training-lowering" ? (
+        <BackwardOptimizerLoweringWorkbench />
+      ) : workbench === "backend-parity" ? (
+        <BackendParityWorkbench />
+      ) : workbench === "precision-residency" ? (
+        <PrecisionResidencyWorkbench />
+      ) : workbench === "reference-validation" ? (
+        <ReferenceValidationWorkbench />
+      ) : workbench === "language-consumers" ? (
+        <CrossLanguageConsumerWorkbench />
+      ) : workbench === "rust-c-abi" ? (
+        <RustCAbiWorkbench />
+      ) : workbench === "implementation-coverage" ? (
+        <ImplementationCoverageWorkbench />
+      ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">
           <div className="rail-summary">

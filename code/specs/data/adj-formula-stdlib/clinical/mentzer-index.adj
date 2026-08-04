@@ -1,0 +1,96 @@
+% ============================================================================
+% mentzer-index.adj — the definition of the Mentzer index
+% (Mentzer index = mean corpuscular volume ÷ red cell count) in the ADJ standard library.
+% ============================================================================
+% The Mentzer-index entry of the *clinical* track — a hematology bedside discriminant, a ratio
+% sibling of the shipped anion-gap.adj / osmolar-gap.adj (which are differences) and of the
+% cardiac-index / ejection-fraction ratios. Where those are gaps, the Mentzer index is a RATIO of two
+% red-cell indices: THE MENTZER INDEX IS THE MEAN CORPUSCULAR VOLUME DIVIDED BY THE RED CELL COUNT —
+% a one-number screen that helps distinguish the two commonest causes of a microcytic anaemia. A LOW
+% index (< 13) suggests thalassemia trait (many small cells: high RBC count, low MCV); a HIGH index
+% (> 13) suggests iron-deficiency anaemia (fewer, small cells: low RBC count). It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements
+% (the MCV an index implies for a given red cell count, and the red cell count it implies for a given
+% MCV). As with every compute library, a consumer states NO arithmetic: it `import`s this file, binds
+% the two red-cell indices from its own byte-provenance decomposition, and asks the engine to APPLY
+% the cited definition on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "mentzer-index.adj"
+%     observe mean_corpuscular_volume(80)   % "…MCV 80 fL…"                (span cited by the model)
+%     observe red_cell_count(4)             % "…RBC 4 million/µL…"          (span cited by the model)
+%     ? mentzer_index(mean_corpuscular_volume, red_cell_count)
+%                                            % engine → 20, carrying the Mentzer-index ratio
+%
+% All three formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case MCV = 80 fL, red cell count = 4 (million/µL):
+% Mentzer index = 80 ÷ 4 = 20 (a HIGH index, > 13, pointing to iron deficiency). The `mentzer_index` a
+% consumer computes is exactly the value the `mean_corpuscular_volume` formula multiplies back by the
+% red cell count to recover 80, and exactly the value the `red_cell_count` formula divides the MCV by
+% to recover 4.
+%
+%   mentzer_index(mean_corpuscular_volume, red_cell_count)
+%       = mean_corpuscular_volume / red_cell_count      % index = MCV ÷ RBC        (definition)
+%   mean_corpuscular_volume(mentzer_index, red_cell_count)
+%       = mentzer_index * red_cell_count                % MCV = index × RBC         (solved for MCV)
+%   red_cell_count(mean_corpuscular_volume, mentzer_index)
+%       = mean_corpuscular_volume / mentzer_index       % RBC = MCV ÷ index         (solved for RBC)
+%
+% NOTE ON UNITS: by clinical convention the MCV is in femtolitres (fL) and the red cell count in
+% millions per microlitre (equivalently 10¹² per litre); the Mentzer index is the pure number that
+% results, compared against the dimensionless cut-off of 13. The engine computes the exact ratio over
+% whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME definitional clause — "The calculation of the Mentzer
+% index (mean corpuscular volume divided by red cell count) is useful. A Mentzer index below 13
+% suggests thalassemia, whereas an index above 13 suggests anemia due to iron deficiency." — because
+% that one definition (the Mentzer index IS the MCV-over-RBC ratio) sanctions the relation read every
+% way (the index from the two indices, the MCV from the index and the count, or the count from the MCV
+% and the index). The quote is transcribed verbatim from the StatPearls "Thalassemia" article on the
+% NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped grounded clause
+% carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the
+% definitional clause is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable red-cell index the definition ranges over, and each
+% result is a derived quantity. `mean_corpuscular_volume`, `red_cell_count` and `mentzer_index` each
+% appear BOTH as a derived result and as an input (of the other formulas), so each is a single
+% dictionary term used in both roles. The `surface` lists are the everyday names a decomposer maps
+% onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary mentzer_index_vocab {
+    define mean_corpuscular_volume : finding  surface "MCV", "mean corpuscular volume"                       % femtolitres (fL)
+    define red_cell_count          : finding  surface "RBC count", "red cell count", "red blood cell count"  % millions per microlitre (10^12/L)
+    define mentzer_index           : finding  surface "Mentzer index"                                        % dimensionless (cut-off 13)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the StatPearls
+% "Thalassemia" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact quotient or product of two red-cell indices, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook mentzer_index_laws {
+    use mentzer_index_vocab
+
+    % Mentzer index — the mean corpuscular volume divided by the red cell count, i.e. index = MCV ÷ RBC.
+    formula mentzer_index(mean_corpuscular_volume, red_cell_count) = mean_corpuscular_volume / red_cell_count
+        source "The calculation of the Mentzer index (mean corpuscular volume divided by red cell count) is useful. A Mentzer index below 13 suggests thalassemia, whereas an index above 13 suggests anemia due to iron deficiency."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545151/"
+        trust authoritative
+
+    % Mean corpuscular volume — the same definition solved for the MCV an index implies for a given red
+    % cell count (MCV = index × RBC). Defended by the SAME clause.
+    formula mean_corpuscular_volume(mentzer_index, red_cell_count) = mentzer_index * red_cell_count
+        source "The calculation of the Mentzer index (mean corpuscular volume divided by red cell count) is useful. A Mentzer index below 13 suggests thalassemia, whereas an index above 13 suggests anemia due to iron deficiency."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545151/"
+        trust authoritative
+
+    % Red cell count — the same definition solved for the count (RBC = MCV ÷ index): the mean
+    % corpuscular volume divided by the index. The SAME clause, read the third way.
+    formula red_cell_count(mean_corpuscular_volume, mentzer_index) = mean_corpuscular_volume / mentzer_index
+        source "The calculation of the Mentzer index (mean corpuscular volume divided by red cell count) is useful. A Mentzer index below 13 suggests thalassemia, whereas an index above 13 suggests anemia due to iron deficiency."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545151/"
+        trust authoritative
+}

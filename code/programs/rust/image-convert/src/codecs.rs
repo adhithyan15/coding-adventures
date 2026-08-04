@@ -149,7 +149,7 @@ pub fn decode_image(bytes: &[u8], fmt: &ImageFormat) -> Result<PixelContainer, S
 pub fn encode_image(
     pixels: &PixelContainer,
     fmt: &ImageFormat,
-    quality: u8,
+    _quality: u8,
 ) -> Result<Vec<u8>, String> {
     if !fmt.is_encodable() {
         return Err(format!(
@@ -367,7 +367,7 @@ mod tests {
         let (r, _g, _b, a) = out.pixel_at(0, 0);
         assert_eq!(a, 255);
         // (128 * 0 + 127 * 255) / 255 ≈ 127
-        assert!(r >= 125 && r <= 130, "Expected ~127, got {}", r);
+        assert!((125..=130).contains(&r), "Expected ~127, got {}", r);
     }
 
     // ── pixels_to_rgba ────────────────────────────────────────────────────

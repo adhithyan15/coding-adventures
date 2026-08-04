@@ -122,14 +122,13 @@ pub fn check_module(module: &IIRModule) -> TypeCheckReport {
             let type_hint = instr.type_hint.as_str();
 
             // ── Count data-flow instructions ──────────────────────────────
-            if is_data_op(op) {
-                if instr.dest.is_some() {
+            if is_data_op(op)
+                && instr.dest.is_some() {
                     total_data_instrs += 1;
                     if is_concrete_type(type_hint) {
                         typed_data_instrs += 1;
                     }
                 }
-            }
 
             // ── Validate conditional-branch condition is bool (runs even for
             //    "any" branch instructions because the first *source* variable

@@ -144,6 +144,24 @@ final class TrigTests: XCTestCase {
         XCTAssertEqual(Trig.sqrt(1e10), 1e5, accuracy: 1e-4)
     }
 
+    func testSqrtFullBinary64Range() {
+        func relative(_ actual: Double, _ expected: Double) -> Bool {
+            Swift.abs(actual - expected) / Swift.abs(expected) <= 1e-12
+        }
+        XCTAssertTrue(relative(Trig.sqrt(1e-100), 1e-50))
+        XCTAssertTrue(relative(
+            Trig.sqrt(Double.leastNonzeroMagnitude),
+            2.2227587494850775e-162
+        ))
+        XCTAssertTrue(relative(
+            Trig.sqrt(Double.greatestFiniteMagnitude),
+            1.3407807929942596e154
+        ))
+        XCTAssertEqual(Trig.sqrt(-0.0).sign, .minus)
+        XCTAssertEqual(Trig.sqrt(Double.infinity), Double.infinity)
+        XCTAssertTrue(Trig.sqrt(Double.nan).isNaN)
+    }
+
     func testSqrtRoundtrip() {
         // sqrt(2) * sqrt(2) should recover 2.0
         let s = Trig.sqrt(2.0)
@@ -179,6 +197,14 @@ final class TrigTests: XCTestCase {
 
     func testAtanZero() {
         XCTAssertEqual(Trig.atan(0.0), 0.0)
+    }
+
+    func testAtanPreservesTinyInputsAndNegativeZero() {
+        XCTAssertEqual(Trig.atan(-0.0).sign, .minus)
+        XCTAssertEqual(Trig.atan(Double(sign: .plus, exponent: -30, significand: 1.0)),
+                       Double(sign: .plus, exponent: -30, significand: 1.0))
+        XCTAssertEqual(Trig.atan(Double.leastNonzeroMagnitude), Double.leastNonzeroMagnitude)
+        XCTAssertEqual(Trig.atan(-Double.leastNonzeroMagnitude), -Double.leastNonzeroMagnitude)
     }
 
     func testAtanOne() {

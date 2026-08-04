@@ -1,0 +1,6 @@
+(library
+ (name coding_adventures_my_pkg)
+ (public_name coding-adventures-my-pkg)
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))

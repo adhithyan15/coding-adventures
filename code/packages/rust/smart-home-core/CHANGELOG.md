@@ -1,11 +1,30 @@
 # Changelog
 
+- Add canonical device indicator, display, and sensor calibration capabilities
+  with explicit device-control command types and risk tiers.
+
 All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add a reusable `camera.ptz` capability plus typed preset-recall and bounded
+  movement commands with a human-approval policy tier.
+- Add a reusable `camera.recording` capability and typed recording-control
+  command with a human-approval policy tier.
+- Add a reusable device-configuration capability and typed commands for display
+  standards, baseline/learning settings, self-test, and correction profiles.
+
 ### Added
 
+- Typed media playback, volume, grouping, and queue command operations plus
+  canonical command-capability mappings.
+- A first-class `LanTcp` bridge transport for local stream protocols.
+- A first-class `LanUdp` bridge transport for local UDP discovery, polling,
+  and command integrations.
+- First-class `Camera` entities and the `Onvif` protocol family for normalized
+  camera integrations.
+- Serde support for the normalized smart-home model so versioned durable stores
+  can persist protocol-neutral topology, state, events, and command records.
 - `smart_home.get_recovery_readiness_brief` tool descriptor for read-only Chief
   return-to-normal readiness packets over existing D23 recovery,
   service-execution safety, activation rollback, observability, guardrail,

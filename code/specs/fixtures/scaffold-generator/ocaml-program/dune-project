@@ -1,0 +1,7 @@
+(lang dune 3.16)
+(name coding-adventures-my-pkg)
+(generate_opam_files false)
+(package
+ (name coding-adventures-my-pkg)
+ (synopsis "A test package")
+ (description "A test package"))

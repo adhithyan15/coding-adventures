@@ -6,11 +6,20 @@ Generate CI-ready package scaffolding for the coding-adventures monorepo.
 
 This CLI tool generates correctly-structured, CI-ready package directories
 for the package ecosystems currently scaffolded in the repo: Python, Go,
-Ruby, TypeScript, Rust, Elixir, Perl, Lua, Swift, Haskell, C#, and F#.
+Ruby, TypeScript, Rust, Elixir, Perl, Lua, Swift, Haskell, OCaml, C#, and F#.
 
 It is powered by [cli-builder](../../../packages/typescript/cli-builder/) --
 the entire command-line interface is defined in a JSON spec file, and this
 program contains only the business logic.
+
+Generated Haskell libraries include a schema-v1
+`required_capabilities.json` with an explicit pure-computation profile and a
+package identity derived from the on-disk directory.
+
+Generated OCaml libraries and programs match the shared OCAML02 golden trees,
+with exact direct opam/Dune metadata, Alcotest, formatting and coverage
+commands, safe local dependency pins, and schema-v1 capability profiles.
+Transitive opam-repository/switch locking remains a separate CI-toolchain gate.
 
 ## Why It Exists
 
@@ -23,8 +32,9 @@ by agents hand-crafting packages inconsistently:
 - Ruby require ordering (deps before own modules)
 - Rust workspace Cargo.toml not updated
 
-This tool eliminates those failures. Run it, get a package that compiles,
-lints, and passes tests. Then fill in the business logic.
+This tool incrementally eliminates those failures as each language template
+completes the scaffold contract. Remaining cross-template exceptions are
+tracked in the parity backlog.
 
 ## Usage
 
@@ -37,6 +47,10 @@ npx tsx src/index.ts my-package -l typescript --description "TS only"
 
 # Generate a program (goes in code/programs/ instead of code/packages/)
 npx tsx src/index.ts my-tool -t program -l go
+
+# Generate an OCaml library or program
+npx tsx src/index.ts my-package -l ocaml --description "Pure OCaml logic"
+npx tsx src/index.ts my-tool -t program -l ocaml
 
 # Generate a .NET package
 npx tsx src/index.ts graph -l csharp --description "Undirected graph"

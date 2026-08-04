@@ -1,0 +1,25 @@
+% ============================================================================
+% light-behaviors.query.adj — a worked recall over the physics light-behaviors
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does light do when it
+% reflects?": it states no physics fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `light_behavior` rows and returns the effect + the table's source/locator/
+% trust. The fifth query runs the relation BACKWARD (bind the effect
+% `bounces_off`, recall the behavior that produces it — reflection). Gravity is
+% not a way light interacts with matter, so a recall on it abstains honestly —
+% the engine never invents an effect.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli light-behaviors.query.adj
+% ============================================================================
+
+import "light-behaviors.adj"
+
+? light_behavior(reflection, $E)     % expect bounces_off
+? light_behavior(refraction, $E)     % expect changes_direction
+? light_behavior(diffraction, $E)    % expect bends_and_spreads
+? light_behavior(scattering, $E)     % expect variety_of_directions
+? light_behavior($B, bounces_off)    % expect reflection — reverse recall
+? light_behavior(gravity, $E)        % expect abstain — gravity is not a light behavior

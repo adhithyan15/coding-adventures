@@ -223,6 +223,12 @@ where
 }
 
 trait MailboxJobSubmitter<Request, Response> {
+    // `submit` is the abstraction point behind the `Submitter` trait bound used
+    // by the generic runtime loops; the inherent `submit` methods on the
+    // concrete submitter types take priority at their call sites, so the
+    // compiler's reachability analysis reports the trait declaration itself as
+    // unused. Kept as the intended abstraction surface.
+    #[allow(dead_code)]
     fn submit(&self, connection_id: ConnectionId, payload: Request) -> Result<String, WorkerError>;
 }
 
@@ -393,6 +399,10 @@ impl Drop for WorkerPoolGuard {
     }
 }
 
+// The two variants wrap different runtime representations of intentionally
+// different sizes; a `RuntimeInstance` is created once per server, so the size
+// difference has no practical cost and boxing would only add indirection.
+#[allow(clippy::large_enum_variant)]
 enum RuntimeInstance<State> {
     Single(PlatformTcpRuntime<State>),
     Sharded(PlatformShardedTcpRuntime<State>),
@@ -1046,9 +1056,10 @@ fn validate_response_id<Response>(
 }
 
 fn runtime_options(options: &EmbeddableTcpServerOptions) -> TcpRuntimeOptions {
-    let mut runtime_options = TcpRuntimeOptions::default();
-    runtime_options.max_connections = options.max_connections.max(1);
-    runtime_options
+    TcpRuntimeOptions {
+        max_connections: options.max_connections.max(1),
+        ..Default::default()
+    }
 }
 
 #[cfg(any(
@@ -2071,7 +2082,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
     }
 
     fn hex_decode(input: &str) -> Result<Vec<u8>, String> {
-        if input.len() % 2 != 0 {
+        if !input.len().is_multiple_of(2) {
             return Err("hex input has odd length".to_string());
         }
         let mut output = Vec::with_capacity(input.len() / 2);

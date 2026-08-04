@@ -2,6 +2,77 @@
 
 All notable changes to the Go build tool will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **Canonical discovery identity registry.** Go discovery now consumes the
+  shared language-registry and duplicate-identity fixtures, recognizes every
+  canonical package/program bucket including Mosaic, Twig, OCaml, and retained
+  `.NET` hosts, preserves the `programs` identity segment, and excludes
+  specification fixture trees.
+- **Fail-closed duplicate identities.** Two directories that normalize to one
+  graph name now return typed `DUPLICATE_PACKAGE_IDENTITY` details with sorted
+  repository-relative paths; the CLI prints the stable root-redacted
+  diagnostic and exits `2`.
+- **C and C++ as first-class languages.** `inferLanguage` now recognizes `c`
+  and `cpp` path components (exact-match, so `c` never fires inside `csharp` or
+  `cpp`). Existing C++ packages (`cpp/conduit`, `cpp/conduit-hello`,
+  `cpp/mosaic-flux-qt`) are now inferred as language `cpp` instead of `unknown`.
+- **`cpp` CI toolchain.** Added to `allToolchains`; both the `c` and `cpp`
+  package languages map to the single `cpp` toolchain in
+  `toolchainForPackageLanguage` (they share compilers: gcc/g++, clang/clang++,
+  cl.exe), mirroring the `csharp`/`fsharp` → `dotnet` collapse. See spec
+  `code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md`.
+- **`cpp` is now a CI-managed toolchain** (`validateCIFullBuildToolchains`): the
+  validator requires `.github/workflows/ci.yml` to bind `needs_cpp` and force it
+  on the main full-build path. ci.yml installs Clang alongside GCC on Linux and
+  MSVC on Windows so the pure-ISO multi-compiler check sees all three across the
+  matrix.
+
+### Fixed
+
+- Java and Kotlin Gradle resolution now reads only comment-aware
+  `includeBuild("...")` calls from root `settings.gradle.kts`, supports
+  multiline and nested relative paths through exact same-lane package-root
+  matching, and ignores strings, build-script coordinates, absolute paths,
+  cross-lane targets, and unknown targets without following referenced paths.
+  Java/Kotlin source plus Gradle settings/build files now invalidate package
+  hashes.
+- Dart dependency resolution now accepts only direct package keys under root
+  `dependencies:` and `dev_dependencies:` maps, excluding nested source
+  options, dependency overrides, comments, and unrelated YAML fields.
+- Elixir dependency resolution now reads local `path:` tuples from both direct
+  project `deps:` lists and block or shorthand `defp deps` lists, including
+  multiline tuples, while excluding comments, application metadata, prose,
+  `mix.lock`, and non-path dependencies.
+- Perl dependency resolution now reads only top-level runtime `requires`
+  declarations from root `cpanfile`s, excludes test and other phase blocks and
+  `Makefile.PL` dependency tables, and registers exact declared module names
+  plus current and legacy distribution aliases. The aes-modes BUILD recipe now
+  declares the newly authoritative local AES prerequisite. Standalone BUILD
+  validation separately recognizes test-block source references and their
+  runtime closure without promoting test-only dependencies into the graph.
+- Ruby dependency resolution now reads only runtime dependency calls on the
+  gem specification receiver, treats `add_dependency` and
+  `add_runtime_dependency` as synonyms, ignores development dependencies and
+  commented-out calls, and registers declared gem names alongside derived
+  directory aliases.
+- Rust dependency resolution now honors Cargo inline-table `package` renames
+  for path dependencies while retaining the top-level `[dependencies]` field
+  boundary.
+- Lua `.rockspec` metadata is now decoded as strict UTF-8 before dependency
+  parsing. Invalid bytes fail closed with `METADATA_INVALID_UTF8`, package and
+  repository-relative manifest identity, and CLI exit code 2 without leaking
+  checkout paths.
+- Haskell dependency resolution now recognizes the plain Cabal names used by
+  current packages as well as legacy `coding-adventures-*` names. The resolver
+  registers directory and manifest aliases, parses every `build-depends`
+  stanza, removes duplicates and self-references, and therefore exposes local
+  dependency edges to diff-based affected-package analysis.
+- Haskell package discovery now rejects directories with multiple ambiguous
+  Cabal manifests instead of selecting one based on enumeration order.
+
 ## [0.3.1] - 2026-03-30
 
 ### Fixed

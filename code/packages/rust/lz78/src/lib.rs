@@ -230,7 +230,7 @@ pub fn decode(tokens: &[Token], original_length: Option<usize>) -> Vec<u8> {
         let seq = reconstruct(&dict_table, tok.dict_index);
         output.extend_from_slice(&seq);
 
-        if original_length.map_or(true, |n| output.len() < n) {
+        if original_length.is_none_or(|n| output.len() < n) {
             output.push(tok.next_char);
         }
 

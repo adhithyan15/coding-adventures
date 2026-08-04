@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Added - HostSurface native composition primitive
+
+`HostSurface` now registers as a kernel primitive for mounting a host-supplied
+`node` slot. This gives generated native shells an explicit, typed boundary for
+Metal, Direct2D, video, map, and other platform-owned render surfaces without
+reimplementing surrounding application UI outside Mosaic.
+
+### Fixed - a string literal inside an expression lost its quotes
+
+`( status == "done" )` reconstructed as `status == done` — a comparison against an
+undefined identifier rather than against the string. The lexer strips a STRING token's
+surrounding quotes and resolves its escapes before storing the value, and
+`reconstruct_expr_text` pushed that value verbatim. Every backend interpolates this text
+into generated source, so the bug reached all of them; any `.mll` expression comparing
+against a string was silently wrong.
+
+String tokens are now re-quoted and re-escaped when the expression text is rebuilt.
+Non-string tokens are untouched, so identifiers and numbers are unaffected.
+
+This also closes the only route by which expression text could contribute *structural*
+characters (`}`, `,`, a bare quote) to emitted source — see
+`code/specs/UI36-data-driven-sizing.md` §6, which recorded it as a follow-on.
+
+3 new tests (86 total). All eight Mosaic emit backends plus the resolver and
+`mosaic-compile` re-run clean (1,078 tests).
+
+
 ### Added — U29-G3: `expr` non-terminal in prop values
 
 - Ten new tokens in `moslayout.tokens` for the expression grammar:
@@ -43,6 +70,41 @@
   and the empty-string case.
 - Resolves limitation #3 in `code/programs/typescript/visicalc/README.md` —
   `placeholder: "Enter formula"` is now expressible at the source level.
+
+## [0.1.1] — 2026-07-14
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`parse_layout` built its `GrammarParser` with no recursion-depth cap, even
+though `moslayout-compiler` is reachable via the `mosaic` CLI on arbitrary
+`.mll` files — a real, not theoretical, attack surface. Deeply-nested
+input, in any of this grammar's three *independent* recursive shapes
+(node-tree nesting, `!`/NOT-chain nesting, or the shared
+`primary/expr/.../postfix` re-entry cycle reached via either parenthesised
+or bracket-index nesting), would recurse until it overflowed the native
+thread stack — an uncatchable process abort — before this crate's own
+`Result`-returning entry points ever got a chance to report anything.
+
+All shapes were independently measured (binary search, uncapped parser,
+the true default per-test-thread stack — no `RUST_MIN_STACK` override, no
+explicit `Builder::stack_size`, matching what `cargo test` and a
+production caller both actually get — debug build, adversarial
+5000-level input): node-tree nesting (the *binding*, lower floor) safe
+through 145 rule-frames, crashes at 146; NOT-chain safe through 210,
+crashes at 220; bracket-index nesting safe through 260, crashes at 270;
+parenthesised nesting safe through 280, crashes at 290. Added a bespoke
+`MAX_RULE_DEPTH = 100` — about 31% below the binding floor — and wired it
+into `parse_layout` via `.with_max_depth(...)`.
+
+- Added `MAX_RULE_DEPTH: usize = 100` and wired it into `parse_layout`.
+- 12 new regression tests (3 per independent recursive shape): deep
+  adversarial input on an enlarged-stack thread returns a clean `Err`,
+  input at the measured real-nesting boundary (97 levels for node-tree, 86
+  for NOT-chain, 12 for bracket-index, 10 for parenthesised) still parses
+  while one level past it doesn't, and the cap trips before the native
+  stack would overflow even on a default-stack thread.
+
+No change to behaviour for any input that nests below the cap.
 
 ## [0.1.0] — 2026-05-11
 

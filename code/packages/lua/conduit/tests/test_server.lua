@@ -3,8 +3,8 @@
 -- Starts a real TCP server on an ephemeral port, makes HTTP requests via
 -- luasocket, and asserts on status codes, headers, and response bodies.
 --
--- All tests share a single server instance (started in before_all / lazy
--- startup) to keep test run time short.
+-- All tests share a foreground server in a dedicated child process. This keeps
+-- Busted and native request threads from concurrently accessing one lua_State.
 --
 -- If luasocket is not installed, the E2E tests are pending (skipped).
 
@@ -21,7 +21,9 @@ if not (socket_http_ok and ltn12_ok and socket_ok) then
     return
 end
 
-local conduit = require("conduit")
+socket_http.TIMEOUT = 5
+
+local fixture = dofile("server_fixture.lua")
 
 -- ---------------------------------------------------------------------------
 -- Helpers
@@ -78,79 +80,24 @@ end
 local server_instance
 local server_port
 
-local function build_app()
-    local app = conduit.Application.new()
-    app:set("app_name", "Conduit E2E Test")
-
-    -- Before filter: block /down
-    app:before(function(ctx)
-        if ctx:path() == "/down" then
-            conduit.halt(503, "Under maintenance")
-        end
-    end)
-
-    -- GET /
-    app:get("/", function(ctx)
-        return conduit.html("<h1>Hello from Conduit!</h1>")
-    end)
-
-    -- GET /hello/:name
-    app:get("/hello/:name", function(ctx)
-        local name = ctx:params()["name"]
-        return conduit.json({ message = "Hello " .. name })
-    end)
-
-    -- POST /echo  — echoes the JSON body
-    app:post("/echo", function(ctx)
-        local data = ctx:json_body()
-        return conduit.json(data)
-    end)
-
-    -- GET /redirect → 301 to /
-    app:get("/redirect", function(ctx)
-        return conduit.redirect("/", 301)
-    end)
-
-    -- GET /halt → 403 Forbidden via halt()
-    app:get("/halt", function(ctx)
-        conduit.halt(403, "Forbidden — this route always halts")
-    end)
-
-    -- GET /down → unreachable (before filter intercepts)
-    app:get("/down", function(ctx)
-        return conduit.html("this should never be reached")
-    end)
-
-    -- GET /error → triggers error handler
-    app:get("/error", function(ctx)
-        error("Intentional error for testing")
-    end)
-
-    -- Custom not-found handler (JSON to avoid XSS from raw path interpolation)
-    app:not_found(function(ctx)
-        return conduit.json({ message = "Not Found", path = ctx:path() }, 404)
-    end)
-
-    -- Custom error handler
-    app:error_handler(function(ctx, err)
-        return conduit.json({ error = "Internal Server Error" }, 500)
-    end)
-
-    return app
-end
-
 setup(function()
-    local app = build_app()
-    server_instance = conduit.Server.new(app, { host = "127.0.0.1", port = 0 })
-    server_instance:serve_background()
-    server_port = server_instance:local_port()
+    server_instance = assert(io.popen("lua server_process.lua 2>&1", "r"))
+    local ready_line = server_instance:read("*l")
+    assert.is_truthy(ready_line, "Conduit server process exited before startup")
+    server_port = tonumber(ready_line:match("^CONDUIT_READY (%d+)$"))
+    assert.is_truthy(
+        server_port,
+        "unexpected Conduit server startup output: " .. ready_line
+    )
     assert.is_true(wait_for_server(server_port, 5), "Server did not start in time")
 end)
 
 teardown(function()
+    if server_instance and server_port then
+        pcall(get, server_port, "/__test_shutdown")
+    end
     if server_instance then
-        server_instance:stop()
-        socket.sleep(0.1)
+        server_instance:close()
     end
 end)
 
@@ -240,13 +187,13 @@ describe("conduit.Server (E2E)", function()
     end)
 
     it("server:running() returns true while serving", function()
-        assert.is_true(server_instance:running())
+        local r = get(server_port, "/__test_running")
+        assert.equal(200, r.status)
+        assert.truthy(r.body:find('"running":true', 1, true))
     end)
 
     it("app:get(key) returns the configured setting", function()
-        -- Verify settings survive from Application creation to request time.
-        -- We test this by checking the app object directly (not via HTTP).
-        local app = build_app()
+        local app = fixture.build_app()
         assert.equal("Conduit E2E Test", app:get("app_name"))
     end)
 

@@ -1,0 +1,98 @@
+% ============================================================================
+% transferrin-saturation.adj — the transferrin saturation
+% (TSAT = [serum iron / transferrin] × 70.9) in the ADJ standard library.
+% ============================================================================
+% The transferrin-saturation entry of the *clinical* track — the percentage of the blood's iron-carrying
+% protein (transferrin) that is actually loaded with iron. It is a core iron-study index: a LOW saturation
+% (empty carriers) points to iron-deficiency states, while a HIGH saturation (carriers overfull) points to
+% iron overload such as haemochromatosis. Each milligram per decilitre of transferrin can bind a fixed
+% amount of iron, so multiplying the transferrin concentration by that binding factor gives the total
+% iron-binding capacity; the saturation is then the measured serum iron as a percentage of what the
+% transferrin present could carry. The cited article expresses this directly in terms of the transferrin
+% concentration, folding the unit conversion and the ×100 percentage scale into a single factor of 70.9
+% (serum iron in µg/dL over transferrin in mg/dL). THE TRANSFERRIN SATURATION IS THE SERUM IRON DIVIDED BY
+% THE TRANSFERRIN, TIMES 70.9 — i.e. TSAT = [serum Fe / transferrin] × 70.9. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with two exact rearrangements (the serum iron and the
+% transferrin a given saturation implies). As with every compute library, a consumer states NO arithmetic:
+% it `import`s this file, binds the serum iron and transferrin from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "transferrin-saturation.adj"
+%     observe serum_iron(100)     % "…serum iron 100 µg/dL…"   (span cited by the model)
+%     observe transferrin(200)     % "…transferrin 200 mg/dL…"  (span cited by the model)
+%     ? transferrin_saturation(serum_iron, transferrin)   % engine → 35.45 (%)
+%
+% Structurally this is a RATIO SCALED BY A CONSTANT — the serum-iron-to-transferrin ratio times the fixed
+% factor 70.9 — the same product-times-constant family as several other clinical libraries, reused here for a
+% NEW quantity (iron saturation) rather than reinvented; the novelty is the analyte pair and its
+% iron-overload/deficiency role, not the arithmetic. The embedded constant is 70.9 (the µg-per-mg iron-binding
+% factor times the percentage scale, exactly as the cited equation prints it); the serum iron and transferrin
+% are formal parameters bound at apply time. The engine holds 70.9 as an EXACT rational (709/10) and computes
+% each value EXACTLY; the rendered `value` is the engine's single lossless-to-lossy f64 export of that exact
+% result. The three formulas COMPOSE and invert cleanly around the worked case serum iron = 100 µg/dL,
+% transferrin = 200 mg/dL (TSAT = 100 / 200 × 70.9 = 0.5 × 70.9 = 35.45 %): the `transferrin_saturation` a
+% consumer computes is exactly the value each inverse formula back-solves to recover its own measured input
+% (100, 200).
+%
+%   transferrin_saturation(serum_iron, transferrin) = serum_iron / transferrin * 70.9   % (%)
+%   serum_iron(transferrin_saturation, transferrin) = transferrin_saturation * transferrin / 70.9   % (solved for serum iron)
+%   transferrin(transferrin_saturation, serum_iron) = serum_iron * 70.9 / transferrin_saturation     % (solved for transferrin)
+%
+% NOTE ON UNITS AND MODELLING: this specific form pins the units — serum iron in µg/dL and transferrin in
+% mg/dL — because the factor 70.9 encodes exactly that conversion (a mixed-unit factor, unlike the
+% unit-independent "serum iron / TIBC × 100" restatement). Bind the serum iron and transferrin in those
+% units, or the 70.9 factor no longer applies. This library only COMPUTES the saturation; interpreting a low
+% or high value against the iron-study panel is the clinician's task, stated by the cited source but applied
+% by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted saturation equation — because that one
+% equation ([serum Fe / transferrin] × 70.9) sanctions the relation read every way. The quote is transcribed
+% verbatim from the StatPearls "Iron-Binding Capacity" article on the NCBI Bookshelf (a current, non-archived
+% article), which prints it as a fully-bracketed equation with an equals sign; this transferrin-and-70.9 form
+% was grounded because it is the page's TYPED equation, whereas the tidier "serum iron / TIBC × 100"
+% restatement appears there only as prose. Each `formula` therefore carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored
+% — the formula is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `serum_iron`, `transferrin` and `transferrin_saturation` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary transferrin_saturation_vocab {
+    define serum_iron              : finding  surface "serum iron", "serum Fe", "iron", "Fe"          % µg/dL
+    define transferrin             : finding  surface "transferrin", "Tf", "serum transferrin"        % mg/dL
+    define transferrin_saturation  : finding  surface "transferrin saturation", "TSAT", "iron saturation", "Tsat" % %
+}
+
+% ----------------------------------------------------------------------------
+% The transferrin saturation, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the saturation equation from the StatPearls
+% "Iron-Binding Capacity" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is
+% an exact expression in the measured values and the exact factor 70.9, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook transferrin_saturation_laws {
+    use transferrin_saturation_vocab
+
+    % TSAT — the serum-iron-to-transferrin ratio, scaled by the 70.9 iron-binding-and-percentage factor.
+    formula transferrin_saturation(serum_iron, transferrin) = serum_iron / transferrin * 70.9
+        source "Transferrin saturation (TSAT %) = [serum Fe (µg/dL) / transferrin (mg/dL)] × 70.9"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559119/"
+        trust authoritative
+
+    % Serum iron — the same equation solved for the serum iron. Defended by the SAME equation.
+    formula serum_iron(transferrin_saturation, transferrin) = transferrin_saturation * transferrin / 70.9
+        source "Transferrin saturation (TSAT %) = [serum Fe (µg/dL) / transferrin (mg/dL)] × 70.9"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559119/"
+        trust authoritative
+
+    % Transferrin — the same equation solved for the transferrin, the third reading of the one law.
+    formula transferrin(transferrin_saturation, serum_iron) = serum_iron * 70.9 / transferrin_saturation
+        source "Transferrin saturation (TSAT %) = [serum Fe (µg/dL) / transferrin (mg/dL)] × 70.9"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559119/"
+        trust authoritative
+}

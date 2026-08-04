@@ -1,0 +1,202 @@
+# FLOW-MATIC Token Grammar (B-0, 1955–1959)
+# ============================================================
+#
+# FLOW-MATIC — originally "B-0" (Business Language version 0) — was the first
+# English-like data-processing programming language.  Grace Hopper and her team
+# at Remington Rand (the UNIVAC division) built it between roughly 1955 and 1959;
+# it ran on the UNIVAC I, the first commercial computer sold in the United
+# States.  It is the direct ancestor of COBOL: its English verbs, its
+# hyphenated data names, and its separation of file/data description from
+# procedure all flowed into the 1959 COBOL design.
+#
+# A FLOW-MATIC program is a sequence of numbered *operations*.  Each operation
+# is written as a parenthesised operation number followed by one or more
+# clauses, the clauses separated by ";", and the whole operation terminated by
+# a period ".".  The canonical published example (an inventory-pricing run)
+# begins:
+#
+#   (0)  INPUT INVENTORY FILE-A PRICE FILE-B ; OUTPUT PRICED-INV FILE-C
+#          UNPRICED-INV FILE-D ; HSP D .
+#   (1)  COMPARE PRODUCT-NO (A) WITH PRODUCT-NO (B) ;
+#          IF GREATER GO TO OPERATION 10 ;
+#          IF EQUAL GO TO OPERATION 5 ;
+#          OTHERWISE GO TO OPERATION 2 .
+#
+# This file is the LEXER half of the frontend (see PL06-flow-matic.md).  Like
+# every language frontend in this repo it is fed to the generic `GrammarLexer`
+# — nothing is hand-tokenised.  The companion `flow_matic.grammar` gives the
+# parser its productions.
+#
+# ------------------------------------------------------------
+# Two design notes that make FLOW-MATIC pleasantly simple to lex
+# ------------------------------------------------------------
+#
+# 1. NO context-sensitive hooks are needed.  Unlike COBOL — whose fixed
+#    80-column punched-card layout forces a `pre_tokenize` column-strip hook
+#    (see lexer-parser-hooks.md) — FLOW-MATIC listings are free-form: tokens are
+#    separated by spaces and statements end at a period, so a physical line
+#    boundary carries no meaning.  We therefore skip newlines like any other
+#    whitespace and lex straight through.
+#
+# 2. The operation label `(0)` and a field qualifier like `(A)` are BOTH just
+#    "LPAREN something RPAREN" at the lexical level.  We do NOT invent a special
+#    OP_NUMBER token.  The parser tells them apart structurally: an operation
+#    label is `"(" NUMBER ")"` at the head of a statement, while a field
+#    reference is `NAME "(" NAME ")"`.  Keeping the lexer dumb here means the
+#    grammar — not a fragile regex — owns the distinction.
+
+# @version 1
+# @case_insensitive true
+case_sensitive: false
+
+# ============================================================
+# Historical case handling
+# ============================================================
+#
+# The UNIVAC I's console and printers were uppercase-only, exactly like the
+# teletypes that later shaped Dartmouth BASIC.  Real FLOW-MATIC source was
+# therefore all capitals.  Following the same reasoning the BASIC grammar uses,
+# we treat case as *insignificant* rather than rejecting lowercase:
+#
+#   'case_sensitive: false'   — token PATTERNS match without regard to case, so
+#                               the lowercase NAME pattern below also matches the
+#                               all-caps text of a real UNIVAC listing.
+#   'case_insensitive true'   — keyword lookup uppercases each NAME candidate and
+#                               emits KEYWORD tokens with their uppercase value,
+#                               so grammar literals like "COMPARE" match COMPARE,
+#                               compare, or Compare alike.
+#
+# (Those two directive names are quoted above on purpose: an unquoted '# @key'
+#  line is parsed as a real magic comment, even inside an explanatory block.)
+#
+# Net effect: KEYWORDS are normalized to uppercase (COMPARE, WRITE-ITEM), while a
+# NAME's value PRESERVES the case it was typed in — so canonical uppercase source
+# keeps data names intact (PRODUCT-NO, FILE-A), and lowercase input still lexes.
+
+# ============================================================
+# SECTION 1: Literals and names
+# ============================================================
+#
+# Operation numbers and branch targets are plain unsigned integers.  FLOW-MATIC
+# business data was fixed-point held in fields; the *program text* itself only
+# ever writes whole numbers (operation numbers such as `(10)` and the targets in
+# `GO TO OPERATION 10`).  A bare integer is a NUMBER; the parser decides whether
+# a given NUMBER is a label, a branch target, or a comparison constant.
+NUMBER = /[0-9]+/
+
+# Data names are the defining trait of the COBOL family: an identifier may
+# contain internal hyphens, e.g. PRODUCT-NO, UNIT-PRICE, FILE-A, UNPRICED-INV.
+#
+#   [a-z]                    — must start with a letter
+#   [a-z0-9]*                — then letters/digits
+#   (-[a-z0-9]+)*            — then zero or more "-<alnum-run>" groups
+#
+# The trailing group requires a letter/digit run AFTER each hyphen, so a hyphen
+# can never dangle at the end of a name.  Because FLOW-MATIC has no infix minus
+# operator (arithmetic is spelled out with ADD / SUBTRACT / …), the hyphen is
+# unambiguously part of a name and never a subtraction sign.
+#
+# The multi-word English *verbs* that happen to contain a hyphen — WRITE-ITEM,
+# READ-ITEM, CLOSE-OUT — are matched by this same NAME pattern and then promoted
+# to KEYWORD by the keyword-lookup step (they appear in the `keywords:` list
+# below).  So "write-item" → NAME("write-item") → KEYWORD("WRITE-ITEM").
+NAME = /[a-z][a-z0-9]*(-[a-z0-9]+)*/
+
+# ============================================================
+# SECTION 2: Keywords (the English verbs and clause words)
+# ============================================================
+#
+# FLOW-MATIC's vocabulary is a fixed set of English words.  A NAME whose
+# uppercased value appears here is reclassified to KEYWORD.  Keyword-prefix
+# safety falls out for free: "inventory" uppercases to "INVENTORY", which is not
+# in the set, so it stays NAME — we never accidentally split it into IN + …
+#
+# Several constructs are multi-*word* rather than multi-character:
+#   GO TO OPERATION n     — two words GO, TO before OPERATION
+#   END OF DATA           — the end-of-file test in READ-ITEM
+# These are simply adjacent keyword tokens; the grammar sequences them.
+#
+# NOTE: one keyword per line.  The grammar-tools parser stores each `keywords:`
+# line verbatim as a single entry (it does NOT split on spaces), so grouping
+# several words on one line would create a bogus multi-word "keyword" that never
+# matches a single NAME token.
+keywords:
+  # -- File description (operation 0) --
+  INPUT
+  OUTPUT
+  HSP
+  # -- Comparison and its three-way branch --
+  COMPARE
+  WITH
+  IF
+  GREATER
+  EQUAL
+  LESS
+  GO
+  TO
+  OPERATION
+  OTHERWISE
+  JUMP
+  # -- Data movement --
+  TRANSFER
+  MOVE
+  # -- Record I/O and end-of-file --
+  WRITE-ITEM
+  READ-ITEM
+  END
+  OF
+  DATA
+  # -- Sentinel test, tape control, shutdown --
+  TEST
+  AGAINST
+  REWIND
+  CLOSE-OUT
+  FILES
+  STOP
+  # -- Arithmetic and control verbs recognised by the lexer for completeness
+  #    (the v1 parser grammar covers the demonstrated subset above; these are
+  #    reserved here so a program that uses them still tokenises cleanly) --
+  SET
+  ADD
+  SUBTRACT
+  MULTIPLY
+  DIVIDE
+  BY
+  FROM
+  INTO
+  EXECUTE
+  DEFINE
+
+# ============================================================
+# SECTION 3: Punctuation
+# ============================================================
+#
+# LPAREN / RPAREN wrap both operation labels `(0)` and field qualifiers `(A)`.
+# PERIOD terminates an operation.  SEMICOLON separates clauses within an
+# operation (and, in CLOSE-OUT FILES C ; D, separates file names — an overlap
+# the backtracking parser resolves; see the grammar file).
+LPAREN    = "("
+RPAREN    = ")"
+PERIOD    = "."
+SEMICOLON = ";"
+
+# ============================================================
+# SECTION 4: Skipped whitespace
+# ============================================================
+#
+# Spaces, tabs, and — crucially — newlines are all insignificant.  A FLOW-MATIC
+# operation may wrap across several printed lines; only the terminating period
+# ends it.  So unlike line-oriented BASIC, we do NOT keep NEWLINE tokens.
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+
+# ============================================================
+# SECTION 5: Error recovery
+# ============================================================
+#
+# Any character that matches no token above is reported as UNKNOWN rather than
+# silently dropped, so malformed input fails fast with a pointer to the offending
+# character. (The Rust GrammarLexer returns an Err on such input; the section is
+# also honoured by the Python/Ruby/Elixir lexers, which emit an UNKNOWN token.)
+errors:
+  UNKNOWN = /./

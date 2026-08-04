@@ -73,8 +73,10 @@ The current parser surface includes:
   hints, and required/readonly/multiple control state across document,
   content-tree, and render-tree projections
 - browser-facing URL resolution metadata for links, loadable resources, images,
-  and form actions using the document `base` href when available, while keeping
-  raw authored URLs available to browser policy code
+  and form actions using the document `base` href when available, plus
+  `parse_browser_render_tree_with_document_url` for resolving relative browser
+  content against the fetched navigation URL while keeping raw authored URLs
+  available to browser policy code
 - browser-facing link/resource scheduling metadata for preconnect, preload,
   modulepreload, prefetch, manifest, canonical, and icon links, including
   `as`, integrity, CORS/referrer policy, fetch priority, blocking, and
@@ -134,26 +136,31 @@ focused regression test in `tests/browser_readiness_test.rs`. The
 executable source of truth for that boundary and should fail if a future field
 is added without coverage evidence.
 
-The checked-in html5lib tree-construction smoke corpus now covers every case in
-the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
-by source signature. A separate adapter can project DOM into `document-ast` for
-existing native document rendering.
+The checked-in tree-construction smoke corpus contains 2,637 passing DOM cases.
+It mirrors every source signature in the current 1,934-case upstream WPT
+tree-construction corpus. A separate adapter can project DOM into
+`document-ast` for existing native document rendering.
 
 ## Conformance Audit
 
 The tree-construction fixture lives in
-`tests/fixtures/html5lib-tree-construction-smoke.dat`, and the shared
-html5lib tokenizer corpus lives under `../html-lexer/tests/fixtures`. To verify
-that the checked-in fixtures still cover an upstream html5lib-tests checkout:
+`tests/fixtures/html5lib-tree-construction-smoke.dat`, and the shared html5lib
+tokenizer corpus lives under `../html-lexer/tests/fixtures`. Tree-construction
+tests moved from html5lib-tests to WPT, so a current audit uses both checkouts:
 
 ```bash
 HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
-  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
+WPT_ROOT=/path/to/wpt \
+  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
+  --expect-tree-missing 0 \
+  --expect-tokenizer-missing 0
 ```
 
-The audit fails if an upstream tree-construction case is missing, if an
-upstream tokenizer case is missing from the raw mirrored tokenizer corpus, or
-if the normalized tokenizer corpus records skipped cases.
+Without explicit missing-case expectations, the audit fails if an upstream
+tree-construction or tokenizer case is absent locally. Supplying an exact
+missing-case expectation accepts only that checked debt count; the stable report
+also pins every missing source signature so same-count churn remains visible.
+Normalized tokenizer skips always fail the audit.
 
 For CI jobs that need to catch accidental fixture drift as well as missing
 coverage, the audit can pin the current corpus counts:
@@ -161,19 +168,39 @@ coverage, the audit can pin the current corpus counts:
 ```bash
 python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
   /path/to/html5lib-tests \
-  --expect-tree-upstream-cases 1778 \
-  --expect-tree-local-cases 2485 \
+  --wpt-root /path/to/wpt \
+  --expect-tree-upstream-cases 1934 \
+  --expect-tree-local-cases 2637 \
+  --expect-tree-missing 0 \
   --expect-tokenizer-upstream-cases 6806 \
   --expect-tokenizer-local-raw-cases 7015 \
+  --expect-tokenizer-missing 0 \
   --expect-normalized-cases 7242 \
   --expect-normalized-skipped 0
 ```
 
 The audit also owns a checked `tests/fixtures/html5lib-coverage-audit.json`
-summary. Regenerate or verify that exact report with `--write-report` or
-`--check-report`. The Rust integration tests also parse that report and compare
-its local corpus counts against the checked tree-construction and tokenizer
-fixtures.
+summary. It records the exact WPT and html5lib-tests commits alongside corpus
+counts and missing source signatures, so the evidence is reproducible even
+when upstream changes without changing a case count. Regenerate or verify that
+exact report with `--write-report` or `--check-report`. The Rust integration
+tests also parse that report and compare its local corpus counts against the
+checked tree-construction and tokenizer fixtures.
+
+The prioritized completion queue and intake rules live in
+`CONFORMANCE-BACKLOG.md`.
+
+Tree-construction data also carries legacy `#errors` rows. The shared test
+loader retains those rows and the main tree-construction test ratchets whether
+each malformed case produces any lexer or parser diagnostic. Exact legacy
+error strings are not treated as a public WHATWG taxonomy; they are used to
+identify missing diagnostic coverage while DOM output remains independently
+checked. Full-document parsing follows the Standard's initial insertion mode:
+whitespace, comments, and processing instructions may precede a doctype, while
+any other token first emits `missing-doctype` and enters quirks handling.
+Repeated `html`, `head`, and `body` start tags also emit shell diagnostics;
+`html` and `body` retain the Standard's missing-attribute merge behavior while
+a repeated `head` token is ignored.
 
 For sharper parser regression reporting, the generated
 `tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the
@@ -366,12 +393,12 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_select_lis
   --check
 ```
 
-The generated `tests/fixtures/whatwg-post-parse-repair-audit.json` fixture
-indexes the remaining html5lib rows that still justify finish-time post-parse
-repair shims:
+The generated `tests/fixtures/whatwg-processing-instruction-audit.json`
+fixture indexes all current WPT processing-instruction tree cases across
+target validation, data normalization, EOF recovery, and insertion contexts:
 
 ```bash
-python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_post_parse_repair_audit_fixture.py \
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_processing_instruction_audit_fixture.py \
   --check
 ```
 
@@ -395,8 +422,9 @@ self-contained generated HTML lexer/parser fixtures:
 python3 code/packages/rust/html-lexer/tests/fixtures/check_generated_html_fixtures.py
 ```
 
-Pass `--html5lib-tests /path/to/html5lib-tests` to fold the checked coverage
-audit report and pinned-count checks into the same local guard.
+Pass `--html5lib-tests /path/to/html5lib-tests --wpt-tests /path/to/wpt` to
+fold the checked coverage audit report and pinned-count checks into the same
+local guard.
 
 ## Usage
 

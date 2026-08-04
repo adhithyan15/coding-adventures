@@ -80,8 +80,7 @@ struct Args {
     #[arg(long)]
     jobs: Option<usize>,
 
-    /// Filter to language: python, ruby, go, typescript, rust, elixir, lua,
-    /// perl, swift, java, kotlin, haskell, wasm, csharp, fsharp, dotnet, or all.
+    /// Filter to a canonical discovery language or use all.
     #[arg(long, default_value = "all")]
     language: String,
 
@@ -130,16 +129,12 @@ fn find_repo_root(start: Option<&str>) -> Option<PathBuf> {
             return Some(current);
         }
 
-        match current.parent() {
-            Some(parent) => {
-                if parent == current {
-                    // Reached filesystem root without finding .git.
-                    return None;
-                }
-                current = parent.to_path_buf();
-            }
-            None => return None,
+        let parent = current.parent()?;
+        if parent == current {
+            // Reached filesystem root without finding .git.
+            return None;
         }
+        current = parent.to_path_buf();
     }
 }
 
@@ -210,7 +205,7 @@ fn chrono_now_iso8601() -> String {
 
 /// Helper for leap year calculation.
 fn is_leap_year(y: u64) -> bool {
-    (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
+    (y.is_multiple_of(4) && !y.is_multiple_of(100)) || y.is_multiple_of(400)
 }
 
 // ---------------------------------------------------------------------------
@@ -259,7 +254,13 @@ fn run() -> i32 {
     }
 
     // Step 2: Discover packages.
-    let mut packages = discovery::discover_packages(&code_root);
+    let mut packages = match discovery::discover_packages(&code_root) {
+        Ok(packages) => packages,
+        Err(error) => {
+            eprintln!("{}", error);
+            return 2;
+        }
+    };
     if packages.is_empty() {
         eprintln!("No packages found.");
         return 0;
@@ -288,7 +289,13 @@ fn run() -> i32 {
     println!("Discovered {} packages", packages.len());
 
     // Step 4: Resolve dependencies.
-    let graph = resolver::resolve_dependencies(&packages);
+    let graph = match resolver::resolve_dependencies(&packages) {
+        Ok(graph) => graph,
+        Err(error) => {
+            eprintln!("{}", error);
+            return 2;
+        }
+    };
 
     // Step 5: Git-diff change detection (default mode).
     // Git is the source of truth — no cache file needed for primary workflow.

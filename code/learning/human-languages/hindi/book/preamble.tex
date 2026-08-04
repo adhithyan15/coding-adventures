@@ -1,0 +1,135 @@
+% Preamble for "Hindi, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only. Uses the vendored static Noto Sans Devanagari (see _fonts/),
+% loaded by relative path so local and CI builds are identical.
+% (Load non-polyglossia packages first, as a habit — bidi in RTL tracks
+%  requires it, and it's harmless here for LTR Devanagari.)
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+% Transliteration letters absent from Latin Modern, mapped to accents so the
+% romanizations don't drop characters (ṁ = anusvāra, in haiṁ etc.).
+\usepackage{newunicodechar}
+\newunicodechar{ṁ}{\.{m}}
+\newunicodechar{ṉ}{\b{n}}
+\newunicodechar{ṟ}{\b{r}}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguage{hindi}
+\setotherlanguage{arabic}
+\setotherlanguage{russian}
+
+% Vendored static script fonts. Explicitly map every requested shape to the
+% same complete glyph file so bold or italic teaching context cannot fall back
+% to a system font or emit a substitution warning.
+\newfontfamily\hindifont[
+  Path=../../_fonts/,
+  Script=Devanagari,
+  BoldFont=NotoSansDevanagari-Static.ttf,
+  ItalicFont=NotoSansDevanagari-Static.ttf,
+  BoldItalicFont=NotoSansDevanagari-Static.ttf
+]{NotoSansDevanagari-Static.ttf}
+\newfontfamily\devanagarifont[
+  Path=../../_fonts/,
+  Script=Devanagari,
+  BoldFont=NotoSansDevanagari-Static.ttf,
+  ItalicFont=NotoSansDevanagari-Static.ttf,
+  BoldItalicFont=NotoSansDevanagari-Static.ttf
+]{NotoSansDevanagari-Static.ttf}
+\newfontfamily\arabicfont[
+  Path=../../_fonts/,
+  Script=Arabic,
+  BoldFont=NotoNaskhArabic-Static.ttf,
+  ItalicFont=NotoNaskhArabic-Static.ttf,
+  BoldItalicFont=NotoNaskhArabic-Static.ttf
+]{NotoNaskhArabic-Static.ttf}
+\newfontfamily\russianfont[
+  Path=../../_fonts/,
+  Script=Cyrillic,
+  BoldFont=NotoSansCyrillic-Static.ttf,
+  ItalicFont=NotoSansCyrillic-Static.ttf,
+  BoldItalicFont=NotoSansCyrillic-Static.ttf
+]{NotoSansCyrillic-Static.ttf}
+
+% Inline Hindi snippet within English text.
+\newcommand{\hi}[1]{\texthindi{#1}}
+\newcommand{\ar}[1]{\textarabic{#1}}
+\newcommand{\ru}[1]{\textrussian{#1}}
+\pdfstringdefDisableCommands{%
+  \def\hi#1{#1}% Keep script text while dropping font-only presentation.
+  \def\ar#1{#1}%
+  \def\ru#1{#1}%
+  \def\hindifont{}%
+  \def\devanagarifont{}%
+  \def\arabicfont{}%
+  \def\russianfont{}%
+}
+
+% Micro-lessons intentionally end at natural pause points instead of stretching
+% their callout boxes to force every page to the same depth. The small reserve
+% also lets prose choose a cleaner line break before it exceeds the measure.
+\raggedbottom
+\emergencystretch=2em
+% TeX's default 1000 threshold reports three visually sound lines in the
+% 1200--1900 range after choosing safer breaks. Keep reporting genuinely loose
+% lines while accepting those mild stretches.
+\hbadness=2000
+
+% Polyglossia's bidi support can leave running heads on the blank verso that
+% book.cls inserts before an open-right chapter. Keep the print-friendly verso,
+% but make it truly empty.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
+
+\hypersetup{
+  pdftitle={Hindi, Step by Step, Root by Root},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven Hindi curriculum},
+  pdfkeywords={Hindi, Sanskrit, Devanagari, language learning}
+}
+
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart --- its roots and family}
+}
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+\newtcolorbox{grammarlens}[1][]{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}, #1
+}
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The letters in this word}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}

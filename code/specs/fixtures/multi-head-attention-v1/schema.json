@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/multi-head-attention-v1.json",
+  "title": "Multi-head attention learning lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "token_ids", "embeddings", "heads", "output_projection", "normalization", "expected"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "head_count", "model_width", "head_width", "softmax", "causal_rule", "masked_score_encoding", "block_order", "layer_norm_variance"],
+      "properties": {
+        "kind": { "const": "two-head-causal-attention-add-norm" },
+        "head_count": { "const": 2 },
+        "model_width": { "const": 2 },
+        "head_width": { "const": 1 },
+        "softmax": { "const": "stable-row-wise" },
+        "causal_rule": { "const": "key-index-less-than-or-equal-query-index" },
+        "masked_score_encoding": { "const": "null" },
+        "block_order": { "const": "attention-output-projection-add-residual-layer-norm" },
+        "layer_norm_variance": { "const": "population" }
+      }
+    },
+    "token_ids": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "embeddings": { "$ref": "#/$defs/matrix3x2" },
+    "heads": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/headParameters" }
+    },
+    "output_projection": { "$ref": "#/$defs/matrix2x2" },
+    "normalization": { "$ref": "#/$defs/normalizationParameters" },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows"],
+      "properties": {
+        "rows": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/traceRow" } }
+      }
+    }
+  },
+  "$defs": {
+    "vector2": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+    "vector3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+    "boolean3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "boolean" } },
+    "nullableVector3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": ["number", "null"] } },
+    "matrix2x2": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/vector2" } },
+    "matrix3x2": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/vector2" } },
+    "headParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "query_projection", "key_projection", "value_projection"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "query_projection": { "$ref": "#/$defs/vector2" },
+        "key_projection": { "$ref": "#/$defs/vector2" },
+        "value_projection": { "$ref": "#/$defs/vector2" }
+      }
+    },
+    "normalizationParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epsilon", "gamma", "beta"],
+      "properties": {
+        "epsilon": { "type": "number", "exclusiveMinimum": 0 },
+        "gamma": { "$ref": "#/$defs/vector2" },
+        "beta": { "$ref": "#/$defs/vector2" }
+      }
+    },
+    "headTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "query_products", "query", "key_products", "keys", "value_products", "values", "scale_divisor", "scaled_scores", "allowed", "masked_scores", "row_max", "shifted_scores", "exponentials", "denominator", "weights", "value_contributions", "context"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "query_products": { "$ref": "#/$defs/vector2" },
+        "query": { "type": "number" },
+        "key_products": { "$ref": "#/$defs/matrix3x2" },
+        "keys": { "$ref": "#/$defs/vector3" },
+        "value_products": { "$ref": "#/$defs/matrix3x2" },
+        "values": { "$ref": "#/$defs/vector3" },
+        "scale_divisor": { "type": "number", "exclusiveMinimum": 0 },
+        "scaled_scores": { "$ref": "#/$defs/vector3" },
+        "allowed": { "$ref": "#/$defs/boolean3" },
+        "masked_scores": { "$ref": "#/$defs/nullableVector3" },
+        "row_max": { "type": "number" },
+        "shifted_scores": { "$ref": "#/$defs/nullableVector3" },
+        "exponentials": { "$ref": "#/$defs/vector3" },
+        "denominator": { "type": "number", "exclusiveMinimum": 0 },
+        "weights": { "$ref": "#/$defs/vector3" },
+        "value_contributions": { "$ref": "#/$defs/vector3" },
+        "context": { "type": "number" }
+      }
+    },
+    "layerNormTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean", "centered", "squared_deviations", "variance", "denominator", "normalized", "affine_products", "output"],
+      "properties": {
+        "mean": { "type": "number" },
+        "centered": { "$ref": "#/$defs/vector2" },
+        "squared_deviations": { "$ref": "#/$defs/vector2" },
+        "variance": { "type": "number", "minimum": 0 },
+        "denominator": { "type": "number", "exclusiveMinimum": 0 },
+        "normalized": { "$ref": "#/$defs/vector2" },
+        "affine_products": { "$ref": "#/$defs/vector2" },
+        "output": { "$ref": "#/$defs/vector2" }
+      }
+    },
+    "traceRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["token", "input", "heads", "concatenated", "output_projection_products", "projected_attention", "residual_sum", "layer_norm"],
+      "properties": {
+        "token": { "type": "string", "minLength": 1 },
+        "input": { "$ref": "#/$defs/vector2" },
+        "heads": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/headTrace" } },
+        "concatenated": { "$ref": "#/$defs/vector2" },
+        "output_projection_products": { "$ref": "#/$defs/matrix2x2" },
+        "projected_attention": { "$ref": "#/$defs/vector2" },
+        "residual_sum": { "$ref": "#/$defs/vector2" },
+        "layer_norm": { "$ref": "#/$defs/layerNormTrace" }
+      }
+    }
+  }
+}

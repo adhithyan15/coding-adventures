@@ -115,11 +115,13 @@ the handler and a `BindingKind::Let` binding for the catch param.
 
 ## End-to-end oracles (`closurec` diff fixtures)
 
-* **`simple-try-catch`** — at SIMPLE: a single-use function inlines, arithmetic
-  inside the try/catch blocks folds, dead-code after a `return` in the catch is
-  dropped, and `try`/`catch (e)`/`finally` survive verbatim. A companion
-  assertion proves the output is NOT the whitespace fallback (the `log` ⇒
-  `report` inline can only come from the typed pipeline).
+* **`simple-try-catch`** — at SIMPLE: arithmetic inside the try/catch blocks
+  folds, dead-code after a `return` in the catch is dropped, and
+  `try`/`catch (e)`/`finally` survive verbatim. `function log` is KEPT — SIMPLE
+  is open-world and never inlines or removes a top-level name (that inline is
+  ADVANCED-only). A companion assertion proves the output is NOT the whitespace
+  fallback (the unreachable `dead(99)` after `return` is dropped by DCE, which
+  only the typed pipeline runs).
 * **`advanced-try-catch-rename`** — at ADVANCED: `process`/`value`/`temp` get
   short names, uses inside both the try block and the catch body are rewritten,
   and the catch binding `err` is preserved verbatim and never aliased to a

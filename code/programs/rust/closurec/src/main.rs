@@ -57,6 +57,16 @@
 //! `(text, ExitCode)` so tests can exercise the whole pipeline
 //! without spawning the binary. `main` is a thin wrapper.
 
+// This crate is deliberately documentation-heavy (Knuth-style literate
+// programming): the module and item docs use prose paragraphs that follow
+// numbered/bulleted lists. clippy 1.97's doc-list-continuation lints flag those
+// as mis-indented list items; the formatting is intentional, so allow them
+// crate-wide rather than reflow authored prose.
+#![allow(
+    clippy::doc_lazy_continuation,
+    clippy::doc_overindented_list_items
+)]
+
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_str, Parser};
 use std::process::ExitCode;

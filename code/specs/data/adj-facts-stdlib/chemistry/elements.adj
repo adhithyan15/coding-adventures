@@ -1,0 +1,68 @@
+% ============================================================================
+% elements — the atomic number of the first twenty chemical elements
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% A chemistry facts library in the ADJ standard library — the kind a medicine
+% or science agent `import`s when it needs a grounded periodic-table fact:
+% "hydrogen is element number 1, oxygen is number 8." The atomic number is the
+% count of protons in an atom's nucleus, and it is what ORDERS the periodic
+% table. Recall is a binding query:
+%
+%     ? atomic_number(oxygen, $Z)          % 8
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `atomic_number(element, number)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% number WITH its source, on the CPU, with zero model calls, and abstains on an
+% element not in the table. The query also runs BACKWARD — bind the number and
+% recall the element:
+%
+%     ? atomic_number($E, 6)               % carbon
+%
+% Because the `number` value is a NUMBER (not a label), a recalled atomic number
+% composes straight into arithmetic: it IS the proton count, so `number` protons
+% is that value, and (for a neutral atom) the electron count too — the concrete
+% bridge from chemistry RECALL to COMPUTE.
+%
+% Provenance: every element name and its atomic number is copied verbatim from
+% the PubChem Periodic Table REST data endpoint (U.S. National Institutes of
+% Health / National Library of Medicine — a primary government chemical-data
+% source). The citable artifact is that JSON table at the `locator`; its columns
+% are declared, in order, `AtomicNumber, Symbol, Name`, so each row's first cell
+% is the atomic number and its third cell is the element name. The `source` span
+% below is the verbatim first data row, pairing atomic number 1 with Hydrogen.
+% `trust authoritative` — a primary government reference. Nothing here is
+% asserted from memory; the twenty pairs were read out of the fetched endpoint
+% and any pair that could not be verified there would have been dropped.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table atomic_number {
+    columns element, number
+
+    row (hydrogen, 1)
+    row (helium, 2)
+    row (lithium, 3)
+    row (beryllium, 4)
+    row (boron, 5)
+    row (carbon, 6)
+    row (nitrogen, 7)
+    row (oxygen, 8)
+    row (fluorine, 9)
+    row (neon, 10)
+    row (sodium, 11)
+    row (magnesium, 12)
+    row (aluminum, 13)
+    row (silicon, 14)
+    row (phosphorus, 15)
+    row (sulfur, 16)
+    row (chlorine, 17)
+    row (argon, 18)
+    row (potassium, 19)
+    row (calcium, 20)
+
+    source "\"1\",\n          \"H\",\n          \"Hydrogen\","
+    locator "https://pubchem.ncbi.nlm.nih.gov/rest/pug/periodictable/JSON"
+    trust authoritative
+}

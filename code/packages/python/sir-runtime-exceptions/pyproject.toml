@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sir-runtime-exceptions"
-version = "0.2.0"
+version = "0.3.0"
 description = "Exception runtime for Semantic-IR-emitted Python — SIR exception base class, raise helper, and rescue-clause class matching"
 requires-python = ">=3.12"
 dependencies = []

@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-07-13
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`create_s_parser`/`try_parse_s` built their `GrammarParser` with no
+recursion-depth cap, even though `s-repl` feeds this parser arbitrary,
+untrusted source at an interactive prompt. Deeply-nested input
+(`((((...))))`) would recurse until it overflowed the native thread stack —
+an uncatchable process abort — before this crate's own `Result`-returning
+entry points ever got a chance to report anything.
+
+Rather than reuse `r-parser`'s bespoke `MAX_RULE_DEPTH` unmeasured — the two
+grammars share rule names but are not byte-identical in compiled shape, and
+a sibling's measured floor is a prior, not a substitute for measuring this
+grammar's own native-stack behaviour — this crate's floor was measured
+independently the same way: binary-searching an *uncapped* parser against
+increasing real nesting depth on a default-stack worker thread (crashes at
+24 levels, safe at 23; in rule-frame terms, safe through at least 298 on the
+same 5000-level adversarial input, slightly higher than `r-parser`'s
+measured floor). `r-parser`'s value (200) was then confirmed safe here too,
+so both crates share the same cap now that it's independently verified for
+each.
+
+- Added `MAX_RULE_DEPTH: usize = 200` and wired it into both
+  `create_s_parser` and `try_parse_s` via `.with_max_depth(...)`.
+- 3 new regression tests, mirroring `r-parser`'s own:
+  `test_deeply_nested_input_returns_error_not_overflow` (5000 levels on a
+  32 MiB worker thread returns a clean `Err`, never crashes),
+  `test_nesting_up_to_cap_still_parses` (15 levels parse, 16 trips),
+  `test_opt_in_cap_trips_before_overflow_on_default_stack` (5000 levels on
+  a **default**-stack thread still returns `Err` cleanly, proving the cap
+  trips before the native stack would).
+
+No change to behaviour for any input that nests below the cap — every real
+S program and every existing test.
+
 ## [0.3.0] - 2026-06-19
 
 ### Changed

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/axiom-to-semantic-ir",
+  "capabilities": [],
+  "justification": "Pure compiler pass: walks an in-memory GrammarASTNode CST and builds an in-memory semantic_ir::Module. No filesystem, network, process, DOM, or environment access -- like every sibling `-to-semantic-ir` frontend (maple-to-semantic-ir, reduce-to-semantic-ir, derive-to-semantic-ir, idl-to-semantic-ir, ...), this crate does not even spawn a worker thread (axiom-parser's own MAX_RULE_DEPTH is already safe on a bare default stack)."
+}

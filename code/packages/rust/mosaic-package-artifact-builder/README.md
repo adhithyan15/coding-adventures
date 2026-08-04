@@ -31,9 +31,15 @@ written as a backend-agnostic `<Component>.lattice` sidecar beside the emitted
 component artifact.
 
 Set `BuildOptions::emit_project` to `true` to write backend project shells
-beside the component artifacts. React, HTML, WebComponent, Flutter, Qt,
-SwiftUI, and XAML all produce their shell side files from the same package
-source tree.
+beside the component artifacts. React, Electron, HTML, WebComponent, Flutter,
+Compose, Qt, SwiftUI, and XAML all produce their shell side files from the same
+package source tree. Typed `node` slots remain in-process host objects rather
+than serialized scalars: the generated shell resolves the matching native
+view, element, widget, composable, or QML/WinUI object through its optional
+`MosaicHost` contract.
+Compose Desktop shells also subscribe to the optional host's prop-change
+callback and include pinned JNA/JSON runtime support, so package-owned native
+adapters can publish live content-surface state back into generated controls.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative
@@ -71,6 +77,8 @@ so a fresh emitted project is runnable without a separate build step.
 | HTML | `.html` | wired |
 | XAML | `.xaml` | wired |
 | Flutter | `.dart` | wired |
+| Compose | `.kt` | wired |
+| Electron | `.tsx` | wired |
 
 ## Usage
 

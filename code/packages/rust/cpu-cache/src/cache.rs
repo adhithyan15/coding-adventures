@@ -477,8 +477,8 @@ mod tests {
         let access = cache.read(0x400, 5);
         assert!(!access.hit);
         // The evicted line (0x100) was dirty
-        if access.evicted.is_some() {
-            assert!(access.evicted.as_ref().unwrap().dirty);
+        if let Some(evicted) = access.evicted.as_ref() {
+            assert!(evicted.dirty);
         }
     }
 

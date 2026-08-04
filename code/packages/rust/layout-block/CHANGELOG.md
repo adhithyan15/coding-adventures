@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0] — atomic inline flow
+
+### Added
+- Consecutive `inline`, `inline-text`, and `inline-replaced` children now share
+  a line box and wrap atomically when the next child does not fit.
+- Explicit `line-break` display nodes advance to the next line while remaining
+  in the positioned tree.
+- Inline `Wrap` containers shrink to their occupied content width, preserving
+  useful geometry for links and other semantic inline wrappers.
+
+### Compatibility
+- Nodes without block display metadata remain block-level, preserving the
+  original document-layout behavior.
+- Full text-run fragmentation and baseline alignment remain explicit follow-up
+  work.
+
 ## [0.1.0] — initial release
 
 ### Added

@@ -342,6 +342,15 @@ module CodingAdventures
         # If the lexer already stripped quotes, return as-is.
         return s unless has_prefix || has_quotes
 
+        # A bare lexer value beginning with r/b is ordinary content, not a
+        # prefixed literal. Only treat prefix letters as syntax when the
+        # prefix run is immediately followed by a quote.
+        if has_prefix && !has_quotes
+          after_prefix = s.dup
+          after_prefix = after_prefix[1..] while !after_prefix.empty? && %w[r R b B].include?(after_prefix[0])
+          return s if after_prefix.empty? || !['"', "'"].include?(after_prefix[0])
+        end
+
         # Strip optional prefix (r, b, rb, br, etc.)
         raw = false
         while s.length > 0 && %w[r R b B].include?(s[0])
@@ -1208,7 +1217,9 @@ module CodingAdventures
         end
 
         if kw_count > 0
-          compiler.emit(Op::CALL_FUNCTION_KW, positional_count + kw_count)
+          # Preserve both counts. Keyword arguments occupy two stack slots
+          # (name, value), while positional arguments occupy one.
+          compiler.emit(Op::CALL_FUNCTION_KW, [positional_count, kw_count])
         else
           compiler.emit(Op::CALL_FUNCTION, positional_count)
         end

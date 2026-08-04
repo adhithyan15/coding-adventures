@@ -1,0 +1,4 @@
+--js
+tests/diff/rest-params/input/a.js
+--compilation_level
+SIMPLE

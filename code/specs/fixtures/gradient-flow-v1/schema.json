@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/gradient-flow-v1.json",
+  "title": "Gradient flow V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "scenarios", "expected"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "question": {"type": "string", "minLength": 1},
+    "absolute_tolerance": {"type": "number", "exclusiveMinimum": 0},
+    "concepts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "loss", "activation_derivative", "finite_difference_epsilon", "vanishing_threshold", "exploding_threshold"],
+      "properties": {
+        "kind": {"const": "scalar-gradient-flow"},
+        "loss": {"const": "half-squared-error"},
+        "activation_derivative": {"const": "saved-output"},
+        "finite_difference_epsilon": {"const": 1e-6},
+        "vanishing_threshold": {"const": 0.1},
+        "exploding_threshold": {"const": 10}
+      }
+    },
+    "scenarios": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/scenario"}},
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["traces"],
+      "properties": {"traces": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/trace"}}}
+    }
+  },
+  "$defs": {
+    "numberArray": {"type": "array", "minItems": 2, "items": {"type": "number"}},
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "input", "weights", "activation", "target"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "input": {"type": "number"},
+        "weights": {"$ref": "#/$defs/numberArray"},
+        "activation": {"enum": ["tanh", "relu"]},
+        "target": {"type": "number"}
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layer", "input", "weight", "preactivation", "activation", "activation_derivative", "local_jacobian", "upstream_gradient", "preactivation_gradient", "weight_gradient", "input_gradient"],
+      "properties": {
+        "layer": {"type": "integer", "minimum": 1},
+        "input": {"type": "number"},
+        "weight": {"type": "number"},
+        "preactivation": {"type": "number"},
+        "activation": {"type": "number"},
+        "activation_derivative": {"type": "number"},
+        "local_jacobian": {"type": "number"},
+        "upstream_gradient": {"type": "number"},
+        "preactivation_gradient": {"type": "number"},
+        "weight_gradient": {"type": "number"},
+        "input_gradient": {"type": "number"}
+      }
+    },
+    "trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "output", "output_error", "loss", "chain_jacobian", "input_gradient", "finite_difference_input_gradient", "finite_difference_error", "classification", "layers"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "output": {"type": "number"},
+        "output_error": {"type": "number"},
+        "loss": {"type": "number", "minimum": 0},
+        "chain_jacobian": {"type": "number"},
+        "input_gradient": {"type": "number"},
+        "finite_difference_input_gradient": {"type": "number"},
+        "finite_difference_error": {"type": "number", "minimum": 0},
+        "classification": {"enum": ["vanishing", "stable", "exploding"]},
+        "layers": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/layer"}}
+      }
+    }
+  }
+}

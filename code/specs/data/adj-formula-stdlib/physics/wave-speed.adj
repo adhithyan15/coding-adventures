@@ -1,0 +1,88 @@
+% ============================================================================
+% wave-speed.adj — the wave relation (v = f·λ) in the ADJ standard library.
+% ============================================================================
+% The wave-speed entry of the *physics* track, a sibling of `kinematics.adj`,
+% `momentum.adj` and `energy-work.adj`: the foundational wave relation a first course
+% states as THE SPEED OF A WAVE IS THE PRODUCT OF ITS FREQUENCY AND WAVELENGTH, as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the frequency a speed implies for a wavelength, and the wavelength
+% it implies for a frequency). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the physical quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited relation on
+% the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY, carrying the relation's citation.
+%
+%     import "wave-speed.adj"
+%     observe frequency(2)             % "…2 Hz…"    (span cited by the model)
+%     observe wavelength(3)            % "…3 m…"     (span cited by the model)
+%     ? wave_speed(frequency, wavelength)   % engine → 6, carrying v = f·λ
+%
+% All three formulas are EXACT over their parameters — one a product, two quotients
+% of measured quantities. There is no *separately grounded* physical constant here,
+% so every value the engine returns is exact. The three COMPOSE and invert cleanly:
+% the `wave_speed` a consumer computes from a frequency and a wavelength is exactly
+% the `wave_speed` the `frequency` formula divides by that wavelength to recover the
+% frequency, and exactly the `wave_speed` the `wavelength` formula divides by that
+% frequency to recover the wavelength.
+%
+%   wave_speed(frequency, wavelength) = frequency * wavelength   %  v = f·λ  (the wave relation)
+%   frequency(wave_speed, wavelength) = wave_speed / wavelength   %  f = v/λ  (same relation, solved for f)
+%   wavelength(wave_speed, frequency) = wave_speed / frequency    %  λ = v/f  (same relation, solved for λ)
+%
+% All three formulas are defended by the SAME sentence — "The relationship of the
+% speed of sound, its frequency, and wavelength is the same as for all waves:" —
+% because that one statement (which the page immediately writes as v = fλ, and which
+% it explicitly generalises to EVERY wave, not just sound) sanctions the relation read
+% every way (v from f and λ, f from v and λ, or λ from v and f). The quote is
+% transcribed verbatim from Physics LibreTexts (OpenStax College Physics — a primary
+% educational reference, the same publisher `molarity.adj` and `dilution.adj` cite for
+% chemistry), so each `formula` carries the provenance envelope every shipped grounded
+% clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the sentence is a verbatim span of the cited page,
+% not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable physical quantity the relation ranges
+% over, and each result is the derived quantity. `wave_speed`, `frequency` and
+% `wavelength` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended SI unit.
+% ----------------------------------------------------------------------------
+dictionary wave_speed_vocab {
+    define frequency  : finding  surface "frequency", "f"                        % frequency, e.g. Hz
+    define wavelength : finding  surface "wavelength", "lambda"                  % wavelength, e.g. m
+    define wave_speed : finding  surface "wave speed", "speed", "wave velocity"  % speed, e.g. m/s
+}
+
+% ----------------------------------------------------------------------------
+% The wave relation, all three ways. Each is a named, importable, reusable `let` over
+% its formal parameters, bound at apply time, and each carries the definitional quote
+% from Physics LibreTexts (a quote is required on a shipped formula). One is a product
+% and two are quotients, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook wave_speed_laws {
+    use wave_speed_vocab
+
+    % Wave speed — the product of frequency and wavelength. LibreTexts gives the speed
+    % of a wave as its frequency multiplied by its wavelength, i.e. v = f·λ.
+    formula wave_speed(frequency, wavelength) = frequency * wavelength
+        source "The relationship of the speed of sound, its frequency, and wavelength is the same as for all waves:"
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/17:_Physics_of_Hearing/17.02:_Speed_of_Sound_Frequency_and_Wavelength"
+        trust authoritative
+
+    % Frequency — the same relation solved for the frequency a speed implies for a
+    % wavelength (f = v/λ). Defended by the SAME sentence, read the other way.
+    formula frequency(wave_speed, wavelength) = wave_speed / wavelength
+        source "The relationship of the speed of sound, its frequency, and wavelength is the same as for all waves:"
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/17:_Physics_of_Hearing/17.02:_Speed_of_Sound_Frequency_and_Wavelength"
+        trust authoritative
+
+    % Wavelength — the same relation solved for the wavelength a speed implies for a
+    % frequency (λ = v/f). Again the SAME sentence, read the third way.
+    formula wavelength(wave_speed, frequency) = wave_speed / frequency
+        source "The relationship of the speed of sound, its frequency, and wavelength is the same as for all waves:"
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/17:_Physics_of_Hearing/17.02:_Speed_of_Sound_Frequency_and_Wavelength"
+        trust authoritative
+}

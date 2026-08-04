@@ -681,6 +681,10 @@ pub fn x25519_public_key(secret: &Scalar) -> MontgomeryPoint {
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
+// Field-element limbs below are hand-written radix-2^51 test vectors; the digit
+// grouping mirrors the limb boundaries rather than a uniform byte grouping, so the
+// cosmetic grouping lint is allowed for this test module. The numeric values are unchanged.
+#[allow(clippy::unusual_byte_groupings)]
 mod tests {
     use super::*;
 

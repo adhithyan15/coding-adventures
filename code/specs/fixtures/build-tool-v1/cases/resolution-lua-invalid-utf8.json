@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "resolution/lua-invalid-utf8",
+  "domain": "resolution",
+  "summary": "Lua rockspec metadata with invalid UTF-8 fails closed with a stable diagnostic.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/lua/pkg/BUILD",
+        "content_utf8": "echo \"building pkg\"\n"
+      },
+      {
+        "path": "code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec",
+        "content_base64": "cGFja2FnZSA9ICJjb2RpbmctYWR2ZW50dXJlcy1wa2ciCnZlcnNpb24gPSAiMC4xLjAtMSIKZGVwZW5kZW5jaWVzID0gewogICAgImx1YSA+PSA1LjQiLAp9Ci0tIGludmFsaWQgYnl0ZToglwo="
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "lua"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/lua-invalid-utf8",
+    "domain": "resolution",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [
+      {
+        "code": "METADATA_INVALID_UTF8",
+        "severity": "error",
+        "path": "code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec",
+        "package": "lua/pkg",
+        "details": {
+          "encoding": "UTF-8"
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

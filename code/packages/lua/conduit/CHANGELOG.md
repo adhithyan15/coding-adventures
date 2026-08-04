@@ -5,6 +5,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased
+
+### Fixed
+
+- Run the real-TCP E2E fixture through foreground `serve()` in a dedicated Lua
+  child process. The previous in-process `serve_background()` fixture allowed
+  Busted and native request threads to access one `lua_State` concurrently,
+  causing intermittent Linux segmentation faults.
+
 ## [1.0.0] — 2026-04-24
 
 ### Added

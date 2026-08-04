@@ -1,0 +1,95 @@
+% ============================================================================
+% maddrey-discriminant-function.adj — the Maddrey discriminant function
+% (DF = 4.6 × (patient PT − control PT) + total bilirubin) in the ADJ standard library.
+% ============================================================================
+% The Maddrey-discriminant-function entry of the *clinical* track — the 1977 severity score for
+% ALCOHOL-ASSOCIATED HEPATITIS that decides whether a patient is sick enough to warrant corticosteroids.
+% It combines the two labs that track how badly the liver is failing acutely: the prothrombin time (how
+% far coagulation-factor synthesis has fallen, measured against the lab's control PT) and the total serum
+% bilirubin (how far excretion has fallen). A value of 32 or more marks severe disease with a roughly
+% 50% 28-day mortality — the threshold at which steroids are considered. THE DISCRIMINANT FUNCTION IS 4.6
+% TIMES THE PATIENT'S PROTHROMBIN TIME MINUS THE CONTROL PROTHROMBIN TIME, PLUS THE TOTAL BILIRUBIN —
+% i.e. 4.6 × (patient PT − control PT) + total bilirubin. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its two exact rearrangements (the patient prothrombin time a given
+% DF implies, and the total bilirubin a given DF implies). As with every compute library, a consumer states
+% NO arithmetic: it `import`s this file, binds the two prothrombin times and the bilirubin from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "maddrey-discriminant-function.adj"
+%     observe pt(25)          % "…PT 25 s…"           (span cited by the model)
+%     observe control_pt(15)   % "…control PT 15 s…"   (span cited by the model)
+%     observe tbili(8)         % "…bilirubin 8…"       (span cited by the model)
+%     ? discriminant_function(pt, control_pt, tbili)   % engine → 54 (severe, ≥ 32)
+%
+% Structurally this is a CONSTANT-SCALED DIFFERENCE PLUS A TERM — the fixed 4.6 coefficient times the
+% prolongation of the prothrombin time (patient minus control), plus the bilirubin — a shape distinct from
+% the ratio, ratio-of-ratios, percentage-sum, product-over-constant, and chained-division forms of the
+% other clinical libraries. The 4.6 coefficient is the EXACT constant of the cited formula (not a
+% measurement); the formula is otherwise an exact expression over the three measured quantities, so every
+% value the engine returns is exact. The three formulas COMPOSE and invert cleanly around the worked case
+% patient PT = 25 s, control PT = 15 s, total bilirubin = 8 (DF = 4.6 × (25 − 15) + 8 = 46 + 8 = 54, well
+% above the 32 severe-disease threshold): the `discriminant_function` a consumer computes is exactly the
+% value each inverse formula back-solves to recover its own measured input (25, 8).
+%
+%   discriminant_function(pt, control_pt, tbili) = 4.6 * (pt - control_pt) + tbili   % (score)
+%   pt(discriminant_function, control_pt, tbili) = (discriminant_function - tbili) / 4.6 + control_pt   % (solved for patient PT)
+%   tbili(discriminant_function, pt, control_pt) = discriminant_function - 4.6 * (pt - control_pt)   % (solved for total bilirubin)
+%
+% NOTE ON UNITS AND MODELLING: the two prothrombin times are in seconds and the total bilirubin is in
+% mg/dL, as the cited (US-unit) form of the equation prints it (a μmol/L form divides the bilirubin by an
+% extra factor; this library grounds the mg/dL form exactly as printed). The discriminant function is a
+% plain dimensionless score. This library only COMPUTES the score; the interpretation (≥ 32 marking severe
+% disease and prompting consideration of corticosteroids) is stated by the cited source but is applied by
+% the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted discriminant-function equation — because
+% that one equation (4.6 × (patient PT − control PT) + total bilirubin) sanctions the relation read every
+% way. The quote is transcribed verbatim from the review article "Prognostic and diagnostic scoring models
+% in acute alcohol-associated hepatitis" on PubMed Central (a current, freely available NCBI-hosted
+% article), so each `formula` carries the provenance envelope every shipped grounded clause carries; the
+% linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula, including its 4.6
+% constant, is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `pt`, `control_pt`, `tbili` and `discriminant_function` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary maddrey_discriminant_function_vocab {
+    define pt                     : finding  surface "PT", "prothrombin time", "patient PT", "patient prothrombin time"  % seconds
+    define control_pt             : finding  surface "control PT", "control prothrombin time", "reference PT"            % seconds
+    define tbili                  : finding  surface "total bilirubin", "TBili", "serum bilirubin", "bilirubin"          % mg/dL
+    define discriminant_function  : finding  surface "discriminant function", "Maddrey discriminant function", "mDF", "MDF"  % score
+}
+
+% ----------------------------------------------------------------------------
+% The Maddrey discriminant function, three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the discriminant-function equation from the
+% cited PubMed Central review article (a quote is required on a shipped formula). Each is an exact
+% expression in the measured values and the cited 4.6 constant, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook maddrey_discriminant_function_laws {
+    use maddrey_discriminant_function_vocab
+
+    % Discriminant function — 4.6 times the prothrombin-time prolongation, plus the bilirubin.
+    formula discriminant_function(pt, control_pt, tbili) = 4.6 * (pt - control_pt) + tbili
+        source "Discriminant Function = 4.6 × (Pt's PT-control PT) + TBili"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10494564/"
+        trust authoritative
+
+    % Patient prothrombin time — the same equation solved for the patient PT. Defended by the SAME equation.
+    formula pt(discriminant_function, control_pt, tbili) = (discriminant_function - tbili) / 4.6 + control_pt
+        source "Discriminant Function = 4.6 × (Pt's PT-control PT) + TBili"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10494564/"
+        trust authoritative
+
+    % Total bilirubin — the same equation solved for the bilirubin, the third reading of the one score.
+    formula tbili(discriminant_function, pt, control_pt) = discriminant_function - 4.6 * (pt - control_pt)
+        source "Discriminant Function = 4.6 × (Pt's PT-control PT) + TBili"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10494564/"
+        trust authoritative
+}

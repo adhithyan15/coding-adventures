@@ -1,0 +1,19 @@
+% ============================================================================
+% genetic-code.query.adj — a worked recall over the standard-genetic-code library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does codon AUG code
+% for?": it states no biology fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `codon_amino_acid`
+% rows and returns the amino acid + the table's source/locator/trust. A triplet
+% that is not a real codon abstains honestly — the engine never invents a product.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli genetic-code.query.adj
+% ============================================================================
+
+import "genetic-code.adj"
+
+? codon_amino_acid(atg, $A)      % expect m    — methionine, also the START codon
+? codon_amino_acid(taa, $A)      % expect stop — a STOP codon terminates translation
+? codon_amino_acid(gag, $A)      % expect e    — glutamate (sickle-cell wild-type)
+? codon_amino_acid(xyz, $A)      % expect abstain — `xyz` is not a codon

@@ -1,0 +1,21 @@
+% ============================================================================
+% blood-cell-types.query.adj — a worked recall over the biology blood-cell library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what do red blood cells
+% do?": it states no biology fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `blood_cell_function` rows and returns the function atom + the table's
+% source/locator/trust. The third query runs the relation BACKWARD (bind the
+% job, recall the cell). Something that is not one of the three blood cell
+% types abstains honestly — the engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli blood-cell-types.query.adj
+% ============================================================================
+
+import "blood-cell-types.adj"
+
+? blood_cell_function(red_blood_cells, $F)   % expect carry_oxygen
+? blood_cell_function(platelets, $F)         % expect clotting
+? blood_cell_function($C, fight_infection)   % expect white_blood_cells — the reverse recall
+? blood_cell_function(neuron, $F)            % expect abstain — a nerve cell, not a blood cell

@@ -21,6 +21,26 @@ final class WaveTests: XCTestCase {
         XCTAssertEqual(w.phase, Double.pi / 2, accuracy: eps)
     }
 
+    func testCheckedConstructionRejectsNonfiniteValuesAndAngularOverflow() {
+        let invalid: [(Double, Double, Double)] = [
+            (.nan, 1.0, 0.0),
+            (.infinity, 1.0, 0.0),
+            (1.0, .nan, 0.0),
+            (1.0, .infinity, 0.0),
+            (1.0, .greatestFiniteMagnitude, 0.0),
+            (1.0, 1.0, .nan),
+            (1.0, 1.0, .infinity),
+        ]
+
+        for (amplitude, frequency, phase) in invalid {
+            XCTAssertThrowsError(
+                try Wave(
+                    validatingAmplitude: amplitude,
+                    frequency: frequency,
+                    phase: phase))
+        }
+    }
+
     // ========================================================================
     // MARK: - Derived Properties
     // ========================================================================
@@ -78,6 +98,39 @@ final class WaveTests: XCTestCase {
     func testZeroAmplitude() {
         let w = Wave(amplitude: 0.0, frequency: 1.0)
         XCTAssertEqual(w.evaluate(at: 0.5), 0.0, accuracy: eps)
+    }
+
+    func testCheckedEvaluationRejectsNonfiniteTime() throws {
+        let wave = try Wave(validatingAmplitude: 0.0, frequency: 1.0)
+        for time in [Double.nan, .infinity, -.infinity] {
+            XCTAssertThrowsError(try wave.evaluateChecked(at: time))
+        }
+    }
+
+    func testCheckedExtremeInputsStayFiniteAndBounded() throws {
+        let zero = try Wave(
+            validatingAmplitude: 0.0,
+            frequency: 1e300,
+            phase: Double.pi / 2.0)
+        let zeroResult = try zero.evaluateChecked(at: .greatestFiniteMagnitude)
+        XCTAssertEqual(zeroResult.bitPattern, 0)
+
+        let extreme = try Wave(
+            validatingAmplitude: .greatestFiniteMagnitude,
+            frequency: 1e300,
+            phase: Double.pi / 2.0)
+        let result = try extreme.evaluateChecked(at: .greatestFiniteMagnitude)
+        XCTAssertTrue(result.isFinite)
+        XCTAssertLessThanOrEqual(abs(result), Double.greatestFiniteMagnitude)
+
+        let subnormal = try Wave(
+            validatingAmplitude: 1.0,
+            frequency: .leastNonzeroMagnitude,
+            phase: .greatestFiniteMagnitude)
+        XCTAssertEqual(subnormal.period, .infinity)
+        let subnormalResult = try subnormal.evaluateChecked(at: .greatestFiniteMagnitude)
+        XCTAssertTrue(subnormalResult.isFinite)
+        XCTAssertLessThanOrEqual(abs(subnormalResult), 1.0)
     }
 
     // ========================================================================

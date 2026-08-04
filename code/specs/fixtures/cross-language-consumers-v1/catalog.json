@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "weighted-neuron-language-consumers",
+  "title": "One weighted neuron across three language families",
+  "question": "Can native programs in different language families read one fixture and earn the same prediction?",
+  "source_fixture": "code/specs/fixtures/neural-learning-v1/labs/00-weighted-neuron.json",
+  "protocol": {
+    "command": "python code/scripts/validate_cross_language_fixture_consumers.py",
+    "success_exit_code": 0,
+    "steps": [
+      "read the same committed NN03 JSON fixture without translating it",
+      "recompute each weighted contribution, the bias addition, and the identity activation",
+      "emit one closed JSON receipt on standard output with no explanatory noise",
+      "compare every lane with the fixture expectation and its declared absolute tolerance"
+    ],
+    "receipt_keys": [
+      "schema_version",
+      "lane_id",
+      "fixture_id",
+      "row",
+      "contributions",
+      "bias",
+      "preactivation",
+      "prediction",
+      "maximum_absolute_error",
+      "passes"
+    ]
+  },
+  "hand_check": {
+    "input": [2.0, -1.0],
+    "weights": [0.5, -0.25],
+    "contributions": [1.0, 0.25],
+    "bias": 0.1,
+    "preactivation": 1.35,
+    "activation": "identity",
+    "prediction": 1.35,
+    "absolute_tolerance": 0.000001
+  },
+  "lanes": [
+    {
+      "id": "go-native",
+      "language": "Go",
+      "family": "compiled-garbage-collected",
+      "execution": "native",
+      "working_directory": "code/programs/go/neural-fixture-consumer",
+      "command": ["go", "run", ".", "--fixture", "{fixture}"],
+      "source": "code/programs/go/neural-fixture-consumer/main.go"
+    },
+    {
+      "id": "ruby-native",
+      "language": "Ruby",
+      "family": "dynamic-interpreted",
+      "execution": "native",
+      "working_directory": ".",
+      "command": ["ruby", "code/programs/ruby/neural-fixture-consumer/main.rb", "--fixture", "{fixture}"],
+      "source": "code/programs/ruby/neural-fixture-consumer/main.rb"
+    },
+    {
+      "id": "rust-native",
+      "language": "Rust",
+      "family": "systems-native",
+      "execution": "native",
+      "working_directory": ".",
+      "command": ["cargo", "run", "--quiet", "--manifest-path", "code/programs/rust/neural-fixture-consumer/Cargo.toml", "--", "--fixture", "{fixture}"],
+      "source": "code/programs/rust/neural-fixture-consumer/src/main.rs"
+    }
+  ]
+}

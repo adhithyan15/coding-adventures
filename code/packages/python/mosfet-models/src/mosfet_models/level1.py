@@ -8,9 +8,11 @@ analytical Jacobian. Pedagogy-grade — for hand calculations and the canonical
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import exp, sqrt
+from math import exp, isfinite, sqrt
 
 from device_physics import thermal_voltage
+
+OXIDE_PERMITTIVITY = 3.453133e-11
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,7 +27,22 @@ class Level1Params:
     PHI: float = 0.84  # surface potential at threshold, 2*phi_F (V)
     W: float = 1e-6  # channel width (m)
     L: float = 130e-9  # channel length (m)
+    LD: float = 0.0  # source/drain lateral diffusion length (m)
+    TOX: float = 1e-7  # gate oxide thickness (m)
+    U0: float = 600.0  # zero-bias surface mobility (cm^2/V/s)
+    RD: float = 0.0  # external drain resistance (ohm)
+    RS: float = 0.0  # external source resistance (ohm)
+    RSH: float = 0.0  # drain/source sheet resistance (ohm per square)
+    NRD: float = 1.0  # number of drain diffusion squares
+    NRS: float = 1.0  # number of source diffusion squares
+    AD: float = 0.0  # drain diffusion area (m^2)
+    AS: float = 0.0  # source diffusion area (m^2)
+    PD: float = 0.0  # drain diffusion perimeter (m)
+    PS: float = 0.0  # source diffusion perimeter (m)
+    CJ: float = 0.0  # bottom junction capacitance per area (F/m^2)
+    CJSW: float = 0.0  # sidewall junction capacitance per perimeter (F/m)
     IS: float = 1e-15  # saturation current (A)
+    JS: float = 0.0  # saturation current density (A/m^2)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
     CGSO: float = 0.0  # gate-source overlap capacitance per width (F/m)
@@ -35,6 +52,10 @@ class Level1Params:
     CBD: float = 0.0  # drain-bulk zero-bias junction capacitance (F)
     PB: float = 0.8  # bulk junction potential (V)
     MJ: float = 0.5  # bulk junction grading coefficient
+    MJSW: float = 0.33  # sidewall junction grading coefficient
+    FC: float = 0.5  # forward-bias depletion transition coefficient
+    KF: float = 0.0  # flicker-noise coefficient
+    AF: float = 1.0  # flicker-noise drain-current exponent
     subthreshold_enable: bool = True
 
 
@@ -59,6 +80,7 @@ def bulk_junction_capacitance(
     junction_voltage: float,
     junction_potential: float,
     grading_coefficient: float,
+    forward_bias_coefficient: float = 0.5,
 ) -> float:
     """Return the Level-1 bulk-junction depletion capacitance.
 
@@ -68,10 +90,28 @@ def bulk_junction_capacitance(
 
     if zero_bias_capacitance <= 0.0:
         return zero_bias_capacitance
+    if (
+        not isfinite(forward_bias_coefficient)
+        or forward_bias_coefficient < 0.0
+        or forward_bias_coefficient >= 1.0
+    ):
+        raise ValueError("MOSFET FC must be finite and in [0, 1)")
     if junction_potential <= 0.0 or grading_coefficient == 0.0:
         return zero_bias_capacitance
-    reverse_scale = max(0.0, -junction_voltage) / junction_potential
-    return zero_bias_capacitance / ((1.0 + reverse_scale) ** grading_coefficient)
+    normalized_voltage = junction_voltage / junction_potential
+    if normalized_voltage < forward_bias_coefficient:
+        return zero_bias_capacitance / (
+            (1.0 - normalized_voltage) ** grading_coefficient
+        )
+    denominator = (1.0 - forward_bias_coefficient) ** (
+        1.0 + grading_coefficient
+    )
+    continuation = (
+        1.0
+        - forward_bias_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage
+    )
+    return zero_bias_capacitance * continuation / denominator
 
 
 def evaluate_level1(
@@ -87,7 +127,44 @@ def evaluate_level1(
     sign of inputs/outputs externally.
     """
     p = params
-    beta = p.KP * (p.W / p.L)
+    if not isfinite(p.FC) or p.FC < 0.0 or p.FC >= 1.0:
+        raise ValueError("MOSFET FC must be finite and in [0, 1)")
+    effective_length = p.L - 2.0 * p.LD
+    if not isfinite(p.LD) or p.LD < 0.0 or effective_length <= 0.0:
+        raise ValueError(
+            "MOSFET LD must be finite and non-negative with L - 2*LD > 0"
+        )
+    if not isfinite(p.TOX) or p.TOX <= 0.0:
+        raise ValueError("MOSFET TOX must be finite and positive")
+    if not isfinite(p.U0) or p.U0 < 0.0:
+        raise ValueError("MOSFET U0 must be finite and non-negative")
+    if not isfinite(p.RD) or p.RD < 0.0:
+        raise ValueError("MOSFET RD must be finite and non-negative")
+    if not isfinite(p.RS) or p.RS < 0.0:
+        raise ValueError("MOSFET RS must be finite and non-negative")
+    if not isfinite(p.RSH) or p.RSH < 0.0:
+        raise ValueError("MOSFET RSH must be finite and non-negative")
+    if not isfinite(p.NRD) or p.NRD < 0.0:
+        raise ValueError("MOSFET NRD must be finite and non-negative")
+    if not isfinite(p.NRS) or p.NRS < 0.0:
+        raise ValueError("MOSFET NRS must be finite and non-negative")
+    if not isfinite(p.AD) or p.AD < 0.0:
+        raise ValueError("MOSFET AD must be finite and non-negative")
+    if not isfinite(p.AS) or p.AS < 0.0:
+        raise ValueError("MOSFET AS must be finite and non-negative")
+    if not isfinite(p.PD) or p.PD < 0.0:
+        raise ValueError("MOSFET PD must be finite and non-negative")
+    if not isfinite(p.PS) or p.PS < 0.0:
+        raise ValueError("MOSFET PS must be finite and non-negative")
+    if not isfinite(p.CJ) or p.CJ < 0.0:
+        raise ValueError("MOSFET CJ must be finite and non-negative")
+    if not isfinite(p.CJSW) or p.CJSW < 0.0:
+        raise ValueError("MOSFET CJSW must be finite and non-negative")
+    if not isfinite(p.JS) or p.JS < 0.0:
+        raise ValueError("MOSFET JS must be finite and non-negative")
+    if not isfinite(p.MJSW) or p.MJSW < 0.0:
+        raise ValueError("MOSFET MJSW must be finite and non-negative")
+    beta = p.KP * (p.W / effective_length)
 
     # Threshold with body effect. The formula is well-defined whenever
     # PHI - V_BS >= 0 (sqrt domain). If V_BS rises above PHI (heavy forward
@@ -102,12 +179,28 @@ def evaluate_level1(
 
     Cgs_overlap = p.CGSO * p.W
     Cgd_overlap = p.CGDO * p.W
-    Cgb_overlap = p.CGBO * p.L
-    Cgs_intrinsic = (2.0 / 3.0) * p.W * p.L * p.KP / 1.0  # placeholder; Meyer model
+    Cgb_overlap = p.CGBO * effective_length
+    channel_capacitance = (
+        p.W * effective_length * OXIDE_PERMITTIVITY / p.TOX
+    )
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
-    Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ)
-    Cbd_bulk = bulk_junction_capacitance(p.CBD, V_BS - V_DS, p.PB, p.MJ)
+    Cbs_bulk = bulk_junction_capacitance(
+        p.CBS + p.CJ * p.AS,
+        V_BS,
+        p.PB,
+        p.MJ,
+        p.FC,
+    ) + bulk_junction_capacitance(p.CJSW * p.PS, V_BS, p.PB, p.MJSW, p.FC)
+    Cbd_bulk = bulk_junction_capacitance(
+        p.CBD + p.CJ * p.AD,
+        V_BS - V_DS,
+        p.PB,
+        p.MJ,
+        p.FC,
+    ) + bulk_junction_capacitance(
+        p.CJSW * p.PD, V_BS - V_DS, p.PB, p.MJSW, p.FC
+    )
 
     if V_OV <= 0:
         # Cutoff — optionally subthreshold.
@@ -122,7 +215,7 @@ def evaluate_level1(
             gds_sub = (beta * n * V_T) * exp(V_OV / (n * V_T)) * exp(-V_DS / V_T)
             return MosResult(
                 Id=Id_sub, gm=gm_sub, gds=gds_sub, gmb=0.0,
-                Cgs=Cgs_overlap + Cgs_intrinsic,
+                Cgs=Cgs_overlap + channel_capacitance,
                 Cgd=Cgd_overlap + Cgd_intrinsic,
                 Cgb=Cgb_overlap + Cgb_intrinsic,
                 Cbs=Cbs_bulk,
@@ -131,7 +224,7 @@ def evaluate_level1(
             )
         return MosResult(
             Id=0.0, gm=0.0, gds=0.0, gmb=0.0,
-            Cgs=Cgs_overlap + Cgs_intrinsic,
+            Cgs=Cgs_overlap + channel_capacitance,
             Cgd=Cgd_overlap + Cgd_intrinsic,
             Cgb=Cgb_overlap + Cgb_intrinsic,
             Cbs=Cbs_bulk,
@@ -155,8 +248,8 @@ def evaluate_level1(
             gmb = 0.0
         return MosResult(
             Id=Id, gm=gm, gds=gds, gmb=gmb,
-            Cgs=Cgs_overlap + Cgs_intrinsic / 2.0,
-            Cgd=Cgd_overlap + Cgd_intrinsic / 2.0,
+            Cgs=Cgs_overlap + channel_capacitance / 2.0,
+            Cgd=Cgd_overlap + channel_capacitance / 2.0,
             Cgb=Cgb_overlap + Cgb_intrinsic,
             Cbs=Cbs_bulk,
             Cbd=Cbd_bulk,
@@ -174,7 +267,7 @@ def evaluate_level1(
         gmb = 0.0
     return MosResult(
         Id=Id, gm=gm, gds=gds, gmb=gmb,
-        Cgs=Cgs_overlap + (2.0 / 3.0) * Cgs_intrinsic,
+        Cgs=Cgs_overlap + (2.0 / 3.0) * channel_capacitance,
         Cgd=Cgd_overlap,
         Cgb=Cgb_overlap,
         Cbs=Cbs_bulk,

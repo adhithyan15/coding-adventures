@@ -31,6 +31,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -88,6 +89,22 @@ func main() {
 	os.Exit(run())
 }
 
+func formatResolverError(err error) (string, int) {
+	var encodingError *resolver.MetadataEncodingError
+	if errors.As(err, &encodingError) {
+		return encodingError.Error(), 2
+	}
+	return fmt.Sprintf("Error: %v", err), 1
+}
+
+func formatDiscoveryError(err error) (string, int) {
+	var duplicateError *discovery.DuplicatePackageIdentityError
+	if errors.As(err, &duplicateError) {
+		return duplicateError.Error(), 2
+	}
+	return fmt.Sprintf("Error: %v", err), 1
+}
+
 // expandAffectedSetWithPrereqs ensures all transitive prerequisites of the
 // currently affected packages are also scheduled. This matters on fresh CI
 // runners: some package BUILD steps materialize local dependency state
@@ -141,7 +158,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, wasm, csharp, fsharp, dotnet, all")
+	language := flag.String("language", "all", "Filter to a canonical package language or all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
@@ -151,6 +168,7 @@ func run() int {
 	shardIndex := flag.Int("shard-index", -1, "Run only the selected shard from a build plan")
 	emitShardMatrix := flag.Bool("emit-shard-matrix", false, "Output build_shards JSON for GitHub Actions matrix expansion")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
+	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
 	flag.Parse()
 
@@ -319,7 +337,12 @@ func run() int {
 
 	if !usedPlan {
 		// Step 2: Discover packages.
-		packages = discovery.DiscoverPackages(codeRoot)
+		packages, err = discovery.DiscoverPackages(codeRoot)
+		if err != nil {
+			message, exitCode := formatDiscoveryError(err)
+			fmt.Fprintln(os.Stderr, message)
+			return exitCode
+		}
 		if len(packages) == 0 {
 			fmt.Fprintln(os.Stderr, "No packages found.")
 			return 0
@@ -380,7 +403,12 @@ func run() int {
 		fmt.Printf("Discovered %d packages\n", len(packages))
 
 		// Step 4: Resolve dependencies.
-		graph = resolver.ResolveDependencies(packages)
+		graph, err = resolver.ResolveDependencies(packages)
+		if err != nil {
+			message, exitCode := formatResolverError(err)
+			fmt.Fprintln(os.Stderr, message)
+			return exitCode
+		}
 
 		// Step 5: Git-diff change detection (default mode).
 		// Git is the source of truth — no cache file needed for primary workflow.
@@ -510,6 +538,7 @@ func run() int {
 		*jobs,
 		affectedSet,
 		tracker,
+		*clippy,
 	)
 
 	if tracker != nil {
@@ -537,7 +566,7 @@ func run() int {
 
 // allToolchains is the canonical list of build toolchains we may need in CI.
 // The order is stable and matches the order used in CI setup.
-var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "dotnet"}
+var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "dotnet", "cpp"}
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {
@@ -545,6 +574,11 @@ func toolchainForPackageLanguage(language string) string {
 		return "rust"
 	case "csharp", "fsharp", "dotnet":
 		return "dotnet"
+	case "c", "cpp":
+		// C and C++ share compilers (gcc/g++, clang/clang++, cl.exe), so a
+		// single "cpp" toolchain installs the compilers for both languages —
+		// mirroring the csharp/fsharp → dotnet collapse above.
+		return "cpp"
 	default:
 		return language
 	}

@@ -60,6 +60,8 @@ var sourceExtensions = map[string]map[string]bool{
 	"starlark":   {".star": true},
 	"perl":       {".pl": true, ".pm": true, ".t": true, ".xs": true},
 	"haskell":    {".hs": true, ".cabal": true},
+	"java":       {".java": true},
+	"kotlin":     {".kt": true, ".kts": true},
 	// .cs and .fs are C# and F# source files. .csproj and .fsproj are the
 	// project manifests — equivalent to Cargo.toml or go.mod. Changes to
 	// any of these should invalidate the build cache and trigger a rebuild.
@@ -79,6 +81,8 @@ var specialFilenames = map[string]map[string]bool{
 	"starlark":   {},
 	"perl":       {"Makefile.PL": true, "Build.PL": true, "cpanfile": true, "MANIFEST": true, "META.json": true, "META.yml": true},
 	"haskell":    {},
+	"java":       {"settings.gradle.kts": true, "build.gradle.kts": true},
+	"kotlin":     {"settings.gradle.kts": true, "build.gradle.kts": true},
 	// global.json pins the .NET SDK version — a change here should trigger
 	// a rebuild even if no source files changed. NuGet.Config controls the
 	// package feed sources (case-insensitive filename on Windows, so both

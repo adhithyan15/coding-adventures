@@ -1,9 +1,36 @@
 # Changelog
 
+- Add local API labels for typed camera PTZ preset recall and bounded movement.
+
+- Expose device indicator/display and sensor calibration command labels through
+  the local smart-home API contract.
+
 All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add the stable `camera_set_recording` local API command label.
+- Add stable local API labels for typed device-configuration commands.
+
+- Added round-trippable local API labels for D23 media playback, volume,
+  grouping, and queue command types.
+- Added `lan_tcp` bridge transport projection and request parsing.
+- Added `lan_udp` bridge transport projection and request parsing.
+- Added camera entity labels and Home Assistant-compatible `camera` domains to
+  the local API projection.
+- Added an operational browser dashboard for native migrated views, runtime
+  inventory and health, automation definitions and audit, pairing sessions,
+  state history, and command/authorization audit. The durable controller can
+  load validated raw or applied dashboard manifests before binding.
+- Added native dashboard-manifest and pairing-session list/detail routes.
+- Added a restart-safe automation runtime to the production controller, a local
+  schedule worker, and native definition, evaluation, dry-run, and audit API
+  routes with atomic persistence rollback.
+- Added a production `smart-home-local-controller` binary that restores the
+  durable runtime store, uses a live clock, and atomically persists authorized
+  desired-state and service mutations before returning success.
+- Added persistence-failure rollback and local-folder restart tests so an HTTP
+  mutation either survives a fresh store instance or remains unapplied.
 - Added a Home Assistant-compatible read-only local API `web-core::WebApp` for
   config, state, services, and events over smart-home runtime snapshots.
 - Added a local-controller smoke script export generated from the runtime smoke

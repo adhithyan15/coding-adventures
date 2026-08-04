@@ -477,7 +477,7 @@ pub fn import_anki_notes_tsv(
         };
 
         cards.extend(
-            generate_cards_for_note(&note_type, &note)
+            generate_cards_for_note(note_type, &note)
                 .iter()
                 .map(|generated| materialize_generated_card(generated, options.created_at)),
         );

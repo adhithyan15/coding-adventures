@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-agent-stdio-host"
+version = "0.1.0"
+edition = "2021"
+description = "Level 4 subprocess host over Chief channels and JSON lines"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-agent-stdio-protocol = { path = "../chief-of-staff-agent-stdio-protocol" }
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+
+[[bin]]
+name = "chief-agent-stdio-test-child"
+path = "src/bin/chief_agent_stdio_test_child.rs"
+test = false

@@ -1,0 +1,90 @@
+% ============================================================================
+% gravitation.adj — Newton's law of universal gravitation for the ADJ compute
+% stdlib (ADJ-FORMULA-LIBRARIES §4, SCIENCE track / physics layer).
+% ============================================================================
+% A companion to `physics/mechanics-laws.adj`: where that file ships the leaf
+% laws a student memorizes (F = m·a, V = I·R, ρ = m/V, v = d/t), this ships the
+% single most-cited *inverse-square* law of classical physics — Newton's law of
+% universal gravitation:
+%
+%       G · m₁ · m₂
+%   F = ───────────          (the attractive force between two point masses)
+%           r²
+%
+% The contract is the whole point of the ladder: THE MODEL DOES ZERO ARITHMETIC.
+% A consumer states no math. It `import`s this file, binds the three quantities
+% from its own byte-provenance decomposition of the input, and asks the engine
+% to APPLY the cited law on the CPU. The engine computes exactly, and the answer
+% carries the law's citation — so the derivation is auditable end to end:
+%
+%     import "gravitation.adj"
+%     observe mass_one(5.972e24)                 % "…Earth's mass 5.972×10²⁴ kg…" (span cited)
+%     observe mass_two(7.348e22)                 % "…the Moon's 7.348×10²² kg…"    (span cited)
+%     observe distance(3.844e8)                  % "…384 400 km apart…"            (span cited)
+%     ? gravitational_force(mass_one, mass_two, distance)   % engine → ≈1.98×10²⁰ N
+%
+% The law (and its source) live HERE; the numbers (and their spans) come from
+% the input. A science/medicine agent that needs "the gravitational force
+% between two bodies" RECALLS which law applies and BINDS the numbers — it never
+% re-derives F = G·m₁·m₂/r².
+%
+% Why the constant is the crux. The relationship F ∝ m₁m₂/r² is the *structure*;
+% the Newtonian constant of gravitation G is the *magnitude*, and getting G wrong
+% by a decimal place is the whole answer wrong. So G is grounded to the primary
+% metrological authority — the NIST CODATA 2022 recommended value,
+% 6.674 30 × 10⁻¹¹ m³ kg⁻¹ s⁻² — copied VERBATIM into the formula's `source`, with
+% the NIST value page as the `locator`, at `authoritative` trust. The
+% inverse-square *form* composes from the arithmetic primitives already in the
+% stdlib (multiply, divide) applied to the parameter leaves; only the constant
+% needs external grounding, and it is grounded to the definitive source.
+%
+% Run a worked consumer (from a directory it can resolve this import from):
+%     adj-lang-cli gravitation.query.adj
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each term is an observable physical quantity the law ranges over.
+% rung-0's grammar types an observable slot as `finding` (dimensional typing of
+% formula parameters is a later rung — but the engine already INFERS and CHECKS
+% dimensions when a formula is APPLIED, so kg × kg / m² carries through and a
+% unit mismatch is an error, not a silent coercion). The intended dimension of
+% each term is recorded in the trailing comment, and the `surface` synonyms let a
+% decomposer map everyday phrasing onto the canonical term.
+%
+%   Term                Dimension                  Role in F = G·m₁·m₂/r²
+%   ----                ---------                  ----------------------
+%   mass_one            mass (kg)                  first body's mass, m₁
+%   mass_two            mass (kg)                  second body's mass, m₂
+%   distance            length (m)                 centre-to-centre separation, r
+%   gravitational_force mass·length/time² (N)      attractive force, F
+% ----------------------------------------------------------------------------
+dictionary gravitation_vocab {
+    define mass_one            : finding  surface "first mass", "m1", "mass of the first body", "M"    % mass, e.g. kg
+    define mass_two            : finding  surface "second mass", "m2", "mass of the second body"       % mass, e.g. kg
+    define distance            : finding  surface "distance", "separation", "r", "distance between centres" % length, e.g. m
+    define gravitational_force : finding  surface "gravitational force", "force of gravity", "F"       % mass · length / time² (newtons)
+}
+
+% ----------------------------------------------------------------------------
+% The law. A named, importable, reusable `let` over its formal parameters — the
+% SAME expression grammar `let` uses, with the parameter leaves bound at apply
+% time. The provenance clause is the envelope every grounded clause carries: the
+% constant G is quoted VERBATIM from the NIST CODATA value page (the definitive
+% metrological source), the `locator` resolves to that page, and the trust tier
+% is `authoritative`. The inverse-square denominator `distance * distance` is r²
+% composed from the multiply primitive; the whole body composes G·m₁·m₂ / r².
+% ----------------------------------------------------------------------------
+formulabook physics_gravitation {
+    use gravitation_vocab
+
+    % Newton's law of universal gravitation — every point mass attracts every
+    % other with a force proportional to the product of their masses and
+    % inversely proportional to the square of the distance between them.
+    % F = G · m₁ · m₂ / r², with G = 6.674 30 × 10⁻¹¹ m³ kg⁻¹ s⁻² (NIST CODATA
+    % 2022, the exact recommended value → authoritative).
+    formula gravitational_force(mass_one, mass_two, distance) =
+        6.67430e-11 * mass_one * mass_two / (distance * distance)
+        source "Newtonian constant of gravitation: Numerical value 6.674 30 x 10-11 m3 kg-1 s-2 (Standard uncertainty 0.000 15 x 10-11 m3 kg-1 s-2), CODATA 2022 recommended value."
+        locator "https://physics.nist.gov/cgi-bin/cuu/Value?bg"
+        trust authoritative
+}

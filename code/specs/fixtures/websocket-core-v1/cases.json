@@ -1,0 +1,541 @@
+{
+  "schema_version": 1,
+  "contract": "websocket-core-v1",
+  "cases": [
+    {
+      "id": "accept-rfc-example",
+      "operation": "derive_accept",
+      "input": { "key": "dGhlIHNhbXBsZSBub25jZQ==" },
+      "expected": { "accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo=" }
+    },
+    {
+      "id": "client-request-rfc-nonce",
+      "operation": "build_client_request",
+      "input": {
+        "host": "server.example.com",
+        "target": "/chat",
+        "nonce_hex": "7468652073616d706c65206e6f6e6365"
+      },
+      "expected": {
+        "request": "GET /chat HTTP/1.1\r\nHost: server.example.com\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n",
+        "expected_accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
+      }
+    },
+    {
+      "id": "client-request-host-injection",
+      "operation": "build_client_request",
+      "input": {
+        "host": "server.example.com\r\nX-Leak: payload",
+        "target": "/chat",
+        "nonce_hex": "000102030405060708090a0b0c0d0e0f"
+      },
+      "expected": {
+        "error": "header_injection",
+        "diagnostic": "websocket: unsafe handshake field"
+      }
+    },
+    {
+      "id": "client-request-target-invalid",
+      "operation": "build_client_request",
+      "input": {
+        "host": "server.example.com",
+        "target": "chat",
+        "nonce_hex": "000102030405060708090a0b0c0d0e0f"
+      },
+      "expected": {
+        "error": "header_injection",
+        "diagnostic": "websocket: unsafe handshake field"
+      }
+    },
+    {
+      "id": "client-response-valid-coalesced",
+      "operation": "validate_client_response",
+      "input": {
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\n\r\n",
+        "tail_hex": "8100",
+        "expected_accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
+      },
+      "expected": { "consumed": 129 }
+    },
+    {
+      "id": "client-response-incomplete",
+      "operation": "validate_client_response",
+      "input": {
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\n",
+        "tail_hex": "",
+        "expected_accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
+      },
+      "expected": {
+        "error": "incomplete_handshake",
+        "diagnostic": "websocket: incomplete handshake"
+      }
+    },
+    {
+      "id": "client-response-wrong-accept",
+      "operation": "validate_client_response",
+      "input": {
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: wrong\r\n\r\n",
+        "tail_hex": "",
+        "expected_accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
+      },
+      "expected": {
+        "error": "invalid_handshake",
+        "diagnostic": "websocket: invalid handshake"
+      }
+    },
+    {
+      "id": "client-response-body-framing",
+      "operation": "validate_client_response",
+      "input": {
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\nContent-Length: 0\r\n\r\n",
+        "tail_hex": "",
+        "expected_accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
+      },
+      "expected": {
+        "error": "invalid_handshake",
+        "diagnostic": "websocket: invalid handshake"
+      }
+    },
+    {
+      "id": "client-response-extension-forbidden",
+      "operation": "validate_client_response",
+      "input": {
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\nSec-WebSocket-Extensions: permessage-deflate\r\n\r\n",
+        "tail_hex": "",
+        "expected_accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
+      },
+      "expected": {
+        "error": "invalid_handshake",
+        "diagnostic": "websocket: invalid handshake"
+      }
+    },
+    {
+      "id": "server-request-valid-coalesced",
+      "operation": "accept_server_request",
+      "input": {
+        "request": "GET /chat HTTP/1.1\r\nHost: server.example.com\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n",
+        "tail_hex": "818537fa213d7f9f4d5158"
+      },
+      "expected": {
+        "consumed": 161,
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\n\r\n"
+      }
+    },
+    {
+      "id": "server-request-incomplete",
+      "operation": "accept_server_request",
+      "input": {
+        "request": "GET /chat HTTP/1.1\r\nHost: server.example.com\r\n",
+        "tail_hex": ""
+      },
+      "expected": {
+        "error": "incomplete_handshake",
+        "diagnostic": "websocket: incomplete handshake"
+      }
+    },
+    {
+      "id": "server-request-lf-only",
+      "operation": "accept_server_request",
+      "input": {
+        "request": "GET /chat HTTP/1.1\nHost: server.example.com\n\n",
+        "tail_hex": ""
+      },
+      "expected": {
+        "error": "invalid_handshake",
+        "diagnostic": "websocket: invalid handshake"
+      }
+    },
+    {
+      "id": "server-request-missing-host",
+      "operation": "accept_server_request",
+      "input": {
+        "request": "GET /chat HTTP/1.1\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n",
+        "tail_hex": ""
+      },
+      "expected": {
+        "error": "invalid_handshake",
+        "diagnostic": "websocket: invalid handshake"
+      }
+    },
+    {
+      "id": "server-request-duplicate-key",
+      "operation": "accept_server_request",
+      "input": {
+        "request": "GET /chat HTTP/1.1\r\nHost: server.example.com\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n\r\n",
+        "tail_hex": ""
+      },
+      "expected": {
+        "error": "invalid_handshake",
+        "diagnostic": "websocket: invalid handshake"
+      }
+    },
+    {
+      "id": "server-request-noncanonical-key",
+      "operation": "accept_server_request",
+      "input": {
+        "request": "GET /chat HTTP/1.1\r\nHost: server.example.com\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: Zm9v\r\nSec-WebSocket-Version: 13\r\n\r\n",
+        "tail_hex": ""
+      },
+      "expected": {
+        "error": "invalid_base64",
+        "diagnostic": "websocket: invalid base64"
+      }
+    },
+    {
+      "id": "server-request-extension-forbidden",
+      "operation": "accept_server_request",
+      "input": {
+        "request": "GET /chat HTTP/1.1\r\nHost: server.example.com\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Extensions: permessage-deflate\r\n\r\n",
+        "tail_hex": ""
+      },
+      "expected": {
+        "error": "invalid_handshake",
+        "diagnostic": "websocket: invalid handshake"
+      }
+    },
+    {
+      "id": "encode-server-text",
+      "operation": "encode_frame",
+      "input": {
+        "role": "server",
+        "frame": { "fin": true, "opcode": "text", "payload_hex": "48656c6c6f" },
+        "mask_key_hex": null
+      },
+      "expected": { "wire_hex": "810548656c6c6f" }
+    },
+    {
+      "id": "encode-client-rfc-hello",
+      "operation": "encode_frame",
+      "input": {
+        "role": "client",
+        "frame": { "fin": true, "opcode": "text", "payload_hex": "48656c6c6f" },
+        "mask_key_hex": "37fa213d"
+      },
+      "expected": { "wire_hex": "818537fa213d7f9f4d5158" }
+    },
+    {
+      "id": "encode-server-mask-forbidden",
+      "operation": "encode_frame",
+      "input": {
+        "role": "server",
+        "frame": { "fin": true, "opcode": "binary", "payload_hex": "0102" },
+        "mask_key_hex": "00010203"
+      },
+      "expected": {
+        "error": "mask_direction",
+        "diagnostic": "websocket: invalid frame mask direction"
+      }
+    },
+    {
+      "id": "encode-client-mask-required",
+      "operation": "encode_frame",
+      "input": {
+        "role": "client",
+        "frame": { "fin": true, "opcode": "binary", "payload_hex": "0102" },
+        "mask_key_hex": null
+      },
+      "expected": {
+        "error": "mask_direction",
+        "diagnostic": "websocket: invalid frame mask direction"
+      }
+    },
+    {
+      "id": "encode-close-echo",
+      "operation": "encode_frame",
+      "input": {
+        "role": "server",
+        "frame": { "fin": true, "opcode": "close", "payload_hex": "03e8627965" },
+        "mask_key_hex": null
+      },
+      "expected": { "wire_hex": "880503e8627965" }
+    },
+    {
+      "id": "decode-rfc-masked-hello",
+      "operation": "decode_frames",
+      "input": {
+        "role": "server",
+        "max_frame_payload": 64,
+        "chunks_hex": ["81", "85", "37fa", "213d7f", "9f4d5158"]
+      },
+      "expected": {
+        "frames": [
+          { "fin": true, "opcode": "text", "payload_hex": "48656c6c6f" }
+        ],
+        "buffered_len": 0
+      }
+    },
+    {
+      "id": "decode-multiple-unmasked-frames",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 64,
+        "chunks_hex": ["8203010203890178"]
+      },
+      "expected": {
+        "frames": [
+          { "fin": true, "opcode": "binary", "payload_hex": "010203" },
+          { "fin": true, "opcode": "ping", "payload_hex": "78" }
+        ],
+        "buffered_len": 0
+      }
+    },
+    {
+      "id": "decode-partial-frame-retained",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 64,
+        "chunks_hex": ["8105"]
+      },
+      "expected": { "frames": [], "buffered_len": 2 }
+    },
+    {
+      "id": "decode-reserved-bit",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 64,
+        "chunks_hex": ["c100"]
+      },
+      "expected": {
+        "error": "reserved_bits",
+        "diagnostic": "websocket: reserved frame bits set"
+      }
+    },
+    {
+      "id": "decode-unknown-opcode",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 64,
+        "chunks_hex": ["8300"]
+      },
+      "expected": {
+        "error": "invalid_opcode",
+        "diagnostic": "websocket: invalid frame opcode"
+      }
+    },
+    {
+      "id": "decode-mask-direction",
+      "operation": "decode_frames",
+      "input": {
+        "role": "server",
+        "max_frame_payload": 64,
+        "chunks_hex": ["8100"]
+      },
+      "expected": {
+        "error": "mask_direction",
+        "diagnostic": "websocket: invalid frame mask direction"
+      }
+    },
+    {
+      "id": "decode-noncanonical-length",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 256,
+        "chunks_hex": ["817e007d"]
+      },
+      "expected": {
+        "error": "non_canonical_length",
+        "diagnostic": "websocket: non-canonical frame length"
+      }
+    },
+    {
+      "id": "decode-oversize-before-payload",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 32,
+        "chunks_hex": ["827e0100"]
+      },
+      "expected": {
+        "error": "frame_too_large",
+        "diagnostic": "websocket: frame exceeds limit"
+      }
+    },
+    {
+      "id": "decode-fragmented-control",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 64,
+        "chunks_hex": ["0900"]
+      },
+      "expected": {
+        "error": "invalid_control_frame",
+        "diagnostic": "websocket: invalid control frame"
+      }
+    },
+    {
+      "id": "decode-close-length-one",
+      "operation": "decode_frames",
+      "input": {
+        "role": "client",
+        "max_frame_payload": 64,
+        "chunks_hex": ["880103"]
+      },
+      "expected": {
+        "error": "invalid_close_frame",
+        "diagnostic": "websocket: invalid close frame"
+      }
+    },
+    {
+      "id": "assemble-fragmented-text-with-ping",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": false, "opcode": "text", "payload_hex": "f09f" },
+          { "fin": true, "opcode": "ping", "payload_hex": "21" },
+          { "fin": true, "opcode": "continuation", "payload_hex": "8c8d" }
+        ]
+      },
+      "expected": {
+        "events": [
+          { "kind": "ping", "payload_hex": "21" },
+          { "kind": "text", "text": "🌍" }
+        ],
+        "replies": [
+          { "fin": true, "opcode": "pong", "payload_hex": "21" },
+          null
+        ],
+        "fragmented": false,
+        "closed": false
+      }
+    },
+    {
+      "id": "assemble-binary-and-pong",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": true, "opcode": "binary", "payload_hex": "000102" },
+          { "fin": true, "opcode": "pong", "payload_hex": "78" }
+        ]
+      },
+      "expected": {
+        "events": [
+          { "kind": "binary", "payload_hex": "000102" },
+          { "kind": "pong", "payload_hex": "78" }
+        ],
+        "replies": [null, null],
+        "fragmented": false,
+        "closed": false
+      }
+    },
+    {
+      "id": "assemble-continuation-without-start",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": true, "opcode": "continuation", "payload_hex": "00" }
+        ]
+      },
+      "expected": {
+        "error": "invalid_fragmentation",
+        "diagnostic": "websocket: invalid fragmentation state",
+        "error_at": 0
+      }
+    },
+    {
+      "id": "assemble-second-data-start",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": false, "opcode": "text", "payload_hex": "61" },
+          { "fin": true, "opcode": "binary", "payload_hex": "62" }
+        ]
+      },
+      "expected": {
+        "error": "invalid_fragmentation",
+        "diagnostic": "websocket: invalid fragmentation state",
+        "error_at": 1
+      }
+    },
+    {
+      "id": "assemble-invalid-utf8",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": true, "opcode": "text", "payload_hex": "ff" }
+        ]
+      },
+      "expected": {
+        "error": "invalid_utf8",
+        "diagnostic": "websocket: invalid text encoding",
+        "error_at": 0
+      }
+    },
+    {
+      "id": "assemble-message-limit",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 3,
+        "frames": [
+          { "fin": true, "opcode": "binary", "payload_hex": "00010203" }
+        ]
+      },
+      "expected": {
+        "error": "message_too_large",
+        "diagnostic": "websocket: message exceeds limit",
+        "error_at": 0
+      }
+    },
+    {
+      "id": "assemble-close-echo",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": true, "opcode": "close", "payload_hex": "03e8627965" }
+        ]
+      },
+      "expected": {
+        "events": [
+          { "kind": "close", "code": 1000, "reason": "bye" }
+        ],
+        "replies": [
+          { "fin": true, "opcode": "close", "payload_hex": "03e8627965" }
+        ],
+        "fragmented": false,
+        "closed": true
+      }
+    },
+    {
+      "id": "assemble-data-after-close",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": true, "opcode": "close", "payload_hex": "" },
+          { "fin": true, "opcode": "text", "payload_hex": "78" }
+        ]
+      },
+      "expected": {
+        "error": "closed_session",
+        "diagnostic": "websocket: data after close",
+        "error_at": 1
+      }
+    },
+    {
+      "id": "assemble-invalid-close-code",
+      "operation": "assemble_messages",
+      "input": {
+        "max_message_payload": 64,
+        "frames": [
+          { "fin": true, "opcode": "close", "payload_hex": "03ed" }
+        ]
+      },
+      "expected": {
+        "error": "invalid_close_frame",
+        "diagnostic": "websocket: invalid close frame",
+        "error_at": 0
+      }
+    }
+  ]
+}

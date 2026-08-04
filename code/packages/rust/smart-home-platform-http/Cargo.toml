@@ -6,13 +6,18 @@ description = "Home Assistant-compatible local HTTP API routes for the smart-hom
 license = "MIT"
 
 [dependencies]
+embeddable-http-server = { path = "../embeddable-http-server" }
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+smart-home-automation-runtime = { path = "../smart-home-automation-runtime" }
 smart-home-core = { path = "../smart-home-core" }
+smart-home-dashboard-core = { path = "../smart-home-dashboard-core" }
 smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }
+storage-local-folder = { path = "../storage-local-folder" }
+tcp-runtime = { path = "../tcp-runtime" }
 web-core = { path = "../web-core" }
 
 [dev-dependencies]
-embeddable-http-server = { path = "../embeddable-http-server" }
 http-core = { path = "../http-core" }
 smart-home-testkit = { path = "../smart-home-testkit" }
-tcp-runtime = { path = "../tcp-runtime" }

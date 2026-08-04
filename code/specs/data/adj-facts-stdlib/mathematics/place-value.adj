@@ -1,0 +1,67 @@
+% ============================================================================
+% place-value — each place-value name → the number it is worth (adj-facts-stdlib, MATHEMATICS).
+% ============================================================================
+% The very first arithmetic fact a child meets: in our base-ten number system a
+% digit's WORTH depends on the COLUMN it sits in. The rightmost column is the
+% ones (each digit there is worth 1); the next column left is the tens (worth 10);
+% then the hundreds (100); then the thousands (1000). Each column to the left is
+% ten times bigger than the one to its right. Recall is a binding query — you name
+% a place and get back its value, WITH its citation:
+%
+%     ? place_value(hundreds, $V)      % 100
+%     ? place_value(tens, $V)          % 10
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `place_value(place, value)` carrying the table's citation, so the
+% lookup is the ordinary SLD binding query — the engine returns the value WITH its
+% source, on the CPU, with zero model calls, and abstains on a word that is not a
+% place name (it never invents a value).
+%
+% Why the `value` is a plain NUMBER, and why that matters: because each place is a
+% whole number (1, 10, 100, 1000), a recalled place value COMPOSES straight into
+% arithmetic. That is the concrete bridge from RECALL to COMPUTE — and it is
+% exactly how you take a number APART or put it back together. The number 143 is
+%
+%     1 × place_value(hundreds) + 4 × place_value(tens) + 3 × place_value(ones)
+%       = 1 × 100 + 4 × 10 + 3 × 1
+%       = 143
+%
+% So a looked-up place value feeds NUMBER DECOMPOSITION: recall the column values,
+% multiply each by its digit, add them up. Recall (name the place) flows straight
+% into compute (build or break apart the number). That is why this tiny table is a
+% foundation stone the rest of arithmetic is built on.
+%
+% Why a `table` and NOT four prose sentences: this is exactly the shape the fact
+% ships in — a place-value chart, one column per row with the number it is worth.
+% A chart cell like `hundreds | 100` was never a prose sentence, so there is no
+% sentence to cite; the citable artifact IS the place-value lesson at the `locator`
+% below, and each place→value pair here is read straight off the expanded-form
+% examples on that page. One provenance envelope defends the whole table rather
+% than repeating source/locator/trust on every row.
+%
+% Provenance: the place names and their values are taken from Cuemath's "Place
+% Value" lesson. The `source` span below joins the page's own expanded-form
+% examples VERBATIM (delimiter ` | ` added here): "3 × 1 = 3 or 3 ones" gives
+% ones = 1, "4 × 10 = 40 or 4 tens" gives tens = 10, "5 × 100 = 500 or 5 hundreds"
+% gives hundreds = 100, and "4 thousands = 4,000" gives thousands = 1000. Only
+% places whose value is confirmable on that page are shipped — the page does not
+% state a value for ten-thousands in the same expanded form, so it is deliberately
+% omitted rather than asserted from memory. `trust consensus` — Cuemath is a
+% secondary math-education reference (not a primary standards body), re-fetchable at
+% the `locator`. Nothing here is asserted from memory: every place→value pair is a
+% cell read off the cited lesson. (See ../README.md; ADJ-TABLES.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table place_value {
+    columns place, value
+
+    row (ones, 1)
+    row (tens, 10)
+    row (hundreds, 100)
+    row (thousands, 1000)
+
+    source "3 × 1 = 3 or 3 ones | 4 × 10 = 40 or 4 tens | 5 × 100 = 500 or 5 hundreds | 4 thousands = 4,000"
+    locator "https://www.cuemath.com/numbers/place-value/"
+    trust consensus
+}

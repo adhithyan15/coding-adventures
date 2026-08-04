@@ -253,7 +253,7 @@ fn ascii_ci_eq(a: &str, b: &str) -> bool {
     a.len() == b.len()
         && a.chars()
             .zip(b.chars())
-            .all(|(x, y)| x.to_ascii_lowercase() == y.to_ascii_lowercase())
+            .all(|(x, y)| x.eq_ignore_ascii_case(&y))
 }
 
 /// Glob match with `*` (any chars) and `?` (one char). Case-insensitive

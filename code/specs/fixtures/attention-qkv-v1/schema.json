@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/attention-qkv-v1.json",
+  "title": "Attention QKV learning lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "tokens", "matrices", "expected"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "vector_orientation", "score_scaling", "softmax_applied"],
+      "properties": {
+        "kind": { "const": "three-token-qkv-dot-products" },
+        "vector_orientation": { "const": "row" },
+        "score_scaling": { "const": "inverse-square-root-key-dimension" },
+        "softmax_applied": { "const": false }
+      }
+    },
+    "tokens": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "embedding"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "embedding": { "$ref": "#/$defs/vector2" }
+        }
+      }
+    },
+    "matrices": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["query", "key", "value"],
+      "properties": {
+        "query": { "$ref": "#/$defs/matrix2" },
+        "key": { "$ref": "#/$defs/matrix2" },
+        "value": { "$ref": "#/$defs/matrix2" }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["queries", "keys", "values", "dot_products", "raw_score_matrix", "scaled_score_matrix"],
+      "properties": {
+        "queries": { "$ref": "#/$defs/matrix3x2" },
+        "keys": { "$ref": "#/$defs/matrix3x2" },
+        "values": { "$ref": "#/$defs/matrix3x2" },
+        "dot_products": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["query", "key", "products", "raw_score", "scaled_score"],
+            "properties": {
+              "query": { "type": "string", "minLength": 1 },
+              "key": { "type": "string", "minLength": 1 },
+              "products": { "$ref": "#/$defs/vector2" },
+              "raw_score": { "type": "number" },
+              "scaled_score": { "type": "number" }
+            }
+          }
+        },
+        "raw_score_matrix": { "$ref": "#/$defs/matrix3x3" },
+        "scaled_score_matrix": { "$ref": "#/$defs/matrix3x3" }
+      }
+    }
+  },
+  "$defs": {
+    "vector2": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+    "vector3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+    "matrix2": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/vector2" } },
+    "matrix3x2": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/vector2" } },
+    "matrix3x3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/vector3" } }
+  }
+}

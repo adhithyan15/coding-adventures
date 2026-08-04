@@ -223,29 +223,29 @@ pub fn transform_source(
 /// - fold-control-flow then prunes `if (false) {A}` to an empty `;`;
 /// - dce then sweeps that empty statement (and any code after a `return`)
 ///   away;
-/// - inline is in the chain because `remove-unused-vars` declares
-///   `depends_on = ["dce", "inline"]` — the scheduler will not run
-///   remove-unused-vars unless `inline` is registered. (inline is
-///   currently an identity pass; it earns its slot once function
-///   inlining lands, and registering it now pins the canonical order.)
-/// - remove-unused-vars deletes top-level `var/let/const` bindings that
-///   nothing references, when their initializer is side-effect-free;
-/// - treeshake runs last and deletes top-level `function`/`class`
-///   declarations that nothing references. It is the function-shaped
-///   complement to remove-unused-vars (which deliberately skips
-///   functions). Running it after remove-unused-vars means a function
-///   that only a now-removed var referenced is itself swept this pass.
-///   Removing an unused function declaration is unconditionally safe —
-///   declaring a function has no side effect, so no purity gate is
-///   needed (unlike a `var` initializer).
+/// - inline is a registered slot (an identity pass today) that pins the
+///   canonical position for local function inlining once it lands;
+/// - inline-variables propagates a `const = literal` to its use sites;
+/// - rename shortens leaf-function *local* names last.
+///
+/// ## SIMPLE is OPEN-WORLD — it never removes top-level names
+///
+/// The reference Closure Compiler treats a SIMPLE compile as *open-world*: a
+/// top-level (global-scope) `var`/`let`/`const`, `function`, or `class` may be
+/// read or called by another script sharing the same global object, so SIMPLE
+/// never removes it. `remove-unused-vars` (deletes unreferenced top-level
+/// `var/let/const`) and `treeshake` (deletes unreferenced top-level
+/// `function`/`class`) are therefore ADVANCED-only — see [`ADVANCED_PASS_NAMES`]
+/// and the gated `pipeline.add`s in [`run_typed_pipeline`]. Running them at
+/// SIMPLE was a miscompile: `var z = 1;` (a global another script might read)
+/// was dropped, where the reference compiler keeps it. Function-*local* unused
+/// bindings are still removed — that is scope-local and sound.
 const SIMPLE_PASS_NAMES: &[&str] = &[
     "constant-fold",
     "fold-control-flow",
     "dce",
     "inline",
     "inline-variables",
-    "remove-unused-vars",
-    "treeshake",
     "rename",
 ];
 
@@ -363,25 +363,40 @@ fn run_typed_pipeline(
 
     // The pipeline topo-sorts on each pass's `depends_on`, with
     // registration order as the tie-breaker between independent passes.
-    // `remove-unused-vars` declares `depends_on = ["dce", "inline"]`, so
-    // `inline` MUST be registered or the scheduler refuses to run
-    // remove-unused-vars. `inline` is an identity pass today; it holds
-    // the canonical slot until real function inlining lands.
     let mut pipeline = PassPipeline::new();
     pipeline.add(Box::new(ConstantFoldPass::new()));
     pipeline.add(Box::new(FoldControlFlowPass::new()));
     pipeline.add(Box::new(DcePass::new()));
-    pipeline.add(Box::new(InlinePass::new()));
-    // inline-variables propagates a top-level `const = literal` to its
-    // use sites; it runs before remove-unused-vars, which then deletes
-    // the now-unreferenced `const` declaration.
+    // `inline` inlines a single-use top-level function into its one call site
+    // — a CLOSED-WORLD transform (it removes/relocates a global the reference
+    // compiler leaves callable by other scripts at SIMPLE). It runs ONLY at
+    // ADVANCED, in its canonical slot BEFORE inline-variables, so ADVANCED
+    // output is unchanged; `remove-unused-vars` declares
+    // `depends_on = ["dce", "inline"]`, so registering inline here (also
+    // ADVANCED-gated) keeps that dependency satisfied.
+    if advanced.is_some() {
+        pipeline.add(Box::new(InlinePass::new()));
+    }
+    // inline-variables propagates a `const = literal` to its use sites.
     pipeline.add(Box::new(InlineVariablesPass::new()));
-    pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
-    pipeline.add(Box::new(TreeshakePass::new()));
-    // rename runs last among the SIMPLE passes: it shortens leaf-function
-    // parameter names after every structural pass has finished
-    // removing/rewriting code. It has no dependencies (correct
-    // standalone), so registration order places it at the end.
+
+    // remove-unused-vars (deletes unreferenced top-level `var/let/const`) and
+    // treeshake (deletes unreferenced top-level `function`/`class`) are
+    // CLOSED-WORLD transforms: they assume no other script shares the global
+    // object. That holds only at ADVANCED (which demands `--externs` and
+    // treats un-exported globals as private), so they run ONLY there. At
+    // SIMPLE the reference compiler is open-world — a top-level `var z = 1;`
+    // may be read by another script — so removing it is a miscompile. They
+    // keep their canonical position (before `rename`) so ADVANCED output is
+    // unchanged; SIMPLE simply skips them.
+    if advanced.is_some() {
+        pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
+        pipeline.add(Box::new(TreeshakePass::new()));
+    }
+    // rename runs last among the pre-global passes: it shortens leaf-function
+    // parameter names (locals only — never top-level, which is open-world at
+    // SIMPLE) after every structural pass has finished removing/rewriting
+    // code. It has no dependencies, so registration order places it here.
     pipeline.add(Box::new(RenamePass::new()));
 
     // ADVANCED only. Registered after `rename` so the renamers shorten
@@ -537,7 +552,7 @@ pub fn transform_source_with_cv(
             let parse_result = match cv_pair.as_mut() {
                 Some((log, _id, _ids, file)) => {
                     coding_adventures_javascript_parser::parse_javascript_typed_with_cv(
-                        source, *file, es_version, *log,
+                        source, file, es_version, log,
                     )
                 }
                 None => parse_javascript_typed(source, es_version),
@@ -2202,9 +2217,9 @@ fn format_cv_log_json(
         );
     }
     if pretty {
-        serde_json::to_string_pretty(&value).unwrap_or_else(|_| compact)
+        serde_json::to_string_pretty(&value).unwrap_or(compact)
     } else {
-        serde_json::to_string(&value).unwrap_or_else(|_| compact)
+        serde_json::to_string(&value).unwrap_or(compact)
     }
 }
 
@@ -5915,6 +5930,11 @@ mod tests {
         // the load-bearing case: constant-fold turns `2 > 3` into
         // `false`, and only then can fold-control-flow decide the
         // branch — so this exercises the two passes composing.
+        //
+        // CLOC12.194: the selected `else` branch is a bare `{ b(); }` block
+        // with no block-scoped binding, so fold-control-flow now *flattens*
+        // it — the redundant braces are removed and `b()` runs directly,
+        // matching the reference Closure Compiler (which emits `b();`).
         let cfg = CompilerConfig {
             compilation: crate::config::CompilationConfig {
                 level: crate::config::CompilationLevel::Simple,
@@ -5923,7 +5943,10 @@ mod tests {
             ..Default::default()
         };
         let out = transform_source("if (2 > 3) { a(); } else { b(); }", &cfg).expect("ok");
-        assert_eq!(out, "{b()}", "fold-control-flow must keep only the else branch");
+        assert_eq!(
+            out, "b();",
+            "fold-control-flow keeps the else branch AND flattens its redundant block"
+        );
     }
 
     #[test]
@@ -5967,7 +5990,7 @@ mod tests {
         let out = transform_source("function f() { g(); return 1; dead(); } f(); f();", &cfg)
             .expect("ok");
         assert_eq!(
-            out, "function f(){g();return 1};f();f();",
+            out, "function f(){g();return 1}f();f();",
             "dce must drop the statement after the return"
         );
     }
@@ -5995,7 +6018,7 @@ mod tests {
         )
         .expect("ok");
         assert_eq!(
-            out, "function f(){return 2};f();sink(f);",
+            out, "function f(){return 2}f();sink(f);",
             "dce must sweep the empty statement left by fold-control-flow"
         );
     }
@@ -6021,36 +6044,67 @@ mod tests {
     }
 
     #[test]
-    fn simple_remove_unused_drops_dead_top_level_var() {
-        // CLOC12.158: the SIMPLE pipeline now ends with
-        // remove-unused-vars. An unreferenced top-level `var` with a
-        // pure (literal) initializer is deleted entirely.
-        let cfg = CompilerConfig {
-            compilation: crate::config::CompilationConfig {
-                level: crate::config::CompilationLevel::Simple,
-                ..Default::default()
-            },
-            ..Default::default()
+    fn remove_unused_top_level_var_is_advanced_only() {
+        // An unreferenced top-level `var` is CLOSED-WORLD state: another
+        // script sharing the global object might read it, so SIMPLE
+        // (open-world) KEEPS it and only ADVANCED (closed-world) removes it.
+        // Removing it at SIMPLE was a miscompile.
+        let src = "var unused = 1; used();";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
         };
-        let out = transform_source("var unused = 1; used();", &cfg).expect("ok");
-        assert_eq!(out, "used();", "the unused var must be removed");
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Simple),
+            "var unused=1;used();",
+            "SIMPLE is open-world: the unused top-level var must be KEPT"
+        );
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            "used();",
+            "ADVANCED is closed-world: the unused top-level var is removed"
+        );
     }
 
     #[test]
-    fn simple_remove_unused_composes_with_constant_fold() {
+    fn remove_unused_composes_with_constant_fold_at_advanced() {
         // `var x = 1 + 2; sideEffect();` — constant-fold turns the
-        // initializer into the literal `3`, and only then does
-        // remove-unused-vars see a pure init it can drop. Proves the
-        // two passes compose end to end.
-        let cfg = CompilerConfig {
-            compilation: crate::config::CompilationConfig {
-                level: crate::config::CompilationLevel::Simple,
-                ..Default::default()
-            },
-            ..Default::default()
+        // initializer into the literal `3` at both levels. Only ADVANCED
+        // (closed-world) then removes the now-dead `var x`; SIMPLE keeps
+        // the folded-but-unreferenced top-level binding (open-world).
+        let src = "var x = 1 + 2; sideEffect();";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
         };
-        let out = transform_source("var x = 1 + 2; sideEffect();", &cfg).expect("ok");
-        assert_eq!(out, "sideEffect();", "folded-then-dead var must be removed");
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Simple),
+            "var x=3;sideEffect();",
+            "SIMPLE folds the init but KEEPS the top-level binding"
+        );
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            "sideEffect();",
+            "ADVANCED removes the folded-then-dead var"
+        );
     }
 
     #[test]
@@ -6087,19 +6141,34 @@ mod tests {
     }
 
     #[test]
-    fn simple_treeshake_drops_unused_function() {
-        // CLOC12.159: the SIMPLE pipeline now ends with treeshake, which
-        // deletes a top-level function declaration nothing references.
-        let cfg = CompilerConfig {
-            compilation: crate::config::CompilationConfig {
-                level: crate::config::CompilationLevel::Simple,
-                ..Default::default()
-            },
-            ..Default::default()
+    fn treeshake_unused_function_is_advanced_only() {
+        // A top-level function declaration nothing references is CLOSED-WORLD
+        // state — another script might call it — so SIMPLE (open-world) KEEPS
+        // it and only ADVANCED removes it.
+        let src = "function dead() { return 1; } used();";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
         };
-        let out =
-            transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
-        assert_eq!(out, "used();", "the unused function must be removed");
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Simple),
+            "function dead(){return 1}used();",
+            "SIMPLE is open-world: the unused top-level function must be KEPT"
+        );
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            "used();",
+            "ADVANCED removes the unused top-level function"
+        );
     }
 
     #[test]
@@ -6118,7 +6187,7 @@ mod tests {
         let out = transform_source("function f() { return 2; } log(f()); sink(f);", &cfg)
             .expect("ok");
         assert_eq!(
-            out, "function f(){return 2};log(f());sink(f);",
+            out, "function f(){return 2}log(f());sink(f);",
             "a called function must be kept"
         );
     }
@@ -6136,8 +6205,14 @@ mod tests {
         };
         let out =
             transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
+        // The function survives (WHITESPACE_ONLY does no tree-shaking) and the
+        // declaration is NOT terminated: a brace-terminated construct takes the
+        // synthetic `;` only when nothing follows it, and `used();` follows here.
+        // Oracle-verified. This matches the emitter-side rule from the
+        // "terminate only the last program item" change, so both output paths
+        // now agree.
         assert_eq!(
-            out, "function dead(){return 1};used();",
+            out, "function dead(){return 1}used();",
             "whitespace_only must NOT remove the function"
         );
     }
@@ -6162,7 +6237,7 @@ mod tests {
             &cfg,
         )
         .expect("ok");
-        assert_eq!(out, "function f(a){return a+1};f(5);sink(f);");
+        assert_eq!(out, "function f(a){return a+1}f(5);sink(f);");
     }
 
     #[test]
@@ -6183,7 +6258,7 @@ mod tests {
             &cfg,
         )
         .expect("ok");
-        assert_eq!(out, "function f(a){return a.longName};f(x);sink(f);");
+        assert_eq!(out, "function f(a){return a.longName}f(x);sink(f);");
     }
 
     #[test]
@@ -6344,7 +6419,7 @@ mod tests {
         };
         let out = transform_source("function f(longName) { return longName + 1; } f(5);", &cfg)
             .expect("ok");
-        assert_eq!(out, "function f(longName){return longName+1};f(5);");
+        assert_eq!(out, "function f(longName){return longName+1}f(5);");
     }
 
     #[test]
@@ -6366,19 +6441,18 @@ mod tests {
             },
         )
         .expect("ok");
-        assert_eq!(advanced, "function f(a){return a+1};f(5);sink(f);");
+        assert_eq!(advanced, "function f(a){return a+1}f(5);sink(f);");
         assert_ne!(advanced, src, "ADVANCED must no longer be an identity no-op");
     }
 
     #[test]
-    fn advanced_matches_simple_output() {
-        // ADVANCED adds `rename-globals` on top of the SIMPLE pipeline, but
-        // it only differs when a top-level name SURVIVES to the end. Here
-        // `g` is a single-use leaf function, so `inline`/`treeshake`
-        // delete it entirely — nothing top-level remains, so ADVANCED and
-        // SIMPLE produce identical output for THIS input. See
-        // `advanced_renames_surviving_top_level_function` for the divergent
-        // case.
+    fn advanced_optimizes_top_level_that_simple_keeps() {
+        // The two levels DIVERGE on top-level state. `g` is a single-use leaf
+        // function and `dead` an unused var: ADVANCED (closed-world) inlines
+        // `g` into its call, folds it to `8`, and tree-shakes `g` + `dead`
+        // away; SIMPLE (open-world) must KEEP both — another script might read
+        // `dead` or call `g`. constant-fold still applies at both levels
+        // (`1 + 2` → `3`) and rename still shortens the local `value` → `a`.
         let src = "var dead = 1 + 2; function g(value) { return value * 2; } use(g(4));";
         let mk = |level| {
             transform_source(
@@ -6394,8 +6468,14 @@ mod tests {
             .expect("ok")
         };
         assert_eq!(
-            mk(crate::config::CompilationLevel::Advanced),
             mk(crate::config::CompilationLevel::Simple),
+            "var dead=3;function g(a){return a*2}use(g(4));",
+            "SIMPLE keeps the top-level var and function (open-world)"
+        );
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            "use(8);",
+            "ADVANCED inlines + tree-shakes the top-level names (closed-world)"
         );
     }
 
@@ -6426,11 +6506,11 @@ mod tests {
         let advanced = mk(crate::config::CompilationLevel::Advanced);
         assert_eq!(
             simple,
-            "function helper(){sideEffect();return value};helper();helper();"
+            "function helper(){sideEffect();return value}helper();helper();"
         );
         assert_eq!(
             advanced,
-            "function a(){sideEffect();return value};a();a();"
+            "function a(){sideEffect();return value}a();a();"
         );
         assert!(
             advanced.len() < simple.len(),
@@ -6580,60 +6660,101 @@ mod tests {
     }
 
     #[test]
-    fn simple_pipeline_iterates_to_a_fixed_point() {
-        // CLOC13.F: the pipeline now runs to a fixed point. `inline`
-        // turns the single-use `double(7)` into `7 * 2` (sweep 1), and
-        // `constant-fold` — which ran *before* inline in sweep 1 — folds
-        // it to `14` on sweep 2. Before fixed-point iteration the
-        // pipeline ran each pass once and stopped at `log(7 * 2);`.
-        let cfg = CompilerConfig {
-            compilation: crate::config::CompilationConfig {
-                level: crate::config::CompilationLevel::Simple,
-                ..Default::default()
-            },
-            ..Default::default()
+    fn advanced_pipeline_iterates_to_a_fixed_point() {
+        // CLOC13.F: the pipeline runs to a fixed point. `inline` (ADVANCED-
+        // only, since inlining a single-use top-level function is closed-
+        // world) turns `double(7)` into `7 * 2` (sweep 1), and constant-fold
+        // folds it to `14` (sweep 2). SIMPLE (open-world) keeps `double` and
+        // its call untouched.
+        let src = "function double(x) { return x * 2; } log(double(7));";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
         };
-        let out = transform_source("function double(x) { return x * 2; } log(double(7));", &cfg)
-            .expect("ok");
         assert_eq!(
-            out, "log(14);",
-            "inline → fold cascade must converge to the folded constant"
+            mk(crate::config::CompilationLevel::Simple),
+            "function double(x){return x*2}log(double(7));",
+            "SIMPLE keeps the top-level function and its call (open-world)"
+        );
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            "log(14);",
+            "ADVANCED inline → fold cascade converges to the folded constant"
         );
     }
 
     #[test]
-    fn simple_inlines_small_function_at_multiple_sites() {
-        // CLOC13.G: a small pure function (`x * x`, within the size
-        // budget) is inlined at BOTH call sites, treeshake removes it,
-        // and constant-fold folds the literal results.
-        let cfg = CompilerConfig {
-            compilation: crate::config::CompilationConfig {
-                level: crate::config::CompilationLevel::Simple,
-                ..Default::default()
-            },
-            ..Default::default()
+    fn advanced_inlines_small_function_at_multiple_sites() {
+        // CLOC13.G: a small pure function (`x * x`, within the size budget)
+        // is inlined at BOTH call sites, treeshake removes it, and
+        // constant-fold folds the literal results — all closed-world, so
+        // ADVANCED only. SIMPLE (open-world) keeps `sq` and both calls.
+        let src = "function sq(x) { return x * x; } a(sq(3)); b(sq(4));";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
         };
-        let out = transform_source("function sq(x) { return x * x; } a(sq(3)); b(sq(4));", &cfg)
-            .expect("ok");
-        assert_eq!(out, "a(9);b(16);");
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Simple),
+            "function sq(x){return x*x}a(sq(3));b(sq(4));",
+            "SIMPLE keeps the top-level function and its calls (open-world)"
+        );
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            "a(9);b(16);",
+            "ADVANCED inlines at both sites and tree-shakes the function"
+        );
     }
 
     #[test]
-    fn simple_propagates_const_literal_and_removes_binding() {
-        // CLOC13.H: a top-level `const` bound to a literal is propagated
-        // to its use sites, remove-unused-vars deletes the binding, and
-        // constant-fold folds the now-concrete `2 + 1`.
-        let cfg = CompilerConfig {
-            compilation: crate::config::CompilationConfig {
-                level: crate::config::CompilationLevel::Simple,
-                ..Default::default()
-            },
-            ..Default::default()
+    fn propagates_const_literal_but_only_advanced_removes_binding() {
+        // CLOC13.H: a top-level `const` bound to a literal is propagated to
+        // its use sites at BOTH levels (inline-variables), and constant-fold
+        // folds the now-concrete `RATE + 1` → `3`. Only ADVANCED (closed-
+        // world) then removes the now-unreferenced binding; SIMPLE keeps
+        // `const RATE = 2` — another script might read it.
+        let src = "const RATE = 2; total(base * RATE); margin(RATE + 1);";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
         };
-        let out =
-            transform_source("const RATE = 2; total(base * RATE); margin(RATE + 1);", &cfg)
-                .expect("ok");
-        assert_eq!(out, "total(base*2);margin(3);");
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Simple),
+            "const RATE=2;total(base*2);margin(3);",
+            "SIMPLE propagates the literal but KEEPS the binding (open-world)"
+        );
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            "total(base*2);margin(3);",
+            "ADVANCED removes the now-unreferenced const binding"
+        );
     }
 
     #[test]
@@ -6675,9 +6796,9 @@ mod tests {
         // The pass pipeline must be recorded in the trace, in order.
         assert!(
             body.contains(
-                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"inline-variables\",\"remove-unused-vars\",\"treeshake\",\"rename\"]"
+                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"inline-variables\",\"rename\"]"
             ),
-            "expected passes list in CV sidecar: {body}"
+            "expected SIMPLE (open-world) passes list in CV sidecar: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
@@ -6693,13 +6814,15 @@ mod tests {
         let in_path = dir.join("in.js");
         let out_path = dir.join("out.js");
         let sidecar_path = dir.join("out.js.cv.json");
-        // with-statement: the grammar parses it, but bridge::grammar_to_program
-        // returns UnsupportedSyntax (with_statement is still Phase 2+ — and
-        // renaming-unsafe, so it is a deliberate non-target). do-while (CLOC20),
-        // for-in (CLOC22), and for-of (CLOC23) are all supported now and no
-        // longer degrade; class declarations fail at the grammar parser level,
-        // not the bridge.
-        fs::write(&in_path, "with (obj) { x(); }").expect("setup");
+        // destructuring: `var {a} = o;` — the grammar parses it (the bindings
+        // become a `binding_pattern` node), but the bridge's `BindingTarget` is
+        // a single-variant `Identifier`, so `convert_variable_declarator` returns
+        // UnsupportedSyntax (destructuring is a deliberate deferral — wiring
+        // patterns explodes ~40 irrefutable-let sites across the workspace).
+        // `with` used to sit here, but as of CLOC12.187 it bridges; do-while
+        // (CLOC20), for-in (CLOC22), and for-of (CLOC23) are supported too;
+        // class declarations fail at the grammar parser level, not the bridge.
+        fs::write(&in_path, "var {a} = o;").expect("setup");
         let cfg = CompilerConfig {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],

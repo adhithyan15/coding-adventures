@@ -1,0 +1,45 @@
+% ============================================================================
+% oceans — each ocean basin's size rank, largest = 1 (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% A geography facts library — an early science fact: the world's five ocean
+% basins, put in order from biggest to smallest. It is the kind of thing a child
+% learns with a map: the Pacific is the widest blue on the globe, the Arctic the
+% little one at the top. Recall is a binding query:
+%
+%     ? ocean_size_rank(pacific, $R)     % 1  (the Pacific is the largest basin)
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `ocean_size_rank(ocean, rank)` carrying the NOAA citation, so the lookup above
+% is the ordinary SLD binding query — the engine returns the rank WITH its source,
+% on the CPU, with zero model calls, and abstains on something that is not one of
+% the five named oceans (e.g. mediterranean is a SEA, not an ocean, so it is
+% deliberately NOT a row here). The `rank` value is a NUMBER, so a recalled rank
+% composes into arithmetic (how many basins sit between the Pacific and the
+% Southern Ocean? 4 − 1 − 1 = 2).
+%
+% Provenance: NOAA's National Ocean Service states the full size ordering in
+% prose — "The Pacific Ocean is the largest and deepest of the world ocean
+% basins. The Atlantic basin is the second largest basin, followed by the Indian
+% Ocean basin, the Southern Ocean, and finally the Arctic Ocean basin." That one
+% span fixes all five ranks: pacific 1, atlantic 2, indian 3, southern 4,
+% arctic 5. The citable artifact is NOAA's "What is the largest ocean basin on
+% Earth?" page at the `locator`. `trust authoritative` — NOAA is the primary
+% U.S. federal ocean authority (a .gov source). Nothing here is asserted from
+% memory. The set of oceans is the five that the U.S. (NOAA) recognizes today,
+% including the Southern (Antarctic) Ocean. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_size_rank {
+    columns ocean, rank
+
+    row (pacific, 1)
+    row (atlantic, 2)
+    row (indian, 3)
+    row (southern, 4)
+    row (arctic, 5)
+
+    source "The Pacific Ocean is the largest and deepest of the world ocean basins. The Atlantic basin is the second largest basin, followed by the Indian Ocean basin, the Southern Ocean, and finally the Arctic Ocean basin."
+    locator "https://oceanservice.noaa.gov/facts/biggestocean.html"
+    trust authoritative
+}

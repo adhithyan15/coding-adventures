@@ -100,6 +100,33 @@ func canonicalCapabilityString(category, action, target string) CapabilityString
 	return CapabilityString(category + ":" + action + ":" + target)
 }
 
+// validCapabilityPair implements the closed category/action taxonomy from
+// Spec 13. It prevents malformed cross-pairs from becoming wildcard
+// declarations in the analyzer.
+func validCapabilityPair(category, action string) bool {
+	switch category {
+	case "fs":
+		return action == "read" || action == "write" || action == "create" ||
+			action == "delete" || action == "list"
+	case "net":
+		return action == "connect" || action == "listen" || action == "dns"
+	case "proc":
+		return action == "exec" || action == "fork" || action == "signal"
+	case "env":
+		return action == "read" || action == "write"
+	case "ffi":
+		return action == "call" || action == "load"
+	case "time":
+		return action == "read" || action == "sleep"
+	case "stdin":
+		return action == "read"
+	case "stdout":
+		return action == "write"
+	default:
+		return false
+	}
+}
+
 // canonicalBannedConstructExceptionKey converts a (language, construct) pair
 // into the standard "<language>:<construct>" form used for O(1) exemption checks.
 func canonicalBannedConstructExceptionKey(language, construct string) string {
@@ -162,7 +189,14 @@ func LoadManifestData(dir string) (*ManifestData, error) {
 		Declared:                  make(map[CapabilityString]bool),
 		BannedConstructExceptions: make(map[string]bool),
 	}
-	for _, cap := range mf.Capabilities {
+	for i, cap := range mf.Capabilities {
+		if !validCapabilityPair(cap.Category, cap.Action) {
+			return nil, fmt.Errorf(
+				"LoadManifest: capability %d has invalid category/action pair %q:%q",
+				i, cap.Category, cap.Action,
+			)
+		}
+
 		// Add the exact capability as declared.
 		manifest.Declared[canonicalCapabilityString(cap.Category, cap.Action, cap.Target)] = true
 

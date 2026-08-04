@@ -718,12 +718,16 @@ const FLOAT_SPEC: &str = r#"{
 }"#;
 
 #[test]
+// 3.14 here is arbitrary float test data, not an approximation of PI.
+#[allow(clippy::approx_constant)]
 fn test_float_flag_parsed_correctly() {
     let r = parse_ok(FLOAT_SPEC, &["tool", "--threshold=3.14"]);
     assert_eq!(r.flags["threshold"], json!(3.14));
 }
 
 #[test]
+// 2.718 here is arbitrary float test data, not an approximation of Euler's number.
+#[allow(clippy::approx_constant)]
 fn test_float_flag_via_short() {
     let r = parse_ok(FLOAT_SPEC, &["tool", "-t", "2.718"]);
     assert_eq!(r.flags["threshold"], json!(2.718));

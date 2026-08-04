@@ -2,6 +2,129 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.20.0] - 2026-07-14
+
+### Changed — collect references inside default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. `walk_function_declaration` / `walk_function_expression` /
+`walk_arrow_function_expression` now walk each `FunctionParam::AssignmentPattern` default (`a = expr`) in
+the function scope, recording the identifiers it references. Every downstream pass that consumes
+`ScopeAnalysis` — `remove-unused-vars`, `treeshake` — therefore counts a variable read in a default,
+so it is never wrongly deleted. The param-binding loops now use the AST `binding_identifier()` accessor
+(handling all three variants uniformly).
+
+## [0.19.0] - 2026-07-14
+
+### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0. Handles the new `FunctionParam::RestElement` variant via
+`binding_identifier()`, so a rest parameter (`...name`) is walked as an ordinary single-name binding
+(counted / looked up / renamed) rather than being unrepresentable. Additive; MINOR.
+
+## [0.18.0] - 2026-07-12
+
+### Added — CLOC12.189 PR2: `export` soundness gate
+
+New `has_export` field on `ScopeAnalysis` (set when the `analyze` walk reaches an
+`Export*` declaration) and a public `program_contains_export_declaration` helper
+— a sibling of `program_contains_import_declaration`. It is the flag the renaming
+passes read to disable renaming whole-program when an `export` is present: an
+export publishes a binding to other modules by an exact name, so renaming an
+exported binding (or a specifier's exported name) would break importers the
+analyzer cannot see. Two tests.
+
+## [0.17.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration no scope binding is registered and no flag is set (the export soundness gate lands with the bridge PR)
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+no scope binding is registered and no flag is set (the export soundness gate lands with the bridge PR). Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.16.0] - 2026-07-12
+
+### Added — CLOC12.188 PR2: `import` soundness gate
+
+New `has_import` field on `ScopeAnalysis` (set when the `analyze` walk reaches an
+`ImportDeclaration`) and a public `program_contains_import_declaration` helper —
+a sibling of `program_contains_with_statement`. It is the flag the renaming
+passes read to disable renaming whole-program when a module `import` is present:
+an import aliases a foreign module's exports (renaming would break the
+cross-module contract), and because no binding is registered for it the
+fresh-name allocator could also collide an unrelated local with an import name.
+Two tests pin the true/false contracts.
+
+## [0.15.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arm
+
+Exhaustive-match no-op arm for the new `Declaration::ImportDeclaration` variant in
+`walk_declaration`. Full import-binding scope handling (the specifier idents are
+module-scoped bindings that must not be renamed) lands with the bridge PR.
+
+## [0.14.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2a: `with` soundness gate
+
+New `has_with: bool` field on `ScopeAnalysis` (set by the existing `analyze`
+walk whenever a `with` statement is encountered anywhere) and a public
+`program_contains_with_statement(&Program) -> bool` helper built on it. A `with`
+splices its object onto the scope chain, so a bare name in the body can resolve
+to an object property rather than a lexical binding — which makes renaming
+unsound. The rename / rename-globals / rename-properties passes read this gate
+and decline to rename when it is set. Because it rides the full `analyze` walk,
+it detects a `with` however deeply nested (e.g. inside a function expression).
+Three unit tests pin detection (absent / top-level / nested-in-function).
+
+## [0.13.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: walk `WithStatement`
+
+`walk_tagged_statement` now descends into a `with` statement's object expression
+and body. The renaming-unsoundness bailout that `with` demands (a binding
+resolved through the injected object cannot be safely renamed) lands with the
+bridge PR that makes the node reachable; picks up javascript-ast 0.38.0.
+
+## [0.12.17] - 2026-07-11
+
+### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arm
+
+The computed-key walk gains a `PropertyKey::PrivateName` arm (a no-op): a private
+name is not an identifier reference — it names a slot in the class's private
+brand, resolved lexically at parse time, never through scope — so it binds and
+references nothing. Keeps the match exhaustive after `javascript-ast` 0.36.0
+added the variant. PATCH.
+
+## [0.12.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms (declaration + expression) walking the block as a free-standing `walk_block_statement` — a static block is its own block scope, so local `let`/`const`/`var` land in a block scope and references resolve.
+
+## [0.12.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: resolve references in field initializers
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` arms (class
+declaration + class expression) that walk the field's initializer and computed
+key so references inside a field initializer (evaluated at construction in the
+class scope) are resolved. Reachable once the CLOC12.175 PR2 bridge produces the
+node.
+
+## [0.12.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` walk arm
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+`walk_class_declaration` to the exhaustive `walk_declaration` match: it emits a
+`BindingKind::Class` binding for the class name in the current scope (the lexical
+analogue of the `Function`-kind binding a function declaration hoists — the
+`Class` kind was already reserved for exactly this), then resolves references in
+the `extends` heritage (enclosing scope) and each method value (its own function
+scope). Reachable once the CLOC12.174 PR2 bridge produces the node.
+
 ## [0.12.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

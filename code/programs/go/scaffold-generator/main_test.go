@@ -780,19 +780,455 @@ func TestGeneratePerlNoDeps(t *testing.T) {
 	}
 }
 
-func TestGenerateHaskellUsesShortTestSuiteName(t *testing.T) {
+func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 	tmpDir := t.TempDir()
-	if err := generateHaskell(tmpDir, "my-pkg", "My package", "", nil, nil); err != nil {
+	if err := generateHaskell(
+		tmpDir,
+		"my-pkg",
+		"100% compatible package",
+		"Layer context",
+		[]string{"graph"},
+		[]string{"bitset", "graph"},
+	); err != nil {
 		t.Fatalf("generateHaskell: %v", err)
 	}
 
-	cabal, err := os.ReadFile(filepath.Join(tmpDir, "coding-adventures-my-pkg.cabal"))
+	cabal, err := os.ReadFile(filepath.Join(tmpDir, "my-pkg.cabal"))
 	if err != nil {
 		t.Fatalf("cannot read cabal file: %v", err)
 	}
 
-	if !strings.Contains(string(cabal), "test-suite spec") {
-		t.Fatal("cabal file should use a short test-suite name")
+	cabalText := string(cabal)
+	for _, want := range []string{
+		"name:          my-pkg",
+		"synopsis:      100% compatible package",
+		"description:   100% compatible package.",
+		"category:      Development",
+		"exposed-modules:  CodingAdventures.MyPkg",
+		", graph >=0.1 && <0.2",
+		"other-modules:    MyPkgSpec",
+		", hspec ==2.*",
+		"ghc-options:      -Wall",
+	} {
+		if !strings.Contains(cabalText, want) {
+			t.Errorf("cabal file missing %q", want)
+		}
+	}
+	if strings.Contains(cabalText, "coding-adventures-") {
+		t.Error("cabal file should use the repository's plain package names")
+	}
+	if strings.Contains(cabalText, ", bitset") {
+		t.Error("cabal build-depends should contain direct dependencies only")
+	}
+
+	project, err := os.ReadFile(filepath.Join(tmpDir, "cabal.project"))
+	if err != nil {
+		t.Fatalf("cannot read cabal.project: %v", err)
+	}
+	projectText := string(project)
+	if !strings.Contains(projectText, "../bitset") || !strings.Contains(projectText, "../graph") {
+		t.Errorf("cabal.project should contain the transitive local closure, got %q", projectText)
+	}
+
+	for _, path := range []string{
+		"BUILD",
+		"BUILD_windows",
+		"required_capabilities.json",
+		filepath.Join("src", "CodingAdventures", "MyPkg.hs"),
+		filepath.Join("test", "MyPkgSpec.hs"),
+		filepath.Join("test", "Spec.hs"),
+	} {
+		if _, err := os.Stat(filepath.Join(tmpDir, path)); err != nil {
+			t.Errorf("generated Haskell file %s missing: %v", path, err)
+		}
+	}
+
+	build, err := os.ReadFile(filepath.Join(tmpDir, "BUILD"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD: %v", err)
+	}
+	if string(build) != "cabal test\n" {
+		t.Errorf("BUILD = %q, want plain cabal test", build)
+	}
+
+	capabilityPath := filepath.Join(tmpDir, "required_capabilities.json")
+	capabilities, err := os.ReadFile(capabilityPath)
+	if err != nil {
+		t.Fatalf("cannot read required_capabilities.json: %v", err)
+	}
+	golden, err := os.ReadFile(
+		filepath.Join("..", "..", "..", "specs", "fixtures", "scaffold-generator", "haskell_library_required_capabilities.json"),
+	)
+	if err != nil {
+		t.Fatalf("cannot read Haskell capability golden file: %v", err)
+	}
+	if string(capabilities) != string(golden) {
+		t.Errorf(
+			"required_capabilities.json did not match golden output\n--- got ---\n%s--- want ---\n%s",
+			capabilities,
+			golden,
+		)
+	}
+}
+
+func TestDescriptionSafety(t *testing.T) {
+	for _, description := range []string{
+		"safe\nnext-field",
+		"safe\ttab",
+		"safe\x00nul",
+		"safe\u0085next-field",
+		"safe\u2028next-line",
+		"safe */ injected",
+		"safe *) injected",
+		"safe %{workspace_root} injected",
+	} {
+		if isSafeDescription(description) {
+			t.Errorf("isSafeDescription(%q) = true, want false", description)
+		}
+	}
+	if !isSafeDescription("A printable single-line description.") {
+		t.Error("isSafeDescription rejected a printable single-line description")
+	}
+}
+
+func TestGenerateOcamlMatchesGoldenTrees(t *testing.T) {
+	for _, pkgType := range []string{"library", "program"} {
+		t.Run(pkgType, func(t *testing.T) {
+			target := t.TempDir()
+			if err := generateOcaml(
+				target,
+				"my-pkg",
+				pkgType,
+				"A test package",
+				"",
+				nil,
+				nil,
+				nil,
+			); err != nil {
+				t.Fatalf("generateOcaml: %v", err)
+			}
+
+			golden := filepath.Join(
+				"..", "..", "..", "specs", "fixtures", "scaffold-generator", "ocaml-"+pkgType,
+			)
+			assertTreesEqual(t, target, golden)
+		})
+	}
+}
+
+func TestGenerateOcamlEncodesDependenciesAndDescriptions(t *testing.T) {
+	target := t.TempDir()
+	description := `Quotes " backslash \ hash # parens () ; backticks ` + "`" + " and $(shell) plus\u00a0space"
+	if err := generateOcaml(
+		target,
+		"my-pkg",
+		"library",
+		description,
+		"Layer 4 in the computing stack.",
+		[]string{"graph"},
+		[]string{"bitset", "graph"},
+		nil,
+	); err != nil {
+		t.Fatalf("generateOcaml: %v", err)
+	}
+
+	opam, err := os.ReadFile(filepath.Join(target, "coding-adventures-my-pkg.opam"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	opamText := string(opam)
+	for _, want := range []string{
+		`"coding-adventures-graph" {= "0.1.0"}`,
+		"synopsis: \"Quotes \\\" backslash \\\\ hash # parens () ; backticks ` and $(shell) plus\u00a0space\"",
+	} {
+		if !strings.Contains(opamText, want) {
+			t.Errorf("opam metadata missing encoded %q", want)
+		}
+	}
+
+	build, err := os.ReadFile(filepath.Join(target, "BUILD"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	buildText := string(build)
+	for _, want := range []string{
+		"opam pin add --no-action -y coding-adventures-bitset ../bitset",
+		"opam pin add --no-action -y coding-adventures-graph ../graph",
+		"opam exec -- dune build @fmt",
+		"opam exec -- dune runtest --force",
+		"opam exec -- bisect-ppx-report summary --per-file --expect src/coding_adventures_my_pkg.ml bisect*.coverage",
+	} {
+		if !strings.Contains(buildText, want) {
+			t.Errorf("BUILD missing %q", want)
+		}
+	}
+	if strings.Contains(buildText, description) {
+		t.Error("BUILD must not contain user-controlled description text")
+	}
+	if strings.Contains(opamText, `\u00a0`) {
+		t.Error("opam metadata must preserve accepted Unicode as UTF-8, not Go escapes")
+	}
+	duneProject, err := os.ReadFile(filepath.Join(target, "dune-project"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(duneProject), "plus\u00a0space") {
+		t.Error("Dune metadata did not preserve accepted Unicode")
+	}
+}
+
+func TestReadOcamlDepsUsesCheckedInOpamMetadata(t *testing.T) {
+	pkgDir := filepath.Join(t.TempDir(), "my-pkg")
+	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	metadata := `opam-version: "2.0"
+name: "coding-adventures-my-pkg"
+synopsis: "depends: [ \"coding-adventures-synopsis-decoy\" ]"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "coding-adventures-graph" {= "0.1.0"}
+  "coding-adventures-state-machine" {= "0.1.0"}
+]
+build: [ "echo coding-adventures-build-decoy" ]
+`
+	if err := os.WriteFile(filepath.Join(pkgDir, "coding-adventures-my-pkg.opam"), []byte(metadata), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(
+		filepath.Join(pkgDir, "aaa-decoy.opam"),
+		[]byte("depends: [ \"coding-adventures-wrong-file\" ]\n"),
+		0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	deps, err := readOcamlDeps(pkgDir)
+	if err != nil {
+		t.Fatalf("readOcamlDeps: %v", err)
+	}
+	if got := strings.Join(deps, ","); got != "graph,state-machine" {
+		t.Fatalf("readOcamlDeps = %v", deps)
+	}
+}
+
+func TestGeneratedOcamlMetadataHasNoSelfDependency(t *testing.T) {
+	baseDir := t.TempDir()
+	pkgDir := filepath.Join(baseDir, "my-pkg")
+	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := generateOcaml(
+		pkgDir,
+		"my-pkg",
+		"library",
+		"A test package",
+		"",
+		nil,
+		nil,
+		nil,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	deps, err := readOcamlDeps(pkgDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(deps) != 0 {
+		t.Fatalf("generated dependency metadata includes false deps: %v", deps)
+	}
+	closure, err := transitiveClosure([]string{"my-pkg"}, "ocaml", baseDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	order, err := topologicalSort(closure, "ocaml", baseDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(order, ","); got != "my-pkg" {
+		t.Fatalf("topological order = %q, want my-pkg", got)
+	}
+}
+
+func TestScaffoldOcamlProgramResolvesLibraryDependencies(t *testing.T) {
+	repoRoot := t.TempDir()
+	packagesDir := filepath.Join(repoRoot, "code", "packages", "ocaml")
+	leafDir := filepath.Join(packagesDir, "leaf")
+	baseDir := filepath.Join(packagesDir, "base")
+	for _, dir := range []string{leafDir, baseDir} {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := generateOcaml(leafDir, "leaf", "library", "Leaf", "", nil, nil, nil); err != nil {
+		t.Fatal(err)
+	}
+	if err := generateOcaml(
+		baseDir,
+		"base",
+		"library",
+		"Base",
+		"",
+		[]string{"leaf"},
+		[]string{"leaf"},
+		map[string]string{"leaf": leafDir},
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	err := scaffold(scaffoldConfig{
+		packageName: "tool",
+		pkgType:     "program",
+		directDeps:  []string{"base"},
+		description: "An OCaml tool",
+		repoRoot:    repoRoot,
+	}, "ocaml", &stdout, &stderr)
+	if err != nil {
+		t.Fatalf("scaffold: %v", err)
+	}
+
+	buildPath := filepath.Join(repoRoot, "code", "programs", "ocaml", "tool", "BUILD")
+	build, err := os.ReadFile(buildPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	buildText := string(build)
+	leafPin := "coding-adventures-leaf ../../../packages/ocaml/leaf"
+	basePin := "coding-adventures-base ../../../packages/ocaml/base"
+	if !strings.Contains(buildText, leafPin) || !strings.Contains(buildText, basePin) {
+		t.Fatalf("program BUILD has incorrect package pin paths:\n%s", buildText)
+	}
+	if strings.Index(buildText, leafPin) > strings.Index(buildText, basePin) {
+		t.Fatalf("program BUILD is not leaf-first:\n%s", buildText)
+	}
+}
+
+func TestScaffoldRejectsSymlinkDependency(t *testing.T) {
+	repoRoot := t.TempDir()
+	baseDir := filepath.Join(repoRoot, "code", "packages", "ocaml")
+	if err := os.MkdirAll(baseDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	outside := filepath.Join(t.TempDir(), "outside")
+	if err := os.MkdirAll(outside, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	depDir := filepath.Join(baseDir, "linked-dep")
+	if err := os.Symlink(outside, depDir); err != nil {
+		t.Skipf("symlink creation is unavailable on this platform: %v", err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	err := scaffold(scaffoldConfig{
+		packageName: "consumer",
+		pkgType:     "library",
+		directDeps:  []string{"linked-dep"},
+		description: "A consumer",
+		dryRun:      true,
+		repoRoot:    repoRoot,
+	}, "ocaml", &stdout, &stderr)
+	if err == nil || !strings.Contains(err.Error(), "symlink") {
+		t.Fatalf("expected symlink dependency rejection, got %v", err)
+	}
+}
+
+func assertTreesEqual(t *testing.T, gotRoot, wantRoot string) {
+	t.Helper()
+	wantFiles := map[string]string{}
+	err := filepath.Walk(wantRoot, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.IsDir() {
+			return nil
+		}
+		rel, relErr := filepath.Rel(wantRoot, path)
+		if relErr != nil {
+			return relErr
+		}
+		data, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return readErr
+		}
+		wantFiles[filepath.ToSlash(rel)] = string(data)
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking golden tree: %v", err)
+	}
+
+	gotFiles := map[string]string{}
+	err = filepath.Walk(gotRoot, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.IsDir() {
+			return nil
+		}
+		rel, relErr := filepath.Rel(gotRoot, path)
+		if relErr != nil {
+			return relErr
+		}
+		data, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return readErr
+		}
+		gotFiles[filepath.ToSlash(rel)] = string(data)
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking generated tree: %v", err)
+	}
+
+	if len(gotFiles) != len(wantFiles) {
+		t.Fatalf("generated %d files, golden has %d\ngot: %v\nwant: %v", len(gotFiles), len(wantFiles), gotFiles, wantFiles)
+	}
+	for path, want := range wantFiles {
+		if got, ok := gotFiles[path]; !ok {
+			t.Errorf("generated tree missing %s", path)
+		} else if got != want {
+			t.Errorf("%s differs from golden\n--- got ---\n%s--- want ---\n%s", path, got, want)
+		}
+	}
+	for path := range gotFiles {
+		if _, ok := wantFiles[path]; !ok {
+			t.Errorf("generated tree has unexpected %s", path)
+		}
+	}
+}
+
+func TestReadHaskellDepsUsesCabalProjectSiblingPaths(t *testing.T) {
+	root := t.TempDir()
+	pkgDir := filepath.Join(root, "http1")
+	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, sibling := range []string{"http-core", "parser"} {
+		if err := os.MkdirAll(filepath.Join(root, sibling), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	project := `packages: . ../http-core
+          ../parser
+          ../missing
+          -- ../commented-out
+repository: ../not-a-package
+`
+	if err := os.WriteFile(
+		filepath.Join(pkgDir, "cabal.project"),
+		[]byte(project),
+		0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	deps, err := readHaskellDeps(pkgDir)
+	if err != nil {
+		t.Fatalf("readHaskellDeps: %v", err)
+	}
+	if strings.Join(deps, ",") != "http-core,parser" {
+		t.Fatalf("readHaskellDeps = %v, want [http-core parser]", deps)
 	}
 }
 
@@ -951,5 +1387,185 @@ func TestRefusesToOverwrite(t *testing.T) {
 	}
 	if !strings.Contains(stderr.String(), "already exists") {
 		t.Errorf("stderr should mention directory already exists, got: %s", stderr.String())
+	}
+}
+
+// =========================================================================
+// File generation tests — C and C++ (pure ISO, iso-harness)
+// =========================================================================
+
+func TestRefusesDanglingSymlinkTarget(t *testing.T) {
+	repoRoot := t.TempDir()
+	baseDir := filepath.Join(repoRoot, "code", "packages", "ocaml")
+	if err := os.MkdirAll(baseDir, 0o755); err != nil {
+		t.Fatalf("create OCaml package directory: %v", err)
+	}
+
+	targetDir := filepath.Join(baseDir, "linked-pkg")
+	if err := os.Symlink(filepath.Join(repoRoot, "missing-target"), targetDir); err != nil {
+		t.Skipf("symlink creation is unavailable on this platform: %v", err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	err := scaffold(scaffoldConfig{
+		packageName: "linked-pkg",
+		pkgType:     "library",
+		description: "A linked package",
+		repoRoot:    repoRoot,
+	}, "ocaml", &stdout, &stderr)
+	if err == nil {
+		t.Fatal("expected dangling symlink target to be refused")
+	}
+	if !strings.Contains(err.Error(), "directory already exists") {
+		t.Fatalf("expected existing-directory error, got %v", err)
+	}
+}
+
+func TestGenerateC(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := generateC(tmpDir, "ring-buf", "A ring buffer", ""); err != nil {
+		t.Fatalf("generateC: %v", err)
+	}
+
+	// Header, source, and test use snake_case filenames/symbols derived from the
+	// kebab package name.
+	header, err := os.ReadFile(filepath.Join(tmpDir, "include", "ring_buf.h"))
+	if err != nil {
+		t.Fatalf("cannot read header: %v", err)
+	}
+	if !strings.Contains(string(header), "#ifndef RING_BUF_H") {
+		t.Error("header missing include guard")
+	}
+	if !strings.Contains(string(header), "int ring_buf_answer(void);") {
+		t.Error("header missing API declaration")
+	}
+	if _, err := os.Stat(filepath.Join(tmpDir, "src", "ring_buf.c")); err != nil {
+		t.Error("source file missing")
+	}
+	test, err := os.ReadFile(filepath.Join(tmpDir, "tests", "ring_buf_test.c"))
+	if err != nil {
+		t.Fatalf("cannot read test: %v", err)
+	}
+	if !strings.Contains(string(test), "#include \"iso_test.h\"") {
+		t.Error("test does not use the iso_test.h harness")
+	}
+
+	// BUILD declares the iso-harness toolchain dep and runs the POSIX script.
+	build, err := os.ReadFile(filepath.Join(tmpDir, "BUILD"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD: %v", err)
+	}
+	if !strings.Contains(string(build), "# build-tool: deps=c/iso-harness") {
+		t.Error("BUILD missing iso-harness dependency comment")
+	}
+	if !strings.Contains(string(build), "sh tools/run.sh") {
+		t.Error("BUILD does not invoke tools/run.sh")
+	}
+
+	// BUILD_windows drives the MSVC path via PowerShell.
+	buildWin, err := os.ReadFile(filepath.Join(tmpDir, "BUILD_windows"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD_windows: %v", err)
+	}
+	if !strings.Contains(string(buildWin), "tools\\run.ps1") {
+		t.Error("BUILD_windows does not invoke tools/run.ps1")
+	}
+
+	// run.sh locates the harness by walking up and compiles the C sources.
+	runSh, err := os.ReadFile(filepath.Join(tmpDir, "tools", "run.sh"))
+	if err != nil {
+		t.Fatalf("cannot read run.sh: %v", err)
+	}
+	if !strings.Contains(string(runSh), "code/packages/c/iso-harness") {
+		t.Error("run.sh does not reference the iso-harness location")
+	}
+	if !strings.Contains(string(runSh), "iso_build_and_run c ring_buf-tests tests/ring_buf_test.c src/ring_buf.c") {
+		t.Error("run.sh does not invoke iso_build_and_run with the expected C sources")
+	}
+
+	// _build/ is ignored so compiled artifacts never get committed.
+	gitignore, err := os.ReadFile(filepath.Join(tmpDir, ".gitignore"))
+	if err != nil {
+		t.Fatalf("cannot read .gitignore: %v", err)
+	}
+	if !strings.Contains(string(gitignore), "_build/") {
+		t.Error(".gitignore does not ignore _build/")
+	}
+}
+
+func TestGenerateCpp(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := generateCpp(tmpDir, "static-vector", "A fixed-capacity vector", ""); err != nil {
+		t.Fatalf("generateCpp: %v", err)
+	}
+
+	// Header-only: a .hpp under include/ with a namespaced inline API, and NO src/.
+	header, err := os.ReadFile(filepath.Join(tmpDir, "include", "static_vector.hpp"))
+	if err != nil {
+		t.Fatalf("cannot read header: %v", err)
+	}
+	if !strings.Contains(string(header), "#ifndef STATIC_VECTOR_HPP") {
+		t.Error("header missing include guard")
+	}
+	if !strings.Contains(string(header), "namespace static_vector") {
+		t.Error("header missing namespace")
+	}
+	if _, err := os.Stat(filepath.Join(tmpDir, "src")); !os.IsNotExist(err) {
+		t.Error("C++ header-only package should not create a src/ directory")
+	}
+
+	test, err := os.ReadFile(filepath.Join(tmpDir, "tests", "static_vector_test.cpp"))
+	if err != nil {
+		t.Fatalf("cannot read test: %v", err)
+	}
+	if !strings.Contains(string(test), "static_vector::answer()") {
+		t.Error("test does not call the generated API")
+	}
+
+	runSh, err := os.ReadFile(filepath.Join(tmpDir, "tools", "run.sh"))
+	if err != nil {
+		t.Fatalf("cannot read run.sh: %v", err)
+	}
+	if !strings.Contains(string(runSh), "iso_build_and_run cpp static_vector-tests tests/static_vector_test.cpp") {
+		t.Error("run.sh does not invoke iso_build_and_run with the expected C++ source")
+	}
+}
+
+// C and C++ must be accepted by the language validator and produce packages
+// under the c/ and cpp/ buckets.
+func TestCFamilyLanguagesAreValid(t *testing.T) {
+	for _, lang := range []string{"c", "cpp"} {
+		found := false
+		for _, vl := range validLanguages {
+			if vl == lang {
+				found = true
+			}
+		}
+		if !found {
+			t.Errorf("%q missing from validLanguages", lang)
+		}
+	}
+}
+
+func TestOcamlLanguageIsValid(t *testing.T) {
+	for _, lang := range validLanguages {
+		if lang == "ocaml" {
+			return
+		}
+	}
+	t.Fatal(`"ocaml" missing from validLanguages`)
+}
+
+// readDeps must not error for C/C++ (they have no manifest; deps live in the
+// BUILD comment). It returns an empty dependency set.
+func TestReadDepsCFamilyIsEmpty(t *testing.T) {
+	for _, lang := range []string{"c", "cpp"} {
+		deps, err := readDeps(t.TempDir(), lang)
+		if err != nil {
+			t.Errorf("readDeps(%q) errored: %v", lang, err)
+		}
+		if len(deps) != 0 {
+			t.Errorf("readDeps(%q) = %v, want empty", lang, deps)
+		}
 	}
 }

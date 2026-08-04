@@ -2,6 +2,549 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.58.0] - 2026-07-21
+
+### Fixed - drop the redundant `;` after a block-final `var` declaration
+
+A `var`/`let`/`const` declaration that is the **last statement inside a
+block** (`{ … }`) used to keep its terminator `;` right before the closing
+`}`:
+
+```js
+function f(){ var y = h(); }   // was: function(){var y=h();}
+```
+
+The closing `}` already terminates that statement (ECMAScript ASI), so the
+reference Closure Compiler emits no `;` there — `function(){var y=h()}`. The
+compact-mode "drop the redundant terminator `;` before `}`" rule
+(`last_stmt_uses_terminator_semi`) excluded **all** declarations; it now
+returns `true` for a block-final `VariableDeclaration`, so the `;` is popped.
+
+This gate feeds only `emit_block_statement`; the separate top-level part-B
+`;` that `emit_program` appends after a trailing function/class declaration
+(the fix from the previous "extra `;` after a top-level declaration" work) is
+untouched. Function/class declarations end in `}` (no `;` to pop, so the pop
+no-ops on them), and import/export declarations are illegal inside a block and
+never reach the gate.
+
+This defect was latent until now: the fold-control-flow `var` hoist/split
+(removed in `closure-pass-fold-control-flow` 0.33.0) always moved a `var`'s
+initializer off the last-statement position, so a block-final `var` never
+reached the emitter. Removing that transform surfaced this, and the two
+changes ship together.
+
+## [0.57.0] - 2026-07-20
+
+### Added - output line wrapping at a 500-column budget
+
+The emitter produced the whole program as ONE line regardless of length. The
+reference compiler wraps, so every output longer than the budget diverged.
+
+Oracle-verified against `closure-compiler-v20260712.jar` by emitting N
+uniform-width call statements and measuring each output line:
+
+```text
+  stmt width | line 1 | previous statement ended at
+  -----------+--------+-----------------------------
+       10    |   510  |  500
+       11    |   506  |  495
+       12    |   504  |  492
+```
+
+In every row the line is cut at the FIRST length exceeding 500, and the
+preceding length is <= 500. The rule is therefore: emit the statement, then if
+the line is now over budget, break AFTER it. Lines routinely run slightly over
+500 -- the break lands after the statement that crosses, not before it.
+
+Verified byte-identical to the oracle at all three widths and across five
+consecutive breaks (`510 510 510 510 510 50` on 260 statements).
+
+### Why a `var` run wraps differently, and why it does not apply here
+
+A run of separate `var v00=1;` statements wraps at 500/495/492 instead -- BEFORE
+the crossing statement. That is a different mechanism (upstream notes a preferred
+break point ahead of certain constructs). It does not reach this code path:
+consecutive `var` declarations are COLLAPSED into a single statement at
+SIMPLE/ADVANCED (oracle-confirmed), and WHITESPACE_ONLY does not route through
+this emitter at all -- closurec has a separate `whitespace_only` minifier. The
+levels this emitter governs only ever see the break-after rule.
+
+Getting this backwards is easy and silent: an early draft of this change derived
+the rule from a `var` bisection and wrapped at the wrong column on every large
+file while still passing every test. Only a byte-comparison against the oracle
+caught it, which is why the constant carries the table and the caveat inline.
+
+### Not covered
+
+A single statement whose own minified form exceeds the budget. The reference
+compiler breaks INSIDE such a statement at safe token boundaries (after a binary
+operator, after an argument comma) and those lines may exceed 500. That needs
+line tracking threaded through every emit method plus a notion of which
+boundaries are ASI-safe, and is tracked separately.
+
+## [0.56.0] - 2026-07-20
+
+### Fixed - control characters now render exactly as the reference compiler does
+
+String-literal escaping diverged from the real Closure Compiler on FOUR counts.
+All four are fixed and pinned by tests; the table below is oracle-verified
+byte-for-byte against `closure-compiler-v20260712.jar` (SIMPLE,
+`--language_in ECMASCRIPT_2020 --language_out NO_TRANSPILE`) by round-tripping
+every code point in `0x00..=0x1F` plus `0x7F` and reading the bytes with `xxd`.
+
+1. **NUL was emitted as `\u0000`; Closure emits `\x00`.** This is the headline
+   fix, and NUL is the ONLY code point Closure renders with the `\x` form -- see
+   (2). 
+2. **The `\x` shortening does NOT generalise.** `\x01` would be shorter than
+   `\u0001`, but Closure keeps `\u0001`. The emitter deliberately special-cases
+   NUL alone; a future "consistency" refactor that turns this into a general
+   `\xXX` rule would diverge on every other control character. The tests pin
+   `\u0001` / `\u0007` precisely to prevent that.
+3. **Hex digits are LOWERCASE.** The emitter used `{:04X}` and produced
+   `\u001B`; Closure emits `\u001b`.
+4. **`\b`, `\v` and `\f` were missing from the short-escape set**, so 0x08 / 0x0B /
+   0x0C fell through to `\u0008` / `\u000B` / `\u000C` instead of the one-letter
+   forms. 0x7F DEL was not escaped AT ALL (the guard was `< 0x20`, and DEL sits
+   above it), so a raw DEL byte could reach the output; it is now `\u007f`.
+
+The full table now implemented:
+
+```text
+  0x00                     -> \x00
+  0x08 0x09 0x0A 0x0B 0x0C 0x0D -> \b \t \n \v \f \r
+  0x01..0x07, 0x0E..0x1F   -> \u0001 .. \u001f   (lowercase)
+  0x7F DEL                 -> \u007f
+```
+
+The logic was triplicated across `escape_str_sq`, `escape_str_dq` and
+`escape_ascii_only`; all three now delegate to one `push_control_escape` helper
+that carries the oracle table and the reasoning in its doc comment.
+
+End-to-end proof: feeding all 33 code points through `closurec` at SIMPLE and
+diffing against the oracle yields byte streams that are IDENTICAL once line
+breaks are normalised. (The residual newline difference is Closure's ~500-char
+output line-wrapping, an unrelated gap tracked as its own task -- closure-emitter
+does not wrap yet.)
+
+Not changed here, tracked separately: astral code points are still emitted as
+`\u{XXXXX}` rather than as surrogate pairs, and non-ASCII is still only escaped
+under `ascii_only` while Closure escapes it by default.
+
+## [0.55.0] - 2026-07-19
+
+### Changed — a function/class declaration is terminated only when it is the last program item
+
+Previously the emitter appended a redundant `;` after every top-level function
+declaration's closing `}` (and, for classes, the class body already self-terminates
+with `}`). But a declaration's `}` is self-terminating: the following statement
+begins cleanly with no separator needed. The reference Closure Compiler emits the
+extra `;` in exactly one spot — after the LAST program item, when that item is a
+`function`/`class` declaration (a trailing terminator, mirroring how any final
+statement is terminated). Everywhere else the declaration abuts the next item bare:
+
+- `function f(){}g()`            (no `;` between the decl and the call)
+- `function f(){}function g(){}` (no `;` between two decls)
+- `function f(){};`              (a lone/last decl DOES get the trailing `;`)
+- `class C{}`                    (a class body self-terminates; a lone class gets `;`)
+
+The terminator is now emitted once in `emit_program`, only when the final program
+item is a `FunctionDeclaration` or `ClassDeclaration` and we are in compact mode.
+`emit_function_declaration` no longer appends its own `;`. This removes a byte of
+drift from every minified module that placed a function/class declaration before
+another statement — the common case.
+
+## [0.54.0] - 2026-07-18
+
+### Changed — `in` / `instanceof` drop their space at hard token boundaries
+
+The word-shaped operators `in` / `instanceof` previously always emitted a space
+on both sides. But a space is only needed to prevent the keyword from fusing with
+a neighbour into one identifier, which can only happen when the touching character
+is an identifier-part char (`[A-Za-z0-9_$]`). At a hard boundary the space is
+redundant, and the reference Closure Compiler drops it in compact mode:
+
+- `"k" in obj`  → `"k"in obj`   (the string's closing `"` absorbs the LEFT space)
+- `a in {}`     → `a in{}`      (the `{` absorbs the RIGHT space)
+- `a in [1]`    → `a in[1]`     (the `[` absorbs the RIGHT space)
+
+while `a in b`, `1 in o` keep both spaces (identifier/digit seams). The left seam
+is decided from the already-emitted buffer's last char; the right seam reuses
+`keyword_needs_space_before` (the helper `return`/`throw` use — those keywords also
+end in a letter, so the classification is identical). Pretty mode is unchanged
+(always spaced). Oracle-verified byte-identical.
+
+## [0.53.0] - 2026-07-17
+
+### Fixed — `throw`/`return` drop the space before a punctuation-leading argument
+
+`emit_throw` and `emit_return` emitted an unconditional space between the keyword
+and its argument (`throw {a:1}`, `return "x"`). The reference Closure Compiler
+emits that space only when the argument would otherwise **fuse** with the
+keyword into one token; a punctuation-leading argument needs no separator:
+
+- `throw {a:1}` → `throw{a:1}`   `throw [1,2]` → `throw[1,2]`
+- `throw "x"` → `throw"x"`       `throw /re/` → `throw/re/`   `throw !0` → `throw!0`
+- **kept** where a word token would fuse: `throw x`, `throw 5`,
+  `throw new C`, `throw void x`, `return typeof x`
+
+A new `keyword_needs_space_before` helper decides this. It is **conservative** —
+it returns `true` (keep the space, always safe against mis-tokenisation) for
+every expression whose leading character is not *provably* punctuation, so it
+can never drop a required separator. The punctuation-leading set is exact: object
+/ array / string / regex / template literals, plus a unary with a symbol
+operator (`!`/`~`/`-`/`+`); the *word* unary operators `void`/`typeof`/`delete`
+still take the space.
+
+This was a `SIMPLE`/`ADVANCED`-only divergence (the whitespace-only path already
+omitted the space); it also completes the byte-identity of the `new Object()` /
+`new Array()` → `{}` / `[]` folds in `throw`/`return` position. Fixes hand-written
+`throw {…}` / `throw "…"` too. Byte-identical to the reference compiler at SIMPLE.
+## [0.52.0] - 2026-07-17
+
+### Fixed — an optional-chain `new` callee is now parenthesized (invalid-JS miscompile)
+
+An optional chain (`a?.b`) used as the **callee of a `new` expression** MUST be
+parenthesized: ECMAScript's `MemberExpression` production for `new` forbids an
+`OptionalChain` in the callee, so a bare `new a?.b` is an outright **Syntax
+Error**, not merely a mis-parse. The emitter previously dropped the parens,
+producing invalid output:
+
+- `new (a?.b)` → `new a?.b`  (invalid)
+- `new (a?.[b])` → `new a?.[b]`, `new (a.b?.c)` → `new a.b?.c`,
+  `new (a?.b())` → `new a?.b()`, `new (a?.b)(x)` → `new a?.b(x)` — all invalid
+
+`new_callee_needs_parens` now returns `true` for a **top-level**
+`ChainExpression` callee. The check is deliberately top-level-only and is NOT
+threaded through the member-spine recursion: a chain nested as a member
+*object* (`new (a?.b).c`, whose top-level callee is a plain non-optional
+member) is already wrapped internally by `emit_plain_access_base`, so recursing
+would double-wrap it to `new ((a?.b).c)`. The call-in-spine walk moved to a
+dedicated `new_callee_has_call_in_spine` helper.
+
+### Fixed — `new ` keeps its space before a parenthesized callee (byte-identity)
+
+The reference compiler always separates `new` from a parenthesized callee with
+a space (`new (f())`, `new (a.b().c)`, `new (a?.b)`), even though `new(f())`
+would tokenise fine. The wrapped-callee branch of `emit_new` previously emitted
+`new(` directly; it now emits the same `required_ws()` the bare-callee branch
+uses, so every wrapped shape (call-in-spine and optional-chain) matches Closure
+byte-for-byte. (Operator/logical/sequence callees already got the space via the
+precedence-wrapped bare branch — `new (a+b)`, `new (a||b)`; only the explicit
+call/member/chain wrap was missing it.)
+
+## [0.51.0] - 2026-07-17
+
+### Fixed — a `ChainExpression` base of a plain member/call/tagged-template is now parenthesized (optional-chain-scope miscompile)
+
+An optional chain (`a?.b`) used as the object of a **non-optional** member
+access, the callee of a plain call, or the tag of a tagged template MUST be
+parenthesized — the parens are the chain boundary. Dropping them lets a
+following non-optional access join the chain, which is a **semantic** change,
+not cosmetic:
+
+- `(a?.b).c` → `a?.b.c`  — `.c` now short-circuits with `?.` (`a?.b.c` returns
+  `undefined` when `a` is nullish; `(a?.b).c` throws — different behavior)
+- `(a?.b)()` → `a?.b()`, `(a?.[0]).x` → `a?.[0].x`, `(a?.()).x` → `a?.().x`
+- `` (a?.b)`x` `` → `` a?.b`x` `` (also outright invalid — a tagged template
+  can't tag an optional chain unparenthesized)
+
+A `ChainExpression` is the transparent chain-boundary wrapper, tagged
+`PREC_PRIMARY` (its inner spine is a member/call node), so the ordinary
+`PREC_PRIMARY` base emit never wrapped it. A new `emit_plain_access_base` helper
+wraps a `ChainExpression` base and otherwise keeps the existing `PREC_PRIMARY`
+emit; it backs `emit_member`, `emit_call`, and `emit_tagged_template`.
+
+An **optional** access base is deliberately excluded — `(a?.b)?.c` needs no
+parens because the chain simply continues (`a?.b?.c`), so
+`emit_optional_member`/`emit_optional_call` keep their bare emit. A chain as a
+call **argument** (`f(a?.b)`) or in statement position is likewise unwrapped.
+
+Verified byte-identical to the reference Closure Compiler at `SIMPLE` across
+member/call/computed/optional-call-result/tagged-template and deep chains
+(`(a?.b).c().d`, `((a?.b).c)?.d`). Bug fix; MINOR bump 0.50.0 → 0.51.0.
+
+Not covered (rarer, separate follow-ups): a `ChainExpression` as a `new` callee
+(`new (a?.b)`, which also has a `new␣(` spacing quirk) and an **object literal**
+at the head of an optional chain that is then member-accessed
+(`({}?.x).y` → the chain is now correctly bounded, but Closure additionally
+wraps the object literal: `(({})?.x).y`).
+
+## [0.50.0] - 2026-07-16
+
+### Fixed — object literal at the leftmost spine of a statement is now parenthesized (invalid-JS miscompile)
+
+An `ExpressionStatement` whose first emitted token is `{` mis-parses as a
+**block**. The direct-expression guard already wrapped a bare `{…}`, but it
+missed an object literal reached through the leftmost **emit spine** — a member,
+call, assignment target, update, binary/logical/conditional/sequence — so these
+printed invalid JS:
+
+- `({}).f` → `{}.f`  (parses `{}` as a block, then `.f` is a syntax error)
+- `({}).f()` → `{}.f()`, `({})[0]` → `{}[0]`, `` ({}).f`` `` → `` {}.f`` ``
+- `({}).x++` → `{}.x++`, `({}).a = 1` → `{}.a=1`, `({}+"")` → `{}+""`
+
+The reference Closure Compiler wraps the **object literal itself** (`({}).f`),
+not the whole statement (`({}.f)`), so a whole-statement wrap would not be
+byte-identical. The fix arms a printer flag (`wrap_leftmost_object`) at the start
+of an expression statement whose leftmost spine leaf is an object literal;
+because every spine construct emits its leftmost child before any token of its
+own, the flag lands on exactly that leaf, and `emit_object` consumes it to wrap
+only itself. A new `starts_with_object_literal` walks the same leftmost spine to
+decide when to arm the flag.
+
+`function`/`class` expressions keep the existing direct-expression wrap: deeper
+on the spine they are already parenthesized by the printer's precedence rules
+(`(function(){})()` stays single-wrapped), so they are deliberately excluded from
+the object-spine walk to avoid double-wrapping. Objects **not** at statement
+start are unaffected (`a = {}.f` stays `a={}.f`, `g(({}).f())` stays `g({}.f())`).
+
+Verified byte-identical to the reference Closure Compiler at `SIMPLE`. Bug fix;
+MINOR bump 0.49.0 → 0.50.0.
+
+## [0.49.0] - 2026-07-16
+
+### Changed — a no-argument `new` drops its empty `()`; `new` always wraps as a member/call spine
+
+The emitter now prints a zero-argument `NewExpression` without the empty
+parentheses — `new C()` → `new C`, `new a.b.C()` → `new a.b.C` — matching the
+reference Closure Compiler at `SIMPLE` byte-for-byte. Previously the argument
+parens were always printed.
+
+Dropping the `()` makes a `new` a bare `NewExpression` in the grammar, which
+binds **looser** than a member access or call: a following `.y` / `[k]` / `(…)`
+would otherwise re-associate onto the callee (`new C.y` parses as `new (C.y)`).
+To preserve meaning, `expr_prec` now tags every `NewExpression` at a new
+`PREC_NEW` (just below `PREC_PRIMARY`), so a member-object or call-callee parent
+wraps it. This matches Closure for **both** the argumented and no-argument
+forms:
+
+- `new C()` → `new C`
+- `new C().foo` → `(new C).foo`
+- `new C()()` → `(new C)()`
+- `new C().m()` → `(new C).m()`
+- `new C(1).foo` → `(new C(1)).foo`
+- `new C(1)()` → `(new C(1))()`
+- `new new C()` → `new (new C)`
+- `new C(1)` (standalone), `typeof new C`, `new C+1` — no wrap (looser parents)
+
+Verified byte-identical against `closure-compiler-v20260712.jar` (`SIMPLE`).
+The upstream `CodePrinterTest` `new`-operator port
+(`tests/upstream/code_printer_new_test.rs`) previously pinned the always-`()`
+spelling; its assertions were corrected to the true jar output (`new X`,
+`(new X).y`, …).
+
+Out of scope (separate divergences, unchanged here): the computed-index → dot
+normalisation (`(new C)["k"]` → `(new C).k`), sequence-at-statement splitting
+(`a,b` → `a;b`), and the space before a parenthesised callee
+(`new(f())` vs `new (f())`). MINOR bump 0.48.0 → 0.49.0.
+
+## [0.48.0] - 2026-07-15
+
+### Added — drop the leading zero of a bare fraction in value position (`0.5` → `.5`)
+
+A numeric literal whose magnitude is in `(0, 1)` now emits without its leading
+zero in **expression/value position**, matching the reference Closure Compiler's
+minification: `0.5` → `.5`, `-0.25` → `-.25`, `0.75` → `.75`. The strip is
+applied to the decimal candidate *before* the decimal-vs-exponential
+shorter-of comparison, so a stripped decimal can win a tie against the
+exponential form (`0.001` → `.001`, not `1E-3`) while a strictly-shorter
+exponential still wins (`0.0001` → `1E-4`). A non-zero integer part is untouched
+(`10.5`, `3.14`).
+
+The strip is **value-position only**. In object-key position the reference
+compiler does not drop the leading zero — it quotes a float key instead
+(`{0.5:1}` → `{"0.5":1}`), a separate transform — so `emit_numeric` (value path)
+uses the new `format_js_number_value`, while the `PropertyKey::NumericLiteral`
+arm keeps the canonical `format_js_number`. Both share `format_js_number_impl`,
+parameterized by whether to strip.
+
+## [0.47.0] - 2026-07-14
+
+### Added — emit `name=expr` default parameters — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. New `FunctionParam::AssignmentPattern` emit arm writes the `left`
+identifier, `=` (tight in minified mode, spaced `a = 1` in pretty mode via `pretty_ws()`), then the
+`right` default expression at `PREC_ASSIGNMENT` — so a looser bare-sequence default parenthesises
+(`function f(a=(1,2)){}`) while an ordinary literal prints bare. The arrow single-param paren-elision
+guard already restricts to a plain identifier, so a lone default param `(a=1)=>` keeps its parens
+(`a=1=>` is invalid JS). Additive; MINOR.
+
+## [0.46.0] - 2026-07-14
+
+### Added — emit `...name` rest parameters — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0. New `FunctionParam::RestElement` emit arm writes `...` + the gathered
+identifier (`function f(a,...rest){}`). A lone rest param keeps its parens — the arrow concise-param form
+now only elides parens for a plain identifier, since `...a=>` is invalid JS. Additive; MINOR.
+
+## [0.45.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: emit export declarations
+
+`emit_export_named` / `emit_export_default` / `emit_export_all` render the new
+`Declaration::Export*` variants in minified form: `export{a,b as c};`,
+`export{a}from"y";`, `export const x=1;` (defers to the inner declaration's own
+terminator), `export default 1;` (expression) / `export default function f(){}`
+(self-terminating), `export*from"y";`, and `export*as ns from"y";`. Six emit
+tests.
+
+## [0.44.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: emit `import` declarations
+
+`emit_import` renders `Declaration::ImportDeclaration` in minified form:
+side-effect `import"y";`, default `import x from"y";`, namespace
+`import*as ns from"y";` (the `*` punctuator abuts `import` with no space), named
+`import{a,b as c}from"y";`, and the default-plus-named combination
+`import x,{a}from"y";`. Five emit tests cover each shape.
+
+## [0.43.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: emit `with (obj) stmt`
+
+New `emit_with` prints `with(` + the object expression + `)` + the body statement
+(mirroring `emit_while`), dispatched from a new `TaggedStatement::WithStatement`
+arm. Picks up javascript-ast 0.38.0.
+
+## [0.42.0] - 2026-07-11
+
+### Added — CLOC12.183: emit ES2021 logical assignment operators
+
+`assignment_op_str` now maps the three new `AssignmentOperator` variants
+(`LogicalAndEq`/`LogicalOrEq`/`NullishCoalescingEq`) to `&&=` / `||=` / `??=`.
+Picks up javascript-ast 0.37.0. New `logical_assignment_operators_emit` test.
+
+## [0.41.1] - 2026-07-11
+
+### Added — CLOC12.177 PR3: CodePrinter private-name conformance port
+
+New upstream conformance port `tests/upstream/code_printer_private_name_test.rs`
+(the twenty-fourth CodePrinter port), mirroring `CodePrinterTest.java`'s
+private-class-member-name printing cases. Isolates the `PrivateName` arm of
+`emit_property_key` (CLOC12.177 PR1). 7 active `#[test]`s, 0 `#[ignore]`:
+initialized private field (`#x=1;`), bare private field (`#x;`), single-`#`
+regression guard, static private field (`static #x=1;`), private method key
+(`#m(){}`), and private/public interleave (`#x=1;m(){}`, `x=1;#y=2;`). Inputs are
+hand-constructed AST (the emitter is the unit under test; the private-field
+bridge is exercised separately in javascript-parser + a closurec e2e fixture, and
+building AST directly covers the private-method key shape whose bridge is a later
+slice). Test-only; adds a `[[test]]` entry to `Cargo.toml` and a row to
+`tests/upstream/ATTRIBUTION.md`. PATCH.
+
+## [0.41.0] - 2026-07-11
+
+### Added — CLOC12.177 PR1: emit private class-member names (`#x`)
+
+`javascript-ast` 0.36.0 added `PropertyKey::PrivateName`. `emit_property_key`
+gains a `PrivateName` arm that prints `#` followed by the stored bare name — so a
+private field (`class C{#x=1;}`), a bare private field (`class C{#x;}`), a static
+private field (`class C{static #x=1;}`), and a private method (`class C{#m(){}}`)
+all print correctly. No quote/shorten logic applies (a private name is a hard
+token boundary, unlike a string key). 5 emit tests. MINOR.
+
+## [0.40.1] - 2026-07-11
+
+### Added — CLOC12.176 PR3: CodePrinter static-block conformance port
+
+New upstream conformance port `tests/upstream/code_printer_static_block_test.rs`
+(the twenty-third CodePrinter port), mirroring `CodePrinterTest.java`'s **static
+initialization block** printing cases. Isolates `emit_static_block` + the shared
+`emit_class_tail` member loop's `StaticBlock` arm (CLOC12.176 PR1). 9 active
+`#[test]`s, 0 `#[ignore]`: empty block (`static{}`, `static` abutting `{`),
+statement body (`static{x}`), real initializer (`static{x=1}`), two statements
+(`static{x;y}`), brace-termination needing no `;` separator (`static{}m(){}`,
+`m(){}static{}`), two blocks back-to-back (`static{}static{}`), and all three
+member kinds in source order (`x=1;static{y=2}m(){}`). Inputs are
+hand-constructed AST (the emitter is the unit under test; the bridge is exercised
+separately in javascript-parser + a closurec e2e fixture). Test-only; adds a
+`[[test]]` entry to `Cargo.toml` and a row to `tests/upstream/ATTRIBUTION.md`.
+PATCH.
+
+## [0.40.0] - 2026-07-11
+
+### Added — CLOC12.176 PR1: emit static initialization blocks
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). The shared `emit_class_tail` member loop gains a `StaticBlock` arm calling the new
+`emit_static_block`, which prints `static{<statements>}` — the `static` keyword
+abutting the `{` (a hard token boundary), the body via the shared
+`emit_block_statement`, and no trailing `;` (brace-terminated like a method). 4
+emit tests (`static{}`, `static{x}`, `static{x;y}`, field/block/method interleave).
+
+## [0.39.1] - 2026-07-11
+
+### Added — CLOC12.175 PR3: CodePrinter class-field conformance port
+
+New `tests/upstream/code_printer_class_field_test.rs` (registered as the
+`upstream_code_printer_class_field` `[[test]]`), the third class port — mirroring
+upstream Closure `CodePrinterTest`'s class-**field** printing cases. 14 active
+`#[test]`s, 0 `#[ignore]`, driving `emit_class_field` + the shared
+`emit_class_tail` `Field` arm from HAND-BUILT AST (so it also covers computed /
+numeric / string keys and a sequence initializer the grammar/bridge cannot yet
+parse): initialized field (`x=1;`), bare field (`y;`, no stray `=`), `static`
+prefix (`static z=2;` / `static z;`), computed / literal keys (`[k]=v;` /
+`static [k]=v;` / `0=1;` / quoted `"a-b"=1;`), the `PREC_ASSIGNMENT` sequence wrap
+(`x=(a,b);`), and field/method interleave (`x=1;m(){}` / `m(){}x=1;` /
+`x=1;y;static z=2;`). PATCH — test-only, no emitter change.
+
+## [0.39.0] - 2026-07-11
+
+### Added — CLOC12.175 PR1: emit class fields
+
+`javascript-ast` 0.34.0 added `ClassMember::Field(PropertyDefinition)`. The
+shared class-body member loop (`emit_class_tail`, used by both the class
+expression and the class declaration) gains a `Field` arm calling the new
+`emit_class_field`, which prints `[static ]key[=value];` — the initializer at
+`PREC_ASSIGNMENT`, a bare field emitting just `key;`. Six emit tests cover
+initialized / bare / static / computed-key fields and a field interleaved with a
+method.
+
+## [0.38.1] - 2026-07-11
+
+### Added — CLOC12.174 PR3: CodePrinter class-declaration conformance port
+
+New upstream port `tests/upstream/code_printer_class_declaration_test.rs`
+(registered as `[[test]] upstream_code_printer_class_declaration`), the companion
+to the class-expression port. Isolates `emit_class_declaration` + the shared
+`emit_class_tail` helper from PR1. **20 active `#[test]`s, 0 `#[ignore]`** — the
+declaration emits **bare** (no wrapping paren, unlike the expression form's
+`(class …);`; no trailing `;`, unlike a `function` declaration), the four
+`extends`-operand precedence cases (identifier / member / call bare, conditional
+wrapped `extends (a?b:c)`), the member forms (method / params+body / `static` /
+`get` / `set` / `constructor` / stacked `static get` / generator `*m` / `async m`
+/ computed `[k]`, `[0]`, `[a+b]` / two members back-to-back), and the full shape
+`class C extends B{m(){}}`. Inputs are hand-constructed AST, so the port also
+covers the generator / async / computed-key / multi-member shapes the grammar
+cannot yet parse. Test-only change (no production edit); ATTRIBUTION.md updated.
+This closes the CLOC12.174 class-declaration arc.
+
+## [0.38.0] - 2026-07-10
+
+### Added — CLOC12.174 PR1: emit `ClassDeclaration` (`class C [extends S] {…}`)
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. New
+`emit_class_declaration` prints `class <id>[ extends S]{members}`, reusing
+`emit_class_member` for each member. The shared `[ extends S]{members}` tail was
+factored into a new `emit_class_tail` helper used by **both** `emit_class` (the
+expression form) and `emit_class_declaration`.
+
+Three deliberate differences from the class *expression*, each the exact mirror
+of the `FunctionDeclaration` vs `FunctionExpression` split:
+
+1. **`id` always prints** (it is non-optional), with a `required_ws()` after
+   `class`, like `emit_function_declaration` after `function`.
+2. **No precedence wrap / no statement-start parenthesis** — a class expression
+   is `PREC_UNARY` and wrapped in statement position (`(class{});`) because a
+   leading `class` parses as a declaration, which is precisely what this node
+   *is*. So the declaration form has no `expr_prec` entry and is never wrapped.
+3. **No trailing `;`** — `emit_function_declaration` appends a normalising `;`
+   (gap-030 part B); a class declaration terminates with its `}` alone (upstream
+   Closure).
+
+5 hand-constructed AST unit tests: empty (bare, no `;`), heritage, members
+(method / static / get / set), `constructor` + computed key, and the full
+`class C extends B{m(){}}` shape. Reachable end-to-end once the PR2 bridge
+produces the node.
+
 ## [0.37.1] - 2026-07-08
 
 ### Added — CLOC12.173 PR3: CodePrinter class-expression conformance port
@@ -702,7 +1245,7 @@ quote-choice selects:
 
 - **7 active `#[test]`s** (all pass on the first run — no new emitter bug):
   backslash doubling (`a\b` → `"a\\b"`), the `\n`/`\r`/`\t` short escapes, an
-  "other" control char as upper-case `\uXXXX` (`U+0007` → ``), the
+  "other" control char as upper-case `\uXXXX` (`U+0007` → `\x07`), the
   U+2028/U+2029 line-terminator escapes, printable non-ASCII left verbatim
   (`café` stays `café` in the default non-`ascii_only` mode), and two
   single-quote-path cases (backslash still doubles; the active `'` is escaped

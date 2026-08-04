@@ -80,7 +80,10 @@ pub fn emit_module(m: &Module) -> String {
     // source-controlled field — so this substitution can never inject into the
     // emitted Go.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
+    out.push_str(&RUNTIME.replace(
+        "__SIR_DISPLAY_RUBY__",
+        if display_ruby { "true" } else { "false" },
+    ));
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -847,9 +850,44 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::MatMul { .. }
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
-        | Expr::IndexGet { .. } => {
+        | Expr::IndexGet { .. }
+        // SIR22 addendum: APL primitive operators — same deferral rationale
+        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
+        // features, which `ACCEPTED_FEATURES` still doesn't declare).
+        | Expr::Reduce { .. }
+        | Expr::Scan { .. }
+        | Expr::OuterProduct { .. }
+        | Expr::Shape { .. }
+        | Expr::Reshape { .. }
+        | Expr::IndexGenerator { .. }
+        | Expr::IndexOf { .. }
+        | Expr::Ravel { .. }
+        | Expr::Catenate { .. }
+        // SIR26 `Convert` — this backend does not accept `Conversions`, so a
+        // validated module never reaches here (capability check rejects it).
+        | Expr::Convert { .. } => {
             panic!(
-                "go backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                "go backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                e.span()
+            );
+        }
+        // ── SIR23 (symbolic expression + pattern/rewrite IR) ──────────
+        // `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+        // `SymPatternNamed`/`SymRule`/`SymReplaceAll` observe
+        // `Feature::SymbolicExpr` and/or `Feature::PatternMatching`, neither
+        // of which `ACCEPTED_FEATURES` declares, so the SIR10 capability
+        // gate rejects any module using one of these nodes before it ever
+        // reaches emit — mirrors the SIR22/SIR26 deferred-node panic above.
+        Expr::SymSymbol { .. }
+        | Expr::SymRational { .. }
+        | Expr::SymApply { .. }
+        | Expr::SymPatternBlank { .. }
+        | Expr::SymPatternNamed { .. }
+        | Expr::SymRule { .. }
+        | Expr::SymReplaceAll { .. } => {
+            panic!(
+                "go backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );
@@ -1298,6 +1336,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // the emitter simple.
     let helper = match name {
         "+" => "_sir_plus",
+        "<<" => "_sir_shift_left",
         "-" => "_sir_minus",
         "*" => "_sir_times",
         "/" => "_sir_divide",
@@ -1305,6 +1344,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "case_eq" => "_sir_case_eq",
         "<" => "_sir_lt",
         ">" => "_sir_gt",
+        // The Ruby frontend lowers `a == b` / `!=` / `<=` / `>=` to these
+        // operator-spelling builtins (`lower_comparison_chain`).  `==` is a
+        // synonym for `=`; the rest route to the new `ne`/`le`/`ge` helpers.
+        // Without these arms the builtin fell to the runtime dispatch default,
+        // which panicked `unknown builtin: ==` even for `puts(1 == 1)`.
+        "==" => "_sir_eq",
+        "!=" => "_sir_ne",
+        "<=" => "_sir_le",
+        ">=" => "_sir_ge",
         "cons" => "_sir_cons",
         "car" => "_sir_car",
         "cdr" => "_sir_cdr",

@@ -720,11 +720,8 @@ impl LatticeTransformer {
         }
 
         if let Some(ASTNodeOrToken::Node(inner)) = node.children.first() {
-            match inner.rule_name.as_str() {
-                "lattice_block_item" => {
-                    return self.expand_lattice_block_item(inner.clone(), scope);
-                }
-                _ => {}
+            if inner.rule_name.as_str() == "lattice_block_item" {
+                return self.expand_lattice_block_item(inner.clone(), scope);
             }
         }
 
@@ -1142,12 +1139,11 @@ impl LatticeTransformer {
                             mixin_name = Some(tok.value.trim_end_matches('(').to_string());
                             mixin_token = Some(tok.clone());
                         }
-                        "Ident" | "IDENT" => {
-                            if mixin_name.is_none() {
+                        "Ident" | "IDENT"
+                            if mixin_name.is_none() => {
                                 mixin_name = Some(tok.value.clone());
                                 mixin_token = Some(tok.clone());
                             }
-                        }
                         _ => {}
                     }
                 }
@@ -2021,22 +2017,19 @@ impl LatticeTransformer {
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "function_arg" => {
                     for fc in &n.children {
-                        match fc {
-                            ASTNodeOrToken::Token(tok) => {
-                                if tok.value == "," {
-                                    args.push(vec![]);
+                        if let ASTNodeOrToken::Token(tok) = fc {
+                            if tok.value == "," {
+                                args.push(vec![]);
+                            } else {
+                                let val = if get_token_type_name(tok) == "VARIABLE" {
+                                    scope.get(&tok.value)
+                                        .map(|v| v.to_css_text())
+                                        .unwrap_or_else(|| tok.value.clone())
                                 } else {
-                                    let val = if get_token_type_name(tok) == "VARIABLE" {
-                                        scope.get(&tok.value)
-                                            .map(|v| v.to_css_text())
-                                            .unwrap_or_else(|| tok.value.clone())
-                                    } else {
-                                        tok.value.clone()
-                                    };
-                                    args.last_mut().unwrap().push(val);
-                                }
+                                    tok.value.clone()
+                                };
+                                args.last_mut().unwrap().push(val);
                             }
-                            _ => {}
                         }
                     }
                 }
@@ -2336,12 +2329,12 @@ pub fn emit_raw_node(node: &GrammarASTNode) -> String {
 /// Create a synthetic IDENT token with the given value.
 pub fn make_synthetic_token(value: &str, template: &Token) -> Token {
     // Determine the best token type for the value
+    // NOTE: the "alphabetic, non-quoted" case currently yields the same
+    // (Name, None) as the fallback, so the two are folded into one `else`.
     let (type_, type_name) = if value.starts_with('#') {
         (TokenType::Name, Some("HASH".to_string()))
     } else if value.ends_with('%') {
         (TokenType::Name, Some("PERCENTAGE".to_string()))
-    } else if value.chars().any(|c| c.is_alphabetic()) && !value.starts_with('"') {
-        (TokenType::Name, None)
     } else {
         (TokenType::Name, None)
     };
@@ -2461,8 +2454,8 @@ fn parse_css_text_to_value(text: &str) -> LatticeValue {
     if trimmed == "true" { return LatticeValue::Bool(true); }
     if trimmed == "false" { return LatticeValue::Bool(false); }
     if trimmed == "null" { return LatticeValue::Null; }
-    if trimmed.ends_with('%') {
-        if let Ok(n) = trimmed[..trimmed.len()-1].parse::<f64>() {
+    if let Some(rest) = trimmed.strip_suffix('%') {
+        if let Ok(n) = rest.parse::<f64>() {
             return LatticeValue::Percentage(n);
         }
     }

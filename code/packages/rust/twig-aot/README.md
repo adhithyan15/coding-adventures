@@ -35,25 +35,28 @@ two translation units:
   `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …).
 - `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
   `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
-  plus int box/unbox, implementing `lispy-runtime`'s 3-bit-tagged 64-bit
+  plus int box/unbox, implementing `dynval-runtime`'s 3-bit-tagged 64-bit
   `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
   McCarthy Lisp, future lisps) compile cons cells and interned symbols to a
   native binary — it is a language-agnostic primitive, not tied to one
   frontend.
 
-The C lisp runtime and the Rust `lispy-runtime` crate (used by the VM/JIT)
+The C lisp runtime and the Rust `dynval-runtime` crate (used by the VM/JIT)
 are two implementations of one documented ABI. The `lispy_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
 
-- `runtime/twig_gc.c` — **TWIG-GC**: a conservative mark-and-sweep garbage
-  collector (TWIG-GC, Layer 1 of `code/specs/native-aot-substrate.md`). Every
-  managed allocation (`__twig_gc_alloc`) is preceded by a 32-byte header and
-  tracked in a linked list. Collections trigger automatically when total live
-  bytes exceed an adaptive threshold (starts 1 MB, doubles/halves based on
-  survival rate). The stack scan is conservative: every word (and `word & ~0x7`
-  for NaN-boxed Lispy pointers) is tested as a potential managed pointer.
-  `__twig_lispy_cons` now uses `__twig_gc_alloc` instead of leaking `calloc`.
+- **Garbage collector** — the conservative mark-and-sweep collector is **no longer
+  a C file in this crate**. `runtime/twig_gc.c` was retired (#118b-2b); the collector
+  now lives in the `gc-core-capi` crate (`gc-core`'s flat mark-and-sweep model behind
+  a C ABI), which exports both the generic `__gc_*` names and the `__twig_gc_*` compat
+  aliases the emitted code and `dynval_runtime.c` reference. `build.rs` builds
+  `libgc_core_capi.a` and embeds it; each AOT link site writes it to a temp `.a` and
+  passes it to the linker alongside the runtime archive, so every emitted binary's
+  `__twig_gc_alloc` / `__twig_gc_safepoint` references resolve against one generic
+  collector. `__dyn_cons` still allocates cons cells via `__twig_gc_alloc` — that ABI
+  is unchanged; only its implementation moved. See `code/specs/AOT00-T1-precise-gc.md`
+  and `code/specs/LANG16-gc-core.md`.
 
 LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
@@ -68,6 +71,11 @@ and `(string-ref (substring "ABCDE" 1 4) 1)` run natively through the same
 preparation pass. Folded `str_len` metadata can also flow through typed integer
 arithmetic, so `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))`
 folds to byte `69` before native lowering.
+
+When either operand is a runtime string handle, `str_eq` and `str_cmp` instead
+lower to the matching `__twig_str_*` helper. This preserves equality and signed
+lexical ordering for procedure results and branch-selected locals without
+discarding the literal folding fast path.
 
 As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
 `cdr` to **calls into this runtime** (via

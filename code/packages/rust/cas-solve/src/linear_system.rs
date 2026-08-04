@@ -47,6 +47,10 @@ pub fn solve_linear_system(equations: &[IRNode], variables: &[IRNode]) -> Option
                 continue;
             }
             let factor = matrix[row][col] / pivot;
+            // Row reduction reads pivot row `col` while writing row `row`; the
+            // index `j` addresses two distinct rows, so an iterator rewrite
+            // would fight the borrow checker.
+            #[allow(clippy::needless_range_loop)]
             for j in col..=dimension {
                 matrix[row][j] = matrix[row][j] - factor * matrix[col][j];
             }

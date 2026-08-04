@@ -1,0 +1,35 @@
+[package]
+name = "coding-adventures-idl-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "IDL (Interactive Data Language) CST -> narrow-waist Semantic IR (SIR22 array/matrix domain). MA-12e, the last item in IDL's Wave-6 rollout per MA12 §6; front3 of HML01."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-idl-parser = { path = "../idl-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly. This crate
+# deliberately does NOT depend on `coding-adventures-idl-runtime` -- lowering
+# only needs the parse-tree shape (`idl-parser`), not the tree-walking
+# evaluator, mirroring every sibling `-to-semantic-ir` frontend's identical
+# choice (`scilab-to-semantic-ir`, `q-to-semantic-ir`, ...): this is a
+# separate, ahead-of-time lowering pass over the same CST shape the runtime
+# walks, not a consumer of the runtime itself.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# tests/test_validator.rs (confirms the JS backend structurally accepts
+# every module this frontend produces) and tests/e2e_node.rs (actually runs
+# the compiled JS through `node`).
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# tests/oracle.rs's ground truth: the same tree-walking evaluator
+# (`idl-runtime`, MA-12d) this frontend's own CST comes from
+# (`coding-adventures-idl-parser`), reached through its own `Interpreter`
+# (HML01 §7's oracle/golden testing) -- mirroring `scilab-to-semantic-ir`'s/
+# `q-to-semantic-ir`'s identical use of their own native runtime crate as
+# ground truth. The non-dev `[dependencies]` section above still
+# deliberately does NOT depend on this crate -- lowering itself only needs
+# the parse-tree shape, never the evaluator; only this test file needs it,
+# for comparison purposes only.
+coding-adventures-idl-runtime = { path = "../idl-runtime" }

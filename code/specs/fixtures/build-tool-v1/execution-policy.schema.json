@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-tool-conformance-execution-policy-v1.json",
+  "title": "Build-tool trusted-execution policy v1",
+  "description": "Runner-owned identities and ceilings. Operator authorization is deliberately out of band.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "conformance_revision",
+    "enabled",
+    "execution_corpus_sha256",
+    "hard_limits",
+    "backends",
+    "adapters"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "conformance_revision": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "maxLength": 80
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "execution_corpus_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "hard_limits": {
+      "$ref": "#/$defs/limits"
+    },
+    "backends": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/backend"
+      }
+    },
+    "adapters": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/adapter"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "safe_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?*\\u0000-\\u001F/]+(?:/[^<>:\"|?*\\u0000-\\u001F/]+)*$"
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wall_time_ms",
+        "output_bytes",
+        "workspace_bytes",
+        "process_count",
+        "memory_mib",
+        "cpu_time_ms"
+      ],
+      "properties": {
+        "wall_time_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 600000
+        },
+        "output_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16777216
+        },
+        "workspace_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 268435456
+        },
+        "process_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "memory_mib": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2048
+        },
+        "cpu_time_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 600000
+        }
+      }
+    },
+    "backend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "kind",
+        "status",
+        "identity_sha256"
+      ],
+      "properties": {
+        "platform": {
+          "enum": [
+            "darwin",
+            "linux",
+            "windows"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "linux_oci",
+            "windows_appcontainer",
+            "macos_isolated"
+          ]
+        },
+        "status": {
+          "enum": [
+            "unavailable",
+            "ready"
+          ]
+        },
+        "identity_sha256": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ready"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "identity_sha256": {
+                "$ref": "#/$defs/sha256"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "identity_sha256": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "platform",
+        "executable",
+        "executable_sha256"
+      ],
+      "properties": {
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "maxLength": 64
+        },
+        "platform": {
+          "enum": [
+            "darwin",
+            "linux",
+            "windows"
+          ]
+        },
+        "executable": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "executable_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}

@@ -22,6 +22,10 @@
 //! 44:    validate-then-lower round-trip.
 //! 45:    non-empty instruction stream.
 
+// The float literals in these tests (e.g. 3.14...) are hand-written test data,
+// not approximations of `std::f64::consts::PI` to be replaced.
+#![allow(clippy::approx_constant)]
+
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_beam::{lower_iir_to_beam, validate_for_beam, IIRBeamConfig};
 

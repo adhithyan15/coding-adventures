@@ -274,7 +274,7 @@ mod tests {
     fn compile_typed_module() {
         let mut core = AOTCore::new(Box::new(NullBackend), None, 1);
         let bytes = core.compile(&typed_module()).unwrap();
-        assert!(bytes.len() > 0);
+        assert!(!bytes.is_empty());
     }
 
     #[test]

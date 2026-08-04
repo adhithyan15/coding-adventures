@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "cli/dry-run-success",
+  "domain": "cli",
+  "summary": "A successful dry-run decision returns the stable success exit code without dispatching work.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "cli"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "cli",
+    "options": {
+      "action": "dry_run",
+      "condition": "success",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/dry-run-success",
+    "domain": "cli",
+    "outcome": "ok",
+    "result": {
+      "exit_code": 0
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

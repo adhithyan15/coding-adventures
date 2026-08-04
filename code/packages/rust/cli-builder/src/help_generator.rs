@@ -239,7 +239,7 @@ fn append_options_section(out: &mut String, section_title: &str, flags: &[&FlagD
 fn append_arguments_section(out: &mut String, args: &[ArgumentDef]) {
     out.push_str("\nARGUMENTS\n");
 
-    let arg_strs: Vec<String> = args.iter().map(|a| format_arg_signature(a)).collect();
+    let arg_strs: Vec<String> = args.iter().map(format_arg_signature).collect();
     let max_len = arg_strs.iter().map(|s| s.len()).max().unwrap_or(0);
     let col_width = max_len.max(8) + 2;
 
@@ -408,12 +408,10 @@ fn find_command<'a>(spec: &'a CliSpec, command_path: &[String]) -> Option<&'a Co
         let found = commands.iter().find(|c| {
             c.name == *name || c.aliases.iter().any(|a| a == name)
         });
-        match found {
-            Some(cmd) => {
-                current = Some(cmd);
-                commands = &cmd.commands;
-            }
-            None => return None,
+        {
+            let cmd = found?;
+            current = Some(cmd);
+            commands = &cmd.commands;
         }
     }
 

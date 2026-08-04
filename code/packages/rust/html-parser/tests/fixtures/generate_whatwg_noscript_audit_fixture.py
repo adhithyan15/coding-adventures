@@ -45,6 +45,10 @@ CASE_AXES = (
         "axis": "paragraph-noscript",
         "reason": "noscript inside paragraph phrasing flow with sibling content",
     },
+    {
+        "axis": "processing-instruction",
+        "reason": "processing-instruction insertion inside head noscript with scripting disabled",
+    },
 )
 
 
@@ -202,6 +206,8 @@ def axis_for_case(case: SmokeCase) -> str:
     data = case.data.lower()
     source_file = case.source.split(":", 1)[0]
 
+    if source_file == "processing-instructions.dat":
+        return "processing-instruction"
     if source_file == "noscript01.dat":
         return "head-noscript-disabled"
     if source_file == "webkit02.dat":

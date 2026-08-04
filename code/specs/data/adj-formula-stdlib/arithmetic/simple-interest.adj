@@ -1,0 +1,76 @@
+% ============================================================================
+% simple-interest.adj — the simple-interest formula library
+% (ADJ-RULE-SUBSTRATE RS-1 / FL-4).
+% ============================================================================
+% SIMPLE INTEREST is the first money formula a student meets: the interest an
+% amount earns (or owes) is charged only on the original PRINCIPAL, never on the
+% interest already accrued. The elementary schoolbook form multiplies three
+% quantities and divides by a hundred (because the rate is quoted as a PERCENT
+% per year):
+%
+%       S.I. = (P · R · T) / 100
+%
+% where P is the principal (the starting amount), R is the annual rate of
+% interest IN PERCENT (so 5, not 0.05), and T is the time in years. It sits with
+% the other elementary compositions in `arithmetic/` — a percent-of-a-quantity
+% application, not a bare new primitive. Like `ratio`, `percent`, and
+% `proportion`, it performs no multiplication of its own: it CALLS the cited
+% `product` primitive twice to form `P·R·T`, then divides by 100 (the "per
+% hundred" of the percent) — every arithmetic step named and cited (RS-1
+% write-once-reuse-many).
+%
+%     import "simple-interest.adj"                   % transitively imports arithmetic.adj
+%     observe principal(1000)                        % $1000 deposited
+%     observe rate(5)                                % 5% per year (a PERCENT, not 0.05)
+%     observe time(2)                                % for 2 years
+%     ? simple_interest(principal, rate, time)       % engine → 100   ((1000·5·2)/100)
+%
+% Worked check: (1000 · 5 · 2) / 100 = 10000 / 100 = 100 — the deposit earns $100
+% of simple interest over the two years. The engine expands `simple_interest` →
+% `product` → `product` on the CPU and composes the provenance chain: the answer
+% cites the simple-interest definition (primary) AND the `product` primitive it
+% built on (corroboration). Zero arithmetic is performed by the model.
+%
+% Honesty note: the rate here is a PERCENT PER YEAR and the time is in YEARS — the
+% `/100` is exactly the "per hundred" of the percent. A zero rate (or zero time)
+% correctly yields zero interest; nothing is invented. For interest that itself
+% earns interest, see COMPOUND interest — a different formula (a later rung).
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitive `product`. The import is RELATIVE to this
+% file (same directory); a consumer that imports `simple-interest.adj`
+% transitively gets `product` (and its siblings), so the body resolves.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The three inputs of S.I. = (P·R·T)/100, named for readability; the
+% result is the simple interest earned/owed. Rung-0 types each observable slot as
+% `finding`; the `surface` synonyms let a decomposer map everyday phrasing
+% ("deposit", "annual rate", "for N years") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary simple_interest_vocab {
+    define principal       : finding  surface "principal", "starting amount", "deposit", "amount borrowed", "p"
+    define rate            : finding  surface "rate", "interest rate", "annual rate", "rate percent", "r"
+    define time            : finding  surface "time", "years", "term", "duration", "t"
+    define simple_interest : finding  surface "simple interest", "interest earned", "interest", "si"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formula. `simple_interest(principal, rate, time) =
+% product(product(principal, rate), time) / 100` is a formula CALLING the cited
+% `product` primitive twice — `product(principal, rate)` forms P·R, the outer
+% `product(…, time)` forms P·R·T — then divides by 100 (the "per hundred" that
+% turns the percent rate into a fraction). The engine resolves the applications
+% on the CPU and carries `product`'s citation alongside this one. The formula
+% asserts its own claim about the world and so carries its own required source.
+% ----------------------------------------------------------------------------
+formulabook simple_interest_book {
+    use simple_interest_vocab
+
+    formula simple_interest(principal, rate, time) = product(product(principal, rate), time) / 100
+        source "S.I. = (P × R × T)/100"
+        locator "https://www.cuemath.com/commercial-math/simple-interest/"
+        trust consensus
+}

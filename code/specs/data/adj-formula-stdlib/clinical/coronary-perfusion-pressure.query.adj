@@ -1,0 +1,37 @@
+% ============================================================================
+% coronary-perfusion-pressure.query.adj — worked lookups over the coronary perfusion pressure
+% definition.
+% ============================================================================
+% The shape a consumer produces to compute coronary perfusion pressure at the bedside: it
+% `import`s the grounded library, `observe`s the aortic diastolic pressure and the left
+% ventricular end-diastolic pressure it decomposed from its own source bytes, and asks the engine
+% to APPLY the cited definition. No arithmetic is stated by the consumer; the engine computes the
+% exact value WITH the definition's StatPearls citation as its proof, on the CPU, with zero model
+% calls.
+%
+% Worked case (aortic diastolic pressure = 80 mmHg, LVEDP = 12 mmHg):
+%
+%   ? coronary_perfusion_pressure(aortic_diastolic_pressure, left_ventricular_end_diastolic_pressure)   % 68  (80 − 12, CPP = ADP − LVEDP)
+%
+% and the same one definition, inverted both other ways:
+%
+%   ? aortic_diastolic_pressure(coronary_perfusion_pressure, left_ventricular_end_diastolic_pressure)   % 80  (68 + 12, ADP = CPP + LVEDP)
+%   ? left_ventricular_end_diastolic_pressure(aortic_diastolic_pressure, coronary_perfusion_pressure)   % 12  (80 − 68, LVEDP = ADP − CPP)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli coronary-perfusion-pressure.query.adj
+% ============================================================================
+
+import "coronary-perfusion-pressure.adj"
+
+% Forward: coronary perfusion pressure from the two pressures.
+observe aortic_diastolic_pressure(80)
+observe left_ventricular_end_diastolic_pressure(12)
+? coronary_perfusion_pressure(aortic_diastolic_pressure, left_ventricular_end_diastolic_pressure)   % expect 68
+
+% Inverse 1: the aortic diastolic pressure a CPP implies for an LVEDP.
+observe coronary_perfusion_pressure(68)
+? aortic_diastolic_pressure(coronary_perfusion_pressure, left_ventricular_end_diastolic_pressure)   % expect 80
+
+% Inverse 2: the LVEDP the other two imply.
+? left_ventricular_end_diastolic_pressure(aortic_diastolic_pressure, coronary_perfusion_pressure)   % expect 12

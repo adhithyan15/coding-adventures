@@ -5,10 +5,48 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+/// Recursion-depth cap for the Lattice [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_lattice_parser` never called `with_max_depth` at all, leaving
+/// every caller exposed to a native-stack-overflow DoS from adversarial
+/// deeply-nested input (e.g. `@if (((...$x...))) { }`).
+///
+/// **Not the shared engine's bare default** (see `csharp-parser`'s own
+/// identically-named constant for why a blind
+/// [`DEFAULT_MAX_RULE_DEPTH`](parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH)
+/// (128) is unsafe-for-usability on a rich general-purpose grammar).
+/// Measured directly instead (binary search over candidate
+/// `with_max_depth` values against a fixed 5000-level adversarial
+/// `@if (((...$x...))) { }` input — ordinary parenthesised grouping, via
+/// `lattice_primary = ... | LPAREN lattice_expression RPAREN` — on a
+/// default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **289**, crashes at **290**.
+///
+/// `MAX_RULE_DEPTH` is set to **200** — about 31% below that floor
+/// (comparable margin to `sql-parser`'s/`verilog-parser`'s/
+/// `vhdl-parser`'s own ~30-31%). Measured real-input headroom at `200`:
+/// plain parenthesised nesting parses cleanly to at least 15 levels —
+/// comfortably beyond ordinary hand-written nesting depth.
+///
+/// Lattice's grammar has other self-referential recursion shapes beyond
+/// paren-grouping (nested `qualified_rule`/`at_rule` blocks via
+/// `block -> block_contents -> rule -> qualified_rule -> block`, i.e. CSS
+/// nesting; nested `paren_block` at-rule preludes; nested `function_call`
+/// arguments) — this pass measures only **one** of them (paren-grouping),
+/// the way `ruby-parser`'s/`starlark-parser`'s own `MAX_RULE_DEPTH`
+/// document a single-shape measurement across a larger shape inventory. A
+/// full multi-shape audit (the `css-parser`/`toml-parser` treatment) is a
+/// tracked follow-up.
+const MAX_RULE_DEPTH: usize = 200;
+
 pub fn create_lattice_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_lattice(source);
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 pub fn parse_lattice(source: &str) -> GrammarASTNode {
@@ -348,6 +386,36 @@ mod tests {
         // stylesheet has multiple rule children
         assert!(ast.children.len() >= 3,
             "Expected at least 3 rule children, got {}", ast.children.len());
+    }
+
+    // -----------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -----------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!("@if {}$x{} {{ }}\n", "(".repeat(n), ")".repeat(n))
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let mut parser = create_lattice_parser(&src);
+            let _ = parser.parse();
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        let mut parser = create_lattice_parser(&nested_paren_source(10));
+        assert!(parser.parse().is_ok());
     }
 }
 

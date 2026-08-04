@@ -1,23 +1,22 @@
 //! Integration test for the `tests/diff/simple-treeshake/` fixture.
 //!
-//! Exercises the CLOC12.159 addition of the `treeshake` pass to the
-//! `--compilation_level SIMPLE` pipeline, which is now
-//! `constant-fold → fold-control-flow → dce → inline → remove-unused-vars
-//! → treeshake`. `treeshake` deletes top-level `function`/`class`
-//! declarations that nothing references — the function-shaped complement
-//! to `remove-unused-vars` (which skips functions):
+//! `treeshake` (deletes unreferenced top-level `function`/`class`
+//! declarations) is a CLOSED-WORLD pass and runs ONLY at ADVANCED. At
+//! `--compilation_level SIMPLE` the compiler is open-world: although
+//! *declaring* a function has no side effect, *deleting* an observable global
+//! is itself observable — another script sharing the page could call `dead` —
+//! so nothing at top level is removed:
 //!
 //! ```text
-//! function dead() { return 1; }   ⇒  (removed — never called)
-//! function live() { return 2; }   ⇒  function live(){return 2}   (called below)
+//! function dead() { return 1; }   ⇒  function dead(){return 1}    (KEPT — open-world)
+//! function live() { return 2; }   ⇒  function live(){return 2}    (called below)
 //! log(live());                    ⇒  log(live());
+//! sink(live);                     ⇒  sink(live);
 //! ```
 //!
-//! Removing an unused function declaration is unconditionally safe —
-//! declaring a function has no side effect, so (unlike a `var`
-//! initializer) no purity gate is needed. The same input under
-//! WHITESPACE_ONLY keeps both functions (see the `simple_treeshake_*`
-//! unit tests in `src/run.rs`).
+//! Under ADVANCED, `dead` would be tree-shaken away. Under WHITESPACE_ONLY
+//! both functions also survive (it never runs treeshake) — see the
+//! `simple_treeshake_*` unit tests in `src/run.rs`.
 
 use std::process::Command;
 

@@ -179,11 +179,11 @@ fn main() {
     // means downstream consumers (VS Code extension generator) see
     // the format they expect.
     for ext in &extensions {
-        if ext.starts_with('.') {
+        if let Some(without_dot) = ext.strip_prefix('.') {
             eprintln!(
                 "twig-spec-dump: --extensions entries must NOT include a leading dot ('{}' is invalid; use '{}')",
                 ext,
-                &ext[1..]
+                without_dot
             );
             process::exit(2);
         }

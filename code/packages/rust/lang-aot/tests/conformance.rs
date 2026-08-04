@@ -17,7 +17,7 @@
 //! | CLR         | object/boxing  | `clr-simulator` (in-process floor)            |
 //! | CLR-real    | object/boxing  | real `ilasm` + real `dotnet` (`.il`) — gated  |
 //! | BEAM        | Erlang terms   | a real `erl` — gated                          |
-//! | LLVM        | tagged-word    | `clang` + `lispy_runtime.c` — gated           |
+//! | LLVM        | tagged-word    | `clang` + `dynval_runtime.c` — gated           |
 //! | native AOT  | tagged-word    | `aarch64`/`x86_64` object + system `ld` — gated, macOS |
 //!
 //! External-tool backends return `None` (skip) when the tool is absent, so the
@@ -42,7 +42,7 @@ use lang_aot::{
     compile_source_to_wasm, run_mccarthy_on_jit, Language,
 };
 
-use lispy_runtime::LispyValue;
+use dynval_runtime::LispyValue;
 
 // The shared real-CoreCLR harness (`compile_source_to_cil_text` → real `ilasm` →
 // real `dotnet`), reused by the per-feature `clr_real_*` tests. Lives in a
@@ -251,7 +251,7 @@ fn run_llvm(src: &str) -> Option<i64> {
     .trim()
     .to_string();
     let runtime_c = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../twig-aot/runtime/lispy_runtime.c");
+        .join("../twig-aot/runtime/dynval_runtime.c");
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, "conf", &triple).ok()?;
     let dir = tmp_dir("llvm");
     let ll_path = dir.join("conf.ll");
@@ -301,6 +301,9 @@ fn run_clr_real(src: &str) -> Option<i64> {
 /// The capstone: every backend that can run a program computes the same integer.
 #[test]
 fn mccarthy_is_uniform_across_every_backend() {
+    // A labelled table of backend runners; the `fn` pointer type is intentional
+    // and reads clearly inline, so keep it rather than hoisting a type alias.
+    #[allow(clippy::type_complexity)]
     let backends: &[(&str, fn(&str) -> Option<i64>)] = &[
         ("VM", run_vm),
         ("JIT", run_jit),

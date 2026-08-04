@@ -1,0 +1,33 @@
+% ============================================================================
+% percent-of.query.adj — a worked example of the percent-of formula library.
+% ============================================================================
+% Run against the shipped stdlib:
+%
+%   adj-lang-cli percent-of.query.adj
+%
+% "What is 20% of 50?" → (20 / 100) × 50 = 10, computed on the CPU by composing
+% the cited `quotient` and `product` primitives. The answer carries the percent-of
+% rule (primary) and both primitive definitions (corroboration) — the model
+% performs zero arithmetic.
+% ============================================================================
+import "percent-of.adj"
+
+observe whole(50)
+    quote "whole is 50." at 0 snapshot "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28"
+    source "percent-of input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt"
+    trust authoritative
+observe rate(20)
+    quote "rate is 20." at 13 snapshot "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28"
+    source "percent-of input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt"
+    trust authoritative
+
+? percent_of(whole, rate)  % expect 10
+
+% ----------------------------------------------------------------------------
+% Honest edge case — 0% OF anything is 0, and the engine COMPUTES it (it does not
+% special-case or invent): (50 × 0) / 100 = 0. (Uncomment to see it.)
+% ----------------------------------------------------------------------------
+% observe rate(0)
+% ? percent_of(whole, rate)
