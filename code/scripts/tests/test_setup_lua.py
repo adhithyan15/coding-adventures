@@ -107,6 +107,27 @@ class WindowsBuildPlanTests(unittest.TestCase):
                 groups["luac"],
             )
 
+    def test_resolves_linker_beside_msvc_compiler(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            tools_dir = Path(directory) / "VC" / "bin"
+            tools_dir.mkdir(parents=True)
+            compiler = tools_dir / "cl.exe"
+            linker = tools_dir / "link.exe"
+            compiler.touch()
+            linker.touch()
+
+            original_which = setup_lua.shutil.which
+            setup_lua.shutil.which = lambda name: (
+                str(compiler) if name == "cl" else None
+            )
+            try:
+                self.assertEqual(
+                    (compiler.resolve(), linker.resolve()),
+                    setup_lua.windows_msvc_tools(),
+                )
+            finally:
+                setup_lua.shutil.which = original_which
+
 
 class PinnedSourceTests(unittest.TestCase):
     def test_version_hash_and_fallbacks_are_pinned(self) -> None:

@@ -93,7 +93,10 @@ def extract_verified_archive(archive: Path, destination: Path) -> Path:
                 raise ValueError(f"Unsafe path in Lua archive: {member.name}")
             if member.issym() or member.islnk():
                 raise ValueError(f"Unexpected link in Lua archive: {member.name}")
-        source.extractall(destination, members=members)
+        if sys.version_info >= (3, 12):
+            source.extractall(destination, members=members, filter="data")
+        else:
+            source.extractall(destination, members=members)
 
     source_root = destination / f"lua-{LUA_VERSION}"
     if not (source_root / "src" / "lua.c").is_file():
@@ -108,9 +111,11 @@ def run(command: list[str], *, cwd: Path) -> None:
     subprocess.run(command, cwd=cwd, check=True)
 
 
-def require_tool(name: str) -> None:
-    if shutil.which(name) is None:
+def require_tool(name: str) -> Path:
+    executable = shutil.which(name)
+    if executable is None:
         raise RuntimeError(f"Required build tool is not on PATH: {name}")
+    return Path(executable).resolve()
 
 
 def install_unix(source_root: Path, prefix: Path) -> None:
@@ -133,9 +138,18 @@ def windows_source_groups(source_root: Path) -> dict[str, list[Path]]:
     return groups
 
 
+def windows_msvc_tools() -> tuple[Path, Path]:
+    """Resolve MSVC's linker next to cl.exe, never Git's Unix `link` utility."""
+
+    compiler = require_tool("cl")
+    linker = compiler.with_name("link.exe")
+    if not linker.is_file():
+        raise RuntimeError(f"MSVC link.exe was not found beside cl.exe: {linker}")
+    return compiler, linker
+
+
 def install_windows(source_root: Path, prefix: Path) -> None:
-    require_tool("cl")
-    require_tool("link")
+    compiler, linker = windows_msvc_tools()
     groups = windows_source_groups(source_root)
     objects: dict[str, list[str]] = {"lib": [], "lua": [], "luac": []}
 
@@ -143,7 +157,7 @@ def install_windows(source_root: Path, prefix: Path) -> None:
         for source in sources:
             relative_source = source.relative_to(source_root)
             command = [
-                "cl",
+                str(compiler),
                 "/nologo",
                 "/MD",
                 "/O2",
@@ -160,15 +174,21 @@ def install_windows(source_root: Path, prefix: Path) -> None:
     dll_name = "lua54.dll"
     lib_name = "lua54.lib"
     run(
-        ["link", "/nologo", "/DLL", f"/out:{dll_name}", *objects["lib"]],
+        [str(linker), "/nologo", "/DLL", f"/out:{dll_name}", *objects["lib"]],
         cwd=source_root,
     )
     run(
-        ["link", "/nologo", "/out:luac.exe", *objects["luac"], *objects["lib"]],
+        [
+            str(linker),
+            "/nologo",
+            "/out:luac.exe",
+            *objects["luac"],
+            *objects["lib"],
+        ],
         cwd=source_root,
     )
     run(
-        ["link", "/nologo", "/out:lua.exe", *objects["lua"], lib_name],
+        [str(linker), "/nologo", "/out:lua.exe", *objects["lua"], lib_name],
         cwd=source_root,
     )
 
