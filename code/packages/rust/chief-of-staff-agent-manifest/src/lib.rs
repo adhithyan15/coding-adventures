@@ -7,10 +7,12 @@ use coding_adventures_json_parser::try_parse_json;
 use coding_adventures_json_serializer::{serialize_pretty, JsonSerializerError, SerializerConfig};
 use coding_adventures_json_value::{from_ast, JsonNumber, JsonValue};
 use core::fmt::{self, Display, Formatter};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Current agent-manifest schema version understood by this package.
-pub const MANIFEST_VERSION: i64 = 1;
+pub const MANIFEST_VERSION: i64 = 2;
+/// Oldest agent-manifest schema version accepted for installed packages.
+pub const LEGACY_MANIFEST_VERSION: i64 = 1;
 /// Canonical schema URL emitted by [`AgentManifest::to_json`].
 pub const MANIFEST_SCHEMA: &str = "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/agent_manifest.schema.json";
 /// Maximum accepted UTF-8 manifest size.
@@ -65,9 +67,11 @@ pub struct VaultAccess {
     pub max_lease_ttl: u16,
 }
 
-/// Typed schema-v1 agent manifest.
+/// Typed agent manifest supporting legacy schema v1 and current schema v2.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct AgentManifest {
+    /// Manifest contract version used by this document.
+    pub version: i64,
     /// Stable lowercase agent identifier.
     pub agent: String,
     /// Reviewer-facing purpose statement.
@@ -76,6 +80,11 @@ pub struct AgentManifest {
     pub privilege_tier: u8,
     /// Declared input and output channels.
     pub channels: ChannelAccess,
+    /// Positive payload-schema version for every declared channel, scoped by channel name.
+    ///
+    /// Legacy schema-v1 manifests leave this map empty. Schema-v2 channel
+    /// bindings each carry one version, represented here as a lookup map.
+    pub message_schema_versions: BTreeMap<String, u32>,
     /// Optional vault-secret declarations.
     pub vault_access: Option<VaultAccess>,
     /// Validated OS capability profile.
@@ -87,7 +96,7 @@ pub struct AgentManifest {
 }
 
 impl AgentManifest {
-    /// Validate an in-memory manifest against the schema-v1 semantic contract.
+    /// Validate an in-memory manifest against its declared semantic contract.
     pub fn validate(&self) -> Result<(), ManifestError> {
         validate_manifest(self)
     }
@@ -103,6 +112,115 @@ impl AgentManifest {
             },
         )
     }
+
+    /// Return the declared payload-schema version for one channel, if present.
+    pub fn message_schema_version(&self, channel: &str) -> Option<u32> {
+        self.message_schema_versions.get(channel).copied()
+    }
+}
+
+/// Stable reasons two manifests cannot be wired across one channel.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ChannelCompatibilityError {
+    /// The originator manifest is not internally valid.
+    InvalidOriginator(ManifestError),
+    /// The receiver manifest is not internally valid.
+    InvalidReceiver(ManifestError),
+    /// The originator does not declare write authority for the channel.
+    OriginatorDoesNotWrite(String),
+    /// The receiver does not declare read authority for the channel.
+    ReceiverDoesNotRead(String),
+    /// The originator is a legacy manifest without a schema declaration.
+    OriginatorSchemaUndeclared(String),
+    /// The receiver is a legacy manifest without a schema declaration.
+    ReceiverSchemaUndeclared(String),
+    /// Both sides declare the channel, but their payload-schema versions differ.
+    SchemaVersionMismatch {
+        /// Channel whose declarations disagree.
+        channel: String,
+        /// Version emitted by the originator.
+        originator: u32,
+        /// Version accepted by the receiver.
+        receiver: u32,
+    },
+}
+
+impl Display for ChannelCompatibilityError {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::InvalidOriginator(error) => write!(formatter, "invalid originator manifest: {error}"),
+            Self::InvalidReceiver(error) => write!(formatter, "invalid receiver manifest: {error}"),
+            Self::OriginatorDoesNotWrite(channel) => {
+                write!(formatter, "originator does not write channel: {channel}")
+            }
+            Self::ReceiverDoesNotRead(channel) => {
+                write!(formatter, "receiver does not read channel: {channel}")
+            }
+            Self::OriginatorSchemaUndeclared(channel) => {
+                write!(formatter, "originator has no message schema version for channel: {channel}")
+            }
+            Self::ReceiverSchemaUndeclared(channel) => {
+                write!(formatter, "receiver has no message schema version for channel: {channel}")
+            }
+            Self::SchemaVersionMismatch {
+                channel,
+                originator,
+                receiver,
+            } => write!(
+                formatter,
+                "message schema version mismatch for channel {channel}: originator {originator}, receiver {receiver}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for ChannelCompatibilityError {}
+
+/// Require exact payload-schema compatibility between one writer and reader.
+///
+/// Schema versions are scoped by channel name. Legacy schema-v1 manifests can
+/// still be discovered and inspected, but they fail closed at this wiring
+/// boundary because they do not declare what payload version they understand.
+pub fn require_channel_compatibility(
+    originator: &AgentManifest,
+    receiver: &AgentManifest,
+    channel: &str,
+) -> Result<(), ChannelCompatibilityError> {
+    originator
+        .validate()
+        .map_err(ChannelCompatibilityError::InvalidOriginator)?;
+    receiver
+        .validate()
+        .map_err(ChannelCompatibilityError::InvalidReceiver)?;
+    if !originator
+        .channels
+        .writes
+        .iter()
+        .any(|value| value == channel)
+    {
+        return Err(ChannelCompatibilityError::OriginatorDoesNotWrite(
+            channel.to_string(),
+        ));
+    }
+    if !receiver.channels.reads.iter().any(|value| value == channel) {
+        return Err(ChannelCompatibilityError::ReceiverDoesNotRead(
+            channel.to_string(),
+        ));
+    }
+    let originator_version = originator.message_schema_version(channel).ok_or_else(|| {
+        ChannelCompatibilityError::OriginatorSchemaUndeclared(channel.to_string())
+    })?;
+    let receiver_version = receiver
+        .message_schema_version(channel)
+        .ok_or_else(|| ChannelCompatibilityError::ReceiverSchemaUndeclared(channel.to_string()))?;
+    if originator_version != receiver_version {
+        return Err(ChannelCompatibilityError::SchemaVersionMismatch {
+            channel: channel.to_string(),
+            originator: originator_version,
+            receiver: receiver_version,
+        });
+    }
+    Ok(())
 }
 
 /// Stable classes of malformed or incompatible manifest input.
@@ -144,7 +262,7 @@ impl Display for ManifestError {
 
 impl std::error::Error for ManifestError {}
 
-/// Parse and validate one schema-v1 agent manifest.
+/// Parse and validate one legacy schema-v1 or current schema-v2 agent manifest.
 pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
     if source.len() > MAX_MANIFEST_BYTES {
         return Err(ManifestError::ManifestTooLarge);
@@ -161,7 +279,7 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
         expect_string(schema, "$schema")?;
     }
     let version = expect_integer(object.required("version")?, "version")?;
-    if version != MANIFEST_VERSION {
+    if !matches!(version, LEGACY_MANIFEST_VERSION | MANIFEST_VERSION) {
         return Err(ManifestError::UnsupportedVersion(version));
     }
     let agent = expect_string(object.required("agent")?, "agent")?;
@@ -169,7 +287,8 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
     let privilege_tier = expect_integer(object.required("privilege_tier")?, "privilege_tier")?;
     let privilege_tier =
         u8::try_from(privilege_tier).map_err(|_| ManifestError::InvalidField("privilege_tier"))?;
-    let channels = parse_channels(object.required("channels")?)?;
+    let (channels, message_schema_versions) =
+        parse_channels(object.required("channels")?, version)?;
     let vault_access = object
         .take("vault_access")
         .map(parse_vault_access)
@@ -183,10 +302,12 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
     let justification = expect_string(object.required("justification")?, "justification")?;
 
     let manifest = AgentManifest {
+        version,
         agent,
         description,
         privilege_tier,
         channels,
+        message_schema_versions,
         vault_access,
         capabilities,
         restart_policy,
@@ -196,12 +317,61 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
     Ok(manifest)
 }
 
-fn parse_channels(value: JsonValue) -> Result<ChannelAccess, ManifestError> {
+fn parse_channels(
+    value: JsonValue,
+    manifest_version: i64,
+) -> Result<(ChannelAccess, BTreeMap<String, u32>), ManifestError> {
     let mut object = expect_object(value, "channels", CHANNEL_FIELDS)?;
-    Ok(ChannelAccess {
-        reads: expect_string_array(object.required("reads")?, "channels.reads")?,
-        writes: expect_string_array(object.required("writes")?, "channels.writes")?,
-    })
+    match manifest_version {
+        LEGACY_MANIFEST_VERSION => Ok((
+            ChannelAccess {
+                reads: expect_string_array(object.required("reads")?, "channels.reads")?,
+                writes: expect_string_array(object.required("writes")?, "channels.writes")?,
+            },
+            BTreeMap::new(),
+        )),
+        MANIFEST_VERSION => {
+            let reads = parse_channel_bindings(object.required("reads")?, "channels.reads")?;
+            let writes = parse_channel_bindings(object.required("writes")?, "channels.writes")?;
+            let mut versions = BTreeMap::new();
+            for (channel, version) in reads.iter().chain(&writes) {
+                versions.insert(channel.clone(), *version);
+            }
+            Ok((
+                ChannelAccess {
+                    reads: reads.into_iter().map(|(channel, _)| channel).collect(),
+                    writes: writes.into_iter().map(|(channel, _)| channel).collect(),
+                },
+                versions,
+            ))
+        }
+        _ => unreachable!("unsupported versions returned above"),
+    }
+}
+
+fn parse_channel_bindings(
+    value: JsonValue,
+    field: &'static str,
+) -> Result<Vec<(String, u32)>, ManifestError> {
+    let bindings = match value {
+        JsonValue::Object(bindings) => bindings,
+        _ => return Err(ManifestError::InvalidField(field)),
+    };
+    let mut seen = BTreeSet::new();
+    bindings
+        .into_iter()
+        .map(|(channel, value)| {
+            if !valid_identifier(&channel) || !seen.insert(channel.clone()) {
+                return Err(ManifestError::InvalidField(field));
+            }
+            let version = expect_integer(value, field)?;
+            let version = u32::try_from(version).map_err(|_| ManifestError::InvalidField(field))?;
+            if version == 0 {
+                return Err(ManifestError::InvalidField(field));
+            }
+            Ok((channel, version))
+        })
+        .collect()
 }
 
 fn parse_vault_access(value: JsonValue) -> Result<VaultAccess, ManifestError> {
@@ -241,6 +411,9 @@ fn parse_capabilities(value: JsonValue) -> Result<Vec<Capability>, ManifestError
 }
 
 fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
+    if !matches!(manifest.version, LEGACY_MANIFEST_VERSION | MANIFEST_VERSION) {
+        return Err(ManifestError::UnsupportedVersion(manifest.version));
+    }
     if !(2..=64).contains(&manifest.agent.len()) || !valid_identifier(&manifest.agent) {
         return Err(ManifestError::InvalidField("agent"));
     }
@@ -268,6 +441,35 @@ fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
         .any(|channel| reads.contains(channel))
     {
         return Err(ManifestError::InvalidField("channels"));
+    }
+    match manifest.version {
+        LEGACY_MANIFEST_VERSION if !manifest.message_schema_versions.is_empty() => {
+            return Err(ManifestError::InvalidField("message_schema_versions"));
+        }
+        MANIFEST_VERSION => {
+            let channel_count = manifest.channels.reads.len() + manifest.channels.writes.len();
+            let channels = manifest
+                .channels
+                .reads
+                .iter()
+                .chain(&manifest.channels.writes)
+                .collect::<BTreeSet<_>>();
+            let declarations = manifest
+                .message_schema_versions
+                .keys()
+                .collect::<BTreeSet<_>>();
+            if channels.len() != channel_count
+                || channels != declarations
+                || manifest
+                    .message_schema_versions
+                    .values()
+                    .any(|version| *version == 0)
+            {
+                return Err(ManifestError::InvalidField("message_schema_versions"));
+            }
+        }
+        LEGACY_MANIFEST_VERSION => {}
+        _ => unreachable!("unsupported versions returned above"),
     }
     if let Some(vault) = &manifest.vault_access {
         if vault.secrets.iter().any(String::is_empty) {
@@ -406,7 +608,7 @@ fn manifest_json(manifest: &AgentManifest) -> JsonValue {
         ),
         (
             "version".to_string(),
-            JsonValue::Number(JsonNumber::Integer(MANIFEST_VERSION)),
+            JsonValue::Number(JsonNumber::Integer(manifest.version)),
         ),
         (
             "agent".to_string(),
@@ -420,13 +622,7 @@ fn manifest_json(manifest: &AgentManifest) -> JsonValue {
             "privilege_tier".to_string(),
             JsonValue::Number(JsonNumber::Integer(i64::from(manifest.privilege_tier))),
         ),
-        (
-            "channels".to_string(),
-            JsonValue::Object(vec![
-                ("reads".to_string(), strings(&manifest.channels.reads)),
-                ("writes".to_string(), strings(&manifest.channels.writes)),
-            ]),
-        ),
+        ("channels".to_string(), channel_json(manifest, &strings)),
     ];
     if let Some(vault) = &manifest.vault_access {
         fields.push((
@@ -483,6 +679,34 @@ fn manifest_json(manifest: &AgentManifest) -> JsonValue {
     JsonValue::Object(fields)
 }
 
+fn channel_json(manifest: &AgentManifest, strings: &impl Fn(&[String]) -> JsonValue) -> JsonValue {
+    if manifest.version == LEGACY_MANIFEST_VERSION {
+        return JsonValue::Object(vec![
+            ("reads".to_string(), strings(&manifest.channels.reads)),
+            ("writes".to_string(), strings(&manifest.channels.writes)),
+        ]);
+    }
+    let bindings = |channels: &[String]| {
+        JsonValue::Object(
+            channels
+                .iter()
+                .map(|channel| {
+                    (
+                        channel.clone(),
+                        JsonValue::Number(JsonNumber::Integer(i64::from(
+                            manifest.message_schema_version(channel).unwrap_or(0),
+                        ))),
+                    )
+                })
+                .collect(),
+        )
+    };
+    JsonValue::Object(vec![
+        ("reads".to_string(), bindings(&manifest.channels.reads)),
+        ("writes".to_string(), bindings(&manifest.channels.writes)),
+    ])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -497,15 +721,42 @@ mod tests {
       "justification": "Uses only encrypted channels and no operating-system access."
     }"#;
 
+    const CURRENT: &str = r#"{
+      "version": 2,
+      "agent": "weather-agent",
+      "description": "Reports a concise local weather forecast.",
+      "privilege_tier": 0,
+      "channels": {
+        "reads": {"weather-requests": 1},
+        "writes": {"weather-reports": 2}
+      },
+      "capabilities": [],
+      "justification": "Uses only encrypted channels and no operating-system access."
+    }"#;
+
     #[test]
     fn parses_defaults_and_round_trips_schema_v1() {
         let manifest = parse_manifest(MINIMAL).unwrap();
+        assert_eq!(manifest.version, LEGACY_MANIFEST_VERSION);
         assert_eq!(manifest.agent, "weather-agent");
         assert_eq!(manifest.restart_policy, "on-failure");
         assert!(manifest.vault_access.is_none());
+        assert!(manifest.message_schema_versions.is_empty());
 
         let json = manifest.to_json().unwrap();
         assert!(json.starts_with(&format!("{{\n  \"$schema\": \"{MANIFEST_SCHEMA}\",")));
+        assert_eq!(parse_manifest(&json).unwrap(), manifest);
+    }
+
+    #[test]
+    fn parses_and_round_trips_current_schema_v2() {
+        let manifest = parse_manifest(CURRENT).unwrap();
+        assert_eq!(manifest.version, MANIFEST_VERSION);
+        assert_eq!(manifest.message_schema_version("weather-requests"), Some(1));
+        assert_eq!(manifest.message_schema_version("weather-reports"), Some(2));
+
+        let json = manifest.to_json().unwrap();
+        assert!(json.contains("\"weather-reports\": 2"));
         assert_eq!(parse_manifest(&json).unwrap(), manifest);
     }
 
@@ -524,14 +775,121 @@ mod tests {
     #[test]
     fn rejects_unsupported_or_malformed_versions() {
         assert_eq!(
-            parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 2")),
-            Err(ManifestError::UnsupportedVersion(2))
+            parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 3")),
+            Err(ManifestError::UnsupportedVersion(3))
         );
         assert_eq!(
             parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 1.0")),
             Err(ManifestError::InvalidField("version"))
         );
         assert_eq!(parse_manifest("{"), Err(ManifestError::InvalidJson));
+    }
+
+    #[test]
+    fn version_contracts_fail_closed() {
+        let v1_with_v2_binding =
+            MINIMAL.replace("[\"weather-requests\"]", "{\"weather-requests\": 1}");
+        assert_eq!(
+            parse_manifest(&v1_with_v2_binding),
+            Err(ManifestError::InvalidField("channels.reads"))
+        );
+        assert_eq!(
+            parse_manifest(&CURRENT.replace("\"weather-reports\": 2", "\"Bad_Channel\": 2")),
+            Err(ManifestError::InvalidField("channels.writes"))
+        );
+        assert_eq!(
+            parse_manifest(&CURRENT.replace("\"weather-reports\": 2", "\"weather-reports\": 0")),
+            Err(ManifestError::InvalidField("channels.writes"))
+        );
+        assert_eq!(
+            parse_manifest(&CURRENT.replace(
+                "\"weather-requests\": 1",
+                "\"weather-requests\": 1, \"weather-requests\": 2"
+            )),
+            Err(ManifestError::InvalidField("channels.reads"))
+        );
+        assert_eq!(
+            parse_manifest(
+                &CURRENT.replace("\"weather-reports\": 2", "\"weather-reports\": \"2\"")
+            ),
+            Err(ManifestError::InvalidField("channels.writes"))
+        );
+    }
+
+    #[test]
+    fn channel_compatibility_requires_matching_declared_versions() {
+        let originator = parse_manifest(CURRENT).unwrap();
+        let receiver = parse_manifest(
+            r#"{
+              "version": 2,
+              "agent": "display-agent",
+              "description": "Displays one concise local weather forecast.",
+              "privilege_tier": 0,
+              "channels": {
+                "reads": {"weather-reports": 2},
+                "writes": {}
+              },
+              "capabilities": [],
+              "justification": "Uses only the declared encrypted weather channel."
+            }"#,
+        )
+        .unwrap();
+        assert_eq!(
+            require_channel_compatibility(&originator, &receiver, "weather-reports"),
+            Ok(())
+        );
+        assert_eq!(
+            require_channel_compatibility(&originator, &receiver, "weather-requests"),
+            Err(ChannelCompatibilityError::OriginatorDoesNotWrite(
+                "weather-requests".to_string()
+            ))
+        );
+        let unrelated_receiver = parse_manifest(
+            r#"{
+              "version": 2,
+              "agent": "unrelated-agent",
+              "description": "Consumes no channels in this compatibility test.",
+              "privilege_tier": 0,
+              "channels": {"reads": {}, "writes": {}},
+              "capabilities": [],
+              "justification": "Uses no channels or operating-system capabilities."
+            }"#,
+        )
+        .unwrap();
+        assert_eq!(
+            require_channel_compatibility(&originator, &unrelated_receiver, "weather-reports"),
+            Err(ChannelCompatibilityError::ReceiverDoesNotRead(
+                "weather-reports".to_string()
+            ))
+        );
+
+        let incompatible = parse_manifest(
+            &receiver
+                .to_json()
+                .unwrap()
+                .replace("\"weather-reports\": 2", "\"weather-reports\": 1"),
+        )
+        .unwrap();
+        assert_eq!(
+            require_channel_compatibility(&originator, &incompatible, "weather-reports"),
+            Err(ChannelCompatibilityError::SchemaVersionMismatch {
+                channel: "weather-reports".to_string(),
+                originator: 2,
+                receiver: 1,
+            })
+        );
+
+        let legacy = parse_manifest(&MINIMAL.replace(
+            "\"reads\": [\"weather-requests\"], \"writes\": [\"weather-reports\"]",
+            "\"reads\": [\"weather-reports\"], \"writes\": []",
+        ))
+        .unwrap();
+        assert_eq!(
+            require_channel_compatibility(&originator, &legacy, "weather-reports"),
+            Err(ChannelCompatibilityError::ReceiverSchemaUndeclared(
+                "weather-reports".to_string()
+            ))
+        );
     }
 
     #[test]

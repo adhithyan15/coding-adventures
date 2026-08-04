@@ -32,7 +32,7 @@ impl DiscoveredAgent {
     pub fn package(&self) -> &VerifiedAgentPackage {
         &self.package
     }
-    /// Borrow the parsed, authenticated schema-v1 manifest.
+    /// Borrow the parsed, authenticated legacy-v1 or current-v2 manifest.
     pub fn manifest(&self) -> &AgentManifest {
         &self.manifest
     }

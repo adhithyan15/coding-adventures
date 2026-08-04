@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add schema-v2 per-channel payload-schema version declarations while retaining
+  strict parsing and deterministic rendering for installed schema-v1 packages.
+- Add a fail-closed originator/receiver channel compatibility check.
+
 ## 0.1.0 - 2026-08-03
 
 - Define the shared typed schema-v1 agent manifest contract.

@@ -163,13 +163,19 @@ paragraph, and a `## Capabilities needed` list. Each capability is written as
 `category:action:target`, optionally followed by ` | justification`; `- none`
 declares an explicit empty profile. The title and paragraph provide zero-config
 identity defaults. Optional `---` frontmatter may override `agent`, `description`,
-`privilege_tier`, `reads`, `writes`, and `restart_policy`; unknown or duplicate
-keys fail closed. The parser emits the schema-v1 `agent_manifest.json` shape and
+`privilege_tier`, `reads`, `writes`, `message_schema_versions`, and
+`restart_policy`; unknown or duplicate keys fail closed. The parser emits the
+schema-v2 `agent_manifest.json` shape and
 sorted, deduplicated Deno permission arguments. Time and standard-stream
 capabilities remain manifest declarations but do not widen Deno OS permissions.
-The shared manifest codec accepts version 1 only and rejects malformed JSON,
-duplicate or unknown fields, and invalid nested capability declarations before
-a package can participate in discovery or registration.
+The shared manifest codec continues to accept installed schema-v1 packages and
+rejects malformed JSON, duplicate or unknown fields, and invalid nested
+capability declarations before a package can participate in discovery or
+registration. Schema v2 declares a positive payload-schema version for every
+read/write channel; channel names scope those versions. Pipeline wiring fails
+closed unless the originator's write declaration and receiver's read declaration
+name the same version. Legacy v1 packages remain discoverable, but have no
+implicit message-schema compatibility.
 Discovery supports explicit inspection and stable immediate-child `.agent`
 scans. It parses only authenticated manifest bytes, enforces signing-key tier
 ceilings, and returns inert candidates for explicit control-plane registration.
