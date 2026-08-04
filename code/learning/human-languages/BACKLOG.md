@@ -101,9 +101,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B27 | Complete (#9844) | Remove Malayalam's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 107-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally empty versos are truly empty. |
 | HL-B28 | Complete (#9854) | Publish Arabic Chapters 3–27 and their writing companions from canonical lessons rather than hand-copying another twenty-five book chapters. | Forty-five schema-v2 lessons now generate twenty-five chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B29 | Complete (#9861) | Remove Arabic's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally empty versos are truly empty. |
-| HL-B30 | Complete in this PR | Publish Hindi Chapters 6–33 and its writing companions from canonical lessons rather than hand-copying another twenty-eight book chapters. | Fifty-one lessons now use schema v2; forty later lessons generate twenty-eight chapters whose source hashes are independently verified against Language Ladder, while eleven prerequisite-ordered writing companions remain inside the gentle hand-authored opening chapters. |
-| HL-B31 | Next | Remove Hindi's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The expanded forced 114-page build has zero missing glyphs but reports nine overfull boxes, one underfull line, five underfull pages, three duplicate practice labels, 108 Hyperref warnings, and seven font-shape warnings; twelve open-right versos contain only running headers/page numbers. |
-| HL-B32 | Queued | Publish Tamil Chapters 6–31 and its writing companions from canonical lessons rather than hand-copying another twenty-six book chapters. | The Tamil PDF stops after Chapter 5 while canonical app content continues through Chapter 31 and eight dependency-ordered writing lessons; schema-v2 migration plus generation should close that drift safely. |
+| HL-B30 | Complete (#9868) | Publish Hindi Chapters 6–33 and its writing companions from canonical lessons rather than hand-copying another twenty-eight book chapters. | Fifty-one lessons now use schema v2; forty later lessons generate twenty-eight chapters whose source hashes are independently verified against Language Ladder, while eleven prerequisite-ordered writing companions remain inside the gentle hand-authored opening chapters. |
+| HL-B31 | Complete in this PR | Remove Hindi's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 114-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; all fourteen intentionally blank pages are truly empty. |
+| HL-B32 | Next | Publish Tamil Chapters 6–31 and its writing companions from canonical lessons rather than hand-copying another twenty-six book chapters. | The Tamil PDF stops after Chapter 5 while canonical app content continues through Chapter 31 and eight dependency-ordered writing lessons; schema-v2 migration plus generation should close that drift safely. |
 | HL-B33 | Queued | Remove Tamil's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports six overfull boxes, six underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and undefined bold/italic Tamil font shapes; the clean-build signal is zero of each. |
 | HL-B34 | Queued | Publish Latin Chapters 2–36 from canonical lessons rather than hand-copying another thirty-five book chapters. | The Latin PDF contains only Chapter 1 while canonical app content continues through Chapter 36; schema-v2 migration plus generation should close that drift safely. |
 | HL-B35 | Queued | Remove Latin's remaining LaTeX layout and font warnings. | A forced build succeeds with no missing glyphs, overfull boxes, duplicate labels, or Hyperref warnings, but reports one underfull box and a small-caps font-shape substitution; the clean-build signal is zero of each. |
@@ -942,6 +942,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   90, 94, and 112 are open-right versos containing only running headers and
   page numbers; pages 2 and 4 are the same front-matter pattern. HL-B31 is next
   and owns that cleanup plus the complete rendered-page audit.
+
+## Findings from HL-B31
+
+- Explicit static bold and italic faces now cover Devanagari, Arabic, and
+  Cyrillic without changing glyph sources between local and CI builds.
+- Bookmark-safe script commands keep readable Hindi, Arabic, and Russian text
+  in the outline while preventing Hyperref from interpreting presentation-only
+  font switches.
+- Four hand-authored practice labels are unique. Natural page bottoms and a
+  small emergency line-break reserve remove layout warnings without deleting
+  teaching content; the one long Chapter 5 running title has a concise short
+  form.
+- The twelve open-right chapter versos and two front-matter versos remain in
+  the print-friendly layout but are now genuinely empty: no running header and
+  no page number.
+- A forced XeLaTeX build produces 114 pages with zero missing glyphs, overfull
+  or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX
+  warnings, or font warnings. All 114 rendered pages were inspected again.
+- Correct title/author metadata, 35 top-level and 107 total outline entries,
+  generated source hashes, and zero schema or generator leaks remain intact.
+- HL-B32 is next: publish Tamil Chapters 6–31 and its dependency-ordered
+  writing companions from the canonical app corpus.
 
 ## Findings from HL-D01C
 
