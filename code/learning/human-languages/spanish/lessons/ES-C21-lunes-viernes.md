@@ -78,12 +78,16 @@ unlike the plainer, better-understood story for its four siblings.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02] -->
 
-[PAUSE 3s] What did every Spanish weekday begin life as? (**"[Planet-god]'s
-diēs (day)"** — the same Latin phrase French keeps more visibly with *-di*.)
-Why do **martes, jueves, viernes** end in *-s*, and where does **lunes** get
-its *-s* from? (**From the planet's own Latin genitive** — Martis/Iovis/
-Veneris already end in *-s*; *lunes* likely picked it up **by analogy**, since
-*lūnae* has no *-s* of its own.) What's debated about **miércoles**? (**Whether
-its "‑coles" is a genuine surviving trace of diēs** — unlike the plainer,
-better-understood story for its four siblings.) Why do *martes* and *Tuesday* line up? (Same day — the war-god's —
-named *Mars* in Latin, *Tiw* in Germanic.)
+[PAUSE 3s] Recall the weekday family:
+
+- What did every Spanish weekday begin life as? (**"[Planet-god]'s diēs
+  (day)"** — the same Latin phrase French keeps more visibly with *-di*.)
+- Why do **martes, jueves, viernes** end in *-s*, and where does **lunes** get
+  its *-s* from? (**From the planet's own Latin genitive** — Martis/Iovis/
+  Veneris already end in *-s*; *lunes* likely picked it up **by analogy**,
+  since *lūnae* has no *-s* of its own.)
+- What's debated about **miércoles**? (**Whether its "‑coles" is a genuine
+  surviving trace of diēs** — unlike the plainer, better-understood story for
+  its four siblings.)
+- Why do *martes* and *Tuesday* line up? (They name the same day for the
+  war-god: *Mars* in Latin, *Tiw* in Germanic.)
