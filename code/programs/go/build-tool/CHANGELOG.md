@@ -32,6 +32,13 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Java and Kotlin Gradle resolution now reads only comment-aware
+  `includeBuild("...")` calls from root `settings.gradle.kts`, supports
+  multiline and nested relative paths through exact same-lane package-root
+  matching, and ignores strings, build-script coordinates, absolute paths,
+  cross-lane targets, and unknown targets without following referenced paths.
+  Java/Kotlin source plus Gradle settings/build files now invalidate package
+  hashes.
 - Dart dependency resolution now accepts only direct package keys under root
   `dependencies:` and `dev_dependencies:` maps, excluding nested source
   options, dependency overrides, comments, and unrelated YAML fields.

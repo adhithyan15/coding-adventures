@@ -117,6 +117,17 @@ directory-derived snake-case aliases identify packages. The shared
 field-boundary fixture covers these boundaries, and the complete 82-package
 lane resolves exactly 67 edges.
 
+Java and Kotlin dependency resolution reads only `includeBuild("...")` calls
+from root `settings.gradle.kts` files. Calls may span lines; their quoted
+relative paths are normalized lexically and must exactly match a discovered
+package root in the same language lane. Comments, unrelated strings,
+`include(...)`, build-script coordinates, absolute paths, cross-lane paths,
+and unknown targets cannot invent graph edges. Referenced targets are never
+opened. Java/Kotlin source and Gradle settings/build files participate in the
+package hash. The two shared field-boundary fixtures cover direct and nested
+paths plus adversarial decoys; the complete Java and Kotlin lanes resolve
+exactly 186 and 166 edges respectively.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

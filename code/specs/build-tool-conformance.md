@@ -331,6 +331,20 @@ dependencies. Resolvers ignore package descriptions, environment constraints,
 lockfiles, and every other root field. A local `path:` value identifies source
 metadata only; resolvers do not follow or read the referenced path.
 
+For Java and Kotlin Gradle composite builds, dependency candidates come only
+from `includeBuild("...")` call expressions in the package root's
+`settings.gradle.kts`. The call may span lines, and its sole argument is a
+quoted relative path. Resolvers normalize that path lexically against the
+declaring package root and create an edge only when the result exactly matches
+a discovered package root in the same language scope. They do not follow or
+read the referenced path. Resolvers ignore line and block comments, string
+literals that merely contain example calls, `include(...)`, project and plugin
+metadata, dependency coordinates in `build.gradle` or `build.gradle.kts`,
+absolute paths, paths outside the current language scope, undiscovered targets,
+and every other settings field or call. `settings.gradle.kts`, Gradle build
+files, and Java or Kotlin sources participate in the package hash so a
+dependency declaration change invalidates the cache.
+
 For Cabal manifests, dependency candidates come only from each
 `build-depends:` field and its indented comma-separated continuation lines.
 Resolvers ignore Cabal comments, package identity and descriptive metadata,

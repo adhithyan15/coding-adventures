@@ -33,6 +33,15 @@ hashingSpec = describe "package hashing" $ do
                 digest <- hashPackage pkg
                 digest `shouldBe` "1986673100"
 
+    it "invalidates Java hashes when Gradle settings change" $
+        withGradlePackage $ \pkg -> do
+            before <- hashPackage pkg
+            BS8.writeFile
+                (packagePath pkg </> "settings.gradle.kts")
+                "includeBuild(\"../other-dependency\")\n"
+            after <- hashPackage pkg
+            after `shouldNotBe` before
+
 withBinaryPackage :: (Package -> IO a) -> IO a
 withBinaryPackage action =
     withTemporaryDirectory "haskell-build-tool-hashing" $ \packageRoot -> do
@@ -51,6 +60,24 @@ withBinaryPackage action =
                 , packageBuildFile = buildFile
                 , packageBuildCommands = ["echo build"]
                 , packageLanguage = "lua"
+                }
+
+withGradlePackage :: (Package -> IO a) -> IO a
+withGradlePackage action =
+    withTemporaryDirectory "haskell-build-tool-gradle-hashing" $ \packageRoot -> do
+        let buildFile = packageRoot </> "BUILD"
+        createDirectoryIfMissing True (packageRoot </> "src")
+        BS8.writeFile buildFile "gradle test\n"
+        BS8.writeFile (packageRoot </> "settings.gradle.kts") "includeBuild(\"../dependency\")\n"
+        BS8.writeFile (packageRoot </> "build.gradle.kts") "plugins {}\n"
+        BS8.writeFile (packageRoot </> "src" </> "Main.java") "class Main {}\n"
+        action
+            Package
+                { packageName = "java/demo"
+                , packagePath = packageRoot
+                , packageBuildFile = buildFile
+                , packageBuildCommands = ["gradle test"]
+                , packageLanguage = "java"
                 }
 
 withPath :: String -> IO a -> IO a

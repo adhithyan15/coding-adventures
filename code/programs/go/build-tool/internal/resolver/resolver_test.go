@@ -436,6 +436,29 @@ func TestDartResolutionConformanceFixture(t *testing.T) {
 	}
 }
 
+func TestGradleResolutionConformanceFixtures(t *testing.T) {
+	for _, name := range []string{
+		"resolution-gradle-java-field-aware.json",
+		"resolution-gradle-kotlin-field-aware.json",
+	} {
+		t.Run(name, func(t *testing.T) {
+			fixture := loadResolutionFixture(t, name)
+			_, packages := materializeResolutionFixture(t, fixture)
+			graph := mustResolveDependencies(t, packages)
+
+			edges := graph.Edges()
+			if len(edges) != len(fixture.Expected.Result.Edges) {
+				t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+			}
+			for _, edge := range fixture.Expected.Result.Edges {
+				if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+					t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+				}
+			}
+		})
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Tests for Swift dependency parsing
 // ---------------------------------------------------------------------------

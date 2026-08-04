@@ -59,6 +59,17 @@ directory-derived snake-case forms supply aliases, and hashing includes
 `pubspec.yaml` plus `.dart` source. The shared field-boundary fixture and the
 complete 82-package lane match the Go resolver exactly at 67 edges.
 
+Java and Kotlin dependency resolution reads only `includeBuild("...")` calls
+from root `settings.gradle.kts` files. Calls may span lines; their quoted
+relative paths are normalized lexically and must exactly match a discovered
+package root in the same language lane. Comments, unrelated strings,
+`include(...)`, build-script coordinates, absolute paths, cross-lane paths,
+and unknown targets cannot invent graph edges. Referenced targets are never
+opened. Java/Kotlin source and Gradle settings/build files participate in the
+package hash. The two shared field-boundary fixtures cover direct and nested
+paths plus adversarial decoys; both complete lanes match the Go resolver
+exactly at 186 Java edges and 166 Kotlin edges.
+
 Haskell dependency resolution reads package requirements only from Cabal
 `build-depends` fields, including indented comma continuations and repeated
 fields across stanzas. Synopsis and description text, source directories,
