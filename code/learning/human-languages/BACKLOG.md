@@ -108,9 +108,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B34 | Complete (#9883) | Publish Latin Chapters 2–36 from canonical lessons rather than hand-copying another thirty-five book chapters. | All 53 Latin lessons now use schema v2; Chapters 2–36 are generated with source hashes independently verified against Language Ladder. |
 | HL-B35 | Complete (#9885, repaired by #9887) | Remove Latin's remaining LaTeX layout, font, and header-only-verso warnings. | The forced 115-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally blank chapter versos are truly empty. |
 | HL-B36 | Complete (#9890) | Publish Spanish Chapters 19–33 from canonical lessons rather than hand-copying another fifteen book chapters. | The Spanish PDF now includes all 33 canonical chapters; all 21 later lessons use schema v2 and generate fifteen chapters from the same content consumed by Language Ladder. |
-| HL-B37 | Complete in this PR | Remove Spanish's remaining legacy LaTeX layout, bookmark, font, and header-only-verso warnings. | The forced 214-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; all 19 intentionally blank physical pages are truly empty. |
-| HL-P01 | Next | Make the unified Human Languages Books result a protected merge gate, or add an equivalent gate that auto-merge must await. | #9885 auto-merged after general CI passed while the non-required books job had failed; the portable-font repair in #9887 should have been required before merge. |
-| HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
+| HL-B37 | Complete (#9891) | Remove Spanish's remaining legacy LaTeX layout, bookmark, font, and header-only-verso warnings. | The forced 214-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; all 19 intentionally blank physical pages are truly empty. |
+| HL-P01 | Complete in this PR | Make the unified Human Languages Books result a protected merge gate, or add an equivalent gate that auto-merge must await. | Every pull request now receives a stable books gate; relevant changes run the one all-books build, unrelated changes receive a checked fast-path, and pull-request and push contexts remain distinct. |
+| HL-M01 | Next | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-M02 | Queued | Extend Telugu's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson needs a scheduled place, and the map must explicitly split or justify Chapter 20's numbers-and-weather topic collision. |
 | HL-M03 | Queued | Extend Kannada's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5; every canonical lesson needs a scheduled place, and Chapter 20's unrelated numbers/weather pairing must be split or explicitly justified. |
 | HL-M04 | Queued | Extend Malayalam's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the four new support steps, needs a scheduled place. |
@@ -1118,6 +1118,24 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   Arabic shaping; all 19 intentionally blank physical pages are truly empty.
 - HL-P01 is next: make the unified books result a protected merge gate, or add
   an equivalent gate that auto-merge cannot outrun.
+
+## Findings from HL-P01
+
+- A path-filtered workflow cannot be required globally: pull requests outside
+  those paths would never receive its status context. The workflow now starts
+  on every pull request, performs a low-cost path decision, and runs the
+  existing single all-books build only when book inputs changed.
+- `Human Languages Books gate` is stable and always present on pull requests.
+  It fails when detection fails, when a relevant all-books build does not pass,
+  or when the build/result combination is inconsistent. A legitimately skipped
+  irrelevant build is the only fast-path success.
+- Main pushes and manual runs publish `Human Languages Books push gate`, so a
+  push result cannot satisfy the protected pull-request context while its book
+  build is still in progress.
+- After this workflow is proven on the pull request and exact `main`, repository
+  protection must require both `CI gate` and `Human Languages Books gate`.
+- HL-M01 is next: model how each language realizes the shared spine and where
+  script, grammar, and other track-specific extension nodes fit.
 
 ## Findings from HL-D01C
 

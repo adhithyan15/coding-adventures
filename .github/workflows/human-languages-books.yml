@@ -1,6 +1,8 @@
-# Build every Human Languages LaTeX book in one job. Pull requests retain one
-# complete publication bundle as a build artifact; main-branch builds publish
-# that same bundle as a stable download catalog on GitHub Pages.
+# Build every Human Languages LaTeX book in one job. Relevant pull requests
+# retain one complete publication bundle as a build artifact; main-branch
+# builds publish that same bundle as a stable download catalog on GitHub Pages.
+# Every pull request receives one stable gate result, while unrelated changes
+# skip the expensive all-books build after a small change-detection job.
 #
 # Each language track under code/learning/human-languages/<lang>/book/
 # contains a self-contained XeLaTeX book (see HL00 spec). This workflow
@@ -19,23 +21,80 @@ on:
       - ".github/workflows/human-languages-books.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "code/learning/human-languages/**"
-      - "code/packages/typescript/human-language-data/**"
-      - "code/scripts/build_human_language_book_catalog.py"
-      - ".github/workflows/human-languages-books.yml"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: human-languages-books-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-publish:
+  detect:
+    name: Detect human-language book changes
     runs-on: ubuntu-latest
+    outputs:
+      books: ${{ steps.changes.outputs.books }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect relevant paths
+        id: changes
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "books=true" >> "$GITHUB_OUTPUT"
+            echo "A non-pull-request run always builds the publication bundle."
+            exit 0
+          fi
+
+          if [[ ! "$PR_BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || \
+             [[ ! "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Pull-request base or head SHA is invalid."
+            exit 1
+          fi
+
+          set +e
+          git diff --quiet "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
+            code/learning/human-languages \
+            code/packages/typescript/human-language-data \
+            code/scripts/build_human_language_book_catalog.py \
+            .github/workflows/human-languages-books.yml
+          diff_status=$?
+          set -e
+
+          case "$diff_status" in
+            0)
+              echo "books=false" >> "$GITHUB_OUTPUT"
+              echo "No human-language book inputs changed; the all-books build will be skipped."
+              ;;
+            1)
+              echo "books=true" >> "$GITHUB_OUTPUT"
+              echo "Human-language book inputs changed; the all-books build is required."
+              ;;
+            *)
+              echo "::error::git diff failed with status $diff_status."
+              exit "$diff_status"
+              ;;
+          esac
+
+  build-and-publish:
+    name: Build and publish all human-language books
+    needs: detect
+    if: ${{ needs.detect.outputs.books == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -150,3 +209,40 @@ jobs:
           publish_dir: dist/human-languages/books
           destination_dir: human-languages/books
           keep_files: true
+
+  books-gate:
+    # Keep the required pull-request context distinct from the push context.
+    # Otherwise a faster main/branch push can satisfy protection while the
+    # pull-request all-books build is still running.
+    name: ${{ github.event_name == 'pull_request' && 'Human Languages Books gate' || 'Human Languages Books push gate' }}
+    needs: [detect, build-and-publish]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify the required book work succeeded
+        shell: bash
+        env:
+          DETECT_RESULT: ${{ needs.detect.result }}
+          BOOKS_RELEVANT: ${{ needs.detect.outputs.books }}
+          BUILD_RESULT: ${{ needs['build-and-publish'].result }}
+        run: |
+          set -euo pipefail
+          echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+
+          if [ "$DETECT_RESULT" != "success" ]; then
+            echo "::error::Human-language book change detection did not succeed."
+            exit 1
+          fi
+
+          case "$BOOKS_RELEVANT:$BUILD_RESULT" in
+            true:success)
+              echo "The required all-books build passed."
+              ;;
+            false:skipped)
+              echo "No book inputs changed; the all-books build was legitimately skipped."
+              ;;
+            *)
+              echo "::error::Unexpected books gate state: relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+              exit 1
+              ;;
+          esac
