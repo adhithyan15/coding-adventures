@@ -405,6 +405,14 @@ lockstep:
    parity landed in 0.36.3.
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
+8. **SIR18 string interpolation** (`"a#{x}b"` → `Expr::StrConcat { parts }`) —
+   a new `_sir_display_str` runtime helper (Ruby's `to_s`-style display into a
+   fresh string; a string-returning PARALLEL to the pre-existing
+   `puts`/`print` `_sir_fmt` family, not a refactor of it) plus an emitter arm
+   that folds each part through it and pairwise through `_sir_cat` into one
+   `_sir_str(...)` — landed in 0.36.4. `Feature::StringInterpolation` had been
+   the C backend's only remaining unaccepted `Strings`-adjacent feature; every
+   other backend but Go/JS/Rust already had a real emit arm for it.
 
 ## Out of scope (v0)
 
