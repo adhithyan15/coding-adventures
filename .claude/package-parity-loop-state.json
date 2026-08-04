@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9916,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9916",
-    "branch": "codex/typescript-node-builtin-declarations",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "00e47db9a4a8407800c678a50c64475c11699708",
+    "revision": "e634ba0671240ec4fa5cbc8f14d92fc866d84dd5",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -348,7 +343,7 @@
     {
       "id": "typescript-node-builtin-type-declarations",
       "title": "Audit TypeScript Node builtin declaration ownership",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/typescript-node-builtin-declarations",
       "pr_number": 9916,
@@ -357,9 +352,9 @@
     {
       "id": "build-file-standalone-integrity-lua",
       "title": "Repair the Lua BUILD_windows standalone prerequisite wave",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-file-standalone-integrity"],
-      "branch": null,
+      "branch": "codex/lua-build-windows-standalone",
       "pr_number": null,
       "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten pre-existing Lua BUILD_windows files omit sibling installs present in BUILD: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Repair these as one dependency-shaped standalone-build wave; the current metadata-only slice does not alter BUILD files."
     },
