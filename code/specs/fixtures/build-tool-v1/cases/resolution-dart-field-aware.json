@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "resolution/dart-field-aware",
+  "domain": "resolution",
+  "summary": "Dart resolution reads only direct dependency keys from root dependency maps and ignores nested source options and unrelated metadata.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/dart/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/dart/alpha/pubspec.yaml",
+        "content_utf8": "name: alpha\ndescription: \"coding_adventures_gamma: any is prose\"\nenvironment:\n  sdk: ^3.0.0\ndependencies:\n  coding_adventures_beta_helper:\n    path: ../beta-helper\n  external_git:\n    git:\n      url: https://example.invalid/delta.git\n      coding_adventures_gamma: any\ndev_dependencies:\n  delta_name: any\ndependency_overrides:\n  gamma:\n    path: ../gamma\nflutter:\n  assets:\n    - coding_adventures_gamma:\n# coding_adventures_gamma: any\n"
+      },
+      {
+        "path": "code/packages/dart/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/dart/beta-helper/pubspec.yaml",
+        "content_utf8": "name: coding_adventures_beta_helper\nenvironment:\n  sdk: ^3.0.0\n"
+      },
+      {
+        "path": "code/packages/dart/delta_name/BUILD",
+        "content_utf8": "echo build delta_name\n"
+      },
+      {
+        "path": "code/packages/dart/delta_name/pubspec.yaml",
+        "content_utf8": "name: delta_name\nenvironment:\n  sdk: ^3.0.0\n"
+      },
+      {
+        "path": "code/packages/dart/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/dart/gamma/pubspec.yaml",
+        "content_utf8": "name: gamma\nenvironment:\n  sdk: ^3.0.0\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "dart"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/dart-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "dart/beta-helper",
+          "dart/alpha"
+        ],
+        [
+          "dart/delta_name",
+          "dart/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

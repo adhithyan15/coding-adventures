@@ -49,6 +49,16 @@ field-boundary fixture covers direct, block, shorthand, multiline, comment,
 metadata, and external-dependency cases; the complete 282-package lane matches
 the Go resolver exactly at 472 edges.
 
+Dart is a first-class discovery lane for both packages and programs.
+Dependency resolution reads only direct package keys under root
+`dependencies:` and `dev_dependencies:` maps in `pubspec.yaml`. Scalar
+constraints and nested source maps are accepted as direct entries, while
+nested source options, dependency overrides, package metadata, comments, and
+unrelated YAML fields cannot invent edges. Root `name:` fields and
+directory-derived snake-case forms supply aliases, and hashing includes
+`pubspec.yaml` plus `.dart` source. The shared field-boundary fixture and the
+complete 82-package lane match the Go resolver exactly at 67 edges.
+
 Haskell dependency resolution reads package requirements only from Cabal
 `build-depends` fields, including indented comma continuations and repeated
 fields across stanzas. Synopsis and description text, source directories,

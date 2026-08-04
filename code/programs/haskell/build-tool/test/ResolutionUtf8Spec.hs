@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionElixirSpec, resolutionGoSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionDartSpec, resolutionElixirSpec, resolutionGoSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -210,6 +210,26 @@ resolutionElixirSpec = describe "Elixir resolution conformance" $ do
                         [ ["elixir/beta-helper", "elixir/gamma"]
                         , ["elixir/delta_name"]
                         , ["elixir/alpha"]
+                        ]
+
+resolutionDartSpec :: Spec
+resolutionDartSpec = describe "Dart resolution conformance" $ do
+    it "discovers Dart and reads only direct root dependency keys" $
+        withFixture "resolution-dart-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "dart" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "dart/alpha"
+                    , "dart/beta-helper"
+                    , "dart/delta_name"
+                    , "dart/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["dart/beta-helper", "dart/delta_name", "dart/gamma"]
+                        , ["dart/alpha"]
                         ]
 
 resolutionPythonSpec :: Spec

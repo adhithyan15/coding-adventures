@@ -320,6 +320,17 @@ dependency list, line comments, `mix.lock`, non-path Hex/Git dependencies, and
 every other function or field. The quoted path identifies the declaration as
 local metadata; resolvers do not follow or read the referenced path.
 
+For Dart `pubspec.yaml` manifests, dependency candidates come only from the
+direct mapping keys of the root `dependencies:` and `dev_dependencies:`
+fields. The key is an unquoted Dart package identifier and is matched
+case-insensitively against known directory and root `name:` aliases. A direct
+entry may use a scalar constraint or a nested source map; nested `path:`,
+`git:`, `url:`, `ref:`, `sdk:`, and other source-option keys do not become
+dependencies. Resolvers ignore package descriptions, environment constraints,
+`dependency_overrides`, Flutter and tool configuration, comments, inline prose,
+lockfiles, and every other root field. A local `path:` value identifies source
+metadata only; resolvers do not follow or read the referenced path.
+
 For Cabal manifests, dependency candidates come only from each
 `build-depends:` field and its indented comma-separated continuation lines.
 Resolvers ignore Cabal comments, package identity and descriptive metadata,

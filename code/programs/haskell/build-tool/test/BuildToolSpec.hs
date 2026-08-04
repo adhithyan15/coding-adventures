@@ -39,3 +39,6 @@ buildToolSpec = do
 
         it "detects rust program paths" $ do
             inferLanguage "/repo/code/programs/rust/build-tool" `shouldBe` "rust"
+
+        it "detects Dart package paths" $ do
+            inferLanguage "/repo/code/packages/dart/logic-gates" `shouldBe` "dart"
