@@ -18,7 +18,7 @@
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
-    "lessonChaptersWithoutBooks": 15,
+    "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 3,
     "mixedSchemaTracks": 16,
     "version2SchemaTracks": 1
@@ -541,9 +541,7 @@
           15,
           16,
           17,
-          18
-        ],
-        "missingBookChapters": [
+          18,
           19,
           20,
           21,
@@ -560,8 +558,9 @@
           32,
           33
         ],
+        "missingBookChapters": [],
         "orphanBookChapters": [],
-        "coveragePercent": 55
+        "coveragePercent": 100
       },
       {
         "language": "latin",
@@ -1453,8 +1452,8 @@
         "status": "mixed",
         "lessonCount": 128,
         "versions": {
-          "1": 77,
-          "2": 51
+          "1": 56,
+          "2": 72
         }
       },
       {
