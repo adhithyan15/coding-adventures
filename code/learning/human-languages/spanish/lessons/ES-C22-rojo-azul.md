@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C22-rojo-azul
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 700
 chapter: 22
 type: word
 headword: rojo, azul
@@ -9,19 +12,33 @@ prerequisites: [ES-C22-negro-blanco]
 sounds: [r-tap, palatal-j]
 roots: [pie-rewdh-russus, arabic-lazaward]
 etymology_hook: "rojo ← Latin russus, a cousin (not a copy) of French's rouge (← rubeus) — both ultimately from PIE *h₁rewdʰ-; azul ← Arabic lāzaward, and unlike French, this IS Spanish's everyday word for blue"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-ETYMON-NEGRO-02, ES-ETYMON-BLANCO-04]
+introduces:
+  knowledge: [ES-LEX-ROJO-01, ES-ETYMON-ROJO-02, ES-LEX-AZUL-03, ES-ETYMON-AZUL-04]
+practises:
+  knowledge: [ES-ETYMON-NEGRO-02, ES-ETYMON-BLANCO-04, ES-LEX-ROJO-01, ES-ETYMON-ROJO-02, ES-LEX-AZUL-03, ES-ETYMON-AZUL-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C22-negro-blanco]
 ---
 
 # rojo, azul — an old word (taken a different path) and a borrowed one
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-NEGRO-02, ES-ETYMON-BLANCO-04] -->
 
 [PAUSE 2s] Last lesson: one inherited color, one borrowed. This lesson
 repeats the shape — but **red** takes a subtly different road than you might
 expect from French, and **blue** flips which word is "the everyday one."
 
-## rojo — old, but not the SAME old word as French
+## The words, taken apart: rojo
+<!-- hl-knowledge: introduces=[ES-LEX-ROJO-01, ES-ETYMON-ROJO-02]; assesses=[] -->
 
 **rojo** ("red") ← Latin **russus** — a more everyday, expressive Latin
 color-word for red. That's a **different specific Latin word** from the one
@@ -32,7 +49,8 @@ So *rojo* and *rouge* (and English *red*) are all **cousins** — just via two
 different branches of the same very old family, not one borrowed from the
 other.
 
-## azul — borrowed, and here it's the MAIN word
+## The words, taken apart: azul
+<!-- hl-knowledge: introduces=[ES-LEX-AZUL-03, ES-ETYMON-AZUL-04]; assesses=[] -->
 
 **azul** ("blue") ← Arabic **لازورد** (*lāzaward*), "**lapis lazuli**" — the
 same ultimate source as the English word **azure**. Spanish picked this up
@@ -45,6 +63,7 @@ while the **everyday** French blue is the Germanic loan *bleu*. In
 — there's no separate Germanic blue-word competing with it.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-NEGRO-02, ES-ETYMON-BLANCO-04, ES-LEX-ROJO-01, ES-ETYMON-ROJO-02, ES-LEX-AZUL-03, ES-ETYMON-AZUL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rojo, azul"]
@@ -54,6 +73,7 @@ while the **everyday** French blue is the Germanic loan *bleu*. In
   only poetic"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-NEGRO-02, ES-ETYMON-BLANCO-04, ES-LEX-ROJO-01, ES-ETYMON-ROJO-02, ES-LEX-AZUL-03, ES-ETYMON-AZUL-04] -->
 
 [PAUSE 3s] Is **rojo** the same Latin word as French's *rouge*? (**No** —
 *rojo* ← *russus*, *rouge* ← *rubeus* — different Latin words, but true

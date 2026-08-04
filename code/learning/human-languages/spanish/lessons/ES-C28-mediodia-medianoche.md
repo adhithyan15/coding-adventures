@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C28-mediodia-medianoche
+spine_node: SPINE-TIME-OF-DAY
+sequence: 790
 chapter: 28
 type: word
 headword: mediodía, medianoche
@@ -9,18 +12,32 @@ prerequisites: [ES-C27-los-meses]
 sounds: [diphthong-ia, nasal-none]
 roots: [medius-dies-latin, media-nox-latin]
 etymology_hook: "mediodía ← medius diēs, medianoche ← media nox — Spanish kept día/noche fully alive as ordinary words; French's -di (in midi) wore down to an opaque fragment, though its -nuit (in minuit) stayed just as recognizable as Spanish's noche"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02]
+practises:
+  knowledge: [ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C27-los-meses]
 ---
 
 # mediodía, medianoche — noon and midnight, spelled out in full
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two hours that don't get a number — they get a name. And
 Spanish keeps that name far more transparent than its French cousin does.
 
 ## The two words, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02]; assesses=[] -->
 
 | Spanish | ← Latin | literally |
 |---|---|---|
@@ -48,6 +65,7 @@ hour" — originally mid-afternoon, it drifted earlier over the centuries to
 mean midday. Spanish kept the tidier, transparent "mid-day" instead.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mediodía" (noon), "medianoche" (midnight)]
@@ -58,6 +76,7 @@ mean midday. Spanish kept the tidier, transparent "mid-day" instead.)
   to a fossil (-di)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02] -->
 
 [PAUSE 3s] What do *mediodía* and *medianoche* literally mean, and from
 what Latin? ("Mid-day" ← *medius diēs*; "mid-night" ← *media nox*.) Are

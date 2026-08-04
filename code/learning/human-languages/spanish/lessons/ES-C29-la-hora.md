@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C29-la-hora
+spine_node: SPINE-TIME-OF-DAY
+sequence: 800
 chapter: 29
 type: word
 headword: la hora
@@ -9,19 +12,33 @@ prerequisites: [ES-C28-mediodia-medianoche]
 sounds: [silent-h, article-la-las]
 roots: [hora-latin, hora-greek]
 etymology_hook: "hora ← Latin hōra ← Greek hṓrā, 'a season, a time of day' — Spanish inherited it almost unchanged, with a silent h that's a fossil of an already-weak Latin h (NOT the same story as hijo/hacer's silent h, which comes from Spanish's own later f- → h- sound change); the same Latin source as French heure, German's separately-borrowed Uhr, and English hour"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03]
+practises:
+  knowledge: [ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C28-mediodia-medianoche]
 ---
 
 # la hora — Spanish's barely-changed Latin hour
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've now seen this Latin word take three different paths: French wore
 it down to *heure*, German borrowed it centuries later as *Uhr*. Spanish's path is
 the simplest of all — it barely changed.
 
-## The word, taken apart
+## The word, taken apart: hora
+<!-- hl-knowledge: introduces=[ES-LEX-HORA-01, ES-ETYMON-HORA-02]; assesses=[] -->
 
 **hora** ← Latin **hōra** ← Greek **hṓrā**, "a season, a time of day" (the Greek
 goddesses of the seasons were the *Hōrai*). Spanish kept the word almost exactly as
@@ -42,7 +59,8 @@ borrowed it later as *Uhr*; English took the same Latin *hōra* and made *hour*.
 | German | *Uhr* | not inherited — borrowed later, separately |
 | English | *hour* | inherited via French, silent *h* |
 
-## Grammar Lens: "Son las…" — telling the time
+## Grammar Lens: Son las and telling time
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-TELLING-TIME-03]; assesses=[] -->
 
 Spanish uses **ser** ("to be") plus the **feminine plural article** (agreeing with
 the unspoken *horas*) to tell time — and famously switches number for "one":
@@ -57,6 +75,7 @@ everyday speech (unlike French's *il est deux heures*, which spells out "hours"
 every time).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hora" — silent h, a fossil of an already-weak Latin h]
@@ -64,6 +83,7 @@ every time).
 - [YOU SAY: "hora / heure / hour" — one Latin root, three different fates]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03] -->
 
 [PAUSE 3s] What Latin (and Greek) word is *hora* from? (*hōra* ← Greek *hṓrā*.) How
 did Spanish's path differ from French's and German's? (**Spanish** inherited it

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C19-no
+spine_node: SPINE-RESPOND-BASIC
+sequence: 650
 chapter: 19
 type: word
 headword: no
@@ -9,18 +12,32 @@ prerequisites: [ES-C19-si]
 sounds: [vowel-o]
 roots: [non]
 etymology_hook: "no is Latin nōn barely touched — and does double duty: both 'no' the answer and 'not' the negator (no hablo)"
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-NO-01, ES-GRAMMAR-NO-02]
+practises:
+  knowledge: [ES-LEX-NO-01, ES-GRAMMAR-NO-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C19-si, ES-C01-hola]
 ---
 
 # no — no / not
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The easiest word yet — and it quietly does two jobs Spanish never
 splits apart.
 
-## The word
+## The word, taken apart: no
+<!-- hl-knowledge: introduces=[ES-LEX-NO-01]; assesses=[] -->
 
 **no** = **no**. Said *noh*, a clean single vowel.
 
@@ -33,7 +50,8 @@ gone. Compare the family, all from the same *nōn*:
 | Italian | **no** |
 | French | **non** |
 
-## One word, two jobs
+## Grammar Lens: one word, two jobs
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-NO-02]; assesses=[] -->
 
 Here's the thing English splits and Spanish doesn't. English has **"no"** (the
 answer) and **"not"** (inside a sentence) — two different words. Spanish uses
@@ -48,6 +66,7 @@ sentence negative, drop **no** in front of the verb. One little word, two
 everyday jobs.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-01, ES-GRAMMAR-NO-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "no" — *noh*]
@@ -55,6 +74,7 @@ everyday jobs.
 - [YOU SAY: as a negator — "No hablo inglés"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-01, ES-GRAMMAR-NO-02] -->
 
 [PAUSE 3s] How do you say no in Spanish? (**no**.) What Latin word is it from?
 (**nōn**.) Spanish *no* does the work of which **two** English words? (**"no"**

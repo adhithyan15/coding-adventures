@@ -3,9 +3,6 @@
 % support that later tracks (Arabic, Devanagari, Dravidian scripts) require.
 
 \usepackage{fontspec}
-\usepackage{polyglossia}
-\setdefaultlanguage{english}
-\setotherlanguage{spanish}
 
 % Latin Modern ships with every standard TeX distribution (MiKTeX, TeX
 % Live) as OpenType fonts, so this compiles the same way on any machine --
@@ -23,6 +20,23 @@
 \usepackage{tabularx}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
+
+% polyglossia loads bidi for Arabic, so color-related packages must come first.
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage{spanish}
+\setotherlanguage{arabic}
+
+% Chapter 22 preserves the Arabic source of azul. Use the repository's static
+% Naskh font so the source script is deterministic and never dropped in print.
+\newfontfamily\arabicfont[
+  Path=../../_fonts/,
+  Script=Arabic,
+  BoldFont=NotoNaskhArabic-Static.ttf,
+  ItalicFont=NotoNaskhArabic-Static.ttf,
+  BoldItalicFont=NotoNaskhArabic-Static.ttf
+]{NotoNaskhArabic-Static.ttf}
+\newcommand{\esar}[1]{\textarabic{#1}}
 
 \hypersetup{
   pdftitle={Spanish, Step by Step, Root by Root},

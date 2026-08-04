@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C23-padre-madre
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 710
 chapter: 23
 type: word
 headword: el padre, la madre
@@ -9,25 +12,40 @@ prerequisites: [ES-C22-rojo-azul]
 sounds: [r-tap, d-soft]
 roots: [pater-latin, mater-latin]
 etymology_hook: "padre ← pater, madre ← mater — the same PIE *ph2ter/*meh2ter that gave English father/mother via Grimm's law (p→f, t→th)"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-PARENTS-01, ES-ETYMON-PARENTS-02, ES-ETYMON-PARENTS-SOUND-LAW-03]
+practises:
+  knowledge: [ES-LEX-PARENTS-01, ES-ETYMON-PARENTS-02, ES-ETYMON-PARENTS-SOUND-LAW-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C22-rojo-azul, ES-C22-negro-blanco]
 ---
 
 # el padre, la madre — among the oldest words there are
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] "Father" and "mother" are some of the **oldest reconstructible
 words in human language** — older than Latin, older than Rome. Spanish kept
 them close to the Latin original, and they are secretly the *same words* as
 English **father** and **mother**.
 
-## Taken apart
+## The words, taken apart: padre and madre
+<!-- hl-knowledge: introduces=[ES-LEX-PARENTS-01, ES-ETYMON-PARENTS-02]; assesses=[] -->
 
 - **el padre** ("father") ← Latin **pater** ← PIE ***ph₂tḗr***.
 - **la madre** ("mother") ← Latin **māter** ← PIE ***méh₂tēr***.
 
-## The English connection — one sound-law
+## Why it's said this way: the English sound-law
+<!-- hl-knowledge: introduces=[ES-ETYMON-PARENTS-SOUND-LAW-03]; assesses=[] -->
 
 *Padre* and English *father* both descend independently from the **same**
 PIE word — they're siblings, not parent and child. Latin (and Spanish after
@@ -49,6 +67,7 @@ patrón** and **maternal, maternidad**. (A further Latin-only offshoot,
 *materia* and, separately, *matriz* — "womb" — via Latin *mātrix*.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PARENTS-01, ES-ETYMON-PARENTS-02, ES-ETYMON-PARENTS-SOUND-LAW-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "el padre, la madre"]
@@ -56,6 +75,7 @@ patrón** and **maternal, maternidad**. (A further Latin-only offshoot,
 - [YOU SAY: "padre → paternal; madre → maternal"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PARENTS-01, ES-ETYMON-PARENTS-02, ES-ETYMON-PARENTS-SOUND-LAW-03] -->
 
 [PAUSE 3s] Give "father" and "mother" with their articles. (**el padre, la
 madre**.) Does *padre* turn into English *father* directly? (**No** — both

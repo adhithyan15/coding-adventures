@@ -1953,6 +1953,147 @@
       "tex": "spanish/book/chapters/ch06-first-verbs.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:348146303665aa93",
+      "lessonIds": [
+        "ES-C19-si",
+        "ES-C19-no"
+      ],
+      "tex": "spanish/book/chapters/ch19-yes-and-no.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:4aa44d79b283395f",
+      "lessonIds": [
+        "ES-C20-lo-siento"
+      ],
+      "tex": "spanish/book/chapters/ch20-lo-siento.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:09f9bc1fc7fc5a64",
+      "lessonIds": [
+        "ES-C21-lunes-viernes",
+        "ES-C21-sabado-domingo"
+      ],
+      "tex": "spanish/book/chapters/ch21-days-of-the-week.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:2d63daa51e93ecdf",
+      "lessonIds": [
+        "ES-C22-negro-blanco",
+        "ES-C22-rojo-azul"
+      ],
+      "tex": "spanish/book/chapters/ch22-black-white-red-blue.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:c2679458c2100cb6",
+      "lessonIds": [
+        "ES-C23-padre-madre",
+        "ES-C23-hermano-hermana"
+      ],
+      "tex": "spanish/book/chapters/ch23-family.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:bcdb0fd59edf434d",
+      "lessonIds": [
+        "ES-C24-cabeza",
+        "ES-C24-mano"
+      ],
+      "tex": "spanish/book/chapters/ch24-head-and-hand.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:b76c71606e7c1944",
+      "lessonIds": [
+        "ES-C25-las-estaciones"
+      ],
+      "tex": "spanish/book/chapters/ch25-seasons.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:0643114246dbca23",
+      "lessonIds": [
+        "ES-C26-agua-vino",
+        "ES-C26-pan"
+      ],
+      "tex": "spanish/book/chapters/ch26-water-wine-bread.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:3c0241436ecab0b0",
+      "lessonIds": [
+        "ES-C27-los-meses"
+      ],
+      "tex": "spanish/book/chapters/ch27-months.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:67c5930a2b05b153",
+      "lessonIds": [
+        "ES-C28-mediodia-medianoche"
+      ],
+      "tex": "spanish/book/chapters/ch28-noon-midnight.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:ba45be8faf01ca69",
+      "lessonIds": [
+        "ES-C29-la-hora"
+      ],
+      "tex": "spanish/book/chapters/ch29-telling-time.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:063f578621dab785",
+      "lessonIds": [
+        "ES-C30-el-tiempo"
+      ],
+      "tex": "spanish/book/chapters/ch30-weather.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:f2267035c33491e1",
+      "lessonIds": [
+        "ES-C31-numeros-11-20"
+      ],
+      "tex": "spanish/book/chapters/ch31-numbers-11-20.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:2a0d1e66cf7f557a",
+      "lessonIds": [
+        "ES-C32-perro-gato"
+      ],
+      "tex": "spanish/book/chapters/ch32-dog-and-cat.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:d7715072b975cbc3",
+      "lessonIds": [
+        "ES-C33-verde-amarillo"
+      ],
+      "tex": "spanish/book/chapters/ch33-green-and-yellow.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:f39b57f3b08140c4",

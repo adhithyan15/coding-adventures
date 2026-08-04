@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C27-los-meses
+spine_node: SPINE-TIME-OF-DAY
+sequence: 780
 chapter: 27
 type: word
 headword: los meses
@@ -9,13 +12,26 @@ prerequisites: [ES-C21-lunes-viernes, ES-C08-numeros-6-10]
 sounds: [r-tap, diphthong-ie]
 roots: [latin-months, roman-gods]
 etymology_hook: "marzo ← Martius ← Mars, the SAME war-god behind martes; septiembre–diciembre still mean Latin 7–10 because the year once started in March — Julius and Augustus didn't ADD months, they just got two already-existing ones (Quintilis, Sextilis) RENAMED after them"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02]
+introduces:
+  knowledge: [ES-LEX-MONTHS-01, ES-ETYMON-MONTHS-02]
+practises:
+  knowledge: [ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02, ES-LEX-MONTHS-01, ES-ETYMON-MONTHS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C21-lunes-viernes, ES-C08-numeros-6-10]
 ---
 
 # los meses — the calendar's gods and Caesars
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02] -->
 
 [PAUSE 2s] Spanish's twelve months are a **procession of Roman gods and
 emperors**, barely changed from Latin. Two things you already know pay off
@@ -24,6 +40,7 @@ immediately: *marzo* is the war-god you met in *martes*, and
 chapters.
 
 ## The months, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-MONTHS-01, ES-ETYMON-MONTHS-02]; assesses=[] -->
 
 | Spanish | ← Latin | who / what |
 |---|---|---|
@@ -57,6 +74,7 @@ Two payoffs land at once:
   after the fact. The names stuck; the months themselves were never new.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02, ES-LEX-MONTHS-01, ES-ETYMON-MONTHS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the twelve — "enero, febrero, marzo, abril, mayo, junio, julio,
@@ -65,6 +83,7 @@ Two payoffs land at once:
 - [YOU SAY: "septiembre = 7, diciembre = 10" — the old March-start year]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02, ES-LEX-MONTHS-01, ES-ETYMON-MONTHS-02] -->
 
 [PAUSE 3s] Which god links *marzo* and *martes*? (**Mars**, the war-god —
 his month and his day.) Why is *diciembre* Latin for "ten"? (**The Roman
