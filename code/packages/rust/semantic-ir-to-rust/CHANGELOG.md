@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.39.3 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "Python/JS/Rust/Ruby backends: implement shift-operator runtime
+dispatch". `ruby-to-semantic-ir` lowers `<<` to a top-level
+`BuiltinCall("<<", [lhs, rhs, ...])` — a separate protocol from the
+`__method__("<<", recv, arg)` Collections dispatch. The operator form
+reached `call_builtin_by_name`'s floor and panicked `unknown builtin:
+<<` — every Ruby program using `<<` as an operator (`a << 1`, `arr << x`,
+`"a" << "b"`) failed at runtime.
+
+New `shift_left`, polymorphic like the existing `plus`: Array pushes each
+RHS operand in place (chains left-to-right, since the frontend lowers a
+`<<` chain to one variadic call); Integer bitwise-shifts via
+`shift_left_i64`, PORTED from the C/Go backends' helper of the same name
+for identical overflow/negative-amount/saturation semantics; String
+concatenates to a new string, raising the SAME rescuable `TypeError`
+`plus` raises for a non-string operand.
+
+Simpler than the C/Go ports needed: Rust's `i64::unsigned_abs()` already
+handles `i64::MIN` correctly (no manual wraparound trick needed), and
+`f as i64` has been a SATURATING, NaN-safe conversion by language
+guarantee since Rust 1.45 (no manual float-to-int saturation helper
+needed either) — only the shift-count-must-be-checked-before-native-`<<`
+guard (Rust panics/masks on an out-of-range shift count, same hazard as
+Go) needed porting.
+
+Ruby backend (`semantic-ir-to-ruby`) already had `<<` support from
+earlier work; Python and JS/TS backends still lack the top-level
+operator, tracked as separate follow-ups.
+
+`semantic-ir-to-rust` 0.39.2 -> 0.39.3.
+
 ## 0.39.2 — fix: `Array#[]=` (bracket-index write) was unimplemented
 
 Part of "Python/JS/Go/Rust backends: implement `[]`/`[]=` bracket-index
