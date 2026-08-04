@@ -806,6 +806,18 @@ committed diff plan reports exactly 96 changed and 248 affected TypeScript
 packages. The collision-checked inventory remains unchanged at 1,264
 identities and 4,419 slots with zero collisions or unknown buckets.
 
+All 20 exact-head checks reached terminal acceptable conclusions for PR #9912;
+two independent readings returned `MERGEABLE/CLEAN`; guarded squash
+auto-completion merged final head `787e73baab` as `355348901e`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419 slots,
+173 high-consensus packages with 270 gaps, 814 singleton packages with 11,396
+gaps, 618 Rust singletons, and zero collisions or unknown buckets. A quick
+direct-ownership scan finds up to 74 build-script TypeScript projects with Node
+builtin/global references but no manifest-owned `@types/node` provider. The
+dependency/leverage pass selects an executable syntax-aware audit of that
+corpus ahead of the separately pending 10-file Lua `BUILD_windows` wave; the
+audit must refine the exact set before any manifest or lockfile repair.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
