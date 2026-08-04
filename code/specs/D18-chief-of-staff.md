@@ -205,6 +205,15 @@ and correlation mismatches fail before output publication or input
 acknowledgement. Nonzero process exit and EOF before a valid response likewise
 leave the input cursor unchanged for recovery.
 
+The host keeps one ordered subprocess session per Level 4 agent and permits
+only one input to be in flight on that session. It receives one verified
+channel message, obtains and validates the correlated subprocess response,
+publishes the output, and only then acknowledges the input. Protocol or pipe
+failure invalidates the session; the host kills and reaps its owned child so a
+supervisor can restart from the unchanged channel cursor. Package verification,
+sandbox selection, restart policy, and timeout enforcement remain outside the
+wire codec and process adapter.
+
 ---
 
 ## Key Concepts
