@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-agent-stdio-protocol && cargo clippy -p chief-of-staff-agent-stdio-protocol --all-targets -- -D warnings
