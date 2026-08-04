@@ -36,7 +36,15 @@ The shared wellbeing can-do gets an Urdu-specific extra step for addressee
 agreement, an explicit **āp ... haiṅ** honorific frame, and an Urdu/Hindi script
 bridge only after **ٹھیک** is independently readable.
 
-## Chapter 5 — People and simple identity *(planned)*
+## Chapter 5 — Take leave *(authored)*
+
+**خدا** *khudā* → **حافظ** *hāfiz* → **خدا حافظ** *khudā hāfiz* → one
+start-versus-end interaction. The sequence first secures the Urdu reading,
+then exposes the Persian loan plus Arabic root history, and only then compares
+Urdu's visible space with Persian's joined spelling. Casual, time-of-day, and
+“see you” farewells remain later spine work.
+
+## Chapter 6 — People and simple identity *(planned)*
 
 - extend **میں ... ہوں** *maiṅ ... hūṅ* from state to identity;
 - add further masculine and feminine agreement one contrast at a time;

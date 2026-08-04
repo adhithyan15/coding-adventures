@@ -52,6 +52,9 @@ lessons will introduce them only when a useful word needs them.
   sounds in **خ/غ** only inside the name exchange.
 - **حال شما چطور است؟** reuses ezafe and the Persian question mark; **چطور**
   gives **و** its learned *o* value, while **خوبم** returns to long-*u* **و**.
+- **خدا** reuses **خ** and long-*â* **ا**; **حافظ** adds a clear initial *h* and
+  a final **ظ** pronounced *z* in modern Persian. The complete farewell is
+  normally joined in Persian as **خداحافظ**.
 
 One spelling symbol can do more than one job in later words—especially **و**
 and **ی**—so read from the word and context rather than assigning each shape one

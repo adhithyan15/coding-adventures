@@ -77,6 +77,24 @@
         "FA-EXT-012-WELLBEING-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "FA-PATH-006",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "FA-C05-khoda",
+        "FA-C05-hafez",
+        "FA-C05-khodahafez",
+        "FA-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-013-KHODA-HISTORY",
+        "FA-EXT-014-HAFEZ-ROOT",
+        "FA-EXT-015-FAREWELL-SCRIPT-REGISTER",
+        "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -143,9 +161,10 @@
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
-      "segments": [],
+      "segments": [
+        "FA-PATH-006"
+      ],
       "omits": [
-        "FAREWELL",
         "FAREWELL-CASUAL",
         "FAREWELL-LATER",
         "FAREWELL-SOON",
@@ -345,6 +364,58 @@
       ],
       "lessons": [
         "FA-C04-practice"
+      ]
+    },
+    {
+      "id": "FA-EXT-013-KHODA-HISTORY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read khodâ and connect its modern meaning to Middle Persian xwadây without treating etymology as a production burden.",
+      "prerequisites": [
+        "FA-EXT-012-WELLBEING-CONSOLIDATION"
+      ],
+      "lessons": [
+        "FA-C05-khoda"
+      ]
+    },
+    {
+      "id": "FA-EXT-014-HAFEZ-ROOT",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read hâfez and use the Arabic guard-and-preserve root as a memory hook for protector.",
+      "prerequisites": [
+        "FA-EXT-013-KHODA-HISTORY"
+      ],
+      "lessons": [
+        "FA-C05-hafez"
+      ]
+    },
+    {
+      "id": "FA-EXT-015-FAREWELL-SCRIPT-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read joined خداحافظ and use it as a broadly polite close without supplying an unlearned verb.",
+      "prerequisites": [
+        "FA-EXT-014-HAFEZ-ROOT"
+      ],
+      "lessons": [
+        "FA-C05-khodahafez"
+      ]
+    },
+    {
+      "id": "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can open and close a short respectful Persian interaction using only independently learned lines.",
+      "prerequisites": [
+        "FA-EXT-015-FAREWELL-SCRIPT-REGISTER"
+      ],
+      "lessons": [
+        "FA-C05-practice"
       ]
     }
   ]

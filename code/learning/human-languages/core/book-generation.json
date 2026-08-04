@@ -2082,6 +2082,15 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 5,
+      "title": "Take Leave",
+      "label": "ch:fa-take-leave",
+      "output": "persian/book/chapters/ch05-take-leave.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "title": "Ask and Answer Names",
@@ -2096,6 +2105,15 @@
       "title": "How Are You?",
       "label": "ch:ur-how-are-you",
       "output": "urdu/book/chapters/ch04-how-are-you.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 5,
+      "title": "Take Leave",
+      "label": "ch:ur-take-leave",
+      "output": "urdu/book/chapters/ch05-take-leave.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
     }

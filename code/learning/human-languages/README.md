@@ -87,8 +87,8 @@ edition is authored.
 | [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapters 1–36 authored; Chapters 2–36 canonical/generated for app + book |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapters 1–6 authored (lessons + book; Chapter 6 canonical/generated) |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1-2 authored (lessons + book) |
-| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Four authored shared-spine chapters; 16 canonical lessons |
-| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Four authored shared-spine chapters; 16 canonical lessons |
+| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Five authored shared-spine chapters; 20 canonical lessons |
+| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already

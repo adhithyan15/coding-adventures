@@ -37,7 +37,7 @@ showing an answer-bearing summary. Other lexical lessons ask for one English
 meaning. A wrong answer leaves the local frontier unchanged; a correct answer
 shows feedback before the learner continues. The first objective non-lexical
 pilots covered Spanish grammatical gender and punctuation spans; the first
-HL-A01 tranches now reach 21 of 115 mapped non-lexical lessons across 18 tracks,
+HL-A01 tranches now reach 25 of 119 mapped non-lexical lessons across 18 tracks,
 including script, grammar, etymology, culture, and cumulative practice. The
 remaining 94 support lessons retain temporary final-recall confirmation while
 HL-A01 fills the measured contract backlog.

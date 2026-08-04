@@ -67,12 +67,12 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "persian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3, 4]);
+    ).toEqual([1, 2, 3, 4, 5]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3, 4]);
+    ).toEqual([1, 2, 3, 4, 5]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -113,6 +113,10 @@ describe("real curriculum", () => {
       "FA-C04-khub-good",
       "FA-C04-khubam-reply",
       "FA-C04-practice-next-line",
+      "FA-C05-hafez-meaning",
+      "FA-C05-khoda-meaning",
+      "FA-C05-khodahafez-goodbye",
+      "FA-C05-practice-final-line",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
@@ -140,6 +144,10 @@ describe("real curriculum", () => {
       "UR-C04-main-thik-hun-reply",
       "UR-C04-practice-next-line",
       "UR-C04-thik-well",
+      "UR-C05-hafiz-meaning",
+      "UR-C05-khuda-hafiz-goodbye",
+      "UR-C05-khuda-meaning",
+      "UR-C05-practice-final-line",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
@@ -209,6 +217,37 @@ describe("real curriculum", () => {
         ),
       ).toEqual([]);
     }
+  });
+
+  it("keeps the Persian and Urdu Chapter 5 farewell chains closed, objective, and under five minutes", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    for (const language of ["persian", "urdu"]) {
+      const chapter = lessons.filter(
+        (lesson) => lesson.language === language && lesson.realization.chapter === 5,
+      );
+      expect(chapter).toHaveLength(4);
+      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        report.duration.violations.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 5,
+        ),
+      ).toEqual([]);
+      expect(
+        report.prerequisites.laterChapterWithoutPrerequisites.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 5,
+        ),
+      ).toEqual([]);
+    }
+
+    const persianFarewell = lessons.find(
+      (lesson) => lesson.realization.lessonId === "FA-C05-khodahafez",
+    )!;
+    const urduFarewell = lessons.find(
+      (lesson) => lesson.realization.lessonId === "UR-C05-khuda-hafiz",
+    )!;
+    expect(persianFarewell.frontmatter.headword).toBe("خداحافظ");
+    expect(urduFarewell.frontmatter.headword).toBe("خدا حافظ");
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {
