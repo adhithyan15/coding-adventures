@@ -31,6 +31,15 @@ alias wins over a same-basename program alias. Shared fixtures cover the
 field-aware boundary, genuine cycles, legacy BUILD dependencies, and
 package/program alias collisions.
 
+Go dependency resolution reads module paths only from single-line `require`
+directives and `require ( ... )` blocks. Module declarations, Go and toolchain
+versions, comments, and `replace`, `exclude`, and `retract` directives cannot
+invent graph edges; in particular, a local replacement without a corresponding
+requirement is not a dependency. Versions and `// indirect` annotations are
+ignored after the authoritative module path. The shared field-boundary fixture
+covers those exclusions, and the complete 302-package lane matches the Go
+resolver exactly at 936 edges.
+
 Haskell dependency resolution reads package requirements only from Cabal
 `build-depends` fields, including indented comma continuations and repeated
 fields across stanzas. Synopsis and description text, source directories,

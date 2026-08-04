@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionGoSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -169,6 +169,26 @@ resolutionCabalSpec = describe "Cabal resolution conformance" $ do
                     Right
                         [ ["haskell/beta", "haskell/delta", "haskell/gamma"]
                         , ["haskell/alpha"]
+                        ]
+
+resolutionGoSpec :: Spec
+resolutionGoSpec = describe "Go resolution conformance" $ do
+    it "reads only require directives" $
+        withFixture "resolution-go-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "go" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "go/alpha"
+                    , "go/beta-helper"
+                    , "go/delta_name"
+                    , "go/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["go/beta-helper", "go/delta_name", "go/gamma"]
+                        , ["go/alpha"]
                         ]
 
 resolutionPythonSpec :: Spec

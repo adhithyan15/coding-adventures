@@ -29,6 +29,8 @@ All notable changes to this package will be documented in this file.
 - Shared Swift field-boundary coverage for local package path declarations,
   directory aliases, comments, external URLs, and unrelated package, product,
   and target metadata.
+- Shared Go field-boundary coverage for single and block `require` directives,
+  indirect requirements, comments, and replace-only local module aliases.
 
 ### Changed
 
@@ -63,6 +65,9 @@ All notable changes to this package will be documented in this file.
   nested block comments plus unrelated Swift strings and initializer fields.
 - Make the Go resolver apply the same comment-aware Swift manifest boundary
   instead of accepting a `.package(path:)` example inside a block comment.
+- Resolve Go edges only from single-line `require` directives and `require`
+  blocks, ignoring module metadata, comments, and `replace`, `exclude`, and
+  `retract` directives.
 - Declare aes-modes' now-authoritative local AES prerequisite in its portable
   BUILD recipe so standalone build validation remains correct.
 
