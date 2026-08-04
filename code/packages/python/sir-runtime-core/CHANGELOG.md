@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.3.0 — `shift_left` (Ruby's `<<` operator)
+
+Part of "Python/JS backends: implement shift-operator runtime dispatch".
+`ruby-to-semantic-ir` lowers `<<` to a top-level `BuiltinCall("<<", [lhs,
+rhs, ...])` — a separate protocol from the `__method__("<<", recv, arg)`
+Collections dispatch. The Python backend had no `<<` entry at all — any
+program using `<<` as an operator (`a << 1`, `arr << x`, `"a" << "b"`)
+raised `NameError: SIR builtin '<<' is not implemented`.
+
+New `shift_left(*args)`, polymorphic like the existing `add`, but dispatched
+explicitly on the runtime tag since Python's own `<<` doesn't line up for
+every receiver the way `+` did:
+
+- `list` — pushes each RHS operand IN PLACE (`.extend`), returns the
+  mutated receiver (Ruby `Array#<<` mutates, unlike `+`).
+- `str` — concatenates to a NEW string via Python's own `+`, which already
+  raises `TypeError` for a non-`str` RHS (matching Ruby; no explicit check
+  needed, mirroring `add`'s String arm).
+- numeric — bitwise shift. Python ints are arbitrary precision, so this
+  needs NO saturation logic (unlike the C/Go/Rust backends, which saturate
+  at `INT64_MAX` as a documented v0 limitation) — `1 << 63` naturally
+  produces the true mathematical result, MORE faithfully matching real
+  Ruby's own bignum-growing `<<`. Python's native `<<`/`>>` reject a
+  negative shift count (raise `ValueError`), so a negative amount is
+  handled explicitly: it reverses direction, a right shift by the absolute
+  value (`5 << -1 == 5 >> 1 == 2`), matching Ruby. A `bool` operand is
+  excluded from the numeric-shift-amount path (Python's `bool` is an `int`
+  subclass but not a SIR number, mirroring `mul`'s existing guard).
+
+Exported from the package root and registered in the `call_builtin`
+dispatch table.
+
 ## 0.2.0 — comparison helpers: `ne`, `le`, `ge`
 
 Adds the runtime helpers the SIR backends need to lower Ruby's `!=`, `<=`, `>=`

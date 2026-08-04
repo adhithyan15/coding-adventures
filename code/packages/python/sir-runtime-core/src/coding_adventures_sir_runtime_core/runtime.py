@@ -306,6 +306,7 @@ def sir_puts(*args: Any) -> None:
 
 _builtins: dict[str, Callable[..., Any]] = {
     "+": arithmetic.add,
+    "<<": arithmetic.shift_left,
     "-": arithmetic.sub,
     "*": arithmetic.mul,
     "/": arithmetic.div,
