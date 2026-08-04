@@ -1344,6 +1344,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Eg=model.params.get("EG", 1.11),
             Nlev=model.params.get("NLEV", 1.0),
             Gdsnoi=model.params.get("GDSNOI", 1.0),
+            Rd=model.params.get("RD", 0.0),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2134,6 +2135,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or channel_noise_coefficient < 0.0
         ):
             raise NetlistParseError("JFET GDSNOI must be finite and non-negative")
+        drain_resistance = params.get("RD")
+        if drain_resistance is not None and (
+            not math.isfinite(drain_resistance) or drain_resistance < 0.0
+        ):
+            raise NetlistParseError("JFET RD must be finite and non-negative")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]
