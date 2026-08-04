@@ -12,9 +12,12 @@ use chief_of_staff_service_registry::{
 };
 use chief_of_staff_tool_api::PrivilegeTier;
 use core::fmt::{self, Display, Formatter};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
+
+/// Maximum number of packages accepted in one discovery snapshot.
+pub const MAX_AGENT_PACKAGES: usize = 4_096;
 
 /// One authenticated package plus the inert registration it declares.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -40,6 +43,55 @@ impl DiscoveredAgent {
     /// Consume this result and return its registration candidate.
     pub fn into_registration(self) -> HostRegistration {
         self.registration
+    }
+}
+
+/// One deterministic change between two complete verified catalog snapshots.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum CatalogChange {
+    /// A newly discovered agent package.
+    Added(DiscoveredAgent),
+    /// A package identity that is no longer present.
+    Removed(DiscoveredAgent),
+    /// The same agent identity now resolves to a different verified package.
+    Replaced {
+        /// The previously verified package.
+        previous: Box<DiscoveredAgent>,
+        /// The newly verified package.
+        current: Box<DiscoveredAgent>,
+    },
+}
+
+impl CatalogChange {
+    /// Return the stable agent identity affected by this change.
+    pub fn agent_name(&self) -> &str {
+        match self {
+            Self::Added(agent) | Self::Removed(agent) => &agent.manifest.agent,
+            Self::Replaced { current, .. } => &current.manifest.agent,
+        }
+    }
+}
+
+/// A bounded, side-effect-free plan for reconciling two verified catalogs.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct CatalogReloadPlan {
+    changes: Vec<CatalogChange>,
+}
+
+impl CatalogReloadPlan {
+    /// Borrow changes in stable agent-name order.
+    pub fn changes(&self) -> &[CatalogChange] {
+        &self.changes
+    }
+
+    /// Return whether the verified catalogs are identical.
+    pub fn is_empty(&self) -> bool {
+        self.changes.is_empty()
+    }
+
+    /// Consume the plan and return its stable ordered changes.
+    pub fn into_changes(self) -> Vec<CatalogChange> {
+        self.changes
     }
 }
 
@@ -91,6 +143,13 @@ pub enum DiscoveryError {
     },
     /// Two candidates declare the same agent identity.
     DuplicateAgent(String),
+    /// A snapshot exceeds the explicit package-count bound.
+    TooManyPackages {
+        /// Number of package candidates or verified entries supplied.
+        found: usize,
+        /// Maximum number accepted in one snapshot.
+        maximum: usize,
+    },
 }
 
 impl Display for DiscoveryError {
@@ -134,6 +193,10 @@ impl Display for DiscoveryError {
             Self::DuplicateAgent(agent) => {
                 write!(f, "duplicate discovered agent identity: {agent}")
             }
+            Self::TooManyPackages { found, maximum } => write!(
+                f,
+                "agent discovery found {found} packages, exceeding the {maximum}-package bound"
+            ),
         }
     }
 }
@@ -228,6 +291,12 @@ pub fn discover_agent_packages(
         }
     }
     candidates.sort();
+    if candidates.len() > MAX_AGENT_PACKAGES {
+        return Err(DiscoveryError::TooManyPackages {
+            found: candidates.len(),
+            maximum: MAX_AGENT_PACKAGES,
+        });
+    }
     let mut identities = BTreeSet::new();
     let mut agents = Vec::with_capacity(candidates.len());
     for path in candidates {
@@ -239,6 +308,58 @@ pub fn discover_agent_packages(
     }
     agents.sort_by(|a, b| a.manifest.agent.cmp(&b.manifest.agent));
     Ok(agents)
+}
+
+/// Compare two complete verified snapshots without mutating registry or process state.
+///
+/// Inputs need not be sorted, but each must contain at most
+/// [`MAX_AGENT_PACKAGES`] unique identities. Unchanged agents are omitted.
+pub fn plan_catalog_reload(
+    previous: &[DiscoveredAgent],
+    current: &[DiscoveredAgent],
+) -> Result<CatalogReloadPlan, DiscoveryError> {
+    let previous = catalog_by_identity(previous)?;
+    let current = catalog_by_identity(current)?;
+    let identities = previous
+        .keys()
+        .chain(current.keys())
+        .cloned()
+        .collect::<BTreeSet<_>>();
+    let mut changes = Vec::new();
+    for identity in identities {
+        match (previous.get(&identity), current.get(&identity)) {
+            (None, Some(agent)) => changes.push(CatalogChange::Added((*agent).clone())),
+            (Some(agent), None) => changes.push(CatalogChange::Removed((*agent).clone())),
+            (Some(previous), Some(current)) if previous != current => {
+                changes.push(CatalogChange::Replaced {
+                    previous: Box::new((*previous).clone()),
+                    current: Box::new((*current).clone()),
+                });
+            }
+            (Some(_), Some(_)) => {}
+            (None, None) => unreachable!("identity came from one catalog"),
+        }
+    }
+    Ok(CatalogReloadPlan { changes })
+}
+
+fn catalog_by_identity(
+    agents: &[DiscoveredAgent],
+) -> Result<BTreeMap<String, &DiscoveredAgent>, DiscoveryError> {
+    if agents.len() > MAX_AGENT_PACKAGES {
+        return Err(DiscoveryError::TooManyPackages {
+            found: agents.len(),
+            maximum: MAX_AGENT_PACKAGES,
+        });
+    }
+    let mut catalog = BTreeMap::new();
+    for agent in agents {
+        let identity = agent.manifest.agent.clone();
+        if catalog.insert(identity.clone(), agent).is_some() {
+            return Err(DiscoveryError::DuplicateAgent(identity));
+        }
+    }
+    Ok(catalog)
 }
 
 fn tier_number(tier: PrivilegeTier) -> u8 {
@@ -297,9 +418,12 @@ mod tests {
             }
         }
         fn package(&self, dir: &str, agent: &str, tier: u8) -> PathBuf {
+            self.package_with_source(dir, agent, tier, "console.log('ok');\n")
+        }
+        fn package_with_source(&self, dir: &str, agent: &str, tier: u8, source: &str) -> PathBuf {
             let path = self.root.join(dir);
             fs::create_dir_all(path.join("code")).unwrap();
-            fs::write(path.join("code/agent_runtime.ts"), "console.log('ok');\n").unwrap();
+            fs::write(path.join("code/agent_runtime.ts"), source).unwrap();
             fs::write(path.join("launch.sh"), DenoLaunchPlan::launch_script()).unwrap();
             fs::write(path.join("PUBKEY_ID"), "test\n").unwrap();
             fs::write(path.join("manifest.json"), manifest(agent, tier)).unwrap();
@@ -371,6 +495,83 @@ mod tests {
         assert!(matches!(
             discover_agent_packages(&f.root, &f.keyring),
             Err(DiscoveryError::DuplicateAgent(_))
+        ));
+    }
+
+    #[test]
+    fn reload_plan_is_stable_and_omits_unchanged_agents() {
+        let f = Fixture::new(PrivilegeTier::Tier3);
+        let alpha_path = f.package("alpha.agent", "alpha-agent", 0);
+        let beta_path = f.package("beta.agent", "beta-agent", 0);
+        let previous = vec![
+            inspect_agent_package(&beta_path, &f.keyring).unwrap(),
+            inspect_agent_package(&alpha_path, &f.keyring).unwrap(),
+        ];
+
+        f.package_with_source("alpha.agent", "alpha-agent", 0, "console.log('updated');\n");
+        let gamma_path = f.package("gamma.agent", "gamma-agent", 0);
+        let current = vec![
+            inspect_agent_package(&gamma_path, &f.keyring).unwrap(),
+            inspect_agent_package(&alpha_path, &f.keyring).unwrap(),
+        ];
+
+        let plan = plan_catalog_reload(&previous, &current).unwrap();
+        assert_eq!(
+            plan.changes()
+                .iter()
+                .map(CatalogChange::agent_name)
+                .collect::<Vec<_>>(),
+            ["alpha-agent", "beta-agent", "gamma-agent"]
+        );
+        assert!(matches!(
+            &plan.changes()[0],
+            CatalogChange::Replaced { previous, current }
+                if previous.package().digest() != current.package().digest()
+        ));
+        assert!(matches!(&plan.changes()[1], CatalogChange::Removed(_)));
+        assert!(matches!(&plan.changes()[2], CatalogChange::Added(_)));
+    }
+
+    #[test]
+    fn identical_catalog_has_no_reload_work() {
+        let f = Fixture::new(PrivilegeTier::Tier3);
+        let path = f.package("same.agent", "same-agent", 0);
+        let agent = inspect_agent_package(&path, &f.keyring).unwrap();
+        assert!(
+            plan_catalog_reload(std::slice::from_ref(&agent), std::slice::from_ref(&agent),)
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn reload_plan_rejects_duplicate_or_unbounded_inputs() {
+        let f = Fixture::new(PrivilegeTier::Tier3);
+        let path = f.package("same.agent", "same-agent", 0);
+        let agent = inspect_agent_package(&path, &f.keyring).unwrap();
+        assert!(matches!(
+            plan_catalog_reload(&[agent.clone(), agent.clone()], &[]),
+            Err(DiscoveryError::DuplicateAgent(_))
+        ));
+        let oversized = vec![agent; MAX_AGENT_PACKAGES + 1];
+        assert!(matches!(
+            plan_catalog_reload(&oversized, &[]),
+            Err(DiscoveryError::TooManyPackages { .. })
+        ));
+    }
+
+    #[test]
+    fn discovery_rejects_unbounded_candidate_sets_before_verification() {
+        let f = Fixture::new(PrivilegeTier::Tier3);
+        for index in 0..=MAX_AGENT_PACKAGES {
+            fs::create_dir(f.root.join(format!("candidate-{index:04}.agent"))).unwrap();
+        }
+        assert!(matches!(
+            discover_agent_packages(&f.root, &f.keyring),
+            Err(DiscoveryError::TooManyPackages {
+                found,
+                maximum: MAX_AGENT_PACKAGES
+            }) if found == MAX_AGENT_PACKAGES + 1
         ));
     }
 }
