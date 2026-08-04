@@ -45,7 +45,8 @@ _TOOLCHAIN_MARKERS: dict[str, tuple[str, ...]] = {
     ),
     "lua": (
         "needs_lua", "gh-actions-lua", "gh-actions-luarocks", "luarocks",
-        "lua -v", "msvc", "set up lua", "set up luarocks",
+        "lua -v", "luaversion", "msvc", "set up lua", "set up luarocks", "setup_lua.py",
+        "pinned lua", "lua_bin", "lua-5.4.7", "path: .lua",
     ),
     "perl": (
         "needs_perl", "cpanm", "perl --version", "install cpanm",
@@ -203,8 +204,9 @@ def _touches_shared_ci_behavior(content: str) -> bool:
 
 def _is_toolchain_scoped_structural_line(content: str) -> bool:
     return content.startswith((
-        "if:", "run:", "shell:", "with:", "env:", "{", "}", "else", "fi", "then",
-        "printf ", "echo ", "curl ", "powershell ", "call ", "cd ",
+        "if:", "if ", "run:", "id:", "uses:", "shell:", "with:", "key:", "path:", "env:",
+        "{", "}", "else", "fi", "then", "printf ", "echo ", "curl ", "brew ",
+        "sudo apt-get ", "powershell ", "call ", "cd ",
     ))
 
 

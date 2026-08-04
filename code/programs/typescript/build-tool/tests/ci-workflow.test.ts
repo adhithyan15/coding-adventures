@@ -44,6 +44,31 @@ describe("analyzeCIWorkflowPatch", () => {
     expect(sortedToolchains(change.toolchains)).toEqual(["java", "kotlin"]);
   });
 
+  it("allows a verified Lua cache and source fallback", () => {
+    const change = analyzeCIWorkflowPatch(`
+@@ -409,0 +410,14 @@
++      - name: Restore pinned Lua 5.4.7 cache
++        id: lua-cache
++        uses: actions/cache@v4
++        with:
+-          luaVersion: "5.4"
++          path: .lua
++          key: lua-5.4.7-\${{ runner.os }}-\${{ runner.arch }}
++      - name: Install pinned Lua 5.4.7 from verified mirrors
++        shell: bash
++        run: |
++          if [ "$RUNNER_OS" = "macOS" ]; then
++            brew install readline ncurses
++          else
++            sudo apt-get install -q libreadline-dev libncurses-dev
++          fi
++          python3 code/scripts/setup_lua.py --prefix .lua
+`);
+
+    expect(change.requiresFullRebuild).toBe(false);
+    expect(sortedToolchains(change.toolchains)).toEqual(["lua"]);
+  });
+
   it("ignores comment-only changes", () => {
     const change = analyzeCIWorkflowPatch(`
 @@ -316,2 +316,2 @@

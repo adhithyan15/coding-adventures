@@ -33,7 +33,8 @@ const TOOLCHAIN_MARKERS: Record<string, string[]> = {
   ],
   lua: [
     "needs_lua", "gh-actions-lua", "gh-actions-luarocks", "luarocks",
-    "lua -v", "msvc", "set up lua", "set up luarocks",
+    "lua -v", "luaversion", "msvc", "set up lua", "set up luarocks", "setup_lua.py",
+    "pinned lua", "lua_bin", "lua-5.4.7", "path: .lua",
   ],
   perl: ["needs_perl", "cpanm", "perl --version", "install cpanm"],
   haskell: [
@@ -216,9 +217,14 @@ function touchesSharedCIBehavior(content: string): boolean {
 function isToolchainScopedStructuralLine(content: string): boolean {
   return [
     "if:",
+    "if ",
     "run:",
+    "id:",
+    "uses:",
     "shell:",
     "with:",
+    "key:",
+    "path:",
     "env:",
     "{",
     "}",
@@ -228,6 +234,8 @@ function isToolchainScopedStructuralLine(content: string): boolean {
     "printf ",
     "echo ",
     "curl ",
+    "brew ",
+    "sudo apt-get ",
     "powershell ",
     "call ",
     "cd ",
