@@ -792,6 +792,20 @@ remains green at 79, 33, and 60 tests respectively. The new
 and dependency-shaped manifest repair; the 96-config input-boundary tranche
 does not absorb package manifests or lockfiles.
 
+The implemented input-boundary contract audits all 458 build-script projects
+and reports 422 rooted configs, 420 explicitly bounded rooted configs, zero
+unbounded rooted projects, and zero tracked inputs outside their effective
+roots. All 96 repairs are semantically minimal `include: ["src"]` additions.
+Ten focused Python tests and Ruff pass. Real coverage remains green for the
+Algol lexer/parser, arithmetic, browser-extension toolkit, CSV parser, and
+canvas measurement packages; arithmetic, CSV, and canvas builds pass from
+declared dependencies, and all six production audits report zero
+vulnerabilities. The canonical TypeScript validator accepts all 470 packages.
+The Go build tool passes test, vet, build, and module verification; its
+committed diff plan reports exactly 96 changed and 248 affected TypeScript
+packages. The collision-checked inventory remains unchanged at 1,264
+identities and 4,419 slots with zero collisions or unknown buckets.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
