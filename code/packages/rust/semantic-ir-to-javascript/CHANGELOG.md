@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.51.7 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "JS/TS backend: implement shift-operator runtime dispatch".
+`ruby-to-semantic-ir` lowers `<<` to a top-level `BuiltinCall("<<", [lhs,
+rhs])` — a separate protocol from the `__method__("<<", recv, arg)`
+Collections dispatch (Array#push already used on this backend). `<<` had
+no entry in the `builtins` table at all, so it fell to `callBuiltin`'s
+floor and threw `TypeError: unknown builtin: <<` — every Ruby program
+using `<<` as an operator failed at runtime.
+
+New `shiftLeft(...args)`, polymorphic like the existing `plus`:
+
+- Array — pushes each RHS operand IN PLACE (never flattened, unlike
+  `plus`'s Array arm), returns the mutated receiver.
+- String — concatenates via `format` (the same tolerant convention
+  `plus`'s String arm already uses — never raises for a non-string
+  operand).
+- numeric — bitwise shift, implemented via multiplication/division by a
+  power of two rather than native `<<`/`>>`: JS's native bitwise
+  operators coerce both operands to Int32 and mask the shift count to 5
+  bits, so `1 << 40` would silently give the wrong answer, not even
+  close. This backend's numeric model stays plain `number` (no
+  arbitrary-precision integer type — a deliberate, already-tested
+  divergence from the TypeScript sibling package), so precision degrades
+  past `Number.MAX_SAFE_INTEGER` like `+`/`*` already do, rather than
+  saturating like the fixed-width C/Go/Rust backends. A negative amount
+  reverses direction (a right shift); `Math.floor` on the division
+  correctly replicates arithmetic (sign-extending) right shift for a
+  negative receiver too.
+
+Added to both the emitter's 2-arg polymorphic-operator fast path
+(`__Sir.shiftLeft`, alongside `+`/`*`/`-`/`/`/`%`) and the runtime
+`builtins` table (for a first-class `:<<` symbol reference / a hand-built
+module's non-2-arg call).
+
+Only the TypeScript sibling backend (`semantic-ir-to-typescript`, a fully
+separate crate) remains for this task.
+
+`semantic-ir-to-javascript` 0.51.6 -> 0.51.7.
+
 ## 0.51.6 — Axiom's three reserved SIR23 heads gain a real JS evaluator (MA13/Wave 7 close-out)
 
 **Wires `__axiom_declare`/`__axiom_coerce`/`__axiom_has`** — the three
