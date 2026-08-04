@@ -70,14 +70,14 @@ experience.
 | One atomic lesson | Strong: most content lessons teach one word or phrase. | Some lessons are long enough to contain several independent teaching steps. |
 | Strictly less than five minutes | The deterministic duration report now measures zero lessons at or above 300 effective seconds; schema-v2 lessons fail validation outside 1–299 seconds. | Keep the gate green as the corpus grows and finish migrating legacy lesson contracts. |
 | Etymology and morphology | Strong prose tradition and root metadata. | Normalize etymons, record sources/confidence, and deliver the full explanation to the app. |
-| Inline grammar | Present in Markdown prose. | Grammar has almost no structured metadata, cannot be ordered or practised by the app, and cannot be closure-checked. |
-| Inline script | Writing lessons and script JSON exist. | Writing lessons do not participate in the concept sweep; the app gives a one-time script signature rather than a cumulative reading path. |
+| Inline grammar | Typed local extension nodes place grammar lessons in prerequisite-safe paths; the app advances through those lessons inline. | Compile objective prompt/answer contracts so non-lexical focused checks do not rely on learner confirmation. |
+| Inline script | Typed local script extensions, writing lessons, and script JSON now participate in each language's visible frontier. | Complete grapheme-level knowledge closure, progressive transliteration fading, and a true Nastaliq presentation font. |
 | Shared cross-language concepts | 42 concepts are shared by two or more languages. | The shared layer is mostly greetings and A0 vocabulary; 385 concepts remain language-namespaced. |
-| Safe progression | Lesson-id prerequisites have no cycles or unknown ids. | Sixty lessons have no prerequisites, including 42 later-chapter lessons; assumed vocabulary, grammar, sounds, and glyphs are not represented. |
-| Single content source | Claimed by HL00. | The Markdown body is discarded by the parser, LaTeX chapters are handwritten copies, and the app consumes frontmatter summaries only. |
+| Safe progression | All 20 maps cover mapped prerequisites in earlier local positions; Learn stores only completed prefixes and cannot jump ahead. | Finish knowledge-atom and activity-contract migration for legacy lessons so every assessed token, construction, sound, and glyph is closure-checked. |
+| Single content source | The parser preserves typed Markdown bodies; the app renders them and generated book chapters carry the same source hashes. | Continue replacing the remaining handwritten chapter copies and legacy lesson contracts. |
 | Four skills and communicative use | Audio-script cues and guided prompts exist. | There is no structured listening, interaction, writing, or can-do coverage model, and no audio asset contract. |
 | Graded input and sustained reading | Isolated example sentences occur. | There is no controlled micro-story/dialogue corpus or known-token validation. |
-| Mixed-language practice | Learners can choose any of the 20 tracks; every track now has a prerequisite-closed realization path, and a pure planner computes independent local frontiers. | Learn still presents a global concept cursor. Move its visible progression and focused-before-mixed eligibility onto the per-language frontier planner. |
+| Mixed-language practice | Learn advances independent local frontiers, persists safe lesson-id prefixes, blocks advancement after a wrong focused check, and admits only independently passed, visually distinguishable lessons to mixed SRS review. | Compile objective focused activities for non-lexical lessons and expand prompt directions beyond meaning recognition. |
 | Register, dialect, and culture | Often explained in lesson prose. | These distinctions are not typed, so the app can silently compare non-equivalent registers or varieties. |
 | Proficiency target | Roadmaps generally point toward B1. | No CEFR/ACTFL-aligned outcome matrix shows which reception, production, interaction, or mediation abilities are covered. |
 
@@ -98,9 +98,10 @@ tracks:
 
 Subsequent slices added typed body blocks, computed-duration enforcement,
 canonical book generation, and the 20 per-track spine maps described below.
-This foundation still does not claim independently gated focused-to-mixed
-retrieval in the visible Learn flow, a true Nastaliq font, complete schema-v2
-migration, or B1 corpus depth.
+Subsequent app work also moved visible progression and mixed eligibility onto
+independent per-language frontiers with a focused-success gate. This foundation
+still does not claim compiled objective activities for every non-lexical lesson,
+a true Nastaliq font, complete schema-v2 migration, or B1 corpus depth.
 
 ## The curriculum model
 
@@ -474,9 +475,9 @@ measurable.
    duration types while preserving version-1 compatibility.
 2. **Spanish vertical slice** — migrate Chapters 1–3, render book and app, and
    prove strict duration plus closed-world progression.
-3. **Mixed-practice correction** — learner-selected languages and the pure
-   per-language frontier planner are implemented; move the visible Learn cursor,
-   focused-before-interleaved eligibility, and persistence onto that planner.
+3. **Mixed-practice correction** — implemented: learner-selected languages,
+   persistent per-language completed prefixes, visible local frontiers, wrong-
+   answer blocking, and independently gated mixed eligibility.
 4. **Persian and Urdu pilots** — build script composition and the first three spine
    clusters in each language with appropriate typography and variety metadata.
 5. **Existing-track migration** — all tracks now have explicit paths and extension

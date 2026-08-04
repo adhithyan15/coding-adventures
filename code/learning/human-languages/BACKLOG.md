@@ -5,7 +5,7 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-03. Current baseline after per-track spine mapping:
+Last prioritized: 2026-08-03. Current baseline after independent Learn frontiers:
 20 registered tracks, 1,066 Markdown lessons, 20 downloadable LaTeX books, zero
 duration violations, and 20 validated realization maps containing 346 ordered
 path segments, 247 typed extension nodes, and 896 prerequisite-closed mapped
@@ -72,7 +72,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-G03 | Complete (#9646) | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
 | HL-G04 | Queued | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose should use true opening and closing marks under every book's language rules without changing the canonical app text or code spans. |
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
-| HL-V03 | Queued | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Every compiled activity names a non-empty subset of its block's assessed atoms and resolves all answer variants without scraping prose. |
+| HL-V03 | Next | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Every compiled activity names a non-empty subset of its block's assessed atoms and resolves all answer variants without scraping prose; Language Ladder can replace non-lexical self-check confirmation with objective script/grammar retrieval. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
 | HL-B06 | Complete (#9669) | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
@@ -111,8 +111,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B36 | Complete (#9890) | Publish Spanish Chapters 19–33 from canonical lessons rather than hand-copying another fifteen book chapters. | The Spanish PDF now includes all 33 canonical chapters; all 21 later lessons use schema v2 and generate fifteen chapters from the same content consumed by Language Ladder. |
 | HL-B37 | Complete (#9891) | Remove Spanish's remaining legacy LaTeX layout, bookmark, font, and header-only-verso warnings. | The forced 214-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; all 19 intentionally blank physical pages are truly empty. |
 | HL-P01 | Complete (#9893) | Make the unified Human Languages Books result a protected merge gate, or add an equivalent gate that auto-merge must await. | Every pull request now receives a stable books gate; relevant changes run the one all-books build, unrelated changes receive a checked fast-path, and pull-request and push contexts remain distinct. |
-| HL-M01 | Complete in this PR | Add per-track spine realization maps and language-specific extension nodes. | All 20 tracks have validated repeated-segment local paths, explicit omissions/relocations, typed extensions, and a pure prerequisite-safe frontier planner. |
-| HL-M10 | Next | Replace Learn's global concept cursor with per-language frontier progression and focused-before-mixed eligibility. | Persist independent local cursors, teach each language's next mapped lesson without skipping prerequisites, and interleave only after its focused success threshold; reuse the pure planner delivered by HL-M01. |
+| HL-M01 | Complete (#9894) | Add per-track spine realization maps and language-specific extension nodes. | All 20 tracks have validated repeated-segment local paths, explicit omissions/relocations, typed extensions, and a pure prerequisite-safe frontier planner. |
+| HL-M10 | Complete in this PR | Replace Learn's global concept cursor with per-language frontier progression and focused-before-mixed eligibility. | Stable per-language completed prefixes drive each next lesson; wrong focused answers cannot advance; only independently passed, visually distinguishable lessons enter mixed review. |
 | HL-M02 | Queued | Extend Telugu's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson needs a scheduled place, and the map must explicitly split or justify Chapter 20's numbers-and-weather topic collision. |
 | HL-M03 | Queued | Extend Kannada's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5; every canonical lesson needs a scheduled place, and Chapter 20's unrelated numbers/weather pairing must be split or explicitly justified. |
 | HL-M04 | Queued | Extend Malayalam's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the four new support steps, needs a scheduled place. |
@@ -1159,10 +1159,33 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   concept belongs to `SPINE-TAKE-LEAVE`; those six relocations are now data,
   not exceptions hidden in consumer code.
 - The pure planner returns one safe local frontier per selected language and
-  groups only frontiers currently ready at the same shared node. Language
-  Ladder loads and reports the maps and constrains shared-walk admission, but
-  its visible Learn cursor remains global. HL-M10 is therefore the next
-  learner-visible tranche.
+  groups only frontiers currently ready at the same shared node. HL-M10 follows
+  by moving the visible Learn flow and review eligibility onto those frontiers.
+
+## Findings from HL-M10
+
+- Learn no longer has one global concept index or a jump control that can expose
+  a late local realization. Every selected language contributes exactly its
+  first incomplete mapped lesson, so Persian can advance while Urdu remains at
+  its own greeting frontier.
+- Progress persists by stable lesson id per language. On every load, saved data
+  is reduced to the longest valid local prefix; unknown ids, gaps, and a newly
+  inserted prerequisite cannot grant progress past the first missing lesson.
+- Lexical lessons require an English-meaning retrieval with the lesson and all
+  other language cards hidden. Wrong answers reveal feedback but do not advance.
+  Script, grammar, and other support lessons use their authored final recall as
+  a self-check until HL-V03 compiles objective typed activity contracts.
+- Mixed review contains only independently focused-successful shared lessons.
+  It waits for two visually distinct answers, so Persian and Urdu's identical
+  `سلام` cannot produce a fake one-option quiz; once another form is unlocked,
+  the existing adaptive SRS and confusion log operate on the safe grid.
+- Rendered Persian/Urdu QA proved wrong-answer blocking, independent advancement,
+  persistence across reload, explicit RTL/script treatment, and delayed mixed
+  eligibility with zero browser errors. The app build passes 30 test files and
+  478 tests after this tranche.
+- HL-V03 is next because objective prompt/answer contracts are the remaining
+  prerequisite for replacing non-lexical self-confirmation without scraping
+  lesson prose or inventing accepted answers.
 
 ## Findings from HL-D01C
 

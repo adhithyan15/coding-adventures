@@ -6,6 +6,7 @@ import {
   curriculumForLanguage,
   mappedLessonIds,
   mixedCurriculumFrontier,
+  spineNodeById,
 } from "../src/curriculum";
 
 describe("per-language shared-spine maps", () => {
@@ -22,6 +23,11 @@ describe("per-language shared-spine maps", () => {
     expect(spanish.spine["SPINE-MEET-GREET"]?.segments.length).toBeGreaterThan(1);
     expect(spanish.spine["SPINE-TAKE-LEAVE"]?.relocates["GREETING-GOODNIGHT"])
       .toBe("SPINE-TIME-OF-DAY");
+  });
+
+  it("resolves a shared ability by its stable node id", () => {
+    expect(spineNodeById("SPINE-MEET-GREET")?.canDo).toContain("greeting");
+    expect(spineNodeById("MISSING")).toBeUndefined();
   });
 
   it("makes Persian and Urdu script introduction an inline local extension", () => {

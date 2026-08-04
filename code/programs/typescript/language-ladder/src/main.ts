@@ -42,26 +42,19 @@ import { crossScriptSiblings, type Sibling } from "./siblings.ts";
 import type { Letter } from "./types.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
 import {
-  planSession,
   applyAnswer,
   type Progress,
 } from "./sessionplan.ts";
 import { pickNext as pickReviewCell, makeRng, cellKey, type GridCell } from "./quiz.ts";
 import { confusions } from "./mistakes.ts";
 import { loadReview, saveReview } from "./reviewstore.ts";
-import { loadCursor, saveCursor } from "./cursorstore.ts";
 import { clearProgress, removableStorage } from "./reset.ts";
 import {
   scriptsById,
-  firstIntroductionByScript,
-  scriptIntroFor,
   scriptOf,
   type ScriptIntro,
 } from "./scriptintro.ts";
-import {
-  LANGUAGE_CHAIN,
-  spineProgress,
-} from "./sequence.ts";
+import { LANGUAGE_CHAIN } from "./sequence.ts";
 import type { SessionStep } from "./session.ts";
 import {
   crossLanguageConcepts,
@@ -73,10 +66,22 @@ import {
   LANGUAGE_CURRICULA,
   LANGUAGE_REGISTRY,
   SPINE_CONCEPTS,
+  curriculumForLanguage,
   languageName,
   mappedLessonIds,
-  spineNodeForConcept,
+  mixedCurriculumFrontier,
+  spineNodeById,
 } from "./curriculum.ts";
+import {
+  completeFrontierLesson,
+  eligibleReviewGrid,
+  loadLearnProgress,
+  localPathProgress,
+  mixedReviewReady,
+  saveLearnProgress,
+  type LearnCompletion,
+} from "./learnprogress.ts";
+import { focusedCheckKind, meaningAnswerIsCorrect } from "./focused.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
 import { bookHashStatus } from "./bookhashes.ts";
@@ -100,20 +105,10 @@ let mode: Mode = "learn";
 
 // --- the curriculum session (HL03 phase 6) ----------------------------------
 //
-// The whole app is really ONE thing: walk the curriculum the way the book does —
-// concept by concept, forward along the language chain — and let every new
-// language connect back to the ones already learned. `sequence.ts` gives the
-// book-ordered spine of concepts; `sessionplan.ts` assembles one concept into a
-// teaching sweep across the active chain, each stop carrying its connections
-// back to earlier languages that share a root.
-//
-// Languages are selected explicitly by the learner from the complete registry.
-// The authored registry order remains the stable order of every mixed sweep.
-// How far along the spine the learner has walked. Everything up to and including
-// this concept is "covered" (what the review quiz will later draw from); this
-// concept is the one currently being taught. The spine is filtered from the
-// structured curriculum once lessons and the learner's language mix are known.
-let conceptCursor = 0;
+// The whole app walks each selected language's authored local path. Progress is
+// independent: a correct focused check advances only that language and makes
+// only that lesson eligible for mixed review. The shared spine groups frontiers
+// that happen to be ready together; it never overrides local prerequisites.
 
 // --- lesson review state ----------------------------------------------------
 //
@@ -144,29 +139,10 @@ const ALL_MAPPED_LESSON_IDS = mappedLessonIds(LANGUAGE_CURRICULA.map((item) => i
 const MAPPED_SPINE_LESSONS = CONCEPT_LESSONS.filter(
   (lesson) => ALL_MAPPED_LESSON_IDS.has(lesson.id) && SHARED_CONCEPTS.has(lesson.concept),
 );
-// The explicit shared spine, filtered to concepts represented in the selected
-// languages. Language-local extensions remain available in Lessons mode.
-function activeConceptSpine(): string[] {
-  const selected = new Set(selectedLanguages);
-  const admitted = mappedLessonIds(selectedLanguages);
-  const realized = new Set(
-    MAPPED_SPINE_LESSONS
-      .filter((lesson) => selected.has(lesson.language) && admitted.has(lesson.id))
-      .map((lesson) => lesson.concept),
-  );
-  return SPINE_CONCEPTS.filter((concept) => realized.has(concept));
-}
 
-// Script introductions (phase 7). Index the script data by id, then precompute
-// which concept is the FIRST (in book order) to teach each non-Latin script we
-// have data for — the single place its "new script" note should appear. Both
-// are constant for the page's lifetime and grounded in the real scripts JSON.
+// Script metadata is indexed once. A local map's explicit script extension,
+// rather than a global concept position, decides where its introduction appears.
 const SCRIPTS_BY_ID = scriptsById(SCRIPTS);
-const SCRIPT_INTRO_AT = firstIntroductionByScript(
-  SPINE_CONCEPTS,
-  MAPPED_SPINE_LESSONS,
-  new Set(SCRIPTS_BY_ID.keys()),
-);
 
 // --- the Learn-mode review quiz (HL03 phase 6, slice 6b-2) ------------------
 //
@@ -196,11 +172,10 @@ let reviewSession = restoredReview.session; // advances once per answered questi
 let reviewCell: GridCell | null = null; // the question currently on screen
 let reviewOptions: GridCell[] = []; // its answer options (one is `reviewCell`)
 let reviewChosen: string | null = null; // cellKey of the picked option; null = unanswered
-
-// Resume the teaching walk where it was left off: restore the concept cursor
-// from storage, clamped to the current spine (the curriculum may have grown or
-// shrunk since the save). A missing/corrupt value starts at 0.
-conceptCursor = loadCursor(REVIEW_STORAGE, activeConceptSpine().length);
+let learnCompletion: LearnCompletion = loadLearnProgress(REVIEW_STORAGE, LANGUAGE_CURRICULA);
+type FocusedAttempt = { lessonId: string; state: "check" | "wrong" };
+let focusedAttempt: FocusedAttempt | null = null;
+let learnNotice: string | null = null;
 
 // "Reset progress" is a two-click confirm: the first click ARMS it (so a stray
 // tap can't wipe everything), the second executes. This flag is that arming.
@@ -294,7 +269,7 @@ function syllabaryGate(): SyllabaryGate | null {
 
 const SUBTITLES: Record<Mode, string> = {
   learn:
-    "Walk the shared spine one concept at a time, across the languages you choose, with the threads back to what you already know.",
+    "Walk each language's local path one short lesson at a time, then mix only what you have independently unlocked.",
   browse:
     "Pick a script and a letter to see its pieces and stroke order — for pen-and-paper practice.",
   practice:
@@ -858,25 +833,11 @@ function gradeLesson(wasCorrect: boolean): void {
 
 // --- learn mode — the curriculum session -----------------------------------
 //
-// This is the app's spine made visible: a single concept, taught across every
-// active language that has it, in chain order, each stop showing the word and —
-// the whole point — the threads back to the languages already learned. The
-// learner walks the concept spine forward one step at a time; "covered" grows
-// with the cursor, which is what the review quiz (a later slice) will draw from.
-//
-// All the sequencing is in the engine (`planSession` → teaching sweep with
-// connections); this function only lays it out. Everything goes in via
-// textContent — the corpus is repo-authored, but it is still data.
-
-/** Humanize a concept tag ("COURTESY-THANKS") for a heading ("courtesy · thanks"). */
-function conceptTitle(tag: string): string {
-  return tag.toLowerCase().replace(/_/g, " ").replace(/-/g, " · ");
-}
-
-/** The gloss of the first lesson taught in the sweep, for the concept subhead. */
-function firstGloss(teaching: SessionStep[]): string {
-  return teaching[0]?.lessons[0]?.gloss ?? "";
-}
+// This is the app's authored curriculum made visible. Each selected language
+// contributes exactly its next prerequisite-safe local
+// lesson. A focused check advances that language; independently completed
+// shared lessons become the mixed review pool below. Everything enters the DOM
+// through textContent — the corpus is repo-authored, but remains data.
 
 /** The complete registry-backed language mixer shared by Learn and practice views. */
 function renderLanguagePicker(): HTMLElement {
@@ -912,7 +873,8 @@ function renderLanguagePicker(): HTMLElement {
       if (input.checked) next.add(definition.id);
       else next.delete(definition.id);
       selectedLanguages = saveLanguages(REVIEW_STORAGE, next, AVAILABLE_LANGUAGE_IDS);
-      conceptCursor = Math.max(0, Math.min(conceptCursor, activeConceptSpine().length - 1));
+      focusedAttempt = null;
+      learnNotice = null;
       reviewCell = null;
       lessonIndex = null;
       pickLesson();
@@ -954,6 +916,7 @@ function renderTeachingStep(
   step: SessionStep,
   ordinal: number,
   intro: ScriptIntro | null,
+  badgeText: string | null = ordinal === 0 ? "introduced here" : null,
 ): HTMLElement {
   const card = el("div", "step");
   card.dataset.language = step.language;
@@ -964,10 +927,9 @@ function renderTeachingStep(
   const lang = el("span", "step__lang");
   lang.textContent = languageName(step.language);
   head.append(num, lang);
-  if (ordinal === 0) {
-    // The first stop has no connections — it is where the concept enters.
+  if (badgeText) {
     const badge = el("span", "step__badge");
-    badge.textContent = "introduced here";
+    badge.textContent = badgeText;
     head.appendChild(badge);
   }
   card.appendChild(head);
@@ -1027,129 +989,255 @@ function renderTeachingStep(
   return card;
 }
 
-/** Prev / Next along the concept spine — walking the curriculum forward. */
-/**
- * Move the teaching cursor to `index` (clamped), the one place all navigation
- * funnels through — Prev, Next, and the jump picker. Resets the review draw
- * (the covered set changed), persists so the app resumes here, and re-renders.
- * A no-op if the target is where we already are.
- */
-function jumpToConcept(index: number, spine = activeConceptSpine()): void {
-  const target = Math.max(0, Math.min(index, spine.length - 1));
-  if (target === conceptCursor) return;
-  conceptCursor = target;
+type FrontierStep = ReturnType<typeof mixedCurriculumFrontier>["steps"][number];
+
+function frontierLesson(step: FrontierStep): (typeof LESSONS)[number] | undefined {
+  return LESSON_BY_ID.get(step.lessonId);
+}
+
+function frontierScriptIntro(step: FrontierStep): ScriptIntro | null {
+  if (!step.extensions.some(({ extension }) => extension.category === "script")) return null;
+  const data = SCRIPTS_BY_ID.get(scriptOf(step.language));
+  return data
+    ? { name: data.name, system: data.system, signature: data.signature ?? "" }
+    : null;
+}
+
+/** Grounded root links among languages simultaneously ready at one ability. */
+function frontierConnections(
+  step: FrontierStep,
+  lesson: (typeof LESSONS)[number],
+  earlier: Array<{ step: FrontierStep; lesson: (typeof LESSONS)[number] }>,
+): SessionStep["connections"] {
+  const roots = new Set(lesson.roots);
+  return earlier
+    .filter((item) => item.step.spineNode === step.spineNode)
+    .map((item) => ({
+      to: item.step.language,
+      sharedRoots: [...new Set(item.lesson.roots.filter((root) => roots.has(root)))].sort(),
+    }))
+    .filter((connection) => connection.sharedRoots.length > 0);
+}
+
+function finishFocusedCheck(step: FrontierStep): void {
+  const curriculum = curriculumForLanguage(step.language);
+  if (!curriculum) return;
+  const result = completeFrontierLesson(learnCompletion, curriculum, step.lessonId);
+  if (!result.changed) return;
+  learnCompletion = result.completion;
+  saveLearnProgress(REVIEW_STORAGE, learnCompletion, LANGUAGE_CURRICULA);
+  focusedAttempt = null;
   reviewCell = null;
-  saveCursor(REVIEW_STORAGE, conceptCursor);
+  reviewOptions = [];
+  reviewChosen = null;
+  learnNotice = `${languageName(step.language)} passed focused retrieval; this lesson is now eligible for mixed review.`;
   render();
 }
 
-function renderLearnNav(spine: readonly string[]): HTMLElement {
-  const nav = el("div", "learn__nav");
+function renderFocusedCheck(
+  step: FrontierStep,
+  lesson: (typeof LESSONS)[number],
+  ordinal: number,
+): HTMLElement {
+  const card = el("div", "step focused-check");
+  card.dataset.language = step.language;
+  const head = el("div", "step__head");
+  const num = el("span", "step__num");
+  num.textContent = String(ordinal + 1);
+  const lang = el("span", "step__lang");
+  lang.textContent = languageName(step.language);
+  const badge = el("span", "step__badge");
+  badge.textContent = "focused check";
+  head.append(num, lang, badge);
+  card.appendChild(head);
 
-  const prev = el("button", "opt") as HTMLButtonElement;
-  prev.textContent = "← Previous";
-  prev.disabled = conceptCursor === 0;
-  prev.onclick = () => jumpToConcept(conceptCursor - 1);
+  const attempt = focusedAttempt?.lessonId === lesson.id ? focusedAttempt : null;
+  if (attempt?.state === "wrong") {
+    const verdict = el("p", "focused-check__feedback no");
+    verdict.textContent = `Not yet. One accepted meaning is “${lesson.gloss}”. Review the lesson, then try again.`;
+    card.appendChild(verdict);
+    const again = el("button", "next") as HTMLButtonElement;
+    again.textContent = "Review lesson again";
+    again.onclick = () => {
+      focusedAttempt = null;
+      render();
+    };
+    card.appendChild(again);
+    return card;
+  }
 
-  // Jump anywhere in the spine — 186 concepts is a long walk to Next through.
-  // A native <select> gives free keyboard type-ahead over the book-ordered list.
-  const jump = el("select", "learn__jump") as HTMLSelectElement;
-  jump.title = "Jump to concept";
-  spine.forEach((concept, i) => {
-    const opt = el("option", "") as HTMLOptionElement;
-    opt.value = String(i);
-    opt.textContent = `${i + 1}. ${conceptTitle(concept)}`;
-    if (i === conceptCursor) opt.selected = true;
-    jump.appendChild(opt);
-  });
-  jump.onchange = () => jumpToConcept(Number(jump.value), spine);
+  const glyph = el("div", "focused-check__glyph");
+  glyph.textContent = lesson.headword;
+  glyph.dir = SCRIPTS_BY_ID.get(lesson.script)?.direction ?? "auto";
+  card.appendChild(glyph);
+  if (lesson.romanization && lesson.romanization !== lesson.headword) {
+    const romanization = el("p", "step__rom");
+    romanization.textContent = lesson.romanization;
+    card.appendChild(romanization);
+  }
 
-  const next = el("button", "opt") as HTMLButtonElement;
-  next.textContent = "Next →";
-  next.disabled = conceptCursor >= spine.length - 1;
-  next.onclick = () => jumpToConcept(conceptCursor + 1, spine);
+  if (focusedCheckKind(lesson) === "meaning") {
+    const form = el("form", "focused-check__form") as HTMLFormElement;
+    const label = el("label", "focused-check__prompt");
+    label.textContent = `Without reopening the lesson, type one English meaning for “${lesson.headword}”.`;
+    const input = document.createElement("input");
+    input.className = "focused-check__input";
+    input.type = "text";
+    input.autocomplete = "off";
+    input.setAttribute("aria-label", `English meaning for ${languageName(step.language)} ${lesson.headword}`);
+    const submit = el("button", "next") as HTMLButtonElement;
+    submit.type = "submit";
+    submit.textContent = "Check answer";
+    form.append(label, input, submit);
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      if (meaningAnswerIsCorrect(input.value, lesson.gloss)) finishFocusedCheck(step);
+      else {
+        focusedAttempt = { lessonId: lesson.id, state: "wrong" };
+        learnNotice = null;
+        render();
+      }
+    };
+    card.appendChild(form);
+  } else {
+    const prompt = el("p", "focused-check__prompt");
+    prompt.textContent = "Complete the lesson's final recall from memory, without reopening its explanation.";
+    const actions = el("div", "focused-check__actions");
+    const pass = el("button", "next") as HTMLButtonElement;
+    pass.textContent = "I completed it from memory";
+    pass.onclick = () => finishFocusedCheck(step);
+    const again = el("button", "focused-check__secondary") as HTMLButtonElement;
+    again.textContent = "Review lesson again";
+    again.onclick = () => {
+      focusedAttempt = null;
+      render();
+    };
+    actions.append(pass, again);
+    card.append(prompt, actions);
+  }
+  return card;
+}
 
-  nav.append(prev, jump, next);
-  return nav;
+function renderFrontierEncounter(
+  step: FrontierStep,
+  lesson: (typeof LESSONS)[number],
+  ordinal: number,
+  connections: SessionStep["connections"],
+  readyTogether: number,
+): HTMLElement {
+  const sessionStep: SessionStep = {
+    language: step.language,
+    lessons: [lesson],
+    connections,
+  };
+  const card = renderTeachingStep(
+    sessionStep,
+    ordinal,
+    frontierScriptIntro(step),
+    readyTogether > 1 ? `${readyTogether} ready together` : "focused first",
+  );
+  const curriculum = curriculumForLanguage(step.language)!;
+  const progress = localPathProgress(curriculum, learnCompletion);
+  const context = el("p", "frontier__context");
+  const node = spineNodeById(step.spineNode);
+  context.textContent =
+    `Local lesson ${progress.completed + 1} of ${progress.total}` +
+    (node ? ` · ${node.stage} · ${node.canDo}` : "");
+  card.appendChild(context);
+
+  if (step.extensions.length > 0) {
+    const extensionList = el("p", "frontier__extensions");
+    extensionList.textContent = step.extensions
+      .map(({ relation, extension }) => `${relation} ${extension.category}: ${extension.canDo}`)
+      .join(" · ");
+    card.appendChild(extensionList);
+  }
+
+  const start = el("button", "next focused-check__start") as HTMLButtonElement;
+  start.textContent = "Start focused check";
+  start.onclick = () => {
+    focusedAttempt = { lessonId: lesson.id, state: "check" };
+    learnNotice = null;
+    render();
+  };
+  card.appendChild(start);
+  return card;
 }
 
 function renderLearn(): HTMLElement {
   const wrap = el("div", "learn");
   wrap.appendChild(renderLanguagePicker());
-  const conceptSpine = activeConceptSpine();
-
-  if (conceptSpine.length === 0) {
-    const empty = el("p", "muted");
-    empty.textContent = "No concepts to walk yet.";
-    wrap.appendChild(empty);
-    return wrap;
-  }
-
-  // The cursor only moves via the nav buttons, but clamp defensively so a stray
-  // value can never index off the end of the spine.
-  conceptCursor = Math.max(0, Math.min(conceptCursor, conceptSpine.length - 1));
-
-  const concept = conceptSpine[conceptCursor]!;
-  // Everything up to and including the current concept is "covered" — the review
-  // quiz (a later slice) draws from exactly this. Here we render the teaching
-  // pass: the current concept alone, swept across the chain.
-  const covered = conceptSpine.slice(0, conceptCursor + 1);
-  const plan = planSession(concept, covered, MAPPED_SPINE_LESSONS, selectedLanguages);
-
+  const selectedCurricula = selectedLanguages
+    .map((language) => curriculumForLanguage(language))
+    .filter((curriculum) => curriculum !== undefined);
+  const counts = selectedCurricula.map((curriculum) => localPathProgress(curriculum, learnCompletion));
+  const completed = counts.reduce((sum, item) => sum + item.completed, 0);
+  const total = counts.reduce((sum, item) => sum + item.total, 0);
   const progress = el("p", "score");
   progress.textContent =
-    `Concept ${conceptCursor + 1} of ${conceptSpine.length}` +
-    ` · taught in ${plan.teaching.length} language${plan.teaching.length === 1 ? "" : "s"}`;
+    `${completed} of ${total} local lessons passed focused retrieval` +
+    ` · ${selectedLanguages.length} independent path${selectedLanguages.length === 1 ? "" : "s"}`;
   wrap.appendChild(progress);
-
-  // A slim bar for how far along the spine you are — a sense of the whole
-  // journey that the bare "N of M" count doesn't convey at a glance.
   const track = el("div", "progress");
   const fill = el("div", "progress__fill");
-  const pct = spineProgress(conceptCursor, conceptSpine.length) * 100;
+  const pct = total === 0 ? 0 : (completed / total) * 100;
   fill.style.width = `${pct}%`;
   track.appendChild(fill);
   wrap.appendChild(track);
 
-  const heading = el("h2", "learn__concept");
-  heading.textContent = conceptTitle(concept);
-  wrap.appendChild(heading);
-  const node = spineNodeForConcept(concept);
-  if (node) {
-    const canDo = el("p", "learn__can-do");
-    canDo.textContent = `${node.stage} · ${node.canDo}`;
-    wrap.appendChild(canDo);
-  }
-  const gloss = firstGloss(plan.teaching);
-  if (gloss) {
-    const g = el("p", "muted learn__gloss");
-    g.textContent = gloss;
-    wrap.appendChild(g);
+  if (learnNotice) {
+    const notice = el("p", "learn__notice");
+    notice.textContent = learnNotice;
+    wrap.appendChild(notice);
   }
 
-  if (plan.teaching.length === 0) {
-    const none = el("p", "muted");
-    none.textContent = "No active language teaches this concept yet.";
-    wrap.appendChild(none);
-  } else {
+  const frontier = mixedCurriculumFrontier(selectedLanguages, learnCompletion);
+  const activeAttempt = focusedAttempt && frontier.steps.some((step) => step.lessonId === focusedAttempt!.lessonId);
+  if (!activeAttempt) focusedAttempt = null;
+  const heading = el("h2", "learn__concept");
+  heading.textContent = frontier.steps.length > 0 ? "Your next local lessons" : "Selected paths complete";
+  wrap.appendChild(heading);
+  const explanation = el("p", "muted learn__gloss");
+  explanation.textContent = frontier.steps.length > 0
+    ? "Study one short lesson, then pass its focused check. Only that language advances; only passed lessons enter mixed review."
+    : "Every mapped lesson in the selected languages has passed its focused check.";
+  wrap.appendChild(explanation);
+
+  if (frontier.steps.length > 0) {
     const sweep = el("div", "sweep");
-    plan.teaching.forEach((step, i) => {
-      const scriptAlreadyIntroduced = plan.teaching
-        .slice(0, i)
-        .some((earlier) => scriptOf(earlier.language) === scriptOf(step.language));
-      const intro = scriptAlreadyIntroduced
-        ? null
-        : scriptIntroFor(concept, step.language, SCRIPT_INTRO_AT, SCRIPTS_BY_ID);
-      sweep.appendChild(renderTeachingStep(step, i, intro));
+    const earlier: Array<{ step: FrontierStep; lesson: (typeof LESSONS)[number] }> = [];
+    const visibleSteps = focusedAttempt
+      ? frontier.steps.filter((step) => step.lessonId === focusedAttempt!.lessonId)
+      : frontier.steps;
+    visibleSteps.forEach((step, index) => {
+      const lesson = frontierLesson(step);
+      if (!lesson) return;
+      const attempt = focusedAttempt?.lessonId === lesson.id;
+      const readyTogether = frontier.bySpineNode.get(step.spineNode)?.length ?? 1;
+      const card = attempt
+        ? renderFocusedCheck(step, lesson, index)
+        : renderFrontierEncounter(
+          step,
+          lesson,
+          index,
+          frontierConnections(step, lesson, earlier),
+          readyTogether,
+        );
+      sweep.appendChild(card);
+      earlier.push({ step, lesson });
     });
     wrap.appendChild(sweep);
+  } else {
+    focusedAttempt = null;
   }
 
-  wrap.appendChild(renderLearnNav(conceptSpine));
-
-  // The review pass: a cumulative, SRS-weighted quiz over everything covered so
-  // far (this concept and all before it). `plan.reviewGrid` is exactly that grid.
-  wrap.appendChild(renderReview(plan.reviewGrid));
+  const reviewGrid = eligibleReviewGrid(
+    MAPPED_SPINE_LESSONS,
+    LANGUAGE_CURRICULA,
+    selectedLanguages,
+    learnCompletion,
+  );
+  wrap.appendChild(renderReview(reviewGrid));
 
   // A quiet way to start over — clears every persisted key, two-click confirmed.
   wrap.appendChild(renderReset());
@@ -1159,13 +1247,15 @@ function renderLearn(): HTMLElement {
 /** Clear all persisted progress and reset the in-memory session to the start. */
 function executeReset(): void {
   clearProgress(removableStorage());
-  // Review + teaching cursor.
+  // Review + independent local-path progress.
   reviewProgress = { states: new Map(), log: [] };
   reviewSession = 0;
   reviewCell = null;
   reviewOptions = [];
   reviewChosen = null;
-  conceptCursor = 0;
+  learnCompletion = new Map();
+  focusedAttempt = null;
+  learnNotice = null;
   selectedLanguages = [...AVAILABLE_LANGUAGE_IDS];
   // The Lessons-mode schedule is one of the cleared keys, so its in-memory state
   // must be zeroed too — otherwise Lessons still shows the old stats and the next
@@ -1199,7 +1289,7 @@ function renderReset(): HTMLElement {
     return wrap;
   }
   const warn = el("span", "reset-warn");
-  warn.textContent = "Clear all progress — review, mistakes, and your place in the walk?";
+  warn.textContent = "Clear all progress — local paths, review, mistakes, and language mix?";
   const yes = el("button", "reset-yes") as HTMLButtonElement;
   yes.textContent = "Yes, reset";
   yes.onclick = () => executeReset();
@@ -1226,7 +1316,7 @@ function shuffleWith<T>(items: T[], rng: () => number): T[] {
 }
 
 /**
- * Draw the next review question from the covered grid.
+ * Draw the next review question from the independently eligible grid.
  *
  * The cell is chosen by the engine's SRS-weighted `pickNext` (missed/overdue
  * cells rise, mastered ones sink). The options are the SAME concept in other
@@ -1315,18 +1405,27 @@ function renderConfusions(): HTMLElement | null {
 function renderReview(grid: GridCell[]): HTMLElement {
   const wrap = el("div", "review");
   const title = el("h3", "review__title");
-  title.textContent = "Review — everything so far";
+  title.textContent = "Review — independently unlocked";
   wrap.appendChild(title);
 
   if (grid.length === 0) {
     const empty = el("p", "muted");
-    empty.textContent = "Nothing to review yet — keep walking the concepts.";
+    empty.textContent = "Nothing is eligible yet — pass a focused check above first.";
     wrap.appendChild(empty);
     return wrap;
   }
 
+  if (!mixedReviewReady(grid)) {
+    const waiting = el("p", "muted");
+    waiting.textContent =
+      `${grid.length} lesson${grid.length === 1 ? " is" : "s are"} eligible` +
+      "; pass another focused check with a different answer to start mixed review.";
+    wrap.appendChild(waiting);
+    return wrap;
+  }
+
   // Draw lazily: a null cell means "need a fresh question" (first entry, after
-  // Next, or after the covered set changed when the concept cursor moved).
+  // Next, or after a focused success changed the eligible local-prefix set).
   if (!reviewCell) nextReviewQuestion(grid);
   const cell = reviewCell;
   if (!cell) return wrap; // grid non-empty, so this is unreachable, but keeps TS happy
@@ -1334,7 +1433,7 @@ function renderReview(grid: GridCell[]): HTMLElement {
   const stat = el("p", "score");
   const conceptCount = new Set(grid.map((c) => c.concept)).size;
   stat.textContent =
-    `${grid.length} items · ${conceptCount} concept${conceptCount === 1 ? "" : "s"}` +
+    `${grid.length} item${grid.length === 1 ? "" : "s"} · ${conceptCount} concept${conceptCount === 1 ? "" : "s"}` +
     ` · ${reviewProgress.log.length} answered`;
   wrap.appendChild(stat);
 
@@ -1383,7 +1482,7 @@ function renderReview(grid: GridCell[]): HTMLElement {
     const next = el("button", "next") as HTMLButtonElement;
     next.textContent = "Next →";
     next.onclick = () => {
-      reviewCell = null; // force a fresh draw from the current covered grid
+      reviewCell = null; // force a fresh draw from the current eligible grid
       render();
     };
     reveal.appendChild(next);

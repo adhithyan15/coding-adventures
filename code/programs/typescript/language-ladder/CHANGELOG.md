@@ -2,14 +2,32 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — independent local frontiers and focused-before-mixed review
+
+- Replace the global concept cursor and unrestricted jump controls with one
+  prerequisite-safe next lesson per selected language, driven by the 20
+  validated realization maps.
+- Persist completed prefixes by stable lesson id independently per language;
+  corrupt, unknown, out-of-order, and stale saved ids fail closed at the first
+  missing local prerequisite.
+- Require a focused check before advancing: objective English-meaning retrieval
+  for lexical lessons and authored final-recall confirmation for script,
+  grammar, and other support lessons. Wrong answers do not advance.
+- Build mixed SRS review only from independently passed shared lessons and wait
+  for two visually distinct eligible answers, preventing unseen lessons and
+  identical one-option quizzes from entering the pool.
+- Introduce script notes at explicit local script-extension nodes, retain
+  grounded root links among simultaneously ready paths, and include the new
+  Learn-progress key in the two-click reset.
+
 - Load all 20 per-track realization maps at build time and admit Learn/script
   steps through their explicit mapped lesson sets while keeping legacy material
   available in Lessons mode.
 - Show mapped micro-lesson and language-specific extension totals for the
   learner's selected mix, including Persian and Urdu's required inline script
   entry nodes.
-- Expose a browser-safe independent frontier planner for the forthcoming
-  per-language Learn cursor; the current concept cursor remains unchanged.
+- Expose the browser-safe independent frontier planner now consumed by Learn's
+  per-language progression.
 - Hide canonical `hl-knowledge` comments from learner-facing lesson sections;
   the shared parser and source hash still retain their block-boundary meaning.
 - Keep the browser's lightweight dataset adapter compatible with the canonical
