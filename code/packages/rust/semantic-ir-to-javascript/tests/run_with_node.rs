@@ -319,6 +319,60 @@ console.log(o.join("|"));
 }
 
 #[test]
+fn shift_left_polymorphic_dispatch() {
+    // `<<` — Ruby's shift operator, part of "JS/TS backend: implement
+    // shift-operator runtime dispatch". Before this fix `<<` had no entry
+    // in the `builtins` table at all, so ANY use of `<<` as an operator
+    // threw `TypeError: unknown builtin: <<`. Exercises every receiver
+    // arm directly against `__Sir.shiftLeft`/`__Sir.builtins["<<"]`.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.shiftLeft(5, 2)));                       // 20 (Integer left shift)
+o.push(String(F.shiftLeft(5, -1)));                       // 2  (negative amount reverses direction)
+o.push(String(F.shiftLeft(-8, -1)));                      // -4 (arithmetic right shift on a negative receiver)
+o.push(String(F.shiftLeft(0, 40)));                       // 0  (0 shifted by anything is 0)
+o.push(String(F.shiftLeft(1, 40)));                       // 1099511627776 -- proves NOT the native
+                                                            // Int32-masked `<<` (which would give the wrong answer)
+const a = [1, 2];
+const pushed = F.shiftLeft(a, 3);
+o.push(String(pushed === a));                             // true (mutates and returns the SAME receiver)
+o.push(JSON.stringify(a));                                // [1,2,3]
+o.push(F.shiftLeft("ab", "cd"));                           // abcd (new string)
+o.push(String(F.shiftLeft(5, 2.9)));                       // 20 (float amount truncates toward zero)
+o.push(String(F.builtins["<<"](5, 2)));                    // 20 (registered in the builtins table too)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "shiftleft") {
+        assert_eq!(
+            stdout,
+            "20|2|-4|0|1099511627776|true|[1,2,3]|abcd|20|20",
+        );
+    }
+}
+
+#[test]
+fn shift_left_operator_emits_through_the_polymorphic_fast_path() {
+    // Proves the EMITTER routes a real `BuiltinCall("<<", [lhs, rhs])` (the
+    // shape `ruby-to-semantic-ir` produces) through `__Sir.shiftLeft`, not
+    // native JS `<<` (which would be silently wrong for `1 << 40`) and not
+    // the generic `callBuiltin` indirection.
+    let module = module_with_main(
+        vec![print(bc("<<", vec![int(1), int(40)]))],
+        Expr::NilLit { span: sp() },
+        &[],
+    );
+    let artifact = compile(&module).expect("compile to javascript");
+    assert!(
+        artifact.source.contains("__Sir.shiftLeft(1, 40)"),
+        "expected the 2-arg fast path to route through __Sir.shiftLeft; got:\n{}",
+        artifact.source
+    );
+    if let Some(stdout) = run_module(&module, "shiftop") {
+        assert_eq!(stdout, "1099511627776");
+    }
+}
+
+#[test]
 fn numof_unwraps_scalar_ndarray_for_comparison_and_negation() {
     // Regression test for the while-loop-accumulator bug found by
     // `matlab-to-semantic-ir`'s oracle test (`tests/oracle.rs`, previously

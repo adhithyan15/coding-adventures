@@ -610,6 +610,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // variadic `(+ 1 2 3)`, gets the same string/array/numeric dispatch
     // as the inlined 2-arg form.
     "+": (...a) => plus(...a),
+    "<<": (...a) => shiftLeft(...a),
     "-": (...a) => a.length === 1 ? neg(a[0]) : numFold(a.slice(1), a[0], (x, y) => x - y),
     "*": (...a) => times(...a),
     "/": (...a) => a.length === 1
@@ -806,6 +807,66 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `+` — left-associative fold so the variadic contract survives.  The
   // arm is chosen by the FIRST operand; `plus()` with no args is `0`,
   // mirroring the numeric identity.
+  // `<<` — Ruby's shift operator, polymorphic like `plus`:
+  //   Array   — push each RHS operand IN PLACE (`.push`, never flattened —
+  //             unlike `plus`'s Array arm, which concatenates, `<<` pushes
+  //             a nested-array operand as ONE element), returns the
+  //             (mutated) receiver. The frontend lowers a `<<` chain
+  //             (`a << 1 << 2`) to NESTED binary calls
+  //             (`shiftLeft(shiftLeft(a, 1), 2)`), not one flat variadic
+  //             call — but since `<<` mutates and returns the SAME
+  //             receiver, nesting composes exactly like a fold, so this
+  //             function stays variadic-capable (`...args`) for a
+  //             hand-built module that constructs a flat call directly.
+  //   String  — concatenates via `format` (the SAME tolerant convention
+  //             `plus`'s String arm already uses on this backend — never
+  //             raises for a non-string operand, unlike the C/Rust/Python
+  //             backends' stricter TypeError).
+  //   numeric — bitwise shift, implemented via MULTIPLICATION/DIVISION by
+  //             a power of two rather than native `<<`/`>>`: JS's native
+  //             bitwise operators coerce both operands to Int32 and mask
+  //             the shift count to 5 bits, so `1 << 40` would silently
+  //             give the WRONG answer (not even close) rather than the
+  //             correct `1099511627776`. This backend's numeric model is
+  //             plain `number` everywhere (see `numFold`) — deliberately
+  //             NOT the arbitrary-precision integer primitive (a
+  //             divergence from the TypeScript sibling package; see
+  //             `symbolic_uses_plain_numbers_not_bigint`) — so, like
+  //             `+`/`*`, precision silently degrades past
+  //             `Number.MAX_SAFE_INTEGER` (2^53) rather than saturating
+  //             like the fixed-width C/Go/Rust backends. A negative
+  //             amount REVERSES direction (a right shift by the absolute
+  //             value, matching Ruby's `5 << -1 == 5 >> 1 == 2`);
+  //             `Math.floor` on the division correctly replicates
+  //             ARITHMETIC (sign-extending) right shift for a negative
+  //             receiver too (floor division by a power of two IS
+  //             arithmetic right shift). The `acc === 0` short-circuit
+  //             both matches "0 shifted by anything is 0" and avoids
+  //             `0 * Infinity === NaN` once `Math.pow(2, amount)`
+  //             overflows to `Infinity` for an extreme shift amount.
+  function shiftAmountArg(v) {
+    return isNum(v) ? Math.trunc(numOf(v)) : 0;
+  }
+  function shiftLeft(...args) {
+    if (args.length === 0) { return 0; }
+    const first = args[0];
+    if (Array.isArray(first)) {
+      for (const a of args.slice(1)) { first.push(a); }
+      return first;
+    }
+    if (typeof first === "string") {
+      let acc = first;
+      for (const a of args.slice(1)) { acc += format(a); }
+      return acc;
+    }
+    let acc = numOf(first);
+    for (const a of args.slice(1)) {
+      if (acc === 0) { continue; }
+      const amount = shiftAmountArg(a);
+      acc = amount < 0 ? Math.floor(acc / Math.pow(2, -amount)) : acc * Math.pow(2, amount);
+    }
+    return acc;
+  }
   function plus(...args) {
     if (args.length === 0) { return 0; }
     const first = args[0];
@@ -6437,7 +6498,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, matlabTruthy, format, print, puts,
-    plus, times, divide,
+    plus, times, divide, shiftLeft,
     // Tagged floats (Ruby Integer vs Float). Exported so the emitter can
     // mint a boxed float at a `FloatLit` and route `-`/`%`/`neg` through
     // the re-tagging helpers. `mkFloat` is the sole factory.

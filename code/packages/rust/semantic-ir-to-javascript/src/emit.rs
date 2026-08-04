@@ -1716,6 +1716,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if args.len() == 2 {
         let poly = match name {
             "+" => Some("__Sir.plus"),
+            // `<<` (Ruby's shift operator) is ALSO polymorphic — native JS
+            // `<<` is wrong for every receiver type (Int32-coercing bitwise
+            // op for numbers, string concat via `+` only, no Array-push
+            // meaning at all) — so it routes through `__Sir.shiftLeft` the
+            // same way. The frontend always emits this as a 2-arg call (a
+            // `<<` chain lowers to NESTED binary calls, not one flat
+            // variadic one), so this fast path covers every frontend-
+            // sourced use; `__Sir.shiftLeft` itself stays variadic-capable
+            // for a hand-built module.
+            "<<" => Some("__Sir.shiftLeft"),
             "*" => Some("__Sir.times"),
             // `/` routes through the runtime `divide` helper, which ADDS
             // the Ruby zero-divisor check (native JS `/` yields `Infinity`,
