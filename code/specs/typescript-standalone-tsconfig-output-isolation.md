@@ -36,6 +36,9 @@ Every TypeScript package or program that has a sibling `tsconfig.json` and a
 input set remains authoritative, so the compiler preserves the package-root
 relative `src`, `tests`, and `vitest.config` layout under `dist`. This tranche
 does not change runtime APIs, dependency declarations, or source entry points.
+The package test runners MUST exclude `dist` while retaining Vitest's default
+exclusions, so compiled test copies are not rediscovered and generated source
+copies do not dilute coverage.
 
 ## Executable Audit
 
@@ -64,5 +67,5 @@ Real package validation MUST install `window-core` before `window-canvas`, run
 both build and coverage front doors, and prove that generated `.js`, `.d.ts`,
 and source maps exist only under each package's ignored `dist` directory. A
 post-build Git-visible file scan MUST find no generated siblings in tracked
-source, test, or root config trees.
-
+source, test, or root config trees. Coverage after a build MUST execute exactly
+one tracked test module per package and report only tracked `src` files.
