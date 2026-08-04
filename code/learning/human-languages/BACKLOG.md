@@ -5,13 +5,14 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-03. Current baseline after schema-v2 block-boundary
-validation: 20 registered tracks, 1,066 Markdown lessons, 20 downloadable LaTeX
-books, and zero duration violations. HL-V01 keeps the remaining migration debt
-reproducible in both JSON and human-readable reports; the first 51 Spanish
-lessons now prove one typed, knowledge-closed source across Language Ladder and
-six generated book chapters, and the completed HL-D01 tranches prove duration
-remediation without discarding deep content.
+Last prioritized: 2026-08-03. Current baseline after per-track spine mapping:
+20 registered tracks, 1,066 Markdown lessons, 20 downloadable LaTeX books, zero
+duration violations, and 20 validated realization maps containing 346 ordered
+path segments, 247 typed extension nodes, and 896 prerequisite-closed mapped
+lessons. HL-V01 keeps the remaining migration debt reproducible in both JSON and
+human-readable reports; the canonical schema-v2 tranches prove one typed source
+across Language Ladder and generated book chapters without discarding deep
+content.
 
 ## Priority rules
 
@@ -109,8 +110,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B35 | Complete (#9885, repaired by #9887) | Remove Latin's remaining LaTeX layout, font, and header-only-verso warnings. | The forced 115-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally blank chapter versos are truly empty. |
 | HL-B36 | Complete (#9890) | Publish Spanish Chapters 19–33 from canonical lessons rather than hand-copying another fifteen book chapters. | The Spanish PDF now includes all 33 canonical chapters; all 21 later lessons use schema v2 and generate fifteen chapters from the same content consumed by Language Ladder. |
 | HL-B37 | Complete (#9891) | Remove Spanish's remaining legacy LaTeX layout, bookmark, font, and header-only-verso warnings. | The forced 214-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; all 19 intentionally blank physical pages are truly empty. |
-| HL-P01 | Complete in this PR | Make the unified Human Languages Books result a protected merge gate, or add an equivalent gate that auto-merge must await. | Every pull request now receives a stable books gate; relevant changes run the one all-books build, unrelated changes receive a checked fast-path, and pull-request and push contexts remain distinct. |
-| HL-M01 | Next | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
+| HL-P01 | Complete (#9893) | Make the unified Human Languages Books result a protected merge gate, or add an equivalent gate that auto-merge must await. | Every pull request now receives a stable books gate; relevant changes run the one all-books build, unrelated changes receive a checked fast-path, and pull-request and push contexts remain distinct. |
+| HL-M01 | Complete in this PR | Add per-track spine realization maps and language-specific extension nodes. | All 20 tracks have validated repeated-segment local paths, explicit omissions/relocations, typed extensions, and a pure prerequisite-safe frontier planner. |
+| HL-M10 | Next | Replace Learn's global concept cursor with per-language frontier progression and focused-before-mixed eligibility. | Persist independent local cursors, teach each language's next mapped lesson without skipping prerequisites, and interleave only after its focused success threshold; reuse the pure planner delivered by HL-M01. |
 | HL-M02 | Queued | Extend Telugu's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson needs a scheduled place, and the map must explicitly split or justify Chapter 20's numbers-and-weather topic collision. |
 | HL-M03 | Queued | Extend Kannada's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5; every canonical lesson needs a scheduled place, and Chapter 20's unrelated numbers/weather pairing must be split or explicitly justified. |
 | HL-M04 | Queued | Extend Malayalam's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the four new support steps, needs a scheduled place. |
@@ -1116,8 +1118,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   warnings, LaTeX warnings, or font warnings. All 214 rendered pages were
   inspected for clipping, collisions, broken tables, malformed callouts, and
   Arabic shaping; all 19 intentionally blank physical pages are truly empty.
-- HL-P01 is next: make the unified books result a protected merge gate, or add
-  an equivalent gate that auto-merge cannot outrun.
+- That audit led to HL-P01, which made the unified books result a protected
+  merge gate that auto-merge cannot outrun.
 
 ## Findings from HL-P01
 
@@ -1132,10 +1134,35 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - Main pushes and manual runs publish `Human Languages Books push gate`, so a
   push result cannot satisfy the protected pull-request context while its book
   build is still in progress.
-- After this workflow is proven on the pull request and exact `main`, repository
-  protection must require both `CI gate` and `Human Languages Books gate`.
-- HL-M01 is next: model how each language realizes the shared spine and where
-  script, grammar, and other track-specific extension nodes fit.
+- Pull request #9893 and the exact merged `main` revision both passed the full
+  20-book job. Repository protection now requires both `CI gate` and the
+  pull-request-only `Human Languages Books gate`; the exact-main bundle is live
+  in the public catalog.
+- HL-M01 follows by making the shared/local curriculum relationship executable.
+
+## Findings from HL-M01
+
+- All 20 registered tracks now have an explicit `curriculum.json`: 346 ordered
+  path segments map 896 lessons and attach 247 required, supporting, reference,
+  or not-applicable extension nodes. All 11 current spine nodes are present in
+  every map, including planned/empty ledgers.
+- A shared node may recur in a track's path. Contracting each node to one
+  contiguous occurrence creates false cycles because real curricula revisit
+  greetings, time, definiteness, and other abilities after intervening grammar
+  or script work.
+- Validation proves canonical and schema-v2 lesson coverage, recursive
+  prerequisite closure and topological order, exact extension attachment, and
+  explicit omissions. Persian and Urdu each place a required script-entry
+  extension inline with the first greeting lesson.
+- Spanish, Kannada, Latin, Malayalam, Tamil, and Telugu intentionally teach
+  `GREETING-GOODNIGHT` under `SPINE-TIME-OF-DAY` even though the canonical
+  concept belongs to `SPINE-TAKE-LEAVE`; those six relocations are now data,
+  not exceptions hidden in consumer code.
+- The pure planner returns one safe local frontier per selected language and
+  groups only frontiers currently ready at the same shared node. Language
+  Ladder loads and reports the maps and constrains shared-walk admission, but
+  its visible Learn cursor remains global. HL-M10 is therefore the next
+  learner-visible tranche.
 
 ## Findings from HL-D01C
 

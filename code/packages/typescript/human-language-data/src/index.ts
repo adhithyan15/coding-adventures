@@ -34,11 +34,22 @@ export {
   type CurriculumValidationInput,
 } from "./curriculum.js";
 export {
+  orderedCurriculumLessonIds,
+  extensionsForSegment,
+  nextCurriculumLesson,
+  mixedCurriculumFrontier,
+  type ExtensionRelation,
+  type AttachedExtension,
+  type CurriculumFrontierStep,
+  type MixedCurriculumFrontier,
+} from "./plans.js";
+export {
   defaultCurriculumRoot,
   trackScript,
   loadTaxonomy,
   loadLanguageRegistry,
   loadCurriculumSpine,
+  loadLanguageCurricula,
   loadBookCorpus,
   loadLessons,
   loadScripts,

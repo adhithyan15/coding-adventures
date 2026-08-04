@@ -18,7 +18,11 @@ For each concept in the explicit `core/spine.json` order, the
 engine's *teaching pass* (`sessionplan.ts` → `planSession`) is rendered as a
 numbered sweep — one card per selected language that teaches it, in registry
 order. The picker includes every current track, including Russian, Persian, and
-Urdu. Each card carries the word in its own script, its etymology hook, its full
+Urdu. Learn and inline script admission are now constrained by each track's
+validated `curriculum.json`; unmapped legacy material remains available in
+Lessons mode instead of silently entering the shared walk. The picker reports
+the exact mapped micro-lesson and extension totals for the selected mix. Each
+card carries the word in its own script, its etymology hook, its full
 authored Markdown micro-lesson, and the **connections back** to earlier
 languages that share a root, so the cross-language memory the interleaving is
 meant to build is made visible rather than left implicit. Prev / Next walk the
@@ -26,6 +30,13 @@ spine, and a **jump picker** (a `<select>` of the whole book-ordered spine) leap
 straight to any concept; a slim **progress bar** shows progress through the
 selected portion of the shared spine. Consolidation lessons (`practice`/`review`) are left to the
 review quiz, not the teaching sweep.
+
+`curriculum.ts` also exposes the browser-safe form of the pure independent
+frontier planner: one prerequisite-safe next lesson per selected language,
+grouped only when those local frontiers currently share a spine node. The
+current Learn screen still uses its global concept cursor; moving the visible
+progression, persistence, and focused-before-mixed eligibility onto the local
+frontiers is the next UI migration rather than a claim made by this tranche.
 
 The session **introduces writing systems as-needed** (`scriptintro.ts`): the
 first time the walk reaches a non-Latin script — including Persian and Urdu's

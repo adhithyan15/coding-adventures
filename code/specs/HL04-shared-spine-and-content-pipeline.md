@@ -60,13 +60,15 @@ No single course tradition covers the whole target. The useful design is a synth
 
 ## Current coverage and gaps
 
-The 2026-08 audit of `origin/main` found 18 tracks and 963 lesson files. The
-foundation is real, but the governing promises are not yet enforceable.
+The 2026-08 audit now covers 20 tracks, 1,066 lesson files, 20 downloadable
+books, and one explicit local realization map per track. The foundation is real,
+but several governing promises still need end-to-end enforcement in the learner
+experience.
 
 | Requirement | Current coverage | Migration gap |
 |---|---|---|
 | One atomic lesson | Strong: most content lessons teach one word or phrase. | Some lessons are long enough to contain several independent teaching steps. |
-| Strictly less than five minutes | Not enforced: 364 lessons declare 5 minutes and 104 declare 6. | Add a computed duration budget and split every lesson at or above 300 seconds. |
+| Strictly less than five minutes | The deterministic duration report now measures zero lessons at or above 300 effective seconds; schema-v2 lessons fail validation outside 1–299 seconds. | Keep the gate green as the corpus grows and finish migrating legacy lesson contracts. |
 | Etymology and morphology | Strong prose tradition and root metadata. | Normalize etymons, record sources/confidence, and deliver the full explanation to the app. |
 | Inline grammar | Present in Markdown prose. | Grammar has almost no structured metadata, cannot be ordered or practised by the app, and cannot be closure-checked. |
 | Inline script | Writing lessons and script JSON exist. | Writing lessons do not participate in the concept sweep; the app gives a one-time script signature rather than a cumulative reading path. |
@@ -75,7 +77,7 @@ foundation is real, but the governing promises are not yet enforceable.
 | Single content source | Claimed by HL00. | The Markdown body is discarded by the parser, LaTeX chapters are handwritten copies, and the app consumes frontmatter summaries only. |
 | Four skills and communicative use | Audio-script cues and guided prompts exist. | There is no structured listening, interaction, writing, or can-do coverage model, and no audio asset contract. |
 | Graded input and sustained reading | Isolated example sentences occur. | There is no controlled micro-story/dialogue corpus or known-token validation. |
-| Mixed-language practice | Concept sweeps, cumulative review, and mixed-script drills exist. | Learn mode hard-codes 10 languages, learners cannot choose a set, and a concept can expose a late lesson early in another language. |
+| Mixed-language practice | Learners can choose any of the 20 tracks; every track now has a prerequisite-closed realization path, and a pure planner computes independent local frontiers. | Learn still presents a global concept cursor. Move its visible progression and focused-before-mixed eligibility onto the per-language frontier planner. |
 | Register, dialect, and culture | Often explained in lesson prose. | These distinctions are not typed, so the app can silently compare non-equivalent registers or varieties. |
 | Proficiency target | Roadmaps generally point toward B1. | No CEFR/ACTFL-aligned outcome matrix shows which reception, production, interaction, or mediation abilities are covered. |
 
@@ -89,15 +91,16 @@ tracks:
   shared-spine order;
 - Persian and Urdu starter tracks, each with five dependency-ordered, under-five-
   minute lessons and language-specific script metadata;
-- lossless Markdown bodies and lossless discovery of all 17 existing LaTeX books
+- lossless Markdown bodies and lossless discovery of all 20 existing LaTeX books
   in `human-language-data`, with chapter-to-lesson alignment validation;
 - a registry-driven app language picker, the structured spine in Learn mode,
   rendered authored lesson bodies, and fail-closed declared prerequisites.
 
-This slice does not claim the full acceptance criteria below. Per-track spine
-maps, typed body blocks, computed duration, book generation, independently gated
-focused-to-mixed retrieval, a true Nastaliq font, and B1 corpus expansion remain
-explicit migration work.
+Subsequent slices added typed body blocks, computed-duration enforcement,
+canonical book generation, and the 20 per-track spine maps described below.
+This foundation still does not claim independently gated focused-to-mixed
+retrieval in the visible Learn flow, a true Nastaliq font, complete schema-v2
+migration, or B1 corpus depth.
 
 ## The curriculum model
 
@@ -157,27 +160,58 @@ with radically different structures.
 
 ### Per-language plan and extensions
 
-Each track gains a `curriculum.json` that maps spine nodes to an ordered local
-path:
+Each track has a `curriculum.json` that maps the shared graph onto an ordered
+local path. A node may recur in several path segments: real tracks often return
+to greetings after identity, time, or register work, so forcing one contiguous
+occurrence per spine node would create false ordering cycles.
 
 ```jsonc
 {
+  "version": 1,
   "language": "urdu",
-  "spine": {
-    "SPINE-INTRO-EXCHANGE-NAMES": {
-      "lessons": ["UR-C02-aap", "UR-C02-naam", "UR-C02-mera-naam"],
-      "before": ["UR-SCRIPT-BE-FAMILY", "UR-GRAMMAR-POSSESSIVE-AGREEMENT"],
-      "after": ["UR-REGISTER-TUM-AAP"],
-      "omits": []
+  "path": [
+    {
+      "id": "UR-PATH-001",
+      "spine_node": "SPINE-GREETING-MEET",
+      "lessons": ["UR-C01-salaam"],
+      "before": [],
+      "inline": ["UR-EXT-SCRIPT-ENTRY"],
+      "after": []
     }
-  }
+  ],
+  "spine": {
+    "SPINE-GREETING-MEET": {
+      "segments": ["UR-PATH-001"],
+      "omits": ["GREETING-FORMAL", "GREETING-PEACE", "GREETING-WELCOME"],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "UR-EXT-SCRIPT-ENTRY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the joined Nastaliq shapes in سلام.",
+      "prerequisites": [],
+      "lessons": ["UR-C01-salaam"]
+    }
+  ]
 }
 ```
 
+`path` is the executable local order. `before`, `inline`, and `after` place typed
+extension nodes around each segment. The `spine` ledger makes every canonical
+node explicit, including its segment visits, intentionally omitted concepts, and
+deliberate relocations. For example, several tracks teach *good night* with time
+of day even though its canonical concept belongs to taking leave; that difference
+is recorded rather than silently accepted.
+
 An extension may be **required**, **supporting**, **reference**, or explicitly
-**not applicable**. No tool infers order from the minimum chapter number found in
-another language. The shared node orders abilities; each `curriculum.json` orders
-the realization.
+**not applicable**, and is categorized as script, grammar, register,
+culture-pragmatics, etymology, consolidation, or language-specific. No tool
+infers order from another language's chapter numbers. The shared graph orders
+abilities; each `curriculum.json` orders the actual realization.
 
 ## Canonical lesson contract
 
@@ -427,6 +461,9 @@ once a track declares version 2, these are hard errors:
 10. book and app lesson hashes match the canonical AST;
 11. mixed practice includes only independently unlocked realizations;
 12. stage assessment tests production or interaction as well as recognition.
+13. every registered track has one map; every spine node, schema-v2 lesson, and
+    canonical realization is represented exactly once through a segment,
+    omission, or explicit relocation; mapped prerequisites appear earlier.
 
 The validator emits human-readable and JSON gap reports so corpus expansion is
 measurable.
@@ -437,12 +474,14 @@ measurable.
    duration types while preserving version-1 compatibility.
 2. **Spanish vertical slice** — migrate Chapters 1–3, render book and app, and
    prove strict duration plus closed-world progression.
-3. **Mixed-practice correction** — add learner-selected languages, per-language
-   cursors, focused-before-interleaved eligibility, and fail-closed scheduling.
+3. **Mixed-practice correction** — learner-selected languages and the pure
+   per-language frontier planner are implemented; move the visible Learn cursor,
+   focused-before-interleaved eligibility, and persistence onto that planner.
 4. **Persian and Urdu pilots** — build script composition and the first three spine
    clusters in each language with appropriate typography and variety metadata.
-5. **Existing-track migration** — map every track onto the spine, insert extensions,
-   normalize etymons, and eliminate handwritten book copies.
+5. **Existing-track migration** — all tracks now have explicit paths and extension
+   ledgers; continue schema migration, etymon normalization, roadmap alignment,
+   and removal of handwritten book copies.
 6. **Corpus expansion** — grow through B1 while coverage reports select the next
    missing can-do, skill, mode, register, or language realization.
 

@@ -1,0 +1,640 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "path": [
+    {
+      "id": "PT-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "PT-C01-ola"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-002",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PT-C01-bom"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-003",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "PT-C01-o-a"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-004",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "PT-C01-dia",
+        "PT-C01-bom-dia"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-005",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "PT-C01-obrigado"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-006",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "PT-C01-tarde"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-007",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "PT-C01-noite"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-008",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "PT-C02-de-nada"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-009",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PT-C02-como",
+        "PT-C02-tudo",
+        "PT-C02-tudo-bem",
+        "PT-C02-como-vai-esta",
+        "PT-C02-mais-ou-menos",
+        "PT-C02-practice",
+        "PT-C02-formal-practice"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "after": [
+        "PT-EXT-009-CONSOLIDATION",
+        "PT-EXT-009-REGISTER"
+      ]
+    },
+    {
+      "id": "PT-PATH-010",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "PT-C03-eu",
+        "PT-C03-me-chamo",
+        "PT-C03-como-se-chama",
+        "PT-C03-prazer",
+        "PT-C03-practice"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "PT-EXT-010-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "PT-PATH-011",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "PT-C04-adeus",
+        "PT-C04-ate-logo",
+        "PT-C04-ate-amanha",
+        "PT-C04-ate-breve",
+        "PT-C04-practice"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "PT-EXT-011-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "PT-PATH-012",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "PT-C05-falar",
+        "PT-C05-morar",
+        "PT-C05-trabalhar",
+        "PT-C05-falo-portugues",
+        "PT-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-012-LANGUAGE-SPECIFIC",
+        "PT-EXT-012-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-013",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "PT-C06-numeros-1-5",
+        "PT-C06-numeros-6-10"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-014",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "PT-C07-dias-1",
+        "PT-C07-dias-2",
+        "PT-C08-hora",
+        "PT-C08-meio-dia-meia-noite",
+        "PT-C09-meses",
+        "PT-C09-estacoes"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-015",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "PT-C10-pais",
+        "PT-C10-irmaos"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-016",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "PT-C11-pao",
+        "PT-C11-agua-vinho"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-017",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "PT-C12-numeros-11-15",
+        "PT-C12-numeros-16-20"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-018",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "PT-C13-preto-branco",
+        "PT-C13-vermelho-azul"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-019",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "PT-C14-ter",
+        "PT-C14-idade",
+        "PT-C15-preterito-perfeito",
+        "PT-C15-tenho-falado"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-020",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "PT-C16-ser",
+        "PT-C16-ser-roots",
+        "PT-C16-ser-vs-estar",
+        "PT-C16-ser-estar-meaning"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-020-LANGUAGE-SPECIFIC",
+        "PT-EXT-020-ETYMOLOGY",
+        "PT-EXT-020-GRAMMAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-021",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PT-C17-cabeca",
+        "PT-C17-cabeca-caput",
+        "PT-C17-mao"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-021-LANGUAGE-SPECIFIC",
+        "PT-EXT-021-ETYMOLOGY"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "PT-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "PT-PATH-005",
+        "PT-PATH-008"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [],
+      "omits": [
+        "RESPONSE-YES",
+        "RESPONSE-NO",
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "PT-PATH-010",
+        "PT-PATH-015",
+        "PT-PATH-019"
+      ],
+      "omits": [
+        "QUESTION-WHAT",
+        "PRONOUN-ME",
+        "PRONOUN-YOU",
+        "PRONOUN-MY",
+        "WORD-NAME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "PT-PATH-002",
+        "PT-PATH-009",
+        "PT-PATH-021"
+      ],
+      "omits": [
+        "WORD-WELL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "PT-PATH-012",
+        "PT-PATH-016"
+      ],
+      "omits": [
+        "COURTESY-PLEASE",
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "PT-PATH-007",
+        "PT-PATH-011"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "PT-PATH-004",
+        "PT-PATH-006",
+        "PT-PATH-014"
+      ],
+      "omits": [
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-MORNING",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [
+        "PT-PATH-020"
+      ],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "PT-PATH-003",
+        "PT-PATH-018"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "PT-PATH-013",
+        "PT-PATH-017"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "PT-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C02-tudo",
+        "PT-C02-como-vai-esta"
+      ]
+    },
+    {
+      "id": "PT-EXT-009-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Portuguese material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C02-practice"
+      ]
+    },
+    {
+      "id": "PT-EXT-009-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Portuguese form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C02-formal-practice"
+      ]
+    },
+    {
+      "id": "PT-EXT-010-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Portuguese material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C03-practice"
+      ]
+    },
+    {
+      "id": "PT-EXT-011-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Portuguese material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C04-practice"
+      ]
+    },
+    {
+      "id": "PT-EXT-012-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C05-falar",
+        "PT-C05-morar",
+        "PT-C05-trabalhar",
+        "PT-C05-falo-portugues"
+      ]
+    },
+    {
+      "id": "PT-EXT-012-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Portuguese material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C05-practice"
+      ]
+    },
+    {
+      "id": "PT-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C06-numeros-1-5",
+        "PT-C06-numeros-6-10"
+      ]
+    },
+    {
+      "id": "PT-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C07-dias-1",
+        "PT-C07-dias-2",
+        "PT-C08-hora",
+        "PT-C08-meio-dia-meia-noite",
+        "PT-C09-meses",
+        "PT-C09-estacoes"
+      ]
+    },
+    {
+      "id": "PT-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C10-pais",
+        "PT-C10-irmaos"
+      ]
+    },
+    {
+      "id": "PT-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C11-pao",
+        "PT-C11-agua-vinho"
+      ]
+    },
+    {
+      "id": "PT-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C12-numeros-11-15",
+        "PT-C12-numeros-16-20"
+      ]
+    },
+    {
+      "id": "PT-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C13-preto-branco",
+        "PT-C13-vermelho-azul"
+      ]
+    },
+    {
+      "id": "PT-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C14-ter",
+        "PT-C14-idade",
+        "PT-C15-preterito-perfeito",
+        "PT-C15-tenho-falado"
+      ]
+    },
+    {
+      "id": "PT-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C16-ser",
+        "PT-C16-ser-vs-estar"
+      ]
+    },
+    {
+      "id": "PT-EXT-020-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Portuguese word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C16-ser-roots"
+      ]
+    },
+    {
+      "id": "PT-EXT-020-GRAMMAR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Portuguese-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C16-ser-estar-meaning"
+      ]
+    },
+    {
+      "id": "PT-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Portuguese material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C17-cabeca",
+        "PT-C17-mao"
+      ]
+    },
+    {
+      "id": "PT-EXT-021-ETYMOLOGY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Portuguese word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C17-cabeca-caput"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,728 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "path": [
+    {
+      "id": "AR-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "AR-C01-salam"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-002",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "AR-C01-al"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-003",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "AR-C01-as-salamu-alaykum",
+        "AR-C01-marhaba"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-004",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "AR-C01-sabah-al-khayr",
+        "AR-C01-masa-al-khayr"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-005",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "AR-C01-shukran"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "AR-W01-direction-and-alif",
+        "AR-W01-abjad-short-vowels",
+        "AR-W02-joining-sin-lam",
+        "AR-W02-lam-alif-joins",
+        "AR-W03-dots-mim-ba-salam",
+        "AR-W03-write-salam"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-006-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "AR-C02-ism",
+        "AR-C02-anta-anti",
+        "AR-C02-ii-my",
+        "AR-C02-ismii",
+        "AR-C02-maa",
+        "AR-C02-maa-ismuka",
+        "AR-C02-tasharrafna"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "AR-W04-dots-family-nun-ta",
+        "AR-W05-ya-and-my-name",
+        "AR-W06-harakat-and-hamza",
+        "AR-W06-hamza",
+        "AR-W07-hook-family-ha-kha",
+        "AR-W08-kaf-and-ra",
+        "AR-W09-khayr-bikhayr",
+        "AR-C03-kayfa",
+        "AR-C03-hal",
+        "AR-C03-kayfa-haluka",
+        "AR-C03-bi-khayr",
+        "AR-C03-al-hamdu-lillah",
+        "AR-C03-practice"
+      ],
+      "before": [
+        "AR-EXT-008-SCRIPT"
+      ],
+      "inline": [
+        "AR-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "after": [
+        "AR-EXT-008-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "AR-PATH-009",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "AR-W10-ayn",
+        "AR-W11-ha-and-ta-marbuta",
+        "AR-W12-maa-salama",
+        "AR-C04-maa-with",
+        "AR-C04-al-salama",
+        "AR-C04-maa-salama",
+        "AR-C04-ila-liqaa",
+        "AR-C04-practice"
+      ],
+      "before": [
+        "AR-EXT-009-SCRIPT",
+        "AR-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": [
+        "AR-EXT-009-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "AR-PATH-010",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "AR-C05-naam",
+        "AR-C05-la"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-011",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "AR-C06-min-fadlik",
+        "AR-C07-asif"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-012",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "AR-C08-al-ahad-al-khamis",
+        "AR-C08-al-jumua-as-sabt"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-012-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-013",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "AR-C09-aswad-abyad",
+        "AR-C09-ahmar-azraq"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-014",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "AR-C10-ab-umm",
+        "AR-C10-akh-ukht"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-015",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "AR-C11-ras",
+        "AR-C11-yad"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-016",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "AR-C12-al-fusul"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-017",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "AR-C13-maa-khubz"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-018",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "AR-C14-ashhur",
+        "AR-C15-ad-duhr-muntasaf-al-layl",
+        "AR-C16-al-saa"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-019",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "AR-C17-kam-umruka"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-020",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "AR-C18-al-taqs"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-021",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "AR-C19-wahid-khamsa",
+        "AR-C20-ahada-ashar-ishrun"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-022",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "AR-C21-kalb-qitt",
+        "AR-C22-akhdar-asfar"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-022-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-023",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "AR-C23-afwan"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-023-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-024",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "AR-C24-ila-al-ghad"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-024-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-025",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "AR-C25-yawm",
+        "AR-C26-layl"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-026",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "AR-C27-tusbih-ala-khayr"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "AR-PATH-001",
+        "AR-PATH-003"
+      ],
+      "omits": [
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "AR-PATH-005",
+        "AR-PATH-023"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL",
+        "COURTESY-YOUREWELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "AR-PATH-010"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "AR-PATH-007",
+        "AR-PATH-014",
+        "AR-PATH-019"
+      ],
+      "omits": [
+        "PRONOUN-I",
+        "PRONOUN-ME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "AR-PATH-006",
+        "AR-PATH-008",
+        "AR-PATH-015"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "AR-PATH-011",
+        "AR-PATH-017"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "AR-PATH-009",
+        "AR-PATH-024",
+        "AR-PATH-026"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON",
+        "FAREWELL-TOMORROW"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "AR-PATH-004",
+        "AR-PATH-012",
+        "AR-PATH-016",
+        "AR-PATH-018",
+        "AR-PATH-020",
+        "AR-PATH-025"
+      ],
+      "omits": [
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "GREETING-DAY",
+        "GREETING-AFTERNOON"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "AR-PATH-002",
+        "AR-PATH-013",
+        "AR-PATH-022"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "AR-PATH-021"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "AR-EXT-006-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Arabic script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-W01-direction-and-alif",
+        "AR-W01-abjad-short-vowels",
+        "AR-W02-joining-sin-lam",
+        "AR-W02-lam-alif-joins",
+        "AR-W03-dots-mim-ba-salam",
+        "AR-W03-write-salam"
+      ]
+    },
+    {
+      "id": "AR-EXT-008-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Arabic script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-W04-dots-family-nun-ta",
+        "AR-W05-ya-and-my-name",
+        "AR-W06-harakat-and-hamza",
+        "AR-W06-hamza",
+        "AR-W07-hook-family-ha-kha",
+        "AR-W08-kaf-and-ra",
+        "AR-W09-khayr-bikhayr"
+      ]
+    },
+    {
+      "id": "AR-EXT-008-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C03-hal",
+        "AR-C03-al-hamdu-lillah"
+      ]
+    },
+    {
+      "id": "AR-EXT-008-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Arabic material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C03-practice"
+      ]
+    },
+    {
+      "id": "AR-EXT-009-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Arabic script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-W10-ayn",
+        "AR-W11-ha-and-ta-marbuta",
+        "AR-W12-maa-salama"
+      ]
+    },
+    {
+      "id": "AR-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C04-maa-with",
+        "AR-C04-al-salama"
+      ]
+    },
+    {
+      "id": "AR-EXT-009-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Arabic material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C04-practice"
+      ]
+    },
+    {
+      "id": "AR-EXT-012-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C08-al-ahad-al-khamis",
+        "AR-C08-al-jumua-as-sabt"
+      ]
+    },
+    {
+      "id": "AR-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C09-aswad-abyad",
+        "AR-C09-ahmar-azraq"
+      ]
+    },
+    {
+      "id": "AR-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C10-ab-umm",
+        "AR-C10-akh-ukht"
+      ]
+    },
+    {
+      "id": "AR-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C11-ras",
+        "AR-C11-yad"
+      ]
+    },
+    {
+      "id": "AR-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C12-al-fusul"
+      ]
+    },
+    {
+      "id": "AR-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C13-maa-khubz"
+      ]
+    },
+    {
+      "id": "AR-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C14-ashhur",
+        "AR-C15-ad-duhr-muntasaf-al-layl",
+        "AR-C16-al-saa"
+      ]
+    },
+    {
+      "id": "AR-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C17-kam-umruka"
+      ]
+    },
+    {
+      "id": "AR-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C18-al-taqs"
+      ]
+    },
+    {
+      "id": "AR-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C19-wahid-khamsa",
+        "AR-C20-ahada-ashar-ishrun"
+      ]
+    },
+    {
+      "id": "AR-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C21-kalb-qitt",
+        "AR-C22-akhdar-asfar"
+      ]
+    },
+    {
+      "id": "AR-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C23-afwan"
+      ]
+    },
+    {
+      "id": "AR-EXT-024-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Arabic material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C24-ila-al-ghad"
+      ]
+    },
+    {
+      "id": "AR-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Arabic script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C01-salam"
+      ]
+    }
+  ]
+}

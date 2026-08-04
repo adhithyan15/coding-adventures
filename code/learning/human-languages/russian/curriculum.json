@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "language": "russian",
+  "path": [
+    {
+      "id": "RU-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "RU-C01-privet"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "RU-C01-spasibo"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-003",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "RU-C01-pozhaluysta"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-004",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "RU-C01-zdravstvuyte"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-005",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "RU-C01-da",
+        "RU-C01-net"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-006",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "RU-C02-ya",
+        "RU-C02-ty-vy",
+        "RU-C02-vy-formality",
+        "RU-C02-menya-zovut",
+        "RU-C02-kak-vas-zovut",
+        "RU-C02-kak-cross-language",
+        "RU-C02-ochen-priyatno"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-006-REGISTER",
+        "RU-EXT-006-GRAMMAR"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "RU-PATH-001",
+        "RU-PATH-004"
+      ],
+      "omits": [
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "RU-PATH-002"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL",
+        "COURTESY-YOUREWELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "RU-PATH-005"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "RU-PATH-006"
+      ],
+      "omits": [
+        "QUESTION-WHAT",
+        "PRONOUN-ME",
+        "PRONOUN-MY",
+        "WORD-NAME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [],
+      "omits": [
+        "QUESTION-HOW",
+        "STATE-HOW-ARE-YOU",
+        "WORD-GOOD",
+        "WORD-WELL",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "RU-PATH-003"
+      ],
+      "omits": [
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [],
+      "omits": [
+        "FAREWELL",
+        "FAREWELL-CASUAL",
+        "FAREWELL-LATER",
+        "FAREWELL-SOON",
+        "FAREWELL-TOMORROW",
+        "GREETING-GOODNIGHT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [],
+      "omits": [
+        "TIME-DAY",
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-DAY",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "RU-EXT-006-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Russian form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C02-vy-formality"
+      ]
+    },
+    {
+      "id": "RU-EXT-006-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Russian-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C02-kak-cross-language"
+      ]
+    },
+    {
+      "id": "RU-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Russian script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C01-privet"
+      ]
+    }
+  ]
+}

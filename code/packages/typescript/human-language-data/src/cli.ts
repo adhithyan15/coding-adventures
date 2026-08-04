@@ -4,11 +4,15 @@
 
 import { loadEverything } from "./loader.js";
 import { validate, hasErrors, summarize } from "./validate.js";
+import { validateCurriculum } from "./curriculum.js";
 import { coverageByLanguage } from "./queries.js";
 
 export function runValidate(root?: string): number {
-  const { taxonomy, lessons, scripts, dataset } = loadEverything(root);
-  const issues = validate({ taxonomy, lessons, scripts });
+  const { taxonomy, registry, spine, curricula, books, lessons, scripts, dataset } = loadEverything(root);
+  const issues = [
+    ...validate({ taxonomy, lessons, scripts }),
+    ...validateCurriculum({ registry, spine, curricula, taxonomy, lessons, books }),
+  ];
 
   for (const issue of issues) {
     const tag = issue.level.toUpperCase().padEnd(7);

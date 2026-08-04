@@ -17,6 +17,7 @@ Every track shares the same shape:
 <language>/
   README.md                  what this track is, how to use it, current progress
   CHANGELOG.md                per-chapter content additions
+  curriculum.json            ordered shared-spine realization path + local extensions
   roadmap.md                  themed-chapter skeleton
   session-map.md              how lessons compose into commute sessions + review schedule
   pronunciation-reference.md   the sounds, to look up on demand (never a gate)
@@ -32,6 +33,14 @@ core/spine.json                 ordered, language-independent can-do spine
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
+
+Every registered track has one `curriculum.json`. Its ordered path can revisit a
+shared spine node, attaches required/supporting/reference extensions before,
+inline with, or after a local segment, and explicitly records canonical concepts
+that the track omits or deliberately teaches elsewhere. The data-package gate
+proves that all 20 maps cover their schema-v2 and canonical lessons without
+jumping over a prerequisite. Books and the app still read the lesson Markdown;
+the map is the shared scheduling contract, not a second copy of the content.
 
 The unified publication job also emits `curriculum-gaps.json` and
 `curriculum-gaps.txt` beside the books. They record the effective duration budget

@@ -9,7 +9,7 @@ import { validateCurriculum } from "../src/curriculum.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { languagesForConcept } from "../src/queries.js";
 
-const { taxonomy, registry, spine, books, lessons, scripts, dataset } = loadEverything();
+const { taxonomy, registry, spine, curricula, books, lessons, scripts, dataset } = loadEverything();
 
 describe("real curriculum", () => {
   it("has zero validation errors", () => {
@@ -28,12 +28,34 @@ describe("real curriculum", () => {
   });
 
   it("has a valid shared spine covering every registered language", () => {
-    const issues = validateCurriculum({ registry, spine, taxonomy, lessons, books });
+    const issues = validateCurriculum({ registry, spine, curricula, taxonomy, lessons, books });
     expect(issues.filter((issue) => issue.level === "error").map((issue) => issue.message)).toEqual([]);
     expect(registry.languages.map((language) => language.id)).toEqual(dataset.languages.sort((a, b) => {
       const order = new Map(registry.languages.map((language, index) => [language.id, index]));
       return order.get(a)! - order.get(b)!;
     }));
+  });
+
+  it("loads one prerequisite-safe realization map for every language", () => {
+    expect(curricula.map((curriculum) => curriculum.language).sort())
+      .toEqual(registry.languages.map((language) => language.id).sort());
+    expect(curricula.flatMap((curriculum) => curriculum.path).length).toBeGreaterThan(300);
+    expect(
+      curricula.flatMap((curriculum) => curriculum.path.flatMap((segment) => segment.lessons)).length,
+    ).toBeGreaterThan(800);
+    expect(curricula.every((curriculum) =>
+      spine.nodes.every((node) => curriculum.spine[node.id] !== undefined),
+    )).toBe(true);
+
+    const spanish = curricula.find((curriculum) => curriculum.language === "spanish")!;
+    expect(spanish.spine["SPINE-MEET-GREET"]?.segments.length).toBeGreaterThan(1);
+    expect(spanish.spine["SPINE-TAKE-LEAVE"]?.relocates["GREETING-GOODNIGHT"])
+      .toBe("SPINE-TIME-OF-DAY");
+
+    for (const language of ["persian", "urdu"]) {
+      const curriculum = curricula.find((item) => item.language === language)!;
+      expect(curriculum.extensions.some((extension) => extension.category === "script")).toBe(true);
+    }
   });
 
   it("preserves every existing LaTeX book and maps each chapter to short lessons", () => {
