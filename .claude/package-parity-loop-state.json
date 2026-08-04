@@ -11,24 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9884,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9884",
-    "branch": "codex/build-tool-haskell-go-field-aware-manifest-resolution",
-    "implementation_head": "b83d6587380ac95cf8da68c016a26f441be6ab4a",
-    "last_ci_repair": null
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "21b96a502887eb6186959c08187a20404235e4b7",
+    "revision": "de58c11e21c8799afff340f0498f7800c7347714",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1263,
-    "implementation_package_slots": 4418,
+    "implementation_identities": 1264,
+    "implementation_package_slots": 4419,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 270,
-    "singleton_packages": 813,
-    "singleton_missing_slots": 11382,
-    "rust_singletons": 617,
+    "singleton_packages": 814,
+    "singleton_missing_slots": 11396,
+    "rust_singletons": 618,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -466,7 +460,7 @@
     {
       "id": "build-tool-haskell-post-swift-field-aware-manifest-resolution",
       "title": "Make Haskell Go manifest resolution field-aware",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-post-perl-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-go-field-aware-manifest-resolution",
       "pr_number": 9884,
@@ -474,12 +468,21 @@
     },
     {
       "id": "build-tool-haskell-post-go-field-aware-manifest-resolution",
-      "title": "Select the next field-aware Haskell manifest reader after Go",
-      "status": "pending",
+      "title": "Make Elixir manifest resolution field-aware",
+      "status": "in-progress",
       "depends_on": ["build-tool-haskell-post-swift-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-elixir-field-aware-manifest-resolution",
+      "pr_number": null,
+      "notes": "Materialized when the post-Swift audit selected Go's coherent 26-false/0-missing-edge repair. Guarded PR #9884 merged exact head 102936be9eed0a80745ff231e590fc0e6367d529 as 582b15bc38f929a6e3825f75aba7e46b36db65bf after all 17 checks were terminal and two consecutive mergeability readings were MERGEABLE/CLEAN. The refreshed schema-3 inventory is unchanged at 1,263 implementation identities and 4,418 established-lane slots, 173 high-consensus packages with 270 missing slots, 813 singleton packages with 11,382 missing slots, 617 Rust singletons, and zero collisions or unknown buckets. Exact post-merge comparison confirms the repaired Go lane at 302 packages and 936 edges on both engines with zero drift, then selects Elixir as the smallest coherent remaining resolver contract: 282 packages, 470 Go edges, 478 Haskell edges, eight Haskell-only differences, and zero Go-only differences. Direct manifest inspection splits those eight differences into two valid multiline local path declarations that Go misses and six prose/comment references that generic Haskell tokenization falsely promotes. One field-aware Elixir fixture and paired readers can therefore resolve the complete slice without combining TypeScript, .NET, JVM, Dart, standalone BUILD debt, rockspec UTF-8, or native NIF authority. The language-neutral contract now admits direct project deps lists plus block and shorthand defp deps lists, multiline local path tuples, and options after path while excluding application metadata, source prose and strings, comments, mix.lock, and non-path Hex or Git dependencies. Red tests showed Go returning only a commented gamma edge instead of the two expected multiline edges and Haskell adding gamma to the correct pair. The paired readers now resolve the complete 282-package lane to 472 edges each with zero drift while preserving nine direct-list edges caught by the real-graph regression audit. Both real front doors complete BUILD validation for all 282 packages with zero failures. Full Go test, vet, build, module verification, and 75.2% statement coverage pass, with resolver coverage at 85.8%. Full Haskell build-tool, directed-graph, and graph tests, GHC -Wall -Werror, cabal check, Haddock, and coverage pass at 54% top-level declarations, 62% alternatives, and 68% expressions. The schema-1 shared corpus validates 49 cases and 145 files across 15 established languages, 16 implementations, and 12 front doors; all 17 schema tests and 40 runner tests pass. Cabal outdated reports only the existing intentional upper bounds on containers and time; govulncheck, OSV Scanner, HLint, and Fourmolu are unavailable locally. The readers inspect only the already selected mix.exs text, never read mix.lock or referenced paths, execute no content, and add no process, network, credential, filesystem-authority, NIF, or host-policy surface."
+    },
+    {
+      "id": "build-tool-post-elixir-field-aware-manifest-resolution",
+      "title": "Select the next field-aware manifest resolver after Elixir",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-post-go-field-aware-manifest-resolution"],
       "branch": null,
       "pr_number": null,
-      "notes": "Materialized when the post-Swift audit selected Go's coherent 26-false/0-missing-edge repair. Re-run the complete cross-engine resolver audit after Go lands, then select exactly one dependency-shaped ecosystem without combining Elixir's smaller false-only slice with the broader TypeScript, .NET, JVM, Dart, or standalone BUILD debt."
+      "notes": "Materialized when the post-Go audit selected Elixir's coherent eight-edge field-boundary repair. Re-run the complete cross-engine resolver audit after Elixir lands and select exactly one ecosystem without combining TypeScript, .NET, JVM, Dart, standalone BUILD debt, or strict rockspec UTF-8 work."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1988,6 +1991,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 6042102f inventory for the concrete chief-of-staff-agent-discovery adapter. It lists a configured directory, reads sealed package files, canonicalizes host paths, verifies signatures against a trusted keyring, and therefore owns fs:list/fs:read plus platform filesystem semantics rather than an all-language portable contract. Review no-follow and symlink policy, bounded non-recursive enumeration, fail-closed package verification, path disclosure, keyring authority, and platform evidence after the pure projection core lands. This native-runtime review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "chief-skill-package-verification-portable-conformance",
+      "title": "Fixture and port the Chief sealed skill-package verification projection",
+      "status": "pending",
+      "depends_on": ["chief-skill-parser-portable-conformance", "chief-agent-discovery-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered when de58c11e added Rust-only chief-of-staff-skill-package. Extract and fixture the authority-free loader over caller-provided authenticated package records: exact Skill runtime discrimination, strict UTF-8 SKILL.md bytes, reuse of the portable skill parser, canonical schema-v2 manifest regeneration, byte-for-byte authenticated manifest agreement, stable redacted failures, and deterministic parsed output. Port that pure verification projection after the parser and verified-discovery record contracts; package-directory mutation, signing keys, signature generation, path policy, cleanup, and sealed filesystem verification remain native."
+    },
+    {
+      "id": "chief-skill-package-native-authority-review",
+      "title": "Review the Chief sealed skill-package construction exception",
+      "status": "pending",
+      "depends_on": ["chief-skill-package-verification-portable-conformance", "chief-agent-discovery-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered when de58c11e added the mixed chief-of-staff-skill-package boundary. The concrete builder creates a caller-selected directory, writes SKILL.md and manifest.json, signs package contents with caller-provided secret key material, invokes shared host-runtime signing, and recursively cleans up its newly created directory on failure. Review create-new/no-overwrite semantics, symlink and race policy, signing-key custody, durable publication, cleanup containment, path disclosure, and platform evidence. This filesystem and cryptographic native-authority review is excluded from autonomous parity delivery selection."
     },
     {
       "id": "http-digest-auth-portable-conformance",

@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionGoSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionElixirSpec, resolutionGoSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -189,6 +189,27 @@ resolutionGoSpec = describe "Go resolution conformance" $ do
                     Right
                         [ ["go/beta-helper", "go/delta_name", "go/gamma"]
                         , ["go/alpha"]
+                        ]
+
+resolutionElixirSpec :: Spec
+resolutionElixirSpec = describe "Elixir resolution conformance" $ do
+    it "reads local path tuples only from authoritative deps lists" $
+        withFixture "resolution-elixir-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "elixir" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "elixir/alpha"
+                    , "elixir/beta-helper"
+                    , "elixir/delta_name"
+                    , "elixir/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["elixir/beta-helper", "elixir/gamma"]
+                        , ["elixir/delta_name"]
+                        , ["elixir/alpha"]
                         ]
 
 resolutionPythonSpec :: Spec

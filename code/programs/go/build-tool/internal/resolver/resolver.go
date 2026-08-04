@@ -635,13 +635,12 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 		return nil
 	}
 
-	text := string(data)
+	text := stripElixirLineComments(string(data))
 	var internalDeps []string
 
-	re := regexp.MustCompile(`\{:([a-z0-9_]+),\s*path:\s*"[^"]+"`)
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+	re := regexp.MustCompile(`(?s)\{\s*:([a-z0-9_]+)\s*,[^{}]*\bpath:\s*"[^"]+"[^{}]*\}`)
+	for _, body := range elixirDependencyBodies(text) {
+		for _, match := range re.FindAllStringSubmatch(body, -1) {
 			if len(match) < 2 {
 				continue
 			}
@@ -653,6 +652,152 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 	}
 
 	return internalDeps
+}
+
+func elixirDependencyBodies(text string) []string {
+	bodies := elixirDirectDepsBodies(text)
+	if functionBody := elixirDepsBody(text); strings.TrimSpace(functionBody) != "" {
+		bodies = append(bodies, functionBody)
+	}
+	return bodies
+}
+
+func elixirDirectDepsBodies(text string) []string {
+	var bodies []string
+	var current []string
+	depth := 0
+	for _, line := range strings.Split(text, "\n") {
+		if depth == 0 {
+			marker := indexElixirOutsideString(line, "deps:")
+			if marker < 0 {
+				continue
+			}
+			value := strings.TrimSpace(line[marker+len("deps:"):])
+			if !strings.HasPrefix(value, "[") {
+				continue
+			}
+			current = []string{value}
+			depth = elixirBracketDelta(value)
+			if depth <= 0 {
+				bodies = append(bodies, strings.Join(current, "\n"))
+				current = nil
+				depth = 0
+			}
+			continue
+		}
+
+		current = append(current, line)
+		depth += elixirBracketDelta(line)
+		if depth <= 0 {
+			bodies = append(bodies, strings.Join(current, "\n"))
+			current = nil
+			depth = 0
+		}
+	}
+	return bodies
+}
+
+func indexElixirOutsideString(text, target string) int {
+	inString := false
+	escaped := false
+	for index := 0; index < len(text); index++ {
+		character := text[index]
+		if escaped {
+			escaped = false
+			continue
+		}
+		if inString && character == '\\' {
+			escaped = true
+			continue
+		}
+		if character == '"' {
+			inString = !inString
+			continue
+		}
+		if !inString && strings.HasPrefix(text[index:], target) {
+			return index
+		}
+	}
+	return -1
+}
+
+func elixirBracketDelta(text string) int {
+	delta := 0
+	inString := false
+	escaped := false
+	for _, character := range text {
+		if escaped {
+			escaped = false
+			continue
+		}
+		if inString && character == '\\' {
+			escaped = true
+			continue
+		}
+		if character == '"' {
+			inString = !inString
+			continue
+		}
+		if !inString && character == '[' {
+			delta++
+		}
+		if !inString && character == ']' {
+			delta--
+		}
+	}
+	return delta
+}
+
+func stripElixirLineComments(text string) string {
+	lines := strings.Split(text, "\n")
+	for lineIndex, line := range lines {
+		inString := false
+		escaped := false
+		for index, character := range line {
+			if escaped {
+				escaped = false
+				continue
+			}
+			if inString && character == '\\' {
+				escaped = true
+				continue
+			}
+			if character == '"' {
+				inString = !inString
+				continue
+			}
+			if character == '#' && !inString {
+				lines[lineIndex] = line[:index]
+				break
+			}
+		}
+	}
+	return strings.Join(lines, "\n")
+}
+
+func elixirDepsBody(text string) string {
+	lines := strings.Split(text, "\n")
+	insideBlock := false
+	var body []string
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if !insideBlock {
+			if strings.HasPrefix(trimmed, "defp deps,") || strings.HasPrefix(trimmed, "def deps,") {
+				if marker := strings.Index(trimmed, "do:"); marker >= 0 {
+					return trimmed[marker+len("do:"):]
+				}
+			}
+			if trimmed == "defp deps do" || trimmed == "def deps do" {
+				insideBlock = true
+			}
+			continue
+		}
+		if trimmed == "end" {
+			break
+		}
+		body = append(body, line)
+	}
+	return strings.Join(body, "\n")
 }
 
 // parseLuaDeps extracts internal dependencies from a Lua .rockspec file.

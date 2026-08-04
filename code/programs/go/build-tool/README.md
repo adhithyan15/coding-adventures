@@ -99,6 +99,15 @@ distribution spellings are aliases only. The shared field-boundary fixture and
 complete 256-package lane resolve exactly 217 total edges: 216 from
 authoritative manifests and one qualified BUILD dependency.
 
+Elixir dependency resolution reads local dependency tuples only from direct
+project `deps:` lists and lists returned by block or shorthand `defp deps`
+functions. Multiline tuples are accepted when they contain a quoted `path:`
+option. Project and application metadata, source prose, comments, `mix.lock`,
+and non-path Hex or Git dependencies cannot invent graph edges. The shared
+field-boundary fixture covers direct, block, shorthand, multiline, comment,
+metadata, and external-dependency cases; the complete 282-package lane resolves
+exactly 472 edges.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

@@ -32,6 +32,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Elixir dependency resolution now reads local `path:` tuples from both direct
+  project `deps:` lists and block or shorthand `defp deps` lists, including
+  multiline tuples, while excluding comments, application metadata, prose,
+  `mix.lock`, and non-path dependencies.
 - Perl dependency resolution now reads only top-level runtime `requires`
   declarations from root `cpanfile`s, excludes test and other phase blocks and
   `Makefile.PL` dependency tables, and registers exact declared module names
