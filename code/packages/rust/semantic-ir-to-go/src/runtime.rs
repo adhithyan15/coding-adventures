@@ -286,6 +286,153 @@ func _sir_as_string(v Value) string {
 	panic("no implicit conversion of " + _sir_ruby_class_name(v) + " into String")
 }
 
+// ── polymorphic `<<` (Ruby's shift operator) ───────────────────
+//
+// `<<` -- Ruby's shift operator, polymorphic like `+`:
+//   Array   -- push each RHS operand IN PLACE, returns the (mutated)
+//              receiver. Chains left-to-right: `a << 1 << 2` pushes both
+//              (the frontend lowers a `<<` chain to ONE variadic call, the
+//              same convention `_sir_plus` already folds over).
+//   Integer -- bitwise shift; see `_sir_shift_left_i64` below, PORTED from
+//              the C backend's `_sir_shift_left_i64` for identical
+//              overflow/negative-amount semantics (no bignum growth --
+//              saturates at MaxInt64/MinInt64 rather than wrapping).
+//   String  -- concatenates and returns a NEW string, via `_sir_as_string`
+//              -- matching THIS backend's own `+` String-receiver
+//              convention (a non-string RHS panics; Ruby raises TypeError
+//              for `<<` on an incompatible operand too, so this is not a
+//              new divergence from `+`).
+func _sir_shift_left(args []Value) Value {
+	if len(args) == 0 {
+		return int64(0)
+	}
+	switch first := args[0].(type) {
+	case *Seq:
+		first.Items = append(first.Items, args[1:]...)
+		return first
+	case string:
+		out := first
+		for _, a := range args[1:] {
+			out += _sir_as_string(a)
+		}
+		return out
+	}
+	acc := _sir_as_int(args[0])
+	for _, a := range args[1:] {
+		acc = _sir_shift_left_i64(acc, _sir_shift_amount_arg(a))
+	}
+	return acc
+}
+
+// Extracts a shift-amount argument as a plain int64 -- an Integer passes
+// through, a Float truncates toward zero via the saturating helper below
+// (never Go's bare `int64(f)`, which is implementation-specific for a
+// non-finite/out-of-range float); anything else contributes a 0 shift.
+func _sir_shift_amount_arg(v Value) int64 {
+	switch n := v.(type) {
+	case int64:
+		return n
+	case float64:
+		return _sir_f64_to_i64_saturating(n)
+	}
+	return 0
+}
+
+// Truncates a float64 toward zero into an int64, saturating at
+// MaxInt64/MinInt64 on overflow and mapping NaN to 0 -- Go's plain
+// `int64(f)` conversion is implementation-specific once `f` is
+// non-finite or outside the int64 range (the same UB-avoidance
+// discipline the C backend's `_sir_f64_to_i64_saturating` follows). The
+// boundary compares against 2^63 (not `math.MaxInt64`, which is one less
+// and not exactly representable as a float64 near this magnitude).
+func _sir_f64_to_i64_saturating(f float64) int64 {
+	const twoPow63 = 9223372036854775808.0
+	if math.IsNaN(f) {
+		return 0
+	}
+	if f >= twoPow63 {
+		return math.MaxInt64
+	}
+	if f < -twoPow63 {
+		return math.MinInt64
+	}
+	return int64(f)
+}
+
+// Safe magnitude of an int64 as a uint64 -- handles `math.MinInt64` (whose
+// naive negation overflows back to itself in two's complement) via a
+// uint64-wraparound trick, the same one the C backend's `_sir_i64_abs_u`
+// uses.
+func _sir_i64_abs_u(n int64) uint64 {
+	if n >= 0 {
+		return uint64(n)
+	}
+	return uint64(-(n + 1)) + 1
+}
+
+// Bitwise-shifts `n` by `amount`, matching real Ruby's rules (ported from
+// the C backend's `_sir_shift_left_i64` -- see that function's comment for
+// the full rationale):
+//   - `amount == 0` or `n == 0`: identity.
+//   - `amount < 0`: REVERSES direction -- a right shift by `|amount|`
+//     (`5 << -1 == 5 >> 1 == 2`). Go requires a non-negative, in-range
+//     shift count for `>>`/`<<` (a signed negative or >=64 count panics at
+//     runtime), so both branches are computed manually rather than handed
+//     straight to Go's shift operators.
+//   - `amount > 0`: LEFT shift, SATURATES at MaxInt64/MinInt64 rather than
+//     wrapping once the true mathematical result would not fit (no bignum
+//     growth, unlike real Ruby's `1 << 63`).
+//   - A shift amount whose magnitude is >= 64 drains every bit: saturates
+//     to 0/-1 (right) or MaxInt64/MinInt64 (left, `n != 0`).
+func _sir_shift_left_i64(n int64, amount int64) int64 {
+	if amount == 0 || n == 0 {
+		return n
+	}
+	if amount < 0 {
+		k := _sir_i64_abs_u(amount)
+		if k >= 64 {
+			if n < 0 {
+				return -1
+			}
+			return 0
+		}
+		return n >> uint(k)
+	}
+	k := uint64(amount)
+	neg := n < 0
+	if k >= 64 {
+		if neg {
+			return math.MinInt64
+		}
+		return math.MaxInt64
+	}
+	mag := _sir_i64_abs_u(n)
+	if (mag >> (64 - k)) != 0 {
+		if neg {
+			return math.MinInt64
+		}
+		return math.MaxInt64
+	}
+	shifted := mag << k
+	limit := uint64(math.MaxInt64)
+	if neg {
+		limit++
+	}
+	if shifted > limit {
+		if neg {
+			return math.MinInt64
+		}
+		return math.MaxInt64
+	}
+	if neg {
+		if shifted == limit {
+			return math.MinInt64
+		}
+		return -int64(shifted)
+	}
+	return int64(shifted)
+}
+
 func _sir_minus(args []Value) Value {
 	if len(args) == 0 {
 		return int64(0)
@@ -1207,6 +1354,8 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 	switch name {
 	case "+":
 		return _sir_plus(args)
+	case "<<":
+		return _sir_shift_left(args)
 	case "-":
 		return _sir_minus(args)
 	case "*":

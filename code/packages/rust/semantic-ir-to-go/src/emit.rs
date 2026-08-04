@@ -1336,6 +1336,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // the emitter simple.
     let helper = match name {
         "+" => "_sir_plus",
+        "<<" => "_sir_shift_left",
         "-" => "_sir_minus",
         "*" => "_sir_times",
         "/" => "_sir_divide",
