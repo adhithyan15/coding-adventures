@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9916,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9916",
+    "branch": "codex/typescript-node-builtin-declarations",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "00e47db9a4a8407800c678a50c64475c11699708",
     "schema_version": 3,
@@ -343,10 +348,10 @@
     {
       "id": "typescript-node-builtin-type-declarations",
       "title": "Audit TypeScript Node builtin declaration ownership",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/typescript-node-builtin-declarations",
-      "pr_number": null,
+      "pr_number": 9916,
       "notes": "Discovered during real build validation of the standalone TypeScript input-boundary tranche. After the owned TS6059 input leaks are removed, algol-lexer, the algol-parser dependency chain, and browser-extension-toolkit reach Node builtin/process references but have no owned Node type provider; their coverage remains green at 79, 33, and 60 tests respectively. Audit the build-script TypeScript corpus for Node builtin imports without an owned @types/node declaration, classify the exact dependency-shaped gap, and repair it separately; do not widen the 96-config input-boundary tranche into package manifests or lockfiles. Selected after guarded PR #9912 merged because a quick direct-ownership scan finds up to 74 build-script TypeScript projects with Node builtin/global references but no manifest-owned @types/node provider, materially broader than the separately pending 10-file Lua BUILD_windows wave. The executable syntax-aware audit refines that ceiling to exactly 93 Node API build projects: 31 already own direct providers, 62 are missing them, one lacks synchronized lock metadata, and matrix-rust-napi retains its reviewed native-workspace lock exception. The optimized audit completes in seconds and ignores comments, string and template prose, member properties, and sources outside effective roots while inspecting nested template expressions. The collision-checked 355348901e inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The implemented closure adds the direct Node 22 provider to exactly 62 manifests, synchronizes 63 locks including five newly tracked locks, preserves every non-provider manifest and lock field, and reports 93/93 providers, zero missing, zero stale, one reviewed exception, and 449 compiler locks. Sixteen focused tests pass with 91% branch-aware audit coverage; Ruff, Bandit, compileall, JSON, diff, and added-line secret gates pass. Real Windows/front-door validation passes 79 Algol lexer tests at 87.5%, 33 parser tests at 83.33%, 460 CLI tests at 95.66%, 47 JSON-RPC tests at 90%, 60 browser-toolkit tests at 98.75%, 58 actor tests at 91.7%, 89 LS00 tests at 86.98%, 119 Starlark tests at 92.05%, and six Lattice docs tests; all seven selected representative builds and nine production audits pass. Starlark and Lattice optional strict/source builds exposed separately backlogged source items. Go test, vet, build, and module verification pass. The full Go validator reproduces the exact same 17 Perl/Python/Swift diagnostics on clean detached 355348901e and has zero TypeScript errors. Rebased cleanly onto origin/main 00e47db9a4; the refreshed collision inventory is unchanged, the final contract and Go gates pass on that base, and the committed TypeScript diff plan reports exactly 63 changed packages, 236 affected packages, 470 total packages, and 1,076 dependency edges."
     },
     {

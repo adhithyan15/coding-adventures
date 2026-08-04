@@ -870,6 +870,10 @@ After one unrelated curriculum merge, the branch rebases cleanly onto
 unchanged. The committed TypeScript plan reports exactly 63 changed packages,
 236 affected packages, 470 total packages, and 1,076 dependency edges.
 
+Ready-for-review PR #9916 opened at exact validated implementation head
+`2cc08914712409f83ed56048829a142072fc541b`; the loop now monitors that one
+active parity PR and will not select another item until it merges.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
