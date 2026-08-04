@@ -712,6 +712,17 @@ compiler-output integrity boundary and stops `window-core` and `window-canvas`
 builds from emitting into tracked source trees without widening the 58-package
 `BUILD_windows` wave.
 
+PR #9907 closed that two-package gap and merged exact final head `0dfefc77a8`
+as `da895587f3` after all 20 checks were terminal acceptable and two independent
+mergeability readings were `MERGEABLE/CLEAN`. The refreshed collision-checked
+inventory remains unchanged at 1,264 identities, 4,419 slots, 173
+high-consensus packages with 270 gaps, 814 singleton packages with 11,396 gaps,
+618 Rust singletons, and zero collisions or unknown buckets. A fresh validator
+pass decomposes the 58-package TypeScript `BUILD_windows` debt into two exact
+children before reprioritization: a 55-package `cli-builder` closure (54 missing
+only that prerequisite plus `grammar-tools`, which also lacks `directed-graph`
+and `state-machine`) and a separate three-package SIR runtime closure.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are

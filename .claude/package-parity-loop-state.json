@@ -11,15 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9907,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9907",
-    "branch": "codex/typescript-standalone-tsconfig-output-isolation",
-    "implementation_head": "8de312ed24879f11109a74af51d26b14d90179b6",
-    "last_ci_repair": null
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "1198eda2eb787abbb28df06f77aa8f01aebbcb8b",
+    "revision": "da895587f33605ae467c57478dac6289cc648757",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -317,7 +311,25 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The rebased Go oracle full dry-run reports 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. The Python validator separately reports 10 Lua BUILD_windows gaps, now materialized as a child wave. Deliver dependency-shaped waves and preserve the broader July 29 audit queue for Perl, Dart, Kotlin, and related packages."
+      "notes": "The rebased Go oracle full dry-run reports 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. The Python validator separately reports 10 Lua BUILD_windows gaps, now materialized as a child wave. Deliver dependency-shaped waves and preserve the broader July 29 audit queue for Perl, Dart, Kotlin, and related packages. The exact post-PR #9907 TypeScript audit decomposes its 58 packages into a 55-package cli-builder closure and a three-package SIR runtime closure; both are now explicit pending child items and do not wait on this tracking umbrella."
+    },
+    {
+      "id": "typescript-build-windows-cli-builder-closure",
+      "title": "Repair the TypeScript BUILD_windows cli-builder prerequisite closure",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. Fifty-four packages are missing only typescript/cli-builder, while grammar-tools is missing cli-builder plus directed-graph and state-machine. Reconcile these 55 Windows front doors with their authoritative generic BUILD prerequisite order as one common dependency-shaped closure; keep the three SIR runtime packages separate."
+    },
+    {
+      "id": "typescript-build-windows-sir-runtime-closure",
+      "title": "Repair the TypeScript BUILD_windows SIR runtime prerequisite closure",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. sir-runtime-core lacks exceptions and pairs, sir-runtime-oop lacks core plus exceptions and pairs, and sir-runtime-symbolic lacks cas-pattern-matching plus symbolic-ir. Repair these three related Windows front doors as a separate SIR runtime dependency closure."
     },
     {
       "id": "build-file-standalone-integrity-lua",
@@ -529,11 +541,11 @@
     {
       "id": "typescript-standalone-tsconfig-output-isolation",
       "title": "Isolate standalone TypeScript compiler outputs from source trees",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/typescript-standalone-tsconfig-output-isolation",
       "pr_number": 9907,
-      "notes": "Discovered while refining the shared-rootDir audit from 165 rootDir-less configs to 129 actual shared-base consumers. Of the 36 standalone configs outside the shared contract, 26 are explicitly noEmit and eight already declare outDir. typescript/window-core and typescript/window-canvas alone declare neither noEmit nor outDir while their build script runs tsc with declarations enabled, so clean builds emit JavaScript and declaration artifacts beside tracked source and test files. Audit and repair those two standalone package configs as a separate output-isolation tranche; do not widen the shared configDir repair. Selected after guarded PR #9905 merged and the collision-checked 1198eda2eb inventory remained unchanged at 1,264 identities, 4,419 established-lane slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The quick leverage pass prefers this unblocked two-package closure because it completes the TypeScript compiler-output integrity boundary just established by #9905, prevents clean package builds from mutating tracked source trees, and remains narrower than the separately owned 58-package BUILD_windows wave. The implemented audit classifies all 171 standalone configs, accepts 28 noEmit projects, and requires all 143 emit-capable projects to declare isolated output. Both owned packages now emit only beneath dist and exclude compiled test copies while preserving Vitest's defaults. Fresh dependency installs, real builds, 9-test and 5-test coverage suites, zero-vulnerability production audits, effective-config checks, the Go build-tool suite, an exact two-package affected plan, collision-checked inventory, diff, generated-output, and secret checks pass. Repository-wide BUILD validation reproduces only the 58 already-owned prerequisite declarations and reports no diagnostic for either selected package. Ready-for-review PR #9907 opened at exact implementation head 8de312ed24879f11109a74af51d26b14d90179b6."
+      "notes": "Discovered while refining the shared-rootDir audit from 165 rootDir-less configs to 129 actual shared-base consumers. Of the 36 standalone configs outside the shared contract, 26 are explicitly noEmit and eight already declare outDir. typescript/window-core and typescript/window-canvas alone declare neither noEmit nor outDir while their build script runs tsc with declarations enabled, so clean builds emit JavaScript and declaration artifacts beside tracked source and test files. Audit and repair those two standalone package configs as a separate output-isolation tranche; do not widen the shared configDir repair. Selected after guarded PR #9905 merged and the collision-checked 1198eda2eb inventory remained unchanged at 1,264 identities, 4,419 established-lane slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The quick leverage pass prefers this unblocked two-package closure because it completes the TypeScript compiler-output integrity boundary just established by #9905, prevents clean package builds from mutating tracked source trees, and remains narrower than the separately owned 58-package BUILD_windows wave. The implemented audit classifies all 171 standalone configs, accepts 28 noEmit projects, and requires all 143 emit-capable projects to declare isolated output. Both owned packages now emit only beneath dist and exclude compiled test copies while preserving Vitest's defaults. Fresh dependency installs, real builds, 9-test and 5-test coverage suites, zero-vulnerability production audits, effective-config checks, the Go build-tool suite, an exact two-package affected plan, collision-checked inventory, diff, generated-output, and secret checks pass. Repository-wide BUILD validation reproduces only the 58 already-owned prerequisite declarations and reports no diagnostic for either selected package. Ready-for-review PR #9907 opened at exact implementation head 8de312ed24879f11109a74af51d26b14d90179b6. All 20 exact-head checks reached terminal acceptable conclusions; two independent readings returned MERGEABLE/CLEAN; guarded squash auto-completion merged final head 0dfefc77a8b0d1a323023286624ec26279feed47 as da895587f33605ae467c57478dac6289cc648757 on 2026-08-04."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
