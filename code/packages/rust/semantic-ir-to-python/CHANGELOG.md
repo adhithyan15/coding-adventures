@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.10.2 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "Python/JS backends: implement shift-operator runtime dispatch".
+`ruby-to-semantic-ir` lowers `<<` to a top-level `BuiltinCall("<<", [lhs,
+rhs, ...])` — a separate protocol from the `__method__("<<", recv, arg)`
+Collections dispatch. This backend had no `<<` entry anywhere, so it fell
+to the generic `_sir_call_builtin` fallback, which raised `NameError: SIR
+builtin '<<' is not implemented` — every Ruby program using `<<` as an
+operator failed at runtime.
+
+Added `"<<" => "_sir_shift_left"` to the emitter's direct helper-name
+table (alongside `"+" => "_sir_plus"`) and `shift_left as _sir_shift_left`
+to the runtime import list. The actual implementation lives in
+`coding-adventures-sir-runtime-core` 0.3.0 (this backend's runtime
+package, not inlined here) — see that package's own CHANGELOG for the
+polymorphic Array/String/Integer dispatch.
+
+`semantic-ir-to-python` 0.10.1 -> 0.10.2.
+
 ## 0.10.1 — `is_python_keyword` missing two of Python's four soft keywords (task #116 audit)
 
 Follow-up to task #110/#112 (`semantic-ir-to-javascript`/`-typescript`'s
