@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.11.2 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "TypeScript backend: implement shift-operator runtime dispatch".
+`ruby-to-semantic-ir` lowers `<<` to a top-level `BuiltinCall("<<", [lhs,
+rhs])` — a separate protocol from the `__method__("<<", recv, arg)`
+Collections dispatch. `<<` had no entry in the emitter's fast-path
+helper table, so it fell to `__Sir.callBuiltin`'s generic dispatch,
+which had no `"<<"` entry either — every Ruby program using `<<` as an
+operator failed at runtime.
+
+Added `"<<" => "__Sir.shiftLeft"` to the emitter's helper-name table
+(alongside `"+" => "__Sir.add"`). The actual polymorphic implementation
+lives in `@coding-adventures/sir-runtime-core` 0.2.0 (this backend's
+runtime package, not inlined here) — see that package's own CHANGELOG
+for the Array/String/number dispatch.
+
+This completes "C/Go/Rust/Ruby/Python/JS/TS backends: implement
+shift-operator runtime dispatch" — every backend now supports `<<`.
+
+`semantic-ir-to-typescript` 0.11.1 -> 0.11.2.
+
 ## 0.11.1 — `is_ts_reserved` was missing `eval`/`arguments` (task #112, the direct TS sibling of task #110's JS fix)
 
 **Not a syntactic-keyword gap — a strict-mode contextual-reserved-word

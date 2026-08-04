@@ -29,7 +29,7 @@ export {
   setDisplayConvention,
 } from "./values.js";
 export type { Val, ClosureLike } from "./values.js";
-export { add, sub, mul, div, lt, gt } from "./arithmetic.js";
+export { add, shiftLeft, sub, mul, div, lt, gt } from "./arithmetic.js";
 export {
   Closure,
   LocalJumpError,

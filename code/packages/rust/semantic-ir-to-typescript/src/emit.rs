@@ -2392,6 +2392,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     }
     let helper = match name {
         "+" => "__Sir.add",
+        "<<" => "__Sir.shiftLeft",
         "-" => "__Sir.sub",
         "*" => "__Sir.mul",
         "/" => "__Sir.div",
@@ -2878,6 +2879,35 @@ mod tests {
             0,
         );
         assert_eq!(out, "__Sir.add(1, 2)");
+    }
+
+    #[test]
+    fn emit_builtin_call_shift_left() {
+        // `ruby-to-semantic-ir` lowers `<<` to a top-level
+        // `BuiltinCall("<<", [lhs, rhs])` -- a separate protocol from
+        // `__method__("<<", recv, arg)` -- and must route through
+        // `__Sir.shiftLeft`, not `__Sir.callBuiltin`'s generic fallback.
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "<<".into(),
+                args: vec![
+                    Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 40,
+                        span: s(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "__Sir.shiftLeft(1, 40)");
     }
 
     #[test]
