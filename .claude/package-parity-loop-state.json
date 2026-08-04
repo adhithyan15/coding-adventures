@@ -16,7 +16,7 @@
     "url": "https://github.com/adhithyan15/coding-adventures/pull/9902",
     "branch": "codex/build-tool-haskell-typescript-field-aware-resolution",
     "implementation_head": "6fecdd0aaa7b67c524fb24068c694215f4958005",
-    "last_ci_repair": null
+    "last_ci_repair": "CodeQL detection exposed the newly affected typescript/rom-bios BUILD front doors missing their five-package transitive standalone closure; both Unix and Windows metadata now materialize transistors, logic-gates, arithmetic, cpu-simulator, and riscv-simulator. Focused validation and the rom-bios 7-test coverage suite pass."
   },
   "last_inventory": {
     "revision": "658184b11299b3b5b87cb30cb5896a5f7a45a573",
