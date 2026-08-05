@@ -1034,3 +1034,100 @@ fn formula_audit_accepts_a_zero_input_constant_formula() {
 
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }
+
+/// The strict path is chosen from the SOURCE, and the closure walk reaches a
+/// guard declared on a nested callee rather than only on the queried formula.
+///
+/// `outer` declares no precondition of its own; the guard is on `inner`, two
+/// applications down. The audit must still take the guard-replaying v2 path,
+/// and it must do so because the parsed source says a guard exists — not
+/// because the runtime happened to report one.
+#[test]
+fn formula_audit_requires_v2_for_a_guard_declared_in_the_closure() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_closure_guard_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("closure_guard.adj");
+    fs::write(
+        &program,
+        "formulabook nested {\n\
+             formula inner(a, b) = a / b\n\
+               requires nonzero(b)\n\
+               source \"division domain\" trust authoritative\n\
+             formula outer(x, y) = inner(x, y)\n\
+               source \"outer domain\" trust authoritative\n\
+         }\n\
+         observe numerator(8)\n\
+         observe denominator(2)\n\
+         ? outer(numerator, denominator)\n",
+    )
+    .expect("write closure guard program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    assert_eq!(audit["contract"], "adj-lang/formula_audit/v2");
+    let execution = &audit["executions"][0];
+    assert_eq!(execution["guards"].as_array().expect("guards").len(), 1);
+    assert_eq!(execution["guards"][0]["outcome"], "passed");
+    assert_eq!(execution["body"]["status"], "evaluated");
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+/// The other direction, and the one that would show over-reach: a program whose
+/// source declares NO precondition anywhere must still take the v1 path.
+///
+/// Deciding strictness from the source is only an improvement if it stays
+/// scoped to programs that actually declare a guard; forcing every program onto
+/// v2 would be a silent, sweeping change of output shape.
+#[test]
+fn formula_audit_stays_v1_when_no_guard_is_declared() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_unguarded_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("unguarded.adj");
+    fs::write(
+        &program,
+        "formulabook plain {\n\
+             formula inner(a, b) = a / b\n\
+               source \"division definition\" trust authoritative\n\
+             formula outer(x, y) = inner(x, y)\n\
+               source \"outer domain\" trust authoritative\n\
+         }\n\
+         observe numerator(8)\n\
+         observe denominator(2)\n\
+         ? outer(numerator, denominator)\n",
+    )
+    .expect("write unguarded program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v1 audit JSON");
+    assert_eq!(
+        audit["contract"], "adj-lang/formula_audit/v1",
+        "an unguarded program must not be pushed onto the strict path"
+    );
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
