@@ -46,12 +46,26 @@ def local_source(
     *,
     discarded_reason: str,
     data: bytes | None = None,
+    on_disk: bool = True,
     reasoned_discards: list[tuple[int, int, str]] | None = None,
 ) -> tuple[dict, dict[str, dict]]:
     # Accepting already-read bytes is what lets the caller pin offsets and quotes
     # to ONE read of the file. Re-reading here would leave the two a swap apart.
     if data is None:
         data = provenance._read_regular_file(REPO_ROOT / repo_path)
+    elif on_disk:
+        # The supplied buffer must be THIS file's bytes. Nothing else checks it:
+        # the receipt, the IR and every quote are all derived from `data`, so a
+        # mispaired variable would hash one file while claiming another and stay
+        # perfectly self-consistent. A re-read here is a CHECK, never a second
+        # source of quotes. Callers passing a snapshot that may legitimately
+        # differ from disk opt out with `on_disk=False`.
+        actual = provenance._read_regular_file(REPO_ROOT / repo_path)
+        if actual != data:
+            raise provenance.ProvenanceError(
+                f"{repo_path}: supplied bytes do not match the file on disk "
+                f"({provenance.sha256_bytes(data)} vs {provenance.sha256_bytes(actual)})"
+            )
     raw_hash = cas.put(data, kind="raw_source", label=label)
     receipt = provenance.build_input_receipt(
         repo_path=repo_path,

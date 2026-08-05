@@ -183,6 +183,7 @@ def build_query_bundle(
     # file, a same-length replacement in between would pin a claim to a byte range
     # that no longer contains what the claim says — and the result would still
     # verify, because the stored IR would be self-consistent with the second read.
+    caller_supplied_bytes = query_bytes is not None
     if query_bytes is None:
         query_bytes = provenance._read_regular_file(repo_root / spec.query_path)
 
@@ -229,6 +230,12 @@ def build_query_bundle(
         spec.input_description,
         discarded_reason=spec.discarded_reason,
         data=query_bytes,
+        # A caller-supplied snapshot may legitimately differ from the working
+        # tree (that is what a workspace snapshot IS), so the on-disk equality
+        # check applies only when we read the file ourselves. Note this gates a
+        # CHECK, not which bytes are used — the bytes are the same either way,
+        # unlike the conditional forwarding that caused the #9926 double-read.
+        on_disk=not caller_supplied_bytes,
         reasoned_discards=(
             spec.reasoned_discards(query_bytes, question_end)
             if spec.reasoned_discards is not None
