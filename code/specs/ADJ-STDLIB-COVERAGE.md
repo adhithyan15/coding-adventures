@@ -376,8 +376,17 @@ option mapping, or judge/evaluation failure.
     inputs. Same-name rebinding resolves within each predecessor scope. The positive
     proportion query exercises this derived path; its three zero controls remain
     direct-observation abstention witnesses.
-9d. Replace state-machine failure detail strings with a structured error
-    discriminant and typed phase on both guard and yield precision failures.
+9d. **Complete.** State-machine failures carry a typed `FailurePhase`
+    (`transition_guard` / `exit_guard` / `yield`) and, for computation errors, a
+    `ComputationFailure` discriminant mirroring the engine's own error at this
+    boundary. Precision-loss outcomes carry the same typed phase and name their
+    expression directly; previously a yield abstention was distinguishable from a
+    guard abstention only by noticing that the rendering had been prefixed with
+    `"yield "` and placed in a field named `guard`. The human `detail` string is
+    unchanged, so a consumer that only prints it is unaffected, while one that
+    branches keys off the discriminant instead of parsing prose. The translation
+    from the engine error is exhaustive with no wildcard, so a new engine variant
+    is a compile error here rather than a silently reworded string downstream.
 10. Use the first-class derivation and execution-witness contract to execute every
     exported formula before migrating `average.adj`; prose cannot prove its `N=2`
     and `N=3` specializations.

@@ -187,14 +187,24 @@ fn render_state_machines(runs: &[(&LoweredStateMachine, StateMachineRun)]) -> St
                 format!("  => NonTerminating (cycle at {state})")
             }
             StateMachineOutcome::Stuck { state } => format!("  => Stuck in {state}"),
-            StateMachineOutcome::PrecisionLoss { state, guard } => {
-                format!("  => Precision loss in {state}: {guard}")
-            }
+            StateMachineOutcome::PrecisionLoss {
+                state,
+                phase,
+                expression,
+            } => format!(
+                "  => Precision loss in {state} during {}: {expression}",
+                phase.type_tag()
+            ),
             StateMachineOutcome::ComputationError {
                 state,
                 phase,
+                failure,
                 detail,
-            } => format!("  => Computation error in {state} during {phase}: {detail}"),
+            } => format!(
+                "  => Computation error in {state} during {} [{}]: {detail}",
+                phase.type_tag(),
+                failure.type_tag()
+            ),
         };
         out.push(outcome);
     }
