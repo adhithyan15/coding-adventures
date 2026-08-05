@@ -15,8 +15,9 @@
 %     ? fraction_of(fraction, whole)               % engine → 3, carrying every citation
 %
 % The engine expands `fraction_of` → `product` (from arithmetic.adj) on the CPU
-% and composes the provenance chain, so the answer cites BOTH the fraction
-% definition (primary) and the `product` primitive it builds on (corroboration).
+% and composes the provenance chain, so the answer cites BOTH the bytes grounding
+% "of" as multiplication (primary) and the `product` primitive it builds on
+% (corroboration).
 % The model performs zero arithmetic, and the audit trail names every formula
 % that participated.
 % ============================================================================
@@ -66,22 +67,22 @@ formulabook fractions {
     % A fraction OF a quantity — the fractional part scaling the whole. Composes
     % `product` from arithmetic.adj: a quarter of 12 is 0.25 × 12 = 3.
     formula fraction_of(fraction, whole) = product(fraction, whole)
-        source "A fraction represents a part of a whole; a fraction of a quantity is that quantity multiplied by the fraction."
-        locator "https://mathworld.wolfram.com/Fraction.html"
+        source "The word \"of\" translates to the arithmetic operation \"times.\""
+        locator "https://math.libretexts.org/Bookshelves/PreAlgebra/Fundamentals_of_Mathematics_(Burzynski_and_Ellis)/04%3A_Introduction_to_Fractions_and_Multiplication_and_Division_of_Fractions/4.04%3A_Multiplication_of_Fractions"
         trust authoritative
 
     % The reciprocal — the fraction flipped, numerator and denominator swapped.
     % Composes `quotient` with its arguments exchanged: the reciprocal of a/b is
     % b/a.
     formula reciprocal(numerator, denominator) = quotient(denominator, numerator)
-        source "The reciprocal of a number x is the number which, when multiplied by x, yields 1; the reciprocal of a fraction a/b is b/a."
-        locator "https://mathworld.wolfram.com/Reciprocal.html"
+        source "To find the reciprocal of a fraction, we invert the fraction. This means that we place the numerator in the denominator and the denominator in the numerator."
+        locator "https://openstax.org/books/prealgebra-2e/pages/4-2-multiply-and-divide-fractions"
         trust authoritative
 
     % A mixed number — a whole number plus a proper fraction, read as a single
     % value. Composes `sum` and `quotient`: two and a half is 2 + 1/2 = 2.5.
     formula mixed_number(whole_number, numerator, denominator) = sum(whole_number, quotient(numerator, denominator))
-        source "A mixed number is the sum of an integer and a proper fraction."
-        locator "https://mathworld.wolfram.com/MixedFraction.html"
+        source "To do so, we use the idea that a mixed number, such as 5(6/11), is another way to represent 5+(6/11)."
+        locator "https://openstax.org/books/contemporary-mathematics/pages/3-4-rational-numbers"
         trust authoritative
 }

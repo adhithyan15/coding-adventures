@@ -71,8 +71,8 @@ fn fraction_of_composes_product_and_carries_both_citations() {
     // BOTH citations: fraction's own definition (primary) AND the product
     // primitive it composed (corroboration).
     assert!(
-        s.contains("mathworld.wolfram.com/Fraction.html"),
-        "primary cites the fraction definition: {s}"
+        s.contains("math.libretexts.org/Bookshelves/PreAlgebra/Fundamentals_of_Mathematics_(Burzynski_and_Ellis)/04%3A_Introduction_to_Fractions_and_Multiplication_and_Division_of_Fractions/4.04%3A_Multiplication_of_Fractions"),
+        "primary cites the bytes grounding \"of\" as multiplication: {s}"
     );
     assert!(
         s.contains("mathworld.wolfram.com/Product.html"),
@@ -111,8 +111,8 @@ fn reciprocal_flips_the_fraction_via_quotient() {
         "the exact value is 5/4, not a lossy decimal: {s}"
     );
     assert!(
-        s.contains("mathworld.wolfram.com/Reciprocal.html"),
-        "primary cites the reciprocal definition: {s}"
+        s.contains("openstax.org/books/prealgebra-2e/pages/4-2-multiply-and-divide-fractions"),
+        "primary cites the bytes stating a reciprocal inverts the fraction: {s}"
     );
     assert!(
         s.contains("mathworld.wolfram.com/Quotient.html"),
@@ -147,8 +147,11 @@ fn mixed_number_composes_sum_and_quotient() {
         "mixed_number(2, 1, 2) = 2.5: {s}"
     );
     assert!(
-        s.contains("mathworld.wolfram.com/MixedFraction.html"),
-        "primary cites the mixed-number definition: {s}"
+        // Assert on the LABEL, not the locator: this page is cited by
+        // `percent-of.adj` too, so a locator match would pass on ITS citation
+        // if a future fixture happened to include that library.
+        s.contains("is another way to represent 5+(6/11)"),
+        "primary cites the bytes stating whole number plus a fraction: {s}"
     );
     // Both composed primitives appear as corroborations.
     assert!(
