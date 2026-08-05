@@ -19,7 +19,7 @@
 % `table` and not a hand-written `relate` clause: this is exactly the shape reference data
 % comes in — a published table, not prose. The citable artifact IS the NIST conversion-
 % factors table at the `locator` below; the factor here is a CELL of NIST Special
-% Publication 811, Appendix B.9 ("Factors for units listed alphabetically"), defended by
+% Publication 811, Appendix B.9 ("Factors for units listed by kind of quantity or field of science"), defended by
 % one provenance envelope. Each `row` lowers to a ground relation
 % `absorbed_dose_to_gray(unit, gy)`, so the exact lookup above is the ordinary SLD binding
 % query — the engine returns the factor WITH this table's citation as its proof, on the
@@ -50,7 +50,7 @@ table absorbed_dose_to_gray {
 
     row (rad, 0.01)
 
-    source "Factors for units listed alphabetically"
+    source "NIST Guide to the SI, Appendix B.9: Factors for units listed by kind of quantity or field of science"
     locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
     trust authoritative
 }
