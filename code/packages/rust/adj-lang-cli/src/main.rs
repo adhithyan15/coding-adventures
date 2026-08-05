@@ -1372,19 +1372,26 @@ fn state_machine_outcome_json(outcome: &StateMachineOutcome, kb: &KnowledgeBase)
         StateMachineOutcome::Stuck { state } => {
             format!("{{\"type\":\"stuck\",\"state\":\"{}\"}}", esc(state))
         }
-        StateMachineOutcome::PrecisionLoss { state, guard } => format!(
-            "{{\"type\":\"precision_loss\",\"state\":\"{}\",\"guard\":\"{}\"}}",
+        StateMachineOutcome::PrecisionLoss {
+            state,
+            phase,
+            expression,
+        } => format!(
+            "{{\"type\":\"precision_loss\",\"state\":\"{}\",\"phase\":\"{}\",\"expression\":\"{}\"}}",
             esc(state),
-            esc(guard)
+            phase.type_tag(),
+            esc(expression)
         ),
         StateMachineOutcome::ComputationError {
             state,
             phase,
+            failure,
             detail,
         } => format!(
-            "{{\"type\":\"computation_error\",\"state\":\"{}\",\"phase\":\"{}\",\"detail\":\"{}\"}}",
+            "{{\"type\":\"computation_error\",\"state\":\"{}\",\"phase\":\"{}\",\"failure\":\"{}\",\"detail\":\"{}\"}}",
             esc(state),
-            esc(phase),
+            phase.type_tag(),
+            failure.type_tag(),
             esc(detail)
         ),
     }

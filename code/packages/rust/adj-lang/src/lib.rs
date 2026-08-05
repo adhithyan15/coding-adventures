@@ -72,7 +72,8 @@ pub use lower::{
 };
 pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
 pub use statemachine::{
-    run_state_machine, RunStep, StateMachineOutcome, StateMachineRun, YieldValue,
+    run_state_machine, ComputationFailure, FailurePhase, RunStep, StateMachineOutcome,
+    StateMachineRun, YieldValue,
 };
 
 /// Result of compilation. Either the typed program produced by the

@@ -2,6 +2,19 @@
 
 ## Unreleased - replayable formula guard traces
 
+- State-machine failures are structured (ADJ-STDLIB-COVERAGE §9d). `StateMachineOutcome`
+  now carries a typed `FailurePhase` (`TransitionGuard` / `ExitGuard` / `Yield`) instead of
+  a `phase: String`, and `ComputationError` carries a `ComputationFailure` discriminant
+  alongside the existing human `detail`. `PrecisionLoss` gained the same typed phase and
+  renamed `guard` to `expression`: a yield abstention previously reported itself by
+  prefixing the rendering with `"yield "` and placing it in a field named `guard`, so a
+  consumer telling a guard abstention from a yield one had to sniff that prefix.
+- `detail` keeps its exact previous wording, so a consumer that only prints it is
+  unaffected; one that branches now keys off `FailurePhase::type_tag()` /
+  `ComputationFailure::type_tag()`. The engine-to-outcome translation matches every
+  `ComputeError` variant with no wildcard arm, so a new engine variant breaks the build
+  here rather than collapsing into a generic string downstream.
+
 - An aggregation is now rejected when the program also declares a FORMULA of that name
   (`LowerError::AggregationShadowsFormula`). `factor` lists `agg` before `apply`, so
   `sum(a)` became an aggregation over the slot `a` regardless of what `sum` was declared

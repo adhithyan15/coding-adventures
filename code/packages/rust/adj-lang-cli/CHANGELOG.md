@@ -2,6 +2,12 @@
 
 ## Unreleased - formula audit v2 guard witnesses
 
+- State-machine failure JSON is keyed on discriminants rather than prose. `precision_loss`
+  gains `"phase"` and renames `"guard"` to `"expression"`; `computation_error` gains
+  `"failure"` alongside the unchanged `"detail"`. `--explain` names the phase and the
+  failure kind. Previously a yield precision loss was distinguishable from a guard one only
+  by the `"yield "` prefix inside the `"guard"` string.
+
 - `adj-formula-audit` now decides whether to take the strict, guard-replaying v2 path from
   the PARSED SOURCE rather than from the runtime's own execution trace. If a query's
   formula closure declares a `requires` anywhere — including on a nested callee — v2 is
