@@ -341,18 +341,21 @@ option mapping, or judge/evaluation failure.
    always runs before its body" true by construction, because the call side has
    a remaining case.
 
-   Still open (tracked, not closed here): a WRONG-ARITY call of a multi-parameter
+   The call side is now closed too. A WRONG-ARITY call of a multi-parameter
    formula named after an aggregation keyword — `sum(a)` where `sum` takes two —
-   also reduces to an aggregation, so it yields the slot's aggregate instead of
-   raising the arity error it should, and a guard on that formula does not run.
-   The shipped two-parameter `sum` in `arithmetic.adj` makes this reachable in
-   real content. The derivation tree does record the result honestly as an
-   aggregation rather than claiming the formula ran, so this is a missing
-   diagnostic and a plausible wrong number, not a fabricated witness. Closing it
-   means rejecting an aggregation whose keyword also names a registered formula,
-   which requires the formula map at the aggregation lowering site; that site is
-   currently context-free and infallible, so the fix is its own change with its
-   own review rather than a rider on the declaration gates.
+   also reduced to an aggregation, yielding the slot's aggregate instead of the
+   arity error it deserved, with any guard on that formula never running; the
+   shipped two-parameter `sum` in `arithmetic.adj` made this reachable in real
+   content. An aggregation whose keyword also names a declared formula is now a
+   typed error, so the two readings no longer depend on which grammar
+   alternative matched first. An aggregation with no formula of that name in
+   scope is unaffected. The check lives at the single construction site for the
+   engine's aggregation node, so it is co-total with the emitter by construction
+   rather than by a separate walk that could miss a position.
+
+   With both sides closed, "a declared guard runs before its body" holds for the
+   formula surface: a guarded formula can be neither declared unreachable nor
+   called through a path that skips its guards.
 9b. **Complete.** Formula-audit v2 independently replays parser-owned parameter
     binding, nested application order, and every declaration-ordered guard through
     the first failure. The CAS witnesses exact compared values, consumed direct

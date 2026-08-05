@@ -187,6 +187,25 @@ pub enum LowerError {
     ReservedFormulaName {
         formula: String,
     },
+    /// An aggregation (`sum(slot)`, `count(slot)`, …) was written in a program
+    /// that also declares a FORMULA of that name, so the text is ambiguous.
+    ///
+    /// The grammar decides this before the formula map exists: `factor` lists
+    /// `agg` before `apply`, so `sum(a)` becomes an aggregation over the slot
+    /// `a` no matter what `sum` is declared to be. Where the declared formula
+    /// takes one parameter that is caught at declaration
+    /// ([`LowerError::ReservedFormulaName`]); where it takes two or more, the
+    /// call is simply the WRONG ARITY for it, and silently aggregating was a
+    /// plausible wrong number in place of the arity error — with any `requires`
+    /// guard on that formula never running.
+    ///
+    /// Rejecting the aggregation keeps the two readings from depending on which
+    /// grammar alternative happened to match first. Carries the keyword and the
+    /// slot so the message can suggest renaming one of the two.
+    AggregationShadowsFormula {
+        keyword: String,
+        slot: String,
+    },
     /// A formula declared a precondition predicate outside the lowerer's closed,
     /// typed execution set.
     FormulaUnknownPrecondition {
@@ -867,7 +886,7 @@ pub(crate) fn lower_with_binding_origins(
                                 lower_term(conclusion),
                                 slot.clone(),
                                 lower_cmp_op(*op),
-                                lower_expr(rhs),
+                                lower_expr(rhs, &formulas)?,
                                 *lr,
                             )
                             .with_provenance(prov);
@@ -1014,7 +1033,14 @@ pub(crate) fn lower_with_binding_origins(
                         continue;
                     }
                     let substituted =
-                        match apply_formula(fd, conclusion, &kb, &applications, &mut guards) {
+                        match apply_formula(
+                            fd,
+                            conclusion,
+                            &kb,
+                            &applications,
+                            &mut guards,
+                            &formulas,
+                        ) {
                             Ok(value) => value,
                             Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
                                 let mut abstention = *abstention;
@@ -1061,7 +1087,7 @@ pub(crate) fn lower_with_binding_origins(
                         }
                         Err(error) => return Err(error),
                     };
-                    let cexpr = lower_expr(&expanded);
+                    let cexpr = lower_expr(&expanded, &formulas)?;
                     let derived = compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
                         LowerError::ComputationFailed {
                             name: fd.name.clone(),
@@ -1222,7 +1248,7 @@ pub(crate) fn lower_with_binding_origins(
                     }
                     Err(error) => return Err(error),
                 };
-                let cexpr = lower_expr(&expanded);
+                let cexpr = lower_expr(&expanded, &formulas)?;
                 let derived = compute(name.clone(), &cexpr, &kb).map_err(|e| {
                     LowerError::ComputationFailed {
                         name: name.clone(),
@@ -1272,9 +1298,9 @@ pub(crate) fn lower_with_binding_origins(
                 // Keep both sides unevaluated — they mention symbols the solver
                 // will assign. lower_expr is a pure ExprAst → ComputeExpr map.
                 constraints.constraints.push(LoweredConstraint {
-                    lhs: lower_expr(lhs),
+                    lhs: lower_expr(lhs, &formulas)?,
                     op: *op,
-                    rhs: lower_expr(rhs),
+                    rhs: lower_expr(rhs, &formulas)?,
                 });
             }
             Statement::SolveFor { names } => {
@@ -1287,7 +1313,7 @@ pub(crate) fn lower_with_binding_origins(
                 // Keep the objective unevaluated — it mentions the symbols the
                 // LP solver assigns. A second `minimize`/`maximize` overwrites
                 // the first (a program declares one objective).
-                constraints.objective = Some((*dir, lower_expr(objective)));
+                constraints.objective = Some((*dir, lower_expr(objective, &formulas)?));
             }
             // ---- dictionary (MYCIN-2026) ----
             Statement::Define(def) => dictionary.push(def.clone()),
@@ -1428,7 +1454,7 @@ pub(crate) fn lower_with_binding_origins(
                             })
                             .collect();
                         lowered_trs.push(LoweredTransition {
-                            guard: lower_sm_guard(&tr.guard),
+                            guard: lower_sm_guard(&tr.guard, &formulas)?,
                             target: tr.target.clone(),
                             actions,
                         });
@@ -1440,11 +1466,13 @@ pub(crate) fn lower_with_binding_origins(
                 }
                 let lowered_exits = exits
                     .iter()
-                    .map(|ex| LoweredExit {
-                        guard: lower_sm_guard(&ex.guard),
-                        yield_expr: lower_expr(&ex.yield_expr),
+                    .map(|ex| {
+                        Ok::<_, LowerError>(LoweredExit {
+                            guard: lower_sm_guard(&ex.guard, &formulas)?,
+                            yield_expr: lower_expr(&ex.yield_expr, &formulas)?,
+                        })
                     })
-                    .collect();
+                    .collect::<Result<Vec<_>, _>>()?;
                 state_machines.push(LoweredStateMachine {
                     name: name.clone(),
                     initial: initial.clone(),
@@ -1593,7 +1621,7 @@ pub(crate) fn lower_with_binding_origins(
             // stable synthesized slot name (direct applications are the common case).
             _ => "__branch_lhs".to_string(),
         };
-        let cexpr = lower_expr(&expanded);
+        let cexpr = lower_expr(&expanded, &formulas)?;
         let derived =
             compute(slot_name.clone(), &cexpr, &kb).map_err(|e| LowerError::ComputationFailed {
                 name: slot_name.clone(),
@@ -1637,7 +1665,7 @@ pub(crate) fn lower_with_binding_origins(
             d.conclusion.clone(),
             slot_name,
             lower_cmp_op(d.op),
-            lower_expr(&rhs_expanded),
+            lower_expr(&rhs_expanded, &formulas)?,
             d.lr,
         )
         .with_provenance(compose_provenance(d.prov.clone(), &rhs_chain));
@@ -1729,14 +1757,18 @@ pub(crate) fn lower_with_binding_origins(
 /// subject through the shared [`lower_term`], and the optional comparison through
 /// the shared [`lower_cmp_op`] + [`lower_expr`] — the SAME forms every predicate /
 /// compute lowers to, so a guard introduces no new evaluator.
-fn lower_sm_guard(g: &SmGuard) -> LoweredGuard {
-    LoweredGuard {
+fn lower_sm_guard(
+    g: &SmGuard,
+    formulas: &HashMap<&str, &FormulaDef>,
+) -> Result<LoweredGuard, LowerError> {
+    Ok(LoweredGuard {
         subject: lower_term(&g.subject),
         comparison: g
             .comparison
             .as_ref()
-            .map(|(op, e)| (lower_cmp_op(*op), lower_expr(e))),
-    }
+            .map(|(op, e)| Ok::<_, LowerError>((lower_cmp_op(*op), lower_expr(e, formulas)?)))
+            .transpose()?,
+    })
 }
 
 /// Expand `rulebook` blocks into their constituent clause statements, in source
@@ -2001,8 +2033,11 @@ fn lower_term_scoped(t: &AstTerm, vars: &mut HashMap<String, LogicVar>) -> CoreT
 }
 
 /// Lower a surface `let` formula to the engine's [`ComputeExpr`].
-fn lower_expr(expr: &ExprAst) -> ComputeExpr {
-    match expr {
+fn lower_expr(
+    expr: &ExprAst,
+    formulas: &HashMap<&str, &FormulaDef>,
+) -> Result<ComputeExpr, LowerError> {
+    Ok(match expr {
         ExprAst::Ref(slot) => ComputeExpr::Ref(slot.clone()),
         ExprAst::Lit(x) => ComputeExpr::Lit(*x),
         ExprAst::ExactLit(NumLit::Int(value)) => {
@@ -2013,16 +2048,16 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         }
         ExprAst::Bin(op, a, b) => ComputeExpr::Bin(
             lower_arith_op(*op),
-            Box::new(lower_expr(a)),
-            Box::new(lower_expr(b)),
+            Box::new(lower_expr(a, formulas)?),
+            Box::new(lower_expr(b, formulas)?),
         ),
-        ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a))),
-        ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a))),
-        ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
-        ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a))),
-        ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a))),
-        ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a))),
-        ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
+        ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a, formulas)?)),
         // `round_to(x, n)` (NUM-6a): the precision-carrying narrowing. Lowers to the
         // distinct engine `Round` node (not a unary `ComputeOp`) so the precision `n`
         // and the default half-even mode ride along and the exact-path audit records
@@ -2031,7 +2066,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::RoundTo(a, spec) => ComputeExpr::Round {
             spec: *spec,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         // `to_scientific(x, figures)` (NUM-6c): the scientific-notation rendering. Lowers
         // to the distinct engine `ToScientific` node so the significant-figure count and
@@ -2041,7 +2076,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::ToScientific(a, figures) => ComputeExpr::ToScientific {
             figures: *figures,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         // `to_percent(x, places)` (NUM-6c): the percentage rendering. Lowers to the
         // distinct engine `ToPercent` node so the decimal-place count and the default
@@ -2050,7 +2085,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::ToPercent(a, places) => ComputeExpr::ToPercent {
             places: *places,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         // `to_currency(x, code, places)` (NUM-6c): the money rendering. Lowers to the
         // distinct engine `ToCurrency` node so the currency code, the decimal-place count,
@@ -2060,14 +2095,34 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
             code: code.clone(),
             places: *places,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
-            Box::new(lower_expr(a)),
-            Box::new(lower_expr(b)),
+            Box::new(lower_expr(a, formulas)?),
+            Box::new(lower_expr(b, formulas)?),
         ),
-        ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+        // The AMBIGUITY GATE. `factor` lists `agg` before `apply`, so this node
+        // exists because the grammar chose "aggregate the slot" without knowing
+        // what the program declares. If a FORMULA of the same name is in scope,
+        // the same text also reads as a call of that formula, and the grammar's
+        // choice silently won — yielding the slot's aggregate instead of the
+        // arity error the call deserved, with any `requires` guard on that
+        // formula never running. Reject rather than pick.
+        //
+        // This is the single construction site for `ComputeExpr::Agg`, so the
+        // check is co-total with the emitter by construction rather than by a
+        // separate walk that could miss a position.
+        ExprAst::Agg(op, slot) => {
+            let keyword = agg_keyword(*op);
+            if formulas.contains_key(keyword) {
+                return Err(LowerError::AggregationShadowsFormula {
+                    keyword: keyword.to_string(),
+                    slot: slot.clone(),
+                });
+            }
+            ComputeExpr::Agg(lower_agg_op(*op), slot.clone())
+        }
         // A formula application (RS-1) is never lowered directly: it is expanded
         // away by [`expand_applies`] BEFORE `lower_expr` runs, so a fully-expanded
         // expression contains no `Apply`. This arm exists only to keep the match
@@ -2078,7 +2133,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Apply(name, _) => {
             ComputeExpr::Ref(format!("<unexpanded formula application: {name}>"))
         }
-    }
+    })
 }
 
 fn lower_bin_fn(f: BinFn) -> ComputeOp {
@@ -2118,6 +2173,19 @@ fn lower_arith_op(op: ArithOp) -> ComputeOp {
         ArithOp::Div => ComputeOp::Div,
         ArithOp::Pow => ComputeOp::Pow,
         ArithOp::Mod => ComputeOp::Mod,
+    }
+}
+
+/// The surface keyword that produced an [`AggOp`] — the inverse of
+/// `agg_op_from_keyword`. Exhaustive by construction, so a new aggregation
+/// cannot be added without giving it a keyword here.
+fn agg_keyword(op: AggOp) -> &'static str {
+    match op {
+        AggOp::Sum => "sum",
+        AggOp::Count => "count",
+        AggOp::Min => "min",
+        AggOp::Max => "max",
+        AggOp::Avg => "avg",
     }
 }
 
@@ -2358,9 +2426,9 @@ fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
     // silently at each call site.
     //
     // Scope, stated precisely: this gate closes the DECLARATION side. A formula
-    // that survives it cannot be wholly unreachable. It does not by itself make
-    // "a declared guard always runs" true by construction — see (0b) for the
-    // call-side remainder, which is still open.
+    // that survives it cannot be wholly unreachable. The call side is closed
+    // separately, at the `ExprAst::Agg` arm of `lower_expr`; the two together
+    // are what make "a declared guard runs before its body" hold.
     if is_runtime_builtin_formula(&fd.name) {
         return Err(LowerError::ReservedFormulaName {
             formula: fd.name.clone(),
@@ -2385,16 +2453,12 @@ fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
     // position and "aggregate this slot" in another is a footgun regardless of
     // which position happens to be reached first.)
     //
-    // STILL OPEN, on the call side: a wrong-arity call of a MULTI-parameter
-    // aggregation-named formula — `sum(a)` where `sum` takes two — also reduces
-    // to an aggregation, so it yields the slot's aggregate instead of the arity
-    // error it should raise, and any guard on that formula does not run. The
-    // derivation tree does record the result honestly as an aggregation, so this
-    // is a missing diagnostic and a plausible wrong number rather than a
-    // fabricated formula witness. Closing it means rejecting an `ExprAst::Agg`
-    // whose keyword also names a registered formula, which needs the formula map
-    // at the `Agg` lowering site (`lower_expr` is currently infallible and takes
-    // no context); tracked in ADJ-STDLIB-COVERAGE.md §9a.
+    // The CALL side of the same ambiguity — a wrong-arity `sum(a)` against a
+    // two-parameter `sum` — is handled at the `ExprAst::Agg` arm of `lower_expr`
+    // ([`LowerError::AggregationShadowsFormula`]), which is the single place the
+    // engine's aggregation node is built. Between the two, a guarded formula can
+    // be neither declared unreachable nor called through a path that skips its
+    // guards.
     if fd.params.len() == 1 && crate::adapter::agg_op_from_keyword(&fd.name).is_some() {
         return Err(LowerError::ReservedFormulaName {
             formula: fd.name.clone(),
@@ -3066,7 +3130,14 @@ fn expand_rec(
                 formula: fd.name.clone(),
                 provenance: provenance.clone(),
             });
-            enforce_preconditions(fd, &subst, context.kb, state.applications, state.guards)?;
+            enforce_preconditions(
+                fd,
+                &subst,
+                context.kb,
+                state.applications,
+                state.guards,
+                context.formulas,
+            )?;
             // The cycle guard: if this formula is already OPEN on the expansion path,
             // re-entering it is (directly or mutually) recursive. ADJ formulas have
             // no base case, so a cycle can only diverge — reject it here, in O(1), at
@@ -3228,6 +3299,7 @@ fn apply_formula(
     kb: &KnowledgeBase,
     applications: &[FormulaApplicationTrace],
     guards: &mut Vec<FormulaGuardTrace>,
+    formulas: &HashMap<&str, &FormulaDef>,
 ) -> Result<ExprAst, LowerError> {
     let args: &[AstTerm] = match goal {
         AstTerm::Compound { args, .. } => args,
@@ -3249,7 +3321,7 @@ fn apply_formula(
         };
         subst.insert(param.clone(), bound);
     }
-    enforce_preconditions(fd, &subst, kb, applications, guards)?;
+    enforce_preconditions(fd, &subst, kb, applications, guards, formulas)?;
     // A shallow, one-level substitution of leaf bindings (a query's args are atoms
     // or numbers) — its own local budget guards a body that reuses a parameter; the
     // deeper formula-calls-formula expansion of the resulting body runs later, in
@@ -3272,6 +3344,7 @@ fn enforce_preconditions(
     kb: &KnowledgeBase,
     applications: &[FormulaApplicationTrace],
     guards: &mut Vec<FormulaGuardTrace>,
+    formulas: &HashMap<&str, &FormulaDef>,
 ) -> Result<(), LowerError> {
     for (
         precondition_index,
@@ -3290,7 +3363,7 @@ fn enforce_preconditions(
         let argument = substitute_expr(&arguments[0], subst, &mut budget, 0)?;
         let computed = match compute(
             format!("__precondition_{}_{}", fd.name, predicate),
-            &lower_expr(&argument),
+            &lower_expr(&argument, formulas)?,
             kb,
         ) {
             Ok(value) => value,
@@ -7583,6 +7656,112 @@ rule { head: r(a) when: x(t) }";
             .find(|binding| binding.name == "z")
             .expect("z is derived");
         assert_eq!(derived.value, 7.0, "the user formula ran, not an aggregation");
+    }
+
+    /// The call-side half, and the bug this gate exists for. Each keyword here
+    /// names a TWO-parameter formula, so the declaration gate allows it (and
+    /// `arithmetic.adj` ships exactly that shape for `sum`). A one-argument call
+    /// is the WRONG ARITY for it — but `factor` matches `agg` first, so it used
+    /// to compile clean and return the slot's aggregate (`z = 3`, the value of
+    /// `a`, for `sum`), with `requires nonzero(first)` never evaluated and no
+    /// arity error raised.
+    ///
+    /// Every keyword is exercised, not a representative one: the gate looks the
+    /// keyword up by the string [`agg_keyword`] returns, so a wrong string for
+    /// any single variant would reopen the hole for that variant alone.
+    #[test]
+    fn a_wrong_arity_call_cannot_silently_become_an_aggregation() {
+        for keyword in ["sum", "count", "min", "max", "avg"] {
+            let src = format!(
+                r#"
+                formulabook arith {{
+                    formula {keyword}(first, second) = first + second
+                        requires nonzero(first)
+                        source "arithmetic" trust authoritative
+                }}
+                observe a(3)
+                let z = {keyword}(a)
+            "#
+            );
+            assert!(
+                matches!(
+                    compile(&src),
+                    Err(crate::CompileError::Lower(LowerError::AggregationShadowsFormula {
+                        keyword: ref found,
+                        ref slot
+                    })) if found == keyword && slot == "a"
+                ),
+                "a wrong-arity `{keyword}` call must not resolve to an aggregation"
+            );
+        }
+    }
+
+    /// [`agg_keyword`] is the inverse of the adapter's `agg_op_from_keyword`,
+    /// and the gate above is only as correct as that string. Exhaustive matching
+    /// forces an edit when a variant is added, but nothing forces the string to
+    /// be RIGHT — and a typo there would silently stop the lookup from matching,
+    /// re-opening the hole for that one aggregation with no other test failing.
+    /// Pin the round trip.
+    #[test]
+    fn agg_keyword_round_trips_through_the_adapter() {
+        for op in [
+            AggOp::Sum,
+            AggOp::Count,
+            AggOp::Min,
+            AggOp::Max,
+            AggOp::Avg,
+        ] {
+            assert_eq!(
+                crate::adapter::agg_op_from_keyword(agg_keyword(op)),
+                Some(op),
+                "{op:?} does not round-trip through its surface keyword"
+            );
+        }
+    }
+
+    /// The same ambiguity reached through a formula body rather than a `let`.
+    #[test]
+    fn an_aggregation_inside_a_formula_body_is_also_gated() {
+        let src = r#"
+            formulabook arith {
+                formula count(p, q) = p + q
+                    requires nonzero(p)
+                    source "counting" trust authoritative
+                formula outer(x) = count(x)
+                    source "outer" trust authoritative
+            }
+            observe a(3)
+            let z = outer(a)
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(
+                    LowerError::AggregationShadowsFormula { .. }
+                ))
+            ),
+            "the gate must reach aggregations written inside formula bodies"
+        );
+    }
+
+    /// The gate is scoped to the actual ambiguity: with no formula of that name
+    /// declared, an aggregation still means an aggregation. This is the ordinary
+    /// use of `sum(slot)` and it must keep working untouched.
+    #[test]
+    fn an_unshadowed_aggregation_still_aggregates() {
+        let src = r#"
+            observe score(2)
+            observe score(4)
+            let total = sum(score)
+        "#;
+        let lowered = compile(src).expect("an unshadowed aggregation is legal");
+        let derived = lowered
+            .kb
+            .derived_bindings()
+            .iter()
+            .find(|binding| binding.name == "total")
+            .expect("total is derived");
+        assert_eq!(derived.value, 6.0, "sum over the slot, as written");
     }
 
     #[test]

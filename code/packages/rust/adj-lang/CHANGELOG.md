@@ -2,6 +2,21 @@
 
 ## Unreleased - replayable formula guard traces
 
+- An aggregation is now rejected when the program also declares a FORMULA of that name
+  (`LowerError::AggregationShadowsFormula`). `factor` lists `agg` before `apply`, so
+  `sum(a)` became an aggregation over the slot `a` regardless of what `sum` was declared
+  to be. Where the declared formula takes one parameter that was already caught at
+  declaration; where it takes two or more — as the shipped `formula sum(addend_one,
+  addend_two)` in `arithmetic.adj` does — the call was simply the wrong arity for it, and
+  silently aggregating returned a plausible wrong number (`sum(a)` with `a = 3` yielded
+  `3`) in place of the arity error, with any `requires` guard on that formula never
+  running. An aggregation whose name is NOT declared as a formula is unaffected and still
+  aggregates.
+- The check sits at the single construction site for `ComputeExpr::Agg`, so it is co-total
+  with the emitter by construction rather than by a separate walk that could miss a
+  position. `lower_expr`, `lower_sm_guard`, `apply_formula`, and `enforce_preconditions`
+  became fallible and now carry the formula map to reach it.
+
 - A `formulabook` may no longer declare a formula whose name is one of the five runtime
   built-ins (`round_sig`, `round_to`, `to_currency`, `to_percent`, `to_scientific`), which
   the `Apply` lowering answers by name *before* it consults the user formula map. Such a
