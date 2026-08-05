@@ -29,6 +29,7 @@ import sys
 import tempfile
 import threading
 import time
+import unicodedata
 import xml.etree.ElementTree as ET
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, replace
@@ -715,6 +716,154 @@ def build_source_ir(
     }
 
 
+# Per-element ALLOWLIST of attributes, not a denylist of dangerous ones.
+#
+# A denylist loses: `style`/`hidden` are the CSS-flavoured way to hide content,
+# but MathML has NATIVE equivalents honoured with no stylesheet at all —
+# `mathcolor="transparent"`, `mathsize="0"`, `scriptlevel="+9"` each make an
+# element invisible while its text still reaches the projection. Enumerating
+# those one at a time is a losing race, so anything not known-harmless raises.
+#
+# Every entry below is grounded in a census of the pinned CAS: these are the
+# attributes that actually occur inside a <math> element, and nothing else does.
+# `class` survives only on <mrow>, which emits no text of its own; the
+# text-emitting leaves never carry it in the corpus, so they reject it — that
+# closes `class="sr-only"`-style hiding on exactly the elements that can inject
+# prose. A hidden <mrow> remains genuinely unclosable from the bytes alone,
+# because it needs a stylesheet we never fetched; see the backlog.
+_ALLOWED_MATHML_ATTRIBUTES: dict[str, frozenset[str]] = {
+    "math": frozenset({"display", "alttext"}),
+    "semantics": frozenset(),
+    "annotation-xml": frozenset({"encoding"}),
+    "mrow": frozenset({"class"}),
+    "mi": frozenset({"mathvariant"}),
+    "mn": frozenset({"mathvariant"}),
+    "mo": frozenset({"mathvariant", "stretchy", "accent", "lspace", "rspace"}),
+    "mtext": frozenset({"mathvariant"}),
+    "mspace": frozenset({"width"}),
+    "mfrac": frozenset(),
+}
+
+# `mathvariant` values that change how a character LOOKS without changing WHICH
+# character a reader sees. The remapping values are rejected instead: MathML
+# maps `double-struck` R onto ℝ (U+211D), `fraktur` onto 𝔑, `script` onto 𝒮 and
+# so on, so rendering them as bare ASCII would pin a claim about ℝ to the byte
+# "R" — two different mathematical objects sharing one projection. The corpus
+# only ever uses `normal` and `italic`.
+_NON_REMAPPING_MATHVARIANTS = frozenset({"normal", "italic", "bold"})
+
+# MathML named spaces that render as a POSITIVE gap. The `negative*` siblings
+# are deliberately absent — they close space up rather than open it.
+_NAMED_POSITIVE_SPACES = frozenset(
+    {
+        "veryverythinmathspace",
+        "verythinmathspace",
+        "thinmathspace",
+        "mediummathspace",
+        "thickmathspace",
+        "verythickmathspace",
+        "veryverythickmathspace",
+    }
+)
+
+# Units that resolve to a real length. `%` is excluded ON PURPOSE: a MathML
+# percentage is a percentage OF THE ATTRIBUTE'S DEFAULT, and `mspace`'s default
+# width is 0em, so EVERY percentage resolves to zero — `width="100%"` is no gap
+# at all. An unknown unit is discarded by browsers and likewise falls back to
+# the 0em default, so both must fail rather than emit a space.
+_MSPACE_WIDTH_UNITS = frozenset(
+    {"em", "ex", "px", "in", "cm", "mm", "pt", "pc", "ch", "rem"}
+)
+
+_MATHML_LENGTH = re.compile(r"^\+?(\d+(?:\.\d*)?|\.\d+)([a-z%]*)$")
+
+
+def _mspace_width_renders_as_a_gap(width: str) -> bool:
+    """True only when `width` is a length a reader would actually see."""
+    if width in _NAMED_POSITIVE_SPACES:
+        return True
+    match = _MATHML_LENGTH.match(width)
+    if match is None:
+        return False
+    # A unit is REQUIRED: a bare number is not a valid MathML length, so a
+    # browser falls back to the 0em default and shows no gap.
+    if (match.group(2) or "") not in _MSPACE_WIDTH_UNITS:
+        return False
+    # A floor, not merely `> 0`. `width="0.0001em"` is positive but
+    # sub-perceptual, so emitting a space for it fabricates a separator exactly
+    # as `0em` did — a page showing the product `rt` would project `r t`, which
+    # in formula-land is a change of meaning. The threshold is not arbitrary:
+    # MathML's own smallest NAMED gap, `veryverythinmathspace`, is 1/18 em ≈
+    # 0.0556em, and the smallest width in the pinned corpus is 0.056em — the
+    # same quantity written numerically. So 0.05 admits every value the corpus
+    # actually uses and rejects everything below the smallest gap MathML is
+    # itself willing to name.
+    return float(match.group(1)) >= 0.05
+
+
+def _reject_unexpected_attributes(node: ET.Element, tag: str, prefix: str) -> None:
+    # Membership and VALUE checks must read the same key space. Reading the
+    # allowlist off namespace-stripped local names while looking values up by
+    # the raw key would let `<mi m:mathvariant="double-struck">` satisfy the
+    # allowlist and then skip the value check entirely. Harmless today — a
+    # browser only honours these in the null namespace — but it is a trap for
+    # the next value-checked attribute, so both are driven from one mapping.
+    local = {name.rsplit("}", 1)[-1]: value for name, value in node.attrib.items()}
+    unexpected = set(local) - _ALLOWED_MATHML_ATTRIBUTES.get(tag, frozenset())
+    if unexpected:
+        raise ProvenanceError(
+            f"{prefix} MathML element {tag!r} carries unsupported "
+            f"attributes {sorted(unexpected)!r}"
+        )
+    variant = local.get("mathvariant")
+    if variant is not None and variant not in _NON_REMAPPING_MATHVARIANTS:
+        raise ProvenanceError(
+            f"{prefix} MathML element {tag!r} uses character-remapping "
+            f"mathvariant {variant!r}"
+        )
+    # `encoding="text/html"` turns <annotation-xml> into an HTML integration
+    # point, changing how a browser parses that subtree. The corpus only ever
+    # uses MathML-Content (669 occurrences, no other value), so pinning it
+    # costs nothing and removes the parsing-mode question entirely.
+    encoding = local.get("encoding")
+    if encoding is not None and encoding != "MathML-Content":
+        raise ProvenanceError(
+            f"{prefix} MathML annotation-xml encoding {encoding!r} is unsupported"
+        )
+
+
+def _reject_unrenderable_text(text: str, tag: str, prefix: str) -> None:
+    """Reject control/format/separator characters in text that becomes evidence.
+
+    A claim quotes the projection byte-for-byte, so a bidi override (U+202E), a
+    zero-width joiner, or a line/paragraph separator inside the quoted range
+    makes the DISPLAYED evidence differ from the bytes that were pinned. These
+    have no legitimate place in a cited sentence, so they fail closed.
+
+    `Co` (private use) is included because a PUA codepoint renders as whatever a
+    webfont happens to map it to, so nothing about it can be claimed to match
+    what a reader sees.
+
+    This is deliberately BROADER than the deceptive set: ZWJ (U+200D), ZWNJ
+    (U+200C) and SOFT HYPHEN are orthographically load-bearing in Indic and
+    Arabic scripts, and this repo has active work in both, so a legitimate page
+    will eventually trip this. That is over-rejection which fails LOUDLY, which
+    is the right side to err on. When it happens, narrow to the deceptive subset
+    — bidi controls U+202A-202E / U+2066-2069, invisible operators U+2061-2064,
+    U+200B, U+FEFF — rather than dropping the check.
+
+    `Mn` combining marks are intentionally absent: they are needed to spell real
+    words. `Zs` is absent because NBSP and friends are already caught by the
+    whitespace-normalization check on `mtext`.
+    """
+    for character in text:
+        if unicodedata.category(character) in {"Cc", "Cf", "Co", "Zl", "Zp"}:
+            raise ProvenanceError(
+                f"{prefix} MathML {tag} contains a control or format character "
+                f"(U+{ord(character):04X})"
+            )
+
+
 def _mathml_to_infix(source: bytes, prefix: str) -> bytes:
     upper_source = source.upper()
     if b"<!DOCTYPE" in upper_source or b"<!ENTITY" in upper_source:
@@ -727,6 +876,9 @@ def _mathml_to_infix(source: bytes, prefix: str) -> bytes:
     def render(node: ET.Element) -> str:
         tag = node.tag.rsplit("}", 1)[-1]
         children = list(node)
+        # Applied to EVERY element, container and leaf alike: hiding an <mrow>
+        # suppresses everything inside it just as effectively as hiding a token.
+        _reject_unexpected_attributes(node, tag, prefix)
         for child in children:
             if child.tail is not None and child.tail.strip():
                 raise ProvenanceError(f"{prefix} MathML contains mixed tail text")
@@ -752,8 +904,71 @@ def _mathml_to_infix(source: bytes, prefix: str) -> bytes:
         if tag in {"mi", "mn", "mo"}:
             if children or node.text is None:
                 raise ProvenanceError(f"{prefix} MathML token is not canonical")
+            _reject_unrenderable_text(node.text, tag, prefix)
             return node.text.replace("×", "*")
+        if tag == "mtext":
+            # `mtext` is PROSE embedded in the formula — "and", "for", a unit
+            # name. It is emitted verbatim: unlike `mi`/`mn`/`mo` it is not an
+            # operator, so the `×`→`*` rewrite must NOT apply to it (a literal
+            # "×" inside mtext is the word, not a multiplication sign).
+            if children or node.text is None:
+                raise ProvenanceError(f"{prefix} MathML token is not canonical")
+            _reject_unrenderable_text(node.text, tag, prefix)
+            # MathML collapses whitespace inside a token element, so raw text
+            # that is not ALREADY collapsed would project bytes the reader does
+            # not see — and would make the projection hash depend on how the
+            # origin happens to indent its HTML. Fail closed instead of
+            # rewriting: a rewrite would quietly move the pinned bytes.
+            #
+            # This DOES reject a real idiom — `<mtext> and </mtext>`, padding
+            # carried inside the token instead of via `mspace`. If that ever
+            # blocks a citation, do NOT "fix" it by switching to a silent
+            # rewrite: that reintroduces exactly the silent-drop this guards.
+            # Either keep rejecting and record the blocked citation, or add
+            # normalization as its own transform operation with its own byte
+            # accounting, so the collapse is itself auditable.
+            if node.text != " ".join(node.text.split()):
+                raise ProvenanceError(
+                    f"{prefix} MathML mtext is not whitespace-normalized"
+                )
+            return node.text
+        if tag == "mspace":
+            # `mspace` is typeset spacing with no content. It renders as ONE
+            # space, not as nothing. The distinction is load-bearing: OpenStax
+            # writes an inline variable list as
+            #     <mi>r</mi><mspace/><mtext>and</mtext><mspace/><mi>t</mi>
+            # whose reading is "r and t". Dropping mspace would yield "randt"
+            # and the projection would no longer equal the sentence a reader
+            # sees, which is exactly what claims pin into.
+            #
+            # `node.text is not None` rather than `.strip()`: str.strip() treats
+            # NBSP and the ideographic space as whitespace, so a `.strip()` test
+            # would silently DISCARD visible, non-collapsing spacing characters
+            # and map many distinct sources onto one projection byte.
+            if children or node.text is not None:
+                raise ProvenanceError(f"{prefix} MathML spacer is not empty")
+            # An EXPLICIT positive width is required. `mspace`'s default width is
+            # 0em, so a bare <mspace/> shows no gap at all and emitting a space
+            # for it would fabricate a separator — the same defect as
+            # width="0em", reached by omission instead of by value.
+            width = node.attrib.get("width", "").strip()
+            if not width:
+                raise ProvenanceError(
+                    f"{prefix} MathML spacer has no width and defaults to no gap"
+                )
+            if not _mspace_width_renders_as_a_gap(width):
+                raise ProvenanceError(
+                    f"{prefix} MathML spacer width {width!r} does not render "
+                    "as a gap"
+                )
+            return " "
         if tag == "mfrac":
+            # Character data directly inside <mfrac> is rendered by browsers as
+            # anonymous text. Without this guard it is silently DROPPED, so two
+            # different documents project identically while the dropped span is
+            # still certified "represented" by the caller's byte accounting.
+            if node.text is not None and node.text.strip():
+                raise ProvenanceError(f"{prefix} MathML contains mixed fraction text")
             if len(children) != 2:
                 raise ProvenanceError(
                     f"{prefix} MathML fraction must have two operands"
