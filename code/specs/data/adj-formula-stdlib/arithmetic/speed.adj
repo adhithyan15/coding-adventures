@@ -27,17 +27,21 @@
 % the two rearrangements rest on a page that names the uniform-rate formula and
 % then solves it for the other variable, printing `d=rt` and `t=(d/r)` outright.
 %
-% KNOWN GAP, recorded rather than papered over. Neither rearrangement's cited
-% sentence binds the LETTERS to the quantities — it says "the formula d=rt", not
-% "d is distance, r is rate, t is time". The page does state that binding, one
-% sentence later ("This formula gives the value of d, distance, when you
-% substitute in the values of r and t, the rate and time"), but that sentence is
-% not citable today: it typesets its variables with MathML `<mspace>`/`<mtext>`,
-% which `_mathml_to_infix` rejects as unsupported, so the span cannot be
-% rendered into the projection claims pin into. Supporting those two elements is
-% purely additive — a block that fails to render today cannot silently change —
-% and it is logged as a backlog item. When it lands, these two citations should
-% move to the binding sentence, which states the claim outright.
+% The gap this file used to record is now CLOSED for `distance_travelled`. Its
+% citation previously said only "the formula d=rt", leaving the letters unbound
+% — it never said d is distance, r is rate, t is time. The page does bind them,
+% one sentence later, but that sentence typesets its variables with MathML
+% `<mspace>`/`<mtext>`, which the renderer rejected as unsupported, so it could
+% not be projected into the bytes claims pin into. Now that those two elements
+% render, the citation spans BOTH sentences and is self-contained: it names the
+% formula AND binds every letter in it.
+%
+% `travel_time` still cites a sentence that states `t=(d/r)` without re-binding
+% the letters. That is not an oversight: the page binds d, r and t once, in the
+% distance passage above, and a claim pins ONE contiguous span — there is no
+% span containing both the binding and `t=(d/r)`. Stated plainly rather than
+% smoothed over, since the alternative is to imply a binding the cited bytes
+% do not carry.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -85,7 +89,7 @@ formulabook speeds {
     % Distance travelled — speed multiplied by time, the rearrangement d = v·t.
     % Composes `product`: 50 km/h for 3 hours covers 50 * 3 = 150 km.
     formula distance_travelled(speed, time) = product(speed, time)
-        source "In Example 2.58 and Example 2.59, we used the formula d=rt."
+        source "In Example 2.58 and Example 2.59, we used the formula d=rt. This formula gives the value of d, distance, when you substitute in the values of r and t, the rate and time."
         locator "https://openstax.org/books/elementary-algebra-2e/pages/2-6-solve-a-formula-for-a-specific-variable"
         trust authoritative
 
