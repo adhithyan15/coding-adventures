@@ -20,9 +20,24 @@
 % that participated.
 %
 % The three formulas are the one relation v = d / t and its algebraic
-% rearrangements d = v · t and t = d / v — the classic triangle. Each rests on
-% the SAME definitional relation among distance, speed and time, so each carries
-% that definition as its `source`; only the primitive it composes differs.
+% rearrangements d = v · t and t = d / v — the classic triangle. They are the
+% same relation mathematically, but they are NOT the same CITATION: a source
+% that defines average speed does not thereby state d = v·t. So each formula
+% cites bytes stating that formula. `average_speed` rests on the definition;
+% the two rearrangements rest on a page that names the uniform-rate formula and
+% then solves it for the other variable, printing `d=rt` and `t=(d/r)` outright.
+%
+% KNOWN GAP, recorded rather than papered over. Neither rearrangement's cited
+% sentence binds the LETTERS to the quantities — it says "the formula d=rt", not
+% "d is distance, r is rate, t is time". The page does state that binding, one
+% sentence later ("This formula gives the value of d, distance, when you
+% substitute in the values of r and t, the rate and time"), but that sentence is
+% not citable today: it typesets its variables with MathML `<mspace>`/`<mtext>`,
+% which `_mathml_to_infix` rejects as unsupported, so the span cannot be
+% rendered into the projection claims pin into. Supporting those two elements is
+% purely additive — a block that fails to render today cannot silently change —
+% and it is logged as a backlog item. When it lands, these two citations should
+% move to the binding sentence, which states the claim outright.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -70,14 +85,14 @@ formulabook speeds {
     % Distance travelled — speed multiplied by time, the rearrangement d = v·t.
     % Composes `product`: 50 km/h for 3 hours covers 50 * 3 = 150 km.
     formula distance_travelled(speed, time) = product(speed, time)
-        source "Average speed is the rate of change of distance with time."
-        locator "https://physics.info/velocity/"
+        source "In Example 2.58 and Example 2.59, we used the formula d=rt."
+        locator "https://openstax.org/books/elementary-algebra-2e/pages/2-6-solve-a-formula-for-a-specific-variable"
         trust authoritative
 
     % Travel time — distance divided by speed, the rearrangement t = d/v.
     % Composes `quotient`: 150 km at 50 km/h takes 150 / 50 = 3 hours.
     formula travel_time(distance, speed) = quotient(distance, speed)
-        source "Average speed is the rate of change of distance with time."
-        locator "https://physics.info/velocity/"
+        source "We say the formula t=(d/r) is solved for t."
+        locator "https://openstax.org/books/elementary-algebra-2e/pages/2-6-solve-a-formula-for-a-specific-variable"
         trust authoritative
 }
