@@ -206,6 +206,29 @@ pub enum LowerError {
         keyword: String,
         slot: String,
     },
+    /// Two `table` blocks in one program declare the same name.
+    ///
+    /// The registry keeps the LAST declaration, but every block's rows are
+    /// lowered into the KB, and a lookup takes its goal shape — arity and key
+    /// column position — from the winning block alone. So a shadowed block whose
+    /// `columns` differ does not merely lose: its rows become unreachable to
+    /// selection (wrong arity fails to unify; a reordered key column reads a
+    /// non-numeric cell and is skipped), and the lookup answers from a subset of
+    /// the relation while citing it confidently. Two same-named tables are a
+    /// naming collision, not a merge.
+    DuplicateTable {
+        table: String,
+    },
+    /// Two rows of a table used as a `range`/`interpolated`/`nearest` lookup
+    /// share a breakpoint in the key column, so the interval they define has two
+    /// different answers. Selection would pick whichever row enumeration reached
+    /// first and drop the other — including its citation — without a word.
+    /// Carries the two row indices so the table can be fixed at the source.
+    LookupDuplicateKey {
+        table: String,
+        column: String,
+        rows: (usize, usize),
+    },
     /// A formula declared a precondition predicate outside the lowerer's closed,
     /// typed execution set.
     FormulaUnknownPrecondition {
@@ -826,7 +849,17 @@ pub(crate) fn lower_with_binding_origins(
             ..
         } = stmt
         {
-            tables.insert(name.as_str(), (columns.as_slice(), rows.as_slice()));
+            // Last-declaration-wins would leave the earlier block's rows in the
+            // KB but outside the goal shape a lookup builds from the winner, so
+            // they would be silently unreachable rather than merged.
+            if tables
+                .insert(name.as_str(), (columns.as_slice(), rows.as_slice()))
+                .is_some()
+            {
+                return Err(LowerError::DuplicateTable {
+                    table: name.clone(),
+                });
+            }
         }
     }
     // ADJ-TABLES RS-5c: the validated range/bracket lookups, run by the CLI tactic.
@@ -1174,6 +1207,62 @@ pub(crate) fn lower_with_binding_origins(
                             row: i,
                         });
                     }
+                }
+                // Two rows may not share a breakpoint. `range` selects the
+                // GREATEST key `<= q`, and with the key tied that "greatest" is
+                // whichever row the proof enumeration reached first — so one row
+                // answered and the other vanished, silently, carrying its own
+                // citation with it. In a system whose answers ARE their
+                // citations, quietly discarding an equally-applicable row is the
+                // worst shape a wrong answer can take: it looks fully sourced.
+                //
+                // `nearest` already breaks ties deterministically (to the smaller
+                // key) and says so. That is right for nearest, where two rows can
+                // legitimately sit either side of a query. A duplicate BREAKPOINT
+                // is different: it is not a tie to resolve, it is a table that
+                // defines two different answers for one interval. Reject it here,
+                // where the row indices are still available to name, rather than
+                // picking one at query time.
+                //
+                // Compared as exact rationals, so `10` and `10.0` are the same
+                // breakpoint — an `f64` compare would be the lossy shortcut this
+                // path exists to avoid.
+                let key_rational = |cell: Option<&crate::ast::TableCell>| match cell {
+                    Some(crate::ast::TableCell::Number(NumLit::Int(value))) => {
+                        Some(ExactRational::from_i128(*value as i128))
+                    }
+                    Some(crate::ast::TableCell::Number(NumLit::Exact(value))) => {
+                        Some(ExactRational::from_ratio(value.to_rational()))
+                    }
+                    _ => None,
+                };
+                // Sort-then-scan, not a nested search: each key is converted to a
+                // rational ONCE and compared O(n log n) times. The obvious nested
+                // version is O(n²) AND re-runs a `BigDecimal::to_rational()`
+                // allocation per comparison, which on a 4000-row calibration
+                // table — an ordinary size for the growth-chart and tax-table
+                // cases this feature exists for — turned a 1s compile into 8s,
+                // once per lookup statement over that table.
+                let mut keyed: Vec<(usize, ExactRational)> = rows
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(index, row)| {
+                        key_rational(row.cells.get(key_index)).map(|key| (index, key))
+                    })
+                    .collect();
+                keyed.sort_by(|left, right| left.1.as_ratio().cmp(right.1.as_ratio()));
+                if let Some(pair) = keyed
+                    .windows(2)
+                    .find(|pair| pair[0].1.as_ratio() == pair[1].1.as_ratio())
+                {
+                    // Report in source order, so the message points at the rows
+                    // the way the file reads.
+                    let (earlier, later) = (pair[0].0.min(pair[1].0), pair[0].0.max(pair[1].0));
+                    return Err(LowerError::LookupDuplicateKey {
+                        table: table.clone(),
+                        column: key_col.clone(),
+                        rows: (earlier, later),
+                    });
                 }
                 // `interpolated` additionally computes on the VALUE column, so it
                 // too must be numeric in every row (RS-5d). `range` returns the value
@@ -7762,6 +7851,134 @@ rule { head: r(a) when: x(t) }";
             .find(|binding| binding.name == "total")
             .expect("total is derived");
         assert_eq!(derived.value, 6.0, "sum over the slot, as written");
+    }
+
+    /// Two `table` blocks with one name is a collision, not a merge.
+    ///
+    /// The registry kept the LAST block while every block's rows went into the
+    /// KB, and a lookup builds its goal — arity, key column position — from the
+    /// winner alone. So a shadowed block whose `columns` differ had its rows
+    /// become unreachable rather than tied: wrong arity fails to unify, and a
+    /// reordered key column reads a non-numeric cell that selection skips. The
+    /// lookup then answered from a subset of the relation and cited it
+    /// confidently. Reproduced before this gate: a three-band table plus a
+    /// one-row shadowing block with an extra column answered `rogue` at key `0`
+    /// for a query of 15 whose correct answer was `mid` at breakpoint `10`.
+    ///
+    /// This is also what lets the selection-time breakpoint check assume the
+    /// enumerated relation IS the declared table.
+    #[test]
+    fn a_second_table_block_of_the_same_name_is_rejected() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, mid) { source "ten band" }
+                source "framing one"
+                locator "https://example.invalid/one"
+                trust authoritative
+            }
+            table band {
+                columns min_v, label, extra
+                row (0, rogue, x) { source "rogue row" }
+                source "framing two"
+                locator "https://example.invalid/two"
+                trust authoritative
+            }
+            ? lookup band min_v = 15 mode range give label
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::DuplicateTable { ref table }))
+                    if table == "band"
+            ),
+            "two tables of one name must not silently merge"
+        );
+    }
+
+    /// A duplicate breakpoint is a table that defines two answers for one
+    /// interval. Before this gate, `range` selected the greatest key `<= q` and,
+    /// with the key tied, that was whichever row enumeration reached first —
+    /// the other row was dropped along with its citation, silently. Verified
+    /// end-to-end before the fix: a table with two rows keyed `10` answered
+    /// `first_ten` and cited only that row.
+    #[test]
+    fn duplicate_lookup_breakpoints_are_rejected() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, first_ten) { source "first ten band" }
+                row (10, second_ten) { source "second ten band" }
+                source "framing"
+                locator "https://example.invalid/spec"
+                trust authoritative
+            }
+            ? lookup band min_v = 12 mode range give label
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::LookupDuplicateKey {
+                    ref table,
+                    ref column,
+                    rows,
+                })) if table == "band" && column == "min_v" && rows == (1, 2)
+            ),
+            "two rows sharing a breakpoint must not compile"
+        );
+    }
+
+    /// The comparison is on VALUE, not on how the literal was written — `10` and
+    /// `10.0` are one breakpoint. An `f64` compare would happen to agree here;
+    /// the point is that the check uses the exact rational path this codebase
+    /// requires of every numeric decision.
+    #[test]
+    fn duplicate_breakpoints_are_compared_exactly_not_textually() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, ten_int) { source "ten as int" }
+                row (10.0, ten_dec) { source "ten as decimal" }
+                source "framing"
+                locator "https://example.invalid/spec"
+                trust authoritative
+            }
+            ? lookup band min_v = 12 mode range give label
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(
+                    LowerError::LookupDuplicateKey { .. }
+                ))
+            ),
+            "`10` and `10.0` are the same breakpoint"
+        );
+    }
+
+    /// The gate is scoped to genuine duplicates: an ordinary step-function table
+    /// with distinct breakpoints still compiles and still brackets downward.
+    #[test]
+    fn distinct_breakpoints_still_compile() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, mid) { source "ten band" }
+                row (20, high) { source "twenty band" }
+                source "framing"
+                locator "https://example.invalid/spec"
+                trust authoritative
+            }
+            ? lookup band min_v = 12 mode range give label
+        "#;
+        assert!(
+            compile(src).is_ok(),
+            "distinct breakpoints are an ordinary table"
+        );
     }
 
     #[test]
