@@ -85,9 +85,17 @@ def partition(data: bytes, start: int, end: int, item_claim: dict) -> list[dict]
 
 
 def local_source(
-    cas: provenance.Cas, repo_path: str, ranges: list[tuple[str, int, int]], label: str
+    cas: provenance.Cas,
+    repo_path: str,
+    ranges: list[tuple[str, int, int]],
+    label: str,
+    *,
+    data: bytes | None = None,
 ) -> tuple[dict, dict[str, dict]]:
-    data = provenance._read_regular_file(REPO_ROOT / repo_path)
+    # Accepting already-read bytes is what lets the caller pin offsets and quotes
+    # to ONE read of the file. Re-reading here would leave the two a swap apart.
+    if data is None:
+        data = provenance._read_regular_file(REPO_ROOT / repo_path)
     raw_hash = cas.put(data, kind="raw_source", label=label)
     receipt = provenance.build_input_receipt(
         repo_path=repo_path,
@@ -399,10 +407,18 @@ def build(
             (f"adj.question.arithmetic.{name}", question_start, question_end)
         )
     fixture_source, fixture_claims = local_source(
-        cas, fixture_path, fixture_ranges, "arithmetic input fixture"
+        cas,
+        fixture_path,
+        fixture_ranges,
+        "arithmetic input fixture",
+        data=fixture_bytes,
     )
     query_source, query_claims = local_source(
-        cas, query_path, query_ranges, "arithmetic.query.adj input"
+        cas,
+        query_path,
+        query_ranges,
+        "arithmetic.query.adj input",
+        data=query_bytes,
     )
     query_clauses = []
     fixture_locator = f"repo://{fixture_path}"

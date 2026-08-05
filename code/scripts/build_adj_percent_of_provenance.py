@@ -281,6 +281,7 @@ def build(
             "explanatory comments, separators, or closing syntax outside the "
             "selected import, vocabulary, use, and formula rules"
         ),
+        data=library_bytes,
     )
     formula_inventory_hash = provenance.put_formula_parser_inventory(
         cas,
@@ -347,6 +348,7 @@ def build(
         fixture_ranges,
         "percent-of input fixture",
         discarded_reason="newline record separators outside the accepted fact bytes",
+        data=fixture_bytes,
     )
 
     def _disabled_example(data: bytes, question_end: int):

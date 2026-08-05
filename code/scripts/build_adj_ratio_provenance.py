@@ -274,6 +274,7 @@ def build(
             "explanatory comments, separators, or closing syntax outside the "
             "selected import, vocabulary, use, and formula rules"
         ),
+        data=library_bytes,
     )
     formula_inventory_hash = provenance.put_formula_parser_inventory(
         cas,
@@ -332,6 +333,7 @@ def build(
         fixture_ranges,
         "ratio input fixture",
         discarded_reason="newline record separators outside the accepted fact bytes",
+        data=fixture_bytes,
     )
     query_bundle_id, query_bundle_hash = builder.build_query_bundle(
         cas,
