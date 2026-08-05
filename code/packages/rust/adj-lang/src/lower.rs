@@ -172,6 +172,21 @@ pub enum LowerError {
     DuplicateFormula {
         formula: String,
     },
+    /// A formula book declared a formula the runtime answers ITSELF, so the
+    /// declared body could never be reached — and, critically, neither could its
+    /// `requires` guards. That is a silent hole in the precondition contract
+    /// ("every declared guard runs before its body"), so the collision is a
+    /// clean compile error instead. Two layers can swallow a name:
+    ///
+    /// - a RUNTIME BUILT-IN ([`RUNTIME_BUILTIN_FORMULAS`]), which the `Apply`
+    ///   lowering recognises before it looks a user formula up — at any arity;
+    /// - an AGGREGATION KEYWORD (`sum`, `count`, `min`, `max`, `avg`) declared
+    ///   with exactly ONE parameter, which the *grammar* reduces to an
+    ///   `ExprAst::Agg` over a slot before lowering ever sees an application.
+    ///   Only arity 1 collides, because `agg` matches one identifier argument.
+    ReservedFormulaName {
+        formula: String,
+    },
     /// A formula declared a precondition predicate outside the lowerer's closed,
     /// typed execution set.
     FormulaUnknownPrecondition {
@@ -502,6 +517,31 @@ struct FormulaGuardDependencies {
 pub enum FormulaBodyTrace {
     Evaluated,
     WithheldPreconditionFailed,
+}
+
+/// The formula-application names the lowerer answers ITSELF, before it consults
+/// the user formula map (see the `ExprAst::Apply` arm of `expand_rec`): the
+/// NUM-6 precision narrowings and the NUM-6c/6d renderings.
+///
+/// This is the single source of truth for that set, and it is deliberately
+/// public: an independent checker (`adj-formula-audit`) has to replay the same
+/// built-in-versus-user-formula precedence the runtime used, and a second
+/// hand-maintained copy of this list in another crate would be free to drift out
+/// of agreement with the dispatch it is supposed to mirror.
+///
+/// Sorted, so a reader can see at a glance that nothing is duplicated.
+pub const RUNTIME_BUILTIN_FORMULAS: &[&str] = &[
+    "round_sig",
+    "round_to",
+    "to_currency",
+    "to_percent",
+    "to_scientific",
+];
+
+/// Whether `name` is answered by the runtime itself rather than by a user
+/// formula. See [`RUNTIME_BUILTIN_FORMULAS`].
+pub fn is_runtime_builtin_formula(name: &str) -> bool {
+    RUNTIME_BUILTIN_FORMULAS.contains(&name)
 }
 
 /// Ordered runtime evidence for one direct formula query.
@@ -2309,6 +2349,57 @@ pub(crate) fn formula_provenance(fd: &FormulaDef) -> Result<Provenance, LowerErr
 /// time; and (2) the **provenance-required lint** — a shipped formula must carry
 /// a non-empty `source`, mirroring the recall-library adversarial write gate.
 fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
+    // (0) The RESERVED-NAME gate, checked before anything else. `expand_rec`
+    // dispatches the five runtime built-ins by NAME before it consults the user
+    // formula map, so a formula that reuses one of those names is dead on
+    // arrival: every `to_percent(x)` in the program would reach the built-in,
+    // never this body, and never this body's `requires` guards. Rejecting the
+    // definition removes the collision rather than leaving it to be resolved
+    // silently at each call site.
+    //
+    // Scope, stated precisely: this gate closes the DECLARATION side. A formula
+    // that survives it cannot be wholly unreachable. It does not by itself make
+    // "a declared guard always runs" true by construction — see (0b) for the
+    // call-side remainder, which is still open.
+    if is_runtime_builtin_formula(&fd.name) {
+        return Err(LowerError::ReservedFormulaName {
+            formula: fd.name.clone(),
+        });
+    }
+    // (0b) The same hole one layer earlier, in the GRAMMAR rather than the
+    // lowerer. `factor` lists `agg` before `apply`, and
+    // `agg = ("sum"|"count"|"min"|"max"|"avg") LPAREN IDENT RPAREN` — so a
+    // ONE-identifier call of an aggregation keyword becomes an `ExprAst::Agg`
+    // over a slot at PARSE time. It never becomes an `Apply`, so it never
+    // reaches the formula map or `enforce_preconditions`, and a one-parameter
+    // `formula sum(x) … requires nonzero(x)` is unreachable exactly the way a
+    // built-in-named one is.
+    //
+    // The check is arity-aware because the collision is: only an arity-1
+    // declaration can be swallowed, since `agg` matches exactly one identifier
+    // argument. The shipped `formula sum(addend_one, addend_two)` in
+    // `arithmetic.adj` takes two and is reached normally, so it stays legal.
+    // (Arity 1 is also reachable from `predicate`/`sm_guard`/`? query`
+    // positions, which use `apply` directly rather than `factor`. Rejecting it
+    // anyway is deliberate: a name that means "apply this formula" in one
+    // position and "aggregate this slot" in another is a footgun regardless of
+    // which position happens to be reached first.)
+    //
+    // STILL OPEN, on the call side: a wrong-arity call of a MULTI-parameter
+    // aggregation-named formula — `sum(a)` where `sum` takes two — also reduces
+    // to an aggregation, so it yields the slot's aggregate instead of the arity
+    // error it should raise, and any guard on that formula does not run. The
+    // derivation tree does record the result honestly as an aggregation, so this
+    // is a missing diagnostic and a plausible wrong number rather than a
+    // fabricated formula witness. Closing it means rejecting an `ExprAst::Agg`
+    // whose keyword also names a registered formula, which needs the formula map
+    // at the `Agg` lowering site (`lower_expr` is currently infallible and takes
+    // no context); tracked in ADJ-STDLIB-COVERAGE.md §9a.
+    if fd.params.len() == 1 && crate::adapter::agg_op_from_keyword(&fd.name).is_some() {
+        return Err(LowerError::ReservedFormulaName {
+            formula: fd.name.clone(),
+        });
+    }
     // Scope grows LEFT-TO-RIGHT (RS-2): the parameters are in scope everywhere;
     // each `let`-step may reference the parameters plus any EARLIER step's name,
     // and after a step it binds its own name; the final body may reference the
@@ -7333,6 +7424,173 @@ rule { head: r(a) when: x(t) }";
                 LowerError::FormulaPreconditionApplicationUnsupported { .. }
             ))
         ));
+    }
+
+    /// The reserved-name gate, one name at a time. `expand_rec` answers each of
+    /// these itself before it ever looks in the user formula map, so a formula
+    /// that reuses the name is unreachable — and, before this gate existed, was
+    /// accepted in silence.
+    #[test]
+    fn builtin_named_formula_exports_are_rejected() {
+        for name in RUNTIME_BUILTIN_FORMULAS {
+            let src = format!(
+                r#"
+                formulabook collide {{
+                    formula {name}(x) = x + 1
+                        requires nonzero(x)
+                        source "collision" trust authoritative
+                }}
+            "#
+            );
+            assert!(
+                matches!(
+                    compile(&src),
+                    Err(crate::CompileError::Lower(LowerError::ReservedFormulaName {
+                        ref formula
+                    })) if formula == name
+                ),
+                "`{name}` is dispatched as a built-in, so declaring it must not compile"
+            );
+        }
+    }
+
+    /// The behaviour the gate exists to prevent, stated as the scenario rather
+    /// than the rule. Before the gate, this program compiled clean and answered
+    /// `to_scientific = 0`: the built-in rendered the observed `a(0)`, the
+    /// declared body never ran, and `requires nonzero(x)` never fired on a zero
+    /// input. No abstention, no execution trace — so no downstream audit had
+    /// anything to disagree with.
+    #[test]
+    fn a_builtin_name_cannot_silently_swallow_a_declared_guard() {
+        let src = r#"
+            formulabook collide {
+                formula to_scientific(x) = x + 1
+                    requires nonzero(x)
+                    source "collision" trust authoritative
+            }
+            prior 0.1 for high
+            contributes 100 from to_scientific(a) >= 1 to high
+                source "comparison rule" trust authoritative
+            observe a(0)
+            ? high
+        "#;
+
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::ReservedFormulaName { .. }))
+            ),
+            "a guard that can never run must be a compile error, not a silent zero"
+        );
+    }
+
+    /// Anti-drift, in the direction the constant can actually be wrong. Adding a
+    /// name here that the runtime does NOT dispatch would reject a perfectly
+    /// legal user formula, so every listed name must really be answered by
+    /// `expand_rec` with no definition in scope. (The other direction — a
+    /// built-in missing from the list — is what `builtin_named_formula_exports_
+    /// are_rejected` above would stop covering, visibly, the moment it happens.)
+    #[test]
+    fn every_reserved_name_is_really_dispatched_by_the_runtime() {
+        // Applications that are well-formed for each built-in's own signature.
+        let applications = [
+            ("round_sig", "round_sig(a, 2)"),
+            ("round_to", "round_to(a, 2)"),
+            // The currency code is a bare identifier read verbatim, and the ADJ
+            // surface lexer accepts only lowercase identifiers — hence `usd`.
+            ("to_currency", "to_currency(a, usd)"),
+            ("to_percent", "to_percent(a)"),
+            ("to_scientific", "to_scientific(a)"),
+        ];
+        assert_eq!(
+            applications.len(),
+            RUNTIME_BUILTIN_FORMULAS.len(),
+            "a built-in was added without extending this dispatch check"
+        );
+        for (name, application) in applications {
+            assert!(
+                RUNTIME_BUILTIN_FORMULAS.contains(&name),
+                "{name} is not in the reserved list"
+            );
+            // No `formulabook` at all: if the runtime did not answer this name
+            // itself, the lookup would fail as an unknown formula.
+            let src = format!(
+                r#"
+                prior 0.1 for high
+                contributes 100 from {application} >= 1 to high
+                    source "comparison rule" trust authoritative
+                observe a(4)
+                ? high
+            "#
+            );
+            assert!(
+                compile(&src).is_ok(),
+                "{name} is listed as a built-in but the runtime did not dispatch it"
+            );
+        }
+    }
+
+    /// The grammar-level twin of the built-in gate. `agg` is listed before
+    /// `apply` in `factor`, so `sum(a)` becomes an aggregation over the slot `a`
+    /// at parse time — the formula map is never consulted. A one-parameter
+    /// `formula sum(x) … requires nonzero(x)` was therefore as unreachable as a
+    /// `to_scientific` one, and compiled just as silently.
+    #[test]
+    fn one_parameter_aggregation_named_formulas_are_rejected() {
+        for name in ["sum", "count", "min", "max", "avg"] {
+            let src = format!(
+                r#"
+                formulabook collide {{
+                    formula {name}(x) = x + 1
+                        requires nonzero(x)
+                        source "collision" trust authoritative
+                }}
+            "#
+            );
+            assert!(
+                matches!(
+                    compile(&src),
+                    Err(crate::CompileError::Lower(LowerError::ReservedFormulaName {
+                        ref formula
+                    })) if formula == name
+                ),
+                "one-parameter `{name}` is swallowed by the `agg` production"
+            );
+        }
+    }
+
+    /// The gate is arity-aware on purpose. `agg` matches exactly ONE identifier
+    /// argument, so a two-parameter `sum` is reached normally — and one is
+    /// shipped (`arithmetic.adj`'s `formula sum(addend_one, addend_two)`).
+    /// Reserving the bare name would have broken a byte-pinned library for a
+    /// collision that cannot occur.
+    #[test]
+    fn multi_parameter_aggregation_named_formulas_stay_legal() {
+        let src = r#"
+            formulabook arith {
+                formula sum(addend_one, addend_two) = addend_one + addend_two
+                    source "addition" trust authoritative
+            }
+            observe a(3)
+            observe b(4)
+            let z = sum(a, b)
+        "#;
+        let lowered = compile(src).expect("a two-parameter `sum` is reachable and must compile");
+        let derived = lowered
+            .kb
+            .derived_bindings()
+            .iter()
+            .find(|binding| binding.name == "z")
+            .expect("z is derived");
+        assert_eq!(derived.value, 7.0, "the user formula ran, not an aggregation");
+    }
+
+    #[test]
+    fn reserved_names_are_sorted_and_unique() {
+        let mut sorted = RUNTIME_BUILTIN_FORMULAS.to_vec();
+        sorted.sort_unstable();
+        sorted.dedup();
+        assert_eq!(sorted.as_slice(), RUNTIME_BUILTIN_FORMULAS);
     }
 
     #[test]

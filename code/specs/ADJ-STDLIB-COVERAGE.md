@@ -323,6 +323,36 @@ option mapping, or judge/evaluation failure.
    `proportion.adj` requires nonzero `a`, `b`, and `c`, and E2E coverage proves
    each zero position withholds the answer before body evaluation. CAS migration
    remains separate until the worked query's observed inputs receive source IR.
+   A formula name may not collide with a name the runtime answers itself, at
+   either of the two layers that can swallow one. Lowering dispatches the five
+   built-ins (`round_sig`, `round_to`, `to_currency`, `to_percent`,
+   `to_scientific`) by name before the user formula map; and the grammar reduces
+   a one-identifier call of an aggregation keyword (`sum`, `count`, `min`, `max`,
+   `avg`) to an aggregation over a slot before lowering sees an application at
+   all. In both cases a colliding definition was unreachable and its guards
+   unenforced while the program still answered. Both are now typed compile
+   errors, which keeps "a declared guard runs before its body" true by
+   construction rather than by convention. The aggregation check is arity-aware:
+   only a one-parameter declaration can be swallowed, so the shipped
+   two-parameter `sum` in `arithmetic.adj` is unaffected.
+
+   These two gates close the DECLARATION side: a formula that survives them
+   cannot be wholly unreachable. They do not on their own make "a declared guard
+   always runs before its body" true by construction, because the call side has
+   a remaining case.
+
+   Still open (tracked, not closed here): a WRONG-ARITY call of a multi-parameter
+   formula named after an aggregation keyword — `sum(a)` where `sum` takes two —
+   also reduces to an aggregation, so it yields the slot's aggregate instead of
+   raising the arity error it should, and a guard on that formula does not run.
+   The shipped two-parameter `sum` in `arithmetic.adj` makes this reachable in
+   real content. The derivation tree does record the result honestly as an
+   aggregation rather than claiming the formula ran, so this is a missing
+   diagnostic and a plausible wrong number, not a fabricated witness. Closing it
+   means rejecting an aggregation whose keyword also names a registered formula,
+   which requires the formula map at the aggregation lowering site; that site is
+   currently context-free and infallible, so the fix is its own change with its
+   own review rather than a rider on the declaration gates.
 9b. **Complete.** Formula-audit v2 independently replays parser-owned parameter
     binding, nested application order, and every declaration-ordered guard through
     the first failure. The CAS witnesses exact compared values, consumed direct

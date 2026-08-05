@@ -64,11 +64,11 @@ pub use ast::{
     Term as AstTerm,
 };
 pub use lower::{
-    lower, replay_formula_source, ComputationBinding, ConstraintSystem, FormulaAbstention,
-    FormulaApplicationTrace, FormulaBodyTrace, FormulaExecutionTrace, FormulaGuardOutcome,
-    FormulaGuardTrace, FormulaSourceReplay, LowerError, LoweredConstraint, LoweredExit,
-    LoweredGuard, LoweredProgram, LoweredRangeLookup, LoweredState, LoweredStateMachine,
-    LoweredTransition,
+    is_runtime_builtin_formula, lower, replay_formula_source, ComputationBinding, ConstraintSystem,
+    FormulaAbstention, FormulaApplicationTrace, FormulaBodyTrace, FormulaExecutionTrace,
+    FormulaGuardOutcome, FormulaGuardTrace, FormulaSourceReplay, LowerError, LoweredConstraint,
+    LoweredExit, LoweredGuard, LoweredProgram, LoweredRangeLookup, LoweredState,
+    LoweredStateMachine, LoweredTransition, RUNTIME_BUILTIN_FORMULAS,
 };
 pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
 pub use statemachine::{
