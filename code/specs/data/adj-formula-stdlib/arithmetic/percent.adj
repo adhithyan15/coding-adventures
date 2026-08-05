@@ -58,7 +58,7 @@ formulabook percentages {
 
     % A percentage — the part as a share of the whole, expressed per hundred.
     formula percent(part, whole) = quotient(part, whole) * 100
-        source "A percentage is a number or ratio expressed as a fraction of 100; it is often denoted by the percent sign, %."
+        source "A ratio or fraction is converted to a percentage by multiplying by 100 and appending a \"percentage sign\" %."
         locator "https://mathworld.wolfram.com/Percent.html"
         trust authoritative
 
