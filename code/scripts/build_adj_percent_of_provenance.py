@@ -7,6 +7,7 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+import adj_provenance_builder as builder
 import adj_stdlib_provenance as provenance
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -35,83 +36,6 @@ TRANSFORM_OPERATIONS = (
     ("mathml_to_infix", 396_075, 396_368, 17, 26),
     ("copy", 396_375, 396_376, 26, 27),
 )
-
-
-def claim(claim_id: str, data: bytes, start: int, end: int) -> dict:
-    cited = data[start:end]
-    return {
-        "claim_id": claim_id,
-        "end": end,
-        "quote": cited.decode("utf-8"),
-        "quote_sha256": provenance.sha256_bytes(cited),
-        "start": start,
-    }
-
-
-def source_segments(
-    data: bytes,
-    represented: list[tuple[int, int, list[dict]]],
-    *,
-    discarded_reason: str,
-    reasoned_discards: list[tuple[int, int, str]] | None = None,
-) -> list[dict]:
-    segments = []
-    cursor = 0
-
-    def discard(start: int, end: int) -> None:
-        discard_cursor = start
-        for special_start, special_end, reason in reasoned_discards or []:
-            if special_end <= start or special_start >= end:
-                continue
-            if special_start < start or special_end > end:
-                raise provenance.ProvenanceError(
-                    "reasoned discard crosses a represented byte range"
-                )
-            if discard_cursor < special_start:
-                segments.append(
-                    {
-                        "disposition": "discarded",
-                        "end": special_start,
-                        "reason": discarded_reason,
-                        "start": discard_cursor,
-                    }
-                )
-            segments.append(
-                {
-                    "disposition": "discarded",
-                    "end": special_end,
-                    "reason": reason,
-                    "start": special_start,
-                }
-            )
-            discard_cursor = special_end
-        if discard_cursor < end:
-            segments.append(
-                {
-                    "disposition": "discarded",
-                    "end": end,
-                    "reason": discarded_reason,
-                    "start": discard_cursor,
-                }
-            )
-
-    for start, end, claims in sorted(represented, key=lambda item: (item[0], item[1])):
-        if start < cursor:
-            raise provenance.ProvenanceError("source claim ranges overlap")
-        if cursor < start:
-            discard(cursor, start)
-        segments.append(
-            {
-                "claims": claims,
-                "disposition": "represented",
-                "end": end,
-                "start": start,
-            }
-        )
-        cursor = end
-    if cursor < len(data):
-        discard(cursor, len(data))
-    return segments
 
 
 def local_source(
@@ -143,14 +67,14 @@ def local_source(
     for (start, end), claim_ids in sorted(grouped.items()):
         range_claims = []
         for claim_id in sorted(claim_ids):
-            item = claim(claim_id, data, start, end)
+            item = builder.claim(claim_id, data, start, end)
             claims[claim_id] = item
             range_claims.append(item)
         represented.append((start, end, range_claims))
     ir = provenance.build_source_ir(
         source_sha256=raw_hash,
         source=data,
-        segments=source_segments(
+        segments=builder.source_segments(
             data,
             represented,
             discarded_reason=discarded_reason,
@@ -215,11 +139,11 @@ def retained_external_source(
     raw_claim_bytes = captured[CLAIM_START:CLAIM_END]
     if provenance.sha256_bytes(raw_claim_bytes) != CLAIM_RAW_HASH:
         raise provenance.ProvenanceError("reviewed OpenStax formula bytes drifted")
-    raw_claim = claim(PERCENT_OF_CLAIM, captured, CLAIM_START, CLAIM_END)
+    raw_claim = builder.claim(PERCENT_OF_CLAIM, captured, CLAIM_START, CLAIM_END)
     raw_ir = provenance.build_source_ir(
         source_sha256=raw_hash,
         source=captured,
-        segments=source_segments(
+        segments=builder.source_segments(
             captured,
             [(CLAIM_START, CLAIM_END, [raw_claim])],
             discarded_reason=(
@@ -243,7 +167,9 @@ def retained_external_source(
     )
     if rendered_hash != RENDERED_HASH:
         raise provenance.ProvenanceError("rendered percent_of definition hash drifted")
-    rendered_claim = claim(PERCENT_OF_CLAIM, SELECTED_TEXT, 0, len(SELECTED_TEXT))
+    rendered_claim = builder.claim(
+        PERCENT_OF_CLAIM, SELECTED_TEXT, 0, len(SELECTED_TEXT)
+    )
     rendered_ir = provenance.build_source_ir(
         source_sha256=rendered_hash,
         source=SELECTED_TEXT,
@@ -299,10 +225,6 @@ def retained_external_source(
         },
         {PERCENT_OF_CLAIM: rendered_claim},
     )
-
-
-def input_claim_payload(item: dict) -> dict:
-    return {key: item[key] for key in ("end", "quote", "quote_sha256", "start")}
 
 
 def build(
@@ -369,7 +291,9 @@ def build(
         "clauses": [
             {
                 **percent_of_claim,
-                "input_claim": input_claim_payload(input_claims[PERCENT_OF_CLAIM]),
+                "input_claim": builder.input_claim_payload(
+                    input_claims[PERCENT_OF_CLAIM]
+                ),
                 "locator": LOCATOR,
                 "resolution": {
                     "authority_receipt_sha256": external_source["receipt_sha256"],
@@ -470,7 +394,7 @@ def build(
         query_clauses.append(
             {
                 **fact,
-                "input_claim": input_claim_payload(query_claims[claim_id]),
+                "input_claim": builder.input_claim_payload(query_claims[claim_id]),
                 "locator": fixture_locator,
                 "resolution": {
                     "authority_receipt_sha256": fixture_source["receipt_sha256"],

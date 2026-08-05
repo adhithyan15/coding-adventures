@@ -7,6 +7,7 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+import adj_provenance_builder as builder
 import adj_stdlib_provenance as provenance
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -60,17 +61,6 @@ SOURCES = (
 )
 
 
-def claim(claim_id: str, data: bytes, start: int, end: int) -> dict:
-    cited = data[start:end]
-    return {
-        "claim_id": claim_id,
-        "end": end,
-        "quote": cited.decode("utf-8"),
-        "quote_sha256": provenance.sha256_bytes(cited),
-        "start": start,
-    }
-
-
 def partition(data: bytes, start: int, end: int, item_claim: dict) -> list[dict]:
     return [
         {
@@ -122,7 +112,7 @@ def local_source(
                     "start": cursor,
                 }
             )
-        item_claim = claim(claim_id, data, start, end)
+        item_claim = builder.claim(claim_id, data, start, end)
         claims[claim_id] = item_claim
         segments.append(
             {
@@ -176,7 +166,7 @@ def build(
             raise provenance.ProvenanceError(
                 f"MathWorld {item['name']} cited span is not the DC.Description value"
             )
-        raw_claim = claim(item["id"], raw, item["start"], item["end"])
+        raw_claim = builder.claim(item["id"], raw, item["start"], item["end"])
         raw_ir = provenance.build_source_ir(
             source_sha256=item["raw"],
             source=raw,
@@ -195,7 +185,7 @@ def build(
             label=f"MathWorld {item['name']} definition",
             links=[item["raw"]],
         )
-        rendered_claim = claim(item["id"], rendered, 0, len(rendered))
+        rendered_claim = builder.claim(item["id"], rendered, 0, len(rendered))
         rendered_ir = provenance.build_source_ir(
             source_sha256=rendered_hash,
             source=rendered,
@@ -288,7 +278,7 @@ def build(
                     "start": cursor,
                 }
             )
-        item_claim = claim(item["id"], input_bytes, start, end)
+        item_claim = builder.claim(item["id"], input_bytes, start, end)
         input_claims[item["id"]] = item_claim
         input_segments.append(
             {
