@@ -25,6 +25,22 @@
 % multiplication through the cited `product`, not as an exponent. Fractional and
 % symbolic powers (e.g. square roots) belong to a later rung that wires the
 % engine's `Pow` op into the surface — they are deliberately out of scope here.
+%
+% On the citations. Both formulas previously cited MathWorld (`Square.html`,
+% `Cube.html`) with sentences those pages do not contain. `Square.html` states
+% the NOTATION only ("x^2 is the square of x") and never the product expansion;
+% `Cube.html` is about the geometric SOLID — every occurrence of "cube of" there
+% reads "cube of edge length". Neither grounds "multiply the number by itself".
+% No MathWorld sibling (Squared, Cubed, SquareNumber, CubicNumber, Power) states
+% the expansion either, so the retarget is off-site by necessity, not preference.
+% Each formula now cites a page that states ITS claim as a product:
+%   square -> OpenStax Contemporary Mathematics §3.8 (the book percent-of.adj
+%             already cites), verbatim prose, `copy` only
+%   cube   -> Wikipedia "Cube (algebra)", tag `discard` only; Wikipedia is
+%             precedented in this corpus at physics/mechanics-laws.adj (Ohm's law)
+% LibreTexts was rejected despite having ideal sentences: its bodies embed a
+% per-request `pageViewId` UUID, so the same page hashes differently on every
+% fetch and cannot be pinned.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -61,14 +77,14 @@ formulabook powers {
     % The square — the base multiplied by itself. Composes `product`: the square
     % of 5 is 5 × 5 = 25.
     formula square(base) = product(base, base)
-        source "The square of a number is that number multiplied by itself; the square of x is x^2 = x times x."
-        locator "https://mathworld.wolfram.com/Square.html"
+        source "Squaring a number is multiplying it by itself, and has that name because it is the area of a square with that side length."
+        locator "https://openstax.org/books/contemporary-mathematics/pages/3-8-exponents"
         trust authoritative
 
     % The cube — the base multiplied by itself twice. Nests `product` inside
     % `product`: the cube of 3 is (3 × 3) × 3 = 27.
     formula cube(base) = product(product(base, base), base)
-        source "The cube of a number is that number raised to the third power; the cube of x is x^3 = x times x times x."
-        locator "https://mathworld.wolfram.com/Cube.html"
+        source "In arithmetic and algebra, the cube of a number n is its third power, that is, the result of multiplying three instances of n together."
+        locator "https://en.wikipedia.org/wiki/Cube_(algebra)"
         trust authoritative
 }

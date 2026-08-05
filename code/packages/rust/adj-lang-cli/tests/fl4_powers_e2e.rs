@@ -72,7 +72,7 @@ fn square_composes_product_and_carries_both_citations() {
     // BOTH citations: square's own definition (primary) AND the product
     // primitive it composed (corroboration).
     assert!(
-        s.contains("mathworld.wolfram.com/Square.html"),
+        s.contains("openstax.org/books/contemporary-mathematics/pages/3-8-exponents"),
         "primary cites the square definition: {s}"
     );
     assert!(
@@ -106,7 +106,7 @@ fn cube_nests_product_inside_product() {
         "cube(3) = 27: {s}"
     );
     assert!(
-        s.contains("mathworld.wolfram.com/Cube.html"),
+        s.contains("en.wikipedia.org/wiki/Cube_(algebra)"),
         "primary cites the cube definition: {s}"
     );
     assert!(
