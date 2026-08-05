@@ -2,6 +2,34 @@
 
 ## Unreleased - replayable formula guard traces
 
+- A table used as a `range`/`interpolated`/`nearest` lookup may no longer contain two rows
+  sharing a breakpoint in the key column (`LowerError::LookupDuplicateKey`, carrying both
+  row indices). `range` selects the greatest key `<= q`; with the key tied, that was
+  whichever row proof enumeration reached first, so the other row was dropped — along with
+  its own RS-5e per-row citation — with no ambiguity flag and no abstention. Verified before
+  the fix: a table with two rows keyed `10` answered `first_ten` and cited only that row,
+  while an equally-applicable `second_ten` row went unmentioned. Breakpoints are compared as
+  exact rationals, so `10` and `10.0` are one breakpoint.
+- Scoped to the key column of tables actually referenced by a lookup, so a categorical table
+  with repeated first-column values (an ordinary relation) is unaffected. `nearest` keeps its
+  documented deterministic tie-break, which resolves a genuine either-side tie rather than a
+  table defining two answers for one interval.
+- Two `table` blocks declaring the same name are now rejected (`LowerError::DuplicateTable`).
+  The registry kept the last block while every block's rows went into the KB, and a lookup
+  builds its goal — arity, key column position — from the winner alone. A shadowed block whose
+  `columns` differ therefore had its rows become *unreachable* rather than tied: wrong arity
+  fails to unify, and a reordered key column reads a non-numeric cell that selection skips. The
+  lookup then answered from a subset of the relation and cited it confidently. Reproduced: a
+  three-band table plus a one-row shadowing block with an extra column answered `rogue` at key
+  `0` for a query of 15 whose correct answer was `mid` at breakpoint `10`. This is also what
+  lets the selection-time breakpoint check assume the enumerated relation *is* the declared
+  table.
+- The declaration check is a diagnostic, not the guarantee — see the `adj-lang-cli` entry for
+  the selection-time abstention that actually holds the invariant. The duplicate scan sorts
+  once instead of searching pairwise; the nested version was O(n²) and re-ran a
+  `BigDecimal::to_rational()` allocation per comparison, taking ~8s on a 4000-row table (an
+  ordinary size for the calibration and growth-chart cases) once per lookup statement.
+
 - State-machine failures are structured (ADJ-STDLIB-COVERAGE §9d). `StateMachineOutcome`
   now carries a typed `FailurePhase` (`TransitionGuard` / `ExitGuard` / `Yield`) instead of
   a `phase: String`, and `ComputationError` carries a `ComputationFailure` discriminant

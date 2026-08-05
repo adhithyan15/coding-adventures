@@ -226,7 +226,34 @@ same exact-`BigRational` arithmetic, and the same per-row citation path.
   for an exact hit and `FromRangeBracket { table, key, matched_key, mode }` for a bracket select.
   `matched_key` is recorded explicitly because *which breakpoint you landed on* is the entire
   content of a bracket decision, and RS-5e is what lets that step quote a span defending the row
-  it names. Abstention below a table's floor is likewise a typed reason there
+  it names. For that citation to mean anything, a breakpoint must identify **one** row.
+  Otherwise selection resolves the tie by enumeration order and the losing row disappears
+  together with its own span — an answer that looks fully sourced while an equally applicable,
+  differently-sourced row went unmentioned.
+
+  This is enforced in **two places, and the second is the load-bearing one**:
+
+  - A `table` declaration used as a `range`/`interpolated`/`nearest` lookup may not repeat a key
+    in the lookup's key column. That is a compile error naming both row indices — a fast, precise
+    diagnostic pointing at the source.
+  - Selection itself abstains (`ambiguous_breakpoint`) when two rows tie the selected key. This
+    is the guarantee, because the runtime does **not** read the declaration: it enumerates every
+    fact carrying the table's functor and arity. A second `table` block of the same name, or a
+    `relate` fact colliding with the relation, contributes rows the declaration check never saw.
+    A gate that inspects only the parse tree is not co-total with the set selection walks, and a
+    check that is not co-total with its consumer is a check that can be walked around.
+
+  All three modes are gated, and `interpolated` is the sharpest case: its dropped row's *value*
+  feeds the blend, so the emitted number itself moves — one knowledge base yielded two different
+  fully-cited answers depending only on declaration order. Both bracket endpoints are checked.
+  The question is asked **after** selection, about the key that won: asking it against a running
+  best would make abstention depend on enumeration order, and would fire on a duplicate at a key
+  the query never selected, which costs the answer nothing.
+
+  Keys are compared as exact rationals, so `10` and `10.0` are one breakpoint. All of this is
+  distinct from `nearest`'s documented tie-break to the smaller key, which resolves a genuine tie
+  between rows either side of a query; a tie on the key itself is not a choice to settle but a
+  relation defining two answers for one interval. Abstention below a table's floor is likewise a typed reason there
   (`BelowTableDomain { table, key, min_key }`), distinct from a malformed key
   (`NonNumericKey`) — the two are opposite failures and must never render alike.
 - Every lookup answer (exact, range, or interpolated) carries the table's citation. For

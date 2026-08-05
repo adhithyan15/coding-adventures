@@ -216,3 +216,284 @@ fn range_lookup_non_numeric_key_column_is_rejected() {
         "diag: {diag}"
     );
 }
+
+/// A duplicate breakpoint reaching selection through a route the DECLARATION
+/// gate cannot see.
+///
+/// `lower` rejects a `table` block that repeats a key, but the runtime never
+/// reads that block — `range_lookup_json` enumerates every fact with the table's
+/// functor and arity. A `relate` fact colliding with the relation contributes a
+/// row the declaration-time check never examined, so before the runtime gate
+/// this answered `first_ten` and cited only that row, while the separately
+/// sourced `rogue_ten` vanished with `abstained: false`.
+#[test]
+fn a_relate_fact_cannot_smuggle_in_a_duplicate_breakpoint() {
+    let dir = scratch("relate_dup");
+    write(
+        &dir,
+        "p.adj",
+        r#"
+table band {
+    columns min_v, label
+    row (0, low) { source "zero band" }
+    row (10, first_ten) { source "first ten band" }
+    source "framing"
+    locator "https://example.test/one"
+    trust authoritative
+}
+relate band(10, rogue_ten) source "rogue row" locator "https://example.test/rogue" trust authoritative
+? lookup band min_v = 12 mode range give label
+"#,
+    );
+    let (ok, out, err) = run_full(&dir.join("p.adj"));
+    assert!(ok, "{err}");
+    assert!(
+        out.contains("\"abstained\":true") && out.contains("\"ambiguous_breakpoint\""),
+        "a smuggled duplicate breakpoint must abstain, not pick one: {out}"
+    );
+    assert!(
+        !out.contains("first_ten") && !out.contains("rogue_ten"),
+        "neither tied row may be answered: {out}"
+    );
+    std::fs::remove_dir_all(dir).unwrap();
+}
+
+/// The same hole through a second `table` block of the same name — now closed
+/// one layer EARLIER than the abstention above.
+///
+/// The lowerer kept only the last declaration while every block's rows were
+/// lowered into the KB, so a shadowed block was invisible to the declaration
+/// gate and fully visible to enumeration. That is now `LowerError::DuplicateTable`,
+/// so this program never runs at all; the assertion is the compile error rather
+/// than the runtime abstention it used to reach.
+///
+/// The runtime abstention is still the guarantee and still exercised — see the
+/// `relate`-smuggling tests, which remain reachable because a `relate` fact is a
+/// legitimate second producer of a relation rather than a name collision.
+#[test]
+fn a_second_table_block_cannot_smuggle_in_a_duplicate_breakpoint() {
+    let dir = scratch("dup_table_block");
+    write(
+        &dir,
+        "p.adj",
+        r#"
+table band {
+    columns min_v, label
+    row (0, low) { source "zero band" }
+    row (10, first_ten) { source "first ten band" }
+    source "framing one"
+    locator "https://example.test/one"
+    trust authoritative
+}
+table band {
+    columns min_v, label
+    row (10, shadow_ten) { source "shadow ten band" }
+    source "framing two"
+    locator "https://example.test/two"
+    trust authoritative
+}
+? lookup band min_v = 12 mode range give label
+"#,
+    );
+    let (_ok, out, err) = run_full(&dir.join("p.adj"));
+    let reported = format!("{out}{err}");
+    assert!(
+        reported.contains("DuplicateTable"),
+        "a shadowed table block must be rejected outright: {reported}"
+    );
+    assert!(
+        !reported.contains("first_ten") && !reported.contains("shadow_ten"),
+        "no row may be answered from a collided relation: {reported}"
+    );
+    std::fs::remove_dir_all(dir).unwrap();
+}
+
+/// `nearest` snaps to the closest key, and its documented tie-break (toward the
+/// smaller key) settles two rows sitting either side of the query. A tie on the
+/// KEY ITSELF is a different thing — one breakpoint with two differently sourced
+/// answers — and must abstain rather than snap.
+#[test]
+fn nearest_abstains_on_a_duplicated_key_rather_than_snapping() {
+    let dir = scratch("nearest_dup");
+    write(
+        &dir,
+        "p.adj",
+        r#"
+table band {
+    columns min_v, label
+    row (0, low) { source "zero band" }
+    row (10, first_ten) { source "first ten band" }
+    source "framing"
+    locator "https://example.test/one"
+    trust authoritative
+}
+relate band(10, rogue_ten) source "rogue row" locator "https://example.test/rogue" trust authoritative
+? lookup band min_v = 12 mode nearest give label
+"#,
+    );
+    let (ok, out, err) = run_full(&dir.join("p.adj"));
+    assert!(ok, "{err}");
+    assert!(
+        out.contains("\"abstained\":true") && out.contains("\"ambiguous_breakpoint\""),
+        "nearest must abstain on a duplicated key: {out}"
+    );
+    std::fs::remove_dir_all(dir).unwrap();
+}
+
+/// The gate stays scoped: an ordinary table with distinct breakpoints still
+/// answers, and `nearest`'s genuine either-side tie-break is untouched.
+#[test]
+fn distinct_breakpoints_are_unaffected_by_the_ambiguity_gate() {
+    let dir = scratch("distinct_ok");
+    write(
+        &dir,
+        "p.adj",
+        r#"
+table band {
+    columns min_v, label
+    row (0, low) { source "zero band" }
+    row (10, mid) { source "ten band" }
+    row (20, high) { source "twenty band" }
+    source "framing"
+    locator "https://example.test/one"
+    trust authoritative
+}
+? lookup band min_v = 12 mode range give label
+"#,
+    );
+    let (ok, out, err) = run_full(&dir.join("p.adj"));
+    assert!(ok, "{err}");
+    assert!(
+        out.contains("\"abstained\":false") && out.contains("mid"),
+        "a distinct-breakpoint table must still answer: {out}"
+    );
+    std::fs::remove_dir_all(dir).unwrap();
+}
+
+/// `interpolated` is the sharpest form of the shared-breakpoint problem: the
+/// dropped row's VALUE feeds the blend, so the emitted NUMBER changes with which
+/// row enumeration reached first. Before the fix this same knowledge base
+/// answered `150` or `599.5` — each fully cited, neither abstaining — depending
+/// only on whether the smuggled row was declared before or after the table.
+///
+/// The test runs both orders precisely because a mode-parity gap in this file is
+/// what let the bug through: `range` and `nearest` had smuggling coverage and
+/// `interpolated` did not.
+#[test]
+fn interpolated_abstains_on_a_smuggled_duplicate_in_either_order() {
+    for (tag, before, after) in [
+        ("rogue_after", "", ROGUE_TEN),
+        ("rogue_before", ROGUE_TEN, ""),
+    ] {
+        let dir = scratch(tag);
+        write(
+            &dir,
+            "p.adj",
+            &format!(
+                r#"
+{before}
+table band {{
+    columns min_v, val
+    row (0, 0) {{ source "zero band" }}
+    row (10, 100) {{ source "first ten band" }}
+    row (20, 200) {{ source "twenty band" }}
+    source "framing"
+    locator "https://example.test/one"
+    trust authoritative
+}}
+{after}
+? lookup band min_v = 15 mode interpolated give val
+"#
+            ),
+        );
+        let (ok, out, err) = run_full(&dir.join("p.adj"));
+        assert!(ok, "{err}");
+        assert!(
+            out.contains("\"abstained\":true") && out.contains("\"ambiguous_breakpoint\""),
+            "{tag}: a tied bracket endpoint must abstain: {out}"
+        );
+        assert!(
+            !out.contains("150") && !out.contains("599.5"),
+            "{tag}: no blended number may be emitted from a tied bracket: {out}"
+        );
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+}
+
+/// A duplicate at a key the selection did NOT choose costs the answer nothing,
+/// and must not abstain it.
+///
+/// The first version of this gate flagged ambiguity whenever an incoming key tied
+/// the best-SO-FAR, so a duplicate on a losing key poisoned the query or not
+/// purely by enumeration order — the same knowledge base answering `high` in one
+/// declaration order and abstaining in the other. Ambiguity is now decided after
+/// selection, against the key that actually won.
+#[test]
+fn a_duplicate_on_an_unselected_key_does_not_abstain_the_answer() {
+    for (tag, before, after) in [
+        ("losing_after", "", ROGUE_TEN_LABEL),
+        ("losing_before", ROGUE_TEN_LABEL, ""),
+    ] {
+        let dir = scratch(tag);
+        write(
+            &dir,
+            "p.adj",
+            &format!(
+                r#"
+{before}
+table band {{
+    columns min_v, label
+    row (0, low) {{ source "zero band" }}
+    row (10, ten_a) {{ source "ten a" }}
+    row (20, high) {{ source "twenty band" }}
+    source "framing"
+    locator "https://example.test/one"
+    trust authoritative
+}}
+{after}
+? lookup band min_v = 25 mode range give label
+"#
+            ),
+        );
+        let (ok, out, err) = run_full(&dir.join("p.adj"));
+        assert!(ok, "{err}");
+        assert!(
+            out.contains("\"abstained\":false") && out.contains("high"),
+            "{tag}: a duplicate at the unselected key 10 must not abstain a query that selected 20: {out}"
+        );
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+}
+
+/// `nearest`'s documented tie-break survives: two rows equidistant on OPPOSITE
+/// sides are a genuine choice, settled toward the smaller key, not an ambiguous
+/// breakpoint.
+#[test]
+fn nearest_equidistant_tie_break_is_not_treated_as_ambiguous() {
+    let dir = scratch("near_equidistant");
+    write(
+        &dir,
+        "p.adj",
+        r#"
+table band {
+    columns min_v, label
+    row (8, eight) { source "eight band" }
+    row (12, twelve) { source "twelve band" }
+    source "framing"
+    locator "https://example.test/one"
+    trust authoritative
+}
+? lookup band min_v = 10 mode nearest give label
+"#,
+    );
+    let (ok, out, err) = run_full(&dir.join("p.adj"));
+    assert!(ok, "{err}");
+    assert!(
+        out.contains("\"abstained\":false") && out.contains("eight"),
+        "an equidistant tie between DIFFERENT keys still resolves to the smaller: {out}"
+    );
+    std::fs::remove_dir_all(dir).unwrap();
+}
+
+const ROGUE_TEN: &str = r#"relate band(10, 999) source "rogue row" locator "https://example.test/rogue" trust authoritative"#;
+const ROGUE_TEN_LABEL: &str = r#"relate band(10, ten_b) source "rogue ten" locator "https://example.test/rogue" trust authoritative"#;
