@@ -26,6 +26,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 provenance = importlib.import_module("adj_stdlib_provenance")
+provenance_builder = importlib.import_module("adj_provenance_builder")
 guardian = importlib.import_module("adj_process_guardian")
 arithmetic_builder = importlib.import_module("build_adj_arithmetic_provenance")
 ratio_builder = importlib.import_module("build_adj_ratio_provenance")
@@ -5609,7 +5610,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ) -> dict[str, object]:
                 return {
                     **external_claim,
-                    "input_claim": ratio_builder.input_claim_payload(input_claim),
+                    "input_claim": provenance_builder.input_claim_payload(input_claim),
                     "locator": f"repo://{repo_path}",
                     "resolution": {
                         "authority_receipt_sha256": external["receipt_sha256"],

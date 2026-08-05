@@ -7,6 +7,7 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+import adj_provenance_builder as builder
 import adj_stdlib_provenance as provenance
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -26,58 +27,6 @@ SELECTED_TEXT = (
     b"and s is the denominator. The ratio of r to s is equivalent to the quotient "
     b"r/s."
 )
-
-
-def claim(claim_id: str, data: bytes, start: int, end: int) -> dict:
-    cited = data[start:end]
-    return {
-        "claim_id": claim_id,
-        "end": end,
-        "quote": cited.decode("utf-8"),
-        "quote_sha256": provenance.sha256_bytes(cited),
-        "start": start,
-    }
-
-
-def source_segments(
-    data: bytes,
-    represented: list[tuple[int, int, list[dict]]],
-    *,
-    discarded_reason: str,
-) -> list[dict]:
-    segments = []
-    cursor = 0
-    for start, end, claims in sorted(represented, key=lambda item: (item[0], item[1])):
-        if start < cursor:
-            raise provenance.ProvenanceError("source claim ranges overlap")
-        if cursor < start:
-            segments.append(
-                {
-                    "disposition": "discarded",
-                    "end": start,
-                    "reason": discarded_reason,
-                    "start": cursor,
-                }
-            )
-        segments.append(
-            {
-                "claims": claims,
-                "disposition": "represented",
-                "end": end,
-                "start": start,
-            }
-        )
-        cursor = end
-    if cursor < len(data):
-        segments.append(
-            {
-                "disposition": "discarded",
-                "end": len(data),
-                "reason": discarded_reason,
-                "start": cursor,
-            }
-        )
-    return segments
 
 
 def local_source(
@@ -108,14 +57,14 @@ def local_source(
     for (start, end), claim_ids in sorted(grouped.items()):
         range_claims = []
         for claim_id in sorted(claim_ids):
-            item = claim(claim_id, data, start, end)
+            item = builder.claim(claim_id, data, start, end)
             claims[claim_id] = item
             range_claims.append(item)
         represented.append((start, end, range_claims))
     ir = provenance.build_source_ir(
         source_sha256=raw_hash,
         source=data,
-        segments=source_segments(
+        segments=builder.source_segments(
             data,
             represented,
             discarded_reason=discarded_reason,
@@ -183,11 +132,11 @@ def retained_external_source(
     if captured[selected_start:selected_end] != SELECTED_TEXT:
         raise provenance.ProvenanceError("reviewed Ratio.html definition drifted")
 
-    raw_claim = claim(RATIO_CLAIM, captured, selected_start, selected_end)
+    raw_claim = builder.claim(RATIO_CLAIM, captured, selected_start, selected_end)
     raw_ir = provenance.build_source_ir(
         source_sha256=raw_hash,
         source=captured,
-        segments=source_segments(
+        segments=builder.source_segments(
             captured,
             [
                 (
@@ -216,7 +165,7 @@ def retained_external_source(
     )
     if rendered_hash != RENDERED_HASH:
         raise provenance.ProvenanceError("rendered ratio definition hash drifted")
-    rendered_claim = claim(RATIO_CLAIM, SELECTED_TEXT, 0, len(SELECTED_TEXT))
+    rendered_claim = builder.claim(RATIO_CLAIM, SELECTED_TEXT, 0, len(SELECTED_TEXT))
     rendered_ir = provenance.build_source_ir(
         source_sha256=rendered_hash,
         source=SELECTED_TEXT,
@@ -271,10 +220,6 @@ def retained_external_source(
         },
         {RATIO_CLAIM: rendered_claim},
     )
-
-
-def input_claim_payload(item: dict) -> dict:
-    return {key: item[key] for key in ("end", "quote", "quote_sha256", "start")}
 
 
 def build(
@@ -337,7 +282,7 @@ def build(
         "clauses": [
             {
                 **ratio_claim,
-                "input_claim": input_claim_payload(input_claims[RATIO_CLAIM]),
+                "input_claim": builder.input_claim_payload(input_claims[RATIO_CLAIM]),
                 "locator": LOCATOR,
                 "resolution": {
                     "bundle_sha256": arithmetic_bundle_sha256,
@@ -419,7 +364,7 @@ def build(
         query_clauses.append(
             {
                 **fact,
-                "input_claim": input_claim_payload(query_claims[claim_id]),
+                "input_claim": builder.input_claim_payload(query_claims[claim_id]),
                 "locator": fixture_locator,
                 "resolution": {
                     "authority_receipt_sha256": fixture_source["receipt_sha256"],
