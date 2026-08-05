@@ -60,7 +60,7 @@ table moment_of_force_to_newton_metre {
     row (dyne_centimetre, 0.0000001)
     row (kilogram_force_metre, 9.80665)
 
-    source "Factors for units listed alphabetically"
+    source "NIST Guide to the SI, Appendix B.9: Factors for units listed by kind of quantity or field of science"
     locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
     trust authoritative
 }

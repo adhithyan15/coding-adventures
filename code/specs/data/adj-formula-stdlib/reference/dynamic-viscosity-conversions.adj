@@ -18,8 +18,7 @@
 % use-many). Why a `table` and not several hand-written `relate` clauses: this is
 % exactly the shape reference data comes in — a published table, not prose. The
 % citable artifact IS the NIST conversion-factors table at the `locator` below; every
-% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for
-% units listed alphabetically"), and the whole table is defended by one provenance
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for units listed by kind of quantity or field of science"), and the whole table is defended by one provenance
 % envelope rather than repeating `source`/`locator`/`trust` on every row. Each `row`
 % lowers to a ground relation `dynamic_viscosity_to_pascal_seconds(unit, pas)`, so the
 % exact lookup above is the ordinary SLD binding query — the engine returns the factor
@@ -55,7 +54,7 @@ table dynamic_viscosity_to_pascal_seconds {
     row (poise, 0.1)
     row (centipoise, 0.001)
 
-    source "Factors for units listed alphabetically"
+    source "NIST Guide to the SI, Appendix B.9: Factors for units listed by kind of quantity or field of science"
     locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
     trust authoritative
 }

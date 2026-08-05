@@ -58,7 +58,7 @@ table temperature_interval_to_kelvin {
 
     row (degree_celsius, 1)
 
-    source "Factors for units listed alphabetically"
+    source "NIST Guide to the SI, Appendix B.9: Factors for units listed by kind of quantity or field of science"
     locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
     trust authoritative
 }
