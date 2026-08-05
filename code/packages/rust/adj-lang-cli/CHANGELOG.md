@@ -2,6 +2,21 @@
 
 ## Unreleased - formula audit v2 guard witnesses
 
+- `adj-formula-audit` now decides whether to take the strict, guard-replaying v2 path from
+  the PARSED SOURCE rather than from the runtime's own execution trace. If a query's
+  formula closure declares a `requires` anywhere — including on a nested callee — v2 is
+  required whether or not the trace reported a guard, and `validate_guard_prefix` then
+  fails closed on the mismatch. Previously the choice read `formula_executions`, so a
+  producer that emitted no guard trace selected the unguarded v1 shape, and v1 never
+  replays source against execution — the discrepancy the strict path exists to catch was
+  the discrepancy that routed around it. This is hardening: with the reserved-name gates
+  in adj-lang there is no currently-constructible program that reaches the old behaviour.
+  A program declaring no precondition anywhere still emits v1.
+- `is_runtime_builtin_application` now calls `adj_lang::is_runtime_builtin_formula`
+  instead of restating the five built-in names. The audit has to replay the runtime's
+  built-in-versus-user-formula precedence exactly; a second hand-maintained copy could
+  drift from the dispatch it mirrors, and the resulting disagreement would be silent.
+
 - `adj-formula-audit` emits `adj-lang/formula_audit/v2` for executed guards or plans containing
   exact literals. V2 records ordered query executions, parser-backed guard byte identities, exact
   comparisons, stable consumed-fact identities, independent direct-observation rechecks, and a
