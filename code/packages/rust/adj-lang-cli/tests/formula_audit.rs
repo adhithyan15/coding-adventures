@@ -212,8 +212,19 @@ fn formula_audit_v2_stops_source_replay_at_outer_guard_failure() {
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }
 
+/// Built-in precedence itself — a formula body that calls `round_to` gets the
+/// RUNTIME's rounding, and the audit's replayed formula sequence says so by
+/// naming only the user formula that really ran.
+///
+/// This used to be asserted with a `formulabook` that also declared its own
+/// `round_to(a, b) … requires nonzero(a)`, to pin down which one won. That
+/// program no longer compiles (`LowerError::ReservedFormulaName` — see the
+/// companion test below), because a declared guard that can never run is a hole
+/// in the precondition contract rather than a precedence question. The precedence
+/// property is real and still worth pinning, so it is asserted here without the
+/// unreachable shadow definition.
 #[test]
-fn formula_audit_v2_preserves_builtin_precedence_over_same_named_export() {
+fn formula_audit_v2_preserves_builtin_precedence() {
     let directory = std::env::temp_dir().join(format!(
         "adj_formula_audit_builtin_precedence_{}",
         std::process::id()
@@ -224,8 +235,6 @@ fn formula_audit_v2_preserves_builtin_precedence_over_same_named_export() {
     fs::write(
         &program,
         "formulabook guarded {\n\
-             formula round_to(a, b) = a + b requires nonzero(a)\n\
-               source \"shadowed export\" trust authoritative\n\
              formula outer(x) = round_to(x, 0) requires nonzero(x)\n\
                source \"outer domain\" trust authoritative\n\
          }\n\
@@ -245,9 +254,54 @@ fn formula_audit_v2_preserves_builtin_precedence_over_same_named_export() {
     );
     let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
     let execution = &audit["executions"][0];
+    // `round_to` is answered by the runtime, so it never enters the replayed
+    // formula sequence — only `outer` did.
     assert_eq!(execution["formula_sequence"].as_array().unwrap().len(), 1);
     assert_eq!(execution["formula_sequence"][0]["name"], "outer");
     assert_eq!(execution["body"]["status"], "evaluated");
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+/// The collision the audit no longer has to reason about. A `formulabook` that
+/// declares a built-in's name is rejected at compile time, so the audit binary
+/// fails loudly instead of emitting a witness for an execution in which
+/// `requires nonzero(a)` was silently never evaluated.
+#[test]
+fn formula_audit_rejects_a_formulabook_that_shadows_a_builtin() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_builtin_collision_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("builtin_collision.adj");
+    fs::write(
+        &program,
+        "formulabook guarded {\n\
+             formula round_to(a, b) = a + b requires nonzero(a)\n\
+               source \"shadowed export\" trust authoritative\n\
+             formula outer(x) = round_to(x, 0) requires nonzero(x)\n\
+               source \"outer domain\" trust authoritative\n\
+         }\n\
+         observe value(2.4)\n\
+         ? outer(value)\n",
+    )
+    .expect("write built-in collision program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        !output.status.success(),
+        "a formula book shadowing a built-in must not produce an audit"
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("ReservedFormulaName"),
+        "expected a reserved-name rejection, got: {stderr}"
+    );
 
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }

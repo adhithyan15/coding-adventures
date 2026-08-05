@@ -2,6 +2,26 @@
 
 ## Unreleased - replayable formula guard traces
 
+- A `formulabook` may no longer declare a formula whose name is one of the five runtime
+  built-ins (`round_sig`, `round_to`, `to_currency`, `to_percent`, `to_scientific`), which
+  the `Apply` lowering answers by name *before* it consults the user formula map. Such a
+  definition was previously accepted and then never reached: the built-in reduced every
+  call while the declared body — and its `requires` guards — sat unreachable. A guarded
+  formula could therefore compile clean and produce an answer with its precondition never
+  evaluated, emitting no abstention and no execution trace. The collision is now the typed
+  `LowerError::ReservedFormulaName`.
+- The same hole exists one layer earlier, in the grammar: `factor` lists `agg` before
+  `apply`, so a one-identifier call of an aggregation keyword (`sum`, `count`, `min`,
+  `max`, `avg`) reduces to an `ExprAst::Agg` over a slot at parse time and never becomes an
+  application at all. A one-parameter `formula sum(x) … requires nonzero(x)` was therefore
+  unreachable and its guard unenforced. Such a declaration is now rejected with the same
+  error. The check is arity-aware — `agg` matches exactly one identifier argument, so the
+  shipped two-parameter `formula sum(addend_one, addend_two)` in `arithmetic.adj` is
+  reached normally and stays legal.
+- `RUNTIME_BUILTIN_FORMULAS` and `is_runtime_builtin_formula` are public, so an independent
+  checker replaying built-in-versus-user-formula precedence reads the same list the
+  dispatch enforces instead of maintaining its own copy.
+
 - Direct formula queries retain an ordered execution trace for every passed, failed, or unresolved
   precondition, including its exact rational and `f64` value, substituted computation plan,
   derivation tree, original scope, consumed `FactId`s, predicate identity, and provenance.
