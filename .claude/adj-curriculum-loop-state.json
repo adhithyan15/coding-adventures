@@ -1,0 +1,65 @@
+{
+  "job": "adj-curriculum-kindergarten-to-medical-school",
+  "automation_id": "adj-curriculum-loop",
+  "started": "2026-08-04",
+  "plan_ref": "code/specs/ADJ-STDLIB-COVERAGE.md#7-delivery-order",
+  "policy": {
+    "maximum_active_prs": 1,
+    "merge_authority": "auto-merge-after-required-checks",
+    "reprioritize_after_every_merge": true,
+    "delivery_scope": "adj-formula-stdlib and adj-facts-stdlib content, curriculum manifest entries, and the adj-lang symbolic/CAS-wiring rung",
+    "selection_rule": "manifest objective mappings and new K-12-to-medical curriculum libraries, sequenced per ADJ-STDLIB-COVERAGE.md Wave 0 (remainder) -> 2 -> CAS-wiring -> 3 -> 4",
+    "excluded_delivery_classes": [
+      "cas-provenance",
+      "process-containment",
+      "witness-plumbing",
+      "adj-verify-internals"
+    ],
+    "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
+  },
+  "active_pr": null,
+  "last_manifest_check": {
+    "objectives": 10,
+    "coverage_roots": 6,
+    "valid": true,
+    "checked_at": "2026-08-04"
+  },
+  "items": [
+    {
+      "id": "wave0-backfill-physics",
+      "title": "Manifest objectives for the 11 physics formula libraries",
+      "status": "in_progress",
+      "depends_on": [],
+      "branch": "feat/adj-curriculum-k12-to-medical",
+      "pr_number": null,
+      "notes": "Content-only: add band/domain/competency/prerequisites manifest entries for the already-shipped, already-tested physics/*.adj libraries (density, electric-charge, electricity, energy-work, frequency-period, gravitation, hookes-law, kinematics, mechanics-laws, momentum, power, pressure, wave-speed). No new .adj content."
+    },
+    {
+      "id": "wave0-backfill-mathematics",
+      "title": "Manifest objective for mathematics/geometry-formulas.adj",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Single-file domain, cheap batch."
+    },
+    {
+      "id": "wave0-backfill-reference",
+      "title": "Manifest objectives for the ~35 reference unit-conversion libraries",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Large but mechanical/uniform. Likely split across 2-3 PRs by unit family."
+    },
+    {
+      "id": "wave2-k2-math-cardinality-comparison",
+      "title": "K-2 math: cardinality/sets, comparison, number lines",
+      "status": "pending",
+      "depends_on": ["wave0-backfill-physics", "wave0-backfill-mathematics", "wave0-backfill-reference"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "New content per ADJ-STDLIB-COVERAGE.md 5.1. Check adj-ladder rung0 for harvestable material first."
+    }
+  ]
+}
