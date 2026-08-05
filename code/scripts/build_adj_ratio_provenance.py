@@ -37,6 +37,7 @@ def local_source(
     *,
     discarded_reason: str,
     data: bytes | None = None,
+    reasoned_discards: list[tuple[int, int, str]] | None = None,
 ) -> tuple[dict, dict[str, dict]]:
     # Accepting already-read bytes is what lets the caller pin offsets and quotes
     # to ONE read of the file. Re-reading here would leave the two a swap apart.
@@ -72,6 +73,7 @@ def local_source(
             data,
             represented,
             discarded_reason=discarded_reason,
+            reasoned_discards=reasoned_discards,
         ),
     )
     ir_hash = cas.put_json(ir, kind="source_ir", label=f"{label} IR", links=[raw_hash])

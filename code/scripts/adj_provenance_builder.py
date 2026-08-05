@@ -140,6 +140,11 @@ class QueryLibrarySpec:
     witness_label: str
     qualify_by_value: bool = False
     scan_bindings: bool = False
+    # Optional: given the query bytes and the offset just past the question,
+    # return spans to discard WITH A STATED REASON rather than under the blanket
+    # `discarded_reason`. A query that ships a deliberately disabled example owes
+    # the reader why those bytes are unrepresented, not merely that they are.
+    reasoned_discards: object | None = None
 
     def input_claim_id(self, name: str, value: str) -> str:
         return (
@@ -224,6 +229,11 @@ def build_query_bundle(
         spec.input_description,
         discarded_reason=spec.discarded_reason,
         data=query_bytes,
+        reasoned_discards=(
+            spec.reasoned_discards(query_bytes, question_end)
+            if spec.reasoned_discards is not None
+            else None
+        ),
     )
 
     fixture_locator = f"repo://{spec.fixture_path}"
