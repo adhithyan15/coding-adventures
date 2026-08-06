@@ -58,6 +58,31 @@ Two things shape this track.
   words. They remain inline in the opening chapters rather than becoming a
   prerequisite alphabet drill.
 
+## Chapter capabilities (`chapters.json`)
+
+[`chapters.json`](./chapters.json) is the track's
+[`HL05`](../../../specs/HL05-chapter-capability-and-step-by-step-shape.md)
+capability ledger: for each chapter, one first-person `canDo` promise, the
+shared-spine nodes it realises, and the **payoff** lesson that proves the
+promise, with the exact knowledge atoms that lesson practises. It is authored
+intent, not a derived cache — no validator may rewrite it.
+
+Thirty of the thirty-three chapters are authored. Three are honestly missing:
+
+- **Chapters 3, 4, and 5 have no entry.** Every lesson in them is still schema
+  v1 with no `practises.knowledge`, so a payoff there could not name a single
+  real atom. The absence is measurable debt; a placeholder would hide it.
+- **Chapters 1 and 2 pay off in a writing lesson.** Their `HI-C0*-practice`
+  lessons are also schema v1, so the payoff falls back to the last lesson by
+  `sequence` — `HI-W02-ka-ta-mouth-order` and `HI-W05-write-namaste`. Both are
+  recorded as `kind: task`, because forming क, त, and नमस्ते by hand is a
+  writing task and calling it a dialogue would be a lie about the chapter.
+
+Four chapters (1, 2, 6, and 32) currently assess less than half the atoms their
+chapter introduces and will be reported under the 0.5 representativeness
+threshold once the HL05 gates land. The cure is a real terminal consolidation
+lesson in each, not a broader claim here.
+
 ## Book / fonts
 
 The 33-chapter book compiles with XeLaTeX using **vendored** Noto Sans
@@ -70,7 +95,9 @@ warning-free, and every intentionally blank open-right verso is truly empty.
 
 ## Files
 
-- [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
+- [`lessons/`](./lessons/) · [`chapters.json`](./chapters.json)
+  · [`curriculum.json`](./curriculum.json)
+  · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 
