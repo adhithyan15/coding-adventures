@@ -47,6 +47,8 @@ const TASK_VIEW = (projectStart: number) => ({
       { builtin: "start" },
       { builtin: "finish" },
       { builtin: "overdue" },
+      { builtin: "priority" },
+      { builtin: "labels" },
     ],
   },
   projectStart,
@@ -406,7 +408,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
     onMutate?.(engine.snapshot(), order, counter, engine.activeProject()?.data);
 
   // Column order matches TASK_VIEW's visibleFields.
-  const [DONE, NAME, DEADLINE, START, FINISH, OVERDUE] = [0, 1, 2, 3, 4, 5];
+  const [DONE, NAME, DEADLINE, START, FINISH, OVERDUE, PRIORITY, LABELS] = [0, 1, 2, 3, 4, 5, 6, 7];
 
   /// The ONE source of truth for what's on screen: the engine's table selection,
   /// keyed by task and ordered by creation. Both rendering and click-index resolution
@@ -579,6 +581,14 @@ function makeController(engine: any, init: ControllerInit = {}) {
           d2,
           d3,
           heading,
+          // Appended rather than inserted, so the 0-9 contract TaskApp.mil
+          // already documents (and every existing row[n] reference in
+          // TaskApp.mll) stays untouched. The engine already formats these —
+          // `priority` resolves to its display name (e.g. "High"), `labels`
+          // to comma-joined label names — this is display only, no new
+          // engine work.
+          c.display[PRIORITY] ?? "",
+          c.display[LABELS] ?? "",
         ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;

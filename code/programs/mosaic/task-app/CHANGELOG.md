@@ -4,6 +4,30 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - priority and labels shown on task rows
+
+The list view now shows a task's priority (e.g. "High") and labels (comma-
+joined names) as chips, matching the existing due/schedule/overdue chip
+treatment. `task-core` already had both as first-class, first-class view
+dimensions (shipped earlier) — this is pure display wiring, no new engine
+work: `TASK_VIEW`'s `visibleFields` gained `{ builtin: "priority" }` and
+`{ builtin: "labels" }`, and `taskRows()` appends them as two new trailing
+cells (`row[10]`/`row[11]`) rather than inserting between existing indices,
+so no existing `row[n]` reference anywhere shifts meaning.
+
+Verified live: set a task's priority to "High" via the Sheet tab's already-
+editable Priority column (the existing, working way to set it today), then
+confirmed the chip renders correctly on the List tab in both themes.
+
+**Known gap, disclosed rather than hidden**: there is still no UI to
+*assign* a label to a task (`upsertLabel`/`setTaskLabels` exist on the
+engine but nothing in `main.tsx` calls `setTaskLabels`, and the Sheet's
+column catalogue has no Labels column) — so the labels chip, while fully
+wired and using the identical proven `If (when: (row[11]))` mechanism the
+priority chip does, has no way to actually populate today. That's real
+feature work (label management: create, colour-pick, assign), not a
+display fix, and is tracked in `BACKLOG.md`.
+
 ### Added - notes (list + editor) view
 
 Phase 8's UI half: a new `mosaic-pkg-notes` package (adapted from

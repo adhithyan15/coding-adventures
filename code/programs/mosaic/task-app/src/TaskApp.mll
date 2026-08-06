@@ -289,6 +289,12 @@ layout TaskApp {
                     If ( when: ( row[4] ) ) {
                       Text [ chip-over ] ( content : ( row[4] ) )
                     }
+                    If ( when: ( row[10] ) ) {
+                      Text [ chip-priority ] ( content : ( row[10] ) )
+                    }
+                    If ( when: ( row[11] ) ) {
+                      Text [ chip-labels ] ( content : ( row[11] ) )
+                    }
                     HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
                   }
                   // Progressive disclosure: the scheduling detail exists for every

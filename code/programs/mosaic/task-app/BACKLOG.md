@@ -27,10 +27,10 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Richer Gantt: day-grid columns, weekend/today shading, milestone diamonds,
      dependency arrows, hover tooltips, a legend. Current timeline is a simple
      proportional-bar-per-row view.
-   - Richer task rows: critical/slack chips, labels, priority, dependency list, notes
-     paragraph in the detail panel. `task-core` already has labels/priority as
-     first-class fields (shipped) — this is wiring them into `main.tsx`'s row-building
-     and `TaskApp.mil`/`.mll`'s row-cell layout, not new engine work.
+   - Richer task rows: labels/priority chips shipped (see Resolved below). Still
+     missing: critical/slack chips, dependency list, notes paragraph in the detail
+     panel — the notes-paragraph item can now pull from the real `Note` entity
+     (shipped in Phase 8) via an `attached_task` lookup, not just `Task.notes`.
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
@@ -66,6 +66,12 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   UI to set `attached_task`); tags are generic and reusable in `mosaic-pkg-notes` but
   nothing drives them; `Note.body` is plain text, matching every other free-text field
   in the engine; no search box (mirrors Sheet's own v1 scope cut).
+- **Label management UI (create, colour-pick, assign to a task).** `upsertLabel`/
+  `setTaskLabels` exist on the engine; nothing in `main.tsx` calls either yet, and the
+  Sheet's column catalogue has no Labels column. The task-row labels chip shipped
+  (see Resolved below) and is fully wired — it just has no data to show until this
+  lands, the same "engine ready, no create UI yet" shape Notes' attachment picker is
+  in.
 - Recurring tasks / reminders UX.
 - Automation rules (Butler-style).
 - Resource-leveling UI (the engine's `constraint-*` leveling exists; no UI surfaces it).
@@ -75,6 +81,16 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Task-row priority + labels chips.** Pure display wiring — `task-core` already had
+  both fields shipped; `TASK_VIEW`'s `visibleFields` gained `priority`/`labels`,
+  `taskRows()` appends them as trailing cells (`row[10]`/`row[11]`, not inserted, so no
+  existing index shifts), `TaskApp.mil`/`.mll` gained `chip-priority`/`chip-labels`
+  following the exact `chip-due`/`chip-sched`/`chip-over` pattern. Verified live: set a
+  task's priority to "High" via the Sheet tab's already-editable Priority column,
+  confirmed the chip renders on the List tab in both themes. The labels chip uses the
+  identical mechanism but has no way to actually populate yet — no UI assigns a label
+  to a task anywhere in the app — tracked as its own item above (label management UI),
+  not silently glossed over.
 - **Phase 8 — Notes, both halves.** Engine: `task-core` gained `Note { id, title,
   body, attached_task }`, stored per-project (`ProjectState.notes`, serde-defaulted
   so already-persisted workspaces keep loading), `upsert_note`/`delete_note` ops,
