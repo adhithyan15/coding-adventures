@@ -39,6 +39,7 @@ The machine-readable layer alongside the tracks is:
 ```text
 core/languages.json             complete active-language registry and default mix order
 core/spine.json                 ordered, language-independent can-do spine
+core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
@@ -56,6 +57,14 @@ The unified publication job also emits `curriculum-gaps.json` and
 for every over-limit lesson, prerequisite omissions, lesson-to-book chapter
 coverage, and each track's schema-migration status. Existing migration debt is
 reported rather than hidden or treated as a new regression.
+
+The same job also scans every compiled `book.log` and emits `latex-warnings.json`
+beside the books. Overfull and underfull boxes, missing glyphs, hyperref warnings,
+duplicate PDF destinations, and font substitutions are counted per track and compared
+against `core/latex-warning-baseline.json`; a track fails only when it exceeds its
+recorded numbers, and a track recorded as `null` has not been measured yet, so it is
+reported and never failed. Until this gate existed, every track's "builds with zero
+warnings" claim was prose that nothing checked.
 
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
 losslessly and checks that each authored book chapter maps to its short Markdown
