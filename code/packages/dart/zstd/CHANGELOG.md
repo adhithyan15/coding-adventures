@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.1.3
+
+- **Fixed: the decoder never implemented Repeated-Offset (R1/R2/R3) sequence
+  decoding (RFC 8878 §3.1.1.3.2.1.1)** — a second, independent gap from the
+  0.1.2 FSE fixes, found while auditing every `zstd` port after the
+  already-CLI-verified `c/zstd` port (PR #9941) hit the identical issue.
+  A sequence's Offset_Value is not always a literal distance: values 1, 2,
+  and 3 are reserved as references into a 3-slot history of recently-used
+  offsets (R1/R2/R3, defaulting to `{1, 4, 8}` at the start of a frame,
+  threaded across every Compressed block in the frame — not reset per
+  block). `_decompressBlock` previously computed every offset as flat
+  `of_raw - 3` and threw `FormatException: decoded offset underflow` the
+  instant it saw Offset_Value 1, 2, or 3. This package's own `compress()`
+  never emits repeat-offset codes (`_encodeSequencesSection` always writes
+  an explicit, +3-biased offset), so no in-process round trip — including
+  every existing unit test and the 0.1.2 60-case CLI fuzz corpus — ever
+  exercised this path; only decoding a real, unmodified `zstd` CLI's output
+  (the "theirs → ours" direction) can. Added `_resolveOffset`, implementing
+  the full selector table (explicit offset, R1 reuse, R1/R2 swap, R2/R3
+  rotate, and the `Literals_Length == 0` shifted-selector special case),
+  cross-checked against both RFC 8878's prose and the reference decoder
+  (`ZSTD_decodeSequence` in `facebook/zstd`'s `zstd_decompress_block.c`,
+  fetched live rather than recalled) and independently verified to match
+  the identical, already-fuzz-tested formula in `c/zstd`'s PR #9941.
+  `decompress()` now threads a frame-scoped `[R1, R2, R3]` offset-history
+  list through every Compressed block; the encoder is intentionally left
+  unchanged (decode-only fix — see lessons.md).
+- Added a `Repeated-Offset (R1/R2/R3) — real zstd CLI interop` test group:
+  four fixtures (a constant-byte run reproducing the exact original bug;
+  the CMP07 spec's own TC-8 "pattern at a fixed repeated distance" fixture;
+  a three-pattern interleave designed to stress R1/R2 rotation; and a
+  two-pattern interleave) compressed with the real `zstd` CLI and decoded
+  with this package's `decompress()`, verifying byte-exact output. All four
+  reproducibly failed with `FormatException: decoded offset underflow`
+  before this fix and pass after it.
+
 ## 0.1.2
 
 - **Fixed: FSE sequences-section codec was not RFC 8878 conformant**, despite

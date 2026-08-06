@@ -1,8 +1,9 @@
 use chief_of_staff_host_runtime::{
-    verify_agent_package, PackageKeyType, PackageKeyring, TrustedPackageKey,
+    verify_agent_package, AgentPackageRuntime, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
 use chief_of_staff_process_supervisor::ChildProcessControl;
 use chief_of_staff_tool_api::PrivilegeTier;
+use std::env;
 use std::io::{self, Write};
 use std::path::Path;
 use std::thread;
@@ -38,6 +39,14 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         PrivilegeTier::Tier3,
     )?)?;
     let package = verify_agent_package(Path::new("."), &keyring)?;
+    let arguments = env::args().skip(1).collect::<Vec<_>>();
+    let expected_runtime = match package.runtime() {
+        AgentPackageRuntime::Deno => "deno",
+        AgentPackageRuntime::Skill => "skill",
+    };
+    if arguments != ["--package-runtime", expected_runtime] {
+        return Err("package runtime launch argument mismatch".into());
+    }
     let stdin = io::stdin();
     let stdout = io::stdout();
     let mut control = ChildProcessControl::bootstrap(stdin.lock(), stdout.lock())?;

@@ -29,6 +29,36 @@ bool _isZstdCliAvailable() {
   }
 }
 
+/// Compress [original] with the REAL `zstd` CLI, then decompress the result
+/// with our own [decompress]. Returns the round-tripped bytes.
+///
+/// This is the "theirs → ours" direction of TC-9's cross-implementation
+/// check, factored out so multiple fixtures can reuse it (see the
+/// Repeated-Offset test group below). Our own [compress] never emits
+/// repeat-offset sequences (see [_encodeSequencesSection]'s doc comment in
+/// the library), so this direction — decoding bytes a real, unmodified
+/// `zstd` encoder produced — is the only way to exercise our decoder's
+/// Repeated_Offset (R1/R2/R3) handling at all.
+Uint8List _decodeViaRealZstdCli(Uint8List original) {
+  final tmpDir = Directory.systemTemp.createTempSync('zstd-dart-repoffset-');
+  try {
+    final inFile = File('${tmpDir.path}/in.bin');
+    inFile.writeAsBytesSync(original);
+    final result = Process.runSync(
+      'zstd',
+      ['-q', '-c', inFile.path],
+      stdoutEncoding: null,
+    );
+    if (result.exitCode != 0) {
+      fail('real `zstd` failed to compress the fixture: ${result.stderr}');
+    }
+    final compressed = Uint8List.fromList(result.stdout as List<int>);
+    return decompress(compressed);
+  } finally {
+    tmpDir.deleteSync(recursive: true);
+  }
+}
+
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 void main() {
@@ -285,6 +315,124 @@ void main() {
     } finally {
       tmpDir.deleteSync(recursive: true);
     }
+  });
+
+  // ── Repeated-Offset (R1/R2/R3) sequence decoding — real `zstd` CLI ────────
+  //
+  // RFC 8878 §3.1.1.3.2.1.1: a sequence's Offset_Value of 1, 2, or 3 is not
+  // a literal distance — it is a reference into a 3-slot history of
+  // recently-used offsets (R1/R2/R3, defaulting to {1, 4, 8} at the start
+  // of a frame). Real `zstd` encoders use this constantly, since re-using a
+  // recent distance costs far fewer bits than encoding it explicitly. This
+  // package's OWN encoder ([_encodeSequencesSection]) always writes an
+  // explicit offset (biased +3, so raw distances 1..3 land on Offset_Value
+  // 4..6 and never collide with a repeat-offset code) and so never emits
+  // Offset_Value 1/2/3 itself — meaning no in-process `compress`+`decompress`
+  // round trip (TC-1..TC-8, RT-*, etc. above) can ever exercise this path.
+  // Only real `zstd`-CLI-produced input can: see lessons.md (the entry
+  // documenting this gap, cross-referencing the already-CLI-verified
+  // `c/zstd` port's PR that fixed the identical decode gap).
+  //
+  // Before this fix, every fixture below threw `FormatException: decoded
+  // offset underflow` from the old `of_raw - 3` code path, which treated
+  // Offset_Value 1/2/3 as a (nonsensical, always-rejected) explicit offset
+  // instead of a repeat-offset reference.
+  group('Repeated-Offset (R1/R2/R3) — real zstd CLI interop', () {
+    test('constant-byte run (Offset_Value=1, default R1=1)', () {
+      if (!_isZstdCliAvailable()) {
+        markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+        return;
+      }
+      // A run of one repeated byte: the very first match is at distance 1,
+      // which — because the offset-history default is R1=1 — real `zstd`
+      // encodes as a bare repeat-offset reference rather than an explicit
+      // offset. This was the exact minimal repro that first surfaced the
+      // gap: 4713 bytes of the same byte compress to a single Compressed
+      // block whose one sequence has Offset_Value=1.
+      final original = Uint8List(4713)..fillRange(0, 4713, 0x41);
+      expect(_decodeViaRealZstdCli(original), equals(original));
+    });
+
+    test(
+      'CMP07-zstd.md TC-8 fixture: pattern at a fixed repeated distance',
+      () {
+        if (!_isZstdCliAvailable()) {
+          markTestSkipped(
+            'zstd CLI not found on PATH — skipping interop test',
+          );
+          return;
+        }
+        // Straight from the spec's own "TC-8: Repeat-offset compression"
+        // (code/specs/CMP07-zstd.md): an 8-byte pattern reappears at the
+        // same 128-byte distance ten times in a row. Each reappearance
+        // after the first has a nonzero literal run (the 128 filler bytes)
+        // before it, so real `zstd` repeatedly re-uses R1 unchanged
+        // (selector 0 in the decoder's offset-resolution table) — multiple
+        // separate sequences, not just one, all referencing the same
+        // repeat-offset slot.
+        const pattern = [0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48];
+        final original = bytes([
+          ...pattern,
+          for (var i = 0; i < 10; i++) ...[
+            ...List.filled(128, 0x58), // 'X' * 128
+            ...pattern,
+          ],
+        ]);
+        expect(_decodeViaRealZstdCli(original), equals(original));
+      },
+    );
+
+    test('three interleaved repeat distances (stresses R1/R2/R3 rotation)', () {
+      if (!_isZstdCliAvailable()) {
+        markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+        return;
+      }
+      // Three distinct patterns, each periodic at its OWN distance (3, 5,
+      // and 7 bytes), interleaved unit-by-unit. Note: this package's
+      // decoder only supports Raw_Literals (RFC 8878 §3.1.1.2.1 type 0) —
+      // real `zstd`'s Huffman-coded literals (type 2) are a separate,
+      // already-documented out-of-scope limitation (see
+      // _decodeLiteralsSection), not part of this repeat-offset fix. A
+      // small, low-entropy byte alphabet like this one keeps `zstd`'s own
+      // literal-type heuristic on the Raw side while still forcing R1 and
+      // R2 (and their swap) into use as the encoder alternates which
+      // pattern it is currently re-matching — a realistic way to exercise
+      // more of the offset-history state machine than a single-distance
+      // fixture can.
+      const a = [0x10, 0x11, 0x12]; // period-3 pattern
+      const b = [0x20, 0x21, 0x22, 0x23, 0x24]; // period-5 pattern
+      const c = [0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36]; // period-7 pattern
+      final units = <int>[];
+      for (var i = 0; i < 300; i++) {
+        units.addAll(a);
+        units.addAll(b);
+        units.addAll(c);
+      }
+      final original = bytes(units);
+      expect(_decodeViaRealZstdCli(original), equals(original));
+    });
+
+    test('binary data with two interleaved repeat distances', () {
+      if (!_isZstdCliAvailable()) {
+        markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+        return;
+      }
+      // Two distinct short patterns, each periodic at its OWN distance,
+      // interleaved unit-by-unit. A real encoder tracking "most recently
+      // used" offsets will bounce between the two distances as it
+      // alternates which pattern it is currently re-matching, which is a
+      // realistic way to force R1 and R2 (and their swap) to both see use,
+      // beyond the single-distance fixtures above.
+      const a = [0x10, 0x11, 0x12, 0x13]; // period-4 pattern
+      const b = [0x20, 0x21, 0x22, 0x23, 0x24, 0x25]; // period-6 pattern
+      final units = <int>[];
+      for (var i = 0; i < 300; i++) {
+        units.addAll(a);
+        units.addAll(b);
+      }
+      final original = bytes(units);
+      expect(_decodeViaRealZstdCli(original), equals(original));
+    });
   });
 
   // ── Additional round-trip tests ────────────────────────────────────────────
