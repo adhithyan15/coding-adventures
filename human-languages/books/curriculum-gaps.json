@@ -22,9 +22,9 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 3,
-    "drivableLessons": 725,
-    "drivablePercent": 64,
-    "chaptersWithoutDrivablePrefix": 122,
+    "drivableLessons": 956,
+    "drivablePercent": 84,
+    "chaptersWithoutDrivablePrefix": 44,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -1697,65 +1697,65 @@
     ]
   },
   "modality": {
-    "maxLinearisableTableColumns": 0,
+    "maxLinearisableTableColumns": 3,
     "totalLessons": 1133,
-    "voice": 725,
-    "sight": 355,
+    "voice": 956,
+    "sight": 124,
     "pen": 53,
-    "coreVoice": 725,
+    "coreVoice": 956,
     "lessonsWithWritingSegments": 0,
-    "drivablePercent": 64,
+    "drivablePercent": 84,
     "tracks": [
       {
         "language": "arabic",
         "lessonCount": 71,
-        "voice": 37,
-        "sight": 18,
+        "voice": 50,
+        "sight": 5,
         "pen": 16,
-        "coreVoice": 37,
-        "drivablePercent": 52,
-        "drivablePrefixTotal": 31,
+        "coreVoice": 50,
+        "drivablePercent": 70,
+        "drivablePrefixTotal": 42,
         "chapters": [
           {
             "language": "arabic",
             "chapter": 1,
             "lessonCount": 14,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 6,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "AR-C01-practice"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": "AR-W01-abjad-short-vowels"
           },
           {
             "language": "arabic",
             "chapter": 2,
             "lessonCount": 12,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 4,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": "AR-C02-practice"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": "AR-W04-dots-family-nun-ta"
           },
           {
             "language": "arabic",
             "chapter": 3,
             "lessonCount": 9,
-            "voice": 1,
-            "sight": 5,
+            "voice": 4,
+            "sight": 2,
             "pen": 3,
-            "coreVoice": 1,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight",
@@ -1768,11 +1768,12 @@
             "language": "arabic",
             "chapter": 4,
             "lessonCount": 8,
-            "voice": 0,
-            "sight": 5,
+            "voice": 3,
+            "sight": 2,
             "pen": 3,
-            "coreVoice": 0,
+            "coreVoice": 3,
             "modalities": [
+              "voice",
               "sight",
               "pen"
             ],
@@ -1783,16 +1784,15 @@
             "language": "arabic",
             "chapter": 5,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "AR-C05-la"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "arabic",
@@ -1883,15 +1883,15 @@
             "language": "arabic",
             "chapter": 12,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "AR-C12-al-fusul"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "arabic",
@@ -1911,15 +1911,15 @@
             "language": "arabic",
             "chapter": 14,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "AR-C14-ashhur"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "arabic",
@@ -1981,29 +1981,29 @@
             "language": "arabic",
             "chapter": 19,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "AR-C19-wahid-khamsa"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "arabic",
             "chapter": 20,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "AR-C20-ahada-ashar-ishrun"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "arabic",
@@ -2108,12 +2108,12 @@
       {
         "language": "bengali",
         "lessonCount": 31,
-        "voice": 28,
-        "sight": 3,
+        "voice": 29,
+        "sight": 2,
         "pen": 0,
-        "coreVoice": 28,
-        "drivablePercent": 90,
-        "drivablePrefixTotal": 23,
+        "coreVoice": 29,
+        "drivablePercent": 94,
+        "drivablePrefixTotal": 24,
         "chapters": [
           {
             "language": "bengali",
@@ -2191,15 +2191,15 @@
             "language": "bengali",
             "chapter": 6,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "BN-C06-numbers-1-5"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -2233,12 +2233,12 @@
       {
         "language": "french",
         "lessonCount": 73,
-        "voice": 32,
-        "sight": 38,
+        "voice": 58,
+        "sight": 12,
         "pen": 3,
-        "coreVoice": 32,
-        "drivablePercent": 44,
-        "drivablePrefixTotal": 22,
+        "coreVoice": 58,
+        "drivablePercent": 79,
+        "drivablePrefixTotal": 42,
         "chapters": [
           {
             "language": "french",
@@ -2259,10 +2259,10 @@
             "language": "french",
             "chapter": 2,
             "lessonCount": 9,
-            "voice": 6,
-            "sight": 3,
+            "voice": 7,
+            "sight": 2,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 7,
             "modalities": [
               "voice",
               "sight"
@@ -2274,10 +2274,10 @@
             "language": "french",
             "chapter": 3,
             "lessonCount": 7,
-            "voice": 2,
-            "sight": 5,
+            "voice": 6,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 6,
             "modalities": [
               "voice",
               "sight"
@@ -2289,32 +2289,32 @@
             "language": "french",
             "chapter": 4,
             "lessonCount": 8,
-            "voice": 2,
-            "sight": 3,
+            "voice": 5,
+            "sight": 0,
             "pen": 3,
-            "coreVoice": 2,
+            "coreVoice": 5,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "FR-C04-a-demain"
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": "FR-W01-accents"
           },
           {
             "language": "french",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 2,
-            "sight": 3,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FR-C05-habiter"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "FR-C05-parler"
           },
           {
             "language": "french",
@@ -2348,45 +2348,43 @@
             "language": "french",
             "chapter": 8,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "FR-C08-midi-minuit"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "french",
             "chapter": 9,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FR-C09-mois"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "french",
             "chapter": 10,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "FR-C10-parents"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "french",
@@ -2406,11 +2404,12 @@
             "language": "french",
             "chapter": 12,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 1,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
+              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -2420,75 +2419,19 @@
             "language": "french",
             "chapter": 13,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FR-C13-noir-blanc"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "french",
             "chapter": 14,
-            "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FR-C14-age"
-          },
-          {
-            "language": "french",
-            "chapter": 15,
-            "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FR-C15-passe-compose"
-          },
-          {
-            "language": "french",
-            "chapter": 16,
-            "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FR-C16-etre"
-          },
-          {
-            "language": "french",
-            "chapter": 17,
-            "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FR-C17-tete"
-          },
-          {
-            "language": "french",
-            "chapter": 18,
             "lessonCount": 2,
             "voice": 1,
             "sight": 1,
@@ -2499,7 +2442,64 @@
               "sight"
             ],
             "drivablePrefix": 1,
-            "firstNonVoiceLesson": "FR-C18-non"
+            "firstNonVoiceLesson": "FR-C14-avoir"
+          },
+          {
+            "language": "french",
+            "chapter": 15,
+            "lessonCount": 2,
+            "voice": 2,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 16,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 17,
+            "lessonCount": 2,
+            "voice": 1,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "FR-C17-tete"
+          },
+          {
+            "language": "french",
+            "chapter": 18,
+            "lessonCount": 2,
+            "voice": 2,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "french",
@@ -2576,21 +2576,21 @@
       {
         "language": "german",
         "lessonCount": 76,
-        "voice": 36,
-        "sight": 37,
+        "voice": 65,
+        "sight": 8,
         "pen": 3,
-        "coreVoice": 36,
-        "drivablePercent": 47,
-        "drivablePrefixTotal": 22,
+        "coreVoice": 65,
+        "drivablePercent": 86,
+        "drivablePrefixTotal": 60,
         "chapters": [
           {
             "language": "german",
             "chapter": 1,
             "lessonCount": 12,
-            "voice": 10,
-            "sight": 2,
+            "voice": 11,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 10,
+            "coreVoice": 11,
             "modalities": [
               "voice",
               "sight"
@@ -2602,62 +2602,59 @@
             "language": "german",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": "GE-C02-practice"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
             "chapter": 3,
             "lessonCount": 8,
-            "voice": 4,
-            "sight": 4,
+            "voice": 8,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 8,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C03-bitte"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
             "chapter": 4,
             "lessonCount": 9,
-            "voice": 3,
-            "sight": 3,
+            "voice": 6,
+            "sight": 0,
             "pen": 3,
-            "coreVoice": 3,
+            "coreVoice": 6,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C04-auf-wiedersehen"
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": "GE-W01-eszett"
           },
           {
             "language": "german",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 2,
-            "sight": 3,
+            "voice": 5,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 5,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "GE-C05-lernen"
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
@@ -2691,43 +2688,43 @@
             "language": "german",
             "chapter": 8,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C08-mittag-mitternacht"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
             "chapter": 9,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C09-jahreszeiten"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
             "chapter": 10,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C10-eltern"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
@@ -2762,76 +2759,19 @@
             "language": "german",
             "chapter": 13,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C13-rot-blau"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
             "chapter": 14,
-            "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C14-alter"
-          },
-          {
-            "language": "german",
-            "chapter": 15,
-            "lessonCount": 3,
-            "voice": 0,
-            "sight": 3,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C15-perfekt"
-          },
-          {
-            "language": "german",
-            "chapter": 16,
-            "lessonCount": 3,
-            "voice": 0,
-            "sight": 3,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GE-C16-perfekt-sein"
-          },
-          {
-            "language": "german",
-            "chapter": 17,
-            "lessonCount": 3,
-            "voice": 1,
-            "sight": 2,
-            "pen": 0,
-            "coreVoice": 1,
-            "modalities": [
-              "voice",
-              "sight"
-            ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "GE-C17-kopf-haupt"
-          },
-          {
-            "language": "german",
-            "chapter": 18,
             "lessonCount": 2,
             "voice": 1,
             "sight": 1,
@@ -2842,7 +2782,64 @@
               "sight"
             ],
             "drivablePrefix": 1,
-            "firstNonVoiceLesson": "GE-C18-nein"
+            "firstNonVoiceLesson": "GE-C14-haben"
+          },
+          {
+            "language": "german",
+            "chapter": 15,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 16,
+            "lessonCount": 3,
+            "voice": 2,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "GE-C16-sein"
+          },
+          {
+            "language": "german",
+            "chapter": 17,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 18,
+            "lessonCount": 2,
+            "voice": 2,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "german",
@@ -2919,12 +2916,12 @@
       {
         "language": "gujarati",
         "lessonCount": 33,
-        "voice": 28,
-        "sight": 5,
+        "voice": 30,
+        "sight": 3,
         "pen": 0,
-        "coreVoice": 28,
-        "drivablePercent": 85,
-        "drivablePrefixTotal": 27,
+        "coreVoice": 30,
+        "drivablePercent": 91,
+        "drivablePrefixTotal": 29,
         "chapters": [
           {
             "language": "gujarati",
@@ -3002,27 +2999,27 @@
             "language": "gujarati",
             "chapter": 6,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "GU-C06-numbers-1-5"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "hindi",
         "lessonCount": 84,
-        "voice": 62,
-        "sight": 11,
+        "voice": 70,
+        "sight": 3,
         "pen": 11,
-        "coreVoice": 62,
-        "drivablePercent": 74,
-        "drivablePrefixTotal": 41,
+        "coreVoice": 70,
+        "drivablePercent": 83,
+        "drivablePrefixTotal": 54,
         "chapters": [
           {
             "language": "hindi",
@@ -3044,10 +3041,10 @@
             "language": "hindi",
             "chapter": 2,
             "lessonCount": 16,
-            "voice": 8,
-            "sight": 1,
+            "voice": 9,
+            "sight": 0,
             "pen": 7,
-            "coreVoice": 8,
+            "coreVoice": 9,
             "modalities": [
               "voice",
               "sight",
@@ -3060,16 +3057,15 @@
             "language": "hindi",
             "chapter": 3,
             "lessonCount": 7,
-            "voice": 6,
-            "sight": 1,
+            "voice": 7,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 7,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": "HI-C03-hun"
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "hindi",
@@ -3105,31 +3101,29 @@
             "language": "hindi",
             "chapter": 6,
             "lessonCount": 3,
-            "voice": 1,
-            "sight": 2,
+            "voice": 3,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "HI-C06-numbers-1-5"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "hindi",
             "chapter": 7,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "HI-C07-nahin"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "hindi",
@@ -3220,15 +3214,15 @@
             "language": "hindi",
             "chapter": 14,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "HI-C14-ritu"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "hindi",
@@ -3318,30 +3312,29 @@
             "language": "hindi",
             "chapter": 21,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "HI-C21-numbers-6-10"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "hindi",
             "chapter": 22,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "HI-C22-gyarah-bees"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "hindi",
@@ -3502,21 +3495,21 @@
       {
         "language": "italian",
         "lessonCount": 58,
-        "voice": 25,
-        "sight": 33,
+        "voice": 45,
+        "sight": 13,
         "pen": 0,
-        "coreVoice": 25,
-        "drivablePercent": 43,
-        "drivablePrefixTotal": 13,
+        "coreVoice": 45,
+        "drivablePercent": 78,
+        "drivablePrefixTotal": 38,
         "chapters": [
           {
             "language": "italian",
             "chapter": 1,
             "lessonCount": 9,
-            "voice": 7,
-            "sight": 2,
+            "voice": 8,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
               "voice",
               "sight"
@@ -3528,20 +3521,47 @@
             "language": "italian",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 4,
-            "sight": 4,
+            "voice": 8,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 8,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "IT-C02-prego"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "italian",
             "chapter": 3,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 4,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 5,
             "lessonCount": 5,
             "voice": 4,
             "sight": 1,
@@ -3552,37 +3572,7 @@
               "sight"
             ],
             "drivablePrefix": 2,
-            "firstNonVoiceLesson": "IT-C03-come-ti-chiami"
-          },
-          {
-            "language": "italian",
-            "chapter": 4,
-            "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
-            "pen": 0,
-            "coreVoice": 4,
-            "modalities": [
-              "voice",
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "IT-C04-arrivederci"
-          },
-          {
-            "language": "italian",
-            "chapter": 5,
-            "lessonCount": 5,
-            "voice": 1,
-            "sight": 4,
-            "pen": 0,
-            "coreVoice": 1,
-            "modalities": [
-              "voice",
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "IT-C05-parlare"
+            "firstNonVoiceLesson": "IT-C05-lavorare"
           },
           {
             "language": "italian",
@@ -3631,11 +3621,12 @@
             "language": "italian",
             "chapter": 9,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 1,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
+              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -3687,25 +3678,26 @@
             "language": "italian",
             "chapter": 13,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "IT-C13-nero-bianco"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "italian",
             "chapter": 14,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 1,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
+              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -3715,43 +3707,44 @@
             "language": "italian",
             "chapter": 15,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "IT-C15-passato-prossimo"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "italian",
             "chapter": 16,
             "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
+            "voice": 2,
+            "sight": 2,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
+              "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "IT-C16-essere"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "IT-C16-essere-stato"
           },
           {
             "language": "italian",
             "chapter": 17,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "IT-C17-testa"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -3785,21 +3778,21 @@
       {
         "language": "kannada",
         "lessonCount": 60,
-        "voice": 46,
-        "sight": 14,
+        "voice": 53,
+        "sight": 7,
         "pen": 0,
-        "coreVoice": 46,
-        "drivablePercent": 77,
-        "drivablePrefixTotal": 43,
+        "coreVoice": 53,
+        "drivablePercent": 88,
+        "drivablePrefixTotal": 48,
         "chapters": [
           {
             "language": "kannada",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 2,
-            "sight": 4,
+            "voice": 4,
+            "sight": 2,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
@@ -3811,16 +3804,15 @@
             "language": "kannada",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": "KA-C02-practice"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "kannada",
@@ -3868,11 +3860,12 @@
             "language": "kannada",
             "chapter": 6,
             "lessonCount": 3,
-            "voice": 0,
-            "sight": 3,
+            "voice": 1,
+            "sight": 2,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
+              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -3924,15 +3917,15 @@
             "language": "kannada",
             "chapter": 10,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "KA-C10-vaara"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "kannada",
@@ -3952,15 +3945,15 @@
             "language": "kannada",
             "chapter": 12,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "KA-C12-kutumba"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "kannada",
@@ -3980,15 +3973,15 @@
             "language": "kannada",
             "chapter": 14,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "KA-C14-kaalagalu"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "kannada",
@@ -4233,12 +4226,12 @@
       {
         "language": "latin",
         "lessonCount": 57,
-        "voice": 47,
-        "sight": 10,
+        "voice": 54,
+        "sight": 3,
         "pen": 0,
-        "coreVoice": 47,
-        "drivablePercent": 82,
-        "drivablePrefixTotal": 45,
+        "coreVoice": 54,
+        "drivablePercent": 95,
+        "drivablePrefixTotal": 53,
         "chapters": [
           {
             "language": "latin",
@@ -4329,44 +4322,43 @@
             "language": "latin",
             "chapter": 7,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "LA-C07-pater-mater"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "latin",
             "chapter": 8,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "LA-C08-caput"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "latin",
             "chapter": 9,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "LA-C09-anni-tempora"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "latin",
@@ -4386,15 +4378,15 @@
             "language": "latin",
             "chapter": 11,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "LA-C11-menses"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "latin",
@@ -4414,15 +4406,15 @@
             "language": "latin",
             "chapter": 13,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "LA-C13-hora"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "latin",
@@ -4456,15 +4448,15 @@
             "language": "latin",
             "chapter": 16,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "LA-C16-undecim-viginti"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "latin",
@@ -4751,42 +4743,41 @@
       {
         "language": "malayalam",
         "lessonCount": 64,
-        "voice": 51,
-        "sight": 13,
+        "voice": 58,
+        "sight": 6,
         "pen": 0,
-        "coreVoice": 51,
-        "drivablePercent": 80,
-        "drivablePrefixTotal": 49,
+        "coreVoice": 58,
+        "drivablePercent": 91,
+        "drivablePrefixTotal": 57,
         "chapters": [
           {
             "language": "malayalam",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 2,
-            "sight": 4,
+            "voice": 5,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 5,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "ML-C01-illa"
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "ML-C01-practice"
           },
           {
             "language": "malayalam",
             "chapter": 2,
             "lessonCount": 9,
-            "voice": 8,
-            "sight": 1,
+            "voice": 9,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 8,
+            "coreVoice": 9,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": "ML-C02-practice"
+            "drivablePrefix": 9,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "malayalam",
@@ -4918,15 +4909,15 @@
             "language": "malayalam",
             "chapter": 12,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ML-C12-kudumbam"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "malayalam",
@@ -4946,15 +4937,15 @@
             "language": "malayalam",
             "chapter": 14,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ML-C14-kaalangal"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "malayalam",
@@ -5184,130 +5175,124 @@
             "language": "malayalam",
             "chapter": 31,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "ML-C31-afternoon-convergence"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "marathi",
         "lessonCount": 35,
-        "voice": 28,
-        "sight": 7,
+        "voice": 34,
+        "sight": 1,
         "pen": 0,
-        "coreVoice": 28,
-        "drivablePercent": 80,
-        "drivablePrefixTotal": 20,
+        "coreVoice": 34,
+        "drivablePercent": 97,
+        "drivablePrefixTotal": 34,
         "chapters": [
           {
             "language": "marathi",
             "chapter": 1,
             "lessonCount": 7,
-            "voice": 6,
-            "sight": 1,
+            "voice": 7,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 7,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": "MR-C01-practice"
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "marathi",
             "chapter": 2,
             "lessonCount": 9,
-            "voice": 8,
-            "sight": 1,
+            "voice": 9,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 8,
+            "coreVoice": 9,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": "MR-C02-practice"
+            "drivablePrefix": 9,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "marathi",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 6,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 6,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "MR-C03-practice"
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "marathi",
             "chapter": 4,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 6,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 6,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": "MR-C04-practice"
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "marathi",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 3,
-            "sight": 2,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 3,
-            "firstNonVoiceLesson": "MR-C05-practice"
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "MR-C05-rahne"
           },
           {
             "language": "marathi",
             "chapter": 6,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "MR-C06-numbers-1-5"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "persian",
         "lessonCount": 20,
-        "voice": 18,
-        "sight": 2,
+        "voice": 19,
+        "sight": 1,
         "pen": 0,
-        "coreVoice": 18,
-        "drivablePercent": 90,
-        "drivablePrefixTotal": 15,
+        "coreVoice": 19,
+        "drivablePercent": 95,
+        "drivablePrefixTotal": 17,
         "chapters": [
           {
             "language": "persian",
@@ -5341,16 +5326,16 @@
             "language": "persian",
             "chapter": 3,
             "lessonCount": 5,
-            "voice": 3,
-            "sight": 2,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "FA-C03-shoma-to"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "FA-C03-esm-e-shoma-chist"
           },
           {
             "language": "persian",
@@ -5385,21 +5370,21 @@
       {
         "language": "portuguese",
         "lessonCount": 59,
-        "voice": 26,
-        "sight": 33,
+        "voice": 50,
+        "sight": 9,
         "pen": 0,
-        "coreVoice": 26,
-        "drivablePercent": 44,
-        "drivablePrefixTotal": 10,
+        "coreVoice": 50,
+        "drivablePercent": 85,
+        "drivablePrefixTotal": 44,
         "chapters": [
           {
             "language": "portuguese",
             "chapter": 1,
             "lessonCount": 9,
-            "voice": 7,
-            "sight": 2,
+            "voice": 8,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
               "voice",
               "sight"
@@ -5411,61 +5396,57 @@
             "language": "portuguese",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 5,
-            "sight": 3,
+            "voice": 8,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 8,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PT-C02-de-nada"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
             "chapter": 3,
             "lessonCount": 5,
-            "voice": 3,
-            "sight": 2,
+            "voice": 5,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 5,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "PT-C03-me-chamo"
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
+            "voice": 5,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 5,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PT-C04-adeus"
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 1,
-            "sight": 4,
+            "voice": 5,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 5,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PT-C05-falar"
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
@@ -5514,11 +5495,12 @@
             "language": "portuguese",
             "chapter": 9,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 1,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
+              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -5570,84 +5552,83 @@
             "language": "portuguese",
             "chapter": 13,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PT-C13-preto-branco"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
             "chapter": 14,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PT-C14-ter"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
             "chapter": 15,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PT-C15-preterito-perfeito"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
             "chapter": 16,
             "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
+            "voice": 4,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 4,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PT-C16-ser"
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "portuguese",
             "chapter": 17,
             "lessonCount": 3,
-            "voice": 1,
-            "sight": 2,
+            "voice": 3,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "PT-C17-cabeca-caput"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "punjabi",
         "lessonCount": 33,
-        "voice": 29,
-        "sight": 4,
+        "voice": 31,
+        "sight": 2,
         "pen": 0,
-        "coreVoice": 29,
-        "drivablePercent": 88,
-        "drivablePrefixTotal": 28,
+        "coreVoice": 31,
+        "drivablePercent": 94,
+        "drivablePrefixTotal": 30,
         "chapters": [
           {
             "language": "punjabi",
@@ -5725,15 +5706,15 @@
             "language": "punjabi",
             "chapter": 6,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PA-C06-numbers-1-5"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -5783,12 +5764,12 @@
       {
         "language": "sanskrit",
         "lessonCount": 33,
-        "voice": 29,
-        "sight": 4,
+        "voice": 31,
+        "sight": 2,
         "pen": 0,
-        "coreVoice": 29,
-        "drivablePercent": 88,
-        "drivablePrefixTotal": 24,
+        "coreVoice": 31,
+        "drivablePercent": 94,
+        "drivablePrefixTotal": 26,
         "chapters": [
           {
             "language": "sanskrit",
@@ -5851,25 +5832,24 @@
             "language": "sanskrit",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
+            "voice": 5,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 5,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 3,
-            "firstNonVoiceLesson": "SA-C05-vadami"
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "sanskrit",
             "chapter": 6,
             "lessonCount": 3,
-            "voice": 1,
-            "sight": 2,
+            "voice": 2,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight"
@@ -5882,12 +5862,12 @@
       {
         "language": "spanish",
         "lessonCount": 146,
-        "voice": 63,
-        "sight": 76,
+        "voice": 118,
+        "sight": 21,
         "pen": 7,
-        "coreVoice": 63,
-        "drivablePercent": 43,
-        "drivablePrefixTotal": 31,
+        "coreVoice": 118,
+        "drivablePercent": 81,
+        "drivablePrefixTotal": 92,
         "chapters": [
           {
             "language": "spanish",
@@ -5921,42 +5901,42 @@
             "language": "spanish",
             "chapter": 3,
             "lessonCount": 14,
-            "voice": 11,
-            "sight": 2,
+            "voice": 12,
+            "sight": 1,
             "pen": 1,
-            "coreVoice": 11,
+            "coreVoice": 12,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "ES-C03-tu-usted-register"
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": "ES-C03-como-acento"
           },
           {
             "language": "spanish",
             "chapter": 4,
             "lessonCount": 15,
-            "voice": 6,
-            "sight": 3,
+            "voice": 9,
+            "sight": 0,
             "pen": 6,
-            "coreVoice": 6,
+            "coreVoice": 9,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 3,
-            "firstNonVoiceLesson": "ES-C04-estar-estado"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": "ES-W01-acento"
           },
           {
             "language": "spanish",
             "chapter": 5,
             "lessonCount": 7,
-            "voice": 3,
-            "sight": 4,
+            "voice": 6,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 6,
             "modalities": [
               "voice",
               "sight"
@@ -5968,10 +5948,10 @@
             "language": "spanish",
             "chapter": 6,
             "lessonCount": 9,
-            "voice": 6,
-            "sight": 3,
+            "voice": 8,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 8,
             "modalities": [
               "voice",
               "sight"
@@ -5983,40 +5963,40 @@
             "language": "spanish",
             "chapter": 7,
             "lessonCount": 6,
-            "voice": 3,
-            "sight": 3,
+            "voice": 4,
+            "sight": 2,
             "pen": 0,
-            "coreVoice": 3,
-            "modalities": [
-              "voice",
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C07-beber"
-          },
-          {
-            "language": "spanish",
-            "chapter": 8,
-            "lessonCount": 5,
-            "voice": 2,
-            "sight": 3,
-            "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
             "drivablePrefix": 1,
-            "firstNonVoiceLesson": "ES-C08-numeros-1-5"
+            "firstNonVoiceLesson": "ES-C07-comer"
+          },
+          {
+            "language": "spanish",
+            "chapter": 8,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "ES-C08-tener"
           },
           {
             "language": "spanish",
             "chapter": 9,
             "lessonCount": 5,
-            "voice": 1,
-            "sight": 4,
+            "voice": 2,
+            "sight": 3,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight"
@@ -6028,56 +6008,56 @@
             "language": "spanish",
             "chapter": 10,
             "lessonCount": 4,
-            "voice": 1,
-            "sight": 3,
+            "voice": 3,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C10-ir"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "ES-C10-mi-tu-su"
           },
           {
             "language": "spanish",
             "chapter": 11,
             "lessonCount": 5,
-            "voice": 1,
-            "sight": 4,
+            "voice": 5,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 5,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C11-nuestro"
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 12,
             "lessonCount": 4,
-            "voice": 1,
-            "sight": 3,
+            "voice": 3,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C12-decir"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "ES-C12-yo-go"
           },
           {
             "language": "spanish",
             "chapter": 13,
             "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
+            "voice": 2,
+            "sight": 2,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
+              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -6087,16 +6067,15 @@
             "language": "spanish",
             "chapter": 14,
             "lessonCount": 3,
-            "voice": 1,
-            "sight": 2,
+            "voice": 3,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C14-hablar-preterite"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
@@ -6116,73 +6095,74 @@
             "language": "spanish",
             "chapter": 16,
             "lessonCount": 3,
-            "voice": 0,
-            "sight": 3,
+            "voice": 2,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
+              "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C16-imperfecto"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "ES-C16-tres-irregulares"
           },
           {
             "language": "spanish",
             "chapter": 17,
             "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
-            "pen": 0,
-            "coreVoice": 0,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C17-condicional"
-          },
-          {
-            "language": "spanish",
-            "chapter": 18,
-            "lessonCount": 10,
             "voice": 3,
-            "sight": 7,
+            "sight": 1,
             "pen": 0,
             "coreVoice": 3,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C18-inherited-subjunctive-stems"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "ES-C17-practice"
+          },
+          {
+            "language": "spanish",
+            "chapter": 18,
+            "lessonCount": 10,
+            "voice": 9,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 9,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": "ES-C18-subjuntivo"
           },
           {
             "language": "spanish",
             "chapter": 19,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C19-si"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 20,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "ES-C20-perdon"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
@@ -6202,45 +6182,43 @@
             "language": "spanish",
             "chapter": 22,
             "lessonCount": 4,
-            "voice": 3,
-            "sight": 1,
+            "voice": 4,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 4,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "ES-C22-blanco-germanico"
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 23,
             "lessonCount": 3,
-            "voice": 1,
-            "sight": 2,
+            "voice": 3,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C23-padre-madre"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 24,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 2,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C24-cabeza"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
@@ -6260,102 +6238,99 @@
             "language": "spanish",
             "chapter": 26,
             "lessonCount": 3,
-            "voice": 1,
-            "sight": 2,
+            "voice": 3,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C26-agua"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 27,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C27-los-meses"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 28,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C28-mediodia-medianoche"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 29,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C29-la-hora"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 30,
             "lessonCount": 3,
-            "voice": 2,
-            "sight": 1,
+            "voice": 3,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 3,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": "ES-C30-llueve"
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 31,
             "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
+            "voice": 4,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 4,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C31-once-quince"
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 32,
             "lessonCount": 2,
-            "voice": 1,
-            "sight": 1,
+            "voice": 2,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "ES-C32-perro"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
@@ -6376,21 +6351,21 @@
       {
         "language": "tamil",
         "lessonCount": 83,
-        "voice": 55,
-        "sight": 20,
+        "voice": 67,
+        "sight": 8,
         "pen": 8,
-        "coreVoice": 55,
-        "drivablePercent": 66,
-        "drivablePrefixTotal": 46,
+        "coreVoice": 67,
+        "drivablePercent": 81,
+        "drivablePrefixTotal": 53,
         "chapters": [
           {
             "language": "tamil",
             "chapter": 1,
             "lessonCount": 16,
-            "voice": 3,
-            "sight": 5,
+            "voice": 7,
+            "sight": 1,
             "pen": 8,
-            "coreVoice": 3,
+            "coreVoice": 7,
             "modalities": [
               "voice",
               "sight",
@@ -6403,10 +6378,10 @@
             "language": "tamil",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 6,
-            "sight": 2,
+            "voice": 7,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 7,
             "modalities": [
               "voice",
               "sight"
@@ -6460,15 +6435,15 @@
             "language": "tamil",
             "chapter": 6,
             "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
+            "voice": 4,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 4,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "TA-C06-dative-ukku"
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "tamil",
@@ -6519,15 +6494,15 @@
             "language": "tamil",
             "chapter": 10,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "TA-C10-vaara-kizhamai"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "tamil",
@@ -6547,15 +6522,15 @@
             "language": "tamil",
             "chapter": 12,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "TA-C12-kudumbam"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "tamil",
@@ -6575,15 +6550,15 @@
             "language": "tamil",
             "chapter": 14,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "TA-C14-kaalangal"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "tamil",
@@ -6828,21 +6803,21 @@
       {
         "language": "telugu",
         "lessonCount": 60,
-        "voice": 47,
-        "sight": 13,
+        "voice": 54,
+        "sight": 6,
         "pen": 0,
-        "coreVoice": 47,
-        "drivablePercent": 78,
-        "drivablePrefixTotal": 45,
+        "coreVoice": 54,
+        "drivablePercent": 90,
+        "drivablePrefixTotal": 50,
         "chapters": [
           {
             "language": "telugu",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 2,
-            "sight": 4,
+            "voice": 4,
+            "sight": 2,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
@@ -6854,16 +6829,15 @@
             "language": "telugu",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": "TE-C02-practice"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "telugu",
@@ -6911,11 +6885,12 @@
             "language": "telugu",
             "chapter": 6,
             "lessonCount": 2,
-            "voice": 0,
-            "sight": 2,
+            "voice": 1,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
+              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -6967,15 +6942,15 @@
             "language": "telugu",
             "chapter": 10,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "TE-C10-vaaram"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "telugu",
@@ -6995,15 +6970,15 @@
             "language": "telugu",
             "chapter": 12,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "TE-C12-kutumbam"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "telugu",
@@ -7023,15 +6998,15 @@
             "language": "telugu",
             "chapter": 14,
             "lessonCount": 1,
-            "voice": 0,
-            "sight": 1,
+            "voice": 1,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "TE-C14-rutuvulu"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "telugu",
@@ -7276,12 +7251,12 @@
       {
         "language": "urdu",
         "lessonCount": 20,
-        "voice": 16,
-        "sight": 4,
+        "voice": 18,
+        "sight": 2,
         "pen": 0,
-        "coreVoice": 16,
-        "drivablePercent": 80,
-        "drivablePrefixTotal": 7,
+        "coreVoice": 18,
+        "drivablePercent": 90,
+        "drivablePrefixTotal": 15,
         "chapters": [
           {
             "language": "urdu",
@@ -7315,31 +7290,30 @@
             "language": "urdu",
             "chapter": 3,
             "lessonCount": 5,
-            "voice": 3,
-            "sight": 2,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "UR-C03-aap-tum-tu"
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "UR-C03-aap-ka-naam-kya-hai"
           },
           {
             "language": "urdu",
             "chapter": 4,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 6,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 6,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "UR-C04-kaise-kaisi"
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "urdu",

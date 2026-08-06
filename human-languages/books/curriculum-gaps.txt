@@ -5,58 +5,58 @@ Human Languages curriculum gap report
 0 unknown prerequisites; 35 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 3 version-2 schema tracks
-725 drivable lessons (64% of the corpus)
+956 drivable lessons (84% of the corpus)
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  725 voice, 355 sight, 53 pen of 1133 lessons; 64% drivable
-  tables of more than 0 column(s) count as sight
-  725 lessons have a voice CORE; 0 carry a detachable writing segment (0 rescued for the hands-free view)
-  arabic: 37 voice, 18 sight, 16 pen; 52% drivable; 27 chapters, 31 lessons reachable in chapter-prefix order
-  bengali: 28 voice, 3 sight, 0 pen; 90% drivable; 6 chapters, 23 lessons reachable in chapter-prefix order
+  956 voice, 124 sight, 53 pen of 1133 lessons; 84% drivable
+  tables of more than 3 column(s) count as sight
+  956 lessons have a voice CORE; 0 carry a detachable writing segment (0 rescued for the hands-free view)
+  arabic: 50 voice, 5 sight, 16 pen; 70% drivable; 27 chapters, 42 lessons reachable in chapter-prefix order
+  bengali: 29 voice, 2 sight, 0 pen; 94% drivable; 6 chapters, 24 lessons reachable in chapter-prefix order
   chinese: 5 voice, 2 sight, 0 pen; 71% drivable; 1 chapters, 1 lessons reachable in chapter-prefix order
-  french: 32 voice, 38 sight, 3 pen; 44% drivable; 23 chapters, 22 lessons reachable in chapter-prefix order
-  german: 36 voice, 37 sight, 3 pen; 47% drivable; 23 chapters, 22 lessons reachable in chapter-prefix order
-  gujarati: 28 voice, 5 sight, 0 pen; 85% drivable; 6 chapters, 27 lessons reachable in chapter-prefix order
-  hindi: 62 voice, 11 sight, 11 pen; 74% drivable; 33 chapters, 41 lessons reachable in chapter-prefix order
-  italian: 25 voice, 33 sight, 0 pen; 43% drivable; 17 chapters, 13 lessons reachable in chapter-prefix order
+  french: 58 voice, 12 sight, 3 pen; 79% drivable; 23 chapters, 42 lessons reachable in chapter-prefix order
+  german: 65 voice, 8 sight, 3 pen; 86% drivable; 23 chapters, 60 lessons reachable in chapter-prefix order
+  gujarati: 30 voice, 3 sight, 0 pen; 91% drivable; 6 chapters, 29 lessons reachable in chapter-prefix order
+  hindi: 70 voice, 3 sight, 11 pen; 83% drivable; 33 chapters, 54 lessons reachable in chapter-prefix order
+  italian: 45 voice, 13 sight, 0 pen; 78% drivable; 17 chapters, 38 lessons reachable in chapter-prefix order
   japanese: 1 voice, 7 sight, 0 pen; 13% drivable; 1 chapters, 0 lessons reachable in chapter-prefix order
-  kannada: 46 voice, 14 sight, 0 pen; 77% drivable; 31 chapters, 43 lessons reachable in chapter-prefix order
-  latin: 47 voice, 10 sight, 0 pen; 82% drivable; 36 chapters, 45 lessons reachable in chapter-prefix order
-  malayalam: 51 voice, 13 sight, 0 pen; 80% drivable; 31 chapters, 49 lessons reachable in chapter-prefix order
-  marathi: 28 voice, 7 sight, 0 pen; 80% drivable; 6 chapters, 20 lessons reachable in chapter-prefix order
-  persian: 18 voice, 2 sight, 0 pen; 90% drivable; 5 chapters, 15 lessons reachable in chapter-prefix order
-  portuguese: 26 voice, 33 sight, 0 pen; 44% drivable; 17 chapters, 10 lessons reachable in chapter-prefix order
-  punjabi: 29 voice, 4 sight, 0 pen; 88% drivable; 6 chapters, 28 lessons reachable in chapter-prefix order
+  kannada: 53 voice, 7 sight, 0 pen; 88% drivable; 31 chapters, 48 lessons reachable in chapter-prefix order
+  latin: 54 voice, 3 sight, 0 pen; 95% drivable; 36 chapters, 53 lessons reachable in chapter-prefix order
+  malayalam: 58 voice, 6 sight, 0 pen; 91% drivable; 31 chapters, 57 lessons reachable in chapter-prefix order
+  marathi: 34 voice, 1 sight, 0 pen; 97% drivable; 6 chapters, 34 lessons reachable in chapter-prefix order
+  persian: 19 voice, 1 sight, 0 pen; 95% drivable; 5 chapters, 17 lessons reachable in chapter-prefix order
+  portuguese: 50 voice, 9 sight, 0 pen; 85% drivable; 17 chapters, 44 lessons reachable in chapter-prefix order
+  punjabi: 31 voice, 2 sight, 0 pen; 94% drivable; 6 chapters, 30 lessons reachable in chapter-prefix order
   russian: 16 voice, 1 sight, 5 pen; 73% drivable; 2 chapters, 15 lessons reachable in chapter-prefix order
-  sanskrit: 29 voice, 4 sight, 0 pen; 88% drivable; 6 chapters, 24 lessons reachable in chapter-prefix order
-  spanish: 63 voice, 76 sight, 7 pen; 43% drivable; 33 chapters, 31 lessons reachable in chapter-prefix order
-  tamil: 55 voice, 20 sight, 8 pen; 66% drivable; 31 chapters, 46 lessons reachable in chapter-prefix order
-  telugu: 47 voice, 13 sight, 0 pen; 78% drivable; 31 chapters, 45 lessons reachable in chapter-prefix order
-  urdu: 16 voice, 4 sight, 0 pen; 80% drivable; 5 chapters, 7 lessons reachable in chapter-prefix order
+  sanskrit: 31 voice, 2 sight, 0 pen; 94% drivable; 6 chapters, 26 lessons reachable in chapter-prefix order
+  spanish: 118 voice, 21 sight, 7 pen; 81% drivable; 33 chapters, 92 lessons reachable in chapter-prefix order
+  tamil: 67 voice, 8 sight, 8 pen; 81% drivable; 31 chapters, 53 lessons reachable in chapter-prefix order
+  telugu: 54 voice, 6 sight, 0 pen; 90% drivable; 31 chapters, 50 lessons reachable in chapter-prefix order
+  urdu: 18 voice, 2 sight, 0 pen; 90% drivable; 5 chapters, 15 lessons reachable in chapter-prefix order
 
-Chapters that cannot be started by ear (drivable prefix 0): 122
+Chapters that cannot be started by ear (drivable prefix 0): 44
   arabic ch3: 0 of 9 (first blocker AR-W07-hook-family-ha-kha)
   arabic ch4: 0 of 8 (first blocker AR-W10-ayn)
   arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis)
-  arabic ch12: 0 of 1 (first blocker AR-C12-al-fusul)
-  arabic ch14: 0 of 1 (first blocker AR-C14-ashhur)
-  arabic ch19: 0 of 1 (first blocker AR-C19-wahid-khamsa)
-  arabic ch20: 0 of 1 (first blocker AR-C20-ahada-ashar-ishrun)
-  bengali ch6: 0 of 1 (first blocker BN-C06-numbers-1-5)
   french ch3: 0 of 7 (first blocker FR-C03-aller)
-  french ch5: 0 of 5 (first blocker FR-C05-habiter)
   french ch6: 0 of 2 (first blocker FR-C06-nombres-1-5)
   french ch7: 0 of 2 (first blocker FR-C07-jours-1)
-  french ch9: 0 of 2 (first blocker FR-C09-mois)
   french ch12: 0 of 2 (first blocker FR-C12-nombres-11-16)
-  french ch13: 0 of 2 (first blocker FR-C13-noir-blanc)
-  french ch14: 0 of 2 (first blocker FR-C14-age)
-  french ch15: 0 of 2 (first blocker FR-C15-passe-compose)
-  french ch16: 0 of 4 (first blocker FR-C16-etre)
   french ch17: 0 of 2 (first blocker FR-C17-tete)
-  german ch3: 0 of 8 (first blocker GE-C03-bitte)
+  german ch6: 0 of 2 (first blocker GE-C06-zahlen-1-5)
+  german ch7: 0 of 2 (first blocker GE-C07-wochentage-1)
+  hindi ch1: 0 of 10 (first blocker HI-W01-shirorekha-na-ma)
+  hindi ch2: 0 of 16 (first blocker HI-W03-matras-naam)
+  hindi ch10: 0 of 2 (first blocker HI-C10-somavaar-shukravaar)
+  italian ch6: 0 of 2 (first blocker IT-C06-numeri-1-5)
+  italian ch7: 0 of 2 (first blocker IT-C07-giorni-1)
+  italian ch9: 0 of 2 (first blocker IT-C09-mesi)
+  italian ch12: 0 of 2 (first blocker IT-C12-numeri-11-16)
+  italian ch14: 0 of 2 (first blocker IT-C14-avere)
+  japanese ch1: 0 of 8 (first blocker JA-C01-hai)
+  kannada ch1: 0 of 6 (first blocker KA-C01-dhanyavada)
 
 Modality findings (report-only): 0
 
