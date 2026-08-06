@@ -41,9 +41,37 @@ Chapter 1's *N+7* and *N+15* resurfacings land here, as promised above.
 ### Schedule check
 
 Chapter 2's own words follow the same *N+1 / N+3* rhythm inside the chapter;
-their *N+7 / N+15* resurfacings will land in Chapter 3. The letters **read but
+their *N+7 / N+15* resurfacings land in Chapter 3, mapped below. The letters **read but
 not yet written** — я, ы, ч, ь — recur in every session from their introduction
 onward, the same over-learning the four false friends get. The deeper formality
 and question-pattern comparisons are separate prerequisite-ordered lessons, and
 the old long recap is three focused lessons. Every individual lesson stays below
 five minutes even though each commute session deliberately combines several.
+
+## Chapter 3 — Six verbs, and the one you never say
+
+Chapter 2's *N+7* and *N+15* resurfacings land here, as promised above. Every
+lesson in this chapter is `voice`, so every session below is doable in the car
+from beginning to end — the first Russian chapter of which that is true.
+
+| Session | New | Resurfaced | Note |
+|---|---|---|---|
+| **S12** | быть | я *(N+15)*, очень приятно *(N+1)*, нет *(N+15)* | closes the loop the zero-copula practice opened; **ь** met again, still read-only |
+| **S13** | жить, знать | быть *(N+1)*, меня зовут *(N+7)* | the first two personal endings — **-у** on *живу*, **-ю** on *знаю* — and *я не знаю* |
+| **S14** | говорить | жить *(N+1)*, знать *(N+1)*, быть *(N+3)* | the chapter's one **new letter, г**; read-only, like я ч ы ь |
+| **S15** | видеть | говорить *(N+1)*, знать *(N+3)*, как вас зовут *(N+7)* | *вижу* against *видишь*, and the **-ишь** family named a second time |
+| **S16** | идти | видеть *(N+1)*, говорить *(N+3)*, жить *(N+7)* | *иду* against *хожу*; recite all six infinitives to close the chapter |
+
+### Schedule check
+
+Each Chapter-3 verb is resurfaced at *N+1* and *N+3* inside the chapter, and the
+two grammar threads are deliberately re-met rather than re-taught: the personal
+ending arrives on *живу*, is recognised on *знаю*, and is recognised again on
+*говорю* and *иду*; the **-ешь / -ишь** split is named on *говорить* and used to
+classify *видеть* and *идти* without re-explaining it. **г** joins я, ч, ы and ь
+on the read-now-draw-later list — the writing track has taught в р с н б д п и е
+т and has not reached it.
+
+Because the six verbs form one prerequisite chain, S13 is the only session that
+introduces two lessons; it is also the shortest pair, and both sit near four
+minutes.
