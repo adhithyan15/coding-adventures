@@ -27,18 +27,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Richer Gantt: day-grid columns, weekend/today shading, milestone diamonds,
      dependency arrows, hover tooltips, a legend. Current timeline is a simple
      proportional-bar-per-row view.
-   - Richer task rows: labels/priority chips and the dependency list shipped (see
-     Resolved below). Still missing: critical/slack *chips* (today the detail panel's
-     scheduling prose already says "on the critical path" / states slack in prose —
-     a dedicated chip would be a value-only restyle, low priority) and a notes
-     paragraph in the detail panel. The notes paragraph turned out to be
-     **blocked on the "Notes: attachment picker" item below**, not just an engine
-     lookup as previously written here: `Note.attached_task` exists and a
-     `detail-notes` cell would be trivial to wire, but there is no UI anywhere to
-     ever set `attached_task` — v1's notes are permanently standalone. Ship both
-     together: the attach control (however it ends up scoped — a name-matching
-     text field mirroring the Labels column's discipline is the obvious minimal
-     shape) and the detail-panel cell that reads it, in the same PR.
+   - Richer task rows: labels/priority chips, the dependency list, and the notes
+     paragraph all shipped (see Resolved below). Still missing: critical/slack
+     *chips* — today the detail panel's scheduling prose already says "on the
+     critical path" / states slack in prose, so a dedicated chip would be a
+     value-only restyle, low priority.
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
@@ -74,13 +67,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   a 4-way branch duplicating the whole drop-target + event-loop wasn't judged worth it for a
   colour difference. Today's badge shipped (it only needed a small conditional child, the
   same trick Board's `card-crit` chip already uses).
-- **Notes: attachment picker, tags, rich text, search.** Deferred from the Phase 8 UI
-  ship — see `code/specs/task-app-notes-ui-v1.md`. v1's notes are always standalone (no
-  UI to set `attached_task`); tags are generic and reusable in `mosaic-pkg-notes` but
-  nothing drives them; `Note.body` is plain text, matching every other free-text field
-  in the engine; no search box (mirrors Sheet's own v1 scope cut). The attach picker
-  specifically is now also the blocker for the "Next up" design-fidelity item's
-  task-detail notes paragraph above — ship them together.
+- **Notes: a real attachment picker, tags, rich text, search.** Deferred from the
+  Phase 8 UI ship — see `code/specs/task-app-notes-ui-v1.md`. A minimal name-matching
+  attach-to-task *text field* shipped (see Resolved below); this item is what's still
+  missing: a real dropdown/autocomplete/search picker, not just the write path. Tags
+  are generic and reusable in `mosaic-pkg-notes` but nothing drives them; `Note.body`
+  is plain text, matching every other free-text field in the engine; no search box
+  (mirrors Sheet's own v1 scope cut).
 - **Label colour picker + duplicate-name prevention + per-label removal.** Deferred
   from the label-management ship (see Resolved below) — `Label.color` is set (always
   `""` in v1) but nothing renders it; two labels can share a name (mirrors project
@@ -95,14 +88,28 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Notes attach-to-task + task-detail notes paragraph.** Closes the gap the
+  dependency-list entry below disclosed. `mosaic-pkg-notes` 0.2.0 gained a
+  minimal "Attach to task" text field (task NAME, resolved to
+  `attachedTask` on Save, unrecognised name **rejects the whole save** —
+  same discipline as the Sheet Labels column). `TaskApp`'s task-detail
+  panel gained `detail-notes` (`row[13]`), reading the open task's
+  attached note body. Found and fixed one real bug before shipping:
+  `Note` is `#[serde(rename_all = "camelCase")]`, so the JSON field is
+  `attachedTask` — the first draft used the wrong snake_case key in both
+  the detail-panel filter and the editor's name-display lookup, silently
+  matching nothing. Caught live-testing by reading the persisted
+  IndexedDB record directly (the UI alone wouldn't have shown *why* it
+  was empty). Verified live end-to-end, both themes: attach by typing a
+  task name case-insensitively, detail panel shows the note body,
+  reopening the note shows the resolved display name, an unrecognised
+  name is rejected without corrupting the existing attachment (checked
+  the persisted snapshot, not just the UI). A real picker (dropdown/
+  autocomplete/search) is still deferred — see the Backlog item above.
 - **Task-detail dependency list.** The open task's detail panel shows its CPM
   dependencies (`→ Build the prototype (FS)` / `← Design the wireframes (FS)`),
   read from `task-core`'s existing `flowchart()` projection — zero new engine
-  work. A matching notes paragraph was drafted alongside this but pulled back
-  out before shipping: it would have read `Note.attached_task`, but no UI
-  anywhere sets that field yet (see the "Notes: attachment picker" backlog item
-  above, now updated to note it blocks this too). Verified live in both themes,
-  zero console errors.
+  work. Verified live in both themes, zero console errors.
 - **Phase 9 — nested-project tree extracted to `mosaic-pkg-project-nav`.** The
   add/add-subproject composer + nested-project list, extracted verbatim from
   `TaskApp`'s own rail block — same part names, same styling (both themes), same

@@ -60,15 +60,24 @@ pkg::mosaic-pkg-notes::Notes (
   selected-note-id: slot: selected-note-id ,
   title-value:      slot: note-title-value ,
   body-value:       slot: note-body-value ,
-  onSelectNote:  emit: onSelectNote ,
-  onNewNote:     emit: onNewNote ,
-  onTitleChange: emit: onNoteTitleChange ,
-  onBodyChange:  emit: onNoteBodyChange ,
-  onSave:        emit: onSaveNote ,
-  onDelete:      emit: onDeleteNote ,
-  onCancel:      emit: onCancelNote
+  task-name-value:  slot: note-task-value ,
+  onSelectNote:     emit: onSelectNote ,
+  onNewNote:        emit: onNewNote ,
+  onTitleChange:    emit: onNoteTitleChange ,
+  onBodyChange:     emit: onNoteBodyChange ,
+  onTaskNameChange: emit: onNoteTaskNameChange ,
+  onSave:           emit: onSaveNote ,
+  onDelete:         emit: onDeleteNote ,
+  onCancel:         emit: onCancelNote
 )
 ```
+
+`task-name-value`/`onTaskNameChange` are the v0.2.0 "attach to task"
+field — a task NAME (not id), resolved by the host to `upsertNote`'s
+`attachedTask` on Save. An unrecognised name rejects the whole save,
+mirroring the Sheet Labels column's discipline. See
+[task-app-notes-ui-v1.md](../../../specs/task-app-notes-ui-v1.md)'s
+addendum.
 
 The host mints a new note's id up front (on "+ New note", not on Save —
 see `selectedNoteId`'s own comment in `main.tsx`), builds `note-rows` from
