@@ -180,6 +180,80 @@ export interface LanguageCurriculum {
   extensions: CurriculumExtensionNode[];
 }
 
+// ---------------------------------------------------------------------------
+// HL05 — the chapter capability layer
+// ---------------------------------------------------------------------------
+//
+// A chapter used to be nothing but an integer stamped on each lesson. Nothing in
+// the data model knew what a chapter was FOR, so nothing could check that
+// finishing one left the reader able to do anything. These types are that missing
+// promise, made explicit and therefore checkable.
+//
+// The distinction that matters: `curriculum.json`'s `omits`/`relocates` ledgers are
+// recomputed CACHES — a validator derives them and errors on drift. A chapter
+// capability is authored INTENT. No validator may rewrite it.
+
+/** How a chapter proves its promise. */
+export type ChapterPayoffKind = "dialogue" | "task" | "production";
+
+/**
+ * The thing the reader can actually do at the end of a chapter.
+ *
+ * `assesses` is the load-bearing field. Without it a payoff could satisfy its
+ * chapter by exercising a single word, letting the chapter claim a capability it
+ * never delivered — which is the exact failure the representativeness rule exists
+ * to catch (HL05).
+ */
+export interface ChapterPayoff {
+  /** Lesson id that delivers the payoff — normally a practice/practice-mix/pattern. */
+  lesson: string;
+  kind: ChapterPayoffKind;
+  /** One line describing the payoff, for the chapter opening and the gap report. */
+  summary: string;
+  /** Knowledge atoms the payoff exercises. */
+  assesses: string[];
+}
+
+/** One chapter's authored promise. */
+export interface ChapterCapability {
+  chapter: number;
+  /** Printed chapter name. Canonical here; book-generation.json derives it. */
+  title: string;
+  /** LaTeX label, e.g. "ch:first-words". Canonical here. */
+  label: string;
+  /** One first-person sentence, in the reader's terms. */
+  canDo: string;
+  /** Shared spine nodes this chapter realizes; may be empty for local-only work. */
+  spineNodes: string[];
+  payoff: ChapterPayoff;
+  /** Optional HL06 figure ids. */
+  figures?: string[];
+}
+
+/** One track's chapter capability ledger (`<track>/chapters.json`). */
+export interface TrackChapters {
+  version: number;
+  language: string;
+  chapters: ChapterCapability[];
+}
+
+/**
+ * Tunable policy for the HL05 payoff rule and the HL08 gentle-ramp budgets.
+ *
+ * These live in `core/chapter-policy.json` rather than as constants at a call site
+ * precisely so they can be tightened as the corpus matures without hunting through
+ * code — the same reasoning that put the five-minute budget in the lesson schema.
+ */
+export interface ChapterPolicy {
+  version: number;
+  /** Minimum share of a chapter's introduced atoms its payoff must assess (0..1). */
+  payoffRepresentativeness: number;
+  /** HL08: most knowledge atoms one lesson may introduce. */
+  maxNewAtomsPerLesson: number;
+  /** HL08: most a whole chapter may introduce, so splitting cannot game the rule. */
+  maxNewAtomsPerChapter: number;
+}
+
 /** One authored chapter from an existing LaTeX book. */
 export interface BookChapter {
   language: string;

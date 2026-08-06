@@ -10,7 +10,14 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { compress, decompress } from "../src/zstd.js";
+import {
+  compress,
+  decompress,
+  encodeLiteralsSection,
+  encodeSeqCount,
+  encodeSequencesSection,
+  type Seq,
+} from "../src/zstd.js";
 // Also import via the package index to get index.ts coverage
 import * as zstdIndex from "../src/index.js";
 
@@ -464,5 +471,187 @@ describe.skipIf(!isZstdCliAvailable())(
         rmSync(dir, { recursive: true, force: true });
       }
     });
+
+    // Regression coverage for the missing Repeated-Offset (R1/R2/R3) decode
+    // support (RFC 8878 §3.1.1.3.2.1.1) — see lessons.md Lesson 98 and
+    // `decompressBlock`'s doc comment in src/zstd.ts.
+    //
+    // This package's OWN encoder never emits repeat-offset sequences (every
+    // offset code it writes is >= 2, since the minimum LZ77 match offset is
+    // 1), so an own-encoder/own-decoder round trip — and every OTHER test in
+    // this file — never exercises the decode path this covers. Only real
+    // `zstd`-compressed input can produce an Offset_Value <= 3 for our
+    // decoder to interpret. The real `zstd` CLI uses repeat offsets
+    // constantly (one of its main entropy wins for periodic/repetitive
+    // data), so this is not an exotic edge case for real-world `.zst` files
+    // — it is the common case this package was previously unable to decode.
+    it("decodes real zstd-compressed constant-byte data (repeat-offset R1, the exact Lesson 98 repro)", () => {
+      // 4713 bytes of a single repeated byte: this is the literal input that
+      // first surfaced the gap in `code/packages/c/zstd` (PR #9941). The
+      // real `zstd` CLI encodes this as a Compressed block (not the RLE
+      // block type this package's own encoder would choose for constant
+      // data) with one sequence: 2 literal bytes + a match with
+      // Offset_Value = 1 (Repeated_Offset1, default value 1) — an
+      // unmistakable RLE-via-repeat-offset pattern. Before the fix, this
+      // decoded offset `1 - 3` and threw "decoded offset underflow".
+      const original = new Uint8Array(4713).fill(0x5a); // 'Z'
+
+      const dir = mkdtempSync(join(tmpdir(), "zstd-ts-tc9-repeatoffset-"));
+      try {
+        const inPath = join(dir, "in.bin");
+        writeFileSync(inPath, original);
+        const theirCompressed = execFileSync("zstd", ["-q", "-f", "-c", inPath]);
+        const decodedByUs = decompress(new Uint8Array(theirCompressed));
+        expect(decodedByUs).toEqual(original);
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+    });
+
+    it("decodes real zstd-compressed periodic data using repeat-offset sequences across multiple matches", () => {
+      // A short repeating cycle over a larger buffer gives the real `zstd`
+      // encoder many back-to-back matches at the SAME distance (the cycle
+      // length) — exactly the pattern that makes repeat-offset coding a
+      // clear win, so the real encoder is very likely to use R1/R2/R3
+      // repeatedly (not just once, unlike the constant-byte case above).
+      const cycle = new TextEncoder().encode("Mercury,Venus,Earth,Mars!");
+      const original = new Uint8Array(6000);
+      for (let i = 0; i < original.length; i++) original[i] = cycle[i % cycle.length]!;
+
+      const dir = mkdtempSync(join(tmpdir(), "zstd-ts-tc9-repeatoffset-periodic-"));
+      try {
+        const inPath = join(dir, "in.bin");
+        writeFileSync(inPath, original);
+        const theirCompressed = execFileSync("zstd", ["-q", "-f", "-c", inPath]);
+        const decodedByUs = decompress(new Uint8Array(theirCompressed));
+        expect(decodedByUs).toEqual(original);
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+    });
   },
 );
+
+// ─── Repeated-Offset (R1/R2/R3) deterministic coverage ────────────────────────
+//
+// The two TC-9 tests above prove real-world interop, but WHICH of the four
+// Repeated-Offset decode branches (see the `selector` switch in
+// `decompressBlock`, src/zstd.ts) a given real `zstd`-compressed input
+// exercises is entirely up to the real CLI's match-finder heuristics — not
+// something a test can reliably force. This package's OWN `compress()` can
+// never produce ANY repeat-offset code either (see `encodeSequencesSection`'s
+// doc comment: `rawOff = offset + 3 >= 4` always, since the minimum LZ77
+// match offset is 1) — so there is no way to reach all four branches through
+// the public API alone.
+//
+// `encodeLiteralsSection` / `encodeSeqCount` / `encodeSequencesSection` /
+// `Seq` are exported from src/zstd.ts (but NOT re-exported from index.ts —
+// this adds no published API surface) specifically so a test can hand-craft
+// a `Seq[]` with `off` values that alias into the repeat-offset range
+// (`off + 3 <= 3`), bypassing the LZSS front-end entirely. This is the same
+// "manually constructed wire format" pattern already used by the
+// `describe("wire format decoder", ...)` test above, extended to a
+// Compressed block.
+describe("Repeated-Offset (R1/R2/R3) deterministic coverage", () => {
+  /** Build a minimal one-block ZStd frame with a given `Seq[]`, wrapping
+   * `encodeLiteralsSection` + `encodeSeqCount` + a Predefined-modes byte +
+   * `encodeSequencesSection` exactly as `compressBlock` does internally. */
+  function buildFrame(lits: Uint8Array, seqs: Seq[]): Uint8Array {
+    const content: number[] = [
+      ...encodeLiteralsSection(lits),
+      ...encodeSeqCount(seqs.length),
+      0x00, // symbol compression modes: all Predefined
+      ...encodeSequencesSection(seqs),
+    ];
+    const frame: number[] = [
+      0x28, 0xb5, 0x2f, 0xfd, // magic
+      0x20,                   // FHD: Single_Segment=1, FCS_flag=00 -> 1-byte FCS
+      0x14,                   // FCS = 20 (this test's expected decompressed size)
+    ];
+    // Block header: Last=1, Type=Compressed(10), Size=content.length.
+    const hdr = (content.length << 3) | (0b10 << 1) | 1;
+    frame.push(hdr & 0xff, (hdr >>> 8) & 0xff, (hdr >>> 16) & 0xff);
+    frame.push(...content);
+    return new Uint8Array(frame);
+  }
+
+  it("decodes all four Repeated-Offset selector cases in one block, registers threaded correctly", () => {
+    // Registers start at the RFC 8878 default: r1=1, r2=4, r3=8.
+    //
+    // `off` here is the Seq.off field consumed by encodeSequencesSection,
+    // which computes rawOff = off + 3. Picking off <= 0 makes rawOff <= 3,
+    // i.e. an offset CODE < 2 — always interpreted by a conformant decoder
+    // as a repeat-offset reference, regardless of what the encoder "meant".
+    // Four sequences are chained so each one's repeat-offset interpretation
+    // depends on the registers as mutated by all PRECEDING sequences in the
+    // same block (registers are block-local state carried through the loop,
+    // frame-scoped across blocks) — this also exercises the register
+    // threading itself, not just each switch case in isolation.
+    //
+    //   seq1: off=-2 (rawOff=1, of_code=0), ll=8 (!=0)  -> selector 0
+    //         "reuse r1 unchanged, no rotation"
+    //   seq2: off=-2 (rawOff=1, of_code=0), ll=0        -> selector 1
+    //         "use r2, swap r1/r2, r3 untouched"
+    //   seq3: off=-1 (rawOff=2, of_code=1, extra=0), ll=0 -> selector 2
+    //         "use r3, full rotate"
+    //   seq4: off=0  (rawOff=3, of_code=1, extra=1), ll=0 -> selector 3
+    //         "use r1-1, full rotate"
+    //
+    // Expected output and the exact selector/offset/register trace for each
+    // step were derived by simulating this same algorithm independently
+    // (see the worked trace in this PR's description) and cross-checked
+    // against `decompressBlock`'s actual behavior below.
+    const lits = new TextEncoder().encode("ABCDEFGH"); // 8 bytes
+    const seqs: Seq[] = [
+      { ll: 8, ml: 3, off: -2 }, // selector 0: offset=r1=1
+      { ll: 0, ml: 3, off: -2 }, // selector 1: offset=r2=4 (pre-rotation)
+      { ll: 0, ml: 3, off: -1 }, // selector 2: offset=r3=8 (pre-rotation)
+      { ll: 0, ml: 3, off: 0 },  // selector 3: offset=r1-1=7 (r1=8 pre-rotation)
+    ];
+
+    const frame = buildFrame(lits, seqs);
+    const result = decompress(frame);
+
+    // "ABCDEFGH" literals, then:
+    //   seq1 copies 3 bytes from 1 back (self-referential RLE-style) -> "HHH"
+    //   seq2 copies 3 bytes from 4 back -> "HHH"
+    //   seq3 copies 3 bytes from 8 back -> "GHH"
+    //   seq4 copies 3 bytes from 7 back -> "HHH"
+    const expected = new TextEncoder().encode("ABCDEFGHHHHHHHGHHHHH");
+    expect(result).toEqual(expected);
+    expect(result.length).toBe(20);
+  });
+
+  it("selector 0 alone: repeat-offset code with a nonzero preceding literal length reuses r1 without rotating", () => {
+    // A single sequence with off=-2 (of_code=0) and ll!=0 must decode using
+    // the DEFAULT register r1=1 unchanged (RFC 8878: "when Literals_Length
+    // is 0, repeated offsets are shifted by 1" — the converse, ll!=0, is the
+    // unshifted case).
+    const lits = new TextEncoder().encode("XY");
+    const seqs: Seq[] = [{ ll: 2, ml: 3, off: -2 }];
+    const frame = buildFrame1Block(lits, seqs);
+    const result = decompress(frame);
+    // "XY" then copy 3 bytes from 1 back (offset=r1=1): self-referential,
+    // repeats the last byte written ("Y") three times.
+    expect(result).toEqual(new TextEncoder().encode("XYYYY"));
+  });
+
+  /** Single-block frame builder that computes its own FCS byte from the
+   * actual decompressed size, for tests with a different total length than
+   * the primary 20-byte test above. */
+  function buildFrame1Block(lits: Uint8Array, seqs: Seq[]): Uint8Array {
+    const totalLen = seqs.reduce((acc, s) => acc + s.ll + s.ml, 0);
+    if (totalLen > 255) throw new Error("test helper only supports 1-byte FCS");
+    const content: number[] = [
+      ...encodeLiteralsSection(lits),
+      ...encodeSeqCount(seqs.length),
+      0x00,
+      ...encodeSequencesSection(seqs),
+    ];
+    const frame: number[] = [0x28, 0xb5, 0x2f, 0xfd, 0x20, totalLen];
+    const hdr = (content.length << 3) | (0b10 << 1) | 1;
+    frame.push(hdr & 0xff, (hdr >>> 8) & 0xff, (hdr >>> 16) & 0xff);
+    frame.push(...content);
+    return new Uint8Array(frame);
+  }
+});
