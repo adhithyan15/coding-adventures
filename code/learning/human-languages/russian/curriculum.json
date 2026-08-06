@@ -76,6 +76,23 @@
       "after": [
         "RU-EXT-006-CONSOLIDATION"
       ]
+    },
+    {
+      "id": "RU-PATH-007",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "RU-C03-byt",
+        "RU-C03-zhit",
+        "RU-C03-znat",
+        "RU-C03-govorit",
+        "RU-C03-videt",
+        "RU-C03-idti"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-007-CORE-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -192,7 +209,9 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "RU-PATH-007"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL"
@@ -261,6 +280,22 @@
       "prerequisites": [],
       "lessons": [
         "RU-C02-practice"
+      ]
+    },
+    {
+      "id": "RU-EXT-007-CORE-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Russian verbs in the present tense, and I know why the verb 'to be' is missing from that list.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C03-byt",
+        "RU-C03-zhit",
+        "RU-C03-znat",
+        "RU-C03-govorit",
+        "RU-C03-videt",
+        "RU-C03-idti"
       ]
     },
     {

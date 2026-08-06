@@ -680,23 +680,42 @@ describe("corpus regression", () => {
   // alone. The prefix and chapter rollups move much further than the raw counts because
   // a single unspeakable table near the front of a chapter used to block everything
   // behind it — which is why unstartable chapters fall by nearly two thirds.
+  //
+  // HL-C42 then gave Russian its first verbs — a new Chapter 3 of six lessons (быть,
+  // жить, знать, говорить, видеть, идти), the first realization of the canonical
+  // `VERB-*` concepts by any track:
+  //
+  //   totalLessons  1134 -> 1140      voice   957 -> 963  (+6, all six)
+  //   sight          124 ->  124  (unchanged)   pen  53 -> 53  (unchanged)
+  //   chapterCount   377 ->  378  (+1)          drivablePercent 84 (unchanged)
+  //   drivablePrefixTotal   825 -> 831  (+6)
+  //   fullyDrivableChapters 284 -> 285  (+1)
+  //   unstartableChapters    44 ->  44  (unchanged)
+  //
+  // All six land as `voice` and the split is therefore the cleanest one this pin has
+  // recorded: nothing moved into `sight` or `pen`. That is authored, not lucky — the
+  // track was remediated for drivability in HL-C32 and these lessons hold the line by
+  // teaching their one new letter (г) in prose, carrying no table at all, and naming
+  // paradigm pairs in running text rather than in a grid. Because every lesson of the
+  // new chapter is `voice`, its drivable prefix runs to the end: `drivablePrefixTotal`
+  // takes the full +6 and `fullyDrivableChapters` gains the chapter whole.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1134,
-      voice: 957,
+      totalLessons: 1140,
+      voice: 963,
       sight: 124,
       pen: 53,
-      drivableLessons: 957,
+      drivableLessons: 963,
       drivablePercent: 84,
       trackCount: 22,
-      chapterCount: 377,
-      // Prerequisite order still costs a commuter 132 of the 957 ear-only lessons:
+      chapterCount: 378,
+      // Prerequisite order still costs a commuter 132 of the 963 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 825,
-      fullyDrivableChapters: 284,
+      drivablePrefixTotal: 831,
+      fullyDrivableChapters: 285,
       unstartableChapters: 44,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,

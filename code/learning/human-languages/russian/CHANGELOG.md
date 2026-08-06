@@ -1,5 +1,72 @@
 # Changelog — Russian track
 
+## 0.8.0 — 2026-08-06
+
+HL-C42. Russian taught **zero verbs**. It was the smallest real track in the
+corpus — 22 lessons across two chapters — and every one of them was a greeting,
+a courtesy word, a pronoun or a naming phrase. A learner could introduce
+themselves and then say nothing about what they do. This adds Chapter 3: six
+core verbs, one per lesson, in a prerequisite chain.
+
+- **New lessons**, in order: `RU-C03-byt` (быть, `VERB-BE`), `RU-C03-zhit`
+  (жить, `VERB-LIVE`), `RU-C03-znat` (знать, `VERB-KNOW`), `RU-C03-govorit`
+  (говорить, `VERB-SPEAK`), `RU-C03-videt` (видеть, `VERB-SEE`), `RU-C03-idti`
+  (идти, `VERB-GO`). Sequences 140–190; all schema v2.
+- **First realization of the shared `VERB-*` concepts by any track.** Before
+  this, all 85 verb concept tags in the corpus were namespaced (`FR-VERB-ALLER`,
+  `HI-VERB-BOLNA`) and therefore joined nothing across languages; the canonical
+  core-verb list existed with no realization at all. Russian now covers 6 of the
+  core 40 — `tracksWithNoCoreVerb` 22 → 21, `universallyMissing` 40 → 34.
+- **The chapter is built around the thing that surprises English speakers most**:
+  the present-tense copula is simply **omitted**. *Я студент* is "I student",
+  with no word in between. The lesson makes that precise rather than glib —
+  the verb returns in the past (*я был студентом*), and *есть* survives as "there
+  is", already met in Chapter 1 inside *нет* = *не* + *есть*. It also puts the
+  fact in a frame worth keeping: English fuses three PIE roots into *be / is /
+  was*, and Russian keeps two of them apart as **быть** (\**bʰuH-*, English
+  **be**) and **есть** (\**h₁es-*, English **is**).
+- **One grammatical idea per lesson**, each on a word that needs it: the **-у**
+  that alone means "I" (*живу*); **не** doing the entire job of English *don't*
+  with no helper verb (*я не знаю*); the **-ешь / -ишь** families, which is why
+  you learn the *you* form with the infinitive; the **д → ж** swap that hits the
+  *I* form and nothing else (*вижу*, but *видишь*); and verbs of motion at their
+  gentlest — *иду* (now, one way) against *хожу* (habitually), one pair, named as
+  a pattern the rest will follow.
+- **Etymology carried the chapter.** *знать* is English **know** with the silent
+  *k* still pronounced, plus *notice / ignore / noble* and *diagnosis /
+  agnostic*. *видеть* is \**weid-*, which meant *see* **and** *know* — hence
+  *video* and *vision* on one branch and **wit**, **wise**, **witness** and
+  *Veda* on the other, with Russian keeping both halves as *видеть* and *ведать*.
+  *жить* is \**gʷeih₃-*, the root of *vīvere* and *bíos* — and of English
+  **quick** in its older sense of *alive* (*the quick and the dead*,
+  *quicksilver*). *идти → шёл* is *go → went*, suppletion in two languages for
+  one reason. Where the root is **not** clean it says so: *говорить* is from
+  Slavic \**govorъ* "a din", most likely imitative, with no tidy English cousin —
+  and English **govern** is flagged as a false friend (Greek *kybernân*, "to
+  steer", the ancestor of *cybernetics*).
+- **One new letter, taught inline**: **г** (Greek gamma), inside *говорить*. The
+  other five words need nothing the track has not already taught, which is
+  itself worth saying out loud to a beginner. No separate reading course, per
+  HL00.
+- **Drivability held, deliberately.** All six lessons derive `voice`: no tables
+  at all, no `script` blocks, no sight cues, and paradigm pairs written as
+  running text ("*ты знаешь* against *ты говоришь*") rather than as a grid. That
+  makes Chapter 3 the **first Russian chapter that is drivable end to end**, and
+  it protects the 73% the HL-C32 remediation won. Corpus-wide: `voice` 957 → 963,
+  `sight` and `pen` unchanged, `fullyDrivableChapters` 284 → 285.
+- **Curriculum wiring**: a new `RU-PATH-007` segment on `SPINE-SAY-WHAT-I-DO`,
+  with the six lessons attached as a required `RU-EXT-007-CORE-VERBS` extension.
+  That node is stage **A2**, so this is the first content in the whole corpus to
+  sit above A1 — `byLevel.A2` 0 → 6. The claim is scoped: the node's own
+  concepts, `VERB-INFINITIVE` and `VERB-PRESENT-HABITUAL`, remain listed as
+  omitted, because they are.
+- **Known debt, recorded not hidden**: Chapter 3 has no LaTeX chapter and
+  therefore no HL05 capability ledger entry. Russian's book chapters are
+  handwritten and none was authored here. Noted in `README.md` and `roadmap.md`.
+- Updated `roadmap.md` (Chapter 3 is authored; the old "Being and having" plan
+  moves to Chapter 4), `session-map.md` (sessions S12–S16, carrying Chapter 2's
+  *N+7 / N+15* resurfacings as promised) and `README.md`.
+
 ## 0.7.0 — 2026-08-06
 
 HL-C32. Russian was the worst-performing track in the corpus on two independent

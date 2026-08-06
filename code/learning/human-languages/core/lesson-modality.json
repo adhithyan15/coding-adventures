@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c79bbb8df3d255e8",
+  "sourceHash": "fnv1a64:ce254a3eff773b87",
   "summary": {
-    "totalLessons": 1134,
-    "voice": 957,
+    "totalLessons": 1140,
+    "voice": 963,
     "sight": 124,
     "pen": 53,
-    "drivableLessons": 957,
+    "drivableLessons": 963,
     "drivablePercent": 84,
     "trackCount": 22,
-    "chapterCount": 377,
-    "drivablePrefixTotal": 825,
-    "fullyDrivableChapters": 284,
+    "chapterCount": 378,
+    "drivablePrefixTotal": 831,
+    "fullyDrivableChapters": 285,
     "unstartableChapters": 44,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -4901,12 +4901,12 @@
     },
     {
       "language": "russian",
-      "lessonCount": 22,
-      "voice": 16,
+      "lessonCount": 28,
+      "voice": 22,
       "sight": 1,
       "pen": 5,
-      "drivablePercent": 73,
-      "drivablePrefixTotal": 15,
+      "drivablePercent": 79,
+      "drivablePrefixTotal": 21,
       "modalities": [
         "voice",
         "sight",
@@ -4959,6 +4959,27 @@
             "RU-C02-kak-cross-language",
             "RU-C02-practice",
             "RU-C02-ochen-priyatno"
+          ]
+        },
+        {
+          "chapter": 3,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "RU-C03-byt",
+            "RU-C03-zhit",
+            "RU-C03-znat",
+            "RU-C03-govorit",
+            "RU-C03-videt",
+            "RU-C03-idti"
           ]
         }
       ]
@@ -17200,6 +17221,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:97d645e1b389a3a3"
+    },
+    {
+      "id": "RU-C03-byt",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14888e9ea4e76480"
+    },
+    {
+      "id": "RU-C03-zhit",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50c788897a116d01"
+    },
+    {
+      "id": "RU-C03-znat",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:053dfd24401ef0cc"
+    },
+    {
+      "id": "RU-C03-govorit",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e041f674887b95cc"
+    },
+    {
+      "id": "RU-C03-videt",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6012735dbd137abe"
+    },
+    {
+      "id": "RU-C03-idti",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6894e3657dbb8585"
     },
     {
       "id": "SA-C01-am-na",

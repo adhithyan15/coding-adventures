@@ -607,7 +607,8 @@ describe("the whole corpus", () => {
     expect(narrated).toBe(lessons.length);
     // 377, not the 375 this was authored against: HL-C39 and HL-C40 each added a
     // Chapter 1 (Mandarin Chinese and Japanese) while this branch waited to merge.
-    expect(chapters).toHaveLength(377);
+    // 378 since HL-C42, which gave Russian a Chapter 3 of six core-verb lessons.
+    expect(chapters).toHaveLength(378);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {

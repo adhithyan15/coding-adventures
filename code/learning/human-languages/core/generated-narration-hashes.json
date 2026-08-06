@@ -4319,6 +4319,25 @@
       "jsonHash": "fnv1a64:0858930350277e9d"
     },
     {
+      "language": "russian",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:db2b416ba4e0b8f9",
+      "lessonIds": [
+        "RU-C03-byt",
+        "RU-C03-zhit",
+        "RU-C03-znat",
+        "RU-C03-govorit",
+        "RU-C03-videt",
+        "RU-C03-idti"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "russian/narration/ch03.txt",
+      "json": "russian/narration/ch03.json",
+      "textHash": "fnv1a64:505407b8a1fc6797",
+      "jsonHash": "fnv1a64:d7f5efd69186e60e"
+    },
+    {
       "language": "sanskrit",
       "chapter": 1,
       "sourceHash": "fnv1a64:d7cbcfae685a6ecc",

@@ -66,20 +66,44 @@ describe("coverage", () => {
 });
 
 describe("corpus snapshot", () => {
-  // The honest starting line. Every number here should go UP; none may go down.
-  it("pins the core verb baseline: canonical verbs exist, nothing realizes them yet", () => {
+  // The burn-down. Every number here should go UP; none may go down.
+  //
+  // It started at 0 of 40 in all 22 tracks — not because the tracks taught no verbs
+  // (Spanish teaches nineteen) but because every existing verb tag was NAMESPACED and
+  // therefore joined nothing. Adding the canonical concepts was the enabling step;
+  // realizing them is the authoring work these numbers track.
+  //
+  // HL-C42 is the first realization. Russian's Chapter 3 covers six of the forty —
+  // VERB-BE, VERB-GO, VERB-SPEAK, VERB-KNOW, VERB-SEE, VERB-LIVE — so:
+  //
+  //   tracksWithNoCoreVerb  22 -> 21     universallyMissing  40 -> 34
+  //   meanCoveredPercent     0 ->  1     (Russian is at 15%; 15/22 rounds to 1)
+  //
+  // `meanCoveredPercent` moving by a single point off six real lessons is the number
+  // doing its job: it is a mean over 22 tracks, and one track's chapter is genuinely
+  // one twenty-second of the problem.
+  it("pins core verb coverage: Russian is the first track to realize any of it", () => {
     const { lessons, taxonomy } = loadEverything();
     const report = verbCoverage(lessons, taxonomy);
 
     expect(report.summary.coreVerbCount).toBe(40);
 
-    // 0 of 40, in all 22 tracks. Not because the tracks teach no verbs — Spanish teaches
-    // nineteen — but because every existing verb tag is NAMESPACED and therefore joins
-    // nothing. Adding the canonical concepts is the enabling step; realizing them is the
-    // authoring work this number tracks.
-    expect(report.summary.tracksWithNoCoreVerb).toBe(22);
-    expect(report.summary.universallyMissing).toHaveLength(40);
-    expect(report.summary.meanCoveredPercent).toBe(0);
+    expect(report.summary.tracksWithNoCoreVerb).toBe(21);
+    expect(report.summary.universallyMissing).toHaveLength(34);
+    expect(report.summary.meanCoveredPercent).toBe(1);
+
+    // Taxonomy declaration order, not lesson order — `coreVerbConcepts` reads the
+    // authored taxonomy so the authoring list is stable across tracks.
+    const russian = report.tracks.find((track) => track.language === "russian")!;
+    expect(russian.covered).toEqual([
+      "VERB-BE",
+      "VERB-GO",
+      "VERB-SPEAK",
+      "VERB-SEE",
+      "VERB-KNOW",
+      "VERB-LIVE",
+    ]);
+    expect(russian.coveredPercent).toBe(15);
 
     // The existing namespaced verbs are still counted, so the work already done is
     // visible rather than erased.

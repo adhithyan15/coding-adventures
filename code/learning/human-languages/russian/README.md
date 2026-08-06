@@ -24,11 +24,12 @@ inside the words that need it; grammar introduced only when a word needs it.
   for a favour and doubles as "you're welcome."
 - **Grammar inline**: the formal/informal split and *politeness = plural* rule
   arrive at *здравствуйте* (its polite *-те*).
-- **Drivable by ear.** 16 of the track's 22 lessons need only your ears; the
+- **Drivable by ear.** 22 of the track's 28 lessons need only your ears; the
   other 6 are the five handwriting lessons and one cover-the-column retrieval
   drill. Russian used to be the least drivable track here, entirely because its
   cross-language comparisons were set as tables rather than said as sentences.
-  They are sentences now.
+  They are sentences now, and Chapter 3 was written that way from the start —
+  it is the track's first chapter that is drivable end to end.
 
 ## Progress
 
@@ -42,6 +43,17 @@ inside the words that need it; grammar introduced only when a word needs it.
   exchange, person shapes, and zero copula. Case appears only through the forms
   the exchange needs. Every lesson is prerequisite-ordered and below five
   minutes, while the cross-language and etymological depth remains intact.
+- **Chapter 3 — Six verbs, and the one you never say**
+  ([`lessons/RU-C03-*`](./lessons/)): быть (to be) → жить (to live) → знать (to
+  know) → говорить (to speak) → видеть (to see) → идти (to go). One verb per
+  lesson and one grammatical idea per verb — the **zero copula**, the **-у** that
+  by itself means "I", **не** as the whole of English *don't*, the
+  **-ешь / -ишь** families, the **д → ж** swap in *вижу*, and verbs of motion
+  (*иду* now, against *хожу* habitually). The etymology carries the chapter:
+  *быть* is **be**, *знать* is **know**, *видеть* is **wit** and **wise**, *жить*
+  is **quick** in its older sense of *alive*, and *идти → шёл* is *go → went* in
+  a second language. One new letter (**г**), and English *govern* flagged as the
+  false friend it is.
 
 See [`roadmap.md`](./roadmap.md) for the plan toward B1 and
 [`session-map.md`](./session-map.md) for how the lessons compose into commute
@@ -75,6 +87,13 @@ first-person can-do sentence and the lesson that pays it off.
 lessons are schema v1, so it has no assessable payoff to point at. A placeholder
 would hide debt the HL05 gap report is meant to surface.
 
+**Chapter 3 is not in the ledger either**, for a different and equally recorded
+reason: the ledger is checked against the chapters the *book* has, and Russian's
+book chapters are handwritten `.tex` files. No `ch03` was authored, so there is
+no book chapter for a capability entry to describe. The six lessons are
+canonical schema-v2 content and the app can serve them today; the book is what
+is behind.
+
 ## Read and practise
 
 - [`book/book.tex`](./book/book.tex) builds the free two-chapter starter edition
@@ -87,3 +106,6 @@ Chapters 1 and 2 are authored as lessons and as a downloadable LaTeX starter
 book typeset with the vendored `NotoSansCyrillic-Static.ttf`.
 The six-lesson naming chain is also schema-v2 canonical content shared by the
 app, with both mapped non-lexical Russian frontiers using objective activities.
+Chapter 3 is authored as six schema-v2 lessons only — no book chapter yet. It is
+also the corpus's first realization of the shared `VERB-*` concepts (six of the
+core forty), and the first content anywhere to sit on an A2 spine node.

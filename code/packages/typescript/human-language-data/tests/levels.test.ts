@@ -198,16 +198,32 @@ describe("exam alignment", () => {
 describe("corpus snapshot", () => {
   // The measured answer to "how far is each track from A1, and from Advanced?"
   //
-  // Ratchet these as content lands. `A2: 0` is the headline: the A2 spine tranche exists
-  // but NO track has realized a single node of it, so the whole corpus sits at or below
-  // A1 and "Advanced" does not exist anywhere yet.
+  // Ratchet these as content lands. `A2: 0` WAS the headline: the A2 spine tranche
+  // existed and no track had realized a single node of it.
+  //
+  // HL-C42 ends that. Russian's new Chapter 3 — six core verbs, быть/жить/знать/
+  // говорить/видеть/идти — is authored into a `SPINE-SAY-WHAT-I-DO` segment, and that
+  // node is stage A2, so six lessons derive an A2 level and the tranche is no longer
+  // hypothetical:
+  //
+  //   A2       0 -> 6      pre-A1  657 (unchanged)   A1  307 (unchanged)
+  //   unmapped 170 (unchanged — every new lesson is in the path)
+  //   mappedPercent 85 (unchanged at whole-percent rounding: 964/1134 -> 970/1140)
+  //
+  // What it does NOT claim: that Russian teaches A2 grammar in the round. The node's
+  // own concepts, VERB-INFINITIVE and VERB-PRESENT-HABITUAL, are still listed as
+  // omitted in russian/curriculum.json; the six lessons realize the canonical `VERB-*`
+  // vocabulary concepts as a required extension hanging off that node. The level is
+  // derived from where the segment sits, which is the honest reading — the material is
+  // "saying what I do" — and the omission ledger is where the remaining debt is
+  // recorded.
   it("pins where the corpus actually stands on the ladder", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
     expect(summary.byLevel["pre-A1"]).toBe(657);
     expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(0);
+    expect(summary.byLevel.A2).toBe(6);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -219,13 +235,19 @@ describe("corpus snapshot", () => {
     expect(summary.mappedPercent).toBe(85);
   });
 
-  it("shows no track has reached A2, and five have not reached A1", () => {
+  it("shows exactly one track has reached A2, and four have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
-    expect(summary.tracks.every((track) => track.reach !== "A2")).toBe(true);
+    // Russian, and only Russian, on the strength of its core-verb chapter (HL-C42).
+    // Reach is the HIGHEST level a track has any lesson at, so Russian reads A2 while
+    // the rest of its 22 lessons stay at pre-A1 — which is also why it leaves the
+    // pre-A1 list below even though it is nowhere near finished.
+    expect(
+      summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
+    ).toEqual(["russian"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
-    ).toEqual(["chinese", "japanese", "persian", "russian", "urdu"]);
+    ).toEqual(["chinese", "japanese", "persian", "urdu"]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {
