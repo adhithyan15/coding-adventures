@@ -1,0 +1,549 @@
+{
+  "job": "human-languages-step-by-step",
+  "branch": "claude/human-languages-status-9gwa4m",
+  "repo": "adhithyan15/coding-adventures",
+  "note": "PARALLEL MODE (owner-authorised 2026-08-06). Multiple branches/PRs in flight at once, one branch per work item named claude/human-languages-<item>-<slug>. Pick items with non-overlapping file footprints to avoid conflicts. The 20-track content fan-out (HL-C11) is the real mountain: 379 chapters. It unblocks as soon as HL-C02 merges.",
+  "specs": [
+    "HL05",
+    "HL06",
+    "HL07",
+    "HL08"
+  ],
+  "items": [
+    {
+      "id": "HL-C01",
+      "status": "merged",
+      "pr": 9942,
+      "depends_on": [],
+      "title": "Specify HL05-HL08 (chapter capability, visual system, spine to B1, modality/ramp/narration)"
+    },
+    {
+      "id": "HL-C02",
+      "status": "merged",
+      "pr": 9957,
+      "depends_on": [],
+      "title": "chapters.json schema + loader + core/chapter-policy.json. No gates yet.",
+      "autoMerge": true
+    },
+    {
+      "id": "HL-C14",
+      "status": "merged",
+      "pr": 9968,
+      "depends_on": [],
+      "title": "Derive modality (voice/sight/pen) per lesson + chapter drivable prefix; publish in gap report.",
+      "branch": "claude/human-languages-c14-modality",
+      "note": "verified by me: tsc clean, 166 tests, String.includes cue matching (no ReDoS)"
+    },
+    {
+      "id": "HL-C03",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C02"
+      ],
+      "title": "Nine HL05 gates as report-only; first snapshot over all 379 chapters. MUST use >= for the representativeness comparison and ship a boundary test at share==threshold (kannada/telugu ch20 sit exactly on 0.50)."
+    },
+    {
+      "id": "HL-C13",
+      "status": "deferred-by-owner",
+      "pr": 9961,
+      "depends_on": [],
+      "title": "Deploy Language Ladder to GitHub Pages. DEFERRED 2026-08-06 by owner: the app persists progress/mistakes/review schedule in localStorage only, so a public deploy loses a learner's state on cache clear or a second device. Needs per-user persistence first. PR #9961 closed unmerged.",
+      "branch": "claude/human-languages-c13-deploy",
+      "note": "local build+481 tests verified; security review running"
+    },
+    {
+      "id": "HL-C07",
+      "status": "merged",
+      "pr": 9963,
+      "depends_on": [],
+      "title": "Log-scanning LaTeX warning gate with recorded per-track baselines.",
+      "branch": "claude/human-languages-c07-warning-gate",
+      "note": "verified by me: 31 tests pass, exit 0 with unseeded baselines"
+    },
+    {
+      "id": "HL-C16",
+      "status": "pr-open",
+      "pr": 9981,
+      "depends_on": [
+        "HL-C14"
+      ],
+      "title": "narration-cli: plain text + structured JSON, --write/--check, hash-gated.",
+      "note": "63%->84% drivable (694->925). 371/442 tables linearised at 3 cols. Zero reclassified TO sight."
+    },
+    {
+      "id": "HL-C04",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C02"
+      ],
+      "title": "Derive book chapter titles/labels from chapters.json; chapter-title-drift gate."
+    },
+    {
+      "id": "HL-C05",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C02"
+      ],
+      "title": "pattern lesson type + slot-closure and production gates."
+    },
+    {
+      "id": "HL-C08",
+      "status": "pr-open",
+      "pr": 9974,
+      "depends_on": [],
+      "title": "Render the ductus in Language Ladder (penPathD/penTip -> SVG build-up).",
+      "branch": "claude/human-languages-c08-ductus-ui",
+      "note": "verified by me: XML_NAME is anchored, all attr-name breakout vectors blocked. 481->523 tests."
+    },
+    {
+      "id": "HL-C06",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C08"
+      ],
+      "title": "Figure pipeline: SVG generation, graphicx, rsvg-convert in CI, --check hash gate."
+    },
+    {
+      "id": "HL-C18",
+      "status": "pr-open",
+      "pr": 9982,
+      "depends_on": [
+        "HL-C14"
+      ],
+      "title": "Burn down the 52 lessons exceeding the gentle-ramp budget, steepest first.",
+      "note": "VERIFIED: 182 atoms before AND after, 0 lost; 128->146 lessons. Spanish over-budget 15->0, corpus 52->37."
+    },
+    {
+      "id": "HL-C17",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C16"
+      ],
+      "title": "Linearise or reclassify the 322 table-bearing lessons. PRIORITISE by the 123 chapters with drivable prefix 0; the report now names each one's first blocker, which is the burn-down order. CONFIRMED as the corpus's largest modality lever: 271 of 337 remaining sight lessons are table-only. Russian (9%->73%) is the worked example to copy."
+    },
+    {
+      "id": "HL-C15",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C02",
+        "HL-C14"
+      ],
+      "title": "Print modality signs + drivable prefix at chapter openings."
+    },
+    {
+      "id": "HL-C09",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C08"
+      ],
+      "title": "Expand DUCTUS to ~190 letters across the 9 scripts with cited prose stroke order."
+    },
+    {
+      "id": "HL-C10",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "Complete A1, add A2 and B1 spine tranches, update all 20 realization ledgers."
+    },
+    {
+      "id": "HL-C11",
+      "status": "fan-out-complete",
+      "pr": null,
+      "depends_on": [
+        "HL-C02"
+      ],
+      "title": "Author chapter capabilities + payoffs across all 20 tracks (379 chapters). FAN OUT: one subagent per track. Chapters beyond the current 11 spine nodes use spineNodes: [] rather than waiting on HL-C10.",
+      "parallelism": "batch1: latin, hindi, tamil, kannada+telugu",
+      "note": "ALL 20 TRACKS AUTHORED: 277 of 375 chapters, 98 skipped as schema-v1 debt. merged: latin #9962 (36), hindi #9964 (30). open w/ auto-merge: tamil #9965 (27), kannada+telugu #9966 (52), romance #9969 (53), persian+urdu #9970 (8), arabic+malayalam #9971 (51), french+german #9972 (14), six small tracks #9973 (6)."
+    },
+    {
+      "id": "HL-C12",
+      "status": "merged",
+      "pr": 9960,
+      "depends_on": [],
+      "title": "Class C illustration pipeline. UNBLOCKED 2026-08-06: book stays CC BY-SA 4.0; generated images marked CC0-1.0 with rightsAsserted:false. First step is writing _assets/LICENSE.md and amending HL06 to record the decision.",
+      "branch": "claude/human-languages-c12-asset-license",
+      "note": "docs-only; file list verified by me"
+    },
+    {
+      "id": "HL-C36",
+      "status": "deferred",
+      "pr": null,
+      "depends_on": [
+        "HL-C13"
+      ],
+      "title": "Link Language Ladder from the root landing page (code/programs/static/landing-page, deploy-root.yml). The app will be live but undiscoverable. [DEFERRED with HL-C13]",
+      "source": "discovered during HL-C13",
+      "priority": "P1 - small, user-facing"
+    },
+    {
+      "id": "HL-C20",
+      "status": "deferred",
+      "pr": null,
+      "depends_on": [
+        "HL-C13"
+      ],
+      "title": "Code-split Language Ladder per language track. Bundle is a single 3.9 MB JS chunk (992 KB gzipped) because the whole 20-language curriculum is inlined; Vite warns. Will worsen as HL-C11 adds ledgers and HL-C09 adds ductus data. [DEFERRED with HL-C13]",
+      "source": "discovered during HL-C13",
+      "priority": "P1 - grows with the corpus"
+    },
+    {
+      "id": "HL-C21",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "Repo-wide CI supply-chain hardening: every deploy workflow runs `npm install` (executing dependency lifecycle scripts) inside a job holding contents: write, and pins actions to mutable @v4 tags. Fix the FLEET at once - split build from deploy, or SHA-pin. A lone hardened workflow would be inconsistent without the rest.",
+      "source": "discovered during HL-C13",
+      "priority": "P0 - security, repo-wide"
+    },
+    {
+      "id": "HL-C23",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "Per-user progress persistence for Language Ladder. localStorage is per-browser: progress, mistakes, review boxes and language mix are lost on cache clear and never follow a learner to another device. Needs an account/sync story (or explicit export/import) BEFORE any public deploy. This is the blocker for HL-C13.",
+      "source": "owner decision 2026-08-06",
+      "priority": "P0 - gates deployment"
+    },
+    {
+      "id": "HL-C24",
+      "status": "pr-open",
+      "pr": 9979,
+      "depends_on": [],
+      "title": "Latin has only ONE consolidation lesson (LA-C01-practice) across 36 chapters and no practice-mix at all. Chapters 2-36 use their last lesson by sequence as payoff, which is where recombination actually lives but is not a dedicated consolidation step. Author real chapter payoffs; ch21/33/36 are culture/etymology lessons where the reader traces a root rather than performing an exchange.",
+      "source": "discovered during HL-C11 latin",
+      "priority": "P1",
+      "note": "4 payoffs authored (ch19/21/33/36). Test pins UPDATED not weakened (1096->1100, 694->698), verified by me."
+    },
+    {
+      "id": "HL-C25",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C11"
+      ],
+      "title": "Author real chapter payoff lessons across all tracks. The fan-out proved most chapters have no terminal consolidation lesson, so payoffs fall back to an etymology/culture/writing lesson and fail representativeness. This is now the highest-value remaining work for the Step-by-Step goal: a chapter that cannot end in something usable is exactly the problem HL05 was written to fix. Use Persian/Urdu practice lessons (real dialogues minting *-DIALOGUE-* atoms) as the model. SCOPE CORRECTION: this is 'author prerequisite edges, then write lessons'. Also ~1/3 of chapters (lists, etymology) resist a dialogue payoff on principle - `task`/`production` is the honest kind there.",
+      "source": "HL-C11 fan-out",
+      "priority": "P0 - this IS the step-by-step goal"
+    },
+    {
+      "id": "HL-C26",
+      "status": "pr-open",
+      "pr": 9977,
+      "depends_on": [
+        "HL-C11"
+      ],
+      "title": "Mint book-generation.json targets for early chapters that lack them: latin ch1, hindi ch1-2, tamil ch1-5. Their titles currently come from hand-written .tex. The chapter-title-drift test skips targetless chapters, so HL-C04 (inverting title ownership to chapters.json) would leave them unverified.",
+      "source": "HL-C11 latin/hindi/tamil",
+      "priority": "P1 - blocks HL-C04 completeness",
+      "note": "VERIFIED BY ME: adding to targets[] WOULD have forced generation over hand-written .tex. Agent found this and added a parallel handwritten[] array instead. 0 .tex files touched, targets still 270, handwritten 105, 270+105=375 = every chapter. check:books exits 0."
+    },
+    {
+      "id": "HL-C27",
+      "status": "pr-open",
+      "pr": 9975,
+      "depends_on": [],
+      "title": "code/scripts/tests/test_build_human_language_book_catalog.py is executed by NO workflow. The catalog builder ships untested in CI. HL-C07 wired in its own scanner tests; do the same here.",
+      "source": "discovered during HL-C07",
+      "priority": "P1",
+      "note": "verified by me: 2 tests pass, workflow parses, books-gate untouched"
+    },
+    {
+      "id": "HL-C28",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C07"
+      ],
+      "title": "Seed core/latex-warning-baseline.json from the first main run after HL-C07 merges. All 20 tracks ship null (unmeasured, verified exit 0) so the gate measures but cannot fail. It stays inert until real numbers are pasted in from the job summary.",
+      "source": "HL-C07",
+      "priority": "P0 - the gate does nothing until seeded"
+    },
+    {
+      "id": "HL-C29",
+      "status": "pending-conflict-hold",
+      "pr": null,
+      "depends_on": [
+        "HL-C14"
+      ],
+      "title": "Russian is a drivability outlier at 9% (2 voice / 15 sight / 5 pen, ZERO lessons reachable by ear across both chapters). Every other track is 43-90%. Almost certainly a track-authoring pattern rather than genuine sight-dependence - investigate before doing table work elsewhere.",
+      "source": "HL-C14",
+      "priority": "P1",
+      "note": "unblocked by HL-C14 but touches lesson files owned by open track PRs; start once those merge"
+    },
+    {
+      "id": "HL-C30",
+      "status": "closed-measured",
+      "pr": 9978,
+      "depends_on": [
+        "HL-C14"
+      ],
+      "title": "Reorder chapter openings so a voice lesson comes first. Arabic ch3/ch4 OPEN with AR-W* writing lessons, making the whole chapter unstartable by ear even though later lessons are drivable. Cheaper prefix gains than table remediation: moving one lesson beats linearising a table.",
+      "source": "HL-C14",
+      "priority": "P1 - cheapest drivability win",
+      "note": "CLOSED: no legal reorder helps Arabic. Corpus-wide reordering is worth only +4 lessons total."
+    },
+    {
+      "id": "HL-C31",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "Decide how representativeness treats atom CLASSES before HL-C03 makes the gate live. A dialogue payoff cannot assess an etymology atom, yet ETYMON/SCRIPT atoms sit in the denominator, which is why Arabic ch3 scores 0.11 and every Persian/Urdu ch4-5 fails. Options: (a) exclude ETYMON/SCRIPT from the denominator, (b) weight by class, (c) require a separate script/etymon check. Needs an owner decision - it changes what every score in the corpus means. ALSO: HL-C24 proved the metric saturates at 100% wherever terminal lessons are cumulative, so it needs redesign, not just a denominator tweak.",
+      "source": "persian/urdu + arabic/malayalam agents",
+      "priority": "P0 - gates HL-C03"
+    },
+    {
+      "id": "HL-C32",
+      "status": "merged",
+      "pr": 9980,
+      "depends_on": [],
+      "title": "Russian track remediation. Worst on every measurement: 9% drivable, 0.20 representativeness, 6/22 lessons schema v2, schema-v1 practice lessons, ch2 targetless. Two independent metrics agreeing indicates real track debt rather than noise.",
+      "source": "HL-C14 + HL-C11 small-tracks",
+      "priority": "P1",
+      "note": "VERIFIED: 9%->73% drivable, tables converted to prose with content preserved, 166 tests, pins updated not weakened"
+    },
+    {
+      "id": "HL-C33",
+      "status": "pr-open",
+      "pr": 9976,
+      "depends_on": [
+        "HL-C08"
+      ],
+      "title": "CONTENT ERROR, currently shipping: tamil.json's prose stroke order for ma lists THREE steps (implying 2 pen lifts) while the cited UT Austin primer's ductus is ONE unbroken stroke of five movements. The app renders the prose list today, so one of them teaches the wrong thing about where the hand lifts - exactly what the ductus pipeline exists to prevent. Resolve against the citation before expanding DUCTUS in HL-C09.",
+      "source": "HL-C08",
+      "priority": "P0 - wrong teaching content in the shipped app",
+      "note": "verified by me: correctly separated PARTS from STROKES; prose and ductus agreed on ink+direction and conflicted only on pen lifts"
+    },
+    {
+      "id": "HL-C34",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C08"
+      ],
+      "title": "LOW/defence-in-depth: ductusview isSafeName correctly blocks attribute-NAME injection, but attribute VALUES are only XML-escaped, so a future caller could emit xlink:href=\"javascript:...\". The app never emits anchors so this is not reachable today, but SvgNode is exported. Consider a scheme allowlist for URL-shaped attributes.",
+      "source": "my review of HL-C08",
+      "priority": "P2"
+    },
+    {
+      "id": "HL-C35",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "REPO-WIDE, beyond human-languages: 39 of the 60 test files in code/scripts/ are executed by NO workflow (38 after HL-C27). Mostly the neural-learning validate_*_labs suites plus fixture/report checks. They must NOT be bolted onto human-languages-books.yml - that would run them only when a .tex changes and never when their own subjects change, which is fake coverage. They need ci.yml or their own workflow with correct paths: triggers.",
+      "source": "HL-C27",
+      "priority": "P1 - repo health, outside HL scope"
+    },
+    {
+      "id": "HL-C19",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C09"
+      ],
+      "title": "Verify all 190 prose strokeOrders across nine scripts against authored ductus paths. Repo BACKLOG owns this ID as of #9976. Exactly ONE letter (Tamil ma) is verified today; the other 189 are unverified for pen lifts and must not have lifts invented.",
+      "source": "HL-C33",
+      "priority": "P1"
+    },
+    {
+      "id": "HL-C37",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "Fix orderChapterLessons so chapter ordering respects the in-chapter prerequisite graph rather than sorting nulls last. Affects 85 chapters. Either make the comparator prerequisite-respecting, or give the 565 legacy lessons sequences - note validateCurriculum does NOT check sequence uniqueness outside schema v2, so that route has a silent collision hazard. Until fixed, every published drivable-PREFIX number for a mixed-schema track is measured against an order no author wrote.",
+      "source": "HL-C30",
+      "priority": "P0 - published numbers are wrong"
+    },
+    {
+      "id": "HL-C38",
+      "status": "pr-open",
+      "pr": 9987,
+      "depends_on": [],
+      "title": "Make the books read like books. 1,438 [PAUSE Ns] and 1,411 [YOU SAY:] markers print literally in all 270 generated chapters, plus Warm-up/Guided Practice/Wrap-up recall as headings ~500x each. RENDERER fix in book.ts, not a lesson rewrite - narration keeps the cues. Also de-jargon the 20 track READMEs (91 spec-ID refs, 63 'payoff', 49 'schema', 35 'ledger').",
+      "source": "owner feedback: 'sounds like you copy pasted my prompts'",
+      "priority": "P0 - reader-facing quality"
+    },
+    {
+      "id": "HL-C39",
+      "status": "pr-open",
+      "pr": 9984,
+      "depends_on": [],
+      "title": "Add Mandarin Chinese as a track. SCALE TEST: tone is phonemic, characters decompose into radicals not letters, and there is no Latin taproot for the cousin web.",
+      "source": "owner request",
+      "priority": "P0 - proves generalisation",
+      "note": "21 tracks/1103 lessons. XeLaTeX compile UNVERIFIED locally - watch the books job."
+    },
+    {
+      "id": "HL-C40",
+      "status": "pr-open",
+      "pr": 9986,
+      "depends_on": [],
+      "title": "Add Japanese as a track. HARDEST scale test: three writing systems in one sentence contradicts HL00's one-script-per-track assumption; kanji have multiple contextual readings; keigo makes politeness grammatical not lexical. 'Needs a spec amendment' is an acceptable outcome.",
+      "source": "owner request",
+      "priority": "P0 - proves generalisation"
+    },
+    {
+      "id": "HL-C18B",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "Remaining 37 over-budget lessons across 16 tracks: german 8, french 6, sanskrit 3, urdu 3, italian 3, punjabi 2, gujarati 2, persian 2, then 1 each. Worst are three six-atom number lessons (BN-C06-numbers-1-5, PA-C06-panj-convergence, SA-C06-number-cognates) with the same shape as the Spanish one just split.",
+      "source": "HL-C18A",
+      "priority": "P1"
+    },
+    {
+      "id": "HL-C42",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C16"
+      ],
+      "title": "Narration register pass. A 3-column table read aloud as 'letter: ka. says: ka. not: k.' is correct but sounds like a database rather than a teacher. Also 52 lessons need eyes for a wide table and nothing else - reshaping those reaches 89% drivable.",
+      "source": "HL-C16",
+      "priority": "P1"
+    },
+    {
+      "id": "HL-C43",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C16"
+      ],
+      "title": "Dictation-friendly DRIVING EDITION: a second book output over the same canonical source that omits or defers writing content, for use in the car. The complete book keeps everything; this is the reduced view. Reuses the narration export's deferral pattern ('once you have stopped driving'). Depends on block-level modality to skip segments rather than whole lessons.",
+      "source": "owner decision",
+      "priority": "P1 - after the complete book reads well"
+    },
+    {
+      "id": "HL-C41",
+      "status": "pr-open",
+      "pr": 9985,
+      "depends_on": [],
+      "title": "Telugu inline writing + block-level modality (modality vs coreModality, detachable `writing` block).",
+      "note": "0 letters authored - sources network-blocked, correctly authored nothing. Drivability a measured no-op, pinned."
+    },
+    {
+      "id": "HL-C45",
+      "status": "blocked-on-source-access",
+      "pr": null,
+      "depends_on": [],
+      "title": "Author ductus pen paths for Telugu and the other 8 scripts. BLOCKED ON SOURCE ACCESS, not effort: external egress denied, so no stroke-order primer is reachable and strokes.ts correctly refuses uncited paths. Owner can unblock by supplying source material.",
+      "priority": "P1 - blocked"
+    },
+    {
+      "id": "HL-C46",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "Add a schema-v2 block type for '## The letters in this word' (240 occurrences, all schema-v1 today). Without it, inline script teaching has nowhere to live in v2 and Chinese had to split one analysis across a `script` block and an `etymology` block that are really the same thing.",
+      "source": "HL-C39",
+      "priority": "P1 - blocks v1->v2 migration of script-teaching tracks"
+    },
+    {
+      "id": "HL-C47",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "HL01's Script is one string per track and uncoveredGlyphs validates a headword against exactly one inventory. Japanese needs three (hiragana/katakana/kanji) and currently encodes the distinction in a per-sign `role` naming convention. Make multi-script tracks first-class.",
+      "source": "HL-C40",
+      "priority": "P1"
+    },
+    {
+      "id": "HL-C48",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [],
+      "title": "`register` as an open string is inadequate for Japanese, which needs speech level x addressee honorification x referent honorification. Currently a plain-casual/teineigo-polite stopgap. 23 distinct register values already exist corpus-wide - this is also a general drift surface.",
+      "source": "HL-C40",
+      "priority": "P1"
+    },
+    {
+      "id": "HL-C49",
+      "status": "pending",
+      "pr": null,
+      "depends_on": [
+        "HL-C38"
+      ],
+      "title": "Give chapters an argument, not a word list. Four structural issues a renderer cannot fix: the identical 5-block skeleton repeated 1,096 times; recall answers printed beside their questions; NO connective tissue between lessons in a chapter; and per-lesson heading repetition. Needs an owner decision on chapter-level shape.",
+      "source": "HL-C38",
+      "priority": "P0 - the remaining 'sounds machine-made' surface"
+    }
+  ],
+  "decisions": {
+    "illustrationLicensing": {
+      "decidedAt": "2026-08-06",
+      "decidedBy": "project owner",
+      "book": "CC BY-SA 4.0 (unchanged)",
+      "generatedIllustrations": "CC0-1.0, rightsAsserted: false",
+      "rationale": "A CC license grants copyright permissions; purely AI-generated output likely lacks the human authorship copyright requires (US Copyright Office: Zarya of the Dawn, Thaler). Marking CC0 is safe either way -- it claims nothing false if the images are uncopyrightable, and is a deliberate dedication if they are not. Avoids binding readers to an unenforceable ShareAlike obligation.",
+      "requires": "per-asset provenance sidecar (generator, model, prompt, date, sha256); prompts must avoid living artists, brands, and recognizable characters; generator ToS reviewed per asset."
+    }
+  },
+  "mode": "parallel",
+  "reviewPolicy": {
+    "docsOrDataOnly": "auto-merge on green CI is fine; owner authorised auto-merge. Verify the file list myself before trusting a subagent's 'docs only' claim.",
+    "carriesCode": "CLAUDE.md mandates /security-review by a sub-agent BEFORE merge. Subagent self-review is NOT sufficient. Run a real review on every code-carrying PR while CI runs; auto-merge fires only on green CI, which gives a ~20min window.",
+    "codePRsNeedingReview": [
+      "HL-C13 deploy workflow",
+      "HL-C07 warning gate workflow",
+      "HL-C08 ductus renderer",
+      "HL-C14 modality module"
+    ]
+  },
+  "notes": {
+    "assessesIsMechanical": "Track agents derive payoff.assesses verbatim from the payoff lesson's practises.knowledge. That is honest (it is the maximal true claim) and the metric still discriminates - Latin scores 100% while Spanish ch3 is 8/24 = 33% and will fail. But it means `assesses` carries no independent authored signal. Revisit when HL-C03 lands the representativeness gate.",
+    "ciCancelledNotFailed": "A CI 'failure' can be BUILD_RESULT: cancelled caused by my own superseding push to the same branch. Check for 'cancelled' before diagnosing a real defect.",
+    "MAJOR_FINDING_no_payoffs": "THE headline finding of the HL-C11 fan-out. Across latin (36 ch), hindi (30), tamil (27) \u2014 the three largest tracks reported so far \u2014 essentially NO chapter has a schema-v2 terminal consolidation lesson. Latin has exactly one `practice` lesson across 36 chapters and no practice-mix at all. Hindi's two practice lessons are schema v1 and outside the curriculum path. Tamil has none. So payoffs fall back to 'last lesson by sequence', which is frequently an etymology, culture, or script-writing lesson \u2014 the reader traces a root or forms a letter rather than performing a usable exchange. Every representativeness failure reported so far sits on exactly such a chapter. The ledger is honestly DOCUMENTING that the corpus does not yet have chapter payoffs, which is precisely the gap the Step-by-Step goal exists to close. Persian/Urdu are the exception and the quality bar: real `practice` lessons minting *-DIALOGUE-* atoms.",
+    "subagentsLackAgentTool": "Subagents report no Agent/Task tool in their environment, so they self-review instead of launching an independent /security-review. The independent review must therefore be run by ME for any code-carrying PR. Done for #9961 (deploy, found LOW persist-credentials) and #9963 (warning gate, verified exit 0 unseeded). Data-only chapters.json PRs are gated by the package test suite.",
+    "thresholdComparisonAmbiguity": "HL05 says a payoff 'must assess at least a threshold share'. kannada ch20 and telugu ch20 land at EXACTLY 0.50 against a 0.50 threshold, so >= vs > decides whether they pass. HL-C03 MUST implement >= (the natural reading of 'at least') and say so in the spec + a boundary test pinning share==threshold as PASSING. Otherwise raising the threshold later silently reclassifies boundary chapters.",
+    "ch20TopicCollision": "kannada/telugu ch20 teach numbers 11-20 AND weather - two unrelated topics in one chapter - and the weather lesson closes it, so the payoff can only reach half the chapter's atoms. This is ALREADY a known issue: backlog items HL-M02/HL-M03 call out 'Chapter 20's numbers-and-weather topic collision' and ask for it to be split or justified. The representativeness measurement independently rediscovered it, which is corroboration the metric tracks something real.",
+    "mergedFieldIsUnreliable": "TOOLING TRAP: mcp__github__list_pull_requests with a `fields` projection returns merged:false even for PRs that ARE merged (#9960 showed merged:false while merged_at was set). Determine merge state ONLY via mcp__github__pull_request_read method=get, which returns merged:true + merged_at. Using the list view would make the driver miss every merge and re-run completed work.",
+    "drivableMeasured": "HL-C14 result: 694/1096 drivable (63%) - 694 voice / 351 sight / 51 pen. Structural counts reproduce the HL08 baseline EXACTLY (51 pen, 7 script blocks, 322 table-bearing). The 694/61 vs my stated 695/56 \u5dee is purely the sight-cue list, which I never recorded precisely; the agent refused to fit the cue list to hit my number ('fitting a cue list to a target measures the target, not the corpus'). Correct call. 123 of 375 chapters have drivable prefix 0 - you cannot even START them by ear.",
+    "atomClassProblem": "SYSTEMATIC CAUSE of nearly every representativeness failure, identified independently by the persian/urdu and arabic/malayalam agents. Word lessons introduce *-SCRIPT-* and *-ETYMON-* atoms (FA-SCRIPT-KHUB, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, ...) that a consolidating DIALOGUE never re-exercises - because you cannot 'perform' an etymon in a spoken exchange. So the denominator counts atom classes the payoff is structurally incapable of assessing. Persian ch4/ch5 and Urdu ch4/ch5 all fail for exactly this reason, as do Arabic ch3 (0.11) and ch4 (0.12). This is a METRIC DESIGN question, not per-chapter content debt: either weight atom classes differently in the denominator, or require a different check for script/etymon coverage (e.g. a writing companion or a recall prompt rather than the dialogue).",
+    "russianIsTheWorstTrack": "Russian is the consistent outlier on BOTH independent measurements: 9% drivable (2 voice/15 sight/5 pen, zero lessons reachable by ear) AND 0.20 representativeness on its single authorable chapter. Only 6 of 22 lessons are schema v2, its practice-mix lessons are schema v1 so the payoff fell back to a cross-language etymology lesson, and ch2 has no book-generation target. Two unrelated metrics agreeing means this is a real track-health problem, not measurement noise. Worth a dedicated remediation pass.",
+    "staleRemoteRefFalseAlarm": "The stop hook reported '14 unpushed commits'. False alarm: the local branch equals origin/main exactly (0/0) and the remote branch was deleted by GitHub when #9957 merged, so the count was against a dead remote-tracking ref. Fix is `git remote prune origin`, NOT pushing - pushing would recreate a branch identical to main with no PR.",
+    "penLiftsSemantics": "KEY SEMANTIC established by #9976, do not erode: `penLifts` absent means NOT VERIFIED, never NONE, and it must NEVER be inferred from strokeOrder.length. A strokeOrder list names a letter's PARTS in writing order; it has never counted pen-down runs. Three named parts can be three strokes OR one continuous stroke whose parts merely have names - Tamil ma is the latter.",
+    "generationHazardAvoided": "HL-C26 confirmed the hazard I flagged: a book-generation.json targets[] entry makes book-cli GENERATE that chapter's .tex from canonical lessons. The targetless chapters are hand-written and mostly schema-v1, so minting targets for them would have OVERWRITTEN authored content. The safe fix is the new handwritten[] array, which records the chapter for title/label provenance without enrolling it in generation. Remember this before anyone \"completes\" the targets list.",
+    "MEASUREMENT_BUG_orderChapterLessons": "P0 CORRECTION to numbers I already reported. HL-C14 orderChapterLessons sorts a chapter by `sequence` with null last, tie-broken by id. In MIXED-SCHEMA tracks the W* writing lessons are schema v2 and carry a sequence while the word lessons are still legacy and carry none - so the pen block sorts to the FRONT of a chapter it does not actually open. 85 chapters (25 of them among the 123 zero-prefix chapters) are ordered in a way that CONTRADICTS their own in-chapter prerequisite graph. hindi ch1 is reported as opening with HI-W01-shirorekha-na-ma, which DECLARES HI-C01-namaste as a prerequisite. So drivable-PREFIX numbers are unreliable for mixed-schema tracks. The corpus-wide 63% LESSON-level drivability is unaffected - it does not depend on ordering.",
+    "REPRESENTATIVENESS_IS_NEARLY_VACUOUS": "MY DESIGN ERROR, found by HL-C24. I specced payoff representativeness in HL05 and called it 'the rule that carries the weight'. It does not. All 36 Latin chapters measured 100% BEFORE and AFTER adding real payoff lessons, because a chapter's last teaching lesson cumulatively practises everything the chapter introduced. The metric answers 'does the payoff TOUCH the chapter's material', never 'can the reader DO something'. It discriminates only where a terminal lesson happens to be narrow (arabic ch3 0.11, hindi ch2 0.17, spanish ch3 0.25) - so what it actually measures is HOW CUMULATIVE a track's terminal lessons are, not payoff quality. Combined with HL-C31 (ETYMON/SCRIPT atoms in the denominator), the rule needs redesign before HL-C03 builds it. The honest signal HL-C24 found: chapters ending on a lesson WRITTEN to be a payoff, 1 of 36 -> 5 of 36 for Latin.",
+    "HL_C25_IS_EDGES_NOT_LESSONS": "SCOPING INSIGHT for the biggest remaining item. Latin's prerequisite chain is a LINE, not a tree - lessons name one or two prerequisites each - so material taught in a SIBLING branch is invisible to a payoff even though the reader demonstrably learned it. Latin ch36 could not see the bonus-phrase atoms until explicit prerequisite edges were authored. So HL-C25 is not 'write 350 lessons', it is 'AUTHOR PREREQUISITE EDGES, THEN write lessons'. Budget for the edges or every payoff silently shrinks to whatever its one ancestor line happened to carry.",
+    "TABLES_ARE_THE_LEVER": "PROVEN by HL-C32. Russian: 15 of 15 sight lessons tripped `wide-table`, ZERO tripped script-block. The internal proof is decisive: RU-C01-privet and RU-C01-zdravstvuyte carry the SAME 'Across the family' content as PROSE and were the track's only two voice lessons. Same content, two formattings, two modalities. Converting tables to prose took Russian 9% -> 73% drivable with zero content loss. Corpus-wide, 271 of the 337 remaining sight lessons trip wide-table and NOTHING ELSE - spanish 57, german 33, portuguese 32, french 29, italian 29, arabic 14, tamil 14. HL-C17 is the single largest modality lever in the corpus and Russian is the worked example.",
+    "sightCueFalsePositives": "The sight-cue detector uses literal substring matching and has precision problems. In Russian, 2 of 3 cue matches were false positives: \"the course's first look at case\" matched 'look at'; \"the most extreme change in the table\" matched 'the table' only because a table existed. Worth tightening when HL-C17 makes cues the dominant remaining signal.",
+    "representativenessIsOftenSchemaDebt": "REFRAME. The low representativeness scores (arabic ch3 0.11/ch4 0.13, hindi ch2 0.17, spanish ch3 0.25) are largely NOT 'this chapter has no payoff'. The chapter's REAL consolidation lesson exists but is schema v1, so the ledger had to point at a schema-v2 stand-in (an etymology or writing lesson). A ONE-LESSON schema-v2 migration fixes each - HL-C32 did exactly that for RU-C02-practice and moved ch2 from 0.20 to 0.67. That is far cheaper than authoring new payoffs.",
+    "TWO_EDITIONS_NOT_ONE_COMPROMISED_BOOK": "OWNER DECISION 2026-08-06, corrects an instinct of mine. The BOOK is the complete standalone artifact and keeps ALL writing content - it must never be thinned to protect the drivability metric. A DICTATION-FRIENDLY DRIVING EDITION comes later as a separate output view over the same canonical source, omitting what a driver cannot do. I had proposed contorting the book (block-level modality) so interspersed writing would not hurt drivability; that was the wrong trade. Block-level modality is still worth having, but for a better reason: it lets the future driving edition skip just the writing SEGMENT instead of dropping the whole lesson, which today costs a commuter every lesson containing any pen content.",
+    "DRIVING_EDITION_IS_PREFIX_SHAPED": "CRITICAL for HL-C43. You CANNOT build the driving edition by filtering `drivable`. 708 lessons are ear-only but only 551 are REACHABLE - 157 sit behind a blocker inside their own chapter. The filter is PREFIX-shaped, not set-shaped: the edition must TRUNCATE chapters, not select lessons. The manifest emits `drivableLessonIds` in authored order precisely so the renderer does not re-derive this and get it wrong. Also: 121 of 375 chapters cannot be STARTED at all, usually one pen/script lesson sitting first - they are not inaudible, they are front-loaded. That is what makes HL-C41's block-level modality load-bearing rather than nice-to-have: without it the driving edition loses a third of the corpus to opening segments.",
+    "chineseIntegrityCheck": "HL-C39 scale test: ZERO fabricated English cognates (checked directly). Character composition replaced etymology as the memory hook - '## Script - hao, a woman beside a child' (\u5973+\u5b50). The method's SHAPE transferred (attach the new to something already visible) even though its Indo-European mechanism did not. Tone needed its own lessons (ZH-C01-tones, ZH-C01-tone-sandhi), suggesting the 'Sounds you'll need' note could not carry it.",
+    "MY_BRIEFING_ERROR_inflight_vs_merged": "PROCESS ERROR I made repeatedly, caught by HL-C41. I briefed agents from my mental model of ALL in-flight work, but agents branch from origin/main and see ONLY MERGED state. Concretely I told the Telugu agent the narration exporter existed with its '[once you have stopped driving]' precedent (PR #9981, unmerged), that HL-C33's parts-vs-strokes rule was in place (PR #9976, unmerged), and that drivability was 63%->84% (merged baseline is 65%). RULE: state explicitly which referenced work is MERGED vs IN FLIGHT, and tell agents to verify against origin/main rather than trusting my description.",
+    "EXTERNAL_EGRESS_BLOCKED": "ENVIRONMENTAL BLOCKER, verified: external HTTP is denied (curl to en.wikipedia.org and omniglot.com both return 000; proxy allows only package registries and anthropic.com; YouTube 403s). Blocks EVERY task needing an external citation - HL-C41 (0 of ~36 Telugu letters) and HL-C09 (~190 letters) are gated on source access, not effort. Font validation works and fonts are vendored; one openable primer per script makes each about a day's work. The owner can unblock by supplying source material directly.",
+    "teluguStrokeOrderIsNotUniform": "CORRECTION to my framing. I described Telugu as written 'without lifting hands'. Published descriptions say its stroke order is NOT uniform - clockwise for some letters, counter-clockwise for others - and the talakattu tick is its own mark. Telugu is exactly where penLifts must stay ABSENT rather than asserted.",
+    "SCALE_TEST_CHINESE_RESULT": "THE ANSWER to 'does this scale to all languages': the STRUCTURE scales, the METHOD does not.\nHELD: the lesson schema carried tone with ZERO frontmatter change (sounds: [tone-3, tone-sandhi-third], exactly like Persian's sounds: [rtl, long-a]). Just-in-time script introduction transferred intact.\nBROKE 1 - the DATA layer. Letter.tone can only label a glyph. It cannot express the tone INVENTORY (contour 214 belongs to the sound system, not to any character) nor SANDHI, which changes a syllable's pitch because of the syllable AFTER it while the characters and printed pinyin stay identical. ni hao is spoken ni2 hao3; a learner trusting the page mispronounces the commonest greeting. It is a fact about a SEQUENCE and there is no Letter to hang it on. Added ScriptData.tones + ScriptData.toneSandhi.\nBROKE 2 - HL00 walks word->letter (2 levels). Chinese has word->character->component (3). No correct answer to 'which level is letter': characters alone leave shapes unmemorable, components alone leave you unable to speak. Sharper: for Chinese 'the letters in this word' and 'the word, taken apart' are THE SAME ANALYSIS - \u5973+\u5b50 is both decomposition and memory hook. Every other track separates script from etymology BECAUSE letters carry no meaning.\nBROKE 3, THE HEADLINE - the cousin web does not transfer at all. No shared ancestry, so HL00's engine has no fuel. No cognate was invented. Character composition substitutes but is WEAKER in a precise way: a cousin web anchors to knowledge the reader ALREADY HAS; a component gloss anchors to knowledge acquired IN THE SAME BREATH (\u5973 means nothing until this course says so). It is also less reliable - \u597d as woman+child is a TRADITIONAL GLOSS, not settled palaeography, and ~80% of characters are phono-semantic with sound components opaque after 3,000 years. bridges: [] on purpose.",
+    "latentGap_lettersInThisWord_blockType": "Schema v2 has NO block type for '## The letters in this word' - the heading HL00 specifies for inline script teaching. It occurs 240 times, all in schema-v1 lessons. Migrating any of those tracks to v2 will hit this.",
+    "SCALE_TEST_VERDICT": "CHINESE AND JAPANESE AGREE. The STRUCTURE scales; the signature METHOD does not.\nHELD in both: the lesson schema needed no frontmatter change (tone rode `sounds:` exactly like Persian's rtl; Japanese's multiple kanji readings rode `Letter.sound` as a free string). Just-in-time script introduction survives once 'letters' reads as 'the writing this word needs' - konnichiwa brings kana, nihongo brings kanji, koohii brings katakana, each on the word that forces it.\nBROKE in both, same place: the DATA layer. Chinese - Letter.tone cannot express a tone inventory or sandhi (a property of a SEQUENCE, no Letter to hang it on). Japanese - HL01's Script is ONE STRING per track and uncoveredGlyphs validates against exactly one inventory, so three writing systems had to be merged into one file with a per-sign `role`, encoding a three-way distinction in a naming convention.\nBROKE, THE HEADLINE: the cousin web does not transfer. Chinese has no shared ancestry at all and substitutes character composition, which is weaker in a precise way (anchors to knowledge acquired IN THE SAME BREATH rather than knowledge already owned). Japanese PARTIALLY redirects via Sino-Japanese, internal etymology, and shared borrowings - but exactly ONE of eight lessons produced an English cousin, and through a shared loan (koohii/coffee, both from Arabic qahwa) rather than shared descent.\nTHE TWO SECRETLY INDO-EUROPEAN PARTS OF HL00: (1) the Grounding section assumes every track has a deep root the reader owns through English; (2) the one-script-per-track rule.",
+    "xelatexIsActuallyAvailable": "DISCREPANCY worth acting on: the Japanese agent INSTALLED XeLaTeX and built its book (17 pages, 0 overfull, 0 missing glyphs, 1 underfull). The Chinese agent reported XeLaTeX unavailable and shipped with its first compile UNVERIFIED. So the capability exists and the Chinese book can and should be verified the same way.",
+    "BOOK_VOICE_WHAT_A_RENDERER_CANNOT_FIX": "HL-C38 fixed the scaffolding (1,438 [PAUSE] + 1,411 [YOU SAY] gone, block headings renamed, appendix moved to backmatter in 17 books, repo links removed, 20 prefaces rewritten, 20 READMEs de-jargoned) and its verdict is that ch20-lo-siento now reads like a language book. FOUR things remain that a renderer change cannot fix, all chapter-level STRUCTURE:\n1. Every lesson has the identical five-block skeleton, 1,096 times. Invisible in a one-lesson chapter, very visible in a six-lesson one.\n2. Recall answers sit in parentheses immediately after their questions - correct for a spoken script, wrong on a page where the eye lands on the answer first.\n3. NO CONNECTIVE TISSUE between sections. A many-lesson chapter reads as a LIST OF WORDS, not a chapter with an argument. This is the sharpest of the four and the real difference between a book and a glossary.\n4. 'Your turn' / 'Before you move on' repeat once per lesson.\nThese need an owner decision - they are chapter-level authoring changes, not rendering."
+  },
+  "prs": {
+    "9962": "latin ledger MERGED",
+    "9963": "HL-C07 warning gate",
+    "9964": "hindi",
+    "9965": "tamil",
+    "9966": "kannada+telugu",
+    "9968": "HL-C14 modality",
+    "9969": "romance (es/it/pt)",
+    "9970": "persian+urdu"
+  },
+  "durableNotes": {
+    "why": "Committed to the repo so a FRESH session (spawned by a durable Routine) can resume without this session's scratchpad, which is session-scoped and unreachable from a new one.",
+    "rateLimit": "GitHub API rate limit was exceeded by aggressive polling. A durable loop MUST poll sparingly: at most one PR-state sweep per firing, and prefer `git ls-remote` over API calls where possible.",
+    "blockerLanded": "HL-C50 (PR #9988) makes corpus pins DERIVED, so adding a track or splitting a lesson no longer edits any test file. That was the cause of 5-of-9 branch conflicts. Land it before resuming parallel work.",
+    "conflictPolicy": "Doc conflicts (BACKLOG.md, CHANGELOG.md, README.md) are append-only: resolve by keeping BOTH sides. Non-doc conflicts need real review.",
+    "parallelPolicy": "Fan out freely on PER-TRACK files (lessons/, chapters.json, per-track CHANGELOG) - the 20-track fan-out produced zero conflicts. SERIALIZE anything touching core/languages.json, core/book-generation.json, or shared test files.",
+    "agentBriefingRule": "Agents branch from origin/main and see ONLY merged state. Always say which referenced work is merged vs in flight, and require BOTH test suites (human-language-data AND language-ladder) before pushing."
+  }
+}

@@ -26,6 +26,12 @@ Script conventions are grounded in Northwestern University's *Zero Zabar*.
   exact session-count review ledger through S35.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) gathers Urdu
   script and sound facts on demand and labels the current Naskh fallback.
+- [`chapters.json`](./chapters.json) is the HL05 capability ledger: for each
+  authored chapter, one first-person "I can …" promise and the payoff lesson
+  that proves it. Chapters 2–5 are authored; Chapter 1 is not, because its
+  lessons are still schema v1 and declare no knowledge atoms to assess. The
+  capability text describes the shipped Naskh-fallback rendering, not the
+  intended Nastaliq letterforms.
 - [`lessons/`](./lessons/) contains the twenty canonical short practice lessons.
 - [`book/book.tex`](./book/book.tex) builds the free five-chapter starter edition
   with XeLaTeX; merged editions appear in the public human-languages book catalog.

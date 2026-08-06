@@ -87,6 +87,112 @@ gap report exists to measure. Ledgers are **authored intent** — unlike
 `curriculum.json`'s `omits`/`relocates`, which are recomputed caches, no validator
 may rewrite them.
 
+### Modality and the drivable course (HL08)
+
+[`HL08`](../../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md) asks a
+concrete question: **how much of this can I learn in the car?** `modality.ts` answers
+it for every lesson and every chapter.
+
+```ts
+import { summarizeModality, deriveLessonModality, loadEverything } from "@coding-adventures/human-language-data";
+
+const { lessons } = loadEverything();
+const modality = summarizeModality(lessons);
+modality.drivablePercent;              // 63 — the share learnable by ear alone
+modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLesson: "…", … }
+deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
+```
+
+Three channels, each naming what the learner must have available:
+
+| Value | Sign | Meaning |
+|---|---|---|
+| `voice` | 🚗 | learnable by ear alone — a voice assistant can teach it while you drive |
+| `sight` | 👁 | needs eyes — letter shapes, figures, or a table that cannot be read aloud |
+| `pen` | ✍ | needs a hand — handwriting formation and practice |
+
+Modality is **monotonic**: `pen` implies `sight`, so a pen lesson requires both. A
+chapter's modality is the union of its lessons'.
+
+**Modality is derived, never read off `skills:`.** That field records what a lesson
+*develops*, not what it *requires*: 501 of the 531 schema-v2 lessons declare
+`[listening, speaking, reading]`, yet *hola* is perfectly learnable by ear. Deriving
+from `skills` would have stamped roughly 95% of the corpus "needs eyes" and made the
+drivable course an empty promise. The derivation reads lesson type and block
+structure instead:
+
+1. `type: writing` → `pen`;
+2. otherwise a `script` block, a sight cue, or a table wider than the configured
+   linearisable width → `sight`;
+3. otherwise → `voice`.
+
+`maxLinearisableTableColumns` defaults to **0** — until the HL08 narration exporter
+can turn a two-column table into "*X* means *Y*", no table is speakable, and
+claiming otherwise would let a learner silently miss content. Raise it via
+`summarizeModality(lessons, { maxLinearisableTableColumns: 2 })` when the lineariser
+lands.
+
+A **chapter's drivable prefix** is how many of its lessons, in authored `sequence`
+order, are `voice` before the first that is not — deliberately not "how many voice
+lessons does it contain", because chapters are prerequisite-ordered and a voice
+lesson sitting behind a sight one is not reachable in the car.
+
+An author may override with `modality:` in frontmatter; an override that
+*contradicts* the derivation additionally requires `modality_reason:`. Unexplained
+overrides and unknown values are **reported, never thrown** — `summarizeModality()`
+walks the whole corpus and returns every finding at once. This slice ships **no
+gates**, per the HL-V01 precedent.
+
+Measured over all 1,096 lessons: 51 `pen`, 7 with `script` blocks, and among the
+remaining 1,038, 308 carry a Markdown table — the single largest obstacle to a
+hands-free course, and a far more tractable one than the script. **708 lessons
+(65%) are drivable exactly as authored.**
+
+### The modality manifest — two editions from one source (HL-C44)
+
+The derivation above is only useful to a *program* if it is a *file*. `core/lesson-modality.json`
+is that file: one row per lesson, generated and drift-gated, so the complete book, the
+app, and the forthcoming dictation-friendly driving edition can each filter the same
+canonical corpus instead of maintaining three copies of it.
+
+```bash
+npm run build
+npm run generate:modality   # write core/lesson-modality.json
+npm run check:modality      # fail (exit 1) if it drifted from the lessons
+```
+
+```ts
+import { loadModalityManifest, modalityManifestById } from "@coding-adventures/human-language-data";
+
+const manifest = loadModalityManifest();
+manifest.summary.drivablePercent;        // 65
+manifest.lessons.filter((l) => l.drivable);            // the driving edition's lessons
+manifest.tracks[0].chapters[0].drivableLessonIds;      // the prefix, already in order
+modalityManifestById(manifest).get("ES-C01-hola");     // a Map, never a plain object
+```
+
+Each lesson row carries `id`, `language`, `chapter`, `sequence`, `modality`, `derived`,
+`drivable`, `reasons`, and the lesson AST's `sourceHash`; the three override fields
+(`authored`, `authoredReason`, `overridden`) appear only on the handful of lessons that
+have them. Chapters add the drivable prefix and the ids in it; tracks and a corpus
+`summary` roll those up.
+
+Two design decisions are worth knowing before consuming it:
+
+- **`modality` is permanently the strongest channel the lesson needs anywhere.** It is
+  the conservative filter. HL-C41 is adding *block-level* modality — a lesson core that
+  is `voice` beside a short, separable, optional `pen` segment — and it lands as a new
+  optional `coreModality` key beside `modality`, never as a change to it. A consumer
+  reads `entry.coreModality ?? entry.modality` and is correct both before and after;
+  one that never learns about the new key keeps producing a merely *pessimistic*
+  driving edition, which is the safe direction to be wrong in. `features.blockModality`
+  in the header says whether a given build carries block data.
+- **Nothing is authored.** The manifest is derived, exactly like
+  `core/generated-book-hashes.json`. HL08 deliberately refused to put `modality:` in
+  1,096 frontmatter files, because 1,096 authored copies of a computed fact are 1,096
+  places for it to go stale. `check:modality` runs in CI beside `check:books` so the
+  manifest cannot drift from the lessons it describes.
+
 Build the JSON and readable gap reports locally with:
 
 ```bash
@@ -133,13 +239,16 @@ until the existing corpus has been split.
 | `plans.ts` | ordered local paths, extension placement, next lessons, and mixed ready frontiers | ✅ |
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
-| `report.ts` | deterministic duration, prerequisite, book, and schema gap report | ✅ |
+| `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
+| `modality-manifest.ts` | that derivation as an emittable, filterable JSON artifact | ✅ |
+| `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
+| `modality-cli.ts` | writes or checks `core/lesson-modality.json` | ⛔ (fs) |
 
-Only `loader.ts`, `cli.ts`, `report-cli.ts`, and `book-cli.ts` touch the filesystem (declared in
+Only `loader.ts`, `cli.ts`, `report-cli.ts`, `book-cli.ts`, and `modality-cli.ts` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested
 against inline fixtures.
 

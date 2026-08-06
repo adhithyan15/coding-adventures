@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "language": "persian",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapter 1 is deliberately absent — all four of its lessons are still schema v1 with no declared knowledge atoms, so any payoff written for it would be invented rather than derived. That absence is real, measurable debt and must not be papered over with a placeholder.",
+  "chapters": [
+    {
+      "chapter": 2,
+      "title": "Give your name",
+      "label": "ch:persian-name",
+      "canDo": "I can say my name in Persian in one careful sentence, and I can hear the small linking -e that ties the name to its owner.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "FA-C02-esm-e-man",
+        "kind": "production",
+        "summary": "One careful sentence with a slot for your own name: esm-e man ... ast, with the spoken ezafe doing the linking.",
+        "assesses": [
+          "FA-LEX-ESM-E-MAN-AST",
+          "FA-SCRIPT-ESM-MAN-AST",
+          "FA-GRAMMAR-EZAFE-OWNER"
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Ask and Answer Names",
+      "label": "ch:fa-ask-and-answer-names",
+      "canDo": "I can ask someone's name respectfully with shomâ, answer with my own, and tell them I am pleased to meet them.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "FA-C03-practice",
+        "kind": "dialogue",
+        "summary": "A six-line first meeting: greet, ask the name with respectful shomâ, answer with your own, and acknowledge with khoshvaghtam.",
+        "assesses": [
+          "FA-LEX-ESM-E-MAN-AST",
+          "FA-GRAMMAR-EZAFE-OWNER",
+          "FA-LEX-SHOMA-TO",
+          "FA-PRAGMATICS-SHOMA-REGISTER",
+          "FA-LEX-CHIST",
+          "FA-LEX-NAME-QUESTION",
+          "FA-SCRIPT-PERSIAN-QUESTION-MARK",
+          "FA-LEX-KHOSHVAGHTAM",
+          "FA-DIALOGUE-NAME-EXCHANGE"
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "How Are You?",
+      "label": "ch:fa-how-are-you",
+      "canDo": "I can ask how someone is in careful respectful Persian and answer that I am well, thank you.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "FA-C04-practice",
+        "kind": "dialogue",
+        "summary": "The careful wellbeing exchange in two moves: hâl-e shomâ chetor ast? answered khubam, mamnun.",
+        "assesses": [
+          "FA-LEX-WELLBEING-QUESTION",
+          "FA-GRAMMAR-HAL-E-SHOMA",
+          "FA-PRAGMATICS-WELLBEING-FORMAL",
+          "FA-LEX-KHUBAM-REPLY",
+          "FA-GRAMMAR-PERSONAL-COPULA-AM",
+          "FA-DIALOGUE-NAME-EXCHANGE",
+          "FA-DIALOGUE-WELLBEING"
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Take Leave",
+      "label": "ch:fa-take-leave",
+      "canDo": "I can open a short Persian conversation, check how the other person is, and close it with khodâ hâfez.",
+      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "payoff": {
+        "lesson": "FA-C05-practice",
+        "kind": "dialogue",
+        "summary": "A four-line interaction with a beginning and an end: salâm, the wellbeing check, then khodâ hâfez from both voices.",
+        "assesses": [
+          "FA-DIALOGUE-WELLBEING",
+          "FA-LEX-KHODAHAFEZ",
+          "FA-SCRIPT-KHODAHAFEZ-JOINED",
+          "FA-PRAGMATICS-STANDARD-FAREWELL",
+          "FA-DIALOGUE-TAKE-LEAVE"
+        ]
+      }
+    }
+  ]
+}

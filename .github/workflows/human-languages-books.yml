@@ -21,6 +21,9 @@ on:
       - "code/learning/human-languages/**"
       - "code/packages/typescript/human-language-data/**"
       - "code/scripts/build_human_language_book_catalog.py"
+      - "code/scripts/scan_latex_log_warnings.py"
+      - "code/scripts/tests/test_build_human_language_book_catalog.py"
+      - "code/scripts/tests/test_scan_latex_log_warnings.py"
       - ".github/workflows/human-languages-books.yml"
   pull_request:
     branches: [main]
@@ -72,6 +75,9 @@ jobs:
             code/learning/human-languages \
             code/packages/typescript/human-language-data \
             code/scripts/build_human_language_book_catalog.py \
+            code/scripts/scan_latex_log_warnings.py \
+            code/scripts/tests/test_build_human_language_book_catalog.py \
+            code/scripts/tests/test_scan_latex_log_warnings.py \
             .github/workflows/human-languages-books.yml
           diff_status=$?
           set -e
@@ -102,12 +108,46 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # The log scanner is what enforces the books' zero-warning claim, so it is
+      # tested before anything expensive runs: a silently broken gate is worse
+      # than no gate, and finding that out after a 20-book XeLaTeX build wastes
+      # twenty minutes. No dependencies beyond the runner's stock python3.
+      - name: Test the LaTeX warning scanner
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_scan_latex_log_warnings.py' -v
+
+      # The catalog builder writes the index.html and catalog.json that main
+      # pushes publish to GitHub Pages, so it is the other piece of this
+      # workflow whose breakage reaches readers. Same reasoning as above: test
+      # it before the 20-book build, not after.
+      #
+      # This is a second step rather than a widened `-p` on the step above
+      # because `unittest discover` takes exactly ONE pattern, and no glob
+      # matches these two files without also sweeping in the unrelated
+      # test_build_tool_conformance_* and test_build_adj_* suites. Separate
+      # named steps also keep the failure legible — the red step name says
+      # which suite broke without anyone opening the log.
+      - name: Test the book catalog builder
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_build_human_language_book_catalog.py' -v
+
       - name: Build curriculum gap report
         working-directory: code/packages/typescript/human-language-data
         run: |
           npm ci
           npm run build
           npm run check:books
+          # The modality manifest (core/lesson-modality.json) is derived from the
+          # lessons and is what lets the complete book, the app, and the future
+          # dictation-friendly driving edition be filtered out of one source. A stale
+          # manifest is not cosmetic: a lesson that gained a paradigm table would still
+          # read `drivable: true`, and the driving edition would tell somebody at 70mph
+          # to look at a chart. Regenerate with `npm run generate:modality`.
+          npm run check:modality
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"
@@ -180,6 +220,26 @@ jobs:
           test "$book_count" -gt 0
           echo "Built $book_count human-language books"
 
+      # `latexmk -halt-on-error` stops on hard TeX errors but is perfectly happy
+      # with a log full of warnings, so every track's "zero overfull boxes, zero
+      # missing glyphs" claim was prose and nothing else. These two steps turn it
+      # into a contract by reading each book.log the loop above left behind.
+      #
+      # The gate is baselined, not absolute. A track fails only when it EXCEEDS
+      # the counts recorded in core/latex-warning-baseline.json; a track with no
+      # recorded baseline is measured and reported but never failed. Baselines
+      # ship unseeded on purpose — real numbers need a real XeLaTeX run, so the
+      # scanner prints the counts it actually measured into the job summary for
+      # a human to paste back into the baseline file. See HL06's "warning gate".
+      - name: Scan book logs for LaTeX warnings
+        run: |
+          set -euo pipefail
+          python3 code/scripts/scan_latex_log_warnings.py \
+            --book-root code/learning/human-languages \
+            --baseline code/learning/human-languages/core/latex-warning-baseline.json \
+            --summary "$GITHUB_STEP_SUMMARY" \
+            --json dist/human-languages/books/latex-warnings.json
+
       - name: Build download catalog
         run: |
           python code/scripts/build_human_language_book_catalog.py \
@@ -193,7 +253,9 @@ jobs:
           test -s dist/human-languages/books/catalog.json
           test -s dist/human-languages/books/curriculum-gaps.json
           test -s dist/human-languages/books/curriculum-gaps.txt
+          test -s dist/human-languages/books/latex-warnings.json
           python -m json.tool dist/human-languages/books/curriculum-gaps.json >/dev/null
+          python -m json.tool dist/human-languages/books/latex-warnings.json >/dev/null
           test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
 
       - name: Upload complete publication bundle

@@ -2240,6 +2240,21 @@ failed identically before the fix and passed after it.
   in-process round trip can never catch this class of bug on its own. See
   Lesson 98 above (`code/packages/c/zstd`'s original fix) for the
   cross-checked selector formula this entry's Dart fix reused verbatim.
+## Lesson 105 — `java/zstd`'s decoder never implemented Repeated-Offset (R1/R2/R3) sequence decoding — a decode-only feature gap, not the FSE-codec bug class, invisible to every internal round-trip test
+
+**Date:** 2026-08-06
+
+**What happened:** Implementing the first `c/zstd` port (PR #9941) transcribed its sequences-section FSE codec directly from the already-corrected `code/packages/rust/zstd` reference (Lessons 95-97), avoiding that bug class entirely — but a 200-trial ad hoc fuzz sweep against the real `zstd` CLI still found a failure: 4713 bytes of a single repeated byte, real-`zstd`-compressed, failed to decode. The cause was RFC 8878 §3.1.1.3.2.1.1's Repeated-Offset (R1/R2/R3) mechanism — `Offset_Value <= 3` is a reference into a 3-entry offset history (defaulting to `1/4/8`, threaded frame-scoped across blocks), not a literal `Offset_Value - 3` computation. `c/zstd`'s decoder (like the Rust reference it copied) only implemented the explicit-offset path; for `Offset_Value = 1` that underflows, which its offset-bounds check correctly rejected as malformed — except the frame was valid, using a mechanism the decoder didn't understand. `java/zstd` — the ORIGINAL fix site for Lessons 95-97, already independently audited and CLI-interop-tested for the FSE codec class — turned out to have the identical gap: `decompressBlock` computed `matchOffset = ofRaw - 3` unconditionally for every sequence, with a same-shaped "decoded offset underflow" guard for `ofRaw < 3` that (mis)classified valid repeat-offset frames as malformed.
+
+**Why it went unnoticed even after the FSE-codec audit:** This port's own encoder (`encodeSequencesSection`) never emits an offset code `< 2` — the minimum possible LZ77 match offset is 1, so `raw_off = offset + 3 >= 4` always — an intentional educational simplification, not a bug. So `compress()`/`decompress()` self-round-trip, and every unit test built on top of it (including the TC-9 CLI-interop tests added for Lessons 95-97, which only exercised `compress()`-here/`zstd -d`-there and `zstd -c`-there/`decompress()`-here on ONE fixed prose corpus that never happened to produce a repeat-offset sequence), never touched this code path. This is a fundamentally different failure shape from Lessons 95-97: those were an encode/decode *disagreement* masked by both sides sharing the same wrong convention; this is a decode-only *feature gap* — correct behavior on every input the self-consistent round trip (and the one fixed CLI-interop corpus) could produce, wrong on a class of valid input the encoder simply never generates. "Passes against itself" and "passes against every fixed test corpus" are not the same claim as "implements the full format," and a prior audit that fixed one bug class doesn't imply immunity to an unrelated one.
+
+**Rule:**
+- Real `zstd`'s encoder uses repeat offsets constantly — they are one of its principal entropy wins, especially for periodic or highly repetitive data (exactly the shape a compression test suite is likely to include) — so any decoder that only understands explicit offset codes will systematically fail to decode a meaningful fraction of real-world `.zst` files, independent of whether its own encoder is spec-complete.
+- Fixed in `code/packages/java/zstd/src/main/java/com/codingadventures/zstd/Zstd.java` (`decompressBlock`, `decompress`): implemented full Repeated_Offset (R1/R2/R3) decode support per RFC 8878 §3.1.1.3.2.1.1, cross-checked against both the RFC prose and the literal reference C source (`ZSTD_decodeSequence` in `zstd_decompress_block.c`, fetched directly rather than recalled from memory) AND PR #9941's independently-verified `c/zstd` fix — not derived from memory alone, per the Lesson-96 playbook of not trusting any single source. Includes the "when `Literals_Length == 0`, the repeat-offset selector shifts by 1" special case. The three registers are FRAME-scoped (default `1/4/8` for the first block, threaded unmodified through Raw/RLE blocks, updated after every Compressed block's sequences — explicit-offset sequences update `Repeated_Offset1` too, not just repeat-offset ones) — NOT block-scoped or reset per Compressed block. The encoder is intentionally left unchanged (still never emits repeat-offset codes; this is a decode-only fix).
+- Verified with a new `rtCliInteropRepeatedOffset` test reproducing the exact 4713-byte repro (confirmed failing against the pre-fix decoder with `IOException: decoded offset underflow: of_raw=1`, passing after the fix) plus a broader `rtCliInteropRepeatOffsetFuzz` sweep (5 periodic cycle patterns × 4 sizes) and the full existing 23-test suite (all pass, unaffected — this port's own round trip never touches the new code path), with JaCoCo LINE coverage staying above the package's 80% gate.
+- Flagged for every other language's `zstd` port in this repo (Go, Haskell, Perl, C++, C#, Elixir, Kotlin, Lua, etc.) — all share the same encoder-side "no repeat-offset shortcuts" simplification, so all are suspects for this exact decoder gap until individually audited. `rust/zstd` already has the fix (predates this audit); `c/zstd` (PR #9941) and `java/zstd` (this entry) are confirmed fixed; the rest are unverified.
+
+See also `gh pr diff 9941` (the `c/zstd` port that independently found this gap first) and `gh pr diff 9780` (this package's original FSE-codec fix, Lessons 95-97, which this gap survived).
 
 ---
 
@@ -2419,3 +2434,102 @@ and reference fix this port's fix was cross-checked against.
 **A note on constructing a regression test:** the *first* attempt at a "multi-sequence" repeat-offset test (an 8-byte anchor + differently-seeded pseudo-random filler per repetition, repeated 80×) accidentally proved nothing — it passed even against the deliberately-reintroduced bug, because real `zstd`'s optimal parser collapsed the whole repeating unit into a single giant match needing only one (explicit) offset. A second attempt reusing the *same* filler every time failed for an unrelated reason (real `zstd` chose Huffman-compressed literals for that block, which this educational decoder doesn't support at all — a different, pre-existing, intentional scope limit, not this bug). The version that actually worked: an anchor recurring at a fixed distance with an almost-constant filler carrying only a one-byte "salt" (the repetition index) — low-entropy enough to keep real `zstd` on raw literals + predefined FSE tables (this decoder's only supported modes), while the salt still stops the LZ77 matcher from merging repetitions into one match. **Rule:** a regression test for a real-CLI-only decode gap must be verified to actually fail against the bug (temporarily reintroduce it and confirm red, exactly as for any other regression test) — a plausible-looking "multi-sequence repeat-offset" input can pass for reasons that have nothing to do with the fix, because the real encoder's optimal parsing and mode-selection heuristics are opaque and easy to guess wrong about.
 
 Fixed in `code/packages/haskell/zstd/src/Zstd.hs` (`RepOffsets`, `decodeBlocks`, `decompressBlock`, `decodeSequences`). Verified via two new `ZstdCliInteropSpec` cases (a long single-byte run, and the salted-filler periodic pattern above, both real `zstd`-CLI-compressed, both confirmed to fail before this fix and pass after it) plus the full existing 18-case suite, all genuinely executed against the real `zstd` CLI (not skipped — the binary was on `PATH`). See PR #9941 for the `c/zstd` port where this class of gap was first found. `swift/zstd` (PR #9944) and `fsharp/zstd` (Lesson 99, above) were independently fixed for the same gap in parallel, merged into `origin/main` while this audit was in progress — confirms the "other ports may share this gap" prediction was correct at least twice already; the rest of the repo-wide `zstd` set (java, rust, go, python, ruby, typescript, kotlin, perl, elixir, lua, dart, csharp) has not all been individually re-audited for this specific gap and should be treated as suspect until checked.
+
+---
+
+## Lesson 104 — `cpp/zip`: a spec byte-offset table bug, and "trim to declared size" silently defeats an aggregate decompression-bomb budget
+
+**Date:** 2026-08-05
+
+**What happened, part 1 (spec bug):** `code/specs/CMP09-zip.md`'s Local File
+Header and Central Directory Header wire-format tables mis-sized
+`Last_Mod_File_Time`/`Last_Mod_File_Date` as 4 bytes each instead of 2,
+cascading a 4-byte offset error through every field after them (the table
+claimed a 34-byte fixed Local Header with CRC-32 at offset 18; the correct,
+universally-implemented layout — confirmed against `rust/zip` and
+`python/zip`'s actual `struct.pack`/byte-offset code, both of which use
+2-byte `mod_time`/`mod_date` fields — is a 30-byte fixed Local Header with
+CRC-32 at offset 14, and a 46-byte fixed Central Directory Header). Every
+implementation in the repo, including the reference Rust port, had always
+written and read the CORRECT layout; only this one table's prose was wrong,
+undetected because no port's tests round-trip against the written spec text
+byte-by-byte — they round-trip against each other's code. Fixed the table
+and its two downstream mentions (a corrupted-CRC-byte test-vector comment
+still said "bytes 18–21" after the first pass fixed the table but not that
+comment — caught in a later security-review round, not the same pass that
+fixed the table; check EVERY prose reference to a byte offset, not just the
+table itself, when correcting one).
+
+**What happened, part 2 (security-review finding, the more important one):**
+`ZipReader::read`'s original design silently TRIMMED an over-large
+decompressed buffer down to the Central Directory's declared
+`Uncompressed_Size` field before returning — matching the Rust reference's
+own `if decompressed.len() > entry.size { decompressed.truncate(entry.size) }`
+comment ("guards against a decompressor over-read"). `zip::unzip()`'s
+aggregate decompression-bomb budget (a configurable total across every entry
+it decompresses, on top of the existing per-entry `ca::deflate::inflate` cap)
+then accounted the RETURNED (trimmed) size against that budget. Since
+`Uncompressed_Size` is an attacker-controlled Central Directory field, a
+crafted entry can declare `Uncompressed_Size = 0` while its real DEFLATE
+stream still costs the FULL per-entry cap (256 MB) of genuine CPU/memory work
+to decompress — the trim happens AFTER that work is done, so the caller-side
+budget sees a 0-byte result and never grows, letting arbitrarily many such
+entries each smuggle real decompression work past an "aggregate" cap that
+never appeared to be approaching its limit. This is the identical bug class
+independently found and fixed three separate times in `haskell/zip`
+(Lessons in that package's own CHANGELOG — "the aggregate budget counted the
+post-truncation size, not the actual decode work performed") and is a strong
+signal that **every** `zip`/decompression-container port in this repo that
+enforces an aggregate budget by trimming-then-measuring, rather than
+rejecting a declared/actual size mismatch outright, is suspect until
+individually audited.
+
+**Rule:**
+- A decompression-bomb budget that measures its input AFTER a lossy
+  trim/truncate step is measuring the wrong thing. The trim itself must be
+  replaced with a hard rejection (throw/error) whenever the actual
+  decompressed size disagrees with a declared size sourced from untrusted
+  input — for any HONESTLY-produced archive the two are always exactly
+  equal by construction (a writer that compressed N bytes always declares
+  `Uncompressed_Size = N`, and a correct DEFLATE stream decoding that entry
+  always reproduces exactly N bytes), so rejecting a mismatch cannot break
+  legitimate files, only crafted ones.
+- Bounds-check arithmetic that combines an attacker-controlled field with a
+  small constant (`local_offset + 6`, `local_offset + 26`) must be done in a
+  width wide enough that the ADDITION ITSELF cannot wrap — not just the
+  eventual `offset > buffer.size()` comparison. Doing the comparison safely
+  in `uint64_t` while the offset argument was already computed via a
+  narrower (`size_t`) addition one call-site up still leaves the wraparound
+  where it always was, just one line earlier; the fix has to move with the
+  addition, not just the check. In `cpp/zip` this meant changing
+  `read_u16`/`read_u32`'s parameter type from `size_t` to `uint64_t`
+  specifically so every call site is forced to widen the base value BEFORE
+  adding to it, and having `ZipReader::read` widen `entry.local_offset` to a
+  `uint64_t` exactly once rather than re-deriving a `size_t` copy at each of
+  three call sites.
+- The same "silent truncation into a structurally-misleading result" failure
+  mode applies symmetrically on the WRITE side of any binary container
+  format with fixed-width wire fields: an oversized single value (entry
+  name/data past a 16-bit/32-bit field), a cumulative running total (Local
+  Header offsets, Central Directory offset/size past 4 GiB), and a count
+  field (more entries than a 16-bit count can represent) are three distinct
+  places the same bug can hide, found across three separate review rounds
+  on this package (`NameTooLong`/`DataTooLarge`, then `ArchiveTooLarge`, then
+  `TooManyEntries`) — auditing only the first one found is not sufficient;
+  grep every `static_cast<uintN_t>(...)` in a writer for the ones narrowing
+  an unbounded (or merely uncapped) `size()`/count, not just the one the
+  first pass happened to touch.
+
+Fixed in `code/packages/cpp/zip/include/zip.hpp` (`ZipError::DeclaredSizeMismatch`,
+`detail::require_fits_u32`, `read_u16`/`read_u32` widened to `uint64_t`
+offsets, `NameTooLong`/`DataTooLarge`/`ArchiveTooLarge`/`TooManyEntries`).
+Verified via dedicated regression tests for each finding
+(`test_declared_size_mismatch_rejected`, `test_writer_name_too_long_rejected`,
+`test_writer_too_many_entries_rejected`, `test_extreme_local_offset_rejected`)
+plus the full 12-TC spec suite, real CLI-interop against the system
+`zip`/`unzip`, and a real dynamic-Huffman fixture — 90 checks total, all
+passing under GCC and Clang with `-pedantic-errors -Wall -Wextra -Werror`.
+Every other `zip`/archive-container port in this repo that enforces an
+aggregate decompression-bomb budget should be audited for the same
+trim-then-measure pattern, not just `cpp/zip` and the three `haskell/zip`
+rounds that found it independently first.

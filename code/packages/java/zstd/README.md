@@ -81,10 +81,19 @@ Java-implementation boundary in both directions. They're skipped gracefully
 
 Per `code/specs/CMP07-zstd.md`, this implementation deliberately covers a
 subset of RFC 8878: raw literals only (no Huffman literal coding), predefined
-FSE tables only for sequences (no custom tables), no repeat-offset (R1/R2/R3)
-shortcuts (every offset is coded explicitly), no dictionary support, no
+FSE tables only for sequences (no custom tables), no dictionary support, no
 content checksum on frames it produces (though it correctly reads/skips one
 if present on a frame it didn't produce), and blocks capped at 128 KB. It
 rejects any frame using features outside this subset (Huffman literals,
 non-predefined FSE modes) with a clear error rather than misinterpreting
 them.
+
+**Repeat offsets (R1/R2/R3):** encoder none, decoder full support. This
+package's own encoder never emits a repeat-offset shortcut — every offset is
+coded explicitly, so its own `compress()` output never needs the mechanism.
+The decoder, however, fully implements RFC 8878 §3.1.1.3.2.1.1 repeat-offset
+decoding, because real `zstd`-produced frames use repeat offsets constantly
+(one of the format's main entropy wins for periodic/repetitive data) — a
+decoder that only understood explicit offsets would fail to decode a
+meaningful fraction of real-world `.zst` files. See `CHANGELOG.md` 0.1.2 and
+`lessons.md` Lesson 99.

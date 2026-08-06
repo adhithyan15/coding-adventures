@@ -62,8 +62,42 @@ Language Ladder verifies independently. The forced XeLaTeX build is warning-free
 zero missing glyphs, overfull or underfull boxes, duplicate destinations,
 Hyperref warnings, or LaTeX warnings.
 
+## Chapter capabilities (HL05)
+
+[`chapters.json`](./chapters.json) states what a reader can *do* when they
+finish a chapter, and names the lesson that proves it. It is authored intent —
+no validator may rewrite it.
+
+**Seven of twenty-three chapters are authored: 17–23.** Those are exactly the
+chapters whose lessons have been migrated to schema version 2 and so declare
+real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
+`practises.knowledge`, so a payoff written for them could only assess invented
+atoms. They are left out on purpose: an absent entry is debt the gap report can
+measure, a stub is a chapter falsely claiming a capability it never delivered.
+
+Representativeness — the share of a chapter's introduced atoms its payoff
+actually assesses, floored at 0.5 by `core/chapter-policy.json`:
+
+| Chapter | Payoff lesson | Assessed / introduced |
+|---|---|---|
+| 17 Head and Hand | `GE-C17-hand` | 4 / 12 = 0.33 — **below the floor** |
+| 18 Yes and No | `GE-C18-nein` | 5 / 8 = 0.63 |
+| 19 Please | `GE-C19-bitte-requests` | 3 / 3 = 1.00 |
+| 20 Sorry | `GE-C20-entschuldigung` | 3 / 3 = 1.00 |
+| 21 Weather | `GE-C21-das-wetter` | 5 / 5 = 1.00 |
+| 22 Dog and Cat | `GE-C22-hund-katze` | 5 / 5 = 1.00 |
+| 23 Green and Yellow | `GE-C23-gruen-gelb` | 5 / 5 = 1.00 |
+
+Chapter 17 is the one authored chapter that fails. It runs three word lessons
+deep — *Kopf*, *Kopf/Haupt*, *Hand* — with no terminal consolidation lesson, so
+its payoff can only be the last lesson by `sequence` and reaches a third of the
+chapter. The `assesses` list is **not** padded to hide that: the honest fix is a
+real Kopf/Haupt/Hand practice lesson. Chapter 18 has the same missing-practice
+shape but clears the floor because *nein* reassesses *ja*.
+
 ## Files
 
+- [`chapters.json`](./chapters.json) — the HL05 chapter capability ledger.
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/) (`latexmk -xelatex book.tex`)

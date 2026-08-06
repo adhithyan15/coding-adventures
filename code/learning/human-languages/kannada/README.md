@@ -61,6 +61,24 @@ All thirty later lessons remain below five effective minutes. Their twenty-six
 generated chapters carry the same source hashes Language Ladder recomputes from
 the browser-loaded lesson AST, so app and book cannot drift silently.
 
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's
+[`HL05`](../../../specs/HL05-chapter-capability-and-step-by-step-shape.md)
+capability ledger: for each chapter, one first-person `canDo` ("I can tell
+someone the time on the hour in Kannada"), the shared spine nodes it realises,
+and the `payoff` lesson that proves the claim, with the exact knowledge atoms
+that payoff exercises.
+
+Chapters **6–31** are authored — twenty-six entries. Chapters **1–5 are absent
+on purpose**: their lessons are still schema v1 with no `practises.knowledge`
+and no `core/book-generation.json` target, so a payoff for them could only be
+invented. That absence is measurable debt, not a placeholder.
+
+Because no chapter after 5 has a terminal `practice` lesson, each payoff is the
+chapter's last lesson by `sequence` — in practice the lesson whose Guided
+Practice block recombines everything the chapter taught.
+
 ## Book / fonts
 
 The book compiles with XeLaTeX using the **vendored** Noto Sans Kannada font
@@ -69,7 +87,9 @@ and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
 
 ## Files
 
-- [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
+- [`lessons/`](./lessons/) · [`chapters.json`](./chapters.json)
+  · [`curriculum.json`](./curriculum.json)
+  · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 
