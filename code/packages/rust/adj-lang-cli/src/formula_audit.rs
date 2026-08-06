@@ -1355,11 +1355,115 @@ struct SourceExecutionReplay {
     outcomes: Vec<FormulaGuardOutcome>,
 }
 
+/// Whether the runtime answers `name` itself rather than applying a user
+/// formula, mirroring the precedence the lowerer used.
+///
+/// This delegates to `adj-lang` rather than restating the five names. A second
+/// hand-maintained copy would be free to drift from the dispatch it exists to
+/// mirror, and the direction that matters is silent: if the audit thought a name
+/// were a user formula while the runtime answered it as a built-in, the replay
+/// would expect a formula application the trace never contains.
 fn is_runtime_builtin_application(name: &str) -> bool {
-    matches!(
-        name,
-        "round_to" | "round_sig" | "to_scientific" | "to_percent" | "to_currency"
-    )
+    adj_lang::is_runtime_builtin_formula(name)
+}
+
+/// Collect the names applied anywhere in one expression, without substituting.
+///
+/// This is deliberately a plain syntactic walk rather than a reuse of
+/// [`replay_source_expression`]: that one replays an EXECUTION (it substitutes
+/// arguments and follows the runtime's guard short-circuiting), and the whole
+/// point here is to learn what the SOURCE declares before trusting any runtime
+/// evidence at all.
+fn collect_applied_names(expr: &ExprAst, into: &mut Vec<String>) {
+    match expr {
+        ExprAst::Apply(name, arguments) => {
+            into.push(name.clone());
+            for argument in arguments {
+                collect_applied_names(argument, into);
+            }
+        }
+        ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+            collect_applied_names(left, into);
+            collect_applied_names(right, into);
+        }
+        ExprAst::Abs(operand)
+        | ExprAst::Floor(operand)
+        | ExprAst::Ceil(operand)
+        | ExprAst::Round(operand)
+        | ExprAst::Trunc(operand)
+        | ExprAst::Sign(operand)
+        | ExprAst::Call(_, operand)
+        | ExprAst::RoundTo(operand, _)
+        | ExprAst::ToScientific(operand, _)
+        | ExprAst::ToPercent(operand, _)
+        | ExprAst::ToCurrency(operand, _, _) => collect_applied_names(operand, into),
+        ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {}
+    }
+}
+
+/// Whether `export`, or anything it transitively applies, DECLARES a
+/// precondition in its parsed source.
+///
+/// The audit's strict (v2) path is what independently replays guards. Choosing
+/// that path from `lowered.formula_executions` alone would mean the checker asks
+/// the runtime how strict to be about the runtime: a producer that emits no
+/// guard trace — because of a bug, or because the name it should have applied was
+/// answered by something else — silently selects the unguarded v1 shape, and the
+/// v1 shape never calls [`replay_source_execution`], so nothing compares source
+/// against execution. The discrepancy the strict path exists to catch is exactly
+/// the discrepancy that would route around it.
+///
+/// So strictness is decided HERE, from bytes the parser produced, and the runtime
+/// gets no vote. If the source says a guard should have run, v2 is required; if
+/// no guard then appears in the trace, [`validate_guard_prefix`] fails closed
+/// rather than the audit quietly downgrading.
+/// The walk runs against a name index rather than rescanning `exports`. A linear
+/// search per visited name would make this quadratic in the number of exports,
+/// on input the audit binary reads from a file — so an adversarial formula book
+/// with many mutually-applying exports would cost time the checker has no reason
+/// to spend. `build_exports` rejects duplicate names, so one entry per name is
+/// faithful.
+fn export_closure_declares_precondition(export: &ExportRecord, exports: &[ExportRecord]) -> bool {
+    let by_name: BTreeMap<&str, &ExportRecord> = exports
+        .iter()
+        .map(|item| (item.identity.name.as_str(), item))
+        .collect();
+    let mut pending = vec![export.identity.name.as_str()];
+    let mut seen: BTreeSet<&str> = BTreeSet::new();
+    let mut applied = Vec::new();
+    while let Some(name) = pending.pop() {
+        if !seen.insert(name) {
+            continue;
+        }
+        let Some(candidate) = by_name.get(name) else {
+            continue;
+        };
+        if !candidate.formula.preconditions.is_empty() {
+            return true;
+        }
+        // Dead `let` steps are walked too. A guard declared in a step the
+        // runtime folds away is still a guard the SOURCE declares, and this
+        // function answers what the source says — over-approximating here costs
+        // a stricter audit shape, never a weaker one.
+        applied.clear();
+        for step in &candidate.formula.steps {
+            collect_applied_names(&step.expr, &mut applied);
+        }
+        collect_applied_names(&candidate.formula.body, &mut applied);
+        for applied_name in &applied {
+            // Built-ins are answered by the runtime and declare nothing, so they
+            // cannot contribute a guard. A user formula can no longer take one of
+            // those names (adj-lang rejects the declaration), so skipping them
+            // cannot hide a guarded callee.
+            if is_runtime_builtin_application(applied_name) {
+                continue;
+            }
+            if let Some(found) = by_name.get(applied_name.as_str()) {
+                pending.push(found.identity.name.as_str());
+            }
+        }
+    }
+    false
 }
 
 fn validate_guard_prefix(
@@ -2491,6 +2595,11 @@ fn build_audit(
             )));
         }
         requires_v2 |= contains_exact_literal(plan.expr);
+        // Strictness comes from the SOURCE, not from the runtime's own trace.
+        // If this query's formula closure declares a guard, the strict path is
+        // required whether or not the runtime reported executing one — a trace
+        // that is missing the guard is precisely the thing worth failing on.
+        requires_v2 |= export_closure_declares_precondition(export, &exports);
 
         let checked = verify_derived(derived, &lowered.kb, snapshots);
         if checked.name != derived.name || checked.is_query_answer != plan.is_query_answer {

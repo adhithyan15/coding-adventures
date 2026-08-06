@@ -8,6 +8,7 @@ import { REVIEW_STORAGE_KEY } from "../src/reviewstore";
 import { CURSOR_STORAGE_KEY } from "../src/cursorstore";
 import { STORAGE_KEY as LESSON_SCHEDULE_KEY } from "../src/progress";
 import { LANGUAGE_STORAGE_KEY } from "../src/languagestore";
+import { LEARN_PROGRESS_STORAGE_KEY } from "../src/learnprogress";
 
 function fakeStore(seed: Record<string, string> = {}): RemovableStorage & {
   data: Map<string, string>;
@@ -17,11 +18,17 @@ function fakeStore(seed: Record<string, string> = {}): RemovableStorage & {
 }
 
 describe("OWNED_STORAGE_KEYS", () => {
-  it("lists exactly the four keys the app persists, sourced from their owners", () => {
+  it("lists every key the app persists, sourced from its owner", () => {
     // If a persisted key were forgotten here, a reset would silently leave state
     // behind — so pin the set explicitly.
     expect(new Set(OWNED_STORAGE_KEYS)).toEqual(
-      new Set([REVIEW_STORAGE_KEY, CURSOR_STORAGE_KEY, LESSON_SCHEDULE_KEY, LANGUAGE_STORAGE_KEY]),
+      new Set([
+        REVIEW_STORAGE_KEY,
+        CURSOR_STORAGE_KEY,
+        LEARN_PROGRESS_STORAGE_KEY,
+        LESSON_SCHEDULE_KEY,
+        LANGUAGE_STORAGE_KEY,
+      ]),
     );
   });
 });
@@ -31,6 +38,7 @@ describe("clearProgress", () => {
     const store = fakeStore({
       [REVIEW_STORAGE_KEY]: "r",
       [CURSOR_STORAGE_KEY]: "c",
+      [LEARN_PROGRESS_STORAGE_KEY]: "p",
       [LESSON_SCHEDULE_KEY]: "l",
       [LANGUAGE_STORAGE_KEY]: "g",
     });

@@ -490,7 +490,46 @@ type Zstd private () =
             let result = output.ToArray()
             if result.Length < block.Length then Some result else None
 
-    static member private DecompressBlock(data: byte array, output: ResizeArray<byte>) =
+    /// Decodes one Compressed block's payload, appending to `output`.
+    ///
+    /// `rep1`/`rep2`/`rep3` are the three Repeated_Offset registers (RFC
+    /// 8878 §3.1.1.3.2.1.1) — passed by reference because they are
+    /// FRAME-scoped, not block-scoped: "For the first block, the starting
+    /// offset history is populated with Repeated_Offset1=1,
+    /// Repeated_Offset2=4, Repeated_Offset3=8", and every later Compressed
+    /// block in the same frame continues from wherever the previous one's
+    /// sequences left them (Raw and RLE blocks don't touch the registers at
+    /// all). The caller (Decompress) owns the three registers and threads
+    /// them through every Compressed block in a frame.
+    ///
+    /// WHY THIS DECODER NEEDS REPEAT-OFFSET SUPPORT EVEN THOUGH THIS
+    /// PACKAGE'S OWN ENCODER NEVER EMITS IT: EncodeSequences always writes
+    /// an explicit offset code (offsetCode >= 2, since the minimum LZSS
+    /// match offset is 1, giving rawOffset = offset + 3 >= 4), so this
+    /// package's own Compress/Decompress round trip never touches the
+    /// repeat-offset path — "no repeat-offset shortcuts" is entirely an
+    /// ENCODER-side simplification. But the real `zstd` CLI's encoder uses
+    /// repeat offsets constantly (they are one of its main entropy wins,
+    /// especially for periodic/repetitive data), so a decoder that only
+    /// understands explicit offset codes will systematically fail to decode
+    /// a meaningful fraction of real-world `.zst` files — confirmed here by
+    /// a TC-9 regression using 4713 bytes of a single repeated byte, which
+    /// real `zstd` compresses to one Compressed block whose one sequence is
+    /// 2 literal bytes ("ZZ") + a match with Offset_Value=1 (i.e. "reuse
+    /// Repeated_Offset1", which starts at its default value of 1 — an
+    /// unmistakable RLE-via-repeat-offset pattern). See lessons.md Lesson
+    /// 98 (originally found and fixed in `code/packages/c/zstd`, PR #9941;
+    /// this port's fix mirrors that one, cross-checked against both the RFC
+    /// 8878 prose and the literal reference C source, `ZSTD_decodeSequence`
+    /// in `zstd_decompress_block.c` from github.com/facebook/zstd).
+    static member private DecompressBlock
+        (
+            data: byte array,
+            output: ResizeArray<byte>,
+            rep1: byref<int>,
+            rep2: byref<int>,
+            rep3: byref<int>
+        ) =
         let literals, literalBytes = Zstd.DecodeLiterals data
         let mutable position = literalBytes
         if position >= data.Length then
@@ -534,15 +573,74 @@ type Zstd private () =
                     if literalCode < 0 || literalCode >= literalCodes.Length || matchCode < 0 || matchCode >= matchCodes.Length then
                         raise (InvalidDataException("invalid sequence code"))
 
+                    // literalLengthIsZero is needed for the repeat-offset
+                    // interpretation below (RFC 8878's "when Literals_Length
+                    // is 0, repeated offsets are shifted by 1" rule) and is
+                    // knowable right now, from the PEEKED literalCode alone
+                    // — literal-length code 0 is the only code with
+                    // baseline 0 and 0 extra bits, so literalCode = 0 iff
+                    // the eventual decoded literalLength is 0. No extra
+                    // bits need to be read yet to know this.
+                    let literalLengthIsZero = literalCode = 0
+
                     // Step 2 — read the value extra bits, order OF, ML, LL
                     // (RFC 8878 §3.1.1.3.2.1.2: "Decoding starts by reading
                     // the Number_of_Bits required to decode offset. It does
                     // the same for Match_Length and then for
-                    // Literals_Length.").
+                    // Literals_Length."). The NUMBER of bits read for the
+                    // offset field is always exactly `offsetCode`
+                    // regardless of the repeat-offset interpretation below —
+                    // the reference decoder never varies bit-consumption on
+                    // literalLengthIsZero, only how the resulting value maps
+                    // to an actual offset changes.
                     let rawOffset = (1 <<< offsetCode) ||| reader.ReadBits offsetCode
                     let matchLength = matchCodes[matchCode].Baseline + reader.ReadBits matchCodes[matchCode].ExtraBits
                     let literalLength = literalCodes[literalCode].Baseline + reader.ReadBits literalCodes[literalCode].ExtraBits
-                    let matchOffset = rawOffset - 3
+
+                    // Offset_Value -> actual offset (RFC 8878
+                    // §3.1.1.3.2.1.1), including the Repeated_Offset
+                    // (R1/R2/R3) mechanism (lessons.md Lesson 98):
+                    //
+                    // offsetCode >= 2 guarantees rawOffset =
+                    // (1<<<offsetCode)+extra >= 4, i.e. Offset_Value > 3: an
+                    // ordinary explicit offset. offsetCode <= 1 guarantees
+                    // rawOffset in {1, 2, 3}: a repeat-offset reference.
+                    //
+                    // The repeat case collapses to one selector in [0, 3]
+                    // (derived from, and verified against, the reference
+                    // decoder's `ofBase + ll0 + extra_bit`):
+                    //   0 -> reuse rep1 unchanged (no rotation)
+                    //   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+                    //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+                    //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+                    let matchOffset =
+                        if offsetCode >= 2 then
+                            let explicitOffset = rawOffset - 3
+                            rep3 <- rep2
+                            rep2 <- rep1
+                            rep1 <- explicitOffset
+                            explicitOffset
+                        else
+                            let selector = (if literalLengthIsZero then 1 else 0) + rawOffset - 1
+                            match selector with
+                            | 0 -> rep1
+                            | 1 ->
+                                let value = rep2
+                                rep2 <- rep1
+                                rep1 <- value
+                                value
+                            | 2 ->
+                                let value = rep3
+                                rep3 <- rep2
+                                rep2 <- rep1
+                                rep1 <- value
+                                value
+                            | _ ->
+                                let value = if rep1 > 0 then rep1 - 1 else 0
+                                rep3 <- rep2
+                                rep2 <- rep1
+                                rep1 <- value
+                                value
 
                     // Step 3 — update FSE states (consumes bits), order LL,
                     // ML, OF, preparing the states the NEXT sequence's peek
@@ -663,6 +761,14 @@ type Zstd private () =
 
         let output = ResizeArray<byte>()
         let mutable last = false
+        // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped
+        // — default 1/4/8 "for the first block", then threaded unmodified
+        // through every Compressed block's sequences for the rest of the
+        // frame (Raw/RLE blocks don't touch them). See DecompressBlock's
+        // doc comment and lessons.md Lesson 98.
+        let mutable rep1 = 1
+        let mutable rep2 = 4
+        let mutable rep3 = 8
         while not last do
             Zstd.RequireAvailable(data.Length, position, 3, "block header")
             let blockHeader = int data[position] ||| (int data[position + 1] <<< 8) ||| (int data[position + 2] <<< 16)
@@ -686,7 +792,7 @@ type Zstd private () =
                 for _ in 1..blockSize do output.Add value
             | 2 ->
                 Zstd.RequireAvailable(data.Length, position, blockSize, "compressed block")
-                Zstd.DecompressBlock(data[position..position + blockSize - 1], output)
+                Zstd.DecompressBlock(data[position..position + blockSize - 1], output, &rep1, &rep2, &rep3)
                 position <- position + blockSize
             | _ -> raise (InvalidDataException("reserved block type 3"))
 

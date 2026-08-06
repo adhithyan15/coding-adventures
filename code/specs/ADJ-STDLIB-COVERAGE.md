@@ -323,6 +323,39 @@ option mapping, or judge/evaluation failure.
    `proportion.adj` requires nonzero `a`, `b`, and `c`, and E2E coverage proves
    each zero position withholds the answer before body evaluation. CAS migration
    remains separate until the worked query's observed inputs receive source IR.
+   A formula name may not collide with a name the runtime answers itself, at
+   either of the two layers that can swallow one. Lowering dispatches the five
+   built-ins (`round_sig`, `round_to`, `to_currency`, `to_percent`,
+   `to_scientific`) by name before the user formula map; and the grammar reduces
+   a one-identifier call of an aggregation keyword (`sum`, `count`, `min`, `max`,
+   `avg`) to an aggregation over a slot before lowering sees an application at
+   all. In both cases a colliding definition was unreachable and its guards
+   unenforced while the program still answered. Both are now typed compile
+   errors, which keeps "a declared guard runs before its body" true by
+   construction rather than by convention. The aggregation check is arity-aware:
+   only a one-parameter declaration can be swallowed, so the shipped
+   two-parameter `sum` in `arithmetic.adj` is unaffected.
+
+   These two gates close the DECLARATION side: a formula that survives them
+   cannot be wholly unreachable. They do not on their own make "a declared guard
+   always runs before its body" true by construction, because the call side has
+   a remaining case.
+
+   The call side is now closed too. A WRONG-ARITY call of a multi-parameter
+   formula named after an aggregation keyword — `sum(a)` where `sum` takes two —
+   also reduced to an aggregation, yielding the slot's aggregate instead of the
+   arity error it deserved, with any guard on that formula never running; the
+   shipped two-parameter `sum` in `arithmetic.adj` made this reachable in real
+   content. An aggregation whose keyword also names a declared formula is now a
+   typed error, so the two readings no longer depend on which grammar
+   alternative matched first. An aggregation with no formula of that name in
+   scope is unaffected. The check lives at the single construction site for the
+   engine's aggregation node, so it is co-total with the emitter by construction
+   rather than by a separate walk that could miss a position.
+
+   With both sides closed, "a declared guard runs before its body" holds for the
+   formula surface: a guarded formula can be neither declared unreachable nor
+   called through a path that skips its guards.
 9b. **Complete.** Formula-audit v2 independently replays parser-owned parameter
     binding, nested application order, and every declaration-ordered guard through
     the first failure. The CAS witnesses exact compared values, consumed direct
@@ -343,8 +376,17 @@ option mapping, or judge/evaluation failure.
     inputs. Same-name rebinding resolves within each predecessor scope. The positive
     proportion query exercises this derived path; its three zero controls remain
     direct-observation abstention witnesses.
-9d. Replace state-machine failure detail strings with a structured error
-    discriminant and typed phase on both guard and yield precision failures.
+9d. **Complete.** State-machine failures carry a typed `FailurePhase`
+    (`transition_guard` / `exit_guard` / `yield`) and, for computation errors, a
+    `ComputationFailure` discriminant mirroring the engine's own error at this
+    boundary. Precision-loss outcomes carry the same typed phase and name their
+    expression directly; previously a yield abstention was distinguishable from a
+    guard abstention only by noticing that the rendering had been prefixed with
+    `"yield "` and placed in a field named `guard`. The human `detail` string is
+    unchanged, so a consumer that only prints it is unaffected, while one that
+    branches keys off the discriminant instead of parsing prose. The translation
+    from the engine error is exhaustive with no wildcard, so a new engine variant
+    is a compile error here rather than a silently reworded string downstream.
 10. Use the first-class derivation and execution-witness contract to execute every
     exported formula before migrating `average.adj`; prose cannot prove its `N=2`
     and `N=3` specializations.

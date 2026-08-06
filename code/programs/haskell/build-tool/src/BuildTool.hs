@@ -17,10 +17,13 @@ module BuildTool
 
 import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
 import Control.Monad (filterM, foldM, forM, when)
+import Data.Aeson (Value(..), eitherDecodeStrict')
+import qualified Data.Aeson.Key as Key
+import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
 import Data.Char (isAlpha, isAlphaNum, isSpace, ord, toLower)
-import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
+import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
 import Data.Maybe (fromMaybe, listToMaybe, mapMaybe, maybeToList)
@@ -46,8 +49,10 @@ import System.FilePath
     , addTrailingPathSeparator
     , isAbsolute
     , isPathSeparator
+    , joinPath
     , makeRelative
     , normalise
+    , pathSeparator
     , splitDirectories
     , takeDirectory
     , takeExtension
@@ -438,6 +443,7 @@ supportedLanguages =
     , "ruby"
     , "go"
     , "rust"
+    , "dart"
     , "typescript"
     , "elixir"
     , "lua"
@@ -576,19 +582,34 @@ packageAliases pkg = do
     let kebab = map (\char -> if char == '_' then '-' else char) dirName
     let snake = map (\char -> if char == '-' then '_' else char) dirName
     let perlDistributionAliases = if packageLanguage pkg == "perl" then ["coding-adventures-" ++ dirName] else []
+    let conventionalAliases =
+            if packageLanguage pkg == "typescript"
+                then [dirName, "@coding-adventures/" ++ dirName]
+                else
+                    [ dirName
+                    , kebab
+                    , snake
+                    , "coding-adventures-" ++ kebab
+                    , "coding_adventures_" ++ snake
+                    ]
+    let gradlePathAliases =
+            if packageLanguage pkg `elem` ["java", "kotlin"]
+                then [normalizeGradlePackagePath (packagePath pkg)]
+                else []
+    dotnetProjectAliases <-
+        if packageLanguage pkg `elem` ["csharp", "fsharp", "dotnet"]
+            then readDotnetProjectAliases pkg
+            else pure []
     manifestNames <- exactManifestNames pkg
     pure
         (nub
             ( filter
                 (not . null)
                 ( map (map toLower)
-                    ( [ dirName
-                      , kebab
-                      , snake
-                      , "coding-adventures-" ++ kebab
-                      , "coding_adventures_" ++ snake
-                      ]
+                    ( conventionalAliases
                         ++ perlDistributionAliases
+                        ++ gradlePathAliases
+                        ++ dotnetProjectAliases
                         ++ manifestNames
                     )
                 )
@@ -602,13 +623,18 @@ exactManifestNames pkg = do
     let cargoNames = if packageLanguage pkg == "rust" then readCargoNames root else pure []
     let pythonNames = if packageLanguage pkg == "python" then readPyprojectNames root else pure []
     let goNames = if packageLanguage pkg == "go" then readGoModuleNames root else pure []
+    let dartNames = if packageLanguage pkg == "dart" then readPubspecNames root else pure []
     let packageJsonNames = if packageLanguage pkg == "typescript" then readPackageJsonNames root else pure []
     let gemNames = if packageLanguage pkg == "ruby" then readGemspecNames root else pure []
     let perlNames = if packageLanguage pkg == "perl" then readPerlPackageNames root else pure []
-    sequenceToList [cabalNames, cargoNames, pythonNames, goNames, packageJsonNames, gemNames, perlNames]
+    sequenceToList [cabalNames, cargoNames, pythonNames, goNames, dartNames, packageJsonNames, gemNames, perlNames]
 
 sequenceToList :: [IO [String]] -> IO [String]
 sequenceToList actions = fmap concat (sequence actions)
+
+readDotnetProjectAliases :: Package -> IO [String]
+readDotnetProjectAliases pkg =
+    map normalizeDotnetProjectPath <$> rootDotnetProjectFiles pkg
 
 readCabalPackageNames :: FilePath -> IO [String]
 readCabalPackageNames root = do
@@ -652,15 +678,36 @@ readGoModuleNames root = do
                 , "module " `isPrefixOf` stripped
                 ]
 
-readPackageJsonNames :: FilePath -> IO [String]
-readPackageJsonNames root = do
-    let packageJson = root </> "package.json"
-    exists <- doesFileExist packageJson
+readPubspecNames :: FilePath -> IO [String]
+readPubspecNames root = do
+    let pubspecPath = root </> "pubspec.yaml"
+    exists <- doesFileExist pubspecPath
     if not exists
         then pure []
         else do
-            contents <- readFileStrict packageJson
-            pure (parseJsonLikeField "name" contents)
+            contents <- readFileStrict pubspecPath
+            pure (mapMaybe dartRootName (lines contents))
+
+dartRootName :: String -> Maybe String
+dartRootName rawLine
+    | length rawLine /= length (dropWhile (== ' ') rawLine) = Nothing
+    | otherwise =
+        case break (== ':') rawLine of
+            (field, ':' : value)
+                | map toLower (trim field) == "name"
+                , let candidate = map toLower (trim (takeWhile (/= '#') value))
+                , isDartPackageIdentifier candidate -> Just candidate
+            _ -> Nothing
+
+readPackageJsonNames :: FilePath -> IO [String]
+readPackageJsonNames root = do
+    let packageJson = root </> "package.json"
+    manifest <- readPackageJsonObject packageJson
+    pure
+        ( case manifest >>= KeyMap.lookup (Key.fromString "name") of
+            Just (String name) -> [map toLower (Text.unpack (Text.strip name))]
+            _ -> []
+        )
 
 readGemspecNames :: FilePath -> IO [String]
 readGemspecNames root = do
@@ -744,23 +791,6 @@ parseQuotedField fieldName contents =
 parseAssignmentField :: String -> String -> [String]
 parseAssignmentField = parseQuotedField
 
-parseJsonLikeField :: String -> String -> [String]
-parseJsonLikeField fieldName contents =
-    nub
-        [ map toLower value
-        | line <- lines contents
-        , let stripped = trim line
-        , let prefix = "\"" ++ fieldName ++ "\""
-        , prefix `isPrefixOf` stripped
-        , let afterColon = dropWhile (/= ':') stripped
-        , not (null afterColon)
-        , let rhs = trim (drop 1 afterColon)
-        , not (null rhs)
-        , take 1 rhs == "\""
-        , let value = takeWhile (/= '"') (drop 1 rhs)
-        , not (null value)
-        ]
-
 resolvePackageDeps :: Map String (Map String String) -> Package -> IO [String]
 resolvePackageDeps aliasScopes pkg = do
     tokens <- readManifestTokens pkg
@@ -810,6 +840,8 @@ parseBuildToolDependencyLine line =
 readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
+    | packageLanguage pkg == "elixir" = readElixirDependencyTokens pkg
+    | packageLanguage pkg == "dart" = readDartDependencyTokens pkg
     | packageLanguage pkg == "go" = readGoDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
     | packageLanguage pkg == "perl" = readPerlDependencyTokens pkg
@@ -817,7 +849,226 @@ readManifestTokens pkg
     | packageLanguage pkg == "ruby" = readRubyDependencyTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
+    | packageLanguage pkg == "typescript" = readTypescriptDependencyTokens pkg
+    | packageLanguage pkg `elem` ["java", "kotlin"] = readGradleDependencyTokens pkg
+    | packageLanguage pkg `elem` ["csharp", "fsharp", "dotnet"] = readDotnetDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
+
+readPackageJsonObject :: FilePath -> IO (Maybe (KeyMap.KeyMap Value))
+readPackageJsonObject path = do
+    exists <- doesFileExist path
+    if not exists
+        then pure Nothing
+        else do
+            bytes <- BS.readFile path
+            pure
+                ( case eitherDecodeStrict' bytes of
+                    Right (Object manifest) -> Just manifest
+                    _ -> Nothing
+                )
+
+readTypescriptDependencyTokens :: Package -> IO [String]
+readTypescriptDependencyTokens pkg = do
+    manifest <- readPackageJsonObject (packagePath pkg </> "package.json")
+    pure
+        ( nub
+            ( concatMap
+                (typescriptDependencyNames manifest)
+                ["dependencies", "devDependencies"]
+            )
+        )
+
+typescriptDependencyNames :: Maybe (KeyMap.KeyMap Value) -> String -> [String]
+typescriptDependencyNames manifest fieldName =
+    case manifest >>= KeyMap.lookup (Key.fromString fieldName) of
+        Just (Object dependencies) ->
+            sort
+                ( map
+                    (map toLower . Text.unpack . Text.strip . Key.toText)
+                    (KeyMap.keys dependencies)
+                )
+        _ -> []
+
+readDartDependencyTokens :: Package -> IO [String]
+readDartDependencyTokens pkg = do
+    let manifestPath = packagePath pkg </> "pubspec.yaml"
+    exists <- doesFileExist manifestPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict manifestPath
+            pure (dartDependencyTokens contents)
+
+dartDependencyTokens :: String -> [String]
+dartDependencyTokens = nub . collect False Nothing . lines
+  where
+    collect _ _ [] = []
+    collect inBlock directIndent (rawLine : rest)
+        | null stripped || "#" `isPrefixOf` stripped = collect inBlock directIndent rest
+        | indentation == 0 =
+            collect
+                (stripped `elem` ["dependencies:", "dev_dependencies:"])
+                Nothing
+                rest
+        | not inBlock = collect False Nothing rest
+        | otherwise =
+            let expectedIndent = fromMaybe indentation directIndent
+                candidate = if indentation == expectedIndent then dartDependencyKey stripped else Nothing
+             in maybeToList candidate ++ collect True (Just expectedIndent) rest
+      where
+        stripped = trim rawLine
+        indentation = length (takeWhile (== ' ') rawLine)
+
+dartDependencyKey :: String -> Maybe String
+dartDependencyKey line =
+    case break (== ':') line of
+        (field, ':' : _)
+            | let candidate = map toLower (trim field)
+            , isDartPackageIdentifier candidate -> Just candidate
+        _ -> Nothing
+
+isDartPackageIdentifier :: String -> Bool
+isDartPackageIdentifier [] = False
+isDartPackageIdentifier (first : rest) =
+    first >= 'a'
+        && first <= 'z'
+        && all
+            (\character ->
+                (character >= 'a' && character <= 'z')
+                    || (character >= '0' && character <= '9')
+                    || character == '_'
+            )
+            rest
+
+readElixirDependencyTokens :: Package -> IO [String]
+readElixirDependencyTokens pkg = do
+    let manifestPath = packagePath pkg </> "mix.exs"
+    exists <- doesFileExist manifestPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict manifestPath
+            pure (elixirDependencyTokens contents)
+
+elixirDependencyTokens :: String -> [String]
+elixirDependencyTokens contents =
+    let uncommented = unlines (map stripElixirComment (lines contents))
+     in nub
+            ( mapMaybe elixirPathDependencyAtom
+                (concatMap elixirTupleBodies (elixirDependencyBodies uncommented))
+            )
+
+elixirDependencyBodies :: String -> [String]
+elixirDependencyBodies contents =
+    elixirDirectDepsBodies contents
+        ++ [functionBody | let functionBody = elixirDepsBody contents, not (null (trim functionBody))]
+
+elixirDirectDepsBodies :: String -> [String]
+elixirDirectDepsBodies = collect . lines
+  where
+    collect [] = []
+    collect (line : rest) =
+        case elixirFieldRemainder "deps:" line of
+            Just remainder
+                | "[" `isPrefixOf` trim remainder ->
+                    let value = trim remainder
+                        (bodyLines, remainingLines) = collectBracketed (elixirBracketDelta value) [value] rest
+                     in unlines (reverse bodyLines) : collect remainingLines
+            _ -> collect rest
+
+    collectBracketed depth body remaining
+        | depth <= 0 = (body, remaining)
+    collectBracketed _ body [] = (body, [])
+    collectBracketed depth body (line : rest) =
+        collectBracketed (depth + elixirBracketDelta line) (line : body) rest
+
+elixirFieldRemainder :: String -> String -> Maybe String
+elixirFieldRemainder target = go False False
+  where
+    go _ _ [] = Nothing
+    go insideString escaped remaining@(character : rest)
+        | escaped = go insideString False rest
+        | insideString && character == '\\' = go True True rest
+        | character == '"' = go (not insideString) False rest
+        | not insideString && target `isPrefixOf` remaining = Just (drop (length target) remaining)
+        | otherwise = go insideString False rest
+
+elixirBracketDelta :: String -> Int
+elixirBracketDelta = go False False 0
+  where
+    go _ _ total [] = total
+    go insideString escaped total (character : rest)
+        | escaped = go insideString False total rest
+        | insideString && character == '\\' = go True True total rest
+        | character == '"' = go (not insideString) False total rest
+        | not insideString && character == '[' = go False False (total + 1) rest
+        | not insideString && character == ']' = go False False (total - 1) rest
+        | otherwise = go insideString False total rest
+
+elixirDepsBody :: String -> String
+elixirDepsBody = unlines . collect False . lines
+  where
+    collect _ [] = []
+    collect False (line : rest) =
+        case elixirDepsShorthand line of
+            Just body -> [body]
+            Nothing ->
+                if trim line `elem` ["defp deps do", "def deps do"]
+                    then collect True rest
+                    else collect False rest
+    collect True (line : rest)
+        | trim line == "end" = []
+        | otherwise = line : collect True rest
+
+elixirDepsShorthand :: String -> Maybe String
+elixirDepsShorthand line =
+    let stripped = trim line
+        (_function, afterComma) = break (== ',') stripped
+        shorthand = trim (drop 1 afterComma)
+     in if ("defp deps," `isPrefixOf` stripped || "def deps," `isPrefixOf` stripped)
+            && "do:" `isPrefixOf` shorthand
+            then Just (drop 3 shorthand)
+            else Nothing
+
+stripElixirComment :: String -> String
+stripElixirComment = go False False
+  where
+    go _ _ [] = []
+    go insideString escaped (character : rest)
+        | escaped = character : go insideString False rest
+        | insideString && character == '\\' = character : go True True rest
+        | character == '"' = character : go (not insideString) False rest
+        | character == '#' && not insideString = []
+        | otherwise = character : go insideString False rest
+
+elixirTupleBodies :: String -> [String]
+elixirTupleBodies text =
+    case dropWhile (/= '{') text of
+        [] -> []
+        _openingBrace : afterOpening ->
+            let (tupleBody, remainder) = break (== '}') afterOpening
+             in tupleBody : elixirTupleBodies (drop 1 remainder)
+
+elixirPathDependencyAtom :: String -> Maybe String
+elixirPathDependencyAtom tupleBody =
+    let (atomField, options) = break (== ',') tupleBody
+        strippedAtom = trim atomField
+        atom = takeWhile (\character -> isAlphaNum character || character == '_') (dropWhile (== ':') strippedAtom)
+     in if null options
+            || null atom
+            || take 1 strippedAtom /= ":"
+            || not (any isElixirPathField (splitCargoInlineFields (drop 1 options)))
+            then Nothing
+            else Just (map toLower atom)
+
+isElixirPathField :: String -> Bool
+isElixirPathField field =
+    let (key, assignment) = break (== ':') field
+        value = dropWhile (`elem` [' ', '\t']) (drop 1 assignment)
+     in map toLower (trim key) == "path"
+            && not (null assignment)
+            && take 1 value == "\""
+            && not (null (takeWhile (/= '"') (drop 1 value)))
 
 readGoDependencyTokens :: Package -> IO [String]
 readGoDependencyTokens pkg = do
@@ -1335,6 +1586,208 @@ isPortableAbsoluteSwiftPath path@(first : rest) =
             ':' : _ -> isAlpha first
             _ -> False
 
+readGradleDependencyTokens :: Package -> IO [String]
+readGradleDependencyTokens pkg = do
+    let settingsPath = packagePath pkg </> "settings.gradle.kts"
+    exists <- doesFileExist settingsPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict settingsPath
+            pure
+                ( nub
+                    ( mapMaybe
+                        (gradlePathToken pkg)
+                        (gradleIncludeBuildValues (stripSwiftComments contents))
+                    )
+                )
+
+gradleIncludeBuildValues :: String -> [String]
+gradleIncludeBuildValues = collect Nothing
+  where
+    collect _ [] = []
+    collect _ ('"' : rest) = collect (Just '"') (dropSwiftString rest)
+    collect previous source@(character : rest)
+        | gradleIdentifierBoundary previous source "includeBuild" =
+            case parseGradleIncludeBuild (drop (length ("includeBuild" :: String)) source) of
+                Just (path, remaining) -> path : collect Nothing remaining
+                Nothing -> collect (Just character) rest
+        | otherwise = collect (Just character) rest
+
+gradleIdentifierBoundary :: Maybe Char -> String -> String -> Bool
+gradleIdentifierBoundary previous source identifier =
+    identifier `isPrefixOf` source
+        && maybe True (not . isGradleIdentifierCharacter) previous
+        && case drop (length identifier) source of
+            next : _ -> not (isGradleIdentifierCharacter next)
+            [] -> True
+
+isGradleIdentifierCharacter :: Char -> Bool
+isGradleIdentifierCharacter character = isAlphaNum character || character == '_'
+
+parseGradleIncludeBuild :: String -> Maybe (String, String)
+parseGradleIncludeBuild source = do
+    afterOpening <- consumeSwiftCharacter '(' (dropWhile isSpace source)
+    (path, afterString) <- parseSwiftQuotedString (dropWhile isSpace afterOpening)
+    afterClosing <- consumeSwiftCharacter ')' (dropWhile isSpace afterString)
+    pure (path, afterClosing)
+
+gradlePathToken :: Package -> String -> Maybe String
+gradlePathToken pkg path
+    | null path = Nothing
+    | '\\' `elem` path = Nothing
+    | isPortableAbsoluteSwiftPath path = Nothing
+    | otherwise =
+        Just
+            ( normalizeGradlePackagePath
+                (packagePath pkg </> map portableSeparator path)
+            )
+  where
+    portableSeparator character
+        | character == '/' = pathSeparator
+        | otherwise = character
+
+normalizeGradlePackagePath :: FilePath -> String
+normalizeGradlePackagePath =
+    map toLower
+        . joinPath
+        . reverse
+        . foldl collapse []
+        . splitDirectories
+        . normalise
+  where
+    collapse stack "." = stack
+    collapse (top : rest) ".."
+        | top /= ".." && not (isAbsolute top) = rest
+    collapse stack component = component : stack
+
+readDotnetDependencyTokens :: Package -> IO [String]
+readDotnetDependencyTokens pkg = do
+    projectFiles <- rootDotnetProjectFiles pkg
+    fmap (sort . nub . concat) $
+        forM projectFiles $ \projectFile -> do
+            contents <- readFileStrict projectFile
+            pure
+                ( mapMaybe
+                    (dotnetProjectPathToken projectFile)
+                    (dotnetProjectReferenceIncludes contents)
+                )
+
+rootDotnetProjectFiles :: Package -> IO [FilePath]
+rootDotnetProjectFiles pkg = do
+    entries <- listDirectory (packagePath pkg)
+    pure
+        ( sort
+            [ packagePath pkg </> entry
+            | entry <- entries
+            , map toLower (takeExtension entry) `elem` [".csproj", ".fsproj"]
+            ]
+        )
+
+dotnetProjectReferenceIncludes :: String -> [String]
+dotnetProjectReferenceIncludes = collect
+  where
+    collect source =
+        case dropWhile (/= '<') source of
+            [] -> []
+            markup
+                | "<!--" `isPrefixOf` markup -> collect (dropThroughXML "-->" (drop 4 markup))
+                | "<![CDATA[" `isPrefixOf` markup -> collect (dropThroughXML "]]>" (drop 9 markup))
+                | "<?" `isPrefixOf` markup -> collect (dropThroughXML "?>" (drop 2 markup))
+                | "<!" `isPrefixOf` markup -> collect (dropThroughXML ">" (drop 2 markup))
+                | otherwise ->
+                    case parseXMLStartTag markup of
+                        Just ("ProjectReference", attributes, remaining) ->
+                            case xmlLiteralAttribute "Include" attributes of
+                                Just include -> include : collect remaining
+                                Nothing -> collect remaining
+                        Just (_, _, remaining) -> collect remaining
+                        Nothing -> collect (drop 1 markup)
+
+dropThroughXML :: String -> String -> String
+dropThroughXML marker = go
+  where
+    go [] = []
+    go source@(_ : rest)
+        | marker `isPrefixOf` source = drop (length marker) source
+        | otherwise = go rest
+
+parseXMLStartTag :: String -> Maybe (String, String, String)
+parseXMLStartTag ('<' : first : rest)
+    | first `notElem` ['/', '!', '?'] = do
+        let (name, afterName) = span isXMLNameCharacter (first : rest)
+        if null name
+            then Nothing
+            else do
+                (attributes, remaining) <- takeXMLTagAttributes Nothing [] afterName
+                pure (name, attributes, remaining)
+parseXMLStartTag _ = Nothing
+
+takeXMLTagAttributes :: Maybe Char -> String -> String -> Maybe (String, String)
+takeXMLTagAttributes _ _ [] = Nothing
+takeXMLTagAttributes quote collected (character : rest) =
+    case quote of
+        Just delimiter
+            | character == delimiter ->
+                takeXMLTagAttributes Nothing (character : collected) rest
+            | otherwise ->
+                takeXMLTagAttributes quote (character : collected) rest
+        Nothing
+            | character `elem` ['\'', '"'] ->
+                takeXMLTagAttributes (Just character) (character : collected) rest
+            | character == '>' -> Just (reverse collected, rest)
+            | otherwise -> takeXMLTagAttributes Nothing (character : collected) rest
+
+isXMLNameCharacter :: Char -> Bool
+isXMLNameCharacter character =
+    isAlphaNum character || character `elem` ['_', ':', '-', '.']
+
+xmlLiteralAttribute :: String -> String -> Maybe String
+xmlLiteralAttribute wanted = collect . dropWhile isSpace
+  where
+    collect [] = Nothing
+    collect ('/' : _) = Nothing
+    collect source =
+        let (name, afterName) = span isXMLNameCharacter source
+            assignment = dropWhile isSpace afterName
+         in if null name
+                then collect (dropWhile isSpace (drop 1 source))
+                else case assignment of
+                    '=' : rawValue ->
+                        case parseXMLQuotedValue (dropWhile isSpace rawValue) of
+                            Just (value, remaining)
+                                | name == wanted -> Just value
+                                | otherwise -> collect (dropWhile isSpace remaining)
+                            Nothing -> Nothing
+                    _ -> collect assignment
+
+parseXMLQuotedValue :: String -> Maybe (String, String)
+parseXMLQuotedValue (quote : rest)
+    | quote `elem` ['\'', '"'] =
+        case break (== quote) rest of
+            (value, _ : remaining) -> Just (value, remaining)
+            _ -> Nothing
+parseXMLQuotedValue _ = Nothing
+
+dotnetProjectPathToken :: FilePath -> String -> Maybe String
+dotnetProjectPathToken projectFile path
+    | null path = Nothing
+    | any (`elem` ("*?#&" :: String)) path = Nothing
+    | "$(" `isInfixOf` path = Nothing
+    | isPortableAbsoluteSwiftPath path = Nothing
+    | otherwise =
+        Just
+            ( normalizeDotnetProjectPath
+                (takeDirectory projectFile </> map portableSeparator path)
+            )
+  where
+    portableSeparator character
+        | character `elem` ['/', '\\'] = pathSeparator
+        | otherwise = character
+
+normalizeDotnetProjectPath :: FilePath -> String
+normalizeDotnetProjectPath = normalizeGradlePackagePath
+
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do
     let manifestCandidates =
@@ -1346,6 +1799,7 @@ readGenericManifestTokens pkg = do
             , "mix.lock"
             , "Package.swift"
             , "pom.xml"
+            , "settings.gradle.kts"
             , "build.gradle"
             , "build.gradle.kts"
             , "Makefile.PL"
@@ -1551,12 +2005,16 @@ shouldHashFile pkg path =
             , "go.sum"
             , "mix.exs"
             , "mix.lock"
+            , "pubspec.yaml"
             , "package.swift"
             , "makefile.pl"
             , "cpanfile"
             , "gemfile"
             , "project.clj"
             , "deps.edn"
+            , "settings.gradle.kts"
+            , "build.gradle"
+            , "build.gradle.kts"
             ]
         sourceExtensions =
             case packageLanguage pkg of
@@ -1564,6 +2022,7 @@ shouldHashFile pkg path =
                 "ruby" -> [".rb"]
                 "go" -> [".go"]
                 "rust" -> [".rs"]
+                "dart" -> [".dart"]
                 "typescript" -> [".ts", ".tsx", ".js", ".jsx"]
                 "elixir" -> [".ex", ".exs"]
                 "lua" -> [".lua"]

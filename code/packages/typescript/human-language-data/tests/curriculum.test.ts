@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { validateCurriculum } from "../src/curriculum.js";
 import { parseLesson } from "../src/parse.js";
-import type { CurriculumSpine, LanguageRegistry, Taxonomy } from "../src/types.js";
+import type {
+  CurriculumSpine,
+  LanguageCurriculum,
+  LanguageRegistry,
+  Taxonomy,
+} from "../src/types.js";
 
 const registry: LanguageRegistry = {
   version: 1,
@@ -105,7 +110,109 @@ describe("curriculum prerequisite validation", () => {
   });
 });
 
+describe("per-language realization-map validation", () => {
+  const lessons = [
+    parseLesson(source("A", "word", "GREETING-HELLO", []), "test"),
+    parseLesson(source("B", "practice", "TEST-PRACTICE", ["A"]), "test"),
+  ];
+  const curriculum = (): LanguageCurriculum => ({
+    version: 1,
+    language: "test",
+    path: [
+      {
+        id: "TEST-HELLO-1",
+        spine_node: "HELLO",
+        lessons: ["A"],
+        before: [],
+        inline: [],
+        after: [],
+      },
+      {
+        id: "TEST-HELLO-2",
+        spine_node: "HELLO",
+        lessons: ["B"],
+        before: [],
+        inline: ["TEST-EXT-PRACTICE"],
+        after: [],
+      },
+    ],
+    spine: {
+      HELLO: {
+        segments: ["TEST-HELLO-1", "TEST-HELLO-2"],
+        omits: [],
+        relocates: {},
+      },
+    },
+    extensions: [
+      {
+        id: "TEST-EXT-PRACTICE",
+        stage: "pre-A1",
+        kind: "supporting",
+        category: "consolidation",
+        canDo: "I can retrieve the greeting once more.",
+        prerequisites: ["HELLO"],
+        lessons: ["B"],
+      },
+    ],
+  });
+
+  it("accepts repeated spine visits with classified local support", () => {
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons,
+      curricula: [curriculum()],
+    }).filter((issue) => issue.level === "error")).toEqual([]);
+  });
+
+  it("rejects an unsupported map version and a drifted segment ledger", () => {
+    const broken = curriculum();
+    broken.version = 2;
+    broken.spine.HELLO.segments = ["TEST-HELLO-1"];
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons,
+      curricula: [broken],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("unsupported-language-curriculum-version");
+    expect(codes).toContain("curriculum-segment-ledger-drift");
+  });
+
+  it("rejects omitted prerequisites and extension lessons outside their segment", () => {
+    const broken = curriculum();
+    broken.path[0].lessons = ["B"];
+    broken.path[1].lessons = ["A"];
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons,
+      curricula: [broken],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("curriculum-prerequisite-order");
+    expect(codes).toContain("curriculum-extension-outside-segment");
+  });
+});
+
 describe("schema-v2 lesson validation", () => {
+  it("requires schema version 2 before an activity contract can compile", () => {
+    const legacy = source("A", "word", "GREETING-HELLO", []).replace(
+      "# A real body",
+      `## Wrap-up Recall
+<!-- hl-activity: {"id":"A-recall","kind":"text","assesses":["TEST-LEX-HELLO"],"prompt":"Type hello.","answer":"hello","accepted":[],"feedback":{"correct":"Right.","incorrect":"Try again."},"response_seconds":8} -->
+Recall it.`,
+    );
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(legacy, "test")],
+    }).map((issue) => issue.code)).toContain("activity-requires-schema-v2");
+  });
+
   it("accepts a dependency-ordered transitive knowledge chain", () => {
     const lessons = [
       parseLesson(sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"]), "test"),
@@ -255,6 +362,52 @@ describe("schema-v2 lesson validation", () => {
       spine,
       lessons: [parseLesson(malformed, "test")],
     }).map((issue) => issue.code)).toContain("schema-v2-invalid-block-knowledge");
+  });
+
+  it("accepts a compiled activity whose atoms are a subset of its block assessment", () => {
+    const activity = `<!-- hl-activity: {"id":"A-recall","kind":"text","assesses":["TEST-LEX-HELLO"],"prompt":"Type the greeting.","answer":"hello","accepted":["hi"],"feedback":{"correct":"Correct.","incorrect":"Recall the greeting."},"response_seconds":8} -->`;
+    const authored = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replace(
+        "<!-- hl-knowledge: introduces=[]; assesses=[TEST-LEX-HELLO] -->\n\nSay hello once.",
+        `<!-- hl-knowledge: introduces=[]; assesses=[TEST-LEX-HELLO] -->\n${activity}\n\nSay hello once.`,
+      );
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(authored, "test")],
+    }).filter((issue) => issue.level === "error")).toEqual([]);
+  });
+
+  it("rejects invalid activity variants, ids, and atoms outside the containing block", () => {
+    const activity = `<!-- hl-activity: {"id":"other","kind":"text","assesses":["TEST-GRAMMAR-FUTURE"],"prompt":"Type the greeting.","answer":"hello","accepted":["HELLO"],"feedback":{"correct":"Correct.","incorrect":"Recall the greeting."},"response_seconds":8} -->`;
+    const authored = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replace(
+        "<!-- hl-knowledge: introduces=[]; assesses=[TEST-LEX-HELLO] -->\n\nSay hello once.",
+        `<!-- hl-knowledge: introduces=[]; assesses=[TEST-LEX-HELLO] -->\n${activity}\n\nSay hello once.`,
+      );
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(authored, "test")],
+    }).map((issue) => issue.code);
+    expect(codes).toEqual(expect.arrayContaining([
+      "schema-v2-activity-id-prefix",
+      "schema-v2-invalid-activity-contract",
+      "schema-v2-activity-assessment-outside-block",
+    ]));
+  });
+
+  it("rejects malformed or misplaced activity directives", () => {
+    const malformed = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replace("Say hello once.", "Say hello once.\n<!-- hl-activity: {not-json} -->");
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(malformed, "test")],
+    }).map((issue) => issue.code)).toContain("schema-v2-invalid-activity-directive");
   });
 
   it("rejects malformed duration, coverage, sequence, and body blocks", () => {

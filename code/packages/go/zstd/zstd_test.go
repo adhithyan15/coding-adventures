@@ -14,6 +14,8 @@ package zstd
 //   TC-9  Deterministic output
 //   TC-10 Wire-format validation (manual frame)
 //   TC-11 Real `zstd` CLI interop, both directions (see lessons.md Lesson 96)
+//   TC-12 Real `zstd` CLI Repeated-Offset (R1/R2/R3) decode interop (see
+//         lessons.md Lesson 99)
 //
 // Plus unit tests for each internal helper, ensuring high coverage of
 // every codepath including the FSE codec, bit writer/reader, and the
@@ -21,6 +23,7 @@ package zstd
 
 import (
 	"bytes"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -288,9 +291,9 @@ func TestTC9Deterministic(t *testing.T) {
 func TestTC10WireFormat(t *testing.T) {
 	frame := []byte{
 		0x28, 0xB5, 0x2F, 0xFD, // magic
-		0x20,                   // FHD: Single_Segment=1, FCS=1byte
-		0x05,                   // FCS = 5
-		0x29, 0x00, 0x00,       // block header: last=1, raw, size=5
+		0x20,             // FHD: Single_Segment=1, FCS=1byte
+		0x05,             // FCS = 5
+		0x29, 0x00, 0x00, // block header: last=1, raw, size=5
 		'h', 'e', 'l', 'l', 'o',
 	}
 	got, err := Decompress(frame)
@@ -606,7 +609,8 @@ func TestFSETwoSequenceRoundtrip(t *testing.T) {
 	}
 	bitstream := encodeSequencesSection(seqs)
 
-	decoded, err := decodeSequencesSection(bitstream, len(seqs))
+	rep1, rep2, rep3 := uint32(1), uint32(4), uint32(8)
+	decoded, err := decodeSequencesSection(bitstream, len(seqs), &rep1, &rep2, &rep3)
 	if err != nil {
 		t.Fatalf("decodeSequencesSection: %v", err)
 	}
@@ -634,7 +638,8 @@ func TestFSESingleSequenceRoundtrip(t *testing.T) {
 	seqs := []seq{{ll: 3, ml: 5, off: 2}}
 	bitstream := encodeSequencesSection(seqs)
 
-	decoded, err := decodeSequencesSection(bitstream, len(seqs))
+	rep1, rep2, rep3 := uint32(1), uint32(4), uint32(8)
+	decoded, err := decodeSequencesSection(bitstream, len(seqs), &rep1, &rep2, &rep3)
 	if err != nil {
 		t.Fatalf("decodeSequencesSection: %v", err)
 	}
@@ -647,6 +652,144 @@ func TestFSESingleSequenceRoundtrip(t *testing.T) {
 	}
 	if decoded[0].off != 2 {
 		t.Errorf("OFF: got %d, want 2", decoded[0].off)
+	}
+}
+
+// encodeSingleSeqForTest builds a one-sequence FSE bitstream with an
+// EXPLICIT (llCode, mlCode, ofCode, ofExtra) triple, bypassing
+// encodeSequencesSection's automatic `rawOff = offset + 3` derivation.
+//
+// This package's own production encoder (encodeSequencesSection) never
+// emits an Offset code below 4 — see the "Repeat offsets" row in
+// code/specs/CMP07-zstd.md's Educational Simplification table — so it is
+// structurally incapable of producing a repeat-offset (ofCode <= 1)
+// bitstream for a test to decode. This helper exists ONLY to reach into the
+// FSE encode primitives directly and construct one, so the four
+// Repeated_Offset (R1/R2/R3) selector branches in decodeSequencesSection
+// (see its doc comment / lessons.md Lesson 99) can be tested deterministically
+// rather than relying on real `zstd` CLI output happening to hit all four.
+//
+// Mirrors the "only one sequence, so it's always both first-processed and
+// last-real" branch of encodeSequencesSection: the FSE states are
+// initialised directly via fseInitState (no incoming transition to flush,
+// since there is no earlier-in-bitstream sequence), extra bits are written
+// LL, ML, OF, and finally the initial states are flushed ML, OF, LL (so a
+// forward reader sees them in decode order LL, OF, ML).
+func encodeSingleSeqForTest(llCode, mlCode, ofCode uint8, ofExtra uint32) []byte {
+	eeLL, stLL := buildEncodeTable(llNorm[:], llAccLog)
+	eeML, stML := buildEncodeTable(mlNorm[:], mlAccLog)
+	eeOF, stOF := buildEncodeTable(ofNorm[:], ofAccLog)
+	szLL := uint32(1) << llAccLog
+	szML := uint32(1) << mlAccLog
+	szOF := uint32(1) << ofAccLog
+
+	bw := &revBitWriter{}
+	stateOF := fseInitState(ofCode, eeOF, stOF)
+	stateML := fseInitState(mlCode, eeML, stML)
+	stateLL := fseInitState(llCode, eeLL, stLL)
+
+	// llCode/mlCode 0 both have 0 extra bits (see llCodes[0]/mlCodes[0]),
+	// which is all the selector tests below need — extra-bit correctness
+	// for LL/ML is already covered by TestFSE*Roundtrip above.
+	bw.addBits(0, 0) // LL extra bits
+	bw.addBits(0, 0) // ML extra bits
+	bw.addBits(uint64(ofExtra), ofCode)
+
+	bw.addBits(uint64(stateML-szML), mlAccLog)
+	bw.addBits(uint64(stateOF-szOF), ofAccLog)
+	bw.addBits(uint64(stateLL-szLL), llAccLog)
+	bw.flush()
+	return bw.finish()
+}
+
+// TestRepeatOffsetSelectors exercises all four Repeated_Offset (R1/R2/R3)
+// selector branches in decodeSequencesSection (RFC 8878 §3.1.1.3.2.1.1;
+// lessons.md Lesson 99) against hand-constructed bitstreams, since this
+// package's own encoder never emits the ofCode <= 1 inputs that trigger
+// them (see encodeSingleSeqForTest's doc comment). Each case starts from
+// the RFC-mandated default registers (rep1, rep2, rep3 = 1, 4, 8) — the
+// same values Decompress initialises once per frame — so the expected
+// resulting offset and post-update register values are computed by hand
+// from the algorithm documented in code/specs/CMP07-zstd.md's
+// "Repeat-Offset (R1/R2/R3) decode algorithm" section.
+func TestRepeatOffsetSelectors(t *testing.T) {
+	const llCodeZero = 0 // ll = 0 (baseline 0, 0 extra bits) -> llIsZero = true
+	const llCodeFive = 5 // ll = 5 (baseline 5, 0 extra bits) -> llIsZero = false
+	const mlCode = 0     // ml = 3 (baseline 3, 0 extra bits)
+
+	cases := []struct {
+		name                         string
+		llCode, ofCode               uint8
+		ofExtra                      uint32
+		wantOff                      uint32
+		wantRep1, wantRep2, wantRep3 uint32
+	}{
+		// selector = (llIsZero?1:0) + ofRaw - 1.
+		{
+			name:   "selector 0: reuse rep1 unchanged (ll nonzero, ofRaw=1)",
+			llCode: llCodeFive, ofCode: 0, ofExtra: 0, // ofRaw = 1<<0 = 1
+			wantOff: 1, wantRep1: 1, wantRep2: 4, wantRep3: 8, // no rotation
+		},
+		{
+			name:   "selector 1: use rep2 (ll==0, ofRaw=1)",
+			llCode: llCodeZero, ofCode: 0, ofExtra: 0, // ofRaw = 1
+			wantOff: 4, wantRep1: 4, wantRep2: 1, wantRep3: 8, // rep1,rep2 swap
+		},
+		{
+			name:   "selector 2: use rep3 (ll nonzero, ofRaw=3)",
+			llCode: llCodeFive, ofCode: 1, ofExtra: 1, // ofRaw = (1<<1)|1 = 3
+			wantOff: 8, wantRep1: 8, wantRep2: 1, wantRep3: 4, // full rotate
+		},
+		{
+			name:   "selector 3: use rep1-1 (ll==0, ofRaw=3)",
+			llCode: llCodeZero, ofCode: 1, ofExtra: 1, // ofRaw = 3
+			// rep1 starts at 1, so rep1-1 = 0.
+			wantOff: 0, wantRep1: 0, wantRep2: 1, wantRep3: 4, // full rotate
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			bitstream := encodeSingleSeqForTest(c.llCode, mlCode, c.ofCode, c.ofExtra)
+
+			rep1, rep2, rep3 := uint32(1), uint32(4), uint32(8)
+			decoded, err := decodeSequencesSection(bitstream, 1, &rep1, &rep2, &rep3)
+			if err != nil {
+				t.Fatalf("decodeSequencesSection: %v", err)
+			}
+
+			if decoded[0].off != c.wantOff {
+				t.Errorf("offset: got %d, want %d", decoded[0].off, c.wantOff)
+			}
+			if rep1 != c.wantRep1 || rep2 != c.wantRep2 || rep3 != c.wantRep3 {
+				t.Errorf("registers after decode: got (%d,%d,%d), want (%d,%d,%d)",
+					rep1, rep2, rep3, c.wantRep1, c.wantRep2, c.wantRep3)
+			}
+		})
+	}
+}
+
+// TestRepeatOffsetExplicitOffsetUpdatesRegisters verifies that even an
+// ORDINARY explicit offset (ofCode >= 2) updates the Repeated_Offset
+// registers — RFC 8878: the repeat-offset history is updated on every
+// sequence, not only on repeat-offset ones (see decodeSequencesSection's
+// doc comment, `ofCode >= 2` branch).
+func TestRepeatOffsetExplicitOffsetUpdatesRegisters(t *testing.T) {
+	// ofCode=4, ofExtra=0 -> ofRaw = 1<<4 = 16 -> offset = 16 - 3 = 13.
+	bitstream := encodeSingleSeqForTest(0, 0, 4, 0)
+
+	rep1, rep2, rep3 := uint32(1), uint32(4), uint32(8)
+	decoded, err := decodeSequencesSection(bitstream, 1, &rep1, &rep2, &rep3)
+	if err != nil {
+		t.Fatalf("decodeSequencesSection: %v", err)
+	}
+
+	if decoded[0].off != 13 {
+		t.Errorf("offset: got %d, want 13", decoded[0].off)
+	}
+	if rep1 != 13 || rep2 != 1 || rep3 != 4 {
+		t.Errorf("registers after explicit offset: got (%d,%d,%d), want (13,1,4)",
+			rep1, rep2, rep3)
 	}
 }
 
@@ -776,7 +919,7 @@ func TestDecompressReservedBlockType(t *testing.T) {
 		0x28, 0xB5, 0x2F, 0xFD, // magic
 		0xE0,                   // FHD: FCS=8bytes, Single_Segment=1
 		0, 0, 0, 0, 0, 0, 0, 0, // FCS (8 bytes)
-		0x07, 0x00, 0x00,       // block: last=1, type=3 (reserved), size=0
+		0x07, 0x00, 0x00, // block: last=1, type=3 (reserved), size=0
 	}
 	_, err := Decompress(frame)
 	if err == nil {
@@ -792,10 +935,10 @@ func TestDecompressRLEBlock(t *testing.T) {
 	// hdr = (10 << 3) | (1 << 1) | 1 = 83 = 0x53
 	frame := []byte{
 		0x28, 0xB5, 0x2F, 0xFD, // magic
-		0x20,                   // FHD: Single_Segment=1, FCS=1byte
-		0x0A,                   // FCS = 10
-		0x53, 0x00, 0x00,       // block: last=1, RLE, size=10
-		'Z',                    // RLE byte
+		0x20,             // FHD: Single_Segment=1, FCS=1byte
+		0x0A,             // FCS = 10
+		0x53, 0x00, 0x00, // block: last=1, RLE, size=10
+		'Z', // RLE byte
 	}
 	got, err := Decompress(frame)
 	if err != nil {
@@ -834,10 +977,10 @@ func TestDecompressWindowDescriptor(t *testing.T) {
 	// block: last=1, raw, size=3 → (3<<3)|(0<<1)|1 = 25 = 0x19
 	frame := []byte{
 		0x28, 0xB5, 0x2F, 0xFD, // magic
-		0x00,                   // FHD: Single_Segment=0, FCS_flag=0, no dict
-		0x50,                   // Window_Descriptor (skipped)
+		0x00, // FHD: Single_Segment=0, FCS_flag=0, no dict
+		0x50, // Window_Descriptor (skipped)
 		// No FCS (FCS_flag=00 + Single_Segment=0 → 0 FCS bytes)
-		0x19, 0x00, 0x00,       // block: last=1, raw, size=3
+		0x19, 0x00, 0x00, // block: last=1, raw, size=3
 		'a', 'b', 'c',
 	}
 	got, err := Decompress(frame)
@@ -856,10 +999,10 @@ func TestDecompressUnsupportedFSEModes(t *testing.T) {
 	// Seq count: 1 (0x01)
 	// Modes byte: 0x04 (ML mode = 1, non-Predefined)
 	blockData := []byte{
-		0x00,       // literal section header: 0 literals
-		0x01,       // sequence count = 1
-		0x04,       // modes byte: ML mode = 1 (non-zero)
-		0x00,       // bogus bitstream
+		0x00, // literal section header: 0 literals
+		0x01, // sequence count = 1
+		0x04, // modes byte: ML mode = 1 (non-zero)
+		0x00, // bogus bitstream
 	}
 	// Wrap in a frame.
 	bsize := len(blockData)
@@ -1010,4 +1153,138 @@ func TestTC11CliInteropHighSequenceCount(t *testing.T) {
 	}
 	decodedByCLI := runZstdCLI(t, nil, "-d", "-q", "-c", oursZst)
 	assertBytes(t, decodedByCLI, original, "high-sequence-count CLI decode")
+}
+
+// ─── TC-12: real `zstd` CLI Repeated-Offset (R1/R2/R3) decode ─────────────────
+
+// TestTC12CliInteropRepeatOffset proves this decoder correctly handles
+// Repeated-Offset (R1/R2/R3) sequences (RFC 8878 §3.1.1.3.2.1.1) — an
+// independent gap from the FSE-codec bug class in Lesson 96/TestTC11, found
+// while auditing this package against the real `zstd` CLI (see lessons.md
+// Lesson 99, first found and fixed in `code/packages/c/zstd`, PR #9941).
+//
+// This package's OWN encoder (encodeSequencesSection) never emits an offset
+// code < 4 (raw_off = offset + 3 >= 4 always, since the minimum LZ77 match
+// offset is 1) — an intentional "no repeat-offset shortcuts" simplification.
+// So this port's own compress/decompress round trip, and TestTC11's fixed
+// prose corpus, never exercise the repeat-offset DECODE path at all: every
+// offset code decodeSequencesSection ever sees from our own output is >= 2.
+//
+// But the real `zstd` CLI's encoder uses repeat offsets constantly — one of
+// its principal entropy wins, especially on periodic/highly-repetitive
+// input. The minimal repro that surfaced this (documented in Lesson 99): a
+// buffer of one repeated byte, long enough that real `zstd` prefers a
+// Compressed block over an RLE block. Decoding that block requires exactly
+// one FSE sequence: 2 literal bytes ("ZZ") + one match whose Offset_Value is
+// 1 — the encoding for "reuse Repeated_Offset1", which defaults to 1.
+// Pre-fix, `decodeSequencesSection` computed `offset = ofRaw - 3`
+// unconditionally, underflowing for ofRaw=1 into a value the existing
+// bounds check correctly (but confusingly) rejected as "malformed", even
+// though the frame was fully RFC-8878-conformant.
+func TestTC12CliInteropRepeatOffset(t *testing.T) {
+	if !zstdCLIAvailable(t) {
+		t.Skip("zstd CLI not found on PATH — skipping interop test")
+	}
+
+	// 4713 repeated 'Z' bytes: the exact size class (long enough that real
+	// `zstd` prefers a Compressed block carrying a repeat-offset sequence
+	// over an RLE block) from the Lesson 99 repro.
+	original := bytes.Repeat([]byte{'Z'}, 4713)
+
+	theirCompressed := runZstdCLI(t, original, "-q", "-c")
+	decodedByUs, err := Decompress(theirCompressed)
+	if err != nil {
+		t.Fatalf("our Decompress() failed on real `zstd`'s repeat-offset "+
+			"output (RFC 8878 §3.1.1.3.2.1.1 Repeated-Offset sequences): %v", err)
+	}
+	assertBytes(t, decodedByUs, original, "CLI-compressed repeat-offset, us-decoded")
+}
+
+// TestTC12CliInteropRepeatOffsetFuzz widens TestTC12CliInteropRepeatOffset's
+// single fixed repro into a small deterministic sweep across periodic,
+// run-length, and mixed byte patterns most likely to make the real `zstd`
+// CLI choose repeat-offset sequences (RFC 8878 §3.1.1.3.2.1.1) — exercising
+// more of the R1/R2/R3 selector space (see decodeSequencesSection's doc
+// comment: selector 0 = reuse rep1 unchanged, 1 = rep2, 2 = rep3, 3 =
+// rep1-1, each additionally shifted when Literals_Length == 0) than the one
+// fixed corpus above can reach alone. Uses a fixed seed for reproducibility;
+// not a true property-based fuzzer, just breadth beyond one input.
+func TestTC12CliInteropRepeatOffsetFuzz(t *testing.T) {
+	if !zstdCLIAvailable(t) {
+		t.Skip("zstd CLI not found on PATH — skipping interop test")
+	}
+
+	rng := rand.New(rand.NewSource(99)) // seed = lessons.md Lesson 99
+
+	patterns := []func() []byte{
+		// Long constant run — pushes real zstd toward the RLE/repeat-offset
+		// boundary from several nearby sizes.
+		func() []byte {
+			n := 2000 + rng.Intn(6000)
+			return bytes.Repeat([]byte{byte(rng.Intn(256))}, n)
+		},
+		// Short periodic cycle repeated many times — classic repeat-offset
+		// territory (each cycle-length match reuses the same offset).
+		func() []byte {
+			cycleLen := 2 + rng.Intn(6)
+			cycle := make([]byte, cycleLen)
+			for i := range cycle {
+				cycle[i] = byte(rng.Intn(256))
+			}
+			reps := 200 + rng.Intn(800)
+			out := make([]byte, 0, cycleLen*reps)
+			for i := 0; i < reps; i++ {
+				out = append(out, cycle...)
+			}
+			return out
+		},
+		// Two distinct periodic cycles back-to-back, so the encoder must
+		// track more than one recent match distance (R1/R2/R3, not just
+		// R1) as it moves from the first cycle's offset to the second's.
+		// (A pattern of several single-byte constant runs was tried here
+		// too, but real `zstd` reliably picks a non-Predefined FSE table
+		// mode — RLE mode — for the Offset field on that input, which this
+		// decoder intentionally doesn't support (see decompressBlock's
+		// "only Predefined=0 supported" check): a separate, pre-existing,
+		// out-of-scope limitation this repeat-offset-focused test should
+		// not trip over.)
+		func() []byte {
+			cyc1Len := 2 + rng.Intn(4)
+			cyc2Len := cyc1Len + 1 + rng.Intn(4)
+			cyc1 := make([]byte, cyc1Len)
+			cyc2 := make([]byte, cyc2Len)
+			for i := range cyc1 {
+				cyc1[i] = byte(rng.Intn(256))
+			}
+			for i := range cyc2 {
+				cyc2[i] = byte(rng.Intn(256))
+			}
+			reps := 150 + rng.Intn(400)
+			out := make([]byte, 0, (cyc1Len+cyc2Len)*reps)
+			for i := 0; i < reps; i++ {
+				out = append(out, cyc1...)
+			}
+			for i := 0; i < reps; i++ {
+				out = append(out, cyc2...)
+			}
+			return out
+		},
+	}
+
+	const trialsPerPattern = 8
+	for pi, gen := range patterns {
+		for trial := 0; trial < trialsPerPattern; trial++ {
+			original := gen()
+			theirCompressed := runZstdCLI(t, original, "-q", "-c")
+			decodedByUs, err := Decompress(theirCompressed)
+			if err != nil {
+				t.Fatalf("pattern %d trial %d (%d bytes): our Decompress() "+
+					"failed on real `zstd` output: %v", pi, trial, len(original), err)
+			}
+			if !bytes.Equal(decodedByUs, original) {
+				t.Fatalf("pattern %d trial %d (%d bytes): decoded output "+
+					"mismatch", pi, trial, len(original))
+			}
+		}
+	}
 }

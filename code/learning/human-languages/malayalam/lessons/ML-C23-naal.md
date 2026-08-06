@@ -65,6 +65,7 @@ erasing it.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-NAAL-01] -->
+<!-- hl-activity: {"id":"ML-C23-naal-survival","kind":"text","assesses":["ML-CONCEPT-C23-NAAL-01"],"prompt":"Has Sanskrit divasam erased native naal?","answer":"no","accepted":["no it has not","nāḷ still survives","naal still survives"],"feedback":{"correct":"Right: nāḷ still lives in tomorrow, narrative one day, and birthday.","incorrect":"No. Native nāḷ survives in several everyday and narrative compounds."},"response_seconds":8} -->
 
 [PAUSE 3s] Has Sanskrit **divasam** erased native **നാൾ**? (**No.**) Where does
 *nāḷ* live now? (**Inside tomorrow, in narrative “one day,” and in the living

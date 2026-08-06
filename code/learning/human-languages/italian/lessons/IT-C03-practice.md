@@ -75,6 +75,7 @@ swap is automatic. This slots between your greetings (Ch. 1–2) and farewells
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-IO-02, IT-ETYMON-IO-03, IT-GRAMMAR-IO-04, IT-SOUND-MI-CHIAMO-02, IT-ETYMON-MI-CHIAMO-03, IT-GRAMMAR-MI-CHIAMO-04, IT-ETYMON-COME-TI-CHIAMI-02, IT-SOUND-PIACERE-02, IT-ETYMON-PIACERE-03, IT-GRAMMAR-PIACERE-04, IT-LEX-C03-PRACTICE-02, IT-NOTICE-C03-PRACTICE-03] -->
+<!-- hl-activity: {"id":"IT-C03-practice-drop-io","kind":"text","assesses":["IT-GRAMMAR-IO-04"],"prompt":"Why can Italian usually omit io?","answer":"the verb ending says who","accepted":["the verb ending identifies the subject","the verb ending carries the subject"],"feedback":{"correct":"Right: the verb ending already identifies the subject, so io is often unnecessary.","incorrect":"Italian can omit io because the verb ending already says who the subject is."},"response_seconds":8} -->
 
 [PAUSE 3s] Why does Italian usually drop *io*? (The verb ending says who.) What
 does *mi chiamo* literally mean, and its root? ("I call myself"; *clāmāre*.) What

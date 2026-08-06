@@ -212,8 +212,19 @@ fn formula_audit_v2_stops_source_replay_at_outer_guard_failure() {
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }
 
+/// Built-in precedence itself — a formula body that calls `round_to` gets the
+/// RUNTIME's rounding, and the audit's replayed formula sequence says so by
+/// naming only the user formula that really ran.
+///
+/// This used to be asserted with a `formulabook` that also declared its own
+/// `round_to(a, b) … requires nonzero(a)`, to pin down which one won. That
+/// program no longer compiles (`LowerError::ReservedFormulaName` — see the
+/// companion test below), because a declared guard that can never run is a hole
+/// in the precondition contract rather than a precedence question. The precedence
+/// property is real and still worth pinning, so it is asserted here without the
+/// unreachable shadow definition.
 #[test]
-fn formula_audit_v2_preserves_builtin_precedence_over_same_named_export() {
+fn formula_audit_v2_preserves_builtin_precedence() {
     let directory = std::env::temp_dir().join(format!(
         "adj_formula_audit_builtin_precedence_{}",
         std::process::id()
@@ -224,8 +235,6 @@ fn formula_audit_v2_preserves_builtin_precedence_over_same_named_export() {
     fs::write(
         &program,
         "formulabook guarded {\n\
-             formula round_to(a, b) = a + b requires nonzero(a)\n\
-               source \"shadowed export\" trust authoritative\n\
              formula outer(x) = round_to(x, 0) requires nonzero(x)\n\
                source \"outer domain\" trust authoritative\n\
          }\n\
@@ -245,9 +254,54 @@ fn formula_audit_v2_preserves_builtin_precedence_over_same_named_export() {
     );
     let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
     let execution = &audit["executions"][0];
+    // `round_to` is answered by the runtime, so it never enters the replayed
+    // formula sequence — only `outer` did.
     assert_eq!(execution["formula_sequence"].as_array().unwrap().len(), 1);
     assert_eq!(execution["formula_sequence"][0]["name"], "outer");
     assert_eq!(execution["body"]["status"], "evaluated");
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+/// The collision the audit no longer has to reason about. A `formulabook` that
+/// declares a built-in's name is rejected at compile time, so the audit binary
+/// fails loudly instead of emitting a witness for an execution in which
+/// `requires nonzero(a)` was silently never evaluated.
+#[test]
+fn formula_audit_rejects_a_formulabook_that_shadows_a_builtin() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_builtin_collision_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("builtin_collision.adj");
+    fs::write(
+        &program,
+        "formulabook guarded {\n\
+             formula round_to(a, b) = a + b requires nonzero(a)\n\
+               source \"shadowed export\" trust authoritative\n\
+             formula outer(x) = round_to(x, 0) requires nonzero(x)\n\
+               source \"outer domain\" trust authoritative\n\
+         }\n\
+         observe value(2.4)\n\
+         ? outer(value)\n",
+    )
+    .expect("write built-in collision program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        !output.status.success(),
+        "a formula book shadowing a built-in must not produce an audit"
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("ReservedFormulaName"),
+        "expected a reserved-name rejection, got: {stderr}"
+    );
 
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }
@@ -977,6 +1031,103 @@ fn formula_audit_accepts_a_zero_input_constant_formula() {
     );
     assert_eq!(derivation["verification"]["fully_verified"], true);
     assert!(audit["imports"].as_array().expect("imports").is_empty());
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+/// The strict path is chosen from the SOURCE, and the closure walk reaches a
+/// guard declared on a nested callee rather than only on the queried formula.
+///
+/// `outer` declares no precondition of its own; the guard is on `inner`, two
+/// applications down. The audit must still take the guard-replaying v2 path,
+/// and it must do so because the parsed source says a guard exists — not
+/// because the runtime happened to report one.
+#[test]
+fn formula_audit_requires_v2_for_a_guard_declared_in_the_closure() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_closure_guard_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("closure_guard.adj");
+    fs::write(
+        &program,
+        "formulabook nested {\n\
+             formula inner(a, b) = a / b\n\
+               requires nonzero(b)\n\
+               source \"division domain\" trust authoritative\n\
+             formula outer(x, y) = inner(x, y)\n\
+               source \"outer domain\" trust authoritative\n\
+         }\n\
+         observe numerator(8)\n\
+         observe denominator(2)\n\
+         ? outer(numerator, denominator)\n",
+    )
+    .expect("write closure guard program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    assert_eq!(audit["contract"], "adj-lang/formula_audit/v2");
+    let execution = &audit["executions"][0];
+    assert_eq!(execution["guards"].as_array().expect("guards").len(), 1);
+    assert_eq!(execution["guards"][0]["outcome"], "passed");
+    assert_eq!(execution["body"]["status"], "evaluated");
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+/// The other direction, and the one that would show over-reach: a program whose
+/// source declares NO precondition anywhere must still take the v1 path.
+///
+/// Deciding strictness from the source is only an improvement if it stays
+/// scoped to programs that actually declare a guard; forcing every program onto
+/// v2 would be a silent, sweeping change of output shape.
+#[test]
+fn formula_audit_stays_v1_when_no_guard_is_declared() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_unguarded_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("unguarded.adj");
+    fs::write(
+        &program,
+        "formulabook plain {\n\
+             formula inner(a, b) = a / b\n\
+               source \"division definition\" trust authoritative\n\
+             formula outer(x, y) = inner(x, y)\n\
+               source \"outer domain\" trust authoritative\n\
+         }\n\
+         observe numerator(8)\n\
+         observe denominator(2)\n\
+         ? outer(numerator, denominator)\n",
+    )
+    .expect("write unguarded program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v1 audit JSON");
+    assert_eq!(
+        audit["contract"], "adj-lang/formula_audit/v1",
+        "an unguarded program must not be pushed onto the strict path"
+    );
 
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }

@@ -2,8 +2,9 @@
 // reset.ts — starting over.
 //
 // The app now remembers a lot between visits: the review quiz's SRS state and
-// answer log (reviewstore.ts), the teaching cursor (cursorstore.ts), and the
-// lesson schedule (progress.ts). That is good — until you want a clean slate
+// answer log (reviewstore.ts), per-language Learn paths (learnprogress.ts), the
+// legacy teaching cursor (cursorstore.ts), and the lesson schedule (progress.ts).
+// That is good — until you want a clean slate
 // (you're handing the tab to someone else, or you want to re-walk from the top).
 // There was no way to clear it. This is that way.
 //
@@ -18,6 +19,7 @@ import { STORAGE_KEY as LESSON_SCHEDULE_KEY } from "./progress.ts";
 import { REVIEW_STORAGE_KEY } from "./reviewstore.ts";
 import { CURSOR_STORAGE_KEY } from "./cursorstore.ts";
 import { LANGUAGE_STORAGE_KEY } from "./languagestore.ts";
+import { LEARN_PROGRESS_STORAGE_KEY } from "./learnprogress.ts";
 
 /**
  * Every localStorage key this app owns. Sourced from the owning modules'
@@ -27,6 +29,7 @@ import { LANGUAGE_STORAGE_KEY } from "./languagestore.ts";
 export const OWNED_STORAGE_KEYS: readonly string[] = [
   REVIEW_STORAGE_KEY,
   CURSOR_STORAGE_KEY,
+  LEARN_PROGRESS_STORAGE_KEY,
   LESSON_SCHEDULE_KEY,
   LANGUAGE_STORAGE_KEY,
 ];

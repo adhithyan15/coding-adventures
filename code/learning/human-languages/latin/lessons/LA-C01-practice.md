@@ -64,6 +64,7 @@ they secretly contain.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-AVE-01, LA-ETYMON-AVE-02, LA-LEX-AVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PHONO-ITA-NON-01, LA-ETYMON-ITA-NON-02, LA-LEX-ITA-NON-03, LA-ETYMON-PRACTICE-01] -->
+<!-- hl-activity: {"id":"LA-C01-practice-vale-root","kind":"text","assesses":["LA-ETYMON-PRACTICE-01"],"prompt":"Which Latin root links vale to English valid and value?","answer":"valere","accepted":["valēre"],"feedback":{"correct":"Correct: valēre, to be strong, also leads toward valid and value.","incorrect":"The root is valēre, to be strong; it links valē with valid and value."},"response_seconds":8} -->
 
 [PAUSE 3s] Catullus wrote *avē atque valē* at his brother's grave. Translate it,
 and say what each verb literally wishes. ("Hail and farewell"; *avē* "fare well"

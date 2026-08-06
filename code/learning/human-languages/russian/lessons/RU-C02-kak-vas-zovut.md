@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C02-kak-vas-zovut
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 110
 chapter: 2
 type: phrase
 headword: как вас зовут?
@@ -10,46 +13,57 @@ prerequisites: [RU-C02-menya-zovut]
 sounds: [cyrillic-false-friends, stress-unmarked]
 roots: [slavic-kako, slavic-zvati]
 etymology_hook: "Russian asks HOW they call you, not WHAT — как вас зовут, matching French comment vous appelez-vous and Spanish cómo se llama; English is the odd one out with 'what', because it asks about a possession while the others ask about an action"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE]
+introduces:
+  knowledge: [RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME]
+practises:
+  knowledge: [RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE, RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: formal-informal-contrast
+variety: standard-contemporary
 reviews_of: [RU-C02-menya-zovut, RU-C02-ty-vy]
 ---
 
 # как вас зовут? — "what's your name?"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can say your own name. Now ask for someone else's — and notice
 that Russian asks a different question from English.
 
-## The phrase
+## The exchange
+<!-- hl-knowledge: introduces=[RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-NAMING-HOW-FRAME]; assesses=[] -->
 
 > **Как вас зовут?** — *Kak vas zovút?* — formal, or to more than one person.
 > **Как тебя зовут?** — *Kak tebyá zovút?* — informal, to one person you know.
 
 Taken apart:
 
-| | | |
-|---|---|---|
-| **как** | *kak* | **how** |
-| **вас** / **тебя** | *vas* / *tebya* | **you** (object form) |
-| **зовут** | *zovut* | they call |
+**как** — *kak* — **how**. **вас** or **тебя** — *vas* / *tebya* — **you**, in
+the object form. **зовут** — *zovut* — they call.
 
 So: **"How do they call you?"**
 
-## The object forms again
+## Grammar Lens: the object forms again
+<!-- hl-knowledge: introduces=[RU-GRAMMAR-OBJECT-PRONOUNS]; assesses=[RU-LEX-TY-VY, RU-GRAMMAR-MENYA-OBJECT-CASE] -->
 
 Last lesson's *меня* has partners, and they follow the same logic — the person
 being called is the **object**, so the word changes shape:
 
-| subject | object | |
-|---|---|---|
-| я | **меня** | me |
-| ты | **тебя** | you (informal) |
-| вы | **вас** | you (formal/plural) |
+- **я** becomes **меня** — me.
+- **ты** becomes **тебя** — you, informal.
+- **вы** becomes **вас** — you, formal or plural.
 
 You now have a matched pair: **Как вас зовут?** — **Меня зовут…**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE, RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Как вас зовут?" — formal]
@@ -57,6 +71,7 @@ You now have a matched pair: **Как вас зовут?** — **Меня зов
 - [YOU SAY: the whole exchange — "Как вас зовут?" · "Меня зовут…"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE, RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME] -->
 
 [PAUSE 3s] Ask a stranger's name. (*Как вас зовут?*) And a friend's? (*Как тебя
 зовут?*) What does *как* mean, and why does it matter? (**How** — Russian asks

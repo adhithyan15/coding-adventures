@@ -172,6 +172,63 @@ pub enum LowerError {
     DuplicateFormula {
         formula: String,
     },
+    /// A formula book declared a formula the runtime answers ITSELF, so the
+    /// declared body could never be reached — and, critically, neither could its
+    /// `requires` guards. That is a silent hole in the precondition contract
+    /// ("every declared guard runs before its body"), so the collision is a
+    /// clean compile error instead. Two layers can swallow a name:
+    ///
+    /// - a RUNTIME BUILT-IN ([`RUNTIME_BUILTIN_FORMULAS`]), which the `Apply`
+    ///   lowering recognises before it looks a user formula up — at any arity;
+    /// - an AGGREGATION KEYWORD (`sum`, `count`, `min`, `max`, `avg`) declared
+    ///   with exactly ONE parameter, which the *grammar* reduces to an
+    ///   `ExprAst::Agg` over a slot before lowering ever sees an application.
+    ///   Only arity 1 collides, because `agg` matches one identifier argument.
+    ReservedFormulaName {
+        formula: String,
+    },
+    /// An aggregation (`sum(slot)`, `count(slot)`, …) was written in a program
+    /// that also declares a FORMULA of that name, so the text is ambiguous.
+    ///
+    /// The grammar decides this before the formula map exists: `factor` lists
+    /// `agg` before `apply`, so `sum(a)` becomes an aggregation over the slot
+    /// `a` no matter what `sum` is declared to be. Where the declared formula
+    /// takes one parameter that is caught at declaration
+    /// ([`LowerError::ReservedFormulaName`]); where it takes two or more, the
+    /// call is simply the WRONG ARITY for it, and silently aggregating was a
+    /// plausible wrong number in place of the arity error — with any `requires`
+    /// guard on that formula never running.
+    ///
+    /// Rejecting the aggregation keeps the two readings from depending on which
+    /// grammar alternative happened to match first. Carries the keyword and the
+    /// slot so the message can suggest renaming one of the two.
+    AggregationShadowsFormula {
+        keyword: String,
+        slot: String,
+    },
+    /// Two `table` blocks in one program declare the same name.
+    ///
+    /// The registry keeps the LAST declaration, but every block's rows are
+    /// lowered into the KB, and a lookup takes its goal shape — arity and key
+    /// column position — from the winning block alone. So a shadowed block whose
+    /// `columns` differ does not merely lose: its rows become unreachable to
+    /// selection (wrong arity fails to unify; a reordered key column reads a
+    /// non-numeric cell and is skipped), and the lookup answers from a subset of
+    /// the relation while citing it confidently. Two same-named tables are a
+    /// naming collision, not a merge.
+    DuplicateTable {
+        table: String,
+    },
+    /// Two rows of a table used as a `range`/`interpolated`/`nearest` lookup
+    /// share a breakpoint in the key column, so the interval they define has two
+    /// different answers. Selection would pick whichever row enumeration reached
+    /// first and drop the other — including its citation — without a word.
+    /// Carries the two row indices so the table can be fixed at the source.
+    LookupDuplicateKey {
+        table: String,
+        column: String,
+        rows: (usize, usize),
+    },
     /// A formula declared a precondition predicate outside the lowerer's closed,
     /// typed execution set.
     FormulaUnknownPrecondition {
@@ -504,6 +561,31 @@ pub enum FormulaBodyTrace {
     WithheldPreconditionFailed,
 }
 
+/// The formula-application names the lowerer answers ITSELF, before it consults
+/// the user formula map (see the `ExprAst::Apply` arm of `expand_rec`): the
+/// NUM-6 precision narrowings and the NUM-6c/6d renderings.
+///
+/// This is the single source of truth for that set, and it is deliberately
+/// public: an independent checker (`adj-formula-audit`) has to replay the same
+/// built-in-versus-user-formula precedence the runtime used, and a second
+/// hand-maintained copy of this list in another crate would be free to drift out
+/// of agreement with the dispatch it is supposed to mirror.
+///
+/// Sorted, so a reader can see at a glance that nothing is duplicated.
+pub const RUNTIME_BUILTIN_FORMULAS: &[&str] = &[
+    "round_sig",
+    "round_to",
+    "to_currency",
+    "to_percent",
+    "to_scientific",
+];
+
+/// Whether `name` is answered by the runtime itself rather than by a user
+/// formula. See [`RUNTIME_BUILTIN_FORMULAS`].
+pub fn is_runtime_builtin_formula(name: &str) -> bool {
+    RUNTIME_BUILTIN_FORMULAS.contains(&name)
+}
+
 /// Ordered runtime evidence for one direct formula query.
 #[derive(Debug, Clone, PartialEq)]
 pub struct FormulaExecutionTrace {
@@ -767,7 +849,17 @@ pub(crate) fn lower_with_binding_origins(
             ..
         } = stmt
         {
-            tables.insert(name.as_str(), (columns.as_slice(), rows.as_slice()));
+            // Last-declaration-wins would leave the earlier block's rows in the
+            // KB but outside the goal shape a lookup builds from the winner, so
+            // they would be silently unreachable rather than merged.
+            if tables
+                .insert(name.as_str(), (columns.as_slice(), rows.as_slice()))
+                .is_some()
+            {
+                return Err(LowerError::DuplicateTable {
+                    table: name.clone(),
+                });
+            }
         }
     }
     // ADJ-TABLES RS-5c: the validated range/bracket lookups, run by the CLI tactic.
@@ -827,7 +919,7 @@ pub(crate) fn lower_with_binding_origins(
                                 lower_term(conclusion),
                                 slot.clone(),
                                 lower_cmp_op(*op),
-                                lower_expr(rhs),
+                                lower_expr(rhs, &formulas)?,
                                 *lr,
                             )
                             .with_provenance(prov);
@@ -974,7 +1066,14 @@ pub(crate) fn lower_with_binding_origins(
                         continue;
                     }
                     let substituted =
-                        match apply_formula(fd, conclusion, &kb, &applications, &mut guards) {
+                        match apply_formula(
+                            fd,
+                            conclusion,
+                            &kb,
+                            &applications,
+                            &mut guards,
+                            &formulas,
+                        ) {
                             Ok(value) => value,
                             Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
                                 let mut abstention = *abstention;
@@ -1021,7 +1120,7 @@ pub(crate) fn lower_with_binding_origins(
                         }
                         Err(error) => return Err(error),
                     };
-                    let cexpr = lower_expr(&expanded);
+                    let cexpr = lower_expr(&expanded, &formulas)?;
                     let derived = compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
                         LowerError::ComputationFailed {
                             name: fd.name.clone(),
@@ -1109,6 +1208,62 @@ pub(crate) fn lower_with_binding_origins(
                         });
                     }
                 }
+                // Two rows may not share a breakpoint. `range` selects the
+                // GREATEST key `<= q`, and with the key tied that "greatest" is
+                // whichever row the proof enumeration reached first — so one row
+                // answered and the other vanished, silently, carrying its own
+                // citation with it. In a system whose answers ARE their
+                // citations, quietly discarding an equally-applicable row is the
+                // worst shape a wrong answer can take: it looks fully sourced.
+                //
+                // `nearest` already breaks ties deterministically (to the smaller
+                // key) and says so. That is right for nearest, where two rows can
+                // legitimately sit either side of a query. A duplicate BREAKPOINT
+                // is different: it is not a tie to resolve, it is a table that
+                // defines two different answers for one interval. Reject it here,
+                // where the row indices are still available to name, rather than
+                // picking one at query time.
+                //
+                // Compared as exact rationals, so `10` and `10.0` are the same
+                // breakpoint — an `f64` compare would be the lossy shortcut this
+                // path exists to avoid.
+                let key_rational = |cell: Option<&crate::ast::TableCell>| match cell {
+                    Some(crate::ast::TableCell::Number(NumLit::Int(value))) => {
+                        Some(ExactRational::from_i128(*value as i128))
+                    }
+                    Some(crate::ast::TableCell::Number(NumLit::Exact(value))) => {
+                        Some(ExactRational::from_ratio(value.to_rational()))
+                    }
+                    _ => None,
+                };
+                // Sort-then-scan, not a nested search: each key is converted to a
+                // rational ONCE and compared O(n log n) times. The obvious nested
+                // version is O(n²) AND re-runs a `BigDecimal::to_rational()`
+                // allocation per comparison, which on a 4000-row calibration
+                // table — an ordinary size for the growth-chart and tax-table
+                // cases this feature exists for — turned a 1s compile into 8s,
+                // once per lookup statement over that table.
+                let mut keyed: Vec<(usize, ExactRational)> = rows
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(index, row)| {
+                        key_rational(row.cells.get(key_index)).map(|key| (index, key))
+                    })
+                    .collect();
+                keyed.sort_by(|left, right| left.1.as_ratio().cmp(right.1.as_ratio()));
+                if let Some(pair) = keyed
+                    .windows(2)
+                    .find(|pair| pair[0].1.as_ratio() == pair[1].1.as_ratio())
+                {
+                    // Report in source order, so the message points at the rows
+                    // the way the file reads.
+                    let (earlier, later) = (pair[0].0.min(pair[1].0), pair[0].0.max(pair[1].0));
+                    return Err(LowerError::LookupDuplicateKey {
+                        table: table.clone(),
+                        column: key_col.clone(),
+                        rows: (earlier, later),
+                    });
+                }
                 // `interpolated` additionally computes on the VALUE column, so it
                 // too must be numeric in every row (RS-5d). `range` returns the value
                 // cell verbatim (it may be a category label), so it skips this check.
@@ -1182,7 +1337,7 @@ pub(crate) fn lower_with_binding_origins(
                     }
                     Err(error) => return Err(error),
                 };
-                let cexpr = lower_expr(&expanded);
+                let cexpr = lower_expr(&expanded, &formulas)?;
                 let derived = compute(name.clone(), &cexpr, &kb).map_err(|e| {
                     LowerError::ComputationFailed {
                         name: name.clone(),
@@ -1232,9 +1387,9 @@ pub(crate) fn lower_with_binding_origins(
                 // Keep both sides unevaluated — they mention symbols the solver
                 // will assign. lower_expr is a pure ExprAst → ComputeExpr map.
                 constraints.constraints.push(LoweredConstraint {
-                    lhs: lower_expr(lhs),
+                    lhs: lower_expr(lhs, &formulas)?,
                     op: *op,
-                    rhs: lower_expr(rhs),
+                    rhs: lower_expr(rhs, &formulas)?,
                 });
             }
             Statement::SolveFor { names } => {
@@ -1247,7 +1402,7 @@ pub(crate) fn lower_with_binding_origins(
                 // Keep the objective unevaluated — it mentions the symbols the
                 // LP solver assigns. A second `minimize`/`maximize` overwrites
                 // the first (a program declares one objective).
-                constraints.objective = Some((*dir, lower_expr(objective)));
+                constraints.objective = Some((*dir, lower_expr(objective, &formulas)?));
             }
             // ---- dictionary (MYCIN-2026) ----
             Statement::Define(def) => dictionary.push(def.clone()),
@@ -1388,7 +1543,7 @@ pub(crate) fn lower_with_binding_origins(
                             })
                             .collect();
                         lowered_trs.push(LoweredTransition {
-                            guard: lower_sm_guard(&tr.guard),
+                            guard: lower_sm_guard(&tr.guard, &formulas)?,
                             target: tr.target.clone(),
                             actions,
                         });
@@ -1400,11 +1555,13 @@ pub(crate) fn lower_with_binding_origins(
                 }
                 let lowered_exits = exits
                     .iter()
-                    .map(|ex| LoweredExit {
-                        guard: lower_sm_guard(&ex.guard),
-                        yield_expr: lower_expr(&ex.yield_expr),
+                    .map(|ex| {
+                        Ok::<_, LowerError>(LoweredExit {
+                            guard: lower_sm_guard(&ex.guard, &formulas)?,
+                            yield_expr: lower_expr(&ex.yield_expr, &formulas)?,
+                        })
                     })
-                    .collect();
+                    .collect::<Result<Vec<_>, _>>()?;
                 state_machines.push(LoweredStateMachine {
                     name: name.clone(),
                     initial: initial.clone(),
@@ -1553,7 +1710,7 @@ pub(crate) fn lower_with_binding_origins(
             // stable synthesized slot name (direct applications are the common case).
             _ => "__branch_lhs".to_string(),
         };
-        let cexpr = lower_expr(&expanded);
+        let cexpr = lower_expr(&expanded, &formulas)?;
         let derived =
             compute(slot_name.clone(), &cexpr, &kb).map_err(|e| LowerError::ComputationFailed {
                 name: slot_name.clone(),
@@ -1597,7 +1754,7 @@ pub(crate) fn lower_with_binding_origins(
             d.conclusion.clone(),
             slot_name,
             lower_cmp_op(d.op),
-            lower_expr(&rhs_expanded),
+            lower_expr(&rhs_expanded, &formulas)?,
             d.lr,
         )
         .with_provenance(compose_provenance(d.prov.clone(), &rhs_chain));
@@ -1689,14 +1846,18 @@ pub(crate) fn lower_with_binding_origins(
 /// subject through the shared [`lower_term`], and the optional comparison through
 /// the shared [`lower_cmp_op`] + [`lower_expr`] — the SAME forms every predicate /
 /// compute lowers to, so a guard introduces no new evaluator.
-fn lower_sm_guard(g: &SmGuard) -> LoweredGuard {
-    LoweredGuard {
+fn lower_sm_guard(
+    g: &SmGuard,
+    formulas: &HashMap<&str, &FormulaDef>,
+) -> Result<LoweredGuard, LowerError> {
+    Ok(LoweredGuard {
         subject: lower_term(&g.subject),
         comparison: g
             .comparison
             .as_ref()
-            .map(|(op, e)| (lower_cmp_op(*op), lower_expr(e))),
-    }
+            .map(|(op, e)| Ok::<_, LowerError>((lower_cmp_op(*op), lower_expr(e, formulas)?)))
+            .transpose()?,
+    })
 }
 
 /// Expand `rulebook` blocks into their constituent clause statements, in source
@@ -1961,8 +2122,11 @@ fn lower_term_scoped(t: &AstTerm, vars: &mut HashMap<String, LogicVar>) -> CoreT
 }
 
 /// Lower a surface `let` formula to the engine's [`ComputeExpr`].
-fn lower_expr(expr: &ExprAst) -> ComputeExpr {
-    match expr {
+fn lower_expr(
+    expr: &ExprAst,
+    formulas: &HashMap<&str, &FormulaDef>,
+) -> Result<ComputeExpr, LowerError> {
+    Ok(match expr {
         ExprAst::Ref(slot) => ComputeExpr::Ref(slot.clone()),
         ExprAst::Lit(x) => ComputeExpr::Lit(*x),
         ExprAst::ExactLit(NumLit::Int(value)) => {
@@ -1973,16 +2137,16 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         }
         ExprAst::Bin(op, a, b) => ComputeExpr::Bin(
             lower_arith_op(*op),
-            Box::new(lower_expr(a)),
-            Box::new(lower_expr(b)),
+            Box::new(lower_expr(a, formulas)?),
+            Box::new(lower_expr(b, formulas)?),
         ),
-        ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a))),
-        ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a))),
-        ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
-        ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a))),
-        ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a))),
-        ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a))),
-        ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
+        ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a, formulas)?)),
+        ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a, formulas)?)),
         // `round_to(x, n)` (NUM-6a): the precision-carrying narrowing. Lowers to the
         // distinct engine `Round` node (not a unary `ComputeOp`) so the precision `n`
         // and the default half-even mode ride along and the exact-path audit records
@@ -1991,7 +2155,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::RoundTo(a, spec) => ComputeExpr::Round {
             spec: *spec,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         // `to_scientific(x, figures)` (NUM-6c): the scientific-notation rendering. Lowers
         // to the distinct engine `ToScientific` node so the significant-figure count and
@@ -2001,7 +2165,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::ToScientific(a, figures) => ComputeExpr::ToScientific {
             figures: *figures,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         // `to_percent(x, places)` (NUM-6c): the percentage rendering. Lowers to the
         // distinct engine `ToPercent` node so the decimal-place count and the default
@@ -2010,7 +2174,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::ToPercent(a, places) => ComputeExpr::ToPercent {
             places: *places,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         // `to_currency(x, code, places)` (NUM-6c): the money rendering. Lowers to the
         // distinct engine `ToCurrency` node so the currency code, the decimal-place count,
@@ -2020,14 +2184,34 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
             code: code.clone(),
             places: *places,
             mode: bignum_core::RoundingMode::HalfEven,
-            expr: Box::new(lower_expr(a)),
+            expr: Box::new(lower_expr(a, formulas)?),
         },
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
-            Box::new(lower_expr(a)),
-            Box::new(lower_expr(b)),
+            Box::new(lower_expr(a, formulas)?),
+            Box::new(lower_expr(b, formulas)?),
         ),
-        ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+        // The AMBIGUITY GATE. `factor` lists `agg` before `apply`, so this node
+        // exists because the grammar chose "aggregate the slot" without knowing
+        // what the program declares. If a FORMULA of the same name is in scope,
+        // the same text also reads as a call of that formula, and the grammar's
+        // choice silently won — yielding the slot's aggregate instead of the
+        // arity error the call deserved, with any `requires` guard on that
+        // formula never running. Reject rather than pick.
+        //
+        // This is the single construction site for `ComputeExpr::Agg`, so the
+        // check is co-total with the emitter by construction rather than by a
+        // separate walk that could miss a position.
+        ExprAst::Agg(op, slot) => {
+            let keyword = agg_keyword(*op);
+            if formulas.contains_key(keyword) {
+                return Err(LowerError::AggregationShadowsFormula {
+                    keyword: keyword.to_string(),
+                    slot: slot.clone(),
+                });
+            }
+            ComputeExpr::Agg(lower_agg_op(*op), slot.clone())
+        }
         // A formula application (RS-1) is never lowered directly: it is expanded
         // away by [`expand_applies`] BEFORE `lower_expr` runs, so a fully-expanded
         // expression contains no `Apply`. This arm exists only to keep the match
@@ -2038,7 +2222,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Apply(name, _) => {
             ComputeExpr::Ref(format!("<unexpanded formula application: {name}>"))
         }
-    }
+    })
 }
 
 fn lower_bin_fn(f: BinFn) -> ComputeOp {
@@ -2078,6 +2262,19 @@ fn lower_arith_op(op: ArithOp) -> ComputeOp {
         ArithOp::Div => ComputeOp::Div,
         ArithOp::Pow => ComputeOp::Pow,
         ArithOp::Mod => ComputeOp::Mod,
+    }
+}
+
+/// The surface keyword that produced an [`AggOp`] — the inverse of
+/// `agg_op_from_keyword`. Exhaustive by construction, so a new aggregation
+/// cannot be added without giving it a keyword here.
+fn agg_keyword(op: AggOp) -> &'static str {
+    match op {
+        AggOp::Sum => "sum",
+        AggOp::Count => "count",
+        AggOp::Min => "min",
+        AggOp::Max => "max",
+        AggOp::Avg => "avg",
     }
 }
 
@@ -2309,6 +2506,53 @@ pub(crate) fn formula_provenance(fd: &FormulaDef) -> Result<Provenance, LowerErr
 /// time; and (2) the **provenance-required lint** — a shipped formula must carry
 /// a non-empty `source`, mirroring the recall-library adversarial write gate.
 fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
+    // (0) The RESERVED-NAME gate, checked before anything else. `expand_rec`
+    // dispatches the five runtime built-ins by NAME before it consults the user
+    // formula map, so a formula that reuses one of those names is dead on
+    // arrival: every `to_percent(x)` in the program would reach the built-in,
+    // never this body, and never this body's `requires` guards. Rejecting the
+    // definition removes the collision rather than leaving it to be resolved
+    // silently at each call site.
+    //
+    // Scope, stated precisely: this gate closes the DECLARATION side. A formula
+    // that survives it cannot be wholly unreachable. The call side is closed
+    // separately, at the `ExprAst::Agg` arm of `lower_expr`; the two together
+    // are what make "a declared guard runs before its body" hold.
+    if is_runtime_builtin_formula(&fd.name) {
+        return Err(LowerError::ReservedFormulaName {
+            formula: fd.name.clone(),
+        });
+    }
+    // (0b) The same hole one layer earlier, in the GRAMMAR rather than the
+    // lowerer. `factor` lists `agg` before `apply`, and
+    // `agg = ("sum"|"count"|"min"|"max"|"avg") LPAREN IDENT RPAREN` — so a
+    // ONE-identifier call of an aggregation keyword becomes an `ExprAst::Agg`
+    // over a slot at PARSE time. It never becomes an `Apply`, so it never
+    // reaches the formula map or `enforce_preconditions`, and a one-parameter
+    // `formula sum(x) … requires nonzero(x)` is unreachable exactly the way a
+    // built-in-named one is.
+    //
+    // The check is arity-aware because the collision is: only an arity-1
+    // declaration can be swallowed, since `agg` matches exactly one identifier
+    // argument. The shipped `formula sum(addend_one, addend_two)` in
+    // `arithmetic.adj` takes two and is reached normally, so it stays legal.
+    // (Arity 1 is also reachable from `predicate`/`sm_guard`/`? query`
+    // positions, which use `apply` directly rather than `factor`. Rejecting it
+    // anyway is deliberate: a name that means "apply this formula" in one
+    // position and "aggregate this slot" in another is a footgun regardless of
+    // which position happens to be reached first.)
+    //
+    // The CALL side of the same ambiguity — a wrong-arity `sum(a)` against a
+    // two-parameter `sum` — is handled at the `ExprAst::Agg` arm of `lower_expr`
+    // ([`LowerError::AggregationShadowsFormula`]), which is the single place the
+    // engine's aggregation node is built. Between the two, a guarded formula can
+    // be neither declared unreachable nor called through a path that skips its
+    // guards.
+    if fd.params.len() == 1 && crate::adapter::agg_op_from_keyword(&fd.name).is_some() {
+        return Err(LowerError::ReservedFormulaName {
+            formula: fd.name.clone(),
+        });
+    }
     // Scope grows LEFT-TO-RIGHT (RS-2): the parameters are in scope everywhere;
     // each `let`-step may reference the parameters plus any EARLIER step's name,
     // and after a step it binds its own name; the final body may reference the
@@ -2975,7 +3219,14 @@ fn expand_rec(
                 formula: fd.name.clone(),
                 provenance: provenance.clone(),
             });
-            enforce_preconditions(fd, &subst, context.kb, state.applications, state.guards)?;
+            enforce_preconditions(
+                fd,
+                &subst,
+                context.kb,
+                state.applications,
+                state.guards,
+                context.formulas,
+            )?;
             // The cycle guard: if this formula is already OPEN on the expansion path,
             // re-entering it is (directly or mutually) recursive. ADJ formulas have
             // no base case, so a cycle can only diverge — reject it here, in O(1), at
@@ -3137,6 +3388,7 @@ fn apply_formula(
     kb: &KnowledgeBase,
     applications: &[FormulaApplicationTrace],
     guards: &mut Vec<FormulaGuardTrace>,
+    formulas: &HashMap<&str, &FormulaDef>,
 ) -> Result<ExprAst, LowerError> {
     let args: &[AstTerm] = match goal {
         AstTerm::Compound { args, .. } => args,
@@ -3158,7 +3410,7 @@ fn apply_formula(
         };
         subst.insert(param.clone(), bound);
     }
-    enforce_preconditions(fd, &subst, kb, applications, guards)?;
+    enforce_preconditions(fd, &subst, kb, applications, guards, formulas)?;
     // A shallow, one-level substitution of leaf bindings (a query's args are atoms
     // or numbers) — its own local budget guards a body that reuses a parameter; the
     // deeper formula-calls-formula expansion of the resulting body runs later, in
@@ -3181,6 +3433,7 @@ fn enforce_preconditions(
     kb: &KnowledgeBase,
     applications: &[FormulaApplicationTrace],
     guards: &mut Vec<FormulaGuardTrace>,
+    formulas: &HashMap<&str, &FormulaDef>,
 ) -> Result<(), LowerError> {
     for (
         precondition_index,
@@ -3199,7 +3452,7 @@ fn enforce_preconditions(
         let argument = substitute_expr(&arguments[0], subst, &mut budget, 0)?;
         let computed = match compute(
             format!("__precondition_{}_{}", fd.name, predicate),
-            &lower_expr(&argument),
+            &lower_expr(&argument, formulas)?,
             kb,
         ) {
             Ok(value) => value,
@@ -7333,6 +7586,407 @@ rule { head: r(a) when: x(t) }";
                 LowerError::FormulaPreconditionApplicationUnsupported { .. }
             ))
         ));
+    }
+
+    /// The reserved-name gate, one name at a time. `expand_rec` answers each of
+    /// these itself before it ever looks in the user formula map, so a formula
+    /// that reuses the name is unreachable — and, before this gate existed, was
+    /// accepted in silence.
+    #[test]
+    fn builtin_named_formula_exports_are_rejected() {
+        for name in RUNTIME_BUILTIN_FORMULAS {
+            let src = format!(
+                r#"
+                formulabook collide {{
+                    formula {name}(x) = x + 1
+                        requires nonzero(x)
+                        source "collision" trust authoritative
+                }}
+            "#
+            );
+            assert!(
+                matches!(
+                    compile(&src),
+                    Err(crate::CompileError::Lower(LowerError::ReservedFormulaName {
+                        ref formula
+                    })) if formula == name
+                ),
+                "`{name}` is dispatched as a built-in, so declaring it must not compile"
+            );
+        }
+    }
+
+    /// The behaviour the gate exists to prevent, stated as the scenario rather
+    /// than the rule. Before the gate, this program compiled clean and answered
+    /// `to_scientific = 0`: the built-in rendered the observed `a(0)`, the
+    /// declared body never ran, and `requires nonzero(x)` never fired on a zero
+    /// input. No abstention, no execution trace — so no downstream audit had
+    /// anything to disagree with.
+    #[test]
+    fn a_builtin_name_cannot_silently_swallow_a_declared_guard() {
+        let src = r#"
+            formulabook collide {
+                formula to_scientific(x) = x + 1
+                    requires nonzero(x)
+                    source "collision" trust authoritative
+            }
+            prior 0.1 for high
+            contributes 100 from to_scientific(a) >= 1 to high
+                source "comparison rule" trust authoritative
+            observe a(0)
+            ? high
+        "#;
+
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::ReservedFormulaName { .. }))
+            ),
+            "a guard that can never run must be a compile error, not a silent zero"
+        );
+    }
+
+    /// Anti-drift, in the direction the constant can actually be wrong. Adding a
+    /// name here that the runtime does NOT dispatch would reject a perfectly
+    /// legal user formula, so every listed name must really be answered by
+    /// `expand_rec` with no definition in scope. (The other direction — a
+    /// built-in missing from the list — is what `builtin_named_formula_exports_
+    /// are_rejected` above would stop covering, visibly, the moment it happens.)
+    #[test]
+    fn every_reserved_name_is_really_dispatched_by_the_runtime() {
+        // Applications that are well-formed for each built-in's own signature.
+        let applications = [
+            ("round_sig", "round_sig(a, 2)"),
+            ("round_to", "round_to(a, 2)"),
+            // The currency code is a bare identifier read verbatim, and the ADJ
+            // surface lexer accepts only lowercase identifiers — hence `usd`.
+            ("to_currency", "to_currency(a, usd)"),
+            ("to_percent", "to_percent(a)"),
+            ("to_scientific", "to_scientific(a)"),
+        ];
+        assert_eq!(
+            applications.len(),
+            RUNTIME_BUILTIN_FORMULAS.len(),
+            "a built-in was added without extending this dispatch check"
+        );
+        for (name, application) in applications {
+            assert!(
+                RUNTIME_BUILTIN_FORMULAS.contains(&name),
+                "{name} is not in the reserved list"
+            );
+            // No `formulabook` at all: if the runtime did not answer this name
+            // itself, the lookup would fail as an unknown formula.
+            let src = format!(
+                r#"
+                prior 0.1 for high
+                contributes 100 from {application} >= 1 to high
+                    source "comparison rule" trust authoritative
+                observe a(4)
+                ? high
+            "#
+            );
+            assert!(
+                compile(&src).is_ok(),
+                "{name} is listed as a built-in but the runtime did not dispatch it"
+            );
+        }
+    }
+
+    /// The grammar-level twin of the built-in gate. `agg` is listed before
+    /// `apply` in `factor`, so `sum(a)` becomes an aggregation over the slot `a`
+    /// at parse time — the formula map is never consulted. A one-parameter
+    /// `formula sum(x) … requires nonzero(x)` was therefore as unreachable as a
+    /// `to_scientific` one, and compiled just as silently.
+    #[test]
+    fn one_parameter_aggregation_named_formulas_are_rejected() {
+        for name in ["sum", "count", "min", "max", "avg"] {
+            let src = format!(
+                r#"
+                formulabook collide {{
+                    formula {name}(x) = x + 1
+                        requires nonzero(x)
+                        source "collision" trust authoritative
+                }}
+            "#
+            );
+            assert!(
+                matches!(
+                    compile(&src),
+                    Err(crate::CompileError::Lower(LowerError::ReservedFormulaName {
+                        ref formula
+                    })) if formula == name
+                ),
+                "one-parameter `{name}` is swallowed by the `agg` production"
+            );
+        }
+    }
+
+    /// The gate is arity-aware on purpose. `agg` matches exactly ONE identifier
+    /// argument, so a two-parameter `sum` is reached normally — and one is
+    /// shipped (`arithmetic.adj`'s `formula sum(addend_one, addend_two)`).
+    /// Reserving the bare name would have broken a byte-pinned library for a
+    /// collision that cannot occur.
+    #[test]
+    fn multi_parameter_aggregation_named_formulas_stay_legal() {
+        let src = r#"
+            formulabook arith {
+                formula sum(addend_one, addend_two) = addend_one + addend_two
+                    source "addition" trust authoritative
+            }
+            observe a(3)
+            observe b(4)
+            let z = sum(a, b)
+        "#;
+        let lowered = compile(src).expect("a two-parameter `sum` is reachable and must compile");
+        let derived = lowered
+            .kb
+            .derived_bindings()
+            .iter()
+            .find(|binding| binding.name == "z")
+            .expect("z is derived");
+        assert_eq!(derived.value, 7.0, "the user formula ran, not an aggregation");
+    }
+
+    /// The call-side half, and the bug this gate exists for. Each keyword here
+    /// names a TWO-parameter formula, so the declaration gate allows it (and
+    /// `arithmetic.adj` ships exactly that shape for `sum`). A one-argument call
+    /// is the WRONG ARITY for it — but `factor` matches `agg` first, so it used
+    /// to compile clean and return the slot's aggregate (`z = 3`, the value of
+    /// `a`, for `sum`), with `requires nonzero(first)` never evaluated and no
+    /// arity error raised.
+    ///
+    /// Every keyword is exercised, not a representative one: the gate looks the
+    /// keyword up by the string [`agg_keyword`] returns, so a wrong string for
+    /// any single variant would reopen the hole for that variant alone.
+    #[test]
+    fn a_wrong_arity_call_cannot_silently_become_an_aggregation() {
+        for keyword in ["sum", "count", "min", "max", "avg"] {
+            let src = format!(
+                r#"
+                formulabook arith {{
+                    formula {keyword}(first, second) = first + second
+                        requires nonzero(first)
+                        source "arithmetic" trust authoritative
+                }}
+                observe a(3)
+                let z = {keyword}(a)
+            "#
+            );
+            assert!(
+                matches!(
+                    compile(&src),
+                    Err(crate::CompileError::Lower(LowerError::AggregationShadowsFormula {
+                        keyword: ref found,
+                        ref slot
+                    })) if found == keyword && slot == "a"
+                ),
+                "a wrong-arity `{keyword}` call must not resolve to an aggregation"
+            );
+        }
+    }
+
+    /// [`agg_keyword`] is the inverse of the adapter's `agg_op_from_keyword`,
+    /// and the gate above is only as correct as that string. Exhaustive matching
+    /// forces an edit when a variant is added, but nothing forces the string to
+    /// be RIGHT — and a typo there would silently stop the lookup from matching,
+    /// re-opening the hole for that one aggregation with no other test failing.
+    /// Pin the round trip.
+    #[test]
+    fn agg_keyword_round_trips_through_the_adapter() {
+        for op in [
+            AggOp::Sum,
+            AggOp::Count,
+            AggOp::Min,
+            AggOp::Max,
+            AggOp::Avg,
+        ] {
+            assert_eq!(
+                crate::adapter::agg_op_from_keyword(agg_keyword(op)),
+                Some(op),
+                "{op:?} does not round-trip through its surface keyword"
+            );
+        }
+    }
+
+    /// The same ambiguity reached through a formula body rather than a `let`.
+    #[test]
+    fn an_aggregation_inside_a_formula_body_is_also_gated() {
+        let src = r#"
+            formulabook arith {
+                formula count(p, q) = p + q
+                    requires nonzero(p)
+                    source "counting" trust authoritative
+                formula outer(x) = count(x)
+                    source "outer" trust authoritative
+            }
+            observe a(3)
+            let z = outer(a)
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(
+                    LowerError::AggregationShadowsFormula { .. }
+                ))
+            ),
+            "the gate must reach aggregations written inside formula bodies"
+        );
+    }
+
+    /// The gate is scoped to the actual ambiguity: with no formula of that name
+    /// declared, an aggregation still means an aggregation. This is the ordinary
+    /// use of `sum(slot)` and it must keep working untouched.
+    #[test]
+    fn an_unshadowed_aggregation_still_aggregates() {
+        let src = r#"
+            observe score(2)
+            observe score(4)
+            let total = sum(score)
+        "#;
+        let lowered = compile(src).expect("an unshadowed aggregation is legal");
+        let derived = lowered
+            .kb
+            .derived_bindings()
+            .iter()
+            .find(|binding| binding.name == "total")
+            .expect("total is derived");
+        assert_eq!(derived.value, 6.0, "sum over the slot, as written");
+    }
+
+    /// Two `table` blocks with one name is a collision, not a merge.
+    ///
+    /// The registry kept the LAST block while every block's rows went into the
+    /// KB, and a lookup builds its goal — arity, key column position — from the
+    /// winner alone. So a shadowed block whose `columns` differ had its rows
+    /// become unreachable rather than tied: wrong arity fails to unify, and a
+    /// reordered key column reads a non-numeric cell that selection skips. The
+    /// lookup then answered from a subset of the relation and cited it
+    /// confidently. Reproduced before this gate: a three-band table plus a
+    /// one-row shadowing block with an extra column answered `rogue` at key `0`
+    /// for a query of 15 whose correct answer was `mid` at breakpoint `10`.
+    ///
+    /// This is also what lets the selection-time breakpoint check assume the
+    /// enumerated relation IS the declared table.
+    #[test]
+    fn a_second_table_block_of_the_same_name_is_rejected() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, mid) { source "ten band" }
+                source "framing one"
+                locator "https://example.invalid/one"
+                trust authoritative
+            }
+            table band {
+                columns min_v, label, extra
+                row (0, rogue, x) { source "rogue row" }
+                source "framing two"
+                locator "https://example.invalid/two"
+                trust authoritative
+            }
+            ? lookup band min_v = 15 mode range give label
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::DuplicateTable { ref table }))
+                    if table == "band"
+            ),
+            "two tables of one name must not silently merge"
+        );
+    }
+
+    /// A duplicate breakpoint is a table that defines two answers for one
+    /// interval. Before this gate, `range` selected the greatest key `<= q` and,
+    /// with the key tied, that was whichever row enumeration reached first —
+    /// the other row was dropped along with its citation, silently. Verified
+    /// end-to-end before the fix: a table with two rows keyed `10` answered
+    /// `first_ten` and cited only that row.
+    #[test]
+    fn duplicate_lookup_breakpoints_are_rejected() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, first_ten) { source "first ten band" }
+                row (10, second_ten) { source "second ten band" }
+                source "framing"
+                locator "https://example.invalid/spec"
+                trust authoritative
+            }
+            ? lookup band min_v = 12 mode range give label
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::LookupDuplicateKey {
+                    ref table,
+                    ref column,
+                    rows,
+                })) if table == "band" && column == "min_v" && rows == (1, 2)
+            ),
+            "two rows sharing a breakpoint must not compile"
+        );
+    }
+
+    /// The comparison is on VALUE, not on how the literal was written — `10` and
+    /// `10.0` are one breakpoint. An `f64` compare would happen to agree here;
+    /// the point is that the check uses the exact rational path this codebase
+    /// requires of every numeric decision.
+    #[test]
+    fn duplicate_breakpoints_are_compared_exactly_not_textually() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, ten_int) { source "ten as int" }
+                row (10.0, ten_dec) { source "ten as decimal" }
+                source "framing"
+                locator "https://example.invalid/spec"
+                trust authoritative
+            }
+            ? lookup band min_v = 12 mode range give label
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(
+                    LowerError::LookupDuplicateKey { .. }
+                ))
+            ),
+            "`10` and `10.0` are the same breakpoint"
+        );
+    }
+
+    /// The gate is scoped to genuine duplicates: an ordinary step-function table
+    /// with distinct breakpoints still compiles and still brackets downward.
+    #[test]
+    fn distinct_breakpoints_still_compile() {
+        let src = r#"
+            table band {
+                columns min_v, label
+                row (0, low) { source "zero band" }
+                row (10, mid) { source "ten band" }
+                row (20, high) { source "twenty band" }
+                source "framing"
+                locator "https://example.invalid/spec"
+                trust authoritative
+            }
+            ? lookup band min_v = 12 mode range give label
+        "#;
+        assert!(
+            compile(src).is_ok(),
+            "distinct breakpoints are an ordinary table"
+        );
+    }
+
+    #[test]
+    fn reserved_names_are_sorted_and_unique() {
+        let mut sorted = RUNTIME_BUILTIN_FORMULAS.to_vec();
+        sorted.sort_unstable();
+        sorted.dedup();
+        assert_eq!(sorted.as_slice(), RUNTIME_BUILTIN_FORMULAS);
     }
 
     #[test]

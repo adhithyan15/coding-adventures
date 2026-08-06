@@ -1,0 +1,526 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-5 are deliberately absent — every lesson in them is still schema v1 with no practises.knowledge, so no payoff could name a real atom. That absence is measurable debt and must not be papered over with placeholders. No Tamil chapter has a terminal practice/practice-mix lesson under schema v2 either, so every payoff below is the chapter's last lesson by sequence.",
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "canDo": "I can write வணக்கம் and நன்றி by hand, put the puḷḷi and the ி sign in the right places, and tell Tamil's three n-letters apart by name.",
+      "spineNodes": [
+        "SPINE-MEET-GREET",
+        "SPINE-RESPOND-BASIC",
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TA-W04-i-sign-write-nandri",
+        "kind": "task",
+        "summary": "Write நன்றி from its three pieces — ன் under a puḷḷi, ற with the ி hook — and say why the seam sounds ndr.",
+        "assesses": [
+          "TA-SCRIPT-VOWEL-SIGNS-NANDRI-01",
+          "TA-SCRIPT-PULLI-VANAKKAM-01",
+          "TA-SCRIPT-I-SIGN-WRITE-NANDRI-01",
+          "TA-SCRIPT-I-SIGN-WRITE-NANDRI-02",
+          "TA-SOUND-I-SIGN-WRITE-NANDRI-03"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Dative Case and Dative Subjects",
+      "label": "ch:ta-dative-case",
+      "canDo": "I can attach -உக்கு to a noun in either of its surface forms and say why \"I know Tamil\" puts the experiencer in the dative instead of giving the sentence a subject.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TA-C06-dative-subject-family",
+        "kind": "task",
+        "summary": "Line up எனக்கு, నాకు, ನನಗೆ and എനിക്ക്, point to the experiencer in each, and paraphrase எனக்குத் தமிழ் தெரியும் as \"the language is known to me.\"",
+        "assesses": [
+          "TA-LEX-DATIVE-SUBJECT-01",
+          "TA-GRAMMAR-DATIVE-SUBJECT-FAMILY-01"
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ta-numbers-one-to-ten",
+      "canDo": "I can count one to ten in Tamil and say which of those numbers are inherited across the Dravidian family rather than borrowed.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "TA-C07-numbers-6-10-family",
+        "kind": "task",
+        "summary": "Pair Tamil pattu with Kannada hattu, apply the same p→h softening to pāl/hālu, and identify ēḻu as one inherited seven.",
+        "assesses": [
+          "TA-LEX-NUMBERS-6-10-01",
+          "TA-ETYMON-NUMBERS-6-10-FAMILY-01",
+          "TA-ETYMON-NUMBERS-6-10-FAMILY-02"
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ta-please",
+      "canDo": "I can tell an emphatic தயவுசெய்து from the everyday courtesy that lives in the -உங்கள் verb ending, and pick whichever one the moment actually calls for.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TA-C08-please-register",
+        "kind": "production",
+        "summary": "Ask for something twice — தயவுசெய்து when the request needs weight, plain உட்காருங்கள் when it does not — and read the join in செய்து.",
+        "assesses": [
+          "TA-LEX-TAYAVUSEYTU-01",
+          "TA-PRAGMATICS-PLEASE-REGISTER-01",
+          "TA-SCRIPT-PLEASE-REGISTER-02"
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ta-sorry",
+      "canDo": "I can apologise with மன்னிக்கவும் where its register fits, and say plainly where colloquial Tamil varies by region instead of pretending one form is standard.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TA-C09-sorry-register",
+        "kind": "production",
+        "summary": "Say maṉ-ṉi-kkavum holding both doubled consonants, use it for a considered apology, and qualify the casual alternatives rather than asserting one.",
+        "assesses": [
+          "TA-ETYMON-MANNIKKAVUM-01",
+          "TA-PRAGMATICS-SORRY-REGISTER-01",
+          "TA-SCRIPT-SORRY-REGISTER-02"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ta-days-of-the-week",
+      "canDo": "I can name the seven weekdays, take each apart as planet plus கிழமை, and say which are Tamil's own words and which arrived from Sanskrit.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C10-vaara-kizhamai",
+        "kind": "production",
+        "summary": "Run the week from thiṅgaḷ to ñāyiṟu, sorting the four native planet-words from the three Sanskrit ones as you go.",
+        "assesses": [
+          "TA-PRAGMATICS-SORRY-REGISTER-01",
+          "TA-GRAMMAR-VAARA-KIZHAMAI-01",
+          "TA-PRAGMATICS-VAARA-KIZHAMAI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Colours",
+      "label": "ch:ta-colours",
+      "canDo": "I can name black, white, red, and blue in Tamil and say which three are native and which one is the Sanskrit loan.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TA-C11-nirangal",
+        "kind": "production",
+        "summary": "Say karuppu, veḷḷai and sivappu as the native three, nīlam as the borrowed one, and hear veḷḷai echo veḷḷi from last chapter.",
+        "assesses": [
+          "TA-GRAMMAR-VAARA-KIZHAMAI-01",
+          "TA-ETYMON-NIRANGAL-01",
+          "TA-ETYMON-NIRANGAL-02",
+          "TA-PRAGMATICS-NIRANGAL-03"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ta-family",
+      "canDo": "I can use Tamil's four sibling words correctly, settling relative age before gender — the question English never makes you answer.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TA-C12-kudumbam",
+        "kind": "production",
+        "summary": "Name appā and ammā, then place aṇṇaṉ, tambi, akkā and tangai by asking \"older, or younger?\" before you can say \"brother\" at all.",
+        "assesses": [
+          "TA-ETYMON-NIRANGAL-01",
+          "TA-ETYMON-KUDUMBAM-01",
+          "TA-LEX-KUDUMBAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Body Parts",
+      "label": "ch:ta-body-parts",
+      "canDo": "I can say head and hand in Tamil and account for why both stayed native here where Hindi's pair came from Sanskrit.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TA-C13-udal-uruppugal",
+        "kind": "production",
+        "summary": "Say talai and kai, then state the contrast with Hindi's Sanskrit-descended pair.",
+        "assesses": [
+          "TA-ETYMON-KUDUMBAM-01",
+          "TA-LEX-UDAL-URUPPUGAL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ta-seasons",
+      "canDo": "I can name the four seasons in Tamil and say honestly which one is locally central instead of repeating a Western four-way split.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C14-kaalangal",
+        "kind": "production",
+        "summary": "Build kodai/mazhai/kulir onto kaalam, name mazhai kaalam as the season that actually organises the year, and flag vasantha as the one loanword.",
+        "assesses": [
+          "TA-LEX-UDAL-URUPPUGAL-01",
+          "TA-LEX-KAALANGAL-01",
+          "TA-PRAGMATICS-KAALANGAL-02"
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ta-water-and-rice",
+      "canDo": "I can ask for water and keep raw அரிசி apart from cooked சாதம், and state how far the arisi-to-\"rice\" claim can honestly be pushed.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TA-C15-thanneer-arisi",
+        "kind": "production",
+        "summary": "Assemble taṇ plus nīr into taṇṇīr, switch between arisi and sātam by whether it is cooked, and label the English \"rice\" link as contested.",
+        "assesses": [
+          "TA-LEX-KAALANGAL-01",
+          "TA-LEX-THANNEER-ARISI-01",
+          "TA-LEX-THANNEER-ARISI-02",
+          "TA-PRAGMATICS-THANNEER-ARISI-03"
+        ]
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "Tamil Months",
+      "label": "ch:ta-tamil-months",
+      "canDo": "I can name the twelve months of the Tamil solar calendar and place Tamil New Year and Pongal inside it.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C16-thamizh-maadangal",
+        "kind": "production",
+        "summary": "Recite Chithirai through Panguṉi, then date Tamil New Year to Chithirai 1 and Pongal to Thai 1.",
+        "assesses": [
+          "TA-LEX-THANNEER-ARISI-01",
+          "TA-LEX-THAMIZH-MAADANGAL-01",
+          "TA-PRAGMATICS-THAMIZH-MAADANGAL-02"
+        ]
+      }
+    },
+    {
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ta-noon-and-midnight",
+      "canDo": "I can use both the fused and the transparent Tamil words for noon and midnight, and point to the நடு \"middle\" that makes one pair readable on sight.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C17-transparent-middle-synonyms",
+        "kind": "production",
+        "summary": "Say naṇpakal beside naṭuppakal and naḷḷiravu beside naṭu iravu, pointing at naṭu as the everyday \"middle\" still visible in the second of each pair.",
+        "assesses": [
+          "TA-ETYMON-NANPAKAL-NALLIRAVU-01",
+          "TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01"
+        ]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ta-telling-time",
+      "canDo": "I can tell the time on the hour in Tamil and keep the hour-word மணி apart from the unrelated Sanskrit gem-word spelled exactly the same way.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C18-mani-homophone-time",
+        "kind": "production",
+        "summary": "Say oru maṇi and iraṇṭu maṇi for one and two o'clock, then choose hour or gem by the context the word sits in.",
+        "assesses": [
+          "TA-ETYMON-MANI-01",
+          "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
+          "TA-GRAMMAR-MANI-HOMOPHONE-TIME-02"
+        ]
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ta-asking-age",
+      "canDo": "I can ask someone's age in both the casual possessive shape and the formal dative-plus-become shape, and answer with my own.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TA-C19-age-register-grammar",
+        "kind": "dialogue",
+        "summary": "Ask \"un vayasu enna?\" casually, ask \"unakku ettanai vayathu aakirathu?\" formally, and answer \"enakku irupathu vayathu aakirathu.\"",
+        "assesses": [
+          "TA-LEX-VAYATHU-01",
+          "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01",
+          "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02"
+        ]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Numbers Eleven to Twenty and Weather",
+      "label": "ch:ta-numbers-and-weather",
+      "canDo": "I can count eleven to twenty as the transparent compounds they are, and say what the weather is doing.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE",
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C20-vaanilai",
+        "kind": "production",
+        "summary": "Take vāṉilai apart into vāṉam plus nilai, then report the weather with mazhai peykiRathu.",
+        "assesses": [
+          "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
+          "TA-LEX-VAANILAI-01",
+          "TA-LEX-VAANILAI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ta-dog-and-cat",
+      "canDo": "I can say dog and cat in Tamil and say which of the two rests on an undisputed Dravidian root and which sits inside a three-way family split.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TA-C21-naay-poonai",
+        "kind": "production",
+        "summary": "Say nāy and pūnai, then place Kannada's bekku and Telugu's pilli as two other roots entirely rather than variants of the same word.",
+        "assesses": [
+          "TA-LEX-PATHINONDRU-IRUPATHU-01",
+          "TA-LEX-NAAY-POONAI-01",
+          "TA-ETYMON-NAAY-POONAI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ta-green-and-yellow",
+      "canDo": "I can say green and yellow in Tamil, recognise பசுப்பு as a rarer doublet, and keep the pan-Dravidian root separate from the independent one.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TA-C22-paccai-manjal",
+        "kind": "production",
+        "summary": "Say பச்சை as the pan-Dravidian green, மஞ்சள் as a separate native yellow, and பசுப்பு as the rarer doublet beside them.",
+        "assesses": [
+          "TA-ETYMON-NIRANGAL-01",
+          "TA-LEX-NAAY-POONAI-01",
+          "TA-LEX-PACCAI-MANJAL-01",
+          "TA-ETYMON-PACCAI-MANJAL-02",
+          "TA-ETYMON-PACCAI-MANJAL-03"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ta-day",
+      "canDo": "I can use நாள் as the everyday word for day and keep தினம் for the formal compounds where it actually belongs.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C23-day-family-register",
+        "kind": "production",
+        "summary": "Say mūnṟu nāḷ for three days and sutantira tiṉam for Independence Day, classifying each as everyday-native or formal-Sanskrit.",
+        "assesses": [
+          "TA-ETYMON-NAAL-01",
+          "TA-LEX-DAY-FAMILY-REGISTER-01",
+          "TA-LEX-DAY-FAMILY-REGISTER-02"
+        ]
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ta-night",
+      "canDo": "I can use இரவு for night and இருள் for darkness without collapsing the two, and treat the claim that ராத்திரி is the more colloquial word as a claim still to be tested.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C24-night-register-darkness",
+        "kind": "task",
+        "summary": "State the source's rāttiri claim with its hedge intact, set it against native regional usage, and hold iravu and iruḷ apart.",
+        "assesses": [
+          "TA-LEX-IRAVU-01",
+          "TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01",
+          "TA-LEX-NIGHT-REGISTER-DARKNESS-02"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ta-good-night",
+      "canDo": "I can say good night in Tamil out of roots I already own, and trace every one of those forms back to நல்.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C25-goodnight-alternatives",
+        "kind": "production",
+        "summary": "Say nalla iravu and iravu vaṇakkam, then run nal- forward into nalam, naṉṟi and nalla.",
+        "assesses": [
+          "TA-ETYMON-INIYA-IRAVU-01",
+          "TA-LEX-GOODNIGHT-ALTERNATIVES-01"
+        ]
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ta-morning",
+      "canDo": "I can say காலை for morning and state accurately that its origin is uncertain, rather than asserting a Sanskrit source the dictionary itself only hedges at.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C26-kaalai",
+        "kind": "task",
+        "summary": "Say kālai, repeat the source's own \"possibly\" instead of dropping it, and read atikaalai as a transparent ati- plus kālai compound.",
+        "assesses": [
+          "TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01",
+          "TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01",
+          "TA-ETYMON-KAALAI-01",
+          "TA-ETYMON-KAALAI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ta-evening",
+      "canDo": "I can say மாலை for evening and keep it apart from the identically spelled garland word, which is a separate etymology rather than a second sense.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C27-maalai",
+        "kind": "task",
+        "summary": "Say mālai for evening, name the garland mālai as a distinct homonym, and mark the \"darkness\" link as plausible but not spelled out.",
+        "assesses": [
+          "TA-ETYMON-KAALAI-01",
+          "TA-ETYMON-MAALAI-01",
+          "TA-ETYMON-MAALAI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ta-afternoon",
+      "canDo": "I can say பிற்பகல் for afternoon, read it as \"after\" plus \"daytime,\" and name exactly where the dictionary's own noon and afternoon labels overlap.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C28-afternoon-boundary",
+        "kind": "task",
+        "summary": "Show naṭuppakal straddling noon and afternoon, place matiyam as a Sanskrit noon-word, and label the unsourced moon claim unsupported.",
+        "assesses": [
+          "TA-LEX-PIRPAKAL-01",
+          "TA-LEX-AFTERNOON-BOUNDARY-01",
+          "TA-ETYMON-AFTERNOON-BOUNDARY-02"
+        ]
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ta-good-morning",
+      "canDo": "I can greet someone with காலை வணக்கம் before mid-morning and see it as காலை plus the வணக்கம் I already had, with no borrowed blessing-word in it.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C29-kaalai-vanakkam",
+        "kind": "production",
+        "summary": "Greet with kālai vaṇakkam from sunrise to about 11, naming its two known pieces and the borrowed word that is absent.",
+        "assesses": [
+          "TA-ETYMON-KAALAI-01",
+          "TA-LEX-KAALAI-VANAKKAM-01",
+          "TA-PRAGMATICS-KAALAI-VANAKKAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ta-good-evening",
+      "canDo": "I can greet someone with மாலை வணக்கம் from late afternoon through nightfall, built on the same two-piece pattern as the morning greeting.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C30-maalai-vanakkam",
+        "kind": "production",
+        "summary": "Greet with mālai vaṇakkam, assembling mālai plus vaṇakkam, and note the pattern was re-checked rather than assumed to carry over.",
+        "assesses": [
+          "TA-ETYMON-MAALAI-01",
+          "TA-LEX-KAALAI-VANAKKAM-01",
+          "TA-LEX-MAALAI-VANAKKAM-01",
+          "TA-PRAGMATICS-MAALAI-VANAKKAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ta-good-afternoon",
+      "canDo": "I can greet someone with மதிய வணக்கம் around midday and say which word the மதிய inside it actually comes from — noon, not afternoon.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TA-C31-afternoon-greeting-root",
+        "kind": "production",
+        "summary": "Greet with matiya vaṇakkam, trace matiyam back to madhya \"middle,\" and keep pirpakal as the separate after-plus-daytime word.",
+        "assesses": [
+          "TA-ETYMON-MATIYA-VANAKKAM-01",
+          "TA-ETYMON-AFTERNOON-GREETING-ROOT-01"
+        ]
+      }
+    }
+  ]
+}

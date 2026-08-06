@@ -88,6 +88,21 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(generated.tex).toContain("I & \\textbf{hablo} \\\\");
   });
 
+  it("keeps indented Markdown quote continuations in one LaTeX quote", () => {
+    const lesson = parseLesson(
+      source("A", 10, "hello").replace(
+        "- [YOU SAY: **hello**]",
+        '> **hello** — "a greeting\n  that continues."',
+      ),
+      "test",
+    );
+    const generated = renderBookChapter(target, [lesson]);
+    expect(generated.tex).toContain(
+      "\\begin{quote}\n\\textbf{hello} — \\textquotedblleft{}a greeting that " +
+        "continues.\\textquotedblright{}\n\\end{quote}",
+    );
+  });
+
   it("escapes LaTeX control characters while preserving authored emphasis", () => {
     expect(renderInlineMarkdown("**A&B** costs $5 and uses `x_y`")).toBe(
       "\\textbf{A\\&B} costs \\$5 and uses \\texttt{x\\_y}",
@@ -104,6 +119,67 @@ describe("canonical LaTeX chapter rendering", () => {
     );
     expect(renderInlineMarkdown("**\\*parabolāvit**")).toBe(
       "\\textbf{*parabolāvit}",
+    );
+  });
+
+  it("typesets paired straight prose quotes without changing literal text", () => {
+    expect(renderInlineMarkdown('Say "hello" and "**goodbye**".')).toBe(
+      "Say \\textquotedblleft{}hello\\textquotedblright{} and " +
+        "\\textquotedblleft{}\\textbf{goodbye}\\textquotedblright{}.",
+    );
+    expect(
+      renderInlineMarkdown(
+        'Keep `"code"`, ["label"](https://example.test/"raw"), and \\"literal\\".',
+      ),
+    ).toBe(
+      "Keep \\texttt{\"code\"}, " +
+        "\\href{https://example.test/\\%22raw\\%22}" +
+        "{\\textquotedblleft{}label\\textquotedblright{}}, and " +
+        '\"literal\".',
+    );
+    expect(renderInlineMarkdown('Keep a 5" mark before "paired" prose.')).toBe(
+      'Keep a 5" mark before \\textquotedblleft{}paired\\textquotedblright{} prose.',
+    );
+    expect(renderInlineMarkdown('Read "a saying of "you are worthy.""')).toBe(
+      "Read \\textquotedblleft{}a saying of \\textquotedblleft{}you are worthy." +
+        "\\textquotedblright{}\\textquotedblright{}",
+    );
+    expect(renderInlineMarkdown('Say *"...and again."*')).toBe(
+      "Say \\emph{\\textquotedblleft{}...and again.\\textquotedblright{}}",
+    );
+    expect(renderInlineMarkdown('Use "**mother of ___**".')).toBe(
+      "Use \\textquotedblleft{}\\textbf{mother of \\_\\_\\_}\\textquotedblright{}.",
+    );
+    expect(renderInlineMarkdown('An unmatched " mark stays literal.')).toBe(
+      'An unmatched " mark stays literal.',
+    );
+    expect(renderInlineMarkdown('Existing “curly quotes” stay unchanged.')).toBe(
+      'Existing “curly quotes” stay unchanged.',
+    );
+  });
+
+  it("preserves absolute links and resolves relative curriculum links", () => {
+    expect(renderInlineMarkdown("[source](https://example.test/a_b?q=x&y=z#frag)")).toBe(
+      "\\href{https://example.test/a\\_b?q=x\\&y=z\\#frag}{source}",
+    );
+    expect(renderInlineMarkdown("[draft](https://example.test/$value~draft)")).toBe(
+      "\\href{https://example.test/\\%24value\\%7Edraft}{draft}",
+    );
+    expect(
+      renderInlineMarkdown("Read [the next lesson](./TEST-C01-next.md).", undefined, {
+        linkBaseUrl:
+          "https://github.com/example/repo/blob/main/curriculum/test/lessons/TEST-C01-now.md",
+      }),
+    ).toBe(
+      "Read \\href{https://github.com/example/repo/blob/main/curriculum/test/lessons/" +
+        "TEST-C01-next.md}{the next lesson}.",
+    );
+  });
+
+  it("fails closed for relative links without a source base and unsupported protocols", () => {
+    expect(() => renderInlineMarkdown("[next](./next.md)")).toThrow(/requires a source base URL/);
+    expect(() => renderInlineMarkdown("[mail](mailto:hello@example.test)")).toThrow(
+      /unsupported Markdown link protocol 'mailto:'/,
     );
   });
 

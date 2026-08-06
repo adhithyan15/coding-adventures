@@ -40,6 +40,11 @@ func mustResolveDependencies(t *testing.T, packages []discovery.Package) *direct
 }
 
 type resolutionFixture struct {
+	Input struct {
+		Options struct {
+			Language string `json:"language"`
+		} `json:"options"`
+	} `json:"input"`
 	Workspace struct {
 		Files []struct {
 			Path          string `json:"path"`
@@ -401,6 +406,95 @@ func TestGoResolutionConformanceFixture(t *testing.T) {
 		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
 			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
 		}
+	}
+}
+
+func TestElixirResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-elixir-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
+	}
+}
+
+func TestDartResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-dart-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
+	}
+}
+
+func TestGradleResolutionConformanceFixtures(t *testing.T) {
+	for _, name := range []string{
+		"resolution-gradle-java-field-aware.json",
+		"resolution-gradle-kotlin-field-aware.json",
+	} {
+		t.Run(name, func(t *testing.T) {
+			fixture := loadResolutionFixture(t, name)
+			_, packages := materializeResolutionFixture(t, fixture)
+			graph := mustResolveDependencies(t, packages)
+
+			edges := graph.Edges()
+			if len(edges) != len(fixture.Expected.Result.Edges) {
+				t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+			}
+			for _, edge := range fixture.Expected.Result.Edges {
+				if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+					t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+				}
+			}
+		})
+	}
+}
+
+func TestDotnetResolutionConformanceFixtures(t *testing.T) {
+	for _, name := range []string{
+		"resolution-dotnet-csharp-field-aware.json",
+		"resolution-dotnet-cross-language-field-aware.json",
+		"resolution-dotnet-fsharp-field-aware.json",
+	} {
+		t.Run(name, func(t *testing.T) {
+			fixture := loadResolutionFixture(t, name)
+			_, packages := materializeResolutionFixture(t, fixture)
+			language := fixture.Input.Options.Language
+			if language != "all" {
+				filtered := packages[:0]
+				for _, pkg := range packages {
+					if pkg.Language == language {
+						filtered = append(filtered, pkg)
+					}
+				}
+				packages = filtered
+			}
+			graph := mustResolveDependencies(t, packages)
+
+			edges := graph.Edges()
+			if len(edges) != len(fixture.Expected.Result.Edges) {
+				t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+			}
+			for _, edge := range fixture.Expected.Result.Edges {
+				if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+					t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+				}
+			}
+		})
 	}
 }
 
@@ -960,6 +1054,22 @@ func TestParseTypescriptDepsExternalSkipped(t *testing.T) {
 	deps := parseTypescriptDeps(pkg, map[string]string{})
 	if len(deps) != 0 {
 		t.Fatalf("expected external deps to be skipped, got %d", len(deps))
+	}
+}
+
+func TestTypescriptResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-typescript-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
 	}
 }
 

@@ -2,6 +2,128 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — the stroke-order filmstrip (HL-C08)
+
+- Add `src/ductusview.ts`: a pure SVG renderer that composes the authored pen
+  path from `strokes.ts` with the real glyph outline from `truetype.ts` into a
+  frame-by-frame build-up of how a letter is written. It returns a tree of plain
+  objects (`SvgNode`) plus a serialiser, and touches no DOM — the same posture
+  every other pure module in this app takes.
+- Apply exactly **one** shared `scale(1,-1)`: the glyph outline and the pen path
+  are both in font units (y-up) and SVG is y-down, so they are flipped together
+  in a single group and cannot end up disagreeing about which way is up. Only
+  the captions sit outside it, because flipped text reads backwards.
+- Render the finished glyph as a pale background behind each frame, earlier
+  strokes in a settled grey, the current stroke in ink up to that frame's
+  fraction, and a dot at the pen tip. Captions are word-wrapped into `<tspan>`
+  lines so a long instruction cannot run off the panel.
+- Show the stroke ORDER's citation and its variation caveat in the UI. The
+  path's *shape* is machine-checked against the font by `strokes.test.ts`; its
+  *order* can only be vouched for by a source, so the source is visible.
+- Wire it into the "Write it — stroke order" section of the Browse detail panel.
+  **Only Tamil ம has an authored pen path**, so every other letter keeps the
+  existing numbered prose list; the filmstrip is additive and never load-bearing.
+  If the font fails to load or the glyph is missing, the prose stays.
+- Fetch the Tamil font lazily, once, and only when a letter with authored ductus
+  is opened.
+- Build the SVG in `main.ts` through `createElementNS`/`setAttribute`/
+  `textContent` — no `innerHTML`. The string serialiser escapes every value that
+  reaches an attribute or a text node, so a label can only ever become text.
+- Reject illegal or `on*` attribute and tag NAMES in both the string serialiser
+  and the DOM builder. A name cannot be escaped — there is nowhere to put the
+  entity — so it is either a legal XML name or it is dropped, and `onload` is
+  refused by prefix rather than by a blocklist. Every name the module emits is
+  a literal today, but `SvgNode` is a public type and the serialiser is meant
+  to be reused by the book pipeline.
+- Add `tests/ductusview.test.ts` (42 tests): path emission straight from
+  `penPathD`, the y-flip and a control proving an unflipped box would fail,
+  progressive build-up fractions, shared viewBox across a letter's frames,
+  graceful `undefined` for letters with no ductus (including inherited
+  `Object` properties), a multi-stroke letter rendering without throwing, and
+  attribute-escaping against a hostile label. `ductusview.ts` reaches 100%
+  statement and line coverage; it is now listed in `vitest.config.ts`.
+
+This closes the gap HL06 §"the glyph monopoly" calls out: the pen-path model was
+built, font-validated to sub-2-font-unit join tolerance, and imported by nothing
+but its own test.
+
+### Changed — Persian and Urdu Chapter 5 frontiers
+
+- Load eight new prerequisite-safe take-leave steps across Persian and Urdu,
+  including each track's local etymology, script, register, and consolidation
+  extensions.
+- Keep the shared historical phrase locally readable before mixed comparison:
+  Persian joined **خداحافظ** and Urdu spaced **خدا حافظ** remain distinct
+  focused answers.
+- Use authored checks on every new step, raising objective non-lexical coverage
+  to 25 of 119 mapped lessons across 18 tracks while retaining independent
+  focused-before-mixed progression.
+
+### Changed — Persian and Urdu Chapter 3 frontiers
+
+- Load ten new prerequisite-safe name-exchange steps across Persian and Urdu,
+  including each track's inline register, script, grammar, culture, and
+  consolidation extensions.
+- Use the authored cumulative-practice checks for both tracks, raising objective
+  coverage to 21 of 115 mapped non-lexical lessons across 18 tracks while
+  retaining independent focused-before-mixed progression.
+
+### Changed — objective Russian naming progression
+
+- Replace temporary confirmation on both mapped Russian non-lexical frontiers
+  with typed checks for polite *вы* and the cross-language naming frame.
+- Load their six-lesson schema-v2 prerequisite chain without coupling Russian
+  progress to any other selected language; objective coverage is now 19 of 113
+  mapped non-lexical lessons across 16 tracks, with 94 remaining.
+
+### Changed — cross-language objective focused checks
+
+- Replace temporary confirmation with authored retrieval in one ready lesson
+  for each of 15 tracks that has schema-v2 non-lexical activity debt, covering
+  script, grammar, etymology, culture, and cumulative practice.
+- Expand objective non-lexical coverage from 2 to 17 of 113 mapped lessons;
+  96 remain, including 18 legacy lessons that require schema-v2 migration first.
+
+### Changed — typed objective focused activities
+
+- Load compiled `hl-activity` contracts from the shared lesson AST and prefer
+  their authored prompt, canonical answer, accepted variants, feedback, and
+  response budget over lexical inference or self-confirmation.
+- Hide answer-bearing lesson summaries while an authored activity is active,
+  show corrective feedback without advancing after a wrong answer, and require
+  an explicit continue after correct feedback before completing that language's
+  frontier.
+- Keep both knowledge and activity metadata out of the readable lesson view;
+  Spanish grammatical gender and punctuation-span lessons establish the
+  objective non-lexical contract now reused across 16 tracks.
+
+### Changed — independent local frontiers and focused-before-mixed review
+
+- Replace the global concept cursor and unrestricted jump controls with one
+  prerequisite-safe next lesson per selected language, driven by the 20
+  validated realization maps.
+- Persist completed prefixes by stable lesson id independently per language;
+  corrupt, unknown, out-of-order, and stale saved ids fail closed at the first
+  missing local prerequisite.
+- Require a focused check before advancing: compiled activities when authored,
+  objective English-meaning retrieval for other lexical lessons, and temporary
+  final-recall confirmation for remaining support lessons. Wrong answers do not
+  advance.
+- Build mixed SRS review only from independently passed shared lessons and wait
+  for two visually distinct eligible answers, preventing unseen lessons and
+  identical one-option quizzes from entering the pool.
+- Introduce script notes at explicit local script-extension nodes, retain
+  grounded root links among simultaneously ready paths, and include the new
+  Learn-progress key in the two-click reset.
+
+- Load all 20 per-track realization maps at build time and admit Learn/script
+  steps through their explicit mapped lesson sets while keeping legacy material
+  available in Lessons mode.
+- Show mapped micro-lesson and language-specific extension totals for the
+  learner's selected mix, including Persian and Urdu's required inline script
+  entry nodes.
+- Expose the browser-safe independent frontier planner now consumed by Learn's
+  per-language progression.
 - Hide canonical `hl-knowledge` comments from learner-facing lesson sections;
   the shared parser and source hash still retain their block-boundary meaning.
 - Keep the browser's lightweight dataset adapter compatible with the canonical

@@ -3,6 +3,71 @@
 All notable changes to the `swift/zstd` package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.3] — 2026-08-05
+
+### Fixed
+
+- **Repeated-Offset (R1/R2/R3) sequence decoding (RFC 8878 §3.1.1.3.2.1.1)**
+  — see `lessons.md` Lesson 98, found while implementing `c/zstd` (PR #9941).
+  This decoder previously treated every decoded Offset_Value as an explicit
+  offset (`offset = ofRaw - 3`), which underflows for Offset_Value in
+  `{1, 2, 3}`. Those three values are not literal offsets: RFC 8878 §3.1.1.1
+  defines a 3-entry offset history (`Repeated_Offset1/2/3`, seeded `1/4/8`
+  at the start of a frame) that a sequence with `Offset_Value <= 3` reuses
+  instead — one of the format's principal entropy wins, and something real
+  `zstd` encoders reach for constantly (periodic/repetitive data especially).
+  This package's own encoder deliberately never emits repeat-offset codes
+  (its minimum possible LZ77 offset guarantees `ofCode >= 2` always), so no
+  self-round-trip test — including the existing `testTC9CliInterop*` suite's
+  fixed corpora — ever exercised this decode path; the gap was invisible
+  until decoding real `zstd`-CLI-compressed data that happens to use
+  repeat-offsets, which is common.
+  - Reproduced first: added `testTC16RepeatedOffsetDecode`, which failed
+    with `decodingError("decoded offset underflow: ofRaw=1")` against the
+    unfixed decoder — the same underflow signature documented in Lesson 98's
+    `c/zstd` repro (a long run of one repeated byte, which real `zstd`
+    encodes as one Compressed block whose sequences reuse
+    `Repeated_Offset1 = 1` over and over).
+  - Fixed in `decompressBlock`: `rep1`/`rep2`/`rep3` (the three
+    Repeated_Offset registers) are now threaded through as `inout`
+    parameters, frame-scoped (seeded `1/4/8` once per `decompress()` call,
+    carried unmodified across Raw/RLE blocks, updated after every
+    Compressed block's sequences — not reset per block). For each sequence,
+    `ofCode >= 2` still means an explicit offset (and rotates the history:
+    `rep3, rep2, rep1 = rep2, rep1, offset`); `ofCode <= 1` (so
+    `ofRaw` in `{1, 2, 3}`) now resolves via the repeat-offset selector
+    `(llIsZero ? 1 : 0) + ofRaw - 1`, matching the RFC's "when
+    Literals_Length is 0, repeated offsets are shifted by 1" rule and its
+    four cases (reuse `rep1` unchanged / swap in `rep2` / rotate in `rep3` /
+    rotate in `rep1 - 1`). Algorithm cross-checked against both the RFC 8878
+    prose (fetched directly, not recalled from memory) and the literal
+    reference C source (`ZSTD_decodeSequence` in
+    `zstd_decompress_block.c`, `github.com/facebook/zstd`), and against the
+    already-verified `c/zstd` fix (PR #9941) — same selector arithmetic and
+    register-rotation shape in both.
+  - The encoder is unchanged (still never emits repeat-offset codes; this
+    is a decode-only fix, mirroring the `c/zstd` precedent).
+
+### Tests
+
+- Added `testTC16RepeatedOffsetDecode`: real `zstd` CLI interop (compress
+  with `zstd -c -19`, decompress with ours) against two payloads chosen to
+  force repeat-offset usage — a long run of one repeated byte (Lesson 98's
+  exact repro shape) and two interleaved fixed-period runs (forcing reuse
+  of more than one recent distance, exercising `Repeated_Offset2`/`3` as
+  well as `Repeated_Offset1`). Confirmed failing before the fix
+  (`decodingError("decoded offset underflow: ofRaw=1")`) and passing after.
+- Re-ran the full existing suite (25 tests, including `testTC9CliInterop`
+  and `testTC9CliInteropCorpus`) after the fix: all pass, confirming the
+  Lesson 96 FSE-codec conformance work is unaffected.
+- Additionally verified out-of-suite against real `zstd -c` output at
+  compression levels 1/3/9/19 for repetitive source-code-like and
+  JSON-like corpora (both heavy repeat-offset users at higher levels):
+  byte-exact decode in every case that used only Predefined-mode FSE
+  tables and Raw literals; the only failures were the pre-existing,
+  already-documented scope boundary (`unsupportedFSEModes` / Huffman
+  literals), unrelated to this fix.
+
 ## [0.1.2] — 2026-08-03
 
 ### Fixed

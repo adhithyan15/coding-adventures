@@ -2,55 +2,58 @@
 
 **The HL03 unified curriculum learning app** (it began life as the HL02
 `script-writing-visualizer` and has subsumed that app's modes). Five modes.
-**Learn** (the default) walks the structured shared spine — one concept
-at a time, across the learner's selected language mix, each new language showing its
-threads back to the ones already learned, then reviewing it all with a
-randomised SRS quiz. **Browse** and **Practice** work on *script letters*;
+**Learn** (the default) walks each selected language's validated local path —
+one prerequisite-safe micro-lesson at a time — and admits a lesson to mixed
+review only after focused retrieval in that language. Shared-spine abilities
+and grounded roots still show where independently ready paths connect.
+**Browse** and **Practice** work on *script letters*;
 **Lessons** drills the *written curriculum* — every lesson in every track — on a
 spaced-repetition schedule that persists between visits; and **Concepts** shows
 one idea in every language that has it, side by side.
 
 ## Learn mode (the curriculum session)
 
-The spine of the app: [HL03](../../../specs/HL03-unified-language-learning-app.md)
-and [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md) in one screen.
-For each concept in the explicit `core/spine.json` order, the
-engine's *teaching pass* (`sessionplan.ts` → `planSession`) is rendered as a
-numbered sweep — one card per selected language that teaches it, in registry
-order. The picker includes every current track, including Russian, Persian, and
-Urdu. Each card carries the word in its own script, its etymology hook, its full
-authored Markdown micro-lesson, and the **connections back** to earlier
-languages that share a root, so the cross-language memory the interleaving is
-meant to build is made visible rather than left implicit. Prev / Next walk the
-spine, and a **jump picker** (a `<select>` of the whole book-ordered spine) leaps
-straight to any concept; a slim **progress bar** shows progress through the
-selected portion of the shared spine. Consolidation lessons (`practice`/`review`) are left to the
-review quiz, not the teaching sweep.
+The spine of the app is [HL03](../../../specs/HL03-unified-language-learning-app.md)
+plus the stricter [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md)
+progression contract. `curriculum.ts` loads all 20 `curriculum.json` maps and
+the pure frontier planner returns exactly one safe next lesson per selected
+language. A language advances independently; paths are grouped only when their
+current lessons share a spine ability. The picker includes every track,
+including Russian, Persian, and Urdu, and reports the exact mapped lesson and
+extension totals for the mix.
 
-The session **introduces writing systems as-needed** (`scriptintro.ts`): the
-first time the walk reaches a non-Latin script — including Persian and Urdu's
-distinct script identities — that step gets a compact *"New script"* note (name, system, and how to
-recognise it, from the script data's `signature`), shown once at the earliest
-concept that teaches it. It's grounded: a script with no data (Kannada / Telugu
-/ Malayalam today) gets no note rather than an invented one.
+Each frontier card shows the target form, romanization, etymology hook, complete
+authored Markdown micro-lesson, shared can-do, local `N of M` position, and any
+typed script/grammar/register/etymology extension attached at that point.
+Grounded root connections are shown only among languages simultaneously ready
+at the same shared ability. Script notes come from explicit local script
+extensions and the canonical script data, so Persian and Urdu keep distinct
+identities and no global concept cursor guesses where a script belongs.
 
-Below the sweep sits the **review pass** — the second mechanism. A randomised,
-SRS-weighted quiz draws over everything covered so far (`plan.reviewGrid`, the
-concept×language grid up to the cursor), leaning on what you keep missing
-(`pickNext`). Each question is *"‹meaning› — in ‹language›?"* with options drawn
-from the **same concept in other languages** — the cross-language look-alikes
-the interleaving targets (Telugu ధన్యవాద vs Hindi धन्यवाद). Answers thread
-through `applyAnswer` (promote a hit, demote + log a miss), and a *"what you keep
-confusing"* panel rolls the mistakes up from `confusions(log)`. The review
-**persists** (`reviewstore.ts`): its SRS state and answer log are saved to
-`localStorage` after every answer and restored at startup — the same pattern
-`progress.ts` uses for the lesson schedule, with the same defensive parse (a
-corrupt or wrong-version blob restores as empty, never throws).
+Before advancing, the learner starts a **focused check**. When a canonical block
+has an `hl-activity` contract, the app uses its authored prompt, normalized answer
+variants, corrective feedback, and response budget without scraping prose or
+showing an answer-bearing summary. Other lexical lessons ask for one English
+meaning. A wrong answer leaves the local frontier unchanged; a correct answer
+shows feedback before the learner continues. The first objective non-lexical
+pilots covered Spanish grammatical gender and punctuation spans; the first
+HL-A01 tranches now reach 25 of 119 mapped non-lexical lessons across 18 tracks,
+including script, grammar, etymology, culture, and cumulative practice. The
+remaining 94 support lessons retain temporary final-recall confirmation while
+HL-A01 fills the measured contract backlog.
+One successful check completes exactly the current frontier lesson.
+`learnprogress.ts` persists stable lesson IDs independently per language and,
+on load, keeps only the longest valid local prefix. A newly inserted prerequisite
+therefore becomes the frontier instead of being skipped by stale saved state.
 
-The **teaching cursor persists too** (`cursorstore.ts`): the concept you walked
-to is saved on each Prev/Next and restored at startup, so the app resumes where
-you left off rather than back at the first concept. The restored index is
-clamped to the current spine, and a bad blob falls back to the start.
+Below the frontiers, the randomised SRS review draws only from independently
+focused-successful shared lessons. It waits until at least two visually distinct
+answers are eligible, then asks *"‹meaning› — in ‹language›?"* with options from
+that safe grid. A cross-language comparison can appear only after both local
+realizations have passed their own check. Answers still flow through
+`applyAnswer`; misses are demoted and recorded for *"what you keep confusing"*.
+`reviewstore.ts` persists that SRS state and answer log separately from local
+path completion.
 
 A quiet **"Reset progress"** control at the foot of the Learn view clears it all,
 including the saved language mix,
@@ -67,7 +70,7 @@ This mode is that join, and it is the data package's own
 `languagesForConcept` — a function shipped from the start, documented as "what
 the companion app calls," which until now had **no caller**.
 
-- **42 concepts are shared by two or more tracks**, from 973 lessons. A concept
+- **42 concepts are shared by two or more tracks**, from 1,066 lessons. A concept
   only one language tags is filtered out: there is nothing to compare it with,
   which also removes almost every namespaced (`ES-…`) tag without a special case.
 - Each row shows the **headword**, a **romanization** where it differs, and the
@@ -79,7 +82,7 @@ the companion app calls," which until now had **no caller**.
 
 ## Lessons mode
 
-Reads all **973 lessons across 20 languages** straight from the curriculum via
+Reads all **1,066 lessons across 20 languages** straight from the curriculum via
 `@coding-adventures/human-language-data`, and schedules them with the same
 Leitner machinery the letter drills use (`scheduler.ts` is generic over an
 index; it never needed to know what an item is).
@@ -113,9 +116,54 @@ Pick a script, pick a letter, and the detail panel shows:
 - the **glyph**, big, with its sound and role;
 - **Break it apart** — the letter's component pieces (the "a vertical + two
   stacked bowls" of Cyrillic *в*);
-- **Write it** — a conventional stroke order, numbered;
+- **Write it** — a conventional stroke order, numbered; and for letters with an
+  authored pen path, the **stroke-order filmstrip** below;
 - a **⚠ false friend** badge for letters that look like a Latin letter but
   aren't (Cyrillic *в*=v, *р*=r, *с*=s, *н*=n) — the fastest way into the script.
+
+### The stroke-order filmstrip
+
+A numbered list tells you *what* to draw. It does not tell you where the pen
+starts, which way it travels, or — the thing a picture of the finished letter
+can never show — where the hand **lifts**. For letters that have an authored
+pen path, "Write it" becomes a strip of panels instead, each one showing the
+letter a little further written:
+
+```
+┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐
+│ ▏      │  │ ▏      │  │ ▏    ▕ │  │ ▏ ⌒  ▕ │  │ ▏ ⌒▕ ▕ │
+│ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │
+└────────┘  └────────┘  └────────┘  └────────┘  └────────┘
+ 1. down     2. along    3. up the   4. over     5. down
+ the left    the bottom  right side  the top     the middle
+```
+
+Behind every panel, in pale grey, sits the **finished letter — the outline read
+straight out of the shipped font**, never a drawing of one. In front of it, in
+ink, sits as much of the pen path as the hand has travelled so far, with a dot
+showing where the pen is. Underneath sits the cited source for the stroke
+*order*, because unlike the shape, the order is not something a font can vouch
+for.
+
+Three modules meet to make one picture:
+
+| module | knows | checked by |
+|---|---|---|
+| `src/truetype.ts` | what the letter *looks like* — the real outline | the font itself |
+| `src/strokes.ts` | how it is *written* — pen path, parts, lifts | `strokes.test.ts`: every point on real ink, every join < 2 font units, whole letter traced |
+| `src/ductusview.ts` | how to *draw that* — SVG frames, no DOM | `ductusview.test.ts` |
+
+Font units are **y-up**; SVG is **y-down**. The glyph and the pen path are both
+in font units, and `ductusview.ts` flips them together with exactly **one**
+`scale(1,-1)` group — so a mistake cannot leave a plausible-looking stroke
+sitting upside down on a correct letter.
+
+**Only Tamil ம has an authored pen path today.** `DUCTUS` admits no letter
+without a citation for its stroke order, and hand-drawing a letter is forbidden
+outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
+cannot yet read Tamil, so the error would ship *as the lesson*). Every other
+letter falls back to the numbered prose list, unchanged. Extending the coverage
+is HL-C09, and it needs a cited source per letter.
 
 ## Where it fits
 
@@ -218,7 +266,15 @@ read-only — `letters` / `isSyllabary` / the matrix untouched).
   `scriptSummary`, `isFalseFriend`, `falseFriends`. No DOM, no globals; this is
   where the pedagogy is tested.
 - **`src/data.ts`** — the only place that imports the canonical script JSON.
-- **`src/main.ts`** — a deliberately framework-free vanilla-DOM shell.
+- **`src/truetype.ts`** — a small zero-dependency TrueType reader, so every
+  letter this app *draws* comes from the font rather than from a hand.
+- **`src/strokes.ts`** — the pen-path model: strokes as pen-down runs, segments
+  as labelled parts that must meet head-to-tail, with cited provenance.
+- **`src/ductusview.ts`** — the two above, composed into SVG. Pure: it returns a
+  tree of plain objects plus a serialiser, and never touches `document`.
+- **`src/main.ts`** — a deliberately framework-free vanilla-DOM shell. It walks
+  the `ductusview` tree with `createElementNS`/`setAttribute`/`textContent`;
+  there is no `innerHTML` anywhere in the app.
 
 ## Develop
 

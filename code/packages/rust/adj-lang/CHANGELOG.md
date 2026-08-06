@@ -2,6 +2,82 @@
 
 ## Unreleased - replayable formula guard traces
 
+- A table used as a `range`/`interpolated`/`nearest` lookup may no longer contain two rows
+  sharing a breakpoint in the key column (`LowerError::LookupDuplicateKey`, carrying both
+  row indices). `range` selects the greatest key `<= q`; with the key tied, that was
+  whichever row proof enumeration reached first, so the other row was dropped — along with
+  its own RS-5e per-row citation — with no ambiguity flag and no abstention. Verified before
+  the fix: a table with two rows keyed `10` answered `first_ten` and cited only that row,
+  while an equally-applicable `second_ten` row went unmentioned. Breakpoints are compared as
+  exact rationals, so `10` and `10.0` are one breakpoint.
+- Scoped to the key column of tables actually referenced by a lookup, so a categorical table
+  with repeated first-column values (an ordinary relation) is unaffected. `nearest` keeps its
+  documented deterministic tie-break, which resolves a genuine either-side tie rather than a
+  table defining two answers for one interval.
+- Two `table` blocks declaring the same name are now rejected (`LowerError::DuplicateTable`).
+  The registry kept the last block while every block's rows went into the KB, and a lookup
+  builds its goal — arity, key column position — from the winner alone. A shadowed block whose
+  `columns` differ therefore had its rows become *unreachable* rather than tied: wrong arity
+  fails to unify, and a reordered key column reads a non-numeric cell that selection skips. The
+  lookup then answered from a subset of the relation and cited it confidently. Reproduced: a
+  three-band table plus a one-row shadowing block with an extra column answered `rogue` at key
+  `0` for a query of 15 whose correct answer was `mid` at breakpoint `10`. This is also what
+  lets the selection-time breakpoint check assume the enumerated relation *is* the declared
+  table.
+- The declaration check is a diagnostic, not the guarantee — see the `adj-lang-cli` entry for
+  the selection-time abstention that actually holds the invariant. The duplicate scan sorts
+  once instead of searching pairwise; the nested version was O(n²) and re-ran a
+  `BigDecimal::to_rational()` allocation per comparison, taking ~8s on a 4000-row table (an
+  ordinary size for the calibration and growth-chart cases) once per lookup statement.
+
+- State-machine failures are structured (ADJ-STDLIB-COVERAGE §9d). `StateMachineOutcome`
+  now carries a typed `FailurePhase` (`TransitionGuard` / `ExitGuard` / `Yield`) instead of
+  a `phase: String`, and `ComputationError` carries a `ComputationFailure` discriminant
+  alongside the existing human `detail`. `PrecisionLoss` gained the same typed phase and
+  renamed `guard` to `expression`: a yield abstention previously reported itself by
+  prefixing the rendering with `"yield "` and placing it in a field named `guard`, so a
+  consumer telling a guard abstention from a yield one had to sniff that prefix.
+- `detail` keeps its exact previous wording, so a consumer that only prints it is
+  unaffected; one that branches now keys off `FailurePhase::type_tag()` /
+  `ComputationFailure::type_tag()`. The engine-to-outcome translation matches every
+  `ComputeError` variant with no wildcard arm, so a new engine variant breaks the build
+  here rather than collapsing into a generic string downstream.
+
+- An aggregation is now rejected when the program also declares a FORMULA of that name
+  (`LowerError::AggregationShadowsFormula`). `factor` lists `agg` before `apply`, so
+  `sum(a)` became an aggregation over the slot `a` regardless of what `sum` was declared
+  to be. Where the declared formula takes one parameter that was already caught at
+  declaration; where it takes two or more — as the shipped `formula sum(addend_one,
+  addend_two)` in `arithmetic.adj` does — the call was simply the wrong arity for it, and
+  silently aggregating returned a plausible wrong number (`sum(a)` with `a = 3` yielded
+  `3`) in place of the arity error, with any `requires` guard on that formula never
+  running. An aggregation whose name is NOT declared as a formula is unaffected and still
+  aggregates.
+- The check sits at the single construction site for `ComputeExpr::Agg`, so it is co-total
+  with the emitter by construction rather than by a separate walk that could miss a
+  position. `lower_expr`, `lower_sm_guard`, `apply_formula`, and `enforce_preconditions`
+  became fallible and now carry the formula map to reach it.
+
+- A `formulabook` may no longer declare a formula whose name is one of the five runtime
+  built-ins (`round_sig`, `round_to`, `to_currency`, `to_percent`, `to_scientific`), which
+  the `Apply` lowering answers by name *before* it consults the user formula map. Such a
+  definition was previously accepted and then never reached: the built-in reduced every
+  call while the declared body — and its `requires` guards — sat unreachable. A guarded
+  formula could therefore compile clean and produce an answer with its precondition never
+  evaluated, emitting no abstention and no execution trace. The collision is now the typed
+  `LowerError::ReservedFormulaName`.
+- The same hole exists one layer earlier, in the grammar: `factor` lists `agg` before
+  `apply`, so a one-identifier call of an aggregation keyword (`sum`, `count`, `min`,
+  `max`, `avg`) reduces to an `ExprAst::Agg` over a slot at parse time and never becomes an
+  application at all. A one-parameter `formula sum(x) … requires nonzero(x)` was therefore
+  unreachable and its guard unenforced. Such a declaration is now rejected with the same
+  error. The check is arity-aware — `agg` matches exactly one identifier argument, so the
+  shipped two-parameter `formula sum(addend_one, addend_two)` in `arithmetic.adj` is
+  reached normally and stays legal.
+- `RUNTIME_BUILTIN_FORMULAS` and `is_runtime_builtin_formula` are public, so an independent
+  checker replaying built-in-versus-user-formula precedence reads the same list the
+  dispatch enforces instead of maintaining its own copy.
+
 - Direct formula queries retain an ordered execution trace for every passed, failed, or unresolved
   precondition, including its exact rational and `f64` value, substituted computation plan,
   derivation tree, original scope, consumed `FactId`s, predicate identity, and provenance.

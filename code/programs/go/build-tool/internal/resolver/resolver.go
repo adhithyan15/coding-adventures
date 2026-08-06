@@ -40,6 +40,7 @@
 package resolver
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -379,46 +380,19 @@ func parseGoDeps(pkg discovery.Package, knownNames map[string]string) []string {
 //	    "@coding-adventures/logic-gates": "file:../logic-gates"
 //	}
 //
-// We scan for lines matching the @coding-adventures/ prefix and map them
-// to our internal package names. Version specifiers and file: references
-// are ignored — we only care about the package name.
+// Only direct keys of the root dependencies and devDependencies objects are
+// authoritative. Version specifiers and file:/workspace: references are
+// ignored -- we only care about the package name.
 func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	packageJSON := filepath.Join(pkg.Path, "package.json")
-	data, err := os.ReadFile(packageJSON)
-	if err != nil {
+	manifest, ok := readPackageJSON(packageJSON)
+	if !ok {
 		return nil
 	}
 
-	text := string(data)
 	var internalDeps []string
-
-	// We look inside both "dependencies" and "devDependencies" blocks so the
-	// graph reflects local build/test prerequisites too.
-	inDeps := false
-	re := regexp.MustCompile(`"([^"]+)"\s*:`)
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-
-		if !inDeps {
-			if (strings.Contains(trimmed, `"dependencies"`) ||
-				strings.Contains(trimmed, `"devDependencies"`)) &&
-				strings.Contains(trimmed, "{") {
-				inDeps = true
-			}
-			continue
-		}
-
-		// Inside dependencies block.
-		if strings.Contains(trimmed, "}") {
-			inDeps = false
-			continue
-		}
-
-		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
-			if len(match) < 2 {
-				continue
-			}
-			depName := strings.ToLower(strings.TrimSpace(match[1]))
+	for _, field := range []string{"dependencies", "devDependencies"} {
+		for _, depName := range packageJSONDependencyNames(manifest[field]) {
 			if pkgName, ok := knownNames[depName]; ok {
 				internalDeps = append(internalDeps, pkgName)
 			}
@@ -426,6 +400,41 @@ func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []
 	}
 
 	return internalDeps
+}
+
+func readPackageJSON(path string) (map[string]json.RawMessage, bool) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, false
+	}
+
+	var manifest map[string]json.RawMessage
+	if err := json.Unmarshal(data, &manifest); err != nil || manifest == nil {
+		return nil, false
+	}
+	return manifest, true
+}
+
+func packageJSONName(manifest map[string]json.RawMessage) string {
+	var name string
+	if err := json.Unmarshal(manifest["name"], &name); err != nil {
+		return ""
+	}
+	return strings.ToLower(strings.TrimSpace(name))
+}
+
+func packageJSONDependencyNames(raw json.RawMessage) []string {
+	var dependencies map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &dependencies); err != nil || dependencies == nil {
+		return nil
+	}
+
+	names := make([]string, 0, len(dependencies))
+	for name := range dependencies {
+		names = append(names, strings.ToLower(strings.TrimSpace(name)))
+	}
+	sort.Strings(names)
+	return names
 }
 
 // parseDartDeps extracts internal dependencies from a Dart pubspec.yaml file.
@@ -448,7 +457,8 @@ func parseDartDeps(pkg discovery.Package, knownNames map[string]string) []string
 	}
 
 	var internalDeps []string
-	currentBlock := ""
+	inDependencyBlock := false
+	directEntryIndent := -1
 
 	for _, line := range strings.Split(string(data), "\n") {
 		trimmed := strings.TrimSpace(line)
@@ -456,40 +466,48 @@ func parseDartDeps(pkg discovery.Package, knownNames map[string]string) []string
 			continue
 		}
 
-		if !strings.HasPrefix(line, " ") && strings.HasSuffix(trimmed, ":") {
-			switch strings.TrimSuffix(trimmed, ":") {
-			case "dependencies", "dev_dependencies":
-				currentBlock = strings.TrimSuffix(trimmed, ":")
-			default:
-				currentBlock = ""
-			}
+		indent := len(line) - len(strings.TrimLeft(line, " "))
+		if indent == 0 {
+			inDependencyBlock = trimmed == "dependencies:" || trimmed == "dev_dependencies:"
+			directEntryIndent = -1
 			continue
 		}
 
-		if currentBlock == "" {
+		if !inDependencyBlock {
 			continue
 		}
 
-		if len(line)-len(strings.TrimLeft(line, " ")) < 2 {
+		if directEntryIndent < 0 {
+			directEntryIndent = indent
+		}
+		if indent != directEntryIndent {
 			continue
 		}
 
-		if strings.HasPrefix(trimmed, "#") || strings.HasPrefix(trimmed, "sdk:") || strings.HasPrefix(trimmed, "path:") {
+		depName, _, found := strings.Cut(trimmed, ":")
+		depName = strings.ToLower(strings.TrimSpace(depName))
+		if !found || !isDartPackageIdentifier(depName) {
 			continue
 		}
 
-		if !strings.Contains(trimmed, ":") {
-			continue
-		}
-
-		depName := strings.TrimSpace(strings.SplitN(trimmed, ":", 2)[0])
-		depName = strings.ToLower(depName)
 		if pkgName, ok := knownNames[depName]; ok && pkgName != pkg.Name {
 			internalDeps = append(internalDeps, pkgName)
 		}
 	}
 
 	return internalDeps
+}
+
+func isDartPackageIdentifier(value string) bool {
+	if value == "" || value[0] < 'a' || value[0] > 'z' {
+		return false
+	}
+	for _, char := range value[1:] {
+		if (char < 'a' || char > 'z') && (char < '0' || char > '9') && char != '_' {
+			return false
+		}
+	}
+	return true
 }
 
 // parseRustDeps extracts internal dependencies from a Rust Cargo.toml file.
@@ -635,13 +653,12 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 		return nil
 	}
 
-	text := string(data)
+	text := stripElixirLineComments(string(data))
 	var internalDeps []string
 
-	re := regexp.MustCompile(`\{:([a-z0-9_]+),\s*path:\s*"[^"]+"`)
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+	re := regexp.MustCompile(`(?s)\{\s*:([a-z0-9_]+)\s*,[^{}]*\bpath:\s*"[^"]+"[^{}]*\}`)
+	for _, body := range elixirDependencyBodies(text) {
+		for _, match := range re.FindAllStringSubmatch(body, -1) {
 			if len(match) < 2 {
 				continue
 			}
@@ -653,6 +670,152 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 	}
 
 	return internalDeps
+}
+
+func elixirDependencyBodies(text string) []string {
+	bodies := elixirDirectDepsBodies(text)
+	if functionBody := elixirDepsBody(text); strings.TrimSpace(functionBody) != "" {
+		bodies = append(bodies, functionBody)
+	}
+	return bodies
+}
+
+func elixirDirectDepsBodies(text string) []string {
+	var bodies []string
+	var current []string
+	depth := 0
+	for _, line := range strings.Split(text, "\n") {
+		if depth == 0 {
+			marker := indexElixirOutsideString(line, "deps:")
+			if marker < 0 {
+				continue
+			}
+			value := strings.TrimSpace(line[marker+len("deps:"):])
+			if !strings.HasPrefix(value, "[") {
+				continue
+			}
+			current = []string{value}
+			depth = elixirBracketDelta(value)
+			if depth <= 0 {
+				bodies = append(bodies, strings.Join(current, "\n"))
+				current = nil
+				depth = 0
+			}
+			continue
+		}
+
+		current = append(current, line)
+		depth += elixirBracketDelta(line)
+		if depth <= 0 {
+			bodies = append(bodies, strings.Join(current, "\n"))
+			current = nil
+			depth = 0
+		}
+	}
+	return bodies
+}
+
+func indexElixirOutsideString(text, target string) int {
+	inString := false
+	escaped := false
+	for index := 0; index < len(text); index++ {
+		character := text[index]
+		if escaped {
+			escaped = false
+			continue
+		}
+		if inString && character == '\\' {
+			escaped = true
+			continue
+		}
+		if character == '"' {
+			inString = !inString
+			continue
+		}
+		if !inString && strings.HasPrefix(text[index:], target) {
+			return index
+		}
+	}
+	return -1
+}
+
+func elixirBracketDelta(text string) int {
+	delta := 0
+	inString := false
+	escaped := false
+	for _, character := range text {
+		if escaped {
+			escaped = false
+			continue
+		}
+		if inString && character == '\\' {
+			escaped = true
+			continue
+		}
+		if character == '"' {
+			inString = !inString
+			continue
+		}
+		if !inString && character == '[' {
+			delta++
+		}
+		if !inString && character == ']' {
+			delta--
+		}
+	}
+	return delta
+}
+
+func stripElixirLineComments(text string) string {
+	lines := strings.Split(text, "\n")
+	for lineIndex, line := range lines {
+		inString := false
+		escaped := false
+		for index, character := range line {
+			if escaped {
+				escaped = false
+				continue
+			}
+			if inString && character == '\\' {
+				escaped = true
+				continue
+			}
+			if character == '"' {
+				inString = !inString
+				continue
+			}
+			if character == '#' && !inString {
+				lines[lineIndex] = line[:index]
+				break
+			}
+		}
+	}
+	return strings.Join(lines, "\n")
+}
+
+func elixirDepsBody(text string) string {
+	lines := strings.Split(text, "\n")
+	insideBlock := false
+	var body []string
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if !insideBlock {
+			if strings.HasPrefix(trimmed, "defp deps,") || strings.HasPrefix(trimmed, "def deps,") {
+				if marker := strings.Index(trimmed, "do:"); marker >= 0 {
+					return trimmed[marker+len("do:"):]
+				}
+			}
+			if trimmed == "defp deps do" || trimmed == "def deps do" {
+				insideBlock = true
+			}
+			continue
+		}
+		if trimmed == "end" {
+			break
+		}
+		body = append(body, line)
+	}
+	return strings.Join(body, "\n")
 }
 
 // parseLuaDeps extracts internal dependencies from a Lua .rockspec file.
@@ -1091,24 +1254,6 @@ func swiftPathIsAbsolute(path string) bool {
 		((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))
 }
 
-// parseGradleDeps extracts internal dependencies from a Gradle build.gradle.kts
-// file. This parser works for both Java and Kotlin packages since both use
-// Gradle as their build system.
-//
-// Gradle composite builds declare sibling project dependencies using
-// includeBuild() in settings.gradle.kts and then reference them as regular
-// dependencies in build.gradle.kts:
-//
-//	implementation("com.codingadventures:logic-gates")
-//
-// Alternatively, path-based composite builds are declared in
-// settings.gradle.kts:
-//
-//	includeBuild("../logic-gates")
-//
-// We scan settings.gradle.kts for includeBuild("../...") entries, which is
-// the primary mechanism for monorepo-local dependencies. The directory name
-// inside the "../" reference maps directly to our internal package names.
 // parseHaskellDeps extracts internal dependencies from every build-depends
 // field in a Haskell .cabal file.
 //
@@ -1164,65 +1309,197 @@ func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []str
 	return internalDeps
 }
 
-// parseDotnetDeps extracts internal monorepo dependencies from a .NET project
-// file (.csproj or .fsproj). It looks for <ProjectReference Include="...">
-// elements, which are the MSBuild mechanism for referencing sibling projects.
-//
-// Example in a .csproj:
-//
-//	<ItemGroup>
-//	  <ProjectReference Include="../logic-gates/logic-gates.csproj" />
-//	</ItemGroup>
-//
-// The path component between "../" and the next "/" is the dependency's
-// directory name. We look that up in knownNames to find the build-tool
-// package name (e.g., "dotnet/logic-gates").
-//
-// For the initial hello-world programs there are no inter-package dependencies,
-// so this function returns nil. It is registered now so that future dotnet
-// packages with dependencies work without additional build-tool changes.
-func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []string {
-	// Find all .csproj and .fsproj files in the package directory.
-	var projectFiles []string
-	entries, err := os.ReadDir(pkg.Path)
+// parseDotnetDeps reads only literal ProjectReference Include attributes from
+// .csproj and .fsproj files directly inside the package root. Referenced paths
+// are normalized lexically and matched against already discovered root project
+// files in the shared .NET scope; the targets are never opened or followed.
+func parseDotnetDeps(pkg discovery.Package, knownProjectPaths map[string]string) []string {
+	projectFiles := rootDotnetProjectFiles(pkg.Path)
+	seen := make(map[string]bool)
+	for _, projectFile := range projectFiles {
+		data, err := os.ReadFile(projectFile)
+		if err != nil {
+			continue
+		}
+		for _, include := range dotnetProjectReferenceIncludes(string(data)) {
+			targetPath, ok := dotnetProjectReferencePath(projectFile, include)
+			if !ok {
+				continue
+			}
+			if packageName, found := knownProjectPaths[targetPath]; found && packageName != pkg.Name {
+				seen[packageName] = true
+			}
+		}
+	}
+
+	deps := make([]string, 0, len(seen))
+	for dep := range seen {
+		deps = append(deps, dep)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
+func rootDotnetProjectFiles(root string) []string {
+	entries, err := os.ReadDir(root)
 	if err != nil {
 		return nil
 	}
+	var projectFiles []string
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
 		}
 		name := entry.Name()
-		if strings.HasSuffix(name, ".csproj") || strings.HasSuffix(name, ".fsproj") {
-			projectFiles = append(projectFiles, filepath.Join(pkg.Path, name))
+		lowerName := strings.ToLower(name)
+		if strings.HasSuffix(lowerName, ".csproj") || strings.HasSuffix(lowerName, ".fsproj") {
+			projectFiles = append(projectFiles, filepath.Join(root, name))
 		}
 	}
+	sort.Strings(projectFiles)
+	return projectFiles
+}
 
-	// Match <ProjectReference Include="../some-dep/some-dep.csproj" />
-	// The dep directory name is the path component after "../".
-	re := regexp.MustCompile(`<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]*"`)
+func dotnetProjectReferenceIncludes(source string) []string {
+	var includes []string
+	for index := 0; index < len(source); {
+		relative := strings.IndexByte(source[index:], '<')
+		if relative < 0 {
+			break
+		}
+		index += relative
+		switch {
+		case strings.HasPrefix(source[index:], "<!--"):
+			index = skipXMLMarkup(source, index+4, "-->")
+		case strings.HasPrefix(source[index:], "<![CDATA["):
+			index = skipXMLMarkup(source, index+9, "]]>")
+		case strings.HasPrefix(source[index:], "<?"):
+			index = skipXMLMarkup(source, index+2, "?>")
+		case strings.HasPrefix(source[index:], "<!"):
+			index = skipXMLMarkup(source, index+2, ">")
+		default:
+			name, attributes, next, ok := parseXMLStartTag(source, index)
+			if !ok {
+				index++
+				continue
+			}
+			index = next
+			if name != "ProjectReference" {
+				continue
+			}
+			if include, found := xmlLiteralAttribute(attributes, "Include"); found {
+				includes = append(includes, include)
+			}
+		}
+	}
+	return includes
+}
 
-	var internalDeps []string
-	for _, projFile := range projectFiles {
-		data, err := os.ReadFile(projFile)
-		if err != nil {
+func skipXMLMarkup(source string, index int, terminator string) int {
+	relative := strings.Index(source[index:], terminator)
+	if relative < 0 {
+		return len(source)
+	}
+	return index + relative + len(terminator)
+}
+
+func parseXMLStartTag(source string, index int) (string, string, int, bool) {
+	if index >= len(source) || source[index] != '<' || index+1 >= len(source) || source[index+1] == '/' {
+		return "", "", index, false
+	}
+	nameStart := index + 1
+	nameEnd := nameStart
+	for nameEnd < len(source) && isXMLNameByte(source[nameEnd]) {
+		nameEnd++
+	}
+	if nameEnd == nameStart {
+		return "", "", index, false
+	}
+
+	quote := byte(0)
+	for end := nameEnd; end < len(source); end++ {
+		character := source[end]
+		if quote != 0 {
+			if character == quote {
+				quote = 0
+			}
 			continue
 		}
-		for _, match := range re.FindAllSubmatch(data, -1) {
-			if len(match) < 2 {
-				continue
-			}
-			depDir := strings.ToLower(string(match[1]))
-			// Guard against path traversal.
-			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
-				continue
-			}
-			if pkgName, ok := knownNames[depDir]; ok {
-				internalDeps = append(internalDeps, pkgName)
-			}
+		if character == '\'' || character == '"' {
+			quote = character
+			continue
+		}
+		if character == '>' {
+			return source[nameStart:nameEnd], source[nameEnd:end], end + 1, true
 		}
 	}
-	return internalDeps
+	return "", "", len(source), false
+}
+
+func isXMLNameByte(character byte) bool {
+	return character == ':' || character == '_' || character == '-' || character == '.' ||
+		(character >= '0' && character <= '9') ||
+		(character >= 'A' && character <= 'Z') ||
+		(character >= 'a' && character <= 'z')
+}
+
+func xmlLiteralAttribute(attributes string, wanted string) (string, bool) {
+	for index := 0; index < len(attributes); {
+		index = skipSwiftWhitespace(attributes, index)
+		if index >= len(attributes) || attributes[index] == '/' {
+			return "", false
+		}
+		nameStart := index
+		for index < len(attributes) && isXMLNameByte(attributes[index]) {
+			index++
+		}
+		if index == nameStart {
+			index++
+			continue
+		}
+		name := attributes[nameStart:index]
+		index = skipSwiftWhitespace(attributes, index)
+		if index >= len(attributes) || attributes[index] != '=' {
+			continue
+		}
+		index = skipSwiftWhitespace(attributes, index+1)
+		if index >= len(attributes) || (attributes[index] != '\'' && attributes[index] != '"') {
+			continue
+		}
+		quote := attributes[index]
+		valueStart := index + 1
+		index = valueStart
+		for index < len(attributes) && attributes[index] != quote {
+			index++
+		}
+		if index >= len(attributes) {
+			return "", false
+		}
+		value := attributes[valueStart:index]
+		index++
+		if name == wanted {
+			return value, true
+		}
+	}
+	return "", false
+}
+
+func dotnetProjectReferencePath(projectFile, include string) (string, bool) {
+	if include == "" || strings.ContainsAny(include, "*?#&") ||
+		strings.Contains(include, "$(") || swiftPathIsAbsolute(include) {
+		return "", false
+	}
+	portable := strings.Map(func(character rune) rune {
+		if character == '/' || character == '\\' {
+			return filepath.Separator
+		}
+		return character
+	}, include)
+	return normalizedDotnetProjectPath(filepath.Join(filepath.Dir(projectFile), portable)), true
+}
+
+func normalizedDotnetProjectPath(path string) string {
+	return strings.ToLower(filepath.Clean(path))
 }
 
 var buildToolDepsRe = regexp.MustCompile(`(?m)#\s*build-tool:\s*deps\s*=\s*(.+)$`)
@@ -1259,40 +1536,109 @@ func parseBuildToolDeps(pkg discovery.Package, knownPackageNames map[string]bool
 	return deps
 }
 
-func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
+// parseGradleDeps extracts internal dependencies from a Gradle
+// settings.gradle.kts file. This parser works for both Java and Kotlin
+// packages since both use Gradle composite builds. It scans actual
+// includeBuild("...") calls outside comments and unrelated strings. Relative
+// paths are normalized lexically and matched to discovered package roots in
+// the same language scope. The reader never follows or reads a referenced
+// path.
+func parseGradleDeps(pkg discovery.Package, knownPaths map[string]string) []string {
 	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
 	data, err := os.ReadFile(settingsFile)
 	if err != nil {
 		return nil
 	}
 
-	text := string(data)
-	var internalDeps []string
-
-	// Match: includeBuild("../logic-gates") or includeBuild("../some-dep")
-	// The "../" prefix indicates a sibling monorepo package.
-	re := regexp.MustCompile(`includeBuild\s*\(\s*"\.\.\/([^"]+)"\s*\)`)
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-		if trimmed == "" || strings.HasPrefix(trimmed, "//") {
+	seen := make(map[string]bool)
+	for _, relativePath := range gradleIncludeBuildPaths(string(data)) {
+		if relativePath == "" || strings.Contains(relativePath, "\\") ||
+			swiftPathIsAbsolute(relativePath) {
 			continue
 		}
-		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
-			if len(match) < 2 {
-				continue
-			}
-			depDir := strings.ToLower(match[1])
-			// Guard against path traversal.
-			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
-				continue
-			}
-			if pkgName, ok := knownNames[depDir]; ok {
-				internalDeps = append(internalDeps, pkgName)
-			}
+		targetPath := normalizedGradlePackagePath(
+			filepath.Join(pkg.Path, filepath.FromSlash(relativePath)),
+		)
+		if pkgName, ok := knownPaths[targetPath]; ok {
+			seen[pkgName] = true
 		}
 	}
 
-	return internalDeps
+	deps := make([]string, 0, len(seen))
+	for dep := range seen {
+		deps = append(deps, dep)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
+func gradleIncludeBuildPaths(source string) []string {
+	visible := stripSwiftComments(source)
+	var paths []string
+	for index := 0; index < len(visible); {
+		if visible[index] == '"' {
+			index = skipSwiftString(visible, index)
+			continue
+		}
+		if hasGradleIdentifierAt(visible, index, "includeBuild") {
+			if path, next, ok := parseGradleIncludeBuild(visible, index+len("includeBuild")); ok {
+				paths = append(paths, path)
+				index = next
+				continue
+			}
+		}
+		index++
+	}
+	return paths
+}
+
+func hasGradleIdentifierAt(source string, index int, identifier string) bool {
+	if !strings.HasPrefix(source[index:], identifier) {
+		return false
+	}
+	if index > 0 && isGradleIdentifierByte(source[index-1]) {
+		return false
+	}
+	end := index + len(identifier)
+	return end == len(source) || !isGradleIdentifierByte(source[end])
+}
+
+func isGradleIdentifierByte(value byte) bool {
+	return value == '_' || (value >= '0' && value <= '9') ||
+		(value >= 'A' && value <= 'Z') || (value >= 'a' && value <= 'z')
+}
+
+func parseGradleIncludeBuild(source string, index int) (string, int, bool) {
+	index = skipSwiftWhitespace(source, index)
+	if index >= len(source) || source[index] != '(' {
+		return "", index, false
+	}
+	index = skipSwiftWhitespace(source, index+1)
+	if index >= len(source) || source[index] != '"' {
+		return "", index, false
+	}
+
+	start := index + 1
+	for index = start; index < len(source); index++ {
+		if source[index] == '\\' {
+			index++
+			continue
+		}
+		if source[index] != '"' {
+			continue
+		}
+		path := source[start:index]
+		next := skipSwiftWhitespace(source, index+1)
+		if next >= len(source) || source[next] != ')' {
+			return "", next, false
+		}
+		return path, next + 1, true
+	}
+	return "", index, false
+}
+
+func normalizedGradlePackagePath(path string) string {
+	return strings.ToLower(filepath.Clean(path))
 }
 
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
@@ -1316,6 +1662,31 @@ func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []stri
 // to itself and creating a self-loop.
 func buildKnownNames(packages []discovery.Package) map[string]string {
 	return buildKnownNamesForLanguage(packages, "")
+}
+
+func buildKnownGradlePathsForLanguage(packages []discovery.Package, language string) map[string]string {
+	known := make(map[string]string)
+	scope := dependencyScope(language)
+	for _, pkg := range packages {
+		if !inDependencyScope(pkg.Language, scope) {
+			continue
+		}
+		known[normalizedGradlePackagePath(pkg.Path)] = pkg.Name
+	}
+	return known
+}
+
+func buildKnownDotnetProjectPaths(packages []discovery.Package) map[string]string {
+	known := make(map[string]string)
+	for _, pkg := range packages {
+		if !inDependencyScope(pkg.Language, "dotnet") {
+			continue
+		}
+		for _, projectFile := range rootDotnetProjectFiles(pkg.Path) {
+			known[normalizedDotnetProjectPath(projectFile)] = pkg.Name
+		}
+	}
+	return known
 }
 
 func buildKnownNamesForLanguage(packages []discovery.Package, language string) map[string]string {
@@ -1424,11 +1795,9 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			setKnown(strings.ToLower(filepath.Base(pkg.Path)), pkg.Name, pkg.Path, pkg.Language)
 
 			packageJSON := filepath.Join(pkg.Path, "package.json")
-			data, err := os.ReadFile(packageJSON)
-			if err == nil {
-				re := regexp.MustCompile(`"name"\s*:\s*"([^"]+)"`)
-				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
-					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path, pkg.Language)
+			if manifest, ok := readPackageJSON(packageJSON); ok {
+				if declaredName := packageJSONName(manifest); declaredName != "" {
+					setKnown(declaredName, pkg.Name, pkg.Path, pkg.Language)
 				}
 			}
 
@@ -1616,11 +1985,16 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
+	knownGradlePathsByLanguage := make(map[string]map[string]string)
+	knownDotnetProjectPaths := buildKnownDotnetProjectPaths(packages)
 	knownPackageNames := make(map[string]bool, len(packages))
 	for _, pkg := range packages {
 		knownPackageNames[pkg.Name] = true
 		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
 			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
+		}
+		if (pkg.Language == "java" || pkg.Language == "kotlin") && knownGradlePathsByLanguage[pkg.Language] == nil {
+			knownGradlePathsByLanguage[pkg.Language] = buildKnownGradlePathsForLanguage(packages, pkg.Language)
 		}
 	}
 
@@ -1658,9 +2032,9 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 		case "haskell":
 			deps = parseHaskellDeps(pkg, knownNames)
 		case "java", "kotlin":
-			deps = parseGradleDeps(pkg, knownNames)
+			deps = parseGradleDeps(pkg, knownGradlePathsByLanguage[pkg.Language])
 		case "dotnet", "csharp", "fsharp":
-			deps = parseDotnetDeps(pkg, knownNames)
+			deps = parseDotnetDeps(pkg, knownDotnetProjectPaths)
 		}
 		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 

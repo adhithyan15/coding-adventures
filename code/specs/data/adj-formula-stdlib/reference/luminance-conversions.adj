@@ -18,8 +18,7 @@
 % first, then reason (write-once-use-many). Why a `table` and not a hand-written `relate`
 % clause: this is exactly the shape reference data comes in — a published table, not prose.
 % The citable artifact IS the NIST conversion-factors table at the `locator` below; the
-% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for units
-% listed alphabetically"), defended by one provenance envelope. Each `row` lowers to a
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for units listed by kind of quantity or field of science"), defended by one provenance envelope. Each `row` lowers to a
 % ground relation `luminance_to_candela_per_square_metre(unit, cd_per_m2)`, so the exact
 % lookup above is the ordinary SLD binding query — the engine returns the factor WITH this
 % table's citation as its proof, on the CPU, with zero model calls.
@@ -49,7 +48,7 @@ table luminance_to_candela_per_square_metre {
 
     row (stilb, 10000)
 
-    source "Factors for units listed alphabetically"
+    source "NIST Guide to the SI, Appendix B.9: Factors for units listed by kind of quantity or field of science"
     locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
     trust authoritative
 }

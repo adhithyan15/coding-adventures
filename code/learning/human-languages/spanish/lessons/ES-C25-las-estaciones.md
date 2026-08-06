@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C25-las-estaciones
+spine_node: SPINE-TIME-OF-DAY
+sequence: 750
 chapter: 25
 type: word
 headword: la primavera, el verano, el otoño, el invierno
@@ -9,19 +12,33 @@ prerequisites: [ES-C24-mano, ES-C24-cabeza]
 sounds: [r-tap, diphthong-ie]
 roots: [latin-prima-vera, latin-autumnus, latin-hibernum, latin-veranum]
 etymology_hook: "primavera = prima vera 'first spring' (Italian keeps the same word); otoño ← autumnus; invierno ← hibernum ('wintry') — but verano did NOT come from aestas like French été; it's veranum, 'of spring,' whose MEANING drifted to summer once primavera took over spring's job"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-SEASONS-01, ES-ETYMON-SEASONS-02, ES-ETYMON-VERANO-03]
+practises:
+  knowledge: [ES-LEX-SEASONS-01, ES-ETYMON-SEASONS-02, ES-ETYMON-VERANO-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C24-mano, ES-C24-cabeza]
 ---
 
 # la primavera, el verano, el otoño, el invierno — three plain, one surprising
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Three of Spanish's four seasons are exactly what you'd expect
 from Latin. The fourth hides a genuine surprise: its **meaning itself**
 drifted from one season to another.
 
-## The three straightforward ones
+## The words, taken apart: three straightforward seasons
+<!-- hl-knowledge: introduces=[ES-LEX-SEASONS-01, ES-ETYMON-SEASONS-02]; assesses=[] -->
 
 - **la primavera** ("spring") ← Latin ***prīma vēra***, literally "**first
   spring**" (*vēr*, "spring," + *prīma*, "first"). Italian still says the
@@ -33,7 +50,8 @@ drifted from one season to another.
   **wintry** [season]" — the same root as French *hiver* and English
   **hibernate**, "to spend the winter."
 
-## The surprising one: verano
+## Why it's said this way: verano
+<!-- hl-knowledge: introduces=[ES-ETYMON-VERANO-03]; assesses=[] -->
 
 You might expect *verano* ("summer") to come from Latin **aestas**, "heat" —
 the way French *été* does. It doesn't. The standard account (per Spanish
@@ -54,6 +72,7 @@ two Spanish words both rooted in *vēr*, "spring," ended up naming two
 different seasons.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SEASONS-01, ES-ETYMON-SEASONS-02, ES-ETYMON-VERANO-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "primavera, verano, otoño, invierno" — the four seasons]
@@ -63,6 +82,7 @@ different seasons.
 - [YOU SAY: "invierno ~ hibernate"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SEASONS-01, ES-ETYMON-SEASONS-02, ES-ETYMON-VERANO-03] -->
 
 [PAUSE 3s] What does **primavera** literally mean? (**"First spring"** —
 *prīma vēra*.) Does **verano** come from Latin *aestas*, like French *été*?

@@ -89,6 +89,7 @@ Counting words can reshape one another.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-COMPARISON-NUMERAL-FAMILY, SA-HISTORY-NUMERAL-INHERITANCE, SA-SOUND-PIE-KW-OUTCOMES, SA-SOUND-GRIMMS-LAW-P-TO-F, SA-HISTORY-FOUR-FIVE-ANALOGY] -->
+<!-- hl-activity: {"id":"SA-C06-number-cognates-inheritance","kind":"text","assesses":["SA-HISTORY-NUMERAL-INHERITANCE"],"prompt":"Were the Latin and Sanskrit number forms borrowed from one another?","answer":"no","accepted":["no they were not","they are inherited cousins","inherited cousins"],"feedback":{"correct":"Correct: both branches inherited related number forms from an older common source.","incorrect":"No. The Latin and Sanskrit forms are inherited cousins, not loans from one another."},"response_seconds":8} -->
 
 [PAUSE 3s] Are the Latin and Sanskrit forms borrowed from one another? (No:
 they are inherited cousins.) What are the three outcomes of \**kʷ*? (Latin

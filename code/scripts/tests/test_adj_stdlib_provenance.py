@@ -26,6 +26,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 provenance = importlib.import_module("adj_stdlib_provenance")
+provenance_builder = importlib.import_module("adj_provenance_builder")
 guardian = importlib.import_module("adj_process_guardian")
 arithmetic_builder = importlib.import_module("build_adj_arithmetic_provenance")
 ratio_builder = importlib.import_module("build_adj_ratio_provenance")
@@ -5609,7 +5610,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ) -> dict[str, object]:
                 return {
                     **external_claim,
-                    "input_claim": ratio_builder.input_claim_payload(input_claim),
+                    "input_claim": provenance_builder.input_claim_payload(input_claim),
                     "locator": f"repo://{repo_path}",
                     "resolution": {
                         "authority_receipt_sha256": external["receipt_sha256"],
@@ -8676,6 +8677,329 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ],
         )
         self.assertEqual(transform["result_size"], len(result))
+
+    def test_mathml_transform_renders_spacer_separated_variable_list(self) -> None:
+        # The exact block OpenStax uses for an inline variable list. Its reading
+        # is "r and t" — three tokens separated by typeset spacing. If `mspace`
+        # rendered as nothing the projection would read "randt" and no claim
+        # could pin the sentence a reader actually sees.
+        source = (
+            b"<math><semantics><mrow><mi>r</mi>"
+            b'<mspace width="0.2em"></mspace><mtext>and</mtext>'
+            b'<mspace width="0.2em"></mspace><mi>t</mi></mrow>'
+            b'<annotation-xml encoding="MathML-Content"><mrow><mi>r</mi>'
+            b'<mspace width="0.2em"></mspace><mtext>and</mtext>'
+            b'<mspace width="0.2em"></mspace><mi>t</mi></mrow>'
+            b"</annotation-xml></semantics></math>"
+        )
+        result = b"r and t"
+        transform = provenance.build_text_transform(
+            source_sha256=provenance.sha256_bytes(source),
+            source=source,
+            result_sha256=provenance.sha256_bytes(result),
+            result=result,
+            operations=[
+                {
+                    "operation": "mathml_to_infix",
+                    "result_end": len(result),
+                    "result_start": 0,
+                    "source_end": len(source),
+                    "source_start": 0,
+                }
+            ],
+        )
+        self.assertEqual(transform["result_size"], len(result))
+
+    def test_mathml_transform_emits_mtext_verbatim(self) -> None:
+        # `mtext` is prose, not an operator, so the `×`→`*` rewrite that applies
+        # to mi/mn/mo must NOT apply to it: inside mtext a "×" is the word.
+        source = (
+            b"<math><semantics><mrow><mtext>3 \xc3\x97 4</mtext></mrow>"
+            b'<annotation-xml encoding="MathML-Content">'
+            b"<mrow><mtext>3 \xc3\x97 4</mtext></mrow>"
+            b"</annotation-xml></semantics></math>"
+        )
+        result = "3 × 4".encode("utf-8")
+        transform = provenance.build_text_transform(
+            source_sha256=provenance.sha256_bytes(source),
+            source=source,
+            result_sha256=provenance.sha256_bytes(result),
+            result=result,
+            operations=[
+                {
+                    "operation": "mathml_to_infix",
+                    "result_end": len(result),
+                    "result_start": 0,
+                    "source_end": len(source),
+                    "source_start": 0,
+                }
+            ],
+        )
+        self.assertEqual(transform["result_size"], len(result))
+
+    def test_mathml_transform_rejects_non_empty_spacer(self) -> None:
+        # `mspace` is defined as empty. Anything carrying content is not the
+        # element we agreed to render as one space, so it must fail loudly
+        # rather than silently drop the content.
+        source = b"<math><mspace><mi>x</mi></mspace></math>"
+        with self.assertRaisesRegex(provenance.ProvenanceError, "spacer is not empty"):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b" "),
+                result=b" ",
+                operations=[
+                    {
+                        "operation": "mathml_to_infix",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
+
+    def _mathml_raises(self, source: bytes, pattern: str) -> None:
+        with self.assertRaisesRegex(provenance.ProvenanceError, pattern):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b"x"),
+                result=b"x",
+                operations=[
+                    {
+                        "operation": "mathml_to_infix",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
+
+    def test_mathml_transform_rejects_hidden_prose(self) -> None:
+        # The sharpest failure this guard prevents: the page reads "d=rt", the
+        # projection would read "d=rt is false", and a claim could be pinned to
+        # a sentence no reader of the source can see.
+        self._mathml_raises(
+            b"<math><mrow><mtext>d=rt</mtext>"
+            b"<mtext style=\"display:none\">is false</mtext></mrow></math>",
+            r"unsupported attributes \['style'\]",
+        )
+        self._mathml_raises(
+            b'<math><mtext hidden="hidden">SECRET</mtext></math>',
+            r"unsupported attributes \['hidden'\]",
+        )
+
+    def test_mathml_transform_rejects_hidden_container(self) -> None:
+        # Hiding a container suppresses everything inside it, so the guard has
+        # to run for every element, not only for leaves.
+        self._mathml_raises(
+            b'<math><mrow style="display:none"><mi>x</mi></mrow></math>',
+            r"unsupported attributes \['style'\]",
+        )
+
+    def test_mathml_transform_rejects_spacer_that_renders_no_gap(self) -> None:
+        # A zero-width spacer is the mirror image of the bug that motivated
+        # rendering mspace at all: here emitting a space FABRICATES a separator
+        # the reader never sees.
+        for width in (b"0em", b"0", b"0.0em", b"-3em"):
+            self._mathml_raises(
+                b'<math><mrow><mi>r</mi><mspace width="'
+                + width
+                + b'"></mspace><mi>t</mi></mrow></math>',
+                "does not render as a gap",
+            )
+
+    def test_mathml_transform_rejects_spacer_with_unhandled_attributes(self) -> None:
+        # `linebreak` renders as a line break, not a gap, so the emitted single
+        # space would be a fiction.
+        self._mathml_raises(
+            b'<math><mspace linebreak="newline"></mspace></math>',
+            r"unsupported attributes \['linebreak'\]",
+        )
+
+    def test_mathml_transform_rejects_spacer_holding_visible_whitespace(self) -> None:
+        # NBSP is whitespace to str.strip() but VISIBLE, non-collapsing spacing
+        # to a reader. A `.strip()`-based emptiness test would silently drop it.
+        self._mathml_raises(
+            "<math><mspace>  </mspace></math>".encode(),
+            "spacer is not empty",
+        )
+
+    def test_mathml_transform_rejects_unnormalized_mtext(self) -> None:
+        # Otherwise the projection carries bytes the reader does not see, and
+        # its hash moves when the origin merely re-indents its HTML.
+        self._mathml_raises(
+            b"<math><mtext>d=rt </mtext></math>",
+            "not whitespace-normalized",
+        )
+
+    def test_mathml_transform_rejects_bidi_override_in_text(self) -> None:
+        # A bidi override inside quoted evidence makes the DISPLAYED text differ
+        # from the bytes that were pinned.
+        self._mathml_raises(
+            "<math><mtext>a‮b</mtext></math>".encode(),
+            "control or format character",
+        )
+
+    def test_mathml_transform_rejects_private_use_character(self) -> None:
+        # A private-use codepoint renders as whatever a webfont maps it to, so
+        # nothing about it can be claimed to match what a reader sees.
+        self._mathml_raises(
+            "<math><mtext>a\ue000b</mtext></math>".encode(),
+            "control or format character",
+        )
+
+    def test_mathml_transform_rejects_native_hiding_attributes(self) -> None:
+        # MathML can hide content with NO stylesheet at all, which is why the
+        # attribute policy is an allowlist rather than a list of bad names:
+        # `mathcolor="transparent"`, `mathsize="0"` and a deep `scriptlevel`
+        # each render the text invisible while it still reaches the projection.
+        for attribute, value in (
+            (b"mathcolor", b"transparent"),
+            (b"mathsize", b"0"),
+            (b"scriptlevel", b"+9"),
+        ):
+            self._mathml_raises(
+                b"<math><mrow><mtext>d=rt</mtext><mtext "
+                + attribute
+                + b'="'
+                + value
+                + b'">is false</mtext></mrow></math>',
+                r"unsupported attributes \['%s'\]" % attribute.decode(),
+            )
+
+    def test_mathml_transform_rejects_hiding_by_indirection_on_leaves(self) -> None:
+        # `class` and `id` hide only via a stylesheet we never fetched. They
+        # never appear on a text-emitting leaf in the corpus, so rejecting them
+        # there costs nothing and closes `class="sr-only"`-style hiding on
+        # exactly the elements that can inject prose.
+        for attribute in (b"class", b"id"):
+            self._mathml_raises(
+                b"<math><mtext " + attribute + b'="x">SECRET</mtext></math>',
+                r"unsupported attributes \['%s'\]" % attribute.decode(),
+            )
+
+    def test_mathml_transform_rejects_character_remapping_mathvariant(self) -> None:
+        # `double-struck` R renders as ℝ (U+211D), not "R". Emitting bare ASCII
+        # would pin a claim about ℝ to the byte "R" — a different mathematical
+        # object sharing one projection.
+        for variant in (b"double-struck", b"fraktur", b"script", b"monospace"):
+            self._mathml_raises(
+                b'<math><mi mathvariant="' + variant + b'">R</mi></math>',
+                "character-remapping mathvariant",
+            )
+
+    def test_mathml_transform_accepts_non_remapping_mathvariant(self) -> None:
+        # The two values the corpus actually uses must keep working.
+        for variant in (b"normal", b"italic"):
+            source = b'<math><mi mathvariant="' + variant + b'">d</mi></math>'
+            result = b"d"
+            transform = provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(result),
+                result=result,
+                operations=[
+                    {
+                        "operation": "mathml_to_infix",
+                        "result_end": len(result),
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
+            self.assertEqual(transform["result_size"], len(result))
+
+    def test_mathml_transform_rejects_widths_that_resolve_to_no_gap(self) -> None:
+        # A MathML percentage is a percentage OF THE DEFAULT, and mspace's
+        # default width is 0em — so every percentage is zero, `100%` included.
+        # An unknown unit is discarded and falls back to the same default, and a
+        # bare number is not a valid length at all.
+        for width in (b"1%", b"100%", b"5xyz", b"5", b"negativethinmathspace"):
+            self._mathml_raises(
+                b'<math><mrow><mi>r</mi><mspace width="'
+                + width
+                + b'"></mspace><mi>t</mi></mrow></math>',
+                "does not render as a gap",
+            )
+
+    def test_mathml_transform_rejects_sub_perceptual_width(self) -> None:
+        # The continuous tail of the width="0em" defect: positive but invisible,
+        # so emitting a space still fabricates a separator. The floor is
+        # MathML's own smallest named gap (1/18 em) — the corpus minimum,
+        # 0.056em, is that same quantity written numerically and must survive.
+        for width in (b"0.0001em", b"0.01em", b"0.049em"):
+            self._mathml_raises(
+                b'<math><mrow><mi>d</mi><mspace width="'
+                + width
+                + b'"></mspace><mi>t</mi></mrow></math>',
+                "does not render as a gap",
+            )
+
+    def test_mathml_transform_rejects_namespaced_remapping_mathvariant(self) -> None:
+        # The allowlist reads namespace-stripped local names, so the VALUE check
+        # has to read the same key space or a namespaced attribute slips past it.
+        self._mathml_raises(
+            b'<math xmlns:m="urn:x">'
+            b'<mi m:mathvariant="double-struck">R</mi></math>',
+            "character-remapping mathvariant",
+        )
+
+    def test_mathml_transform_rejects_html_annotation_encoding(self) -> None:
+        # encoding="text/html" makes <annotation-xml> an HTML integration point
+        # and changes how a browser parses the subtree.
+        self._mathml_raises(
+            b"<math><semantics><mrow><mi>x</mi></mrow>"
+            b'<annotation-xml encoding="text/html"><mrow><mi>x</mi></mrow>'
+            b"</annotation-xml></semantics></math>",
+            "encoding 'text/html' is unsupported",
+        )
+
+    def test_mathml_transform_rejects_spacer_without_width(self) -> None:
+        # mspace defaults to width 0, so a bare <mspace/> shows no gap and
+        # emitting a space for it fabricates a separator by OMISSION rather
+        # than by value.
+        self._mathml_raises(
+            b"<math><mrow><mi>r</mi><mspace></mspace><mi>t</mi></mrow></math>",
+            "no width and defaults to no gap",
+        )
+
+    def test_mathml_transform_accepts_named_positive_space(self) -> None:
+        # `thinmathspace` occurs 14 times in the pinned corpus; a digits-only
+        # length check would wrongly reject it.
+        source = (
+            b'<math><mrow><mi>a</mi><mspace width="thinmathspace"></mspace>'
+            b"<mi>b</mi></mrow></math>"
+        )
+        result = b"a b"
+        transform = provenance.build_text_transform(
+            source_sha256=provenance.sha256_bytes(source),
+            source=source,
+            result_sha256=provenance.sha256_bytes(result),
+            result=result,
+            operations=[
+                {
+                    "operation": "mathml_to_infix",
+                    "result_end": len(result),
+                    "result_start": 0,
+                    "source_end": len(source),
+                    "source_start": 0,
+                }
+            ],
+        )
+        self.assertEqual(transform["result_size"], len(result))
+
+    def test_mathml_transform_rejects_mixed_fraction_text(self) -> None:
+        # Browsers render stray character data inside <mfrac> as anonymous text.
+        # Unguarded it is silently dropped, so two different documents project
+        # identically while the dropped span is still certified "represented".
+        self._mathml_raises(
+            b"<math><mfrac>NOT <mi>a</mi><mi>b</mi></mfrac></math>",
+            "mixed fraction text",
+        )
 
     def test_mathml_transform_rejects_unsupported_semantics(self) -> None:
         source = b"<math><msqrt><mi>x</mi></msqrt></math>"

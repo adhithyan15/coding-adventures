@@ -29,6 +29,19 @@ gets its own authored spine realization and knowledge closure, new material rece
 focused acquisition before mixed review, and the full lesson body becomes the one
 source for book and app delivery.
 
+### Current progression contract
+
+HL04 governs when its local-path rules conflict with the earlier global
+concept-sweep model below. Learn now presents one prerequisite-safe frontier per
+selected language and stores stable completed lesson-id prefixes independently.
+A focused check advances only that language. It prefers a compiled block-bound
+activity with authored variants and feedback, otherwise uses lexical meaning
+retrieval or a temporary non-lexical confirmation. Mixed review includes only
+lessons that independently passed and waits for at least two visually distinct
+eligible answers. A shared concept sweep is therefore a comparison available when local
+frontiers and eligibility align, not a cursor that can pull another language
+past its own script, grammar, register, or vocabulary prerequisite.
+
 ## The learner's model — a spiral with cumulative concept-sweeps
 
 HL02 stated the pattern in miniature (Spanish → French → German). The real model
@@ -227,9 +240,19 @@ All of the above shipped as the app **`language-ladder`** (renamed from
   romanization under the quiz options — the `romanization` field is populated for
   only ~54 of ~700 lessons (and not the Indic vocabulary, whose romanization lives
   in the gloss text), so showing it would be inconsistent rather than helpful.
+- **HL04 local-frontier migration** — all 20 realization maps now drive Learn.
+  `learnprogress.ts` stores only prerequisite-safe per-language prefixes;
+  compiled activities now gate 19 objective non-lexical lessons across 16
+  tracks, spanning script, grammar, etymology, culture, and cumulative practice;
+  lexical meaning retrieval covers uncontracted vocabulary, and temporary
+  authored non-lexical recall confirmation covers the remaining 94-lesson debt;
+  explicit local extension nodes place script and grammar support; and mixed SRS
+  review draws only from independently focused-successful lessons. The old
+  `cursorstore.ts` key remains resettable only as legacy state.
 
-The two honest non-builds (grammar intro, romanization) can return if the
-curriculum grows the metadata they need.
+The earlier grammar-note non-build has been replaced by full canonical lesson
+bodies, typed local extensions, and compiled activities. Quiz-option
+romanization remains parked until coverage is consistent enough to be honest.
 
 ## Verification
 

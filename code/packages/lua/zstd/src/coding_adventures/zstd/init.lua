@@ -1079,12 +1079,40 @@ end
 --
 -- decompress_block decodes one ZStd compressed block and appends output bytes
 -- to the `out` array. Calls error() on any format violation.
-
-local function decompress_block(data, start, bsize, out)
+--
+-- `rep` is the three-element Repeated_Offset register array (RFC 8878
+-- §3.1.1.3.2.1.1) — {rep[1], rep[2], rep[3]} — passed by reference (Lua
+-- tables are references) because these registers are FRAME-scoped, not
+-- block-scoped: "For the first block, the starting offset history is
+-- populated with Repeated_Offset1=1, Repeated_Offset2=4, Repeated_Offset3=8"
+-- (RFC 8878), and every later Compressed block in the same frame continues
+-- from wherever the previous Compressed block's sequences left them. The
+-- caller (M.decompress) owns `rep` and threads it through every Compressed
+-- block in the frame; Raw/RLE blocks don't touch it.
+--
+-- WHY THIS DECODER NEEDS THIS EVEN THOUGH ITS OWN ENCODER NEVER EMITS
+-- REPEAT-OFFSET SEQUENCES: encode_sequences_section always writes an
+-- explicit offset code (raw_off = offset + 3 >= 4, since our minimum LZ77
+-- match offset is 1), so this port's own compress()/decompress() round trip
+-- never exercises the repeat-offset path — the "no repeat-offset shortcuts"
+-- simplification documented on the encoder side is entirely an ENCODER
+-- choice. But the real `zstd` CLI's encoder uses repeat offsets constantly
+-- (one of its main entropy wins, especially for periodic/repetitive data),
+-- so a decoder that only understands explicit offset codes will
+-- systematically fail to decode real-world `.zst` output — e.g. 4713 bytes
+-- of a single repeated byte compresses (via the real CLI) to a single
+-- Compressed block whose one sequence has Offset_Value=1, i.e. "reuse
+-- Repeated_Offset1" (which starts at its default value of 1). See
+-- lessons.md Lesson 98 and c/zstd's PR #9941, which found and fixed the
+-- identical gap; this port's fix was cross-checked against both that PR's
+-- reference implementation and the RFC 8878 prose directly (fetched live,
+-- not recalled from memory).
+local function decompress_block(data, start, bsize, out, rep)
     -- data:  full frame byte array (integers 0-255)
     -- start: 1-indexed start of this block's payload within data
     -- bsize: number of bytes in the block payload
     -- out:   output byte array (appended in-place)
+    -- rep:   {rep1, rep2, rep3} Repeated_Offset registers, mutated in place
 
     local block_end = start + bsize - 1
 
@@ -1186,24 +1214,76 @@ local function decompress_block(data, start, bsize, out)
             error("zstd: of_code out of range: " .. of_code)
         end
 
+        -- ll_is_zero is needed below for the repeat-offset interpretation
+        -- (RFC 8878's "when Literals_Length is 0, repeated offsets are
+        -- shifted by 1" rule) and is knowable right now, from the PEEKED
+        -- ll_code alone: LL code 0 is the only code with baseline 0 and 0
+        -- extra bits (see LL_CODES), so ll_code == 0 iff the eventual
+        -- decoded `ll` value (computed below, after extra bits are read) is
+        -- 0. No extra bits need to be read yet to know this.
+        local ll_is_zero = (ll_code == 0)
+
         local ll_info = LL_CODES[ll_code + 1]  -- 1-indexed
         local ml_info = ML_CODES[ml_code + 1]
 
         -- Step 2: read the VALUE extra bits, order OF, ML, LL (RFC 8878
         -- §3.1.1.3.2.1.2 — "Decoding starts by reading the Number_of_Bits
         -- required to decode offset. It does the same for Match_Length and
-        -- then for Literals_Length.").
-        -- Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3.
-        -- The "- 3" adjusts for ZStd's repeat-offset encoding baseline.
+        -- then for Literals_Length."). The NUMBER of bits read for the
+        -- offset field is always exactly `of_code`, regardless of whether
+        -- the resulting value ends up interpreted as an explicit offset or
+        -- a repeat-offset reference below (RFC 8878 / the reference decoder
+        -- never varies bit-consumption on ll_is_zero — only how the
+        -- resulting value maps to an actual offset changes).
         local of_raw = (1 << of_code) | br:read_bits(of_code)
         local ml = ml_info[1] + br:read_bits(ml_info[2])
         local ll = ll_info[1] + br:read_bits(ll_info[2])
 
-        if of_raw < 3 then
-            error(string.format(
-                "zstd: decoded offset underflow: of_raw=%d (of_code=%d)", of_raw, of_code))
+        -- Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        -- the Repeated_Offset (R1/R2/R3) mechanism: `of_code >= 2` guarantees
+        -- of_raw = (1<<of_code)+extra >= 4, i.e. Offset_Value > 3 — an
+        -- ordinary explicit offset (raw_off - 3). `of_code <= 1` guarantees
+        -- of_raw in {1, 2, 3} — a repeat-offset reference into `rep`.
+        --
+        -- The repeat case collapses to one selector in [0, 3]:
+        --     selector = (ll_is_zero and 1 or 0) + of_raw - 1
+        --   0 -> reuse rep[1] unchanged (no rotation)
+        --   1 -> use rep[2] (rep[1],rep[2] swap; rep[3] untouched)
+        --   2 -> use rep[3] (full rotate: rep[1],rep[2],rep[3] <- new,old rep[1],old rep[2])
+        --   3 -> use rep[1]-1 (full rotate, same shape as selector 2)
+        -- This mapping is cross-checked against BOTH RFC 8878's prose
+        -- ("Repeat Offsets" — offset codes 1-3 select Repeated_Offset1/2/3
+        -- normally, but shift by one when Literals_Length is 0, with
+        -- Offset_Value 3 in that case meaning "Repeated_Offset1 - 1") and
+        -- the already-verified c/zstd reference fix (PR #9941,
+        -- decompress_block / lessons.md Lesson 98).
+        local offset
+        if of_code >= 2 then
+            offset = of_raw - 3
+            rep[3] = rep[2]
+            rep[2] = rep[1]
+            rep[1] = offset
+        else
+            local selector = (ll_is_zero and 1 or 0) + of_raw - 1
+            if selector == 0 then
+                offset = rep[1]
+                -- no rotation
+            elseif selector == 1 then
+                offset = rep[2]
+                rep[2] = rep[1]
+                rep[1] = offset
+            elseif selector == 2 then
+                offset = rep[3]
+                rep[3] = rep[2]
+                rep[2] = rep[1]
+                rep[1] = offset
+            else -- selector == 3
+                offset = (rep[1] > 0) and (rep[1] - 1) or 0
+                rep[3] = rep[2]
+                rep[2] = rep[1]
+                rep[1] = offset
+            end
         end
-        local offset = of_raw - 3
 
         -- Step 3: update FSE states (consumes bits), order LL, ML, OF (RFC
         -- 8878 §3.1.1.3.2.1.2 — "Literals_Length_State is updated, followed
@@ -1520,6 +1600,13 @@ function M.decompress(data)
     -- ── Blocks ────────────────────────────────────────────────────────────
     local out = {}  -- output byte array, accumulated in-place
 
+    -- Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): FRAME-scoped —
+    -- default 1/4/8 "for the first block", then threaded (and mutated) by
+    -- decompress_block through every Compressed block's sequences for the
+    -- rest of the frame. Raw/RLE blocks don't touch them. See lessons.md
+    -- Lesson 98 and decompress_block's doc comment.
+    local rep = {1, 4, 8}
+
     while true do
         -- Each block begins with a 3-byte little-endian header.
         if pos + 2 > #data then
@@ -1569,7 +1656,7 @@ function M.decompress(data)
                     "zstd: compressed block truncated: need %d bytes at pos %d",
                     bsize, pos))
             end
-            decompress_block(data, pos, bsize, out)
+            decompress_block(data, pos, bsize, out, rep)
             pos = pos + bsize
 
         else  -- btype == 3

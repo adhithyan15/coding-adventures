@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C02-ty-vy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 80
 chapter: 2
 type: word
 headword: ты, вы
@@ -10,42 +13,53 @@ prerequisites: [RU-C02-ya, RU-C01-zdravstvuyte]
 sounds: [yery-vowel, stress-unmarked]
 roots: [pie-eg, pie-tu, pie-wos]
 etymology_hook: "я and ты are cousins of Latin ego and tū, English I and thou — pronouns are the least borrowable words a language has; вы continues PIE *wos like Latin vōs, though English you and German ihr come from the paradigm's OTHER stem *yūs, so that row is only half a cognate set; and вы is formal the way French vous is, a plural used as respect"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-YA]
+introduces:
+  knowledge: [RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU]
+practises:
+  knowledge: [RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: contrastive
+variety: standard-contemporary
 reviews_of: [RU-C02-ya, RU-C01-zdravstvuyte]
 ---
 
 # ты, вы — the two words for "you"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Chapter 1 gave you two ways to say hello, split by formality. That
 split runs through the whole language — and here is the place it matters most:
 Russian has **two words for "you."**
 
 ## The two words
+<!-- hl-knowledge: introduces=[RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER]; assesses=[] -->
 
-| | | |
-|---|---|---|
-| **ты** | *ty* | you — one person you're familiar with |
-| **вы** | *vy* | you — formal, **or** more than one person |
+> **ты** — *ty* — you, one person you're familiar with.
+> **вы** — *vy* — you, formal, **or** more than one person.
 
 Both turn on **ы**, which is the hardest vowel in Russian for an English speaker:
 not the *ee* of *ты*'s look-alike, but a tighter, further-back sound made with
 the tongue pulled towards the throat. Say English *ill*, then try to say it with
 your tongue drawn back. The writing track hasn't reached **ы** either.
 
-## The oldest words you will learn
+## The word, taken apart — the oldest words you will learn
+<!-- hl-knowledge: introduces=[RU-ETYMON-TY-THOU]; assesses=[] -->
 
 Pronouns are the **least borrowable** part of a language. Nouns come and go;
 *I* and *you* stay. So the first two line up almost too neatly:
 
-| Russian | Latin | English | German |
-|---|---|---|---|
-| **я** (last lesson) | *ego* | **I** | *ich* |
-| **ты** | *tū* | **thou** | *du* |
-| **вы** | *vōs* | — | — |
+- **я** (last lesson) — Latin *ego*, English **I**, German *ich*.
+- **ты** — Latin *tū*, English **thou**, German *du*.
+- **вы** — Latin *vōs*, with no English or German survivor to set beside it.
 
-The first two rows are the same word four times over. **The third row is only
+The first two lines are the same word four times over. **The third is only
 half a set**: *вы* and *vōs* both continue PIE \**wos*, but English *you* and
 German *ihr* come from the **other** stem in that paradigm, \**yūs*. Cousins,
 not twins — worth marking rather than smoothing over.
@@ -56,6 +70,7 @@ Quaker usage, northern dialect and liturgy), leaving *you* for everyone — whic
 is why the ты/вы choice feels foreign to English speakers. English **had** it.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU] -->
 
 [PAUSE 1s]
 - [YOU SAY: "я" — *ya*]
@@ -63,6 +78,7 @@ is why the ты/вы choice feels foreign to English speakers. English **had** i
 - [YOU SAY: the family — "**ты** … *tū* … **thou**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU] -->
 
 [PAUSE 3s] Say "I". (**Я**.) What are the two words for "you", and what splits
 them? (**Ты** informal, **вы** formal — or plural.) Why is *ты* familiar to an

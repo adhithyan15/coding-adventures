@@ -66,6 +66,7 @@ grew from the respectful title *vossa mercê*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-DE-NADA-02, PT-ETYMON-DE-NADA-03, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04, PT-GRAMMAR-TUDO-BEM-02, PT-LEX-COMO-VAI-ESTA-01, PT-SOUND-MAIS-OU-MENOS-02, PT-ETYMON-MAIS-OU-MENOS-03, PT-GRAMMAR-MAIS-OU-MENOS-04, PT-LEX-C02-PRACTICE-02, PT-NOTICE-C02-PRACTICE-03] -->
+<!-- hl-activity: {"id":"PT-C02-practice-neutral-question","kind":"text","assesses":["PT-GRAMMAR-TUDO-BEM-02"],"prompt":"Which Portuguese phrase is the safest register-neutral wellbeing question?","answer":"Tudo bem?","accepted":["tudo bem"],"feedback":{"correct":"Correct: Tudo bem? is the safest choice before you know the register.","incorrect":"Use Tudo bem? before choosing between more informal or formal alternatives."},"response_seconds":8} -->
 
 [PAUSE 3s] Run the casual exchange without looking. Which phrase answers a
 small favour? (**De nada**.) Which answer means “so-so”? (**Mais ou menos**.)

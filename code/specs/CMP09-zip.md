@@ -129,6 +129,8 @@ All multi-byte integers are **little-endian** unless otherwise stated.
 
 ### Local File Header
 
+Fixed portion is 30 bytes; total header size is `30 + n + e`.
+
 ```
 Offset  Size  Value
 ──────  ────  ──────────────────────────────────────────────
@@ -139,17 +141,24 @@ Offset  Size  Value
               bit  3: data descriptor follows (set for streaming writes)
               bit 11: UTF-8 filename (always set)
 8       2     Compression_Method: 0 or 8
-10      4     Last_Mod_File_Time (MS-DOS format)
-14      4     Last_Mod_File_Date (MS-DOS format)
-18      4     CRC-32 of uncompressed data (0 if bit 3 set)
-22      4     Compressed_Size   (0 if bit 3 set)
-26      4     Uncompressed_Size (0 if bit 3 set)
-30      2     File_Name_Length  (n)
-32      2     Extra_Field_Length (e)
-34      n     File_Name (UTF-8)
-34+n    e     Extra_Field (variable; see §Extra Fields)
-34+n+e  …     File_Data (compressed or raw bytes)
+10      2     Last_Mod_File_Time (MS-DOS format)
+12      2     Last_Mod_File_Date (MS-DOS format)
+14      4     CRC-32 of uncompressed data (0 if bit 3 set)
+18      4     Compressed_Size   (0 if bit 3 set)
+22      4     Uncompressed_Size (0 if bit 3 set)
+26      2     File_Name_Length  (n)
+28      2     Extra_Field_Length (e)
+30      n     File_Name (UTF-8)
+30+n    e     Extra_Field (variable; see §Extra Fields)
+30+n+e  …     File_Data (compressed or raw bytes)
 ```
+
+(An earlier revision of this table mis-sized `Last_Mod_File_Time` /
+`Last_Mod_File_Date` as 4 bytes each instead of 2, which cascaded a 4-byte
+offset error through the rest of the header. Every implementation in this
+repo — including the reference Rust port — has always written and read the
+correct 2-byte/2-byte, 30-byte-fixed layout below; only this table's prose
+was wrong.)
 
 ### Data Descriptor (optional, follows File_Data when bit 3 set)
 
@@ -167,7 +176,8 @@ archives both with and without the optional signature.
 
 ### Central Directory Header
 
-One per entry; all written after the last Local File Header block.
+One per entry; all written after the last Local File Header block. Fixed
+portion is 46 bytes; total header size is `46 + n + e + c`.
 
 ```
 Offset  Size  Value
@@ -177,23 +187,23 @@ Offset  Size  Value
 6       2     Version_Needed: 20 or 10
 8       2     General_Purpose_Bit_Flag (same as Local Header)
 10      2     Compression_Method
-12      4     Last_Mod_File_Time
-16      4     Last_Mod_File_Date
-20      4     CRC-32
-24      4     Compressed_Size
-28      4     Uncompressed_Size
-32      2     File_Name_Length (n)
-34      2     Extra_Field_Length (e)
-36      2     File_Comment_Length (c) — 0 in this impl
-38      2     Disk_Number_Start: 0
-40      2     Internal_File_Attributes: 0
-42      4     External_File_Attributes
+12      2     Last_Mod_File_Time
+14      2     Last_Mod_File_Date
+16      4     CRC-32
+20      4     Compressed_Size
+24      4     Uncompressed_Size
+28      2     File_Name_Length (n)
+30      2     Extra_Field_Length (e)
+32      2     File_Comment_Length (c) — 0 in this impl
+34      2     Disk_Number_Start: 0
+36      2     Internal_File_Attributes: 0
+38      4     External_File_Attributes
               Unix: (mode << 16), e.g., 0o100644 << 16 for regular file
               Directory: 0o040755 << 16
-46      4     Relative_Offset_Of_Local_Header  (byte offset from start of ZIP)
-50      n     File_Name (UTF-8)
-50+n    e     Extra_Field
-50+n+e  c     File_Comment (empty)
+42      4     Relative_Offset_Of_Local_Header  (byte offset from start of ZIP)
+46      n     File_Name (UTF-8)
+46+n    e     Extra_Field
+46+n+e  c     File_Comment (empty)
 ```
 
 ### End of Central Directory Record (EOCD)
@@ -351,12 +361,23 @@ unzip(data: bytes) → {name: str → data: bytes}
 | Perl       | `CodingAdventures::Zip`      | `CodingAdventures::Zip`        |
 | Swift      | `CodingAdventuresZip`        | `CodingAdventures.Zip`         |
 | C#         | `CodingAdventures.Zip.CSharp`| `CodingAdventures.Zip`         |
+| C++        | `ca::zip` (header-only)      | `ca::zip`                      |
 | Haskell    | `zip`                        | `Zip`                          |
 | F#         | `CodingAdventures.Zip.FSharp`| `CodingAdventures.Zip.FSharp`  |
 | Kotlin     | `com.codingadventures:zip`   | `com.codingadventures.zip`     |
+| Dart       | `coding_adventures_zip`      | `coding_adventures_zip`        |
+| C          | `c/zip`                      | `zip.h` (`Zip*` / `zip_*`)     |
 
-**Dependencies:** each ZIP package depends on the corresponding language's `deflate`
-(CMP05) package for the DEFLATE codec. The CRC-32 implementation is inlined (no separate
+**Dependencies:** in practice, every ZIP package in this repository depends only on the
+corresponding language's `lzss` (CMP02) package for LZ77 match-finding, and implements
+RFC 1951 DEFLATE framing (bit I/O, fixed/dynamic Huffman tables, block structure)
+directly inside the `zip` package itself — rather than depending on the language's
+`deflate` (CMP05) package as an earlier revision of this spec described. Where a
+language's `deflate` package uses a private, self-designed wire format for its own
+internal round-tripping instead of the standard RFC 1951 bit-stream a ZIP entry must
+carry (as `dart/deflate` does — see `code/packages/dart/zip/README.md`), depending on
+it would produce archives no real `unzip` could open and would be unable to read
+archives from other real-world tools. The CRC-32 implementation is inlined (no separate
 package — it's a trivial table-driven function).
 
 **Divergence (Haskell):** the Haskell package depends on `lzss` (CMP02) rather than
@@ -368,6 +389,19 @@ rejects BTYPE=10), which is sufficient for producing and reading valid ZIP entri
 not a byte-for-byte match with the `deflate` package's output. Documented here rather than
 changed, since the implementation is otherwise complete, tested, and correct for the
 DEFLATE subset it emits.
+
+**Divergence (C):** the C package depends directly on `deflate` (CMP05, `c/deflate`)
+rather than `lzss` (CMP02), and does not touch `lzss` at all. This is the opposite of the
+general rule above, and is safe specifically because `c/deflate` is a genuine RFC 1951
+codec — built and verified (including against a real `zlib`-produced dynamic-Huffman
+stream) after the general "don't depend on `deflate`" guidance above was written to codify
+the `dart/deflate` failure mode. `zip_writer_add_file` calls `deflate_compress` (which
+picks fixed or dynamic Huffman, whichever is smaller); `zip_reader_read` calls
+`deflate_decompress`, which decodes all three RFC 1951 block types, verified against the
+same real-world Python-`zipfile` dynamic-Huffman fixture the Rust reference implementation
+uses. Any other language port considering this same divergence must first read its
+sibling `deflate` package's source and confirm it emits/accepts standard RFC 1951 — the
+general rule remains correct for every `deflate` package that does not clear that bar.
 
 ## Test Cases
 
@@ -416,9 +450,9 @@ assert "mydir/file.txt" in names
 ```
 # Corrupt the decompressed content's CRC in the header; reader must raise an error
 archive = zip_bytes([("f.txt", b"test")])
-# Flip a byte in the CRC-32 field (bytes 18–21 of the Local Header)
+# Flip a byte in the CRC-32 field (bytes 14–17 of the Local Header)
 corrupted = bytearray(archive)
-corrupted[18] ^= 0xFF   # corrupt CRC
+corrupted[14] ^= 0xFF   # corrupt CRC
 try:
     unzip(bytes(corrupted))
     assert False, "should have raised"

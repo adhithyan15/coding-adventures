@@ -35,8 +35,30 @@ forms in the etymology. The forced build is free of missing glyphs, layout
 boxes, duplicate destinations, Hyperref warnings, and LaTeX warnings. Run
 `latexmk -xelatex book.tex`.
 
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's HL05 capability ledger. Each
+entry states, in the reader's own voice, what finishing that chapter lets them
+*do* (`canDo`), and names the lesson that proves it (`payoff`) together with the
+knowledge atoms that payoff exercises. It is authored intent, not a derived
+cache — no validator may rewrite it.
+
+Chapters **2–17** are authored, which is every Portuguese chapter that owns a
+`core/book-generation.json` target. Chapter **1** is deliberately absent: its
+lessons are still schema v1 with no declared `practises.knowledge`, so there is
+no honest payoff to point at, and stubbing one would destroy the signal the HL05
+gap report exists to measure. That absence is tracked debt.
+
+Chapters 2–5 end in a terminal `practice-mix`, which is the payoff. Chapters
+6–17 have none, so the payoff is the chapter's last lesson by sequence — the one
+carrying its recombination and wrap-up recall. Chapter 2 carries *two*
+`practice-mix` lessons; the terminal one, `PT-C02-formal-practice`, is the
+payoff, and its narrow practice set is a known representativeness risk (see
+`CHANGELOG.md`).
+
 ## Files
 
+- [`chapters.json`](./chapters.json) — the HL05 chapter capability ledger.
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)

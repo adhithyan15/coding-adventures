@@ -3054,7 +3054,10 @@ fn arith_op_from_value(v: &str) -> Option<ArithOp> {
     }
 }
 
-fn agg_op_from_keyword(kw: &str) -> Option<AggOp> {
+/// The aggregation keywords, and the single place they are named. `lower`'s
+/// reserved-name gate reads this too, so the set the grammar aggregates over and
+/// the set a formula may not shadow cannot drift apart.
+pub(crate) fn agg_op_from_keyword(kw: &str) -> Option<AggOp> {
     match kw {
         "sum" => Some(AggOp::Sum),
         "count" => Some(AggOp::Count),

@@ -7,6 +7,7 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+import adj_provenance_builder as builder
 import adj_stdlib_provenance as provenance
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -76,83 +77,6 @@ QUERY_SPECS = (
 )
 
 
-def claim(claim_id: str, data: bytes, start: int, end: int) -> dict:
-    cited = data[start:end]
-    return {
-        "claim_id": claim_id,
-        "end": end,
-        "quote": cited.decode("utf-8"),
-        "quote_sha256": provenance.sha256_bytes(cited),
-        "start": start,
-    }
-
-
-def source_segments(
-    data: bytes,
-    represented: list[tuple[int, int, list[dict]]],
-    *,
-    discarded_reason: str,
-    reasoned_discards: list[tuple[int, int, str]] | None = None,
-) -> list[dict]:
-    segments = []
-    cursor = 0
-
-    def discard(start: int, end: int) -> None:
-        discard_cursor = start
-        for special_start, special_end, reason in reasoned_discards or []:
-            if special_end <= start or special_start >= end:
-                continue
-            if special_start < start or special_end > end:
-                raise provenance.ProvenanceError(
-                    "reasoned discard crosses a represented byte range"
-                )
-            if discard_cursor < special_start:
-                segments.append(
-                    {
-                        "disposition": "discarded",
-                        "end": special_start,
-                        "reason": discarded_reason,
-                        "start": discard_cursor,
-                    }
-                )
-            segments.append(
-                {
-                    "disposition": "discarded",
-                    "end": special_end,
-                    "reason": reason,
-                    "start": special_start,
-                }
-            )
-            discard_cursor = special_end
-        if discard_cursor < end:
-            segments.append(
-                {
-                    "disposition": "discarded",
-                    "end": end,
-                    "reason": discarded_reason,
-                    "start": discard_cursor,
-                }
-            )
-
-    for start, end, claims in sorted(represented, key=lambda item: (item[0], item[1])):
-        if start < cursor:
-            raise provenance.ProvenanceError("source claim ranges overlap")
-        if cursor < start:
-            discard(cursor, start)
-        segments.append(
-            {
-                "claims": claims,
-                "disposition": "represented",
-                "end": end,
-                "start": start,
-            }
-        )
-        cursor = end
-    if cursor < len(data):
-        discard(cursor, len(data))
-    return segments
-
-
 def local_source(
     cas: provenance.Cas,
     repo_path: str,
@@ -161,10 +85,24 @@ def local_source(
     *,
     discarded_reason: str,
     data: bytes | None = None,
+    on_disk: bool = True,
     reasoned_discards: list[tuple[int, int, str]] | None = None,
 ) -> tuple[dict, dict[str, dict]]:
     if data is None:
         data = provenance._read_regular_file(REPO_ROOT / repo_path)
+    elif on_disk:
+        # The supplied buffer must be THIS file's bytes. Nothing else checks it:
+        # the receipt, the IR and every quote are all derived from `data`, so a
+        # mispaired variable would hash one file while claiming another and stay
+        # perfectly self-consistent. A re-read here is a CHECK, never a second
+        # source of quotes. Callers passing a snapshot that may legitimately
+        # differ from disk opt out with `on_disk=False`.
+        actual = provenance._read_regular_file(REPO_ROOT / repo_path)
+        if actual != data:
+            raise provenance.ProvenanceError(
+                f"{repo_path}: supplied bytes do not match the file on disk "
+                f"({provenance.sha256_bytes(data)} vs {provenance.sha256_bytes(actual)})"
+            )
     raw_hash = cas.put(data, kind="raw_source", label=label)
     receipt = provenance.build_input_receipt(
         repo_path=repo_path,
@@ -184,14 +122,14 @@ def local_source(
     for (start, end), claim_ids in sorted(grouped.items()):
         range_claims = []
         for claim_id in sorted(claim_ids):
-            item = claim(claim_id, data, start, end)
+            item = builder.claim(claim_id, data, start, end)
             claims[claim_id] = item
             range_claims.append(item)
         represented.append((start, end, range_claims))
     ir = provenance.build_source_ir(
         source_sha256=raw_hash,
         source=data,
-        segments=source_segments(
+        segments=builder.source_segments(
             data,
             represented,
             discarded_reason=discarded_reason,
@@ -322,13 +260,13 @@ def retained_external_source(
             raise provenance.ProvenanceError(
                 f"reviewed OpenStax {claim_id} byte span drifted"
             )
-        item = claim(claim_id, captured, start, end)
+        item = builder.claim(claim_id, captured, start, end)
         raw_claims[claim_id] = item
         represented.append((start, end, [item]))
     raw_ir = provenance.build_source_ir(
         source_sha256=raw_hash,
         source=captured,
-        segments=source_segments(
+        segments=builder.source_segments(
             captured,
             represented,
             discarded_reason=(
@@ -361,7 +299,7 @@ def retained_external_source(
             raise provenance.ProvenanceError(
                 f"rendered OpenStax proportion {label} hash drifted"
             )
-        rendered_claim = claim(claim_id, rendered, 0, len(rendered))
+        rendered_claim = builder.claim(claim_id, rendered, 0, len(rendered))
         rendered_claims[claim_id] = rendered_claim
         rendered_ir = provenance.build_source_ir(
             source_sha256=rendered_hash,
@@ -412,10 +350,6 @@ def retained_external_source(
     )
 
 
-def input_claim_payload(item: dict) -> dict:
-    return {key: item[key] for key in ("end", "quote", "quote_sha256", "start")}
-
-
 def _fixture_ranges(fixture_bytes: bytes) -> list[tuple[str, int, int]]:
     ranges = []
     for name, value in sorted(
@@ -440,96 +374,39 @@ def _query_bundle(
     formula_audit_command: Sequence[str],
     query_bytes: bytes | None = None,
 ) -> tuple[str, str]:
-    if query_bytes is None:
-        query_bytes = provenance._read_regular_file(REPO_ROOT / query_path)
-    query_ranges = []
-    for name, value in facts:
-        claim_id = f"adj.input.arithmetic.proportion.{name}.{value}"
-        start = query_bytes.index(f"observe {name}({value})".encode())
-        trust = query_bytes.index(b"    trust authoritative", start)
-        end = query_bytes.index(b"\n", trust) + 1
-        query_ranges.append((claim_id, start, end))
-    import_start = query_bytes.index(b'import "proportion.adj"')
-    import_end = query_bytes.index(b"\n", import_start) + 1
-    query_ranges.append(
-        ("adj.code.arithmetic.proportion.query.import", import_start, import_end)
-    )
-    question_start = query_bytes.index(b"? fourth_proportional(")
-    question_end = query_bytes.index(b"\n", question_start) + 1
-    query_ranges.append((QUESTION_CLAIM, question_start, question_end))
-    binding_cursor = 0
-    binding_index = 0
-    while True:
-        binding_start = query_bytes.find(b"let ", binding_cursor)
-        if binding_start < 0:
-            break
-        binding_end = query_bytes.index(b"\n", binding_start) + 1
-        query_ranges.append(
-            (f"{bundle_id}.binding.{binding_index}", binding_start, binding_end)
-        )
-        binding_cursor = binding_end
-        binding_index += 1
-    query_source, query_claims = local_source(
+    return builder.build_query_bundle(
         cas,
-        query_path,
-        query_ranges,
-        f"{Path(query_path).name} input",
-        discarded_reason=(
-            "comments, spacing, or human-readable explanation outside the selected "
-            "import, observations, and executable question"
+        spec=builder.QueryLibrarySpec(
+            bundle_id=bundle_id,
+            query_path=query_path,
+            fixture_path=FIXTURE,
+            claim_prefix="adj.input.arithmetic.proportion",
+            qualify_by_value=True,
+            import_literal=b'import "proportion.adj"',
+            import_claim_id="adj.code.arithmetic.proportion.query.import",
+            question_prefix=b"? fourth_proportional(",
+            question_claim_id=QUESTION_CLAIM,
+            accepted_fact_reason=(
+                "deterministic proportion query input retained as the "
+                "explicit accepted fact"
+            ),
+            discarded_reason=(
+                "comments, spacing, or human-readable explanation outside the selected "
+                "import, observations, and executable question"
+            ),
+            input_description=f"{Path(query_path).name} input",
+            witness_label=f"{Path(query_path).name} v2 execution witness",
+            scan_bindings=True,
         ),
-        data=query_bytes,
+        repo_root=REPO_ROOT,
+        facts=facts,
+        library_hash=library_hash,
+        fixture_source=fixture_source,
+        fixture_claims=fixture_claims,
+        formula_audit_command=formula_audit_command,
+        local_source=local_source,
+        query_bytes=query_bytes,
     )
-    fixture_locator = f"repo://{FIXTURE}"
-    clauses = []
-    for name, value in facts:
-        claim_id = f"adj.input.arithmetic.proportion.{name}.{value}"
-        clauses.append(
-            {
-                **fixture_claims[claim_id],
-                "input_claim": input_claim_payload(query_claims[claim_id]),
-                "locator": fixture_locator,
-                "resolution": {
-                    "authority_receipt_sha256": fixture_source["receipt_sha256"],
-                    "authority_source_sha256": fixture_source["raw_source_sha256"],
-                    "classification": "accepted_fact",
-                    "kind": "accepted_root",
-                    "reason": (
-                        "deterministic proportion query input retained as the "
-                        "explicit accepted fact"
-                    ),
-                },
-                "snapshot_sha256": fixture_source["raw_source_sha256"],
-                "source_ir_sha256": fixture_source["source_ir_sha256"],
-            }
-        )
-    bundle = {
-        "bundle_id": bundle_id,
-        "clauses": clauses,
-        "dependencies": [library_hash],
-        "input": {
-            key: query_source[key]
-            for key in ("raw_source_sha256", "receipt_sha256", "source_ir_sha256")
-        },
-        "kind": "provenance_bundle",
-        "library": query_path,
-        "sources": [query_source, fixture_source],
-    }
-    derivations, witnesses = provenance.put_formula_execution_evidence(
-        cas,
-        bundle,
-        formula_audit_command,
-        label=f"{Path(query_path).name} v2 execution witness",
-    )
-    bundle["formula_derivation_sha256s"] = derivations
-    bundle["execution_witness_sha256s"] = witnesses
-    bundle_hash = cas.put_json(
-        bundle,
-        kind="provenance_bundle",
-        label=f"{Path(query_path).name} provenance bundle",
-        links=provenance._bundle_declared_links(bundle),
-    )
-    return bundle_id, bundle_hash
 
 
 def build(
@@ -587,6 +464,7 @@ def build(
             "explanatory comments, separators, or closing syntax outside the "
             "selected import, vocabulary, use, and formula rules"
         ),
+        data=library_bytes,
     )
     formula_inventory_hash = provenance.put_formula_parser_inventory(
         cas,
@@ -599,7 +477,9 @@ def build(
         "clauses": [
             {
                 **external_claims[PROPORTION_CLAIM],
-                "input_claim": input_claim_payload(input_claims[PROPORTION_CLAIM]),
+                "input_claim": builder.input_claim_payload(
+                    input_claims[PROPORTION_CLAIM]
+                ),
                 "locator": LOCATOR,
                 "resolution": {
                     "authority_receipt_sha256": external_source["receipt_sha256"],
@@ -641,6 +521,7 @@ def build(
         _fixture_ranges(fixture_bytes),
         "proportion input fixture",
         discarded_reason="newline record separators outside the accepted fact bytes",
+        data=fixture_bytes,
     )
     roots = {bundle["bundle_id"]: bundle_hash}
     for bundle_id, query_path, facts in QUERY_SPECS:

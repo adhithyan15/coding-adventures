@@ -63,6 +63,7 @@ with its article, as one small unit: *el + noun* or *la + noun*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER] -->
+<!-- hl-activity: {"id":"ES-C01-genero-gramatical-class-count","kind":"text","assesses":["ES-GRAMMAR-NOUN-GENDER"],"prompt":"How many grammatical noun classes does Spanish keep?","answer":"two","accepted":["2"],"feedback":{"correct":"Right: Spanish keeps masculine and feminine noun classes.","incorrect":"Spanish reduced Latin's three classes to two: masculine and feminine."},"response_seconds":8} -->
 
 [PAUSE 3s] How many noun classes did Latin have? (Three.) How many does
 Spanish keep? (Two.) What should travel with every new noun you learn? (Its

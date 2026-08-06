@@ -14,6 +14,8 @@ export interface BookGenerationTarget {
   scriptCommand?: string;
   /** Multiple script/font mappings for lessons that compare writing systems inline. */
   inlineScripts?: InlineRenderOptions[];
+  /** Canonical HTTP(S) directory containing the language-track sources. */
+  sourceBaseUrl?: string;
 }
 
 export interface InlineRenderOptions {
@@ -22,6 +24,10 @@ export interface InlineRenderOptions {
 }
 
 type InlineRenderOptionsInput = InlineRenderOptions | readonly InlineRenderOptions[];
+
+export interface MarkdownRenderContext {
+  linkBaseUrl?: string;
+}
 
 export interface GeneratedBookChapter {
   tex: string;
@@ -66,6 +72,41 @@ function escapeLatexCharacter(character: string): string {
   return escaped[character] ?? character;
 }
 
+function resolveMarkdownLink(destination: string, baseUrl: string | undefined): string {
+  const trimmed = destination.trim();
+  if (trimmed === "") throw new Error("Markdown link destination must not be empty");
+  let resolved: URL;
+  try {
+    resolved = baseUrl === undefined ? new URL(trimmed) : new URL(trimmed, baseUrl);
+  } catch {
+    if (baseUrl === undefined) {
+      throw new Error(`relative Markdown link '${trimmed}' requires a source base URL`);
+    }
+    throw new Error(`invalid Markdown link destination '${trimmed}'`);
+  }
+  if (resolved.protocol !== "https:" && resolved.protocol !== "http:") {
+    throw new Error(`unsupported Markdown link protocol '${resolved.protocol}'`);
+  }
+  return resolved.href;
+}
+
+/** Escape URL characters that TeX would otherwise interpret inside `\href`'s first argument. */
+function escapeLatexLinkDestination(destination: string): string {
+  const escaped: Record<string, string> = {
+    "\\": "\\%5C",
+    "{": "\\%7B",
+    "}": "\\%7D",
+    "$": "\\%24",
+    "^": "\\%5E",
+    "~": "\\%7E",
+    "%": "\\%",
+    "#": "\\#",
+    "_": "\\_",
+    "&": "\\&",
+  };
+  return destination.replace(/[\\{}$^~%#_&]/g, (character) => escaped[character] ?? character);
+}
+
 function scriptMatchers(options: InlineRenderOptionsInput | undefined): Array<{
   matcher: RegExp;
   scriptCommand: string;
@@ -91,15 +132,80 @@ function scriptMatchers(options: InlineRenderOptionsInput | undefined): Array<{
   });
 }
 
+type StraightQuoteRole = "opening" | "closing";
+
+/**
+ * Pair authored ASCII double quotes that belong to prose. Code spans, escaped
+ * literals, and link destinations are intentionally outside this typography
+ * pass so the generated PDF never changes their contents.
+ */
+function pairedStraightQuoteRoles(markdown: string): Map<number, StraightQuoteRole> {
+  const positions: number[] = [];
+  let cursor = 0;
+  while (cursor < markdown.length) {
+    const character = markdown[cursor] ?? "";
+    if (character === "\\" && cursor + 1 < markdown.length) {
+      const escaped = markdown[cursor + 1] ?? "";
+      if (`!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~`.includes(escaped)) {
+        cursor += 2;
+        continue;
+      }
+    }
+    if (character === "`") {
+      const end = markdown.indexOf("`", cursor + 1);
+      if (end !== -1) {
+        cursor = end + 1;
+        continue;
+      }
+    }
+    if (character === "[") {
+      const labelEnd = markdown.indexOf("](", cursor + 1);
+      const destinationEnd = labelEnd === -1 ? -1 : markdown.indexOf(")", labelEnd + 2);
+      if (labelEnd !== -1 && destinationEnd !== -1) {
+        cursor = destinationEnd + 1;
+        continue;
+      }
+    }
+    if (character === '"') positions.push(cursor);
+    cursor += 1;
+  }
+
+  const roles = new Map<number, StraightQuoteRole>();
+  const openings: number[] = [];
+  for (const position of positions) {
+    let previousIndex = position - 1;
+    while (markdown[previousIndex] === "*") {
+      previousIndex -= 1;
+    }
+    const previous = markdown[previousIndex];
+    const next = markdown[position + 1];
+    const hasOpeningContext =
+      (previous === undefined || /\s/.test(previous) || "([{<—–-/:;=".includes(previous)) &&
+      next !== undefined &&
+      !/\s/.test(next);
+    if (hasOpeningContext) {
+      openings.push(position);
+      continue;
+    }
+    const opening = openings.pop();
+    if (opening === undefined) continue;
+    roles.set(opening, "opening");
+    roles.set(position, "closing");
+  }
+  return roles;
+}
+
 /** Render the deliberately small inline subset used by schema-v2 lessons. */
 export function renderInlineMarkdown(
   markdown: string,
   options?: InlineRenderOptionsInput,
+  context: MarkdownRenderContext = {},
 ): string {
   markdown = markdown.normalize("NFC");
   const output: string[] = [];
   const emphasis: Array<"italic" | "bold"> = [];
   const scripts = scriptMatchers(options);
+  const straightQuotes = pairedStraightQuoteRoles(markdown);
   let cursor = 0;
   const open = (kind: "italic" | "bold"): void => {
     output.push(kind === "italic" ? "\\emph{" : "\\textbf{");
@@ -160,10 +266,27 @@ export function renderInlineMarkdown(
       const labelEnd = markdown.indexOf("](", cursor + 1);
       const destinationEnd = labelEnd === -1 ? -1 : markdown.indexOf(")", labelEnd + 2);
       if (labelEnd !== -1 && destinationEnd !== -1) {
-        output.push(renderInlineMarkdown(markdown.slice(cursor + 1, labelEnd), options));
+        const destination = resolveMarkdownLink(
+          markdown.slice(labelEnd + 2, destinationEnd),
+          context.linkBaseUrl,
+        );
+        const label = renderInlineMarkdown(
+          markdown.slice(cursor + 1, labelEnd),
+          options,
+          context,
+        );
+        output.push(`\\href{${escapeLatexLinkDestination(destination)}}{${label}}`);
         cursor = destinationEnd + 1;
         continue;
       }
+    }
+    const straightQuote = straightQuotes.get(cursor);
+    if (straightQuote) {
+      output.push(
+        straightQuote === "opening" ? "\\textquotedblleft{}" : "\\textquotedblright{}",
+      );
+      cursor += 1;
+      continue;
     }
     if (markdown.startsWith("***", cursor)) {
       const top = emphasis.at(-1);
@@ -197,7 +320,11 @@ export function renderInlineMarkdown(
   return output.join("");
 }
 
-function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): string {
+function renderMarkdown(
+  markdown: string,
+  options?: InlineRenderOptionsInput,
+  context: MarkdownRenderContext = {},
+): string {
   const output: string[] = [];
   const paragraph: string[] = [];
   const quote: string[] = [];
@@ -207,14 +334,14 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): s
 
   const flushParagraph = (): void => {
     if (paragraph.length === 0) return;
-    output.push(renderInlineMarkdown(paragraph.join(" "), options), "");
+    output.push(renderInlineMarkdown(paragraph.join(" "), options, context), "");
     paragraph.length = 0;
   };
   const flushQuote = (): void => {
     if (quote.length === 0) return;
     output.push(
       "\\begin{quote}",
-      renderInlineMarkdown(quote.join(" "), options),
+      renderInlineMarkdown(quote.join(" "), options, context),
       "\\end{quote}",
       "",
     );
@@ -222,7 +349,7 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): s
   };
   const flushListItem = (): void => {
     if (listItem.length === 0) return;
-    output.push(`  \\item ${renderInlineMarkdown(listItem.join(" "), options)}`);
+    output.push(`  \\item ${renderInlineMarkdown(listItem.join(" "), options, context)}`);
     listItem = [];
   };
   const closeList = (): void => {
@@ -241,7 +368,7 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): s
     if (!isSeparator || header.length === 0) {
       output.push(
         ...tableRows.flatMap((row) => [
-          renderInlineMarkdown(`| ${row.join(" | ")} |`, options),
+          renderInlineMarkdown(`| ${row.join(" | ")} |`, options, context),
           "",
         ]),
       );
@@ -254,7 +381,7 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): s
     ).join("");
     const cells = (row: string[]): string[] =>
       Array.from({ length: header.length }, (_, index) =>
-        renderInlineMarkdown(row[index] ?? "", options),
+        renderInlineMarkdown(row[index] ?? "", options, context),
       );
     output.push(
       "\\noindent",
@@ -302,6 +429,10 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): s
       quote.push(line.slice(2));
       continue;
     }
+    if (quote.length > 0 && /^\s+/.test(line)) {
+      quote.push(line.trim());
+      continue;
+    }
     if (line.startsWith("- ")) {
       flushParagraph();
       flushQuote();
@@ -328,9 +459,13 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): s
   return output.join("\n").trimEnd();
 }
 
-function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptionsInput): string {
-  const content = renderMarkdown(block.markdown, options);
-  const title = renderInlineMarkdown(block.title, options);
+function renderBlock(
+  block: LessonBodyBlock,
+  options?: InlineRenderOptionsInput,
+  context: MarkdownRenderContext = {},
+): string {
+  const content = renderMarkdown(block.markdown, options, context);
+  const title = renderInlineMarkdown(block.title, options, context);
   if (block.type === "pronunciation") return `\\begin{sounds}\n${content}\n\\end{sounds}`;
   if (block.type === "etymology") return `\\begin{cousinweb}\n${content}\n\\end{cousinweb}`;
   if (block.type === "grammar" || block.type === "notice") {
@@ -392,6 +527,24 @@ function targetRenderOptions(target: BookGenerationTarget): InlineRenderOptionsI
   return { unicodeScript: target.unicodeScript, scriptCommand: target.scriptCommand };
 }
 
+function lessonSourceUrl(target: BookGenerationTarget, lesson: ParsedLesson): string | undefined {
+  if (target.sourceBaseUrl === undefined) return undefined;
+  let root: URL;
+  try {
+    root = new URL(
+      target.sourceBaseUrl.endsWith("/") ? target.sourceBaseUrl : `${target.sourceBaseUrl}/`,
+    );
+  } catch {
+    throw new Error(`${target.language} chapter ${target.chapter}: invalid sourceBaseUrl`);
+  }
+  if (root.protocol !== "https:" && root.protocol !== "http:") {
+    throw new Error(`${target.language} chapter ${target.chapter}: sourceBaseUrl must use HTTP(S)`);
+  }
+  const language = encodeURIComponent(target.language);
+  const lessonId = encodeURIComponent(lesson.realization.lessonId);
+  return new URL(`${language}/lessons/${lessonId}.md`, root).href;
+}
+
 /** Render one configured chapter from the same typed lesson AST the app receives. */
 export function renderBookChapter(
   target: BookGenerationTarget,
@@ -424,11 +577,12 @@ export function renderBookChapter(
   const sourceHash = canonicalChapterHash(lessons);
   const sections = lessons.map((lesson) => {
     const id = lesson.realization.lessonId;
+    const context = { linkBaseUrl: lessonSourceUrl(target, lesson) };
     return [
       `\\section[${sectionShortTitle(lesson, renderOptions)}]{${renderInlineMarkdown(lessonTitle(lesson), renderOptions)}}`,
       `\\label{lesson:${id}}`,
       "",
-      ...lesson.blocks.map((block) => renderBlock(block, renderOptions)),
+      ...lesson.blocks.map((block) => renderBlock(block, renderOptions, context)),
     ].join("\n\n");
   });
   const tex = [

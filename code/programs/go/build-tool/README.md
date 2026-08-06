@@ -99,6 +99,55 @@ distribution spellings are aliases only. The shared field-boundary fixture and
 complete 256-package lane resolve exactly 217 total edges: 216 from
 authoritative manifests and one qualified BUILD dependency.
 
+Elixir dependency resolution reads local dependency tuples only from direct
+project `deps:` lists and lists returned by block or shorthand `defp deps`
+functions. Multiline tuples are accepted when they contain a quoted `path:`
+option. Project and application metadata, source prose, comments, `mix.lock`,
+and non-path Hex or Git dependencies cannot invent graph edges. The shared
+field-boundary fixture covers direct, block, shorthand, multiline, comment,
+metadata, and external-dependency cases; the complete 282-package lane resolves
+exactly 472 edges.
+
+Dart dependency resolution reads only direct package keys under the root
+`dependencies:` and `dev_dependencies:` maps. Scalar constraints and nested
+source maps are both valid direct entries, while nested `path:`, `git:`,
+`url:`, `ref:`, and `sdk:` options, dependency overrides, comments, and
+unrelated YAML fields cannot invent graph edges. Root `name:` values and
+directory-derived snake-case aliases identify packages. The shared
+field-boundary fixture covers these boundaries, and the complete 82-package
+lane resolves exactly 67 edges.
+
+TypeScript dependency resolution parses the root `package.json` and reads only
+direct property names from `dependencies` and `devDependencies`. Exact
+top-level `name` strings and directory-derived scoped or unscoped names supply
+aliases. Dependency values are not followed, and peer or optional dependency
+tables, scripts, nested tool configuration, nested names, and malformed JSON
+cannot invent partial graph edges. The shared field-boundary fixture covers
+single-line objects and adversarial decoys; the complete 470-package lane
+resolves exactly 1,076 edges.
+
+Java and Kotlin dependency resolution reads only `includeBuild("...")` calls
+from root `settings.gradle.kts` files. Calls may span lines; their quoted
+relative paths are normalized lexically and must exactly match a discovered
+package root in the same language lane. Comments, unrelated strings,
+`include(...)`, build-script coordinates, absolute paths, cross-lane paths,
+and unknown targets cannot invent graph edges. Referenced targets are never
+opened. Java/Kotlin source and Gradle settings/build files participate in the
+package hash. The two shared field-boundary fixtures cover direct and nested
+paths plus adversarial decoys; the complete Java and Kotlin lanes resolve
+exactly 186 and 166 edges respectively.
+
+C#, F#, and shared .NET dependency resolution reads only literal `Include`
+attributes on unqualified `ProjectReference` start elements in root `.csproj`
+and `.fsproj` files. Relative paths use portable separators, normalize
+lexically, and must exactly match another discovered root project file in the
+shared .NET scope. Comments, CDATA, processing instructions, escaped examples,
+namespaced elements, package references, MSBuild properties, globs, absolute
+paths, nested test projects, and unknown targets cannot invent graph edges;
+referenced files are never opened. Three shared fixtures cover both language
+lanes and cross-language references. The complete 198-package C# and
+197-package F# lanes resolve exactly 238 and 239 edges respectively.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C21-sabado-domingo
+spine_node: SPINE-TIME-OF-DAY
+sequence: 680
 chapter: 21
 type: word
 headword: sábado, domingo
@@ -9,19 +12,33 @@ prerequisites: [ES-C21-lunes-viernes]
 sounds: [r-tap, stress-accent]
 roots: [sabbatum-latin, dominica-latin]
 etymology_hook: "sábado ← Sabbatum (the Sabbath), domingo ← diēs Dominica ('the Lord's day') — the two days that broke the planet-god pattern"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02]
+introduces:
+  knowledge: [ES-LEX-WEEKEND-01, ES-ETYMON-WEEKEND-02]
+practises:
+  knowledge: [ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02, ES-LEX-WEEKEND-01, ES-ETYMON-WEEKEND-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C21-lunes-viernes, ES-C08-numeros-6-10]
 ---
 
 # sábado and domingo — the week's religious edge
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02] -->
 
 [PAUSE 2s] Five days named for planets — then two that broke the pattern
 entirely. The weekend is where **religion overwrote astronomy**, and Spanish
 keeps both rewrites in plain view.
 
 ## The two days, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-WEEKEND-01, ES-ETYMON-WEEKEND-02]; assesses=[] -->
 
 | Spanish | ← Latin | meaning | note |
 |---|---|---|---|
@@ -42,6 +59,7 @@ Two different rewrites:
   the *di-* (day) fossil jumped to the front of the word.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02, ES-LEX-WEEKEND-01, ES-ETYMON-WEEKEND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full week — "lunes, martes, miércoles, jueves, viernes,
@@ -52,6 +70,7 @@ Two different rewrites:
   / Sunday (Lord vs. Sun)"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02, ES-LEX-WEEKEND-01, ES-ETYMON-WEEKEND-02] -->
 
 [PAUSE 3s] Give all seven Spanish days. (*Lunes … domingo*.) Where does
 **sábado** come from, and its English contrast? (The **Sabbath**, *Sabbatum*;

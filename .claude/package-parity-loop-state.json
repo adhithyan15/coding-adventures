@@ -12,23 +12,22 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9884,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9884",
-    "branch": "codex/build-tool-haskell-go-field-aware-manifest-resolution",
-    "implementation_head": "b83d6587380ac95cf8da68c016a26f441be6ab4a",
-    "last_ci_repair": null
+    "number": 9916,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9916",
+    "branch": "codex/typescript-node-builtin-declarations",
+    "status": "open"
   },
   "last_inventory": {
-    "revision": "21b96a502887eb6186959c08187a20404235e4b7",
+    "revision": "00e47db9a4a8407800c678a50c64475c11699708",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1263,
-    "implementation_package_slots": 4418,
+    "implementation_identities": 1264,
+    "implementation_package_slots": 4419,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 270,
-    "singleton_packages": 813,
-    "singleton_missing_slots": 11382,
-    "rust_singletons": 617,
+    "singleton_packages": 814,
+    "singleton_missing_slots": 11396,
+    "rust_singletons": 618,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -317,7 +316,43 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The rebased Go oracle full dry-run reports 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. The Python validator separately reports 10 Lua BUILD_windows gaps, now materialized as a child wave. Deliver dependency-shaped waves and preserve the broader July 29 audit queue for Perl, Dart, Kotlin, and related packages."
+      "notes": "The rebased Go oracle full dry-run originally reported 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. The TypeScript children are now merged and the exact post-#9912 baseline is 17 diagnostics: two Perl, 12 Python, and three Swift. The Python validator separately reports 10 Lua BUILD_windows gaps, already materialized as a child wave. Deliver only the explicit dependency-shaped children and preserve the broader July 29 audit queue for Dart, Kotlin, and related packages."
+    },
+    {
+      "id": "typescript-build-windows-cli-builder-closure",
+      "title": "Repair the TypeScript BUILD_windows cli-builder prerequisite closure",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "codex/typescript-build-windows-cli-builder-closure",
+      "pr_number": 9909,
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. Fifty-four packages are missing only typescript/cli-builder, while grammar-tools is missing cli-builder plus directed-graph and state-machine. Reconcile these 55 Windows front doors with their authoritative generic BUILD prerequisite order as one common dependency-shaped closure; keep the three SIR runtime packages separate. Selected by the post-merge dependency/leverage pass because one shared prerequisite repair closes 55 of 58 TypeScript validator failures in a single coherent layer, leaving the unrelated three-package SIR closure explicit and pending. The collision-checked da895587f3 inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The implementation changes only the 55 owned BUILD_windows files, preserves every prior command byte-for-byte after removing the inserted bootstrap, and verifies complete dependency-safe ordering. The canonical validator falls from the exact 58-package red baseline to only the three separately owned SIR diagnostics. Real Windows front doors pass 169 grammar-tools tests at 85.85% statement coverage and 79 algol-lexer tests at 87.5%, with zero production vulnerabilities. The Go build tool passes test, vet, build, and module verification; its committed diff plan reports exactly 55 changed and 185 affected TypeScript packages. The collision-checked inventory remains unchanged with zero collisions and unknown buckets. An optional algol-lexer npm run build exposed a separate TS6059 compiler-input boundary and is logged pending as typescript-standalone-tsconfig-input-boundaries; its generated test artifacts were removed and this tranche remains scoped to BUILD prerequisites. Ready-for-review PR #9909 opened at exact implementation head 679b0cf743a5f977049981b7dc9f9afc61527fd6."
+    },
+    {
+      "id": "typescript-build-windows-sir-runtime-closure",
+      "title": "Repair the TypeScript BUILD_windows SIR runtime prerequisite closure",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "codex/typescript-build-windows-sir-runtime-closure",
+      "pr_number": 9911,
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. sir-runtime-core lacks exceptions and pairs, sir-runtime-oop lacks core plus exceptions and pairs, and sir-runtime-symbolic lacks cas-pattern-matching plus symbolic-ir. Repair these three related Windows front doors as a separate SIR runtime dependency closure. Selected after guarded PR #9909 merged because the exact three-package red baseline is the complete remaining TypeScript BUILD_windows validator debt; this bounded dependency family has higher immediate closure leverage than the still-unclassified repository-wide TS6059 input-boundary audit. The collision-checked 4c9d1a6f6b inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The implemented contract and focused repository regression lock the exact three prerequisite orders. Clean front-door validation also exposed and repaired same-family strict TypeScript gaps: core and oop now declare the Node typings required while compiling local core sources, core builtin callbacks explicitly accept Val arguments, and oop narrows nullable extremal block keys without runtime changes. The canonical validator passes all 470 TypeScript packages. Real Windows front doors pass 60 core tests at 93.2% statement coverage, 120 oop tests at 96.31%, and 23 symbolic tests at 100%; all three production audits and builds pass, and none declares a lint script. The Go build tool passes test, vet, build, and module verification. Its committed diff plan selects exactly seven packages (the three runtimes plus four materialized prerequisites) and skips 463. The collision inventory remains unchanged with zero collisions or unknown buckets. Ready-for-review PR #9911 opened at exact implementation head 111b711765623d4a8ca2a812e4fd8c386a91d2ae."
+    },
+    {
+      "id": "typescript-standalone-tsconfig-input-boundaries",
+      "title": "Audit standalone TypeScript build input boundaries",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "codex/typescript-tsconfig-input-boundaries",
+      "pr_number": 9912,
+      "notes": "Discovered during representative downstream validation of the TypeScript BUILD_windows cli-builder closure. algol-lexer inherits the shared src rootDir but has no include boundary, so its optional npm run build admits tests/tokenizer.test.ts through TypeScript's default include and fails with TS6059. The package's authoritative BUILD_windows coverage front door remains green. Audit build-script packages for the same rootDir/include mismatch and repair the resulting compiler-input boundary as a separate dependency-shaped tranche; do not widen BUILD prerequisite work. Selected after guarded PR #9911 merged because the exact static corpus contains 96 build-script projects with an effective src root, no explicit include/files/exclude boundary, and 202 tracked TypeScript files outside that root. One shared compiler-input contract therefore has greater immediate build leverage than the separately pending 10-file Lua prerequisite wave. The collision-checked fa9c70094e inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The executable audit now covers all 458 build-script projects and reports 422 rooted configs, 420 explicitly bounded rooted configs, zero unbounded rooted projects, zero tracked inputs leaking outside effective roots, 143 isolated standalone emitters, and 444 compiler locks. All 96 owned tsconfig repairs are semantically minimal include-src additions. Ten focused Python tests and Ruff pass. Real Windows front doors keep 79 algol-lexer tests at 87.5%, 33 algol-parser tests at 83.33%, 62 arithmetic tests at 83.01%, and 20 canvas-measurement tests at 97.72%; browser-extension-toolkit keeps 60 tests at 98.75%, and csv-parser keeps 56 tests at 100%. Arithmetic, csv-parser, and canvas-measurement builds pass from declared dependencies; the separately logged Node declaration item owns the manifest gaps exposed in the other builds. All six production audits are clean. The canonical TypeScript validator accepts all 470 packages; the Go build tool passes test, vet, build, and module verification, and its committed diff plan reports exactly 96 changed and 248 affected TypeScript packages. The collision inventory remains unchanged with zero collisions or unknown buckets. Ready-for-review PR #9912 opened at exact implementation head 6179d4d9c49e1bb89f0cc693fa83111dfeb3fb09. All 20 exact-head checks reached terminal acceptable conclusions; two independent readings returned MERGEABLE/CLEAN; guarded squash auto-completion merged final head 787e73baab644f6cc057811d081ec193d3aede89 as 355348901e668b6c4e588f15296f480e9f284d21."
+    },
+    {
+      "id": "typescript-node-builtin-type-declarations",
+      "title": "Audit TypeScript Node builtin declaration ownership",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/typescript-node-builtin-declarations",
+      "pr_number": 9916,
+      "notes": "Discovered during real build validation of the standalone TypeScript input-boundary tranche. After the owned TS6059 input leaks are removed, algol-lexer, the algol-parser dependency chain, and browser-extension-toolkit reach Node builtin/process references but have no owned Node type provider; their coverage remains green at 79, 33, and 60 tests respectively. Audit the build-script TypeScript corpus for Node builtin imports without an owned @types/node declaration, classify the exact dependency-shaped gap, and repair it separately; do not widen the 96-config input-boundary tranche into package manifests or lockfiles. Selected after guarded PR #9912 merged because a quick direct-ownership scan finds up to 74 build-script TypeScript projects with Node builtin/global references but no manifest-owned @types/node provider, materially broader than the separately pending 10-file Lua BUILD_windows wave. The executable syntax-aware audit refines that ceiling to exactly 93 Node API build projects: 31 already own direct providers, 62 are missing them, one lacks synchronized lock metadata, and matrix-rust-napi retains its reviewed native-workspace lock exception. The optimized audit completes in seconds and ignores comments, string and template prose, member properties, and sources outside effective roots while inspecting nested template expressions. The collision-checked 355348901e inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The implemented closure adds the direct Node 22 provider to exactly 62 manifests, synchronizes 63 locks including five newly tracked locks, preserves every non-provider manifest and lock field, and reports 93/93 providers, zero missing, zero stale, one reviewed exception, and 449 compiler locks. Sixteen focused tests pass with 91% branch-aware audit coverage; Ruff, Bandit, compileall, JSON, diff, and added-line secret gates pass. Real Windows/front-door validation passes 79 Algol lexer tests at 87.5%, 33 parser tests at 83.33%, 460 CLI tests at 95.66%, 47 JSON-RPC tests at 90%, 60 browser-toolkit tests at 98.75%, 58 actor tests at 91.7%, 89 LS00 tests at 86.98%, 119 Starlark tests at 92.05%, and six Lattice docs tests; all seven selected representative builds and nine production audits pass. Starlark and Lattice optional strict/source builds exposed separately backlogged source items. Go test, vet, build, and module verification pass. The full Go validator reproduces the exact same 17 Perl/Python/Swift diagnostics on clean detached 355348901e and has zero TypeScript errors. Rebased cleanly onto origin/main 00e47db9a4; the refreshed collision inventory is unchanged, the final contract and Go gates pass on that base, and the committed TypeScript diff plan reports exactly 63 changed packages, 236 affected packages, 470 total packages, and 1,076 dependency edges."
     },
     {
       "id": "build-file-standalone-integrity-lua",
@@ -329,13 +364,94 @@
       "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten pre-existing Lua BUILD_windows files omit sibling installs present in BUILD: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Repair these as one dependency-shaped standalone-build wave; the current metadata-only slice does not alter BUILD files."
     },
     {
+      "id": "typescript-starlark-interpreter-strict-build",
+      "title": "Repair the TypeScript Starlark interpreter strict build",
+      "status": "pending",
+      "depends_on": ["typescript-node-builtin-type-declarations"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during real new-lock validation of the Node declaration tranche. Direct @types/node ownership removes the ambient provider blocker and reveals seven separate strict compiler diagnostics in src/interpreter.ts: three TS2367 impossible boolean comparisons, one TS2352 array cast, one TS2345 VMValue return mismatch, and two missing VMValue names. The authoritative Windows front door remains green at 119 tests and 92.05% statement coverage. Repair types and source behavior in its own focused tranche; the metadata-only Node contract forbids absorbing runtime source changes."
+    },
+    {
+      "id": "typescript-lattice-docs-strict-build",
+      "title": "Repair the TypeScript Lattice docs strict build dependency closure",
+      "status": "pending",
+      "depends_on": ["typescript-node-builtin-type-declarations"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during real stale-lock validation of the Node declaration tranche. The dependency-first generic BUILD front door passes all six lattice-docs tests. npm run typecheck reaches three separate strict diagnostics in compiler-owned dependencies: unused LatticeList and a readonly-child cast in lattice-ast-to-css, plus unused lexer peek. The Vite production build separately cannot resolve the repository grammar at the current ../../../../grammars/lattice.tokens?raw path. Repair this exact lattice-ast-to-css/lexer/docs typecheck and asset-path closure separately; the metadata-only Node contract does not absorb source changes."
+    },
+    {
       "id": "build-file-standalone-integrity-perl",
       "title": "Repair the Perl BUILD_windows standalone prerequisite wave",
       "status": "pending",
       "depends_on": ["build-file-standalone-integrity"],
       "branch": null,
       "pr_number": null,
-      "notes": "Materialized during the field-aware Perl resolver repair after exact module aliases exposed five pre-existing Windows-only standalone-validation gaps. brainfuck-wasm-compiler, ir-to-wasm-compiler, ir-to-wasm-validator, nib-wasm-compiler, and wasm-module-encoder carry inert REM prerequisite inventories that the validator cannot recognize as declared local refs. Repair these selected BUILD_windows files as one dependency-shaped wave. The resolver slice fixes aes-modes' cross-platform BUILD, HMAC's authoritative hash prerequisites, and Linux generic BUILD validation and paths; it leaves all five inert Windows REM inventories untouched and does not absorb this separate Windows-only wave."
+      "notes": "Materialized during the field-aware Perl resolver repair after exact module aliases exposed five pre-existing Windows-only standalone-validation gaps. Intervening parity repairs closed three; the exact clean 355348901e baseline now retains only ir-to-wasm-validator and nib-wasm-compiler, whose inert REM prerequisite inventories the validator cannot recognize as declared local refs. Repair those two BUILD_windows files as one dependency-shaped Perl wave."
+    },
+    {
+      "id": "build-file-standalone-integrity-python-cas-macsyma",
+      "title": "Repair the Python CAS and Macsyma BUILD_windows prerequisite closure",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact clean 355348901e Go-validator baseline during the TypeScript Node declaration tranche. cas-matrix, cas-summation, macsyma-runtime, and programs/macsyma-repl omit dependency-safe CAS sibling prerequisites from BUILD_windows. Keep this four-package algebra dependency closure separate from Prolog, SIR, IRC, and Algol front doors."
+    },
+    {
+      "id": "build-file-standalone-integrity-python-prolog",
+      "title": "Repair the Python Prolog BUILD_windows prerequisite closure",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact clean 355348901e Go-validator baseline during the TypeScript Node declaration tranche. iso-prolog-parser, swi-prolog-parser, prolog-loader, and prolog-vm-compiler omit their prolog-core, operator-parser, logic-stdlib, or logic-bytecode standalone prerequisites. Repair this four-package Prolog dependency family as one bounded wave."
+    },
+    {
+      "id": "build-file-standalone-integrity-python-sir-runtime",
+      "title": "Repair the Python SIR runtime BUILD_windows prerequisite closure",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact clean 355348901e Go-validator baseline during the TypeScript Node declaration tranche. sir-runtime-core and sir-runtime-oop each omit sir-runtime-exceptions from BUILD_windows; repair this exact two-package same-family closure."
+    },
+    {
+      "id": "build-file-standalone-integrity-python-algol-wasm",
+      "title": "Repair the Python ALGOL WASM BUILD_windows prerequisite",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact clean 355348901e Go-validator baseline during the TypeScript Node declaration tranche. algol-wasm-compiler omits cli-builder from its Windows standalone prerequisite order. Keep this single ALGOL compiler front door independent of the unrelated Python families."
+    },
+    {
+      "id": "build-file-standalone-integrity-python-ircd",
+      "title": "Repair the Python IRC daemon BUILD_windows prerequisite closure",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact clean 355348901e Go-validator baseline during the TypeScript Node declaration tranche. programs/ircd references irc-net-stdlib without declaring it and omits irc-net-selectors from standalone prerequisites. Repair this one-program IRC dependency closure separately."
+    },
+    {
+      "id": "build-file-standalone-integrity-swift-conduit-capi",
+      "title": "Repair the Swift Conduit C API BUILD_windows prerequisite closure",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact clean 355348901e Go-validator baseline during the TypeScript Node declaration tranche. swift/conduit and swift/programs/conduit-hello reference rust/conduit-capi without declaring it in BUILD_windows. Repair the library/program pair as one native-bridge dependency closure."
+    },
+    {
+      "id": "build-file-standalone-integrity-swift-irc-capi",
+      "title": "Repair the Swift IRC C API BUILD_windows prerequisite",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the exact clean 355348901e Go-validator baseline during the TypeScript Node declaration tranche. Swift IrcServerNative references rust/irc-server-capi without declaring it in BUILD_windows. Keep this native IRC bridge separate from the Conduit bridge family."
     },
     {
       "id": "build-tool-lua-rockspec-encoding",
@@ -466,7 +582,7 @@
     {
       "id": "build-tool-haskell-post-swift-field-aware-manifest-resolution",
       "title": "Make Haskell Go manifest resolution field-aware",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-post-perl-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-go-field-aware-manifest-resolution",
       "pr_number": 9884,
@@ -474,12 +590,66 @@
     },
     {
       "id": "build-tool-haskell-post-go-field-aware-manifest-resolution",
-      "title": "Select the next field-aware Haskell manifest reader after Go",
-      "status": "pending",
+      "title": "Make Elixir manifest resolution field-aware",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-post-swift-field-aware-manifest-resolution"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Materialized when the post-Swift audit selected Go's coherent 26-false/0-missing-edge repair. Re-run the complete cross-engine resolver audit after Go lands, then select exactly one dependency-shaped ecosystem without combining Elixir's smaller false-only slice with the broader TypeScript, .NET, JVM, Dart, or standalone BUILD debt."
+      "branch": "codex/build-tool-elixir-field-aware-manifest-resolution",
+      "pr_number": 9888,
+      "notes": "Materialized when the post-Swift audit selected Go's coherent 26-false/0-missing-edge repair. Guarded PR #9884 merged exact head 102936be9eed0a80745ff231e590fc0e6367d529 as 582b15bc38f929a6e3825f75aba7e46b36db65bf after all 17 checks were terminal and two consecutive mergeability readings were MERGEABLE/CLEAN. The refreshed schema-3 inventory is unchanged at 1,263 implementation identities and 4,418 established-lane slots, 173 high-consensus packages with 270 missing slots, 813 singleton packages with 11,382 missing slots, 617 Rust singletons, and zero collisions or unknown buckets. Exact post-merge comparison confirms the repaired Go lane at 302 packages and 936 edges on both engines with zero drift, then selects Elixir as the smallest coherent remaining resolver contract: 282 packages, 470 Go edges, 478 Haskell edges, eight Haskell-only differences, and zero Go-only differences. Direct manifest inspection splits those eight differences into two valid multiline local path declarations that Go misses and six prose/comment references that generic Haskell tokenization falsely promotes. One field-aware Elixir fixture and paired readers can therefore resolve the complete slice without combining TypeScript, .NET, JVM, Dart, standalone BUILD debt, rockspec UTF-8, or native NIF authority. The language-neutral contract now admits direct project deps lists plus block and shorthand defp deps lists, multiline local path tuples, and options after path while excluding application metadata, source prose and strings, comments, mix.lock, and non-path Hex or Git dependencies. Red tests showed Go returning only a commented gamma edge instead of the two expected multiline edges and Haskell adding gamma to the correct pair. The paired readers now resolve the complete 282-package lane to 472 edges each with zero drift while preserving nine direct-list edges caught by the real-graph regression audit. Both real front doors complete BUILD validation for all 282 packages with zero failures. Full Go test, vet, build, module verification, and 75.2% statement coverage pass, with resolver coverage at 85.8%. Full Haskell build-tool, directed-graph, and graph tests, GHC -Wall -Werror, cabal check, Haddock, and coverage pass at 54% top-level declarations, 62% alternatives, and 68% expressions. The schema-1 shared corpus validates 49 cases and 145 files across 15 established languages, 16 implementations, and 12 front doors; all 17 schema tests and 40 runner tests pass. Cabal outdated reports only the existing intentional upper bounds on containers and time; govulncheck, OSV Scanner, HLint, and Fourmolu are unavailable locally. The readers inspect only the already selected mix.exs text, never read mix.lock or referenced paths, execute no content, and add no process, network, credential, filesystem-authority, NIF, or host-policy surface. Ready-for-review PR #9888 opened at exact implementation head 44adee15f714c7fda9da11c7d27b9ef990f46bf1. Guarded squash auto-completion merged exact head a610d247f1b940a78d514879864f8c39d8f76c80 as 9106e9ce784044ee2b3ff1211f88b381e1211eaa after all 17 checks were terminal and two consecutive mergeability readings were MERGEABLE/CLEAN."
+    },
+    {
+      "id": "build-tool-post-elixir-field-aware-manifest-resolution",
+      "title": "Make Haskell Dart discovery and pubspec resolution field-aware",
+      "status": "merged",
+      "depends_on": ["build-tool-haskell-post-go-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-dart-field-aware-resolution",
+      "pr_number": 9892,
+      "notes": "Materialized when the post-Go audit selected Elixir's coherent eight-edge field-boundary repair. Guarded PR #9888 merged as 9106e9ce784044ee2b3ff1211f88b381e1211eaa after 17 terminal acceptable checks and two MERGEABLE/CLEAN reads. The refreshed collision-checked inventory on package-neutral main 6800d09448fcd5ae7e0ad6e5d7755e4a1f7ce0ab remains at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 missing slots, 814 singletons with 11,396 missing slots, 618 Rust singletons, and zero collisions or unknown buckets. The complete 15-lane resolver audit confirms nine exact lanes and leaves C#, F#, TypeScript, Java, and Kotlin as larger two-sided grammar repairs. Dart is the smallest high-leverage root cause: Go discovers 82 packages and 67 edges while Haskell discovers none. Select first-class Dart discovery, exact pubspec name aliases, hashing inputs, and a direct-child dependencies/dev_dependencies reader as one coherent slice. The shared fixture first fails Go with one nested Git-option false edge and Haskell with zero discovered nodes; paired bounded readers converge the complete lane at 82 packages and 67 edges with zero drift. Both real front doors validate all 82 packages with zero failures. Full Go tests, vet, trimpath build, module verification, 75.6% total coverage, and 87.0% resolver coverage pass. Haskell build-tool, directed-graph, and graph suites pass with 27 build-tool examples and GHC -Wall -Werror; cabal check, Haddock, and HPC coverage pass at 55% declarations, 64% alternatives, and 70% expressions. The schema-1 corpus validates 50 cases and 153 files; all 17 schema and 40 runner tests pass. Cabal outdated reports only the existing containers/time upper bounds; govulncheck, OSV Scanner, HLint, and Fourmolu are unavailable locally. The readers inspect only selected pubspec.yaml text, do not follow path values or execute content, and add no process, network, credential, native-runtime, or host-policy authority. Ready-for-review PR #9892 opened at exact implementation head 0fd84b71574fd22babb1255521803b855d9bff5a. Guarded squash auto-completion merged exact head 2b8f898d5bde1212b0b114eebd8178550340d2c0 as 58315402447acc07bdf0162eeb0ef4ffa8b2d1b2 on 2026-08-04 after all 17 exact-head checks were terminal and two consecutive mergeability readings were MERGEABLE/CLEAN."
+    },
+    {
+      "id": "build-tool-post-dart-field-aware-manifest-resolution",
+      "title": "Make Java and Kotlin Gradle composite-build resolution field-aware",
+      "status": "merged",
+      "depends_on": ["build-tool-post-elixir-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-gradle-field-aware-resolution",
+      "pr_number": 9895,
+      "notes": "Discovered by the complete post-Elixir resolver audit and selected after guarded PR #9892 merged as 58315402447acc07bdf0162eeb0ef4ffa8b2d1b2. The refreshed schema-3 inventory remains collision-free at 1,264 implementation identities and 4,419 established-lane slots, with 173 high-consensus packages and 270 missing slots, 814 singleton packages and 11,396 missing slots, 618 Rust singletons, and zero unknown buckets. Exact post-Dart plans confirm Java at 129 packages with 185 Go edges versus 165 Haskell edges (24 Go-only and 4 Haskell-only) and Kotlin at 133 packages with 165 Go edges versus 161 Haskell edges (13 Go-only and 9 Haskell-only). Both lanes share the same Gradle composite-build includeBuild grammar, making this the smallest coherent remaining two-sided repair. The language-neutral contract and paired adversarial fixtures now admit only actual relative includeBuild calls in settings.gradle.kts, ignore comments, example strings, unrelated calls, absolute paths, unknown or cross-lane targets, and build-script coordinates, normalize paths lexically without following them, and require Gradle metadata plus Java/Kotlin sources to participate in package hashes. The fixtures first exposed a false gamma edge and missed direct or nested composite-build edges across both engines. Go and Haskell now converge exactly across all 129 Java packages at 186 edges and all 133 Kotlin packages at 166 edges with zero one-sided drift. Both real front doors validate and dry-run every package with zero failures. The newly recovered conduit to conduit-hello and mosaic-flux-compose to visicalc-compose closures pass their exact Cargo/Gradle package and downstream commands using the repository-local JDK 21 and Gradle 9.6.1 toolchains. Full Go tests, vet, trimpath build, module verification, and 76.6% statement coverage pass. Full Haskell build-tool, directed-graph, and graph suites, GHC -Wall -Werror, cabal check, Haddock, and HPC coverage pass at 56% definitions, 64% alternatives, and 71% expressions. The schema-1 corpus validates 52 cases; all 57 schema/runner tests and 52 fixture subtests pass. Cabal outdated reports only the existing intentional containers/time upper bounds; govulncheck, OSV Scanner, HLint, and Fourmolu are unavailable locally. The collision report, state graph, JSON, diff, module, and direct security gates pass. The scanners inspect only already selected settings text, perform no referenced-path I/O or content execution, and add no process, network, credential, native-runtime, or host-policy authority. .NET project references, TypeScript package metadata, and standalone BUILD debt remain separately owned. A conflict-free rebase onto d9f3ed173d10170dad397e125782230a2ae7bfa7 incorporated the package-neutral human-languages unified-books CI gate; the rerun inventory counts and resolver priority remain unchanged. Ready-for-review PR #9895 opened at exact implementation head 9291c87adf08237eab52a1cbf8d05f479c9489bb with the complete validation and remaining-gap summary. Guarded squash auto-completion merged exact head 68ccd8241328334f1add471db294cf6cbfba2577 as 4b8e56938be4741aff5bdcb6a6018f500c06cb5a on 2026-08-04 after all 20 exact-head checks were terminal and two consecutive mergeability readings were MERGEABLE/CLEAN."
+    },
+    {
+      "id": "build-tool-post-gradle-dotnet-field-aware-manifest-resolution",
+      "title": "Make C# and F# project-reference resolution field-aware",
+      "status": "merged",
+      "depends_on": ["build-tool-post-dart-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-dotnet-field-aware-resolution",
+      "pr_number": 9898,
+      "notes": "Materialized by the exact post-Dart audit as the next independent shared grammar after Gradle. The implemented contract reads only literal Include attributes on unqualified ProjectReference elements in root project files, matches lexically normalized exact root-project paths across the shared .NET scope, and never opens referenced files. Three shared fixtures cover C#, F#, and cross-language references plus XML, MSBuild, nested-project, absolute-path, and unknown-target decoys. The repaired real graphs match edge-for-edge at 198 C# packages/238 edges and 197 F# packages/239 edges with zero one-sided drift. Representative C# and F# MiniSqlite plus F# GFM, Deflate, and Parser downstream tests pass; both front doors validate and dry-run every package in both lanes. Full implementation, coverage, warning, conformance, inventory, diff, and security gates pass. Guarded squash auto-completion merged PR #9898 at exact head c5b07229126a8b096a980df8eddb7cac0d0f4dbb as e78c9986c2fef1823ffe32b1a018a70b6fe9e8ca after all 20 exact-head checks were terminal acceptable and two consecutive mergeability readings were MERGEABLE/CLEAN. TypeScript and standalone BUILD debt remain independently pending."
+    },
+    {
+      "id": "build-tool-post-dotnet-typescript-field-aware-manifest-resolution",
+      "title": "Make TypeScript package metadata resolution field-aware",
+      "status": "merged",
+      "depends_on": ["build-tool-post-gradle-dotnet-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-typescript-field-aware-resolution",
+      "pr_number": 9902,
+      "notes": "Materialized by the exact post-Dart audit as a separate broad grammar and selected after guarded PR #9898 merged as e78c9986c2fef1823ffe32b1a018a70b6fe9e8ca. The red direct resolver-API baseline found both engines at 470 TypeScript packages, with Go at 1,075 edges and Haskell at 275, leaving 948 Go-only and 148 Haskell-only edges. The implemented shared contract parses root package.json objects, registers exact top-level name aliases, accepts direct root dependencies and devDependencies keys, and rejects peer, optional, script, nested-tool, nested-name, non-object-table, and malformed-JSON decoys. The repaired real graph is exact between Go and Haskell at 470 packages and 1,076 edges with zero one-sided drift; Go recovered one dependency missed by its prior line scanner. A conflict-free rebase onto package-neutral human-languages main 658184b11299b3b5b87cb30cb5896a5f7a45a573 leaves the collision-checked inventory unchanged at 1,264 identities and 4,419 slots with zero collisions or unknown buckets. Full implementation, coverage, warning, conformance, downstream, inventory, diff, and security gates pass. Ready-for-review PR #9902 opened at exact implementation head 6fecdd0aaa7b67c524fb24068c694215f4958005. The first exact-head CodeQL detection run exposed the newly affected rom-bios BUILD front doors missing their five-package standalone closure; a focused Unix/Windows metadata repair passed its 7-test coverage suite and every rerun check. Guarded squash auto-completion merged repaired head a7defbbdb5310eede97220b2711525c583eb0bb2 as df0692fa76250371f44b607ae42823425b30125a on 2026-08-04 after all exact-head checks were terminal acceptable and two consecutive mergeability readings were MERGEABLE/CLEAN. The separately owned 58-package TypeScript BUILD_windows prerequisite debt remains outside this tranche."
+    },
+    {
+      "id": "typescript-shared-tsconfig-rootdir-portability",
+      "title": "Make shared TypeScript compiler paths package-relative",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "codex/typescript-shared-tsconfig-rootdir-portability",
+      "pr_number": 9905,
+      "notes": "Discovered during representative downstream validation for the TypeScript field-aware resolver tranche. On unchanged origin/main metadata, code/packages/typescript/tsconfig.base.json declares rootDir and outDir relative to the shared config rather than each extending package. A clean npm run build in typescript/transistors fails with TS6059 because its src/index.ts is outside code/packages/typescript/src. The refined corpus audit finds 458 TypeScript package/program configs with build scripts: 129 directly inherit both faulty shared paths, three override rootDir but still inherit the faulty outDir, 155 directly override both, and 36 rootDir-less configs do not consume the shared base. The real BUILD_windows recipes remain test-oriented and pass for the transistors, logic-gates, and arithmetic dependency chain. Selected after guarded PR #9902 merged and the collision-checked df0692fa76 inventory remained unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. This one shared compiler boundary directly affects 132 configs, giving it greater immediate package-build leverage than a single-engine follow-up while remaining independent of resolver semantics and the separately owned 58-package BUILD_windows debt. The implemented contract uses TypeScript 5.5's ${configDir} template, audits all 458 buildable configs and 444 compiler locks, and resolves all 129 rootDir and 132 outDir inheritors package-locally under real tsc --showConfig. Representative package and program builds, coverage, build-tool, inventory, diff, and production dependency security checks pass after a clean rebase onto origin/main 0378e91750. Ready-for-review PR #9905 opened at exact implementation head cb12f5675a5319cfa8967befed87ad1f367d5525. All 19 exact-head checks reached terminal acceptable conclusions; two independent readings returned MERGEABLE/CLEAN; guarded squash auto-completion merged final head 23302beda25c15c85470b9e41137e75a384ce586 as 1198eda2eb787abbb28df06f77aa8f01aebbcb8b on 2026-08-04."
+    },
+    {
+      "id": "typescript-standalone-tsconfig-output-isolation",
+      "title": "Isolate standalone TypeScript compiler outputs from source trees",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "codex/typescript-standalone-tsconfig-output-isolation",
+      "pr_number": 9907,
+      "notes": "Discovered while refining the shared-rootDir audit from 165 rootDir-less configs to 129 actual shared-base consumers. Of the 36 standalone configs outside the shared contract, 26 are explicitly noEmit and eight already declare outDir. typescript/window-core and typescript/window-canvas alone declare neither noEmit nor outDir while their build script runs tsc with declarations enabled, so clean builds emit JavaScript and declaration artifacts beside tracked source and test files. Audit and repair those two standalone package configs as a separate output-isolation tranche; do not widen the shared configDir repair. Selected after guarded PR #9905 merged and the collision-checked 1198eda2eb inventory remained unchanged at 1,264 identities, 4,419 established-lane slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The quick leverage pass prefers this unblocked two-package closure because it completes the TypeScript compiler-output integrity boundary just established by #9905, prevents clean package builds from mutating tracked source trees, and remains narrower than the separately owned 58-package BUILD_windows wave. The implemented audit classifies all 171 standalone configs, accepts 28 noEmit projects, and requires all 143 emit-capable projects to declare isolated output. Both owned packages now emit only beneath dist and exclude compiled test copies while preserving Vitest's defaults. Fresh dependency installs, real builds, 9-test and 5-test coverage suites, zero-vulnerability production audits, effective-config checks, the Go build-tool suite, an exact two-package affected plan, collision-checked inventory, diff, generated-output, and secret checks pass. Repository-wide BUILD validation reproduces only the 58 already-owned prerequisite declarations and reports no diagnostic for either selected package. Ready-for-review PR #9907 opened at exact implementation head 8de312ed24879f11109a74af51d26b14d90179b6. All 20 exact-head checks reached terminal acceptable conclusions; two independent readings returned MERGEABLE/CLEAN; guarded squash auto-completion merged final head 0dfefc77a8b0d1a323023286624ec26279feed47 as da895587f33605ae467c57478dac6289cc648757 on 2026-08-04."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1988,6 +2158,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 6042102f inventory for the concrete chief-of-staff-agent-discovery adapter. It lists a configured directory, reads sealed package files, canonicalizes host paths, verifies signatures against a trusted keyring, and therefore owns fs:list/fs:read plus platform filesystem semantics rather than an all-language portable contract. Review no-follow and symlink policy, bounded non-recursive enumeration, fail-closed package verification, path disclosure, keyring authority, and platform evidence after the pure projection core lands. This native-runtime review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "chief-skill-package-verification-portable-conformance",
+      "title": "Fixture and port the Chief sealed skill-package verification projection",
+      "status": "pending",
+      "depends_on": ["chief-skill-parser-portable-conformance", "chief-agent-discovery-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered when de58c11e added Rust-only chief-of-staff-skill-package. Extract and fixture the authority-free loader over caller-provided authenticated package records: exact Skill runtime discrimination, strict UTF-8 SKILL.md bytes, reuse of the portable skill parser, canonical schema-v2 manifest regeneration, byte-for-byte authenticated manifest agreement, stable redacted failures, and deterministic parsed output. Port that pure verification projection after the parser and verified-discovery record contracts; package-directory mutation, signing keys, signature generation, path policy, cleanup, and sealed filesystem verification remain native."
+    },
+    {
+      "id": "chief-skill-package-native-authority-review",
+      "title": "Review the Chief sealed skill-package construction exception",
+      "status": "pending",
+      "depends_on": ["chief-skill-package-verification-portable-conformance", "chief-agent-discovery-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered when de58c11e added the mixed chief-of-staff-skill-package boundary. The concrete builder creates a caller-selected directory, writes SKILL.md and manifest.json, signs package contents with caller-provided secret key material, invokes shared host-runtime signing, and recursively cleans up its newly created directory on failure. Review create-new/no-overwrite semantics, symlink and race policy, signing-key custody, durable publication, cleanup containment, path disclosure, and platform evidence. This filesystem and cryptographic native-authority review is excluded from autonomous parity delivery selection."
     },
     {
       "id": "http-digest-auth-portable-conformance",

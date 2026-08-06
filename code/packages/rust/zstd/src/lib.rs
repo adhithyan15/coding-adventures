@@ -12,6 +12,16 @@
 //! - **Predefined decode tables** (RFC 8878 Appendix B) so short frames
 //!   need no table description overhead.
 //!
+//! This crate's own encoder never emits **Repeated-Offset (R1/R2/R3)**
+//! sequence shortcuts (RFC 8878 §3.1.1.3.2.1.1) — an explicit educational
+//! simplification, since every offset it writes is coded in full. The
+//! *decoder*, however, fully understands them: real `zstd` encoders use
+//! repeat offsets constantly (one of their main entropy wins, especially
+//! for periodic or constant data), so a decoder that didn't accept them
+//! would fail to decode a large fraction of real-world `.zst` files despite
+//! passing every self-consistency test. See `decompress_block`'s doc
+//! comment below and lessons.md Lesson 98.
+//!
 //! # Frame layout (RFC 8878 §3)
 //!
 //! ```text
@@ -1109,7 +1119,43 @@ fn compress_block(block: &[u8]) -> Option<Vec<u8>> {
 ///
 /// Reads the literals section, sequences section, and applies the sequences
 /// to the output buffer to reconstruct the original data.
-fn decompress_block(data: &[u8], out: &mut Vec<u8>) -> Result<(), String> {
+///
+/// `rep1`/`rep2`/`rep3` are the three Repeated_Offset registers (RFC 8878
+/// §3.1.1.3.2.1.1) — IN/OUT, because they are FRAME-scoped, not
+/// block-scoped: "For the first block, the starting offset history is
+/// populated with Repeated_Offset1=1, Repeated_Offset2=4,
+/// Repeated_Offset3=8" (RFC 8878), and every later Compressed block in the
+/// same frame continues from wherever the previous Compressed block's
+/// sequences left them. The caller ([`decompress`]) owns the three
+/// registers and threads them through every Compressed block in a frame
+/// (Raw/RLE blocks don't touch them).
+///
+/// WHY THIS DECODER NEEDS THIS EVEN THOUGH ITS OWN ENCODER NEVER EMITS
+/// REPEAT-OFFSET SEQUENCES: [`encode_sequences_section`] always writes an
+/// explicit offset code (`raw_off = offset + 3 >= 4` always, since the
+/// minimum LZ77 match offset is 1), so this crate's own compress()/
+/// decompress() round trip never touches the repeat-offset path — the "no
+/// repeat-offset shortcuts" simplification is entirely an ENCODER-side
+/// choice (see the module doc comment). But the real `zstd` CLI's encoder
+/// uses repeat offsets constantly (one of its main entropy wins, especially
+/// for periodic/repetitive data), so a decoder that only understands
+/// explicit offset codes will systematically fail to decode a large
+/// fraction of real-world `.zst` files — caught here by real CLI interop
+/// (see `tc11_repeat_offset_cli_interop_constant_byte`, which reproduces the
+/// exact repro found while building `code/packages/c/zstd`: 4713 bytes of a
+/// single repeated byte compresses to one Compressed block whose one
+/// sequence has Offset_Value=1, i.e. "reuse Repeated_Offset1"). Algorithm
+/// cross-checked against both RFC 8878 §3.1.1.3.2.1.1 and the literal
+/// reference C source (`ZSTD_decodeSequence` in `zstd_decompress_block.c`,
+/// fetched directly rather than recalled from memory) — see lessons.md
+/// Lesson 98.
+fn decompress_block(
+    data: &[u8],
+    out: &mut Vec<u8>,
+    rep1: &mut u32,
+    rep2: &mut u32,
+    rep3: &mut u32,
+) -> Result<(), String> {
     // ── Literals section ─────────────────────────────────────────────────
     let (lits, lit_consumed) = decode_literals_section(data)?;
     let mut pos = lit_consumed;
@@ -1190,17 +1236,81 @@ fn decompress_block(data: &[u8], out: &mut Vec<u8>) -> Result<(), String> {
         let ll_info = LL_CODES[ll_code as usize];
         let ml_info = ML_CODES[ml_code as usize];
 
+        // `ll_is_zero` is needed for the repeat-offset interpretation below
+        // (RFC 8878's "when Literals_Length is 0, repeated offsets are
+        // shifted by 1" rule) and is knowable right now, from the PEEKED
+        // `ll_code` alone — LL code 0 is the only code with baseline 0 and 0
+        // extra bits, so `ll_code == 0` iff the eventual decoded `ll` value
+        // is 0. No extra bits need to be read yet to know this.
+        let ll_is_zero = ll_code == 0;
+
         // Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
         // §3.1.1.3.2.1.2 — "Decoding starts by reading the Number_of_Bits
         // required to decode offset. It does the same for Match_Length and
-        // then for Literals_Length.").
-        // Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3
+        // then for Literals_Length."). The NUMBER of bits read for the
+        // offset field is always exactly `of_code` regardless of the
+        // repeat-offset interpretation below (the reference decoder never
+        // varies bit-consumption on `ll_is_zero` — only how the resulting
+        // value maps to an actual offset changes).
         let of_raw = (1u32 << of_code) | br.read_bits(of_code) as u32;
         let ml = ml_info.0 + br.read_bits(ml_info.1) as u32;
         let ll = ll_info.0 + br.read_bits(ll_info.1) as u32;
-        let offset = of_raw.checked_sub(3).ok_or_else(|| {
-            format!("decoded offset underflow: of_raw={of_raw}")
-        })?;
+
+        // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        // the Repeated_Offset (R1/R2/R3) mechanism — see the doc comment on
+        // `decompress_block` and lessons.md Lesson 98.
+        //
+        // `of_code >= 2` guarantees `of_raw = (1<<of_code)+extra >= 4`, i.e.
+        // Offset_Value > 3: an ordinary explicit offset. `of_code <= 1`
+        // guarantees `of_raw` in `{1, 2, 3}`: a repeat-offset reference.
+        //
+        // The repeat case collapses to one selector in `[0, 3]`:
+        //     selector = ll_is_zero + of_raw - 1
+        // (cross-checked against both RFC 8878 prose and the reference
+        // decoder's `ofBase + ll0 + extra_bit` in `ZSTD_decodeSequence`):
+        //   0 -> reuse rep1 unchanged (no rotation)
+        //   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+        //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+        //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+        let offset = if of_code >= 2 {
+            let offset = of_raw - 3;
+            *rep3 = *rep2;
+            *rep2 = *rep1;
+            *rep1 = offset;
+            offset
+        } else {
+            let selector = ll_is_zero as u32 + of_raw - 1;
+            match selector {
+                0 => *rep1,
+                1 => {
+                    // rep1 <- old rep2, rep2 <- old rep1; the returned
+                    // offset is the new rep1 (== old rep2).
+                    std::mem::swap(rep1, rep2);
+                    *rep1
+                }
+                2 => {
+                    let offset = *rep3;
+                    *rep3 = *rep2;
+                    *rep2 = *rep1;
+                    *rep1 = offset;
+                    offset
+                }
+                _ => {
+                    // selector == 3: "rep1 - 1" — the RFC's special case for
+                    // when the ordinary rep1/rep2/rep3 slots would otherwise
+                    // collide with Literals_Length==0. Real zstd's decoder
+                    // saturates at 0 rather than underflowing (an offset of
+                    // 0 is then rejected below by the ordinary
+                    // offset-bounds check, same as any other malformed
+                    // offset would be).
+                    let offset = rep1.saturating_sub(1);
+                    *rep3 = *rep2;
+                    *rep2 = *rep1;
+                    *rep1 = offset;
+                    offset
+                }
+            }
+        };
 
         // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
         // 8878 §3.1.1.3.2.1.2 — "Literals_Length_State is updated, followed
@@ -1436,6 +1546,15 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // not just once per Raw/RLE block here.
     let mut out = Vec::new();
 
+    // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+    // default 1/4/8 "for the first block", then threaded unmodified through
+    // every Compressed block's sequences for the rest of the frame (Raw/RLE
+    // blocks don't touch them). See `decompress_block`'s doc comment and
+    // lessons.md Lesson 98.
+    let mut rep1: u32 = 1;
+    let mut rep2: u32 = 4;
+    let mut rep3: u32 = 8;
+
     loop {
         if pos + 3 > data.len() {
             return Err("truncated block header".into());
@@ -1476,7 +1595,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 }
                 let block_data = &data[pos..pos + bsize];
                 pos += bsize;
-                decompress_block(block_data, &mut out)?;
+                decompress_block(block_data, &mut out, &mut rep1, &mut rep2, &mut rep3)?;
             }
             3 => {
                 return Err("reserved block type 3".into());
@@ -1604,6 +1723,17 @@ mod tests {
     }
 
     // ── TC-8: repeat-offset pattern ───────────────────────────────────────────
+    //
+    // NOTE on the name: per spec TC-8, this input is constructed so a
+    // repeat-offset-AWARE encoder could compress it efficiently — but this
+    // crate's own encoder never emits repeat-offset codes (see the crate
+    // doc comment / lessons.md Lesson 98), so this test only exercises our
+    // encoder's ordinary explicit-offset path, self round-tripped through
+    // our own decoder. It does NOT exercise repeat-offset DECODING at all.
+    // For a test that actually proves this decoder understands
+    // repeat-offset sequences (as emitted by a real repeat-offset-aware
+    // encoder), see `tc11_repeat_offset_cli_interop_constant_byte` /
+    // `_periodic` below, which decode real `zstd`-CLI output.
 
     #[test]
     fn tc8_repeat_offset() {
@@ -1739,6 +1869,86 @@ mod tests {
         assert_eq!(
             decoded_by_us, original,
             "our decompress() failed to decode real `zstd`'s compressed output"
+        );
+    }
+
+    // ── Repeated-Offset (R1/R2/R3) decode interop ─────────────────────────────
+    //
+    // This crate's own encoder (`encode_sequences_section`, via
+    // `raw_off = seq.off + 3 >= 4` always) never emits an Offset_Value <= 3,
+    // so it never emits a repeat-offset code — an explicit "no repeat-offset
+    // shortcuts" educational simplification. That means TC-8 above (and any
+    // other self round-trip test in this file) NEVER exercises the
+    // repeat-offset DECODE path, no matter how repetitive its input is: our
+    // own round trip is blind to this by construction, same as it was blind
+    // to the FSE-codec bugs in Lesson 96 until real CLI interop (TC-9) was
+    // added. But the real `zstd` CLI's encoder uses repeat offsets
+    // constantly — they're one of its main entropy wins, especially for
+    // periodic/constant data — so a decoder that only understands explicit
+    // offset codes (`offset = of_raw - 3` unconditionally) will fail on a
+    // large fraction of real-world `.zst` files. See lessons.md Lesson 98
+    // (found while building `code/packages/c/zstd`, PR #9941) for the full
+    // writeup and the reference-C-source cross-check
+    // (`ZSTD_decodeSequence` in `zstd_decompress_block.c`).
+    #[test]
+    fn tc11_repeat_offset_cli_interop_constant_byte() {
+        // The exact Lesson 98 repro: 4713 bytes of a single repeated byte.
+        // Real `zstd` picks a Compressed block (not RLE) with one sequence:
+        // 2 literal bytes ("ZZ") + a match with Offset_Value=1 — "reuse
+        // Repeated_Offset1", whose default value (1) happens to already be
+        // the right distance for constant data, an unmistakable
+        // RLE-via-repeat-offset pattern.
+        if !is_zstd_cli_available() {
+            eprintln!("zstd CLI not found on PATH — skipping interop test");
+            return;
+        }
+
+        let original = vec![b'Z'; 4713];
+        let theirs_input = write_temp_file("tc11-repoff-const-input", &original);
+        let _guard = TempFileGuard(theirs_input.clone());
+        let their_compressed =
+            run_zstd_capture_stdout(&["-q", "-c", theirs_input.to_str().unwrap()]);
+
+        let decoded_by_us = decompress(&their_compressed).expect(
+            "our decompress() failed on real zstd's repeat-offset output — \
+             this is Lesson 98's gap: offset codes 1-3 must be interpreted as \
+             Repeated_Offset (R1/R2/R3) references, not as of_raw - 3",
+        );
+        assert_eq!(
+            decoded_by_us, original,
+            "our decompress() decoded real zstd's repeat-offset output to the \
+             wrong bytes"
+        );
+    }
+
+    #[test]
+    fn tc11_repeat_offset_cli_interop_periodic() {
+        // A periodic pattern at a FIXED distance is the other classic
+        // repeat-offset trigger: after the first match establishes the
+        // distance, every subsequent match at that same distance is cheaper
+        // to encode as "reuse R1" than as a fresh explicit offset. Real
+        // `zstd`'s encoder is very likely to do exactly that here.
+        if !is_zstd_cli_available() {
+            eprintln!("zstd CLI not found on PATH — skipping interop test");
+            return;
+        }
+
+        let pattern = b"ABCDEFGHIJ0123456789";
+        let mut original = Vec::new();
+        for _ in 0..300 {
+            original.extend_from_slice(pattern);
+        }
+        let theirs_input = write_temp_file("tc11-repoff-periodic-input", &original);
+        let _guard = TempFileGuard(theirs_input.clone());
+        let their_compressed =
+            run_zstd_capture_stdout(&["-q", "-c", theirs_input.to_str().unwrap()]);
+
+        let decoded_by_us = decompress(&their_compressed)
+            .expect("our decompress() failed on real zstd's periodic-pattern output");
+        assert_eq!(
+            decoded_by_us, original,
+            "our decompress() decoded real zstd's periodic-pattern output to \
+             the wrong bytes"
         );
     }
 

@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "resolution/gradle-java-field-aware",
+  "domain": "resolution",
+  "summary": "Java Gradle resolution reads only same-lane relative includeBuild calls from settings.gradle.kts and ignores comments, strings, and build-script coordinates.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/java/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/java/alpha/settings.gradle.kts",
+        "content_utf8": "rootProject.name = \"alpha\"\nincludeBuild(\"../beta-helper\")\n/*\nincludeBuild(\"../gamma\")\n*/\nval example = \"includeBuild(\\\"../gamma\\\")\"\ninclude(\"../gamma\")\nincludeBuild(\"C:/gamma\")\nincludeBuild(\"../../kotlin/gamma\")\n"
+      },
+      {
+        "path": "code/packages/java/alpha/build.gradle.kts",
+        "content_utf8": "val documentedDependency = \"gamma\"\n"
+      },
+      {
+        "path": "code/packages/java/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/java/beta-helper/settings.gradle.kts",
+        "content_utf8": "rootProject.name = \"beta-helper\"\n"
+      },
+      {
+        "path": "code/packages/java/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/java/gamma/settings.gradle.kts",
+        "content_utf8": "rootProject.name = \"gamma\"\n"
+      },
+      {
+        "path": "code/packages/kotlin/gamma/BUILD",
+        "content_utf8": "echo build cross-lane gamma\n"
+      },
+      {
+        "path": "code/packages/kotlin/gamma/settings.gradle.kts",
+        "content_utf8": "rootProject.name = \"cross-lane-gamma\"\n"
+      },
+      {
+        "path": "code/programs/java/delta-app/BUILD",
+        "content_utf8": "echo build delta-app\n"
+      },
+      {
+        "path": "code/programs/java/delta-app/settings.gradle.kts",
+        "content_utf8": "rootProject.name = \"delta-app\"\nincludeBuild(\n    \"../../../packages/java/alpha\"\n)\n// includeBuild(\"../../../packages/java/gamma\")\n"
+      },
+      {
+        "path": "code/programs/java/delta-app/build.gradle.kts",
+        "content_utf8": "dependencies { implementation(\"com.codingadventures:alpha\") }\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "java"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/gradle-java-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "java/alpha",
+          "java/programs/delta-app"
+        ],
+        [
+          "java/beta-helper",
+          "java/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

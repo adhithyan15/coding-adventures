@@ -110,6 +110,150 @@ export interface CurriculumSpine {
   nodes: SpineNode[];
 }
 
+/** How strongly a language-specific extension participates in the local path. */
+export type CurriculumExtensionKind =
+  | "required"
+  | "supporting"
+  | "reference"
+  | "not-applicable";
+
+/** Open so a track can name a genuinely language-specific concern. */
+export type CurriculumExtensionCategory =
+  | "script"
+  | "grammar"
+  | "register"
+  | "culture-pragmatics"
+  | "etymology"
+  | "consolidation"
+  | "language-specific"
+  | string;
+
+/** A grammar, script, register, or other local node attached to one path segment. */
+export interface CurriculumExtensionNode {
+  id: string;
+  stage: CurriculumStage;
+  kind: CurriculumExtensionKind;
+  category: CurriculumExtensionCategory;
+  canDo: string;
+  /** Extension ids and/or shared spine-node ids. */
+  prerequisites: string[];
+  /** Existing micro-lessons that realize this extension. */
+  lessons: string[];
+}
+
+/**
+ * One contiguous visit to a shared ability in a language's real local order.
+ *
+ * A node may occur in several segments. That is deliberate: a track can greet,
+ * move on, and later return for a formal greeting without flattening its actual
+ * prerequisite path into one fictional chapter.
+ */
+export interface CurriculumPathSegment {
+  id: string;
+  spine_node: string;
+  /** Exact prerequisite-safe lesson order inside this segment. */
+  lessons: string[];
+  /** Extension ids classified by their relationship to the shared material. */
+  before: string[];
+  inline: string[];
+  after: string[];
+}
+
+/** Coverage ledger for one shared node in one language. */
+export interface SpineRealizationMap {
+  /** Segment ids in their authored local order. */
+  segments: string[];
+  /** Canonical concepts deliberately absent from the current track corpus. */
+  omits: string[];
+  /** Canonical concepts this track deliberately teaches under another node. */
+  relocates: Record<string, string>;
+}
+
+/** One track's executable realization of the shared spine. */
+export interface LanguageCurriculum {
+  version: number;
+  language: string;
+  /** The local, prerequisite-safe walk; shared nodes may repeat. */
+  path: CurriculumPathSegment[];
+  /** Every shared node is explicit, including empty/planned coverage. */
+  spine: Record<string, SpineRealizationMap>;
+  extensions: CurriculumExtensionNode[];
+}
+
+// ---------------------------------------------------------------------------
+// HL05 — the chapter capability layer
+// ---------------------------------------------------------------------------
+//
+// A chapter used to be nothing but an integer stamped on each lesson. Nothing in
+// the data model knew what a chapter was FOR, so nothing could check that
+// finishing one left the reader able to do anything. These types are that missing
+// promise, made explicit and therefore checkable.
+//
+// The distinction that matters: `curriculum.json`'s `omits`/`relocates` ledgers are
+// recomputed CACHES — a validator derives them and errors on drift. A chapter
+// capability is authored INTENT. No validator may rewrite it.
+
+/** How a chapter proves its promise. */
+export type ChapterPayoffKind = "dialogue" | "task" | "production";
+
+/**
+ * The thing the reader can actually do at the end of a chapter.
+ *
+ * `assesses` is the load-bearing field. Without it a payoff could satisfy its
+ * chapter by exercising a single word, letting the chapter claim a capability it
+ * never delivered — which is the exact failure the representativeness rule exists
+ * to catch (HL05).
+ */
+export interface ChapterPayoff {
+  /** Lesson id that delivers the payoff — normally a practice/practice-mix/pattern. */
+  lesson: string;
+  kind: ChapterPayoffKind;
+  /** One line describing the payoff, for the chapter opening and the gap report. */
+  summary: string;
+  /** Knowledge atoms the payoff exercises. */
+  assesses: string[];
+}
+
+/** One chapter's authored promise. */
+export interface ChapterCapability {
+  chapter: number;
+  /** Printed chapter name. Canonical here; book-generation.json derives it. */
+  title: string;
+  /** LaTeX label, e.g. "ch:first-words". Canonical here. */
+  label: string;
+  /** One first-person sentence, in the reader's terms. */
+  canDo: string;
+  /** Shared spine nodes this chapter realizes; may be empty for local-only work. */
+  spineNodes: string[];
+  payoff: ChapterPayoff;
+  /** Optional HL06 figure ids. */
+  figures?: string[];
+}
+
+/** One track's chapter capability ledger (`<track>/chapters.json`). */
+export interface TrackChapters {
+  version: number;
+  language: string;
+  chapters: ChapterCapability[];
+}
+
+/**
+ * Tunable policy for the HL05 payoff rule and the HL08 gentle-ramp budgets.
+ *
+ * These live in `core/chapter-policy.json` rather than as constants at a call site
+ * precisely so they can be tightened as the corpus matures without hunting through
+ * code — the same reasoning that put the five-minute budget in the lesson schema.
+ */
+export interface ChapterPolicy {
+  version: number;
+  /** Minimum share of a chapter's introduced atoms its payoff must assess (0..1). */
+  payoffRepresentativeness: number;
+  /** HL08: most knowledge atoms one lesson may introduce. */
+  maxNewAtomsPerLesson: number;
+  /** HL08: most a whole chapter may introduce, so splitting cannot game the rule. */
+  maxNewAtomsPerChapter: number;
+}
+
 /** One authored chapter from an existing LaTeX book. */
 export interface BookChapter {
   language: string;
@@ -163,6 +307,44 @@ export interface LessonBlockKnowledge {
   assesses: string[];
 }
 
+/** The first executable activity contract supported by HL-V03. */
+export type LessonActivityKind = "text";
+
+export interface LessonActivityFeedback {
+  correct: string;
+  incorrect: string;
+}
+
+/**
+ * One authored retrieval activity attached to a typed lesson-body block.
+ *
+ * Authors store this as compact JSON in an `hl-activity` comment immediately
+ * after the block's `hl-knowledge` directive. The parser removes the comment
+ * from learner copy while keeping this typed value in the canonical AST.
+ */
+export interface LessonActivity {
+  id: string;
+  kind: LessonActivityKind;
+  /** Non-empty subset of the containing block's assessed knowledge atoms. */
+  assesses: string[];
+  prompt: string;
+  /** Canonical display answer. */
+  answer: string;
+  /** Additional authored responses accepted after deterministic normalization. */
+  accepted: string[];
+  feedback: LessonActivityFeedback;
+  responseSeconds: number;
+}
+
+/** A runtime-ready activity with every accepted response resolved up front. */
+export interface CompiledLessonActivity extends LessonActivity {
+  blockIndex: number;
+  blockType: LessonBlockType;
+  blockTitle: string;
+  /** Canonical answer followed by authored variants, all normalized and unique. */
+  acceptedResponses: string[];
+}
+
 export interface LessonBodyBlock {
   type: LessonBlockType;
   /** Original level-two heading, kept for book/app presentation. */
@@ -173,6 +355,10 @@ export interface LessonBodyBlock {
   knowledge?: LessonBlockKnowledge;
   /** Present when an author attempted a directive whose shape is invalid. */
   knowledgeDirectiveError?: string;
+  /** Ordered executable retrieval contracts authored at this block boundary. */
+  activities?: LessonActivity[];
+  /** Present when one or more `hl-activity` directives are invalid or misplaced. */
+  activityDirectiveErrors?: string[];
 }
 
 // ---- Script / character-breakdown data (data/scripts/<script>.json) ----
@@ -233,6 +419,22 @@ export interface LetterForms {
   final?: string;
 }
 
+/**
+ * Where a letter's `strokeOrder` came from.
+ *
+ * A stroke order cannot be read out of a font — no font table records which way
+ * the hand moved — so an order that is more than "the parts, roughly in order"
+ * has to trace to a real teaching source. `variation` is not optional politeness:
+ * for scripts with no national standard (every Indic script, Arabic, Hebrew) it
+ * is the honest statement that this is ONE attested order, not THE order.
+ */
+export interface StrokeOrderSource {
+  citation: string;
+  url: string;
+  /** How standardised the order is, and where it varies. */
+  variation?: string;
+}
+
 /** One base letter of the script (a letter, a character, or a radical). */
 export interface Letter {
   glyph: string; // the citation form
@@ -246,9 +448,25 @@ export interface Letter {
   forms?: LetterForms;
   /** The literal "pieces" of the character, for paper practice. */
   components: string[];
-  /** Typical handwriting order — conventional, not canonical. */
+  /**
+   * Typical handwriting order — conventional, not canonical.
+   *
+   * CAREFUL: this is a list of the letter's PARTS in writing order. It is NOT a
+   * count of pen-down runs. Three named parts can be three separate strokes, or
+   * one continuous stroke whose parts merely have names — Tamil ம is the latter.
+   * Never let the wording (or the count) imply a pen lift that no authored pen
+   * path supports; say "without lifting" explicitly where a path proves it.
+   */
   strokeOrder: string[];
   strokeOrderNote: string;
+  /**
+   * How many times the pen leaves the paper, when a verified pen path says so.
+   * Absent means "not verified" — which is not the same as "none", and must not
+   * be inferred from `strokeOrder.length`.
+   */
+  penLifts?: number;
+  /** Provenance of the stroke ORDER, where the order is claimed rather than sketched. */
+  strokeOrderSource?: StrokeOrderSource;
   notes?: string;
 }
 

@@ -82,17 +82,109 @@ pub enum StateMachineOutcome {
     /// In `state`, no transition guard holds and no exit criterion holds — a dead
     /// end; a grounded abstention ("no transition applies in state …").
     Stuck { state: String },
-    /// A comparison guard could only be decided after discarding exact input
-    /// identity, so the machine abstained at that guard.
-    PrecisionLoss { state: String, guard: String },
+    /// An expression could only be decided after discarding exact input
+    /// identity, so the machine abstained there.
+    ///
+    /// `phase` says WHICH expression, typed. This used to be inferable only by
+    /// noticing that a yield's rendering had been prefixed with `"yield "` and
+    /// stuffed into a field named `guard` — a checker distinguishing a guard
+    /// abstention from a yield abstention had to sniff that prefix.
+    PrecisionLoss {
+        state: String,
+        phase: FailurePhase,
+        expression: String,
+    },
     /// A guard or yield expression failed in the shared computation engine.
-    /// `phase` identifies where evaluation stopped and `detail` preserves the
-    /// typed engine failure as a stable, human-readable diagnostic.
+    ///
+    /// `phase` identifies where evaluation stopped and `failure` carries the
+    /// engine's typed reason. `detail` remains the same human-readable rendering
+    /// it always was, so a consumer that only prints it is unaffected — but a
+    /// consumer that needs to BRANCH on the reason keys off `failure` instead of
+    /// parsing prose.
     ComputationError {
         state: String,
-        phase: String,
+        phase: FailurePhase,
+        failure: ComputationFailure,
         detail: String,
     },
+}
+
+/// Where in a step evaluation stopped. Typed rather than a bare string, so a
+/// checker cannot silently disagree with the producer about spelling.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FailurePhase {
+    /// Evaluating a `transition`'s guard.
+    TransitionGuard,
+    /// Evaluating an `exit` criterion's guard.
+    ExitGuard,
+    /// Evaluating an `exit`'s `yield` expression, after its guard held.
+    Yield,
+}
+
+impl FailurePhase {
+    /// The stable JSON/`--explain` discriminant. Fixed identifiers a checker
+    /// keys off — not `Debug`.
+    pub fn type_tag(&self) -> &'static str {
+        match self {
+            FailurePhase::TransitionGuard => "transition_guard",
+            FailurePhase::ExitGuard => "exit_guard",
+            FailurePhase::Yield => "yield",
+        }
+    }
+}
+
+/// The engine failure behind a [`StateMachineOutcome::ComputationError`],
+/// preserved as a discriminant rather than only as formatted prose.
+///
+/// This mirrors `logic_engine::ComputeError` at the state-machine boundary
+/// instead of re-exporting it, so the outcome type stays owned by this module
+/// and a new engine variant is a compile error here rather than a silently
+/// reworded string downstream.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ComputationFailure {
+    UnknownSlot { slot: String },
+    EmptyAggregation { slot: String },
+    DivisionByZero,
+    MalformedExpr { detail: String },
+    TooDeep { limit: usize },
+    NonFinite { op: String },
+    PrecisionLoss { op: String },
+    DimensionMismatch { op: String, lhs: String, rhs: String },
+}
+
+impl ComputationFailure {
+    /// The stable JSON/`--explain` discriminant.
+    pub fn type_tag(&self) -> &'static str {
+        match self {
+            ComputationFailure::UnknownSlot { .. } => "unknown_slot",
+            ComputationFailure::EmptyAggregation { .. } => "empty_aggregation",
+            ComputationFailure::DivisionByZero => "division_by_zero",
+            ComputationFailure::MalformedExpr { .. } => "malformed_expr",
+            ComputationFailure::TooDeep { .. } => "too_deep",
+            ComputationFailure::NonFinite { .. } => "non_finite",
+            ComputationFailure::PrecisionLoss { .. } => "precision_loss",
+            ComputationFailure::DimensionMismatch { .. } => "dimension_mismatch",
+        }
+    }
+
+    /// The human-readable rendering — byte-identical to what `detail` carried
+    /// before this became structured, so existing output does not shift.
+    pub fn message(&self) -> String {
+        match self {
+            ComputationFailure::UnknownSlot { slot } => format!("unknown slot: {slot}"),
+            ComputationFailure::EmptyAggregation { slot } => format!("empty aggregation: {slot}"),
+            ComputationFailure::DivisionByZero => "division by zero".to_string(),
+            ComputationFailure::MalformedExpr { detail } => {
+                format!("malformed expression: {detail}")
+            }
+            ComputationFailure::TooDeep { limit } => format!("expression depth exceeds {limit}"),
+            ComputationFailure::NonFinite { op } => format!("non-finite result from {op}"),
+            ComputationFailure::PrecisionLoss { op } => format!("precision loss in {op}"),
+            ComputationFailure::DimensionMismatch { op, lhs, rhs } => {
+                format!("dimension mismatch for {op}: {lhs} versus {rhs}")
+            }
+        }
+    }
 }
 
 impl StateMachineOutcome {
@@ -206,15 +298,17 @@ pub fn run_state_machine(sm: &LoweredStateMachine, base_kb: &KnowledgeBase) -> S
                         YieldEvaluation::PrecisionLoss => StateMachineRun {
                             outcome: StateMachineOutcome::PrecisionLoss {
                                 state: state.clone(),
-                                guard: format!("yield {}", render_expr(&exit.yield_expr)),
+                                phase: FailurePhase::Yield,
+                                expression: render_expr(&exit.yield_expr),
                             },
                             steps: trace,
                         },
-                        YieldEvaluation::ComputationError(detail) => StateMachineRun {
+                        YieldEvaluation::ComputationError(failure) => StateMachineRun {
                             outcome: StateMachineOutcome::ComputationError {
                                 state: state.clone(),
-                                phase: "yield".to_string(),
-                                detail,
+                                phase: FailurePhase::Yield,
+                                detail: failure.message(),
+                                failure,
                             },
                             steps: trace,
                         },
@@ -224,17 +318,19 @@ pub fn run_state_machine(sm: &LoweredStateMachine, base_kb: &KnowledgeBase) -> S
                     return StateMachineRun {
                         outcome: StateMachineOutcome::PrecisionLoss {
                             state: state.clone(),
-                            guard: render_guard(&exit.guard),
+                            phase: FailurePhase::ExitGuard,
+                            expression: render_guard(&exit.guard),
                         },
                         steps: trace,
                     };
                 }
-                GuardEvaluation::ComputationError(detail) => {
+                GuardEvaluation::ComputationError(failure) => {
                     return StateMachineRun {
                         outcome: StateMachineOutcome::ComputationError {
                             state: state.clone(),
-                            phase: "exit_guard".to_string(),
-                            detail,
+                            phase: FailurePhase::ExitGuard,
+                            detail: failure.message(),
+                            failure,
                         },
                         steps: trace,
                     };
@@ -296,17 +392,19 @@ pub fn run_state_machine(sm: &LoweredStateMachine, base_kb: &KnowledgeBase) -> S
                     return StateMachineRun {
                         outcome: StateMachineOutcome::PrecisionLoss {
                             state: state.clone(),
-                            guard: render_guard(&transition.guard),
+                            phase: FailurePhase::TransitionGuard,
+                            expression: render_guard(&transition.guard),
                         },
                         steps: trace,
                     };
                 }
-                GuardEvaluation::ComputationError(detail) => {
+                GuardEvaluation::ComputationError(failure) => {
                     return StateMachineRun {
                         outcome: StateMachineOutcome::ComputationError {
                             state: state.clone(),
-                            phase: "transition_guard".to_string(),
-                            detail,
+                            phase: FailurePhase::TransitionGuard,
+                            detail: failure.message(),
+                            failure,
                         },
                         steps: trace,
                     };
@@ -349,12 +447,12 @@ pub fn run_state_machine(sm: &LoweredStateMachine, base_kb: &KnowledgeBase) -> S
 /// (ADJ-STATEMACHINE §3) lives in this function: a comparison guard is the
 /// predicate-gated-contribution comparison, a presence guard is an SLD "any proof?"
 /// check, and the bare atom `true` is the always-holds special case.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 enum GuardEvaluation {
     Holds,
     DoesNotHold,
     PrecisionLoss,
-    ComputationError(String),
+    ComputationError(ComputationFailure),
 }
 
 fn evaluate_guard(g: &LoweredGuard, kb: &KnowledgeBase) -> GuardEvaluation {
@@ -376,7 +474,7 @@ fn evaluate_guard(g: &LoweredGuard, kb: &KnowledgeBase) -> GuardEvaluation {
             let r = match compute("__sm_guard_rhs", rhs, kb) {
                 Ok(result) => result,
                 Err(error) => {
-                    return GuardEvaluation::ComputationError(compute_error_detail(&error));
+                    return GuardEvaluation::ComputationError(compute_failure(&error));
                 }
             };
             if r.precision_loss {
@@ -441,7 +539,7 @@ fn is_true_atom(subject: &CoreTerm) -> bool {
 enum YieldEvaluation {
     Value(YieldValue),
     PrecisionLoss,
-    ComputationError(String),
+    ComputationError(ComputationFailure),
 }
 
 fn eval_yield(expr: &logic_engine::ComputeExpr, kb: &KnowledgeBase) -> YieldEvaluation {
@@ -453,21 +551,38 @@ fn eval_yield(expr: &logic_engine::ComputeExpr, kb: &KnowledgeBase) -> YieldEval
         {
             YieldEvaluation::Value(YieldValue::Symbol(expr_symbol(expr)))
         }
-        Err(error) => YieldEvaluation::ComputationError(compute_error_detail(&error)),
+        Err(error) => YieldEvaluation::ComputationError(compute_failure(&error)),
     }
 }
 
-fn compute_error_detail(error: &ComputeError) -> String {
+/// Translate the engine's failure into this module's owned discriminant. The
+/// match is exhaustive with no wildcard, so a new `ComputeError` variant breaks
+/// the build here rather than collapsing into a generic string downstream.
+fn compute_failure(error: &ComputeError) -> ComputationFailure {
     match error {
-        ComputeError::UnknownSlot { slot } => format!("unknown slot: {slot}"),
-        ComputeError::EmptyAggregation { slot } => format!("empty aggregation: {slot}"),
-        ComputeError::DivisionByZero => "division by zero".to_string(),
-        ComputeError::MalformedExpr { detail } => format!("malformed expression: {detail}"),
-        ComputeError::TooDeep { limit } => format!("expression depth exceeds {limit}"),
-        ComputeError::NonFinite { op } => format!("non-finite result from {op:?}"),
-        ComputeError::PrecisionLoss { op } => format!("precision loss in {op:?}"),
+        ComputeError::UnknownSlot { slot } => ComputationFailure::UnknownSlot {
+            slot: slot.clone(),
+        },
+        ComputeError::EmptyAggregation { slot } => ComputationFailure::EmptyAggregation {
+            slot: slot.clone(),
+        },
+        ComputeError::DivisionByZero => ComputationFailure::DivisionByZero,
+        ComputeError::MalformedExpr { detail } => ComputationFailure::MalformedExpr {
+            detail: (*detail).to_string(),
+        },
+        ComputeError::TooDeep { limit } => ComputationFailure::TooDeep { limit: *limit },
+        ComputeError::NonFinite { op } => ComputationFailure::NonFinite {
+            op: format!("{op:?}"),
+        },
+        ComputeError::PrecisionLoss { op } => ComputationFailure::PrecisionLoss {
+            op: format!("{op:?}"),
+        },
         ComputeError::DimensionMismatch { op, lhs, rhs } => {
-            format!("dimension mismatch for {op:?}: {lhs} versus {rhs}")
+            ComputationFailure::DimensionMismatch {
+                op: format!("{op:?}"),
+                lhs: lhs.clone(),
+                rhs: rhs.clone(),
+            }
         }
     }
 }
@@ -617,10 +732,15 @@ mod tests {
             StateMachineOutcome::ComputationError {
                 state,
                 phase,
+                failure,
                 detail,
             } => {
                 assert_eq!(state, "start");
-                assert_eq!(phase, "transition_guard");
+                assert_eq!(phase, FailurePhase::TransitionGuard);
+                // The discriminant is what a checker branches on; `detail`
+                // stays the same prose it always was.
+                assert_eq!(failure, ComputationFailure::DivisionByZero);
+                assert_eq!(failure.type_tag(), "division_by_zero");
                 assert_eq!(detail, "division by zero");
             }
             other => panic!("expected typed computation error, got {other:?}"),
@@ -649,10 +769,15 @@ mod tests {
             StateMachineOutcome::ComputationError {
                 state,
                 phase,
+                failure,
                 detail,
             } => {
                 assert_eq!(state, "start");
-                assert_eq!(phase, "exit_guard");
+                assert_eq!(phase, FailurePhase::ExitGuard);
+                // The discriminant is what a checker branches on; `detail`
+                // stays the same prose it always was.
+                assert_eq!(failure, ComputationFailure::DivisionByZero);
+                assert_eq!(failure.type_tag(), "division_by_zero");
                 assert_eq!(detail, "division by zero");
             }
             other => panic!("expected typed computation error, got {other:?}"),
@@ -676,10 +801,15 @@ mod tests {
             StateMachineOutcome::ComputationError {
                 state,
                 phase,
+                failure,
                 detail,
             } => {
                 assert_eq!(state, "start");
-                assert_eq!(phase, "yield");
+                assert_eq!(phase, FailurePhase::Yield);
+                // The discriminant is what a checker branches on; `detail`
+                // stays the same prose it always was.
+                assert_eq!(failure, ComputationFailure::DivisionByZero);
+                assert_eq!(failure.type_tag(), "division_by_zero");
                 assert_eq!(detail, "division by zero");
             }
             other => panic!("expected typed computation error, got {other:?}"),
@@ -704,9 +834,18 @@ mod tests {
 
         let run = run_state_machine(&sm, &kb);
         match run.outcome {
-            StateMachineOutcome::PrecisionLoss { state, guard } => {
+            StateMachineOutcome::PrecisionLoss {
+                state,
+                phase,
+                expression,
+            } => {
                 assert_eq!(state, "start");
-                assert_eq!(guard, "yield tainted");
+                // This used to read `guard == "yield tainted"` — the phase was
+                // recoverable only by noticing the `"yield "` prefix on a field
+                // named `guard`. The phase is now typed and the expression is
+                // just the expression.
+                assert_eq!(phase, FailurePhase::Yield);
+                assert_eq!(expression, "tainted");
             }
             other => panic!("expected typed precision loss, got {other:?}"),
         }

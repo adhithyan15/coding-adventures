@@ -39,7 +39,8 @@
     "jsdom": "^25.0.0",
     "electron": "^39.8.5",
     "electron-builder": "^26.8.1",
-    "cross-env": "^7.0.0"
+    "cross-env": "^7.0.0",
+    "@types/node": "^22.20.1"
   },
   "repository": {
     "type": "git",

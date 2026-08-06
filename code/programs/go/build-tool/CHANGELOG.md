@@ -32,6 +32,30 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- TypeScript dependency resolution now parses root `package.json` objects,
+  registers only the exact top-level `name` alias, and accepts only direct
+  keys from `dependencies` and `devDependencies`. Single-line tables resolve
+  correctly while peer, optional, nested tool, script, and malformed-JSON
+  decoys cannot invent partial graph edges.
+- C#, F#, and shared .NET resolution now reads only literal `Include`
+  attributes on unqualified `ProjectReference` elements in root project files,
+  matches lexically normalized paths to exact project files across the shared
+  .NET scope, and ignores XML decoys, dynamic MSBuild paths, nested projects,
+  absolute paths, and unknown targets without opening referenced files.
+- Java and Kotlin Gradle resolution now reads only comment-aware
+  `includeBuild("...")` calls from root `settings.gradle.kts`, supports
+  multiline and nested relative paths through exact same-lane package-root
+  matching, and ignores strings, build-script coordinates, absolute paths,
+  cross-lane targets, and unknown targets without following referenced paths.
+  Java/Kotlin source plus Gradle settings/build files now invalidate package
+  hashes.
+- Dart dependency resolution now accepts only direct package keys under root
+  `dependencies:` and `dev_dependencies:` maps, excluding nested source
+  options, dependency overrides, comments, and unrelated YAML fields.
+- Elixir dependency resolution now reads local `path:` tuples from both direct
+  project `deps:` lists and block or shorthand `defp deps` lists, including
+  multiline tuples, while excluding comments, application metadata, prose,
+  `mix.lock`, and non-path dependencies.
 - Perl dependency resolution now reads only top-level runtime `requires`
   declarations from root `cpanfile`s, excludes test and other phase blocks and
   `Makefile.PL` dependency tables, and registers exact declared module names

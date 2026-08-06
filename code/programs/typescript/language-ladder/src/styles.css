@@ -419,6 +419,79 @@ body {
 }
 .step__script-sig { margin: 5px 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--ink); }
 
+/* Independent local frontiers and the focused check before mixed review. */
+.learn__notice {
+  margin: 12px 0 16px;
+  padding: 9px 12px;
+  border-left: 3px solid #2f855a;
+  background: #e6f6ec;
+  color: #22543d;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9rem;
+}
+.frontier__context {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+.frontier__extensions {
+  margin: 8px 0 0;
+  padding: 7px 10px;
+  background: #fff8ec;
+  border-left: 3px solid var(--ff);
+  border-radius: 0 5px 5px 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.focused-check__start { margin-top: 10px; }
+.focused-check__glyph {
+  margin: 12px 0 4px;
+  font-size: 2.2rem;
+  line-height: 1.25;
+}
+.focused-check[data-language="persian"] .focused-check__glyph,
+.focused-check[data-language="urdu"] .focused-check__glyph {
+  font-family: "Curriculum Naskh", serif;
+}
+.focused-check__form { display: grid; gap: 9px; margin-top: 14px; }
+.focused-check__prompt { color: var(--ink); font-size: 0.9rem; line-height: 1.5; }
+.focused-check__input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 9px 11px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+.focused-check__input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.focused-check__feedback { margin: 10px 0; font-weight: 650; line-height: 1.5; }
+.focused-check__feedback.no { color: #c53030; }
+.focused-check__feedback.yes { color: #247a43; }
+.focused-check__budget {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: -2px 0 8px;
+}
+.focused-check__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.focused-check__secondary {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.focused-check__secondary:hover { border-color: var(--accent); color: var(--accent); }
+
 .learn__nav { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
 /* The jump picker grows to fill the space between Prev and Next. */
 .learn__jump {
@@ -585,3 +658,38 @@ body {
 }
 .sibling__glyph { font-size: 2rem; line-height: 1.1; }
 .sibling__label { font-size: 0.7rem; color: var(--muted); }
+
+/* --- the stroke-order filmstrip (HL-C08) -------------------------------- */
+/* One panel per movement of the pen, read left to right like a comic strip.
+   The SVG carries its own colours, so the very same markup also works in the
+   books; these rules only handle layout and the framing around each panel. */
+.ductus__film {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+/* The SVG carries width/height attributes matching its viewBox, so `height:
+   auto` keeps each panel in its true proportions however wide the column is. */
+.ductus__frame {
+  width: 118px;
+  height: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px;
+}
+.ductus__summary {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.ductus__source {
+  margin: 0 0 8px;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.ductus__source a { color: var(--accent); }
+.ductus__variation { font-style: italic; }

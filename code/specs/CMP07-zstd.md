@@ -105,15 +105,44 @@ After literals are extracted, the LZ77 back-references are encoded as **sequence
 each sequence is a triple `(literal_length, match_length, offset)`. Three separate FSE
 streams encode these three fields simultaneously.
 
-**Repeat Offsets:** ZStd tracks the three most-recently-used offsets in slots R1, R2, R3.
-Referencing a recent offset costs only 2 bits instead of encoding the full distance:
+**Repeat Offsets:** ZStd tracks the three most-recently-used offsets in slots R1, R2, R3
+(RFC 8878 §3.1.1.3.2.1.1). Referencing a recent offset costs only 2 bits instead of
+encoding the full distance. The history is **frame-scoped**, not block-scoped: it starts
+at `R1=1, R2=4, R3=8` for the first block of a frame and is threaded, unmodified across
+Raw/RLE blocks, through every Compressed block's sequences for the rest of the frame.
+
+The mapping from `Offset_Value` (the raw FSE-decoded value, `of_raw` below) to an actual
+offset — including the one genuinely easy-to-miss special case — is:
 
 ```
-offset code 1 → R1 (most recent)
-offset code 2 → R2
-offset code 3 → R3
-offset code ≥ 4 → (value - 3) is the actual offset; update R1, shift others
+Offset_Value ≥ 4        → actual offset = Offset_Value - 3 (explicit); then push it onto
+                           the history: R3←R2, R2←R1, R1←new_offset
+Offset_Value ∈ {1, 2, 3} → a repeat-offset reference, chosen by
+                           selector = (Literals_Length == 0 ? 1 : 0) + Offset_Value - 1:
+                             selector 0 → reuse R1 (no rotation)
+                             selector 1 → use R2 (R1,R2 swap; R3 untouched)
+                             selector 2 → use R3 (rotate: R1,R2,R3 ← new,old_R1,old_R2)
+                             selector 3 → use R1-1 (same rotation shape as selector 2)
 ```
+
+See "Repeat-Offset (R1/R2/R3) decode algorithm" below for further detail.
+
+> **Correction (2026-08):** the history-selection rule is NOT simply "offset code N
+> selects Rn" — that description (an earlier revision of this section) omits the
+> `Literals_Length == 0` shift, which changes which slot codes 1/2/3 select and, for
+> `Offset_Value == 3` with `Literals_Length == 0`, replaces the slot lookup entirely with
+> `R1 - 1`. Every language port's DECODER in this repo initially implemented `offset =
+> Offset_Value - 3` unconditionally for every code — including code 1/2/3 — because this
+> repo's own ENCODERS never emit repeat-offset codes by design (an explicit "no
+> repeat-offset shortcuts" educational simplification: every offset an encoder here
+> writes is `>= 4` on the wire), so a self round trip never exercises this path, and even
+> the spec's own TC-8 (built to be repeat-offset-*friendly* input, not repeat-offset-*
+> aware* output) doesn't catch it. Real `zstd` encoders use repeat offsets constantly, so
+> a decoder missing this fails to decode a large fraction of real-world `.zst` files. See
+> `lessons.md` Lesson 98 and the `rust/zstd` / `c/zstd` conformance fixes; cross-checked
+> against the reference C source (`ZSTD_decodeSequence` in `zstd_decompress_block.c`).
+> Implementing this remains DECODE-only — encoders in this repo are not required to emit
+> repeat-offset codes.
 
 ### ZStd vs DEFLATE vs Brotli
 
@@ -319,6 +348,59 @@ For every subsequent sequence processed (all but the first), the normal
 16`, flush the low `nbBitsOut` bits of `state`, then
 `state = stateTable[(state >>> nbBitsOut) + deltaFindState]`.
 
+#### Repeat-Offset (R1/R2/R3) decode algorithm
+
+RFC 8878 §3.1.1.3.2.1.1. A **decode-only** feature gap this repo's ports can
+share even after the FSE-codec bugs above are fixed, because this repo's own
+encoders (by design — "Educational Simplification" below) never emit it, so
+no port's self-consistency round trip, and not even a fixed single-corpus
+CLI-interop test (TC-9), reliably exercises this path. First found missing in
+`code/packages/c/zstd` (PR #9941) via ad hoc fuzzing against the real `zstd`
+CLI, then confirmed as a repo-wide gap; see `lessons.md` Lesson 99.
+
+The three registers `rep1, rep2, rep3` are **frame-scoped**: initialized to
+`1, 4, 8` "for the first block" (RFC 8878's literal words), then carried
+unmodified across Raw/RLE blocks and updated after **every** Compressed
+block's sequences — explicit-offset sequences included, not only
+repeat-offset ones. They are never reset mid-frame.
+
+For each decoded sequence, after Step 2 ("read extra value bits") above
+produces `of_code` (the peeked Offset symbol) and `Offset_Value = (1 <<
+of_code) | extra_bits`:
+
+```
+if of_code >= 2:
+    # Offset_Value >= 4 always here: an ordinary explicit offset.
+    offset = Offset_Value - 3
+    rep3, rep2, rep1 = rep2, rep1, offset
+
+else:
+    # of_code in {0, 1} => Offset_Value in {1, 2, 3}: a repeat-offset
+    # reference. Literals_Length == 0 shifts the interpretation by one
+    # slot (RFC 8878: "the Literals_Length is used ... to determine
+    # which repeated offset is meant"). Literals_Length == 0 is knowable
+    # from of_code alone at this point in decoding — LL code 0 is the
+    # only Literal_Length code with baseline 0 and 0 extra bits, so it is
+    # decidable from the PEEKED ll_code, before ll's extra bits are read.
+    selector = Offset_Value - 1 + (1 if Literals_Length == 0 else 0)
+    if selector == 0:
+        offset = rep1                              # no rotation
+    elif selector == 1:
+        offset = rep2;  rep2, rep1 = rep1, rep2     # swap; rep3 untouched
+    elif selector == 2:
+        offset = rep3;  rep3, rep2, rep1 = rep2, rep1, rep3   # full rotate
+    else:  # selector == 3
+        offset = rep1 - 1 if rep1 > 0 else 0        # full rotate, same shape as 2
+        rep3, rep2, rep1 = rep2, rep1, offset
+```
+
+Cross-checked against both the RFC prose and the literal reference C source
+(`ZSTD_decodeSequence` in `zstd_decompress_block.c`,
+`github.com/facebook/zstd`) rather than re-derived from memory — the exact
+slot-rotation shape per selector, and the `Literals_Length == 0` shift in
+particular, are easy to get subtly wrong and this repo has already paid for
+that once (Lesson 96) on the adjacent FSE-codec bug class.
+
 #### Exact FSE table-construction algorithm
 
 Also load-bearing, also invisible to self-round-trip tests: the symbol
@@ -357,6 +439,7 @@ The educational implementation **must produce and consume valid .zst files**
 | Skippable frames | Yes | No (skip on read) |
 | Checksums | Optional | Omit (flag=0) |
 | Window size | Up to 8 MB | Fixed 8 MB |
+| Repeat offsets | R1/R2/R3 shortcuts | Encoder: none, every offset coded in full (raw offset ≥ 4 always). Decoder: full support required — real `zstd`'s encoder uses repeat offsets constantly, so a decoder that only understands explicit offsets fails to interoperate with real-world `.zst` files (see "Repeat-Offset (R1/R2/R3) decode algorithm" above and `lessons.md` Lesson 99) |
 
 Raw literals + predefined FSE tables for sequences produces valid, decompressible output.
 The interoperability requirement (test case 9) ensures the format is real, not toy.
@@ -459,6 +542,13 @@ assert output == input
 # The repeat-offset mechanism should make this compress efficiently
 assert len(compressed) < len(input) * 0.70
 ```
+> Note: this test only requires the compressed round trip to be correct and reasonably
+> small — it does NOT, by itself, prove an implementation's *decoder* understands
+> repeat-offset sequences (offset codes 1/2/3), since an implementation whose own encoder
+> never emits repeat-offset codes at all (this repo's educational encoders don't) can pass
+> TC-8 while still failing to decode a real repeat-offset-aware encoder's output. See the
+> Repeat Offsets correction above (Lesson 98) — that gap is only caught by real
+> cross-implementation interop (TC-9-style), not by this test.
 
 ### TC-9: Cross-language / interoperability
 ```

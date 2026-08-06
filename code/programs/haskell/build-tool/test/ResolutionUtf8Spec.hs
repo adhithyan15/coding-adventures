@@ -1,6 +1,21 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionGoSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionSwiftSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec
+    ( resolutionCabalSpec
+    , resolutionDartSpec
+    , resolutionDotnetSpec
+    , resolutionElixirSpec
+    , resolutionGoSpec
+    , resolutionGradleSpec
+    , resolutionPerlSpec
+    , resolutionPythonSpec
+    , resolutionRubySpec
+    , resolutionRustSpec
+    , resolutionSwiftSpec
+    , resolutionTypescriptSpec
+    , resolutionUtf8Spec
+    )
+where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -191,6 +206,108 @@ resolutionGoSpec = describe "Go resolution conformance" $ do
                         , ["go/alpha"]
                         ]
 
+resolutionElixirSpec :: Spec
+resolutionElixirSpec = describe "Elixir resolution conformance" $ do
+    it "reads local path tuples only from authoritative deps lists" $
+        withFixture "resolution-elixir-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "elixir" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "elixir/alpha"
+                    , "elixir/beta-helper"
+                    , "elixir/delta_name"
+                    , "elixir/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["elixir/beta-helper", "elixir/gamma"]
+                        , ["elixir/delta_name"]
+                        , ["elixir/alpha"]
+                        ]
+
+resolutionDartSpec :: Spec
+resolutionDartSpec = describe "Dart resolution conformance" $ do
+    it "discovers Dart and reads only direct root dependency keys" $
+        withFixture "resolution-dart-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "dart" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "dart/alpha"
+                    , "dart/beta-helper"
+                    , "dart/delta_name"
+                    , "dart/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["dart/beta-helper", "dart/delta_name", "dart/gamma"]
+                        , ["dart/alpha"]
+                        ]
+
+resolutionGradleSpec :: Spec
+resolutionGradleSpec = describe "Gradle resolution conformance" $ do
+    forM_ ["java", "kotlin"] $ \language ->
+        it ("reads only same-lane relative includeBuild calls for " ++ language) $
+            withFixture ("resolution-gradle-" ++ language ++ "-field-aware.json") $ \root fixture -> do
+                graph <- resolveFixtureFor language root
+                graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+                DG.nodes graph
+                    `shouldBe`
+                        [ language ++ "/alpha"
+                        , language ++ "/beta-helper"
+                        , language ++ "/gamma"
+                        , language ++ "/programs/delta-app"
+                        ]
+                DG.independentGroups graph
+                    `shouldBe`
+                        Right
+                            [ [language ++ "/beta-helper", language ++ "/gamma"]
+                            , [language ++ "/alpha"]
+                            , [language ++ "/programs/delta-app"]
+                            ]
+
+resolutionDotnetSpec :: Spec
+resolutionDotnetSpec = describe ".NET resolution conformance" $ do
+    forM_ ["csharp", "fsharp"] $ \language ->
+        it ("reads only root ProjectReference Include paths for " ++ language) $
+            withFixture ("resolution-dotnet-" ++ language ++ "-field-aware.json") $ \root fixture -> do
+                graph <- resolveFixtureFor language root
+                graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+                DG.nodes graph
+                    `shouldBe`
+                        [ language ++ "/alpha"
+                        , language ++ "/beta-helper"
+                        , language ++ "/gamma"
+                        , language ++ "/programs/delta-app"
+                        ]
+                DG.independentGroups graph
+                    `shouldBe`
+                        Right
+                            [ [language ++ "/beta-helper", language ++ "/gamma"]
+                            , [language ++ "/alpha"]
+                            , [language ++ "/programs/delta-app"]
+                            ]
+    it "resolves exact root project paths across the shared .NET scope" $
+        withFixture "resolution-dotnet-cross-language-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "all" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "csharp/graph"
+                    , "dotnet/programs/bridge-app"
+                    , "fsharp/helpers"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["fsharp/helpers"]
+                        , ["csharp/graph"]
+                        , ["dotnet/programs/bridge-app"]
+                        ]
+
 resolutionPythonSpec :: Spec
 resolutionPythonSpec = describe "Python resolution conformance" $ do
     it "preserves the shared canonical dependency diamond" $
@@ -296,6 +413,33 @@ resolutionSwiftSpec = describe "Swift resolution conformance" $ do
                         , ["swift/alpha"]
                         ]
 
+resolutionTypescriptSpec :: Spec
+resolutionTypescriptSpec = describe "TypeScript resolution conformance" $ do
+    it "reads only direct root dependency tables through exact manifest aliases" $
+        withFixture "resolution-typescript-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "typescript" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "typescript/alpha"
+                    , "typescript/beta-helper"
+                    , "typescript/delta_name"
+                    , "typescript/gamma"
+                    , "typescript/malformed"
+                    , "typescript/wrong-shape"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ [ "typescript/beta-helper"
+                          , "typescript/delta_name"
+                          , "typescript/gamma"
+                          , "typescript/malformed"
+                          , "typescript/wrong-shape"
+                          ]
+                        , ["typescript/alpha"]
+                        ]
+
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation
 assertMetadataError root metadataError = do
     metadataErrorCode metadataError `shouldBe` "METADATA_INVALID_UTF8"
@@ -313,7 +457,11 @@ resolveFixture = resolveFixtureFor "lua"
 resolveFixtureFor :: String -> FilePath -> IO DG.DirectedGraph
 resolveFixtureFor language root = do
     packages <- discoverPackages (root </> "code")
-    resolveDependencies (filter ((== language) . packageLanguage) packages)
+    resolveDependencies
+        ( if language == "all"
+            then packages
+            else filter ((== language) . packageLanguage) packages
+        )
 
 graphEdges :: DG.DirectedGraph -> [[String]]
 graphEdges graph =

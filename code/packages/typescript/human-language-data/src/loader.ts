@@ -5,16 +5,24 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  MODALITY_MANIFEST_PATH,
+  type ModalityManifest,
+  type ModalityManifestLesson,
+} from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import type {
   BookChapter,
   BookCorpus,
+  ChapterPolicy,
   CurriculumSpine,
   Dataset,
+  LanguageCurriculum,
   LanguageRegistry,
   Script,
   ScriptData,
   Taxonomy,
+  TrackChapters,
 } from "./types.js";
 
 /** Default curriculum root: code/learning/human-languages, relative to this package. */
@@ -39,6 +47,48 @@ export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumS
   return JSON.parse(
     readFileSync(join(root, "core", "spine.json"), "utf8"),
   ) as CurriculumSpine;
+}
+
+/** Read each track's authored shared-spine realization map. */
+export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
+  const out: LanguageCurriculum[] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "curriculum.json");
+    if (!existsSync(path)) continue;
+    out.push(JSON.parse(readFileSync(path, "utf8")) as LanguageCurriculum);
+  }
+  return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/**
+ * Read each track's authored chapter capability ledger (HL05).
+ *
+ * Tracks without a `chapters.json` are skipped rather than defaulted. That is
+ * deliberate: an absent ledger means "not yet authored", which the gap report must
+ * be able to distinguish from "authored and empty". Inventing a placeholder here
+ * would erase exactly the debt the report exists to measure.
+ */
+export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters[] {
+  const out: TrackChapters[] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "chapters.json");
+    if (!existsSync(path)) continue;
+    out.push(JSON.parse(readFileSync(path, "utf8")) as TrackChapters);
+  }
+  return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/**
+ * Read the tunable chapter policy. Unlike the ledgers above, this file is required:
+ * a missing policy would silently disable the payoff and ramp rules, and a gate that
+ * quietly stops running is worse than one that fails loudly.
+ */
+export function loadChapterPolicy(root = defaultCurriculumRoot()): ChapterPolicy {
+  return JSON.parse(
+    readFileSync(join(root, "core", "chapter-policy.json"), "utf8"),
+  ) as ChapterPolicy;
 }
 
 /**
@@ -113,6 +163,44 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
   return out;
 }
 
+/**
+ * Read the generated modality manifest (HL08 / HL-C44).
+ *
+ * The consumer-side counterpart of `modality-cli --write`. An app, a book builder, or
+ * the future driving edition reads this instead of importing the derivation and
+ * re-parsing 1,096 Markdown files — which is the point of emitting it at all.
+ *
+ * Required, not optional, and deliberately so. A missing manifest throws rather than
+ * returning an empty one: "no modality data" and "no lesson needs eyes" are opposite
+ * facts, and a loader that quietly returns the second when it means the first would
+ * hand a driver the handwriting drills. CI's `--check` guarantees the file is present
+ * and current, so the throw is unreachable in a healthy checkout.
+ */
+export function loadModalityManifest(root = defaultCurriculumRoot()): ModalityManifest {
+  return JSON.parse(readFileSync(join(root, MODALITY_MANIFEST_PATH), "utf8")) as ModalityManifest;
+}
+
+/**
+ * Index a manifest's lessons by id.
+ *
+ * A `Map`, never a plain object, and this is the one place in the package where that
+ * choice is load-bearing rather than stylistic. The keys come straight out of parsed
+ * JSON, so `obj[lesson.id] = lesson` with an id of `__proto__` writes the object's
+ * prototype instead of a property — every later lookup then inherits attacker-chosen
+ * fields, and `manifest["anything"]` starts answering with a modality nobody authored.
+ * `Map` keys are plain data with no prototype chain behind them, so the same input is
+ * simply a key named `__proto__`.
+ *
+ * Providing this here means no consumer has to rediscover that.
+ */
+export function modalityManifestById(
+  manifest: ModalityManifest,
+): Map<string, ModalityManifestLesson> {
+  const index = new Map<string, ModalityManifestLesson>();
+  for (const lesson of manifest.lessons) index.set(lesson.id, lesson);
+  return index;
+}
+
 /** Read data/scripts/*.json (may be empty while scripts are still being authored). */
 export function loadScripts(root = defaultCurriculumRoot()): Record<string, ScriptData> {
   const dir = join(root, "data", "scripts");
@@ -131,6 +219,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   taxonomy: Taxonomy;
   registry: LanguageRegistry;
   spine: CurriculumSpine;
+  curricula: LanguageCurriculum[];
   books: BookCorpus;
   lessons: ParsedLesson[];
   scripts: Record<string, ScriptData>;
@@ -139,6 +228,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   const taxonomy = loadTaxonomy(root);
   const registry = loadLanguageRegistry(root);
   const spine = loadCurriculumSpine(root);
+  const curricula = loadLanguageCurricula(root);
   const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
   const scripts = loadScripts(root);
@@ -146,6 +236,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
     taxonomy,
     registry,
     spine,
+    curricula,
     books,
     lessons,
     scripts,

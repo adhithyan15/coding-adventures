@@ -2,6 +2,46 @@
 
 ## Unreleased - formula audit v2 guard witnesses
 
+- A lookup abstains with `ambiguous_breakpoint` when two rows of the table relation tie the
+  breakpoint it selected, instead of keeping whichever row proof enumeration reached first
+  and dropping the other along with its RS-5e citation. This is where the invariant is
+  actually held: `adj-lang` rejects a `table` DECLARATION that repeats a key, but selection
+  does not read declarations — it enumerates every fact with the table's functor and arity,
+  so a second `table` block of the same name or a colliding `relate` fact contributes rows
+  the declaration check never saw. Both routes were reproducible and are covered by tests.
+- All three modes. `interpolated` is the sharpest case, because the dropped row's VALUE feeds
+  the blend: the same knowledge base emitted `150` or `599.5`, each fully cited and neither
+  abstaining, depending only on whether the smuggled row was declared before or after the
+  table. Both bracket endpoints and the exact-hit path are gated.
+- Ambiguity is decided AFTER selection, against the key that actually won, never against a
+  running best. Keying off the best-so-far made abstention depend on enumeration order — a
+  duplicate at a key the query did not select could abstain it or not — which both
+  contradicted the reproducibility this code promises and was a false positive, since a
+  duplicate on an unselected row costs the answer nothing.
+- `nearest`'s tie-break to the smaller key still settles a genuine tie between rows either
+  side of the query, which is a different thing from two rows at one key.
+
+- State-machine failure JSON is keyed on discriminants rather than prose. `precision_loss`
+  gains `"phase"` and renames `"guard"` to `"expression"`; `computation_error` gains
+  `"failure"` alongside the unchanged `"detail"`. `--explain` names the phase and the
+  failure kind. Previously a yield precision loss was distinguishable from a guard one only
+  by the `"yield "` prefix inside the `"guard"` string.
+
+- `adj-formula-audit` now decides whether to take the strict, guard-replaying v2 path from
+  the PARSED SOURCE rather than from the runtime's own execution trace. If a query's
+  formula closure declares a `requires` anywhere — including on a nested callee — v2 is
+  required whether or not the trace reported a guard, and `validate_guard_prefix` then
+  fails closed on the mismatch. Previously the choice read `formula_executions`, so a
+  producer that emitted no guard trace selected the unguarded v1 shape, and v1 never
+  replays source against execution — the discrepancy the strict path exists to catch was
+  the discrepancy that routed around it. This is hardening: with the reserved-name gates
+  in adj-lang there is no currently-constructible program that reaches the old behaviour.
+  A program declaring no precondition anywhere still emits v1.
+- `is_runtime_builtin_application` now calls `adj_lang::is_runtime_builtin_formula`
+  instead of restating the five built-in names. The audit has to replay the runtime's
+  built-in-versus-user-formula precedence exactly; a second hand-maintained copy could
+  drift from the dispatch it mirrors, and the resulting disagreement would be silent.
+
 - `adj-formula-audit` emits `adj-lang/formula_audit/v2` for executed guards or plans containing
   exact literals. V2 records ordered query executions, parser-backed guard byte identities, exact
   comparisons, stable consumed-fact identities, independent direct-observation rechecks, and a

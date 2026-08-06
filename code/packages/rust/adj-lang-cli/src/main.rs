@@ -566,6 +566,12 @@ fn abstention_json(reason: &AbstentionReason) -> String {
             payload(column),
             payload(key)
         ),
+        AbstentionReason::AmbiguousBreakpoint { table, column, key } => format!(
+            "{{\"reason\":\"ambiguous_breakpoint\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"two rows of this relation share that breakpoint, so the interval has two differently-sourced answers; selecting either would drop the other's citation without a word\"}}",
+            payload(table),
+            payload(column),
+            payload(key)
+        ),
         AbstentionReason::SearchLimitExceeded { goal } => format!(
             "{{\"reason\":\"search_limit_exceeded\",\"goal\":\"{}\",\"explanation\":\"the proof search hit its depth or width limit and stopped; this is NOT evidence that no proof exists\"}}",
             payload(goal)
@@ -606,6 +612,23 @@ enum AbstentionReason {
     },
     /// The search stopped at a resolution limit. **Not** an absence.
     SearchLimitExceeded { goal: String },
+    /// Two rows of the table relation share the breakpoint this lookup selected,
+    /// so the interval has two differently-sourced answers and no ground to
+    /// prefer either.
+    ///
+    /// The lowerer rejects a table DECLARATION that repeats a key, but the
+    /// runtime does not read the declaration — it enumerates every fact with the
+    /// table's functor and arity. A second `table` block of the same name, or a
+    /// `relate` fact colliding with the relation, contributes rows the
+    /// declaration-time check never saw. So the invariant is enforced HERE too,
+    /// over exactly the set selection walks. Picking one and dropping the other
+    /// would emit a fully-cited answer while contradicting, separately-sourced
+    /// evidence vanished.
+    AmbiguousBreakpoint {
+        table: String,
+        column: String,
+        key: String,
+    },
 }
 
 fn trace_steps_json(proof: &Proof, kb: &KnowledgeBase) -> String {
@@ -1372,19 +1395,26 @@ fn state_machine_outcome_json(outcome: &StateMachineOutcome, kb: &KnowledgeBase)
         StateMachineOutcome::Stuck { state } => {
             format!("{{\"type\":\"stuck\",\"state\":\"{}\"}}", esc(state))
         }
-        StateMachineOutcome::PrecisionLoss { state, guard } => format!(
-            "{{\"type\":\"precision_loss\",\"state\":\"{}\",\"guard\":\"{}\"}}",
+        StateMachineOutcome::PrecisionLoss {
+            state,
+            phase,
+            expression,
+        } => format!(
+            "{{\"type\":\"precision_loss\",\"state\":\"{}\",\"phase\":\"{}\",\"expression\":\"{}\"}}",
             esc(state),
-            esc(guard)
+            phase.type_tag(),
+            esc(expression)
         ),
         StateMachineOutcome::ComputationError {
             state,
             phase,
+            failure,
             detail,
         } => format!(
-            "{{\"type\":\"computation_error\",\"state\":\"{}\",\"phase\":\"{}\",\"detail\":\"{}\"}}",
+            "{{\"type\":\"computation_error\",\"state\":\"{}\",\"phase\":\"{}\",\"failure\":\"{}\",\"detail\":\"{}\"}}",
             esc(state),
-            esc(phase),
+            phase.type_tag(),
+            failure.type_tag(),
             esc(detail)
         ),
     }
@@ -1498,6 +1528,32 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
     )
 }
 
+/// Whether more than one row of the enumerated relation carries `target` in the
+/// key column — i.e. whether the breakpoint a lookup SELECTED is shared.
+///
+/// Asked AFTER selection, about the key that actually won, and never about a
+/// running best. An earlier version set a flag whenever an incoming key tied the
+/// best-so-far, which made the answer depend on enumeration order: a duplicate at
+/// a key that ultimately LOST could abstain the query or not, depending only on
+/// which row the resolver reached first. That contradicted the reproducibility
+/// this code promises, and it is a false positive besides — a duplicate on a row
+/// that was not selected costs the answer nothing.
+///
+/// Deciding after the fact is order-independent by construction and costs one
+/// extra linear pass over an already-materialized proof list.
+fn breakpoint_is_shared(
+    dag: &logic_engine::ProofDAG,
+    key_var: &LogicVar,
+    target: &logic_engine::compute::ExactRational,
+) -> bool {
+    dag.proofs
+        .iter()
+        .filter_map(|proof| numeric_exact_magnitude(&proof.bindings.walk_var(key_var)))
+        .filter(|k| k.as_ratio() == target.as_ratio())
+        .count()
+        > 1
+}
+
 /// Resolve a RANGE / BRACKET lookup (ADJ-TABLES RS-5c) against the grounded
 /// table and render it as JSON. The table's rows are its facts, so enumerating
 /// `<table>($c0, …, $cn)` binds every column of every row **and** yields that
@@ -1565,6 +1621,24 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
         };
         if take {
             best = Some((proof, key_term, value_term, k));
+        }
+    }
+    // The selected breakpoint must identify ONE row. The declaration-time gate
+    // cannot guarantee that: it reads one `table` block, while enumeration reads
+    // every fact with this functor and arity — a second block of the same name or
+    // a colliding `relate` fact contributes rows it never saw.
+    if let Some((_, key_term, _, best_k)) = &best {
+        if breakpoint_is_shared(&dag, &cols[rl.key_index], best_k) {
+            return format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                abstention_json(&AbstentionReason::AmbiguousBreakpoint {
+                    table: rl.table.clone(),
+                    column: rl.key_col.clone(),
+                    key: format!("{key_term}"),
+                })
+            );
         }
     }
 
@@ -1729,6 +1803,21 @@ fn nearest_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
         };
         if take {
             best = Some((proof, key_term, value_term, k));
+        }
+    }
+
+    // A tie on the SELECTED KEY is not the tie `nearest` resolves. Two rows
+    // equidistant on opposite sides are a real choice, settled deterministically
+    // toward the smaller key. Two rows AT that key are one breakpoint with two
+    // differently-sourced answers, and snapping to either drops the other's
+    // citation.
+    if let Some((_, key_term, _, best_k)) = &best {
+        if breakpoint_is_shared(&dag, &cols[rl.key_index], best_k) {
+            return abstain(AbstentionReason::AmbiguousBreakpoint {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{key_term}"),
+            });
         }
     }
 
@@ -1914,6 +2003,21 @@ fn interpolated_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> Stri
             max_key: extremal(true),
         }),
         (Some((lp, k0, v0)), Some((up, k1, v1))) => {
+            // BOTH bracket endpoints must identify one row each. This mode is the
+            // sharpest case of the shared-breakpoint problem: the dropped row's
+            // VALUE feeds the blend, so the emitted number itself changes with
+            // which row enumeration happened to reach first. The same knowledge
+            // base produced `150` or `599.5`, each fully cited and neither
+            // abstaining, depending only on declaration order.
+            for endpoint in [&k0, &k1] {
+                if breakpoint_is_shared(&dag, &cols[rl.key_index], endpoint) {
+                    return abstain(AbstentionReason::AmbiguousBreakpoint {
+                        table: rl.table.clone(),
+                        column: rl.key_col.clone(),
+                        key: render(endpoint),
+                    });
+                }
+            }
             // Exact hit on a breakpoint (`k0 == k1 == q`): the blend is `0/0`, so
             // return that row's value verbatim with its single citation.
             if k0.as_ratio() == k1.as_ratio() {

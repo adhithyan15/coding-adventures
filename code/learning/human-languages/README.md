@@ -8,8 +8,17 @@ in [`HL00`](../../specs/HL00-human-language-curriculum-framework.md) — read
 that first. The migration to an ordered shared spine, strict sub-five-minute
 lessons, Persian and Urdu extensions, and a single book/app/practice content
 pipeline is specified in
-[`HL04`](../../specs/HL04-shared-spine-and-content-pipeline.md). This page is
-just an index.
+[`HL04`](../../specs/HL04-shared-spine-and-content-pipeline.md). The move to
+chapter-sized deployable capability — every chapter promising something the reader can
+use immediately — is specified in
+[`HL05`](../../specs/HL05-chapter-capability-and-step-by-step-shape.md), with the
+book's visual system and inline script-writing figures in
+[`HL06`](../../specs/HL06-visual-system.md) and the spine's growth through B1 in
+[`HL07`](../../specs/HL07-spine-expansion-to-b1.md).
+[`HL08`](../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md) marks which
+chapters need eyes or a pen and which can be learned entirely by ear, and defines the
+narration export a voice assistant reads aloud on a commute. This page is just an
+index.
 
 Every track shares the same shape:
 
@@ -17,6 +26,7 @@ Every track shares the same shape:
 <language>/
   README.md                  what this track is, how to use it, current progress
   CHANGELOG.md                per-chapter content additions
+  curriculum.json            ordered shared-spine realization path + local extensions
   roadmap.md                  themed-chapter skeleton
   session-map.md              how lessons compose into commute sessions + review schedule
   pronunciation-reference.md   the sounds, to look up on demand (never a gate)
@@ -29,15 +39,46 @@ The machine-readable layer alongside the tracks is:
 ```text
 core/languages.json             complete active-language registry and default mix order
 core/spine.json                 ordered, language-independent can-do spine
+core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
+core/lesson-modality.json       generated: per-lesson voice/sight/pen and per-chapter drivable prefix
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
+
+Every registered track has one `curriculum.json`. Its ordered path can revisit a
+shared spine node, attaches required/supporting/reference extensions before,
+inline with, or after a local segment, and explicitly records canonical concepts
+that the track omits or deliberately teaches elsewhere. The data-package gate
+proves that all 20 maps cover their schema-v2 and canonical lessons without
+jumping over a prerequisite. Books and the app still read the lesson Markdown;
+the map is the shared scheduling contract, not a second copy of the content.
 
 The unified publication job also emits `curriculum-gaps.json` and
 `curriculum-gaps.txt` beside the books. They record the effective duration budget
 for every over-limit lesson, prerequisite omissions, lesson-to-book chapter
 coverage, and each track's schema-migration status. Existing migration debt is
 reported rather than hidden or treated as a new regression.
+
+The same job also scans every compiled `book.log` and emits `latex-warnings.json`
+beside the books. Overfull and underfull boxes, missing glyphs, hyperref warnings,
+duplicate PDF destinations, and font substitutions are counted per track and compared
+against `core/latex-warning-baseline.json`; a track fails only when it exceeds its
+recorded numbers, and a track recorded as `null` has not been measured yet, so it is
+reported and never failed. Until this gate existed, every track's "builds with zero
+warnings" claim was prose that nothing checked.
+
+`core/lesson-modality.json` is generated, never authored. It records for every lesson
+whether it needs `voice`, `sight`, or a `pen`, and for every chapter how many of its
+lessons a commuter can do in the car before hitting the first that needs eyes. This is
+what lets **two editions build from one source**: the complete book keeps everything,
+including the handwriting instruction, while the planned dictation-friendly driving
+edition filters on `drivable` and keeps only what a driver can actually do. The same
+job that builds the books runs `check:modality`, so the manifest cannot drift away from
+the lessons it describes — a lesson that silently gained a paradigm table would
+otherwise still advertise itself as safe to learn at 70mph. Modality stays derived
+rather than written into 1,096 frontmatter files, which would be 1,096 places for it to
+go stale; the authored `modality:` override with a `modality_reason:` remains available
+for the genuinely exceptional lesson.
 
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
 losslessly and checks that each authored book chapter maps to its short Markdown
@@ -78,8 +119,8 @@ edition is authored.
 | [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapters 1–36 authored; Chapters 2–36 canonical/generated for app + book |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapters 1–6 authored (lessons + book; Chapter 6 canonical/generated) |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1-2 authored (lessons + book) |
-| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Shared-spine pilot plus a two-chapter starter book |
-| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Shared-spine pilot plus a two-chapter starter book |
+| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Five authored shared-spine chapters; 20 canonical lessons |
+| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already

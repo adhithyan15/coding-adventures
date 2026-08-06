@@ -346,13 +346,21 @@ case "lua":
 
 ## CI Changes
 
-The GitHub Actions workflow needs Lua toolchain setup:
+The GitHub Actions workflow pins Lua 5.4.7, restores the compiled toolchain from
+an OS-and-architecture-specific cache when possible, and otherwise builds the
+same verified source archive from the first available mirror:
 
 ```yaml
-- name: Set up Lua
-  uses: leafo/gh-actions-lua@v11
+- name: Restore pinned Lua 5.4.7 cache
+  id: lua-cache
+  uses: actions/cache@v4
   with:
-    luaVersion: "5.4"
+    path: .lua
+    key: lua-5.4.7-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('code/scripts/setup_lua.py') }}
+
+- name: Install pinned Lua 5.4.7 from verified mirrors
+  if: steps.lua-cache.outputs.cache-hit != 'true'
+  run: python3 code/scripts/setup_lua.py --prefix .lua
 
 - name: Set up LuaRocks
   uses: leafo/gh-actions-luarocks@v4
@@ -364,9 +372,11 @@ The GitHub Actions workflow needs Lua toolchain setup:
     luarocks install luacheck
 ```
 
-These are the standard GitHub Actions for Lua, maintained by the creator of
-LuaRocks (leafo). They support Linux and macOS — the two OS platforms already in
-our CI matrix.
+The installer checks the official archive's pinned SHA-256 before extraction.
+The lua.org URL remains primary; Debian and Ubuntu carry byte-identical fallback
+copies, so an outage at one host cannot silently change or skip the Lua tests.
+Windows uses the same installer after MSVC initialization and before Ruby can
+prepend its MSYS2 linker to `PATH`.
 
 ### Windows Support
 
@@ -554,6 +564,6 @@ return {
 | OOP pattern | Metatables with `__index` |
 | Naming | `snake_case` dirs, `coding-adventures-*` rockspecs |
 | Total packages | 27 (matching Go and Python) |
-| CI platforms | Linux + macOS (via leafo/gh-actions-lua) |
+| CI platforms | Linux + macOS + Windows (cached, checksum-verified source build) |
 | Local dev | Windows (via LuaBinaries or scoop) |
 | Build tool changes | 3 modifications (discovery, resolver, DIRS) |

@@ -308,6 +308,75 @@ other field or block. In particular, a local `replace` target without a
 corresponding `require` entry changes module lookup but does not create a build
 graph edge.
 
+For Elixir `mix.exs` manifests, dependency candidates come only from tuples in
+the list returned by the root `defp deps` function, in either block or
+single-expression shorthand form, when the tuple begins with a dependency atom
+and contains a quoted `path:` option. The tuple may span multiple lines, and
+options after `path:` do not form part of the identity. The
+dependency atom is matched case-insensitively against known Elixir application
+and package aliases. Resolvers ignore the project `app:` field, application
+configuration, module and function names, source text, strings outside the
+dependency list, line comments, `mix.lock`, non-path Hex/Git dependencies, and
+every other function or field. The quoted path identifies the declaration as
+local metadata; resolvers do not follow or read the referenced path.
+
+For Dart `pubspec.yaml` manifests, dependency candidates come only from the
+direct mapping keys of the root `dependencies:` and `dev_dependencies:`
+fields. The key is an unquoted Dart package identifier and is matched
+case-insensitively against known directory and root `name:` aliases. A direct
+entry may use a scalar constraint or a nested source map; nested `path:`,
+`git:`, `url:`, `ref:`, `sdk:`, and other source-option keys do not become
+dependencies. Resolvers ignore package descriptions, environment constraints,
+`dependency_overrides`, Flutter and tool configuration, comments, inline prose,
+lockfiles, and every other root field. A local `path:` value identifies source
+metadata only; resolvers do not follow or read the referenced path.
+
+For TypeScript `package.json` manifests, dependency candidates come only from
+the direct property names of the root `dependencies` and `devDependencies`
+objects. Each property name is matched case-insensitively against known
+directory aliases and the exact string value of another package's root
+top-level `name` property. Dependency values, including registry constraints,
+`workspace:` ranges, and `file:` paths, do not form part of the identity and
+are not followed. Resolvers ignore `peerDependencies`,
+`optionalDependencies`, scripts, tool configuration, nested objects whose
+property names resemble dependency tables, nested `name` properties, lock
+files, descriptions, and every other root field. A dependency field whose
+value is not an object contributes no candidates, and malformed JSON must not
+produce a partial graph.
+
+For Java and Kotlin Gradle composite builds, dependency candidates come only
+from `includeBuild("...")` call expressions in the package root's
+`settings.gradle.kts`. The call may span lines, and its sole argument is a
+quoted relative path. Resolvers normalize that path lexically against the
+declaring package root and create an edge only when the result exactly matches
+a discovered package root in the same language scope. They do not follow or
+read the referenced path. Resolvers ignore line and block comments, string
+literals that merely contain example calls, `include(...)`, project and plugin
+metadata, dependency coordinates in `build.gradle` or `build.gradle.kts`,
+absolute paths, paths outside the current language scope, undiscovered targets,
+and every other settings field or call. `settings.gradle.kts`, Gradle build
+files, and Java or Kotlin sources participate in the package hash so a
+dependency declaration change invalidates the cache.
+
+For C#, F#, and shared .NET packages, dependency candidates come only from
+unqualified `ProjectReference` start elements with a quoted literal `Include`
+attribute in `.csproj` or `.fsproj` files directly inside the declaring package
+root; project-file extensions are compared ASCII-case-insensitively. A static
+include remains a conservative dependency even when the element
+has a `Condition`; resolvers do not evaluate MSBuild properties or conditions.
+The include must be a relative project-file path with no property expansion,
+glob, query, fragment, or XML entity reference. Both `/` and `\` are portable
+separators. Resolvers normalize the path lexically against the directory of the
+declaring root project and create an edge only when it exactly matches a root
+project file belonging to another discovered C#, F#, or shared .NET package in
+the current `dotnet` dependency scope. They do not follow or read the referenced
+path. Resolvers ignore XML comments, CDATA, processing instructions, escaped
+text examples, namespaced elements, `PackageReference`, `ProjectReference`
+elements without `Include` (including `Update` and `Remove`), project files in
+nested test or tool directories, absolute paths, unknown targets, and every
+other XML element or attribute. Duplicate and self references do not create
+additional edges.
+
 For Cabal manifests, dependency candidates come only from each
 `build-depends:` field and its indented comma-separated continuation lines.
 Resolvers ignore Cabal comments, package identity and descriptive metadata,

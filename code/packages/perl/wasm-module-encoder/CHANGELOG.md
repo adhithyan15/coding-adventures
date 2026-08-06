@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Declare the virtual-machine and Wasm-opcodes packages used by the test-only
+  parser/validator path so clean full-build metadata validation matches the
+  local `PERL5LIB` closure.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

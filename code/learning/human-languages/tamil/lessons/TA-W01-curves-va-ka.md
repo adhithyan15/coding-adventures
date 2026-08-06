@@ -74,6 +74,7 @@ and a chisel; Tamil's curves suit a stylus and a leaf.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-CURVES-VA-KA-01] -->
+<!-- hl-activity: {"id":"TA-W01-curves-va-ka-writing-surface","kind":"text","assesses":["TA-SCRIPT-CURVES-VA-KA-01"],"prompt":"What writing surface is usually linked to Tamil's rounded shapes?","answer":"palm leaves","accepted":["palm leaf","leaves of palm"],"feedback":{"correct":"Correct: the usual account links Tamil's curves to writing on palm leaves.","incorrect":"The usual explanation points to palm leaves, which straight strokes along the grain could split."},"response_seconds":8} -->
 
 [PAUSE 3s] Why is Tamil round? (The **usual** explanation: it was incised on **palm
 leaves**, where a straight stroke along the grain can **split** them — though

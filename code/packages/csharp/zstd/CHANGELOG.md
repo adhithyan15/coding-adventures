@@ -2,6 +2,65 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] - 2026-08-05
+
+### Fixed
+
+- **The sequences decoder never implemented Repeated-Offset (R1/R2/R3)
+  sequence decoding** (RFC 8878 §3.1.1.3.2.1.1). Real `zstd` encoders use
+  repeat offsets constantly — they are one of the format's principal
+  entropy wins, especially for periodic or highly repetitive data — but
+  this package's own encoder, by design, never emits an offset code below
+  2 (the minimum LZSS match offset is 1, so raw offset = offset + 3 is
+  always >= 4). That made the "no repeat-offset shortcuts" simplification
+  entirely an encoder-side choice, and meant `Decompress`'s own round trip
+  with `Compress` — and every existing CLI-interop test's specific input —
+  never exercised the repeat-offset decode path. `DecompressBlock`
+  computed `matchOffset = rawOffset - 3` unconditionally, which underflows
+  for any `Offset_Value <= 3` (a repeat-offset reference, not a literal
+  offset), producing a bogus offset that the existing bounds check
+  correctly rejected as malformed — even though the frame was valid and
+  encoded using a mechanism the decoder simply didn't understand.
+  - This gap was first found and fixed in the new `c/zstd` port (PR #9941)
+    via ad hoc fuzzing against the real `zstd` CLI, and documented as
+    `lessons.md` Lesson 98 there. This package inherited the identical gap
+    (confirmed independently in this session: the pre-fix decoder failed
+    real-CLI-compressed input of a single repeated byte, and of an
+    alternating-literal/long-match pattern, both with
+    `InvalidDataException: match offset exceeds decoded output`).
+  - Fixed by threading three frame-scoped Repeated_Offset registers
+    (`repeatOffset1`/`2`/`3`, defaulting to 1/4/8 per RFC 8878) through
+    `Decompress`'s block loop into `DecompressBlock`, and implementing the
+    full offset-code-to-actual-offset mapping: offset codes >= 2 are
+    ordinary explicit offsets (`rawOffset - 3`, which also rotates the
+    repeat-offset history); offset codes 0-1 (`rawOffset` in `{1, 2, 3}`)
+    are repeat-offset references, resolved via a 4-way selector
+    (`literalIsZero + rawOffset - 1`) that also implements the RFC's
+    "when Literals_Length is 0, repeated offsets are shifted by 1" special
+    case and the corresponding history rotation (no rotation, swap, or
+    full 3-way rotate depending on which register was referenced).
+    Algorithm cross-checked against both the RFC 8878 prose and the
+    literal reference C source (`ZSTD_decodeSequence` in
+    `zstd_decompress_block.c`, fetched directly from
+    `github.com/facebook/zstd`, per the Lesson-96 playbook of not trusting
+    a paraphrase alone) and against the already-fuzz-tested `c/zstd`
+    implementation from PR #9941.
+  - Verified with the real `zstd` CLI: a 60-case fuzz corpus (random,
+    periodic, constant-byte, cyclic, prose-like, and mixed literal/repeat
+    patterns) that failed 24/60 before the fix (11 with this exact
+    underflow signature) now fails only on the 13 cases that hit this
+    package's pre-existing, unrelated, documented scope limits (Huffman
+    literals / FSE-compressed literals / non-predefined FSE modes — out of
+    scope for this educational codec, unrelated to repeat offsets). Two new
+    permanent tests added: `RepeatOffsetCliInterop` (alternating literal
+    run / long same-byte match, forcing the real CLI to reuse a distance
+    across sequences) and `SingleByteRunCliInterop` (the exact minimal
+    repro from `c/zstd`'s Lesson 98: 4713 bytes of one repeated byte).
+    Both reproduce the pre-fix failure and pass byte-exact after the fix.
+    All 32 pre-existing tests continue to pass unmodified — this package's
+    own encoder never emits repeat-offset codes, so its self-consistency
+    round trip is untouched by this fix.
+
 ## [0.1.1] - 2026-08-03
 
 ### Fixed

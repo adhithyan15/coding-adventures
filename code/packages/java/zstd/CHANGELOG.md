@@ -2,6 +2,64 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] — 2026-08-06
+
+### Fixed
+
+- **Decoder never implemented Repeated-Offset (R1/R2/R3) sequence decoding**
+  (RFC 8878 §3.1.1.3.2.1.1). `decompressBlock` treated every sequence's
+  offset code as an explicit offset (`offset = of_raw - 3`), which is only
+  correct for `Offset_Code >= 2`. Offset codes 0/1 (`of_raw` in `{1, 2, 3}`)
+  are repeat-offset references into a 3-entry offset history
+  (`Repeated_Offset1/2/3`, frame-scoped, defaulting to `1/4/8`), not literal
+  values — `of_raw - 3` underflows for `of_raw < 3` and was (correctly, but
+  for the wrong reason) rejected as malformed by the existing offset-bounds
+  check, even though such frames are entirely valid RFC 8878 output.
+  - This port's own encoder (`encodeSequencesSection`) never emits an offset
+    code `< 2` — the minimum possible LZ77 match offset is 1, so
+    `raw_off = offset + 3 >= 4` always — so this port's own
+    `compress()`/`decompress()` round trip, and every prior test in this
+    suite, never exercised the repeat-offset decode path at all. The real
+    `zstd` CLI's encoder uses repeat offsets constantly (one of its
+    principal entropy wins, especially for periodic/repetitive data), so
+    any decoder that only understands explicit offset codes systematically
+    fails to decode a meaningful fraction of real-world `.zst` files.
+  - This is the same class of gap independently found (and fixed the same
+    way) while implementing the first `c/zstd` port (PR #9941), which found
+    it via fuzzing against the real `zstd` CLI after transcribing the
+    already-corrected FSE codec from this package's own PR #9780 fix. It is
+    a genuinely separate bug from PR #9780's FSE-codec bugs (Lesson 96): that
+    class was an encode/decode *disagreement* that a self-consistent round
+    trip could mask; this one is a decode-only *feature gap* that a
+    self-consistent round trip can never surface, because the encoder simply
+    never emits the wire shape the decoder is missing.
+  - Fixed by implementing full RFC 8878 repeat-offset decode support in
+    `decompressBlock`, cross-checked against both the RFC 8878 prose and the
+    literal reference C source (`ZSTD_decodeSequence` in
+    `zstd_decompress_block.c`, per PR #9941's playbook of not trusting
+    either alone), including the "when `Literals_Length == 0`, the
+    repeat-offset selector is shifted by 1" special case. The three
+    registers are frame-scoped — threaded through every Compressed block in
+    a frame via `decompress`, not reset per block — and updated after
+    *every* sequence, explicit-offset or repeat-offset alike (an explicit
+    offset also becomes the new `Repeated_Offset1`, per RFC 8878).
+  - See `lessons.md` Lesson 99.
+
+### Added
+
+- **`rtCliInteropRepeatedOffset`**: reproduces the exact failure shape that
+  surfaced this gap — 4713 bytes of a single repeated byte, which the real
+  `zstd` CLI (verified by manual frame decoding) compresses to one
+  Compressed block with exactly one sequence: 2 literal bytes ("ZZ") plus a
+  match with `Offset_Code = 1`, `Offset_Value = 1` — a repeat-offset
+  reference to `Repeated_Offset1`'s RFC-mandated default. Confirmed this
+  test fails against the pre-fix decoder with
+  `IOException: decoded offset underflow: of_raw=1`, and passes after the
+  fix.
+- **`rtCliInteropRepeatOffsetFuzz`**: broader sweep of real-`zstd`-CLI-compressed
+  periodic inputs (5 cycle patterns × 4 sizes) decoded by this package's
+  `decompress()`, for additional confidence beyond the one fixed repro.
+
 ## [0.1.1] — 2026-08-03
 
 Rescued from an orphaned branch (`worktree-feat+zstd-and-catchups`, never PR'd,
