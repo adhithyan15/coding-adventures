@@ -909,6 +909,32 @@ export_op!(
     |s, a| s.set_priority(&TaskId::from_raw(a.id), a.priority)
 );
 
+// ── notes (active project) ─────────────────────────────────────────────────────
+
+export_op!(
+    /// Create or replace a note (standalone, or attached to a task).
+    upsert_note,
+    task_core::Note,
+    |s, a| {
+        s.upsert_note(a);
+        Ok(())
+    }
+);
+
+#[derive(Deserialize)]
+struct NoteIdArg {
+    id: String,
+}
+export_op!(
+    /// Delete a note.
+    delete_note,
+    NoteIdArg,
+    |s, a| {
+        s.delete_note(&task_core::NoteId::from_raw(a.id));
+        Ok(())
+    }
+);
+
 // ── view projections (active project) ─────────────────────────────────────────────
 
 /// The widest day-offset accepted from the host (~±8,200 years around the epoch).
@@ -1088,6 +1114,39 @@ mod tests {
         // Missing task → NotFound, not a panic.
         let missing = call1(set_notes, r#"{"id":"missing","notes":"x"}"#);
         assert!(missing.contains(r#""ok":false"#), "{missing}");
+    }
+
+    #[test]
+    fn upsert_note_persists_and_delete_note_removes_it() {
+        reset();
+        let up = call1(
+            upsert_note,
+            r#"{"id":"n1","title":"Kickoff","body":"Agenda TBD","attachedTask":null}"#,
+        );
+        assert!(up.contains(r#""ok":true"#), "{up}");
+        let snap = take(snapshot());
+        assert!(snap.contains(r#""title":"Kickoff""#), "{snap}");
+
+        let del = call1(delete_note, r#"{"id":"n1"}"#);
+        assert!(del.contains(r#""ok":true"#), "{del}");
+        let snap2 = take(snapshot());
+        assert!(!snap2.contains(r#""title":"Kickoff""#), "{snap2}");
+    }
+
+    #[test]
+    fn deleting_a_task_orphans_its_attached_note_rather_than_the_note_vanishing() {
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Write spec"}"#);
+        call1(
+            upsert_note,
+            r#"{"id":"n1","title":"Detail","body":"...","attachedTask":"a"}"#,
+        );
+        let del = call1(delete_task, r#"{"id":"a"}"#);
+        assert!(del.contains(r#""ok":true"#), "{del}");
+
+        let snap = take(snapshot());
+        assert!(snap.contains(r#""title":"Detail""#), "the note survives");
+        assert!(snap.contains(r#""attachedTask":null"#), "orphaned to standalone");
     }
 
     #[test]

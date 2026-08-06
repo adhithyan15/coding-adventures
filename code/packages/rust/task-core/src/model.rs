@@ -452,6 +452,32 @@ pub enum WorkContour {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Notes
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// A first-class note: standalone (belongs to the project itself) or attached
+/// to a task. Distinct from `Task::notes` (a plain per-task description
+/// field) — a `Note` has its own identity, can exist without any task at
+/// all, and can be listed, searched, or reattached independently of the task
+/// detail view.
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct Note {
+    /// Note identity.
+    pub id: NoteId,
+    /// Display title.
+    pub title: String,
+    /// Free-text body.
+    pub body: String,
+    /// The task this note is attached to, or `None` for a standalone note
+    /// (one that belongs to the project itself, not to any particular
+    /// task). Deleting the attached task orphans the note back to `None`
+    /// rather than deleting it — see `ProjectState::delete_task`.
+    pub attached_task: Option<TaskId>,
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Calendars (the working-time model)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -936,6 +962,10 @@ pub struct ProjectState {
     /// Label definitions, by id. Defaulted so pre-label snapshots still deserialize.
     #[cfg_attr(feature = "serde", serde(default))]
     pub labels: BTreeMap<LabelId, Label>,
+    /// Notes, by id — standalone or attached to a task (see [`Note`]).
+    /// Defaulted so pre-notes snapshots still deserialize.
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub notes: BTreeMap<NoteId, Note>,
     /// Status workflows, by id.
     pub workflows: BTreeMap<WorkflowId, Workflow>,
     /// Captured baselines, by id.
@@ -968,6 +998,7 @@ impl ProjectState {
             project_calendar: cal_id,
             fields: BTreeMap::new(),
             labels: BTreeMap::new(),
+            notes: BTreeMap::new(),
             workflows: BTreeMap::new(),
             baselines: BTreeMap::new(),
             views: BTreeMap::new(),

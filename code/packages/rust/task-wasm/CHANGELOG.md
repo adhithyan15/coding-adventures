@@ -4,6 +4,25 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - the `Note` entity (`upsert_note` / `delete_note`)
+
+- **`upsert_note`** — create or replace a note (`task_core::Note` as the
+  whole payload, the same shape `upsert_resource` already uses). **`delete_note`**
+  — delete a note by id.
+- Both wired all the way through to `js/task-engine.mjs` (`upsertNote` /
+  `deleteNote`) and verified against the real compiled `.wasm` binary via
+  `js/smoke.mjs`, including that deleting a task orphans (not destroys) any
+  note attached to it.
+- **Found and fixed a pre-existing gap while doing this**: `set_notes` (a
+  task's plain-text notes field, below) has had a working WASM export
+  since it was added, but was never wired into `task-engine.mjs` — the
+  Rust engine supported it end-to-end and the JS surface silently didn't.
+  Fixed alongside the new notes bindings (`setNotes: op("set_notes")`) so
+  the same class of bug isn't shipped twice in one review pass.
+- See `code/specs/task-app-notes-entity-v1.md` for the full design — this
+  is the engine half of task-app's Phase 8; the UI component is a
+  deliberate follow-up PR.
+
 ### Added - `set_notes`
 
 - **`set_notes`** — replace a task's free-text notes. `ops.rs::set_notes` already

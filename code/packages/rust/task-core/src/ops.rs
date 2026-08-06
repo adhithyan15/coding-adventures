@@ -103,6 +103,14 @@ impl ProjectState {
             .retain(|d| &d.predecessor != id && &d.successor != id);
         self.links.retain(|l| &l.from != id && &l.to != id);
         self.assignments.retain(|a| &a.task != id);
+        // Orphan, don't delete: a note is a first-class entity in its own right —
+        // losing the task it happened to be attached to shouldn't silently destroy
+        // content the user wrote. It becomes a standalone note instead.
+        for n in self.notes.values_mut() {
+            if n.attached_task.as_ref() == Some(id) {
+                n.attached_task = None;
+            }
+        }
         Ok(())
     }
 
@@ -298,6 +306,18 @@ impl ProjectState {
     pub fn delete_resource(&mut self, id: &ResourceId) {
         self.resources.remove(id);
         self.assignments.retain(|a| &a.resource != id);
+    }
+
+    // ── notes ─────────────────────────────────────────────────────────────────────
+
+    /// Create or replace a note (standalone, or attached to a task).
+    pub fn upsert_note(&mut self, note: Note) {
+        self.notes.insert(note.id.clone(), note);
+    }
+
+    /// Delete a note.
+    pub fn delete_note(&mut self, id: &NoteId) {
+        self.notes.remove(id);
     }
 
     /// Assign a resource to a task (replacing an existing assignment of the same pair).
@@ -981,6 +1001,63 @@ mod tests {
         a.create_task(tid("x"), "X", None).unwrap();
         assert_eq!(a.tasks.len(), 1);
         assert_eq!(b.tasks.len(), 0);
+    }
+
+    // ── notes ─────────────────────────────────────────────────────────────────────
+
+    fn note(id: &str, attached_task: Option<TaskId>) -> Note {
+        Note {
+            id: NoteId::from_raw(id),
+            title: "Title".into(),
+            body: "Body.".into(),
+            attached_task,
+        }
+    }
+
+    #[test]
+    fn upsert_note_creates_then_replaces_by_id() {
+        let mut s = base();
+        s.upsert_note(note("n1", None));
+        assert_eq!(s.notes.len(), 1);
+        assert_eq!(s.notes[&NoteId::from_raw("n1")].title, "Title");
+
+        let mut edited = note("n1", None);
+        edited.title = "Edited".into();
+        s.upsert_note(edited);
+        assert_eq!(s.notes.len(), 1, "same id replaces, doesn't duplicate");
+        assert_eq!(s.notes[&NoteId::from_raw("n1")].title, "Edited");
+    }
+
+    #[test]
+    fn delete_note_removes_it() {
+        let mut s = base();
+        s.upsert_note(note("n1", None));
+        s.delete_note(&NoteId::from_raw("n1"));
+        assert!(s.notes.is_empty());
+    }
+
+    #[test]
+    fn delete_note_of_unknown_id_is_a_no_op() {
+        let mut s = base();
+        s.delete_note(&NoteId::from_raw("missing")); // must not panic
+        assert!(s.notes.is_empty());
+    }
+
+    #[test]
+    fn delete_task_orphans_its_attached_notes_instead_of_deleting_them() {
+        let mut s = base();
+        s.create_task(tid("a"), "A", None).unwrap();
+        s.upsert_note(note("n1", Some(tid("a"))));
+        s.upsert_note(note("n2", None)); // already standalone — must be unaffected
+
+        s.delete_task(&tid("a")).unwrap();
+
+        assert_eq!(s.notes.len(), 2, "the note itself survives the task's deletion");
+        assert_eq!(
+            s.notes[&NoteId::from_raw("n1")].attached_task, None,
+            "orphaned back to standalone, not left dangling on a deleted task id"
+        );
+        assert_eq!(s.notes[&NoteId::from_raw("n2")].attached_task, None);
     }
 
     // ── Workspace operations ────────────────────────────────────────────────────
