@@ -4,6 +4,32 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - dependency list in the task-detail panel
+
+The open task's detail panel now shows its CPM dependencies alongside the
+existing scheduled/slack prose: `→ Build the prototype (FS)` for a
+predecessor edge, `← Design the wireframes (FS)` for a successor edge,
+each labelled FS/SS/FF/SF. Pure UI — `task-core`'s `flowchart()`
+projection (predecessor/successor task ids + kind label, already exported
+through `task-wasm`/`task-engine.mjs`) needed zero new engine work; only
+`scheduling` edges are shown (real CPM dependencies), not generic links.
+Follows the same "appended, not inserted" (`row[12]`) and
+progressive-disclosure (computed only for the one open row) conventions
+`row[6]`-`row[8]`/`row[10]`-`row[11]` already established.
+
+Verified live: added two tasks (every new task auto-links as a
+dependency successor of the previous one, so no dedicated dependency-UI
+was needed to exercise this), expanded each in turn, confirmed both edge
+directions and the FS label render correctly in both themes. Zero
+console errors.
+
+**Scope note**: a matching "notes paragraph" (attached `Note` entities'
+body text) was drafted alongside this but pulled back out before
+shipping — there is no UI anywhere yet to actually attach a note to a
+task (Notes v1 deliberately deferred that as its own "attachment picker"
+item), so the cell would only ever render empty. See `BACKLOG.md`: it
+now needs to ship together with that picker, not before it.
+
 ### Changed - project rail extracted to mosaic-pkg-project-nav
 
 Phase 9's first half: the nested-project tree + add/add-subproject

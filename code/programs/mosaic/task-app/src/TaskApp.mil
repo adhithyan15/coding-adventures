@@ -126,13 +126,21 @@ component TaskApp {
   //                                opens a group, so the list reads as sections
   //                         [ 10 ] priority display name (e.g. "High"), or empty
   //                         [ 11 ] labels, comma-joined display names, or empty
+  //                         [ 12 ] detail: dependency list (predecessors/successors,
+  //                                each labelled FS/SS/FF/SF), or empty
   //
   // Every cell is optional: an empty one (no due date, not overdue, nothing to add)
-  // is the empty string and the layout hides it. Cells 6-8 are the
+  // is the empty string and the layout hides it. Cells 6-8 and 12 are the
   // progressive-disclosure payload, filled ONLY for the expanded row — so a collapsed
-  // list stays a plain to-do list, and the host skips the CPM recompute entirely when
-  // nothing is open. 10-11 are appended rather than inserted between 9 and the old
-  // end, so no existing row[n] reference anywhere shifts meaning.
+  // list stays a plain to-do list, and the host skips the CPM recompute (and the
+  // dependency lookup) entirely when nothing is open. 10-12 are appended
+  // rather than inserted between 9 and the old end, so no existing row[n] reference
+  // anywhere shifts meaning. A notes-paragraph cell was considered here too (Note
+  // entities already carry an `attached_task` link) but dropped: there is no UI
+  // anywhere yet to actually attach a note to a task (the Notes v1 spec deliberately
+  // deferred that as its own "attachment picker" item), so the cell would only ever
+  // render empty — dead plumbing nothing could reach. Add it alongside that picker,
+  // not before it.
   slot task-rows : list<list<text>> ;
 
   // Typing in the inputs.

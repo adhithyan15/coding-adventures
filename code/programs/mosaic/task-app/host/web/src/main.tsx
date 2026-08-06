@@ -587,6 +587,28 @@ function makeController(engine: any, init: ControllerInit = {}) {
         ];
       };
 
+      // Dependency list for the ONE open row — read from the same `flowchart()`
+      // projection the (currently unused-elsewhere) relation graph exposes:
+      // {nodes: [{task, name, kind}], edges: [{from, to, label, scheduling}]}.
+      // Only `scheduling` edges (real CPM dependencies, not generic links) belong
+      // in a task's dependency list. Computed only when a row is open, same
+      // "don't run a query the collapsed list doesn't need" discipline as `sched`.
+      const flow = expanded === null ? undefined : engine.flowchart().data;
+      const depsFor = (id: string): string => {
+        if (!flow) return "";
+        const names = new Map<string, string>();
+        for (const n of (flow.nodes ?? []) as any[]) {
+          names.set(n.task as string, n.name as string);
+        }
+        const parts: string[] = [];
+        for (const e of (flow.edges ?? []) as any[]) {
+          if (!e.scheduling) continue;
+          if (e.to === id) parts.push(`← ${names.get(e.from) ?? e.from} (${e.label})`);
+          if (e.from === id) parts.push(`→ ${names.get(e.to) ?? e.to} (${e.label})`);
+        }
+        return parts.join(" · ");
+      };
+
       // Group the list the way the design does: what's underway, what's next, and
       // what's finished. The heading rides on the row that OPENS each group, so the
       // layout can print it without knowing anything about grouping.
@@ -630,6 +652,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
           // engine work.
           c.display[PRIORITY] ?? "",
           c.display[LABELS] ?? "",
+          // Same "appended, not inserted" discipline as priority/labels above —
+          // and same progressive-disclosure gating as d1-d3: empty unless open.
+          isOpen ? depsFor(id) : "",
         ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
