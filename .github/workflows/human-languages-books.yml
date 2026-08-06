@@ -22,6 +22,7 @@ on:
       - "code/packages/typescript/human-language-data/**"
       - "code/scripts/build_human_language_book_catalog.py"
       - "code/scripts/scan_latex_log_warnings.py"
+      - "code/scripts/tests/test_build_human_language_book_catalog.py"
       - "code/scripts/tests/test_scan_latex_log_warnings.py"
       - ".github/workflows/human-languages-books.yml"
   pull_request:
@@ -75,6 +76,7 @@ jobs:
             code/packages/typescript/human-language-data \
             code/scripts/build_human_language_book_catalog.py \
             code/scripts/scan_latex_log_warnings.py \
+            code/scripts/tests/test_build_human_language_book_catalog.py \
             code/scripts/tests/test_scan_latex_log_warnings.py \
             .github/workflows/human-languages-books.yml
           diff_status=$?
@@ -115,6 +117,23 @@ jobs:
           set -euo pipefail
           python3 -m unittest discover -s code/scripts/tests \
             -p 'test_scan_latex_log_warnings.py' -v
+
+      # The catalog builder writes the index.html and catalog.json that main
+      # pushes publish to GitHub Pages, so it is the other piece of this
+      # workflow whose breakage reaches readers. Same reasoning as above: test
+      # it before the 20-book build, not after.
+      #
+      # This is a second step rather than a widened `-p` on the step above
+      # because `unittest discover` takes exactly ONE pattern, and no glob
+      # matches these two files without also sweeping in the unrelated
+      # test_build_tool_conformance_* and test_build_adj_* suites. Separate
+      # named steps also keep the failure legible — the red step name says
+      # which suite broke without anyone opening the log.
+      - name: Test the book catalog builder
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_build_human_language_book_catalog.py' -v
 
       - name: Build curriculum gap report
         working-directory: code/packages/typescript/human-language-data
