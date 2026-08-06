@@ -631,6 +631,40 @@ fn adapt_constrain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     Ok(Statement::Constrain { lhs, op, rhs })
 }
 
+/// `formula_relation = expr [ relop expr ]` (FL-8) — a formula's final body.
+/// One `expr` child ⇒ plain arithmetic, returned as-is. Two `expr` children
+/// (with a `relop` between them) ⇒ `ExprAst::Compare`. Mirrors
+/// [`adapt_constrain`]'s child-collection shape exactly, since both rules
+/// have the identical `expr relop expr` structure — only the destination
+/// (a statement there, an expression here) differs.
+fn adapt_formula_relation(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    let exprs: Vec<&GrammarASTNode> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(n),
+            _ => None,
+        })
+        .collect();
+    let lhs = adapt_expr(exprs.first().ok_or(AdapterError::MissingChild {
+        rule: "formula_relation".into(),
+        position: "left-hand expr",
+    })?)?;
+    match exprs.get(1) {
+        None => Ok(lhs),
+        Some(rhs_node) => {
+            let rhs = adapt_expr(rhs_node)?;
+            let relop_node =
+                first_named_child(node, "relop").ok_or(AdapterError::MissingChild {
+                    rule: "formula_relation".into(),
+                    position: "relop",
+                })?;
+            let op = rel_op_from_node(relop_node)?;
+            Ok(ExprAst::Compare(op, Box::new(lhs), Box::new(rhs)))
+        }
+    }
+}
+
 fn adapt_constrain_latex(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     // constrain_latex_decl = "constrain" latex_relation
     // latex_relation = "latex" STRING
@@ -955,13 +989,13 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    // formula_body = EQUALS expr | LBRACE { formula_step } expr RBRACE
+    // formula_body = EQUALS formula_relation | LBRACE { formula_step } formula_relation RBRACE
     // Both forms wrap the body in a `formula_body` node. The single-expression
-    // sugar leaves `steps` empty and `body` = the sole expr; the block form
-    // collects each `let`-step (in source order) and takes the FINAL expr (the
-    // direct `expr` child of `formula_body` — a step's own expr is nested one
-    // level deeper, inside its `formula_step` node, so it is not mistaken for
-    // the body). RS-2.
+    // sugar leaves `steps` empty and `body` = the sole formula_relation; the
+    // block form collects each `let`-step (in source order) and takes the
+    // FINAL formula_relation (the direct `formula_relation` child of
+    // `formula_body` — a step's own expr is nested one level deeper, inside
+    // its `formula_step` node, so it is not mistaken for the body). RS-2.
     let body_node = first_named_child(node, "formula_body").ok_or(AdapterError::MissingChild {
         rule: "formula_decl".into(),
         position: "formula_body",
@@ -989,13 +1023,18 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
             }
         }
     }
-    // The FINAL body expr reuses the EXISTING `let` expression grammar/adapter
-    // verbatim; it is the direct `expr` child of `formula_body`.
-    let expr_node = first_named_child(body_node, "expr").ok_or(AdapterError::MissingChild {
-        rule: "formula_decl".into(),
-        position: "body expr",
-    })?;
-    let body = adapt_expr(expr_node)?;
+    // The FINAL body node — `formula_relation = expr [ relop expr ]` (FL-8).
+    // ONE `expr` child ⇒ the existing plain-arithmetic body, unchanged. TWO
+    // `expr` children (with a `relop` between them) ⇒ a comparison formula;
+    // built the exact same way `adapt_constrain` builds `Statement::Constrain`
+    // (collect the `expr` children in source order, resolve the `relop`
+    // child), just yielding an `ExprAst::Compare` instead of a statement.
+    let relation_node =
+        first_named_child(body_node, "formula_relation").ok_or(AdapterError::MissingChild {
+            rule: "formula_decl".into(),
+            position: "formula_relation",
+        })?;
+    let body = adapt_formula_relation(relation_node)?;
     // Preserve precondition and argument order exactly. Predicate semantics and
     // arity are deliberately a lowering concern.
     let mut preconditions = Vec::new();
@@ -1674,7 +1713,9 @@ fn adapted_expr_depth(expr: &ExprAst) -> Result<usize, AdapterError> {
         maximum = maximum.max(depth);
         let next = depth + 1;
         match node {
-            ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+            ExprAst::Bin(_, left, right)
+            | ExprAst::Call2(_, left, right)
+            | ExprAst::Compare(_, left, right) => {
                 pending.push((right, next));
                 pending.push((left, next));
             }

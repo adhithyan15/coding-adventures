@@ -293,8 +293,12 @@ pub fn program_source_map(src: &str) -> Result<ProgramSourceMap, FormulaSourceMa
                     formula.name
                 )));
             }
+            // `formula_body`'s final node is `formula_relation` (FL-8: `expr [
+            // relop expr ]`), not a bare `expr` — its span covers the whole
+            // body including an optional trailing comparison (`a > b`, not
+            // just `a`), which is the more correct span either way.
             let body_node = direct_child(formula_node, "formula_body")
-                .and_then(|body| direct_child(body, "expr"))
+                .and_then(|body| direct_child(body, "formula_relation"))
                 .ok_or_else(|| {
                     FormulaSourceMapError::Inconsistent(format!(
                         "formula {} has no final body expression",

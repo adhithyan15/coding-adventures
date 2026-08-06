@@ -1,7 +1,16 @@
 # Changelog
 
-## Unreleased - formula audit v2 guard witnesses
+## [0.37.0] - 2026-08-06 - comparison formulas (FL-8) and formula audit v2 guard witnesses
 
+- `formula_audit`'s syntactic walkers (`collect_applied_names`, `replay_source_expression`) and
+  `plan_expr`'s JSON export now handle `ExprAst::Compare`/`ComputeExpr::Bin`-with-a-comparison-op
+  the same way they already handle plain arithmetic `Bin` — a comparison formula's operator
+  serializes through the existing `operator: op.symbol()` field (`>=`/`<=`/`>`/`<`/`==`/`!=`), no
+  new `PlanExprDto` variant. A comparison formula that hasn't been migrated into the CAS
+  provenance manifest reports `"unverified","why":"unmigrated"` exactly like any other
+  freshly-authored formula — `adj-verify`/`adj-formula-audit` never crash or silently mishandle
+  the new operator vocabulary, they just haven't been taught to exact-replay it yet (separate,
+  Wave 1 migration work).
 - A lookup abstains with `ambiguous_breakpoint` when two rows of the table relation tie the
   breakpoint it selected, instead of keeping whichever row proof enumeration reached first
   and dropping the other along with its RS-5e citation. This is where the invariant is

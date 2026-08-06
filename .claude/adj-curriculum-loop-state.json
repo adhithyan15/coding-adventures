@@ -17,7 +17,7 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": 9992,
+  "active_pr": null,
   "last_manifest_check": {
     "objectives": 63,
     "coverage_roots": 6,
@@ -53,13 +53,22 @@
       "notes": "All 39/39 reference libraries now mapped, split across 3 PRs: #9990 (13: length/area/mass CCSS math + mass-density/linear-mass-density/acceleration/density-of-heat/dynamic-viscosity/energy/force/heat-flux-density/kinematic-viscosity/moment-of-force NGSS science), #9991 (7 electrical: capacitance/charge/conductance/current/inductance/potential/resistance, NGSS science; current/potential/resistance also prerequisite adj.science.physics.ohms_law), and this PR (19: si-prefixes CCSS math 3-5 + time/volume CCSS math 6-8 + 16 remaining NGSS science 9-12 - absorbed-dose/dose-equivalent/exposure/radioactivity/illuminance/luminance/magnetic-flux/magnetic-flux-density/power/pressure/specific-energy/specific-heat-capacity/speed/temperature-interval/thermal-conductivity/wave-number). Manifest now at 63 objectives (up from 24 at loop start)."
     },
     {
+      "id": "fl8-comparison-formulas",
+      "title": "CAS-wiring-adjacent language rung: citable boolean-comparison formulas",
+      "status": "in_progress",
+      "depends_on": [],
+      "branch": "feat/adj-fl8-comparison-formulas",
+      "pr_number": null,
+      "notes": "Discovered while scoping wave2-k2-math-cardinality-comparison: ADJ had no way to express a citable, queryable, parameterized 'is A greater than B' — `formula` bodies were arithmetic-only, and `constrain`/`check` (the language's only comparison surface) carries no provenance tail and isn't `?`-queryable. Researched the AST/evaluator/formula_audit.rs blast radius first (compiler-enforced exhaustive matches; confirmed the CAS-provenance agent's adj_stdlib_provenance.py verify only touches its own registered manifest, so an unmigrated comparison formula fails closed, never crashes CI) before implementing. Adds `formula_relation = expr [ relop expr ]` (grammar-additive, every existing formula still parses), `ExprAst::Compare`, 6 new `ComputeOp::Cmp*` variants (dimensionless 1/0 result, exact when operands are, mirrors `Sign`'s dimension-collapse). Spec'd in ADJ-FORMULA-LIBRARIES.md §3B (FL-8). Full test coverage (logic-engine + adj-lang unit/e2e + formula_source_map), clippy clean. Ships as its own PR ahead of the K-2 content PR that will actually use it (comparison.adj)."
+    },
+    {
       "id": "wave2-k2-math-cardinality-comparison",
       "title": "K-2 math: cardinality/sets, comparison, number lines",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["fl8-comparison-formulas"],
       "branch": null,
       "pr_number": null,
-      "notes": "New content per ADJ-STDLIB-COVERAGE.md 5.1. Check adj-ladder rung0 for harvestable material first. All Wave 0 remainder dependencies now satisfied - unblocked 2026-08-06. This is new .adj content (not manifest-only bookkeeping like the Wave 0 items), so it needs its own scoping pass before implementation: what specific K-2 objectives (cardinality/sets, comparison, number lines) get their own formula/fact library vs. table, what CCSS standard IDs to cite, and whether adj-ladder's rung0 items have any directly harvestable material per ADJ-FORMULA-LIBRARIES.md section 6's harvest plan."
+      "notes": "New content per ADJ-STDLIB-COVERAGE.md 5.1. Checked adj-ladder rung0 for harvestable material - none (rung0_arithmetic is generic MCQ word-problem benchmark items, not cardinality/comparison/number-line pedagogical content). Design (via ADJ grammar research, see fl8-comparison-formulas): number-sequence.adj (successor/predecessor 0-20, K.CC.A.1/A.2) + comparison.adj (greater_than, now buildable as a real formula via FL-8 instead of a 45-row enumerated table, K.CC.C.6/C.7) + cardinality.adj (total_cardinality formula composing arithmetic.adj's sum, K.CC.B.4/B.5). Blocked on fl8-comparison-formulas merging first."
     }
   ]
 }

@@ -399,6 +399,27 @@ pub enum ComputeOp {
     /// is dropped — the `f64` remainder already carries the value for the realistic
     /// integer / short-decimal cases (like gcd/lcm).
     Mod,
+    /// Binary **comparison** — `a >= b` / `a <= b` / `a > b` / `a < b` / `a == b` /
+    /// `a != b` (ADJ-FORMULA-LIBRARIES FL-8), the ONLY family of `ComputeOp`s
+    /// that answers something other than a plain arithmetic magnitude: a
+    /// dimensionless **1** (true) or **0** (false), always exact when both
+    /// operands carry an exact-rational sidecar (never approximated — a
+    /// comparison is exactly decidable whenever the value it compares is).
+    /// Dimensionally they combine like addition — both operands must share a
+    /// dimension (`5 kg > 3 kg` is meaningful, `5 kg > 3 usd` is the same
+    /// category error as `5 kg + 3 usd`) — but unlike every other additive-style
+    /// op, the RESULT dimension collapses to `Scalar` rather than carrying the
+    /// operands' shared dimension (a truth value has no unit), mirroring how
+    /// [`ComputeOp::Sign`] already collapses a dimensioned unary operand to a
+    /// dimensionless magnitude. Lowered from a `formula`'s trailing `relop`
+    /// (`code/grammars/adj_lang/adj_lang.grammar`'s `formula_relation`) — the
+    /// one place a formula body may end in a comparison instead of arithmetic.
+    CmpGe,
+    CmpLe,
+    CmpGt,
+    CmpLt,
+    CmpEq,
+    CmpNe,
     Sum,
     Count,
     Min,
@@ -441,6 +462,12 @@ impl ComputeOp {
             ComputeOp::Gcd => "gcd",
             ComputeOp::Lcm => "lcm",
             ComputeOp::Mod => "mod",
+            ComputeOp::CmpGe => ">=",
+            ComputeOp::CmpLe => "<=",
+            ComputeOp::CmpGt => ">",
+            ComputeOp::CmpLt => "<",
+            ComputeOp::CmpEq => "==",
+            ComputeOp::CmpNe => "!=",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -889,8 +916,52 @@ fn dim_op(op: ComputeOp) -> Option<DimOp> {
         // `7 mmol mod 3` a category error). Flows through the general binary path
         // with no extra `eval` locals.
         ComputeOp::Mod => Some(DimOp::Add),
+        // Comparisons combine like addition for COMPATIBILITY (both operands
+        // must share a dimension — `5 kg > 3 usd` is the same category error
+        // as `5 kg + 3 usd`), but the caller overrides the resulting
+        // dimension to `Scalar` afterward: a truth value has no unit, unlike
+        // every other op that reuses `DimOp::Add`.
+        ComputeOp::CmpGe
+        | ComputeOp::CmpLe
+        | ComputeOp::CmpGt
+        | ComputeOp::CmpLt
+        | ComputeOp::CmpEq
+        | ComputeOp::CmpNe => Some(DimOp::Add),
         _ => None,
     }
+}
+
+/// Is `op` one of the six comparison ops? The single place that decides
+/// "does this op answer a truth value instead of a magnitude" — consulted to
+/// collapse a comparison's result dimension to `Scalar` and, in
+/// [`crate::verify`]/rendering, wherever a `1`/`0` result needs to read back
+/// as a comparison rather than an arithmetic value.
+pub fn is_cmp_op(op: ComputeOp) -> bool {
+    matches!(
+        op,
+        ComputeOp::CmpGe
+            | ComputeOp::CmpLe
+            | ComputeOp::CmpGt
+            | ComputeOp::CmpLt
+            | ComputeOp::CmpEq
+            | ComputeOp::CmpNe
+    )
+}
+
+/// `true` → `1.0`, `false` → `0.0` — the exact/dimensionless truth encoding
+/// every comparison op shares (ADJ-FORMULA-LIBRARIES FL-8).
+fn bool_to_f64(b: bool) -> f64 {
+    if b {
+        1.0
+    } else {
+        0.0
+    }
+}
+
+/// `true` → the exact rational `1`, `false` → the exact rational `0` — the
+/// [`ExactRational`] sidecar counterpart of [`bool_to_f64`].
+fn exact_bool(b: bool) -> ExactRational {
+    ExactRational::from_i128(if b { 1 } else { 0 })
 }
 
 /// Compute a binary integer `gcd`/`lcm` on two already-evaluated operand values.
@@ -1145,6 +1216,15 @@ fn eval(
                     ComputeError::DimensionMismatch { op: *op, lhs, rhs }
                 }
             })?;
+            // A comparison's dimension check reuses `DimOp::Add` above (both
+            // operands must share a dimension), but its RESULT is a truth
+            // value, not a magnitude in that dimension — collapse to `Scalar`
+            // here, the one override to the otherwise-shared additive path.
+            let result_dim = if is_cmp_op(*op) {
+                Dimension::Scalar
+            } else {
+                result_dim
+            };
             let (x, y) = (lhs.value(), rhs.value());
             // Binary min/max are folded into this general path (rather than a
             // separate block) so they add NO extra locals to `eval`'s frame — it
@@ -1206,6 +1286,17 @@ fn eval(
                 // Euclid-loop locals live in their own frame, not `eval`'s. A
                 // non-integer operand is a clean `MalformedExpr`.
                 ComputeOp::Gcd | ComputeOp::Lcm => int_gcd_lcm(*op, x, y)?,
+                // Comparisons produce a dimensionless 1.0 (true) / 0.0 (false).
+                // `NaN` compares false against everything in IEEE-754, which
+                // Rust's own operators already give for free — no explicit
+                // NaN branch needed (unlike min/max, which must AVOID that
+                // built-in behavior to keep NaN from silently vanishing).
+                ComputeOp::CmpGe => bool_to_f64(x >= y),
+                ComputeOp::CmpLe => bool_to_f64(x <= y),
+                ComputeOp::CmpGt => bool_to_f64(x > y),
+                ComputeOp::CmpLt => bool_to_f64(x < y),
+                ComputeOp::CmpEq => bool_to_f64(x == y),
+                ComputeOp::CmpNe => bool_to_f64(x != y),
                 _ => unreachable!("dim_op already rejected non-binary ops"),
             };
             let exact_source_would_narrow = exact_l
@@ -1224,6 +1315,17 @@ fn eval(
                     // rational carries through verbatim (ties pick the left).
                     ComputeOp::Min2 => Some(if a.as_ratio() <= b.as_ratio() { a } else { b }),
                     ComputeOp::Max2 => Some(if a.as_ratio() >= b.as_ratio() { a } else { b }),
+                    // A comparison is exactly decidable whenever both operands
+                    // are: compare the exact rationals directly (never the
+                    // narrowed `f64`s), so a comparison formula's truth value
+                    // is as trustworthy as its operands' provenance, not the
+                    // float rounding of whatever computed them.
+                    ComputeOp::CmpGe => Some(exact_bool(a.as_ratio() >= b.as_ratio())),
+                    ComputeOp::CmpLe => Some(exact_bool(a.as_ratio() <= b.as_ratio())),
+                    ComputeOp::CmpGt => Some(exact_bool(a.as_ratio() > b.as_ratio())),
+                    ComputeOp::CmpLt => Some(exact_bool(a.as_ratio() < b.as_ratio())),
+                    ComputeOp::CmpEq => Some(exact_bool(a.as_ratio() == b.as_ratio())),
+                    ComputeOp::CmpNe => Some(exact_bool(a.as_ratio() != b.as_ratio())),
                     _ => None,
                 },
                 _ => None,
@@ -3562,6 +3664,95 @@ mod tests {
 
         assert_eq!(maximum.exact, Some(twice_tiny));
         assert_eq!(minimum.exact, Some(tiny));
+    }
+
+    #[test]
+    fn comparison_true_is_one_and_dimensionless() {
+        // 5 > 3 → 1, and — unlike every other additive-style binary op — the
+        // result dimension COLLAPSES to Scalar rather than carrying the
+        // operands' shared dimension (a truth value has no unit).
+        let kb = kb_with(vec![money("a", 5, "usd"), money("b", 3, "usd")]);
+        let d = compute(
+            "gt",
+            &bin(ComputeOp::CmpGt, refexpr("a"), refexpr("b")),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 1.0);
+        assert_eq!(d.dim, Dimension::Scalar);
+    }
+
+    #[test]
+    fn comparison_false_is_zero() {
+        let d = compute(
+            "gt",
+            &bin(ComputeOp::CmpGt, ComputeExpr::Lit(3.0), ComputeExpr::Lit(5.0)),
+            &KnowledgeBase::new(),
+        )
+        .unwrap();
+        assert_eq!(d.value, 0.0);
+        assert_eq!(d.dim, Dimension::Scalar);
+    }
+
+    #[test]
+    fn comparison_every_operator_matches_its_symbol() {
+        let cases = [
+            (ComputeOp::CmpGe, 5.0, 5.0, 1.0),
+            (ComputeOp::CmpGe, 4.0, 5.0, 0.0),
+            (ComputeOp::CmpLe, 5.0, 5.0, 1.0),
+            (ComputeOp::CmpLe, 6.0, 5.0, 0.0),
+            (ComputeOp::CmpGt, 6.0, 5.0, 1.0),
+            (ComputeOp::CmpGt, 5.0, 5.0, 0.0),
+            (ComputeOp::CmpLt, 4.0, 5.0, 1.0),
+            (ComputeOp::CmpLt, 5.0, 5.0, 0.0),
+            (ComputeOp::CmpEq, 5.0, 5.0, 1.0),
+            (ComputeOp::CmpEq, 4.0, 5.0, 0.0),
+            (ComputeOp::CmpNe, 4.0, 5.0, 1.0),
+            (ComputeOp::CmpNe, 5.0, 5.0, 0.0),
+        ];
+        for (op, x, y, expected) in cases {
+            let d = compute(
+                "c",
+                &bin(op, ComputeExpr::Lit(x), ComputeExpr::Lit(y)),
+                &KnowledgeBase::new(),
+            )
+            .unwrap();
+            assert_eq!(d.value, expected, "{op:?}({x}, {y})");
+        }
+    }
+
+    #[test]
+    fn comparison_rejects_mismatched_dimensions_like_addition_would() {
+        // 5 usd > 3 (a bare number) is the same category error `5 usd + 3`
+        // already is — comparisons reuse the additive dimension-compatibility
+        // check, they just don't inherit its RESULT dimension on success.
+        let kb = kb_with(vec![money("a", 5, "usd")]);
+        let err = compute(
+            "gt",
+            &bin(ComputeOp::CmpGt, refexpr("a"), ComputeExpr::Lit(3.0)),
+            &kb,
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::DimensionMismatch { .. }));
+    }
+
+    #[test]
+    fn comparison_is_exact_when_both_operands_are_exact() {
+        // Comparing two exact rationals stays exact — never narrowed through
+        // f64 first — so a comparison formula's truth value is as
+        // trustworthy as its operands' own provenance.
+        let d = compute(
+            "gt",
+            &bin(
+                ComputeOp::CmpGt,
+                ComputeExpr::ExactLit(ExactRational::new(1, 3).unwrap()),
+                ComputeExpr::ExactLit(ExactRational::new(1, 4).unwrap()),
+            ),
+            &KnowledgeBase::new(),
+        )
+        .unwrap();
+        assert_eq!(d.value, 1.0);
+        assert_eq!(d.exact, ExactRational::new(1, 1));
     }
 
     #[test]
