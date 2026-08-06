@@ -71,6 +71,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
 | HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
 | HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
+| HL-C24 | Complete in this PR | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |
+| HL-C25 | Queued | Scale the HL-C24 payoff pattern across the remaining 32 Latin chapters and the other 19 tracks. | Every chapter's payoff is a lesson written to be a payoff, not the chapter's last teaching lesson pressed into service. |
 
 The illustration licensing question HL06 raised is **settled**. The project owner
 decided on 2026-08-06 that the books stay CC BY-SA 4.0 and that generated
@@ -1862,6 +1864,44 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The audit found 117 authored links across the wider lesson corpus. The 62 not
   yet represented in generated targets remain canonical app content and will
   become live automatically when those chapters migrate to book generation.
+
+## Findings from HL-C24
+
+- Four Latin chapters now end on a lesson written to be a payoff:
+  `LA-C19-practice`, `LA-C21-practice`, `LA-C33-practice`, and
+  `LA-C36-practice`. Latin had exactly one `practice` lesson across 36
+  chapters before this tranche; it now has five, and the corpus reaches 1,100
+  lessons with zero duration violations and zero prerequisite errors.
+- **The representativeness gate cannot see this gap.** All 36 Latin chapters
+  already measured 100% before the change, and all 36 still measure 100% after
+  it, because a chapter's last teaching lesson cumulatively practises every atom
+  the chapter introduced. Representativeness answers "does the payoff touch the
+  chapter's material" — it cannot answer "is the payoff something the reader can
+  *do*." HL-C03's gate set needs a distinct signal for that: the honest one
+  available today is whether the chapter's terminal lesson is of a consolidation
+  type (`practice`, `practice-mix`, `pattern`) at all. On that measure Latin was
+  1 of 36 and is now 5 of 36.
+- Three of the four payoffs are genuine `dialogue`s built only from taught
+  words. Chapter 33 is deliberately **not**: it teaches *vesper* and its
+  afterlives, with no greeting or exchange anywhere in it, so its payoff is a
+  `task` — sort any European evening word into the *vesper* family or the
+  *sērus* family, then produce *vespere*. Forcing a conversation there would have
+  misrepresented what a taproot track is for.
+- The constraint that actually bites is **strict knowledge closure combined with
+  a single-word-per-lesson corpus**. A payoff may only recombine what the
+  transitive prerequisite chain introduced, and Latin's chain is a thin line
+  (each lesson names one or two prerequisites), so useful material taught in a
+  *sibling* branch is invisible unless the payoff names it as an extra
+  prerequisite. Chapter 19 could reach *grātiās tibi agō* only because
+  `LA-C19-quid-agis` happens to depend on `LA-C01-ita-non`; chapter 36 had to
+  name `LA-C34-bonum-vesperum` and `LA-C19-practice` explicitly to see the
+  *bonus*-phrase and wellbeing atoms at all. Any track-wide scale-up should
+  expect to author prerequisite edges, not just lessons.
+- Chapters whose material is purely etymological or purely metalinguistic resist
+  a usable payoff on principle, not on effort. Latin chapter 33 is the clean
+  example; chapters 2 (numbers), 5 (weekday names), and 11 (months) are the same
+  shape. `task` and `production` payoffs are the right answer there, and the
+  ledger should say so rather than labelling them `dialogue`.
 
 ## Completed foundations
 
