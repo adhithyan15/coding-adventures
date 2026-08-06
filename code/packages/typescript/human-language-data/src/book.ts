@@ -1,4 +1,5 @@
 import { canonicalChapterHash } from "./hash.js";
+import { hasOwn } from "./constants.js";
 import type { LessonBodyBlock } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
 
@@ -296,8 +297,14 @@ const AUTHORED_TITLE_REWRITES = new Map<string, string>([
  * Practice: conjugate on command". The label still has to go; the qualifier is
  * the author's and stays, so the prefix alone is swapped.
  */
-const AUTHORED_TITLE_PREFIXES: Array<[string, string]> = [
-  ["guided practice", BOOK_BLOCK_TITLES.guidedPractice],
+// The matcher is written out rather than built from the label at call time: a
+// RegExp assembled from a string would silently reinterpret any metacharacter
+// a future label happened to contain. Each entry carries its own literal
+// pattern, and `length` is how much of the authored heading it replaces.
+const AUTHORED_TITLE_PREFIXES: Array<{ matcher: RegExp; length: number; printed: string }> = [
+  // The trailing separator is required, so "Guided Practicing" is never touched.
+  { matcher: /^guided practice\s*[:—–-]/i, length: "guided practice".length,
+    printed: BOOK_BLOCK_TITLES.guidedPractice },
 ];
 
 /** The heading a reader sees, given the heading an author wrote. */
@@ -305,11 +312,8 @@ export function bookBlockTitle(authored: string): string {
   const trimmed = authored.trim();
   const exact = AUTHORED_TITLE_REWRITES.get(trimmed.toLowerCase());
   if (exact !== undefined) return exact;
-  for (const [prefix, printed] of AUTHORED_TITLE_PREFIXES) {
-    // Only when a separator follows, so "Guided Practicing" is never touched.
-    if (new RegExp(`^${prefix}\\s*[:—–-]`, "i").test(trimmed)) {
-      return printed + trimmed.slice(prefix.length);
-    }
+  for (const { matcher, length, printed } of AUTHORED_TITLE_PREFIXES) {
+    if (matcher.test(trimmed)) return printed + trimmed.slice(length);
   }
   return authored;
 }
@@ -381,14 +385,16 @@ const CUE_VOICES: Record<string, CueVoice> = {
  * A verb nobody has given a voice to yet still has to print as English --- and
  * one lesson writes a whole phrase, `[YOU CHOOSE BY CONTEXT: ...]`, so the
  * fallback sentence-cases the whole thing: "Choose by context".
+ *
+ * The lookup goes through `hasOwn` rather than a bare index, so a verb that
+ * happened to spell an inherited member could never resolve to `Object`'s
+ * prototype. `YOU_CUE` already restricts the verb to A--Z and spaces, which
+ * rules that out today; the guard means it stays ruled out if the cue grammar
+ * is ever widened.
  */
 function cueVoice(verb: string): CueVoice {
-  const known = hasOwnProperty(CUE_VOICES, verb) ? CUE_VOICES[verb] : undefined;
+  const known = hasOwn(CUE_VOICES, verb) ? CUE_VOICES[verb] : undefined;
   return known ?? { item: verb.charAt(0) + verb.slice(1).toLowerCase() };
-}
-
-function hasOwnProperty<T extends object>(object: T, key: string): key is string & keyof T {
-  return Object.prototype.hasOwnProperty.call(object, key);
 }
 
 /** `[PAUSE 2s]` / `[PAUSE 1s each]`, always at the head of a line. */
