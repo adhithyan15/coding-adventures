@@ -1,0 +1,96 @@
+Portuguese, chapter 15: The Past Portuguese Kept.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+falei — the past Portuguese kept.
+
+Warm-up.
+[pause 2 seconds]
+Portuguese's everyday past tense. Its interest isn't its endings — it's that Portuguese still has it in daily speech, when several sisters do not.
+
+You'll want to know: The forms.
+[a table of 5 rows, read aloud]
+(eu), falei.
+(tu), falaste.
+(ele/ela/você), falou.
+(nós), falámos (Portugal) / falamos (Brazil).
+(vocês/eles), falaram.
+One word. No auxiliary, no participle — the verb carries the past by itself.
+The nós form is worth a note: Portugal writes falámos with an accent to separate it from the present falamos, while Brazil writes both falamos and lets context decide. Same word, one accent, two spelling conventions.
+falei from Vulgar Latin perfect fabulāvī, the same source as Spanish hablé. The Latin -āv- dissolved and left a stressed final vowel behind, which is why falei and falou end where they do.
+
+Why it's said this way: The tense the others gave up.
+Now the point of the chapter:
+[a table of 5 rows, read aloud]
+language: Portuguese. this tense: falou. where it lives now: everyday speech.
+language: Spanish. this tense: habló. where it lives now: everyday speech.
+language: Italian. this tense: parlò. where it lives now: south yes, north literary.
+language: German. this tense: sagte. where it lives now: retreating, standard in writing.
+language: French. this tense: il parla. where it lives now: literature only.
+All five inherited the same thing. French, German and northern Italy each built a compound past out of "have" and let it push the old simple past out of conversation. Portuguese and Spanish, at the western edge of the map, didn't.
+Portuguese has all the parts to build a compound — ter from Chapter 14, and a participle (falado). It simply doesn't use them for this job. The next lesson shows what it uses them for instead.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "falei, falaste, falou, falámos, falaram"]
+[pause 8 seconds for the answer]
+[your turn — say: "Ontem falei com a minha mãe" ("Yesterday I spoke with my mother")]
+[pause 8 seconds for the answer]
+[your turn — say: "Trabalhei" — Ch. 5's verb in the past]
+[pause 8 seconds for the answer]
+[your turn — say: the five fates — "falou, habló, parlò, sagte, il parla"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many words does the Portuguese past need? (One — no auxiliary.) Where does falei come from? (Vulgar Latin perfect fabulāvī, like Spanish hablé.) Which two languages kept this tense in everyday speech? (Portuguese and Spanish.) Which one exiled it to literature? (French.) Next: what Portuguese does with ter + participle, since it isn't this.
+
+
+Lesson 2 of 2.
+tenho falado — the compound that means something else.
+
+Warm-up.
+[pause 2 seconds]
+Portuguese does have ter + participle. It looks exactly like the French and Italian compound past, and it means something different. This is one of the most common mistakes English speakers make in Portuguese.
+
+You'll want to know: The form.
+ter (conjugated) + past participle.
+[a table of 3 rows, read aloud]
+infinitive: falar. participle: falado.
+infinitive: comer. participle: comido.
+infinitive: partir. participle: partido.
+becomes tenho falado, tens falado, tem falado…
+
+Grammar Lens: What it actually means.
+[a table of 2 rows, read aloud]
+falei means "I spoke" — one finished event.
+tenho falado means "I have been speaking" — repeatedly, lately.
+Tenho falado com ele does not mean "I have spoken to him [once]." It means "I have been speaking to him" — more than once, over a recent stretch of time, and it may still be going on.
+For a single completed act, Portuguese uses the simple past from the last lesson:
+Falei com ele ontem. — "I spoke with him yesterday."
+
+Why it's said this way: Why the meanings diverged.
+French and Italian let their compound take over the plain past, so j'ai parlé and ho parlato now just mean "I spoke."
+Portuguese never did — falei was already occupying that slot and never left. So when Portuguese assembled the same have + participle machinery, there was no vacancy, and the construction drifted into a different job: repeated or continuing action.
+Same parts, same era, same family. Different outcome, because of what was already in the way.
+[a table of 4 rows, read aloud]
+language: French. have + participle means: j'ai parlé — I spoke.
+language: Italian. have + participle means: ho parlato — I spoke.
+language: German. have + participle means: ich habe gesagt — I said.
+language: Portuguese. have + participle means: tenho falado — I have been speaking (repeatedly).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the contrast — "falei I spoke, tenho falado I've been speaking"]
+[pause 8 seconds for the answer]
+[your turn — say: "Falei com ele ontem" — one event]
+[pause 8 seconds for the answer]
+[your turn — say: "Tenho falado com ele" — repeatedly, lately]
+[pause 8 seconds for the answer]
+[your turn — say: the warning — "tenho falado is not 'I have spoken'"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does tenho falado mean? ("I have been speaking" — repeatedly, over a recent stretch.) What do you use for one finished act? (The simple past — falei.) Why doesn't Portuguese's compound mean "I spoke"? (Because falei never vacated that slot, so the new construction took a different job.) Which languages let their compound take over the plain past? (French, Italian, German.)

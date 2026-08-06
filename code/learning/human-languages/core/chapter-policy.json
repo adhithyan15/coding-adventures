@@ -4,11 +4,13 @@
   "payoffRepresentativeness": 0.5,
   "maxNewAtomsPerLesson": 3,
   "maxNewAtomsPerChapter": 12,
+  "maxLinearisableTableColumns": 3,
   "provenance": {
     "measuredAt": "2026-08-06",
     "corpus": "1096 lessons, 531 schema-v2, 277 schema-v2 chapters",
     "atomsPerLesson": { "mean": 2.31, "median": 2, "p90": 3, "max": 7 },
     "atomsPerChapter": { "median": 3, "p75": 5, "p90": 10, "max": 31 },
-    "rationale": "maxNewAtomsPerLesson sits at the existing p90, so the median lesson is already compliant and only genuine spikes are flagged (52 lessons). maxNewAtomsPerChapter sits just above the chapter p90 of 10, flagging 17 chapters. payoffRepresentativeness starts at half a chapter's introduced atoms; it is a floor to be raised, not a target."
+    "tableColumns": { "2": 99, "3": 173, "4": 60, "5+": 8, "files": 340 },
+    "rationale": "maxNewAtomsPerLesson sits at the existing p90, so the median lesson is already compliant and only genuine spikes are flagged (52 lessons). maxNewAtomsPerChapter sits just above the chapter p90 of 10, flagging 17 chapters. payoffRepresentativeness starts at half a chapter's introduced atoms; it is a floor to be raised, not a target. maxLinearisableTableColumns was 0 until the HL-C16 narration lineariser existed; 3 is where a table stops being a list of labelled facts a listener can hold ('Language: Telugu. Hello: namaskaram. Source: Sanskrit.') and starts being a grid whose meaning lives in comparison across rows — the corpus's own four-column tables have an unlabelled first column that only means something because of where it sits on the page. Three covers 272 of the 340 table-bearing lesson files."
   }
 }

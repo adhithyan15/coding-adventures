@@ -1,0 +1,287 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 8,
+  "title": "Please",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f6321c5249da200d",
+  "lessons": [
+    {
+      "id": "TA-C08-tayavuseytu",
+      "sequence": 260,
+      "title": "தயவுசெய்து (tayavu seytu) — please (do the kindness)",
+      "headword": "தயவுசெய்து",
+      "romanization": "",
+      "gloss": "please (tayavu seytu — \"do the kindness,\" from தயவு tayavu \"compassion/grace\")",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b64c5bd7dd10f8eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Across a whole band of Asia, the word for please is really the word compassion, dressed as a small request. Tamil says it most literally of all: \"do the kindness.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The phrase",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தயவுசெய்து = please, literally \"do the kindness / grace.\" It is two pieces snapped together:"
+            },
+            {
+              "kind": "speech",
+              "text": "தயவு (tayavu) = kindness, compassion, grace — from Sanskrit daya \"compassion.\""
+            },
+            {
+              "kind": "speech",
+              "text": "செய்து (seytu) = \"having done,\" from the verb செய் (sey) \"to do.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So tayavu seytu is an invitation: do me the kindness (of…). You place it in front of a request the way English puts \"please\" in front of one."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the same instinct as Arabic min faḍlik (\"from your grace\") and Hindi kṛpayā (from kṛpā, \"compassion\"). Naming the kindness you hope for is one of the great strategies of politeness — different from French's \"if it pleases you,\" and from Latin/German's \"I ask.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - The Dravidian family, side by side",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All four Dravidian cousins build please the very same way — daya plus a light verb \"do / place / become\":"
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil தயவுசெய்து tayavu seytu — kindness + do."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada ದಯವಿಟ್ಟು dayaviṭṭu — compassion + having placed."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu దయచేసి dayacēsi — compassion + having done."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam ദയവായി dayavāyi — compassion + as / having become."
+            },
+            {
+              "kind": "speech",
+              "text": "One idea, four scripts. Learn one and you can almost read the others."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tayavu\" — the kindness — then \"seytu,\" having done",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tayavu\" — the kindness — then \"seytu,\" having done]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole phrase — \"tayavu seytu\" = please, do the kindness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole phrase — \"tayavu seytu\" = please, do the kindness]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the Tamil phrase for please? (தயவுசெய்து tayavu seytu.) What do its two pieces mean? (\"Kindness\" tayavu + \"having done\" seytu — do the kindness.) Which languages ask the same way? (Kannada, Telugu, Malayalam with daya, and further off Arabic faḍl and Hindi kṛpā.) Next: decide when the standalone phrase is natural and when the verb carries the courtesy."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C08-please-register",
+      "sequence": 270,
+      "title": "தயவுசெய்து or -உங்கள்? — politeness in phrase or verb",
+      "headword": "தயவுசெய்து / -உங்கள்",
+      "romanization": "",
+      "gloss": "standalone please is emphatic while everyday courtesy often lives in the respectful verb ending",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:11ca8536d913b3ec",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: Read the join in செய்து"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: Read the join in செய்து until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil has a phrase meaning \"do the kindness,\" but everyday courtesy often sits somewhere English speakers do not expect: inside the verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Choose by emphasis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A standalone தயவுசெய்து is more emphatic and formal than English \"please.\" Ordinary polite commands use respectful -உங்கள் (-uṅgaḷ):"
+            },
+            {
+              "kind": "speech",
+              "text": "உட்காருங்கள் uṭkāruṅgaḷ — please sit."
+            },
+            {
+              "kind": "speech",
+              "text": "சொல்லுங்கள் solluṅgaḷ — please tell me."
+            },
+            {
+              "kind": "speech",
+              "text": "Use tayavu seytu to mark \"please, do me the kindness\" warmly or formally. Let the verb ending carry routine courtesy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: Read the join in செய்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செ is ca with the ெ sign for e. ய் is ya shut off by puḷḷi, a bare y, before து tu. The same dot that built numbers now makes the consonant seam in seytu visible."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "emphatic request becomes தயவுசெய்து",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: emphatic request → **தயவுசெய்து**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "ordinary \"please sit\" becomes உட்காருங்கள்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: ordinary \"please sit\" → **உட்காருங்கள்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SEGMENT",
+              "instruction": "செ + ய் + து becomes செய்து",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SEGMENT: செ + ய் + து → செய்து]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What carries everyday \"please\"? (The respectful verb ending -uṅgaḷ.) When is tayavu seytu especially useful? (A markedly polite or emphatic request.) What silences y in ய்? (The puḷḷi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

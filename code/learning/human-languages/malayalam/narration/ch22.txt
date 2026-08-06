@@ -1,0 +1,29 @@
+Malayalam, chapter 22: Green and Yellow.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+പച്ച, മഞ്ഞ — matching Tamil twice over, by two different routes.
+
+Warm-up.
+[pause 2 seconds]
+Telugu's green and yellow turned out to be one word wearing two faces. Malayalam's green and yellow are a different story again — two completely separate native words, each one matching Tamil closely, just not matching each other.
+
+You'll want to know.
+പച്ച (paccha, "green") comes from Proto-Dravidian pac- — matching Tamil's பச்சை (paccai) almost exactly, and the same root already seen in Kannada's hasiru and Telugu's pacca. No surprises here; this is the familiar family from the last two lessons.
+
+Why it's said this way.
+മഞ്ഞ (mañña, "yellow") and മഞ്ഞൾ (maññaḷ, "turmeric") are a native doublet pair. This is a completely different Dravidian root from pac-, matching Tamil's own turmeric/yellow pair, மஞ்சள் (mañcaḷ), closely. So here's the honest shape of this arc so far: Kannada split green and yellow into two unrelated families (native vs. Sanskrit loan); Telugu kept them as doublets of the same native root; and Malayalam keeps them as two separate native Dravidian roots, each one independently matching its Tamil counterpart. No single pattern holds across all three languages — the honest answer is that each solved "green vs. yellow" its own way.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "പച്ച" — green, matching Tamil paccai]
+[pause 8 seconds for the answer]
+[your turn — say: "മഞ്ഞ" — yellow, matching Tamil mañcaḷ, a separate root entirely]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — paccha and mañña are NOT doublets of each other, unlike Telugu's pacca/pasupu]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does മഞ്ഞ (mañña, "yellow") share a root with പച്ച (paccha, "green")? (No — they are two separate native Dravidian roots.) What Tamil word does മഞ്ഞ closely match? (மஞ்சள், mañcaḷ, "turmeric/yellow.") Across Kannada, Telugu, and Malayalam, is there one single pattern for how green and yellow relate? (No — Kannada split them into native vs. Sanskrit-loan; Telugu made them doublets of one root; Malayalam keeps them as two separate native roots.)

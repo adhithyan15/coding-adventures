@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 4,
+  "title": "Chapter 4",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:149edab58bdc1eec",
+  "lessons": [
+    {
+      "id": "TE-C04-malli-kaluddaam",
+      "sequence": null,
+      "title": "మళ్ళీ కలుద్దాం (maḷḷī kaluddām) — \"we'll meet again\"",
+      "headword": "మళ్ళీ కలుద్దాం",
+      "romanization": "",
+      "gloss": "we'll meet again",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44e8adcad4eea9bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The open-ended, warm goodbye — no date, just a promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మళ్ళీ (maḷḷī): note the doubled retroflex ళ్ళ (ḷḷ), the same sound as in veḷḷu. కలుద్దాం (kaluddām, \"let's meet\") you just learned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మళ్ళీ కలుద్దాం = మళ్ళీ (maḷḷī, \"again\") + కలుద్దాం (kaluddām, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: maḷḷī (\"again,\" from maral, \"to return\") and kalu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Telugu keeps the native kalu — a small reminder that these sisters make the same phrase from different stock."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"maḷḷī kaluddām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"maḷḷī kaluddām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"again\" and \"let's meet\" (maḷḷī, kaluddām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"again\" and \"let's meet\" (*maḷḷī*, *kaluddām*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the phrase mean, and which Dravidian verb does Telugu use for \"meet\" here? (\"We'll meet again\"; the native kalu — where Tamil used the Sanskrit loan sandi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C04-practice",
+      "sequence": null,
+      "title": "Chapter 4 — The farewells",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 4 recap — the farewells",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4a7c80ad0a0c8f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Three ways to part — none of them a blunt \"goodbye.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The farewells",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday goodbye — veḷḷi vastānu (\"I'll go and come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday goodbye — *veḷḷi vastānu* (\"I'll go and come back\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warm reply — veḷḷi raṇḍi (\"go and come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warm reply — *veḷḷi raṇḍi* (\"go and come back\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"see you tomorrow\" — rēpu kaluddām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"see you tomorrow\" — *rēpu kaluddām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"we'll meet again\" — maḷḷī kaluddām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"we'll meet again\" — *maḷḷī kaluddām*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The atoms",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two verbs (veḷḷu go, vaccu come)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two verbs (*veḷḷu* go, *vaccu* come)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tomorrow,\" \"again,\" \"let's meet\" (rēpu, maḷḷī, kaluddām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tomorrow,\" \"again,\" \"let's meet\" (*rēpu*, *maḷḷī*, *kaluddām*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the \"let's ___\" ending (-ddām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the \"let's ___\" ending (*-ddām*)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Roots you now carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "veḷḷi vastānu — \"having gone, I come\"; the Dravidian promise-of-return goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "rēpu \"tomorrow\" + kalu \"meet\" (native, where Tamil borrowed sandi)."
+            },
+            {
+              "kind": "speech",
+              "text": "maḷḷī from maral \"to return\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Telugu never say a plain \"I'm leaving,\" and what does its everyday goodbye promise instead? (It sounds too final; veḷḷi vastānu promises \"I'll go and come back.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C04-reepu-kaluddaam",
+      "sequence": null,
+      "title": "రేపు కలుద్దాం (rēpu kaluddām) — \"see you tomorrow\"",
+      "headword": "రేపు కలుద్దాం",
+      "romanization": "",
+      "gloss": "see you tomorrow",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4399e54f55c7d582",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A goodbye with a date on it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రే (rē) + పు (pu) becomes రేపు (rēpu). కలుద్దాం (kaluddām) = kalu (\"meet\") + -ddām (\"let's\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రేపు (rēpu, \"tomorrow\") is native Dravidian. కలుద్దాం (kaluddām, \"let's meet\") is from కలు (kalu, \"to meet, to join\") — so the phrase is \"tomorrow, let's meet,\" the Telugu \"see you tomorrow.\" The -దాం (-ddām) ending is Telugu's \"let's ___\" — a first-person-plural invitation: veḷḷddām (\"let's go\"), tindām (\"let's eat\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rēpu kaluddām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rēpu kaluddām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tomorrow\" and \"to meet\" (rēpu, kalu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tomorrow\" and \"to meet\" (*rēpu*, *kalu*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the \"let's ___\" ending (-ddām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the \"let's ___\" ending (*-ddām*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of rēpu kaluddām, and what does -ddām mean? (Rēpu \"tomorrow\" + kalu \"meet\"; -ddām = \"let's ___.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C04-velli-vastaanu",
+      "sequence": null,
+      "title": "వెళ్ళి వస్తాను (veḷḷi vastānu) — \"I'll go and come back\"",
+      "headword": "వెళ్ళి వస్తాను",
+      "romanization": "",
+      "gloss": "goodbye (lit. \"I'll go and come back\")",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd4810e5f26ab33e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday Telugu goodbye — a promise, not a parting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెళ్ళి (veḷḷi, \"having gone\") is veḷḷu + the \"-i\" that means \"having …d.\" వస్తాను (vastānu, \"I come/will come\") is from vaccu (\"come\") + \"I.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెళ్ళి వస్తాను = వెళ్ళి (veḷḷi, \"having gone\") + వస్తాను (vastānu, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Telugu speaker never signs off with a bare \"I'm leaving\" — that sounds final. Instead they promise return. It is the same \"go-and-come-back\" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, \"go and come [back]\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the \"having …d\" participle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Veḷḷi is Telugu's way of chaining actions: \"having gone, (then) I come.\" Like its sisters, Telugu strings verbs with one in the participle form and the last one fully conjugated."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the goodbye — veḷḷi vastānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the goodbye — *veḷḷi vastānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its literal meaning (\"having gone, I come\" becomes \"I'll come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its literal meaning (\"having gone, I come\" → \"I'll come back\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warm reply — veḷḷi raṇḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warm reply — *veḷḷi raṇḍi*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the Telugu goodbye literally promise, and how do you answer? (\"I'll go and come back\"; reply veḷḷi raṇḍi, \"go and come back\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C04-vellu",
+      "sequence": null,
+      "title": "వెళ్ళు (veḷḷu) — \"go,\" and వచ్చు (come)",
+      "headword": "వెళ్ళు",
+      "romanization": "",
+      "gloss": "to go (and వచ్చు, to come)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57415cf23840ee92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two everyday verbs — and together they make the Telugu goodbye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: వచ్చు (vaccu, \"come\") with the doubled చ్చ (cc)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెళ్ళు (veḷḷu, \"to go\") and వచ్చు (vaccu, \"to come\") are native Dravidian verbs. As commands they are whole words: veḷḷu! (\"go!\"), rā! (\"come!\"). You need both, because Telugu — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"veḷḷu\" (go) and \"vaccu\" (come)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"veḷḷu\" (go) and \"vaccu\" (come)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why you need both to say goodbye (Telugu's farewell is \"I'll go and come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why you need both to say goodbye (Telugu's farewell is \"I'll go and come back\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do veḷḷu and vaccu mean, and why will you need them both to part? (\"Go\" and \"come\"; the Telugu goodbye is \"I'll go and come back.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

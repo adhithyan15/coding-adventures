@@ -1,0 +1,407 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 6,
+  "title": "Numbers One to Five",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:6442776b5a8abb61",
+  "lessons": [
+    {
+      "id": "HI-C06-numbers-1-5",
+      "sequence": 210,
+      "title": "एक, दो, तीन, चार, पाँच (pāṁch) — the five forms",
+      "headword": "एक दो तीन चार पाँच",
+      "romanization": "",
+      "gloss": "one to five, with familiar Devanagari pieces and the chandrabindu in पाँच",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc316aab6f08c2c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five words, and a story about how languages age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — The five",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "Hindi",
+                "said"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "1. Hindi: एक. said: ek.",
+                "2. Hindi: दो. said: do.",
+                "3. Hindi: तीन. said: tīn.",
+                "4. Hindi: चार. said: chār.",
+                "5. Hindi: पाँच. said: pāṁch."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "If you did the writing track you'll recognise some pieces: क (Lesson 2), त (Lesson 2), न (Lesson 1), र (Lesson 4), and the ा mātrā (Lesson 3)."
+            },
+            {
+              "kind": "speech",
+              "text": "Plenty here you haven't been taught to draw yet — ए, च, द, प, the ी and ो mātrās, and the ँ. Read them now; you'll draw them when the writing track reaches them."
+            },
+            {
+              "kind": "speech",
+              "text": "The ँ over pāṁch is a chandrabindu, \"moon-dot\" — it nasalises the vowel, the way French does in bon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ek, do, tīn, chār, pāṁch\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ek, do, tīn, chār, pāṁch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the familiar क, त, न, र and ा inside the five words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the familiar क, त, न, र and ा inside the five words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "the ँ moon-dot over pāṁch",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: the **ँ** moon-dot over *pāṁch*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five in Hindi. (Ek, do, tīn, chār, pāṁch.) Which mark nasalises the vowel in पाँच? (The chandrabindu, \"moon-dot.\") Do you need to draw every unfamiliar letter today? (No — read them now and draw them when their stroke lessons arrive.) Next: watch the Sanskrit forms wear smooth."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C06-tin-char-history",
+      "sequence": 220,
+      "title": "तीन and चार — weight moves from consonants to vowels",
+      "headword": "तीन, चार",
+      "romanization": "",
+      "gloss": "three and four descend from Sanskrit neuter forms through Prakrit weight trades",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d80113a6ecd3bbde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The five modern forms did not jump straight from Sanskrit. The Prakrits did most of the wearing-down in between."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — Put the stages side by side",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Sanskrit",
+                "becomes Prakrit, which gives:",
+                "Hindi"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Sanskrit: éka-. becomes Prakrit, which gives:: ekka. Hindi: ek.",
+                "Sanskrit: dvá-. becomes Prakrit, which gives:: do. Hindi: do.",
+                "Sanskrit: neuter trī́ṇi. becomes Prakrit, which gives:: tiṇṇi. Hindi: tīn.",
+                "Sanskrit: neuter catvā́ri. becomes Prakrit, which gives:: cattāri. Hindi: chār.",
+                "Sanskrit: páñca. becomes Prakrit, which gives:: pañca. Hindi: pāṁch."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three and four come from the neuter forms. Sanskrit also had masculine tráyaḥ, but Hindi tīn continues trī́ṇi. The same choice gives catvā́ri becomes chār."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know — The two-step weight trade",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trī́ṇi becomes tiṇṇi: r is lost and ṇ doubles to make up the weight. Long ī shortens because the doubled consonant already makes the syllable heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "tiṇṇi becomes tīn: the double simplifies and the vowel lengthens to pay for the lost consonant weight."
+            },
+            {
+              "kind": "speech",
+              "text": "The vowel ends long again after being short in the middle. Ekka becomes ek shows the second half of the same trade."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not decay in a bad sense; it is what heavy use does over two thousand years. The same ancient number wore down on another continent:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "ancient",
+                "modern"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Latin becomes Spanish. ancient: quattuor. modern: cuatro.",
+                "Sanskrit becomes Hindi. ancient: catvā́ri. modern: chār."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same PIE word, two continents, two ordinary histories."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"trī́ṇi … tiṇṇi … tīn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"trī́ṇi … ti**ṇṇ**i … t**ī**n\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"catvā́ri … cattāri … chār\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"catvā́ri … cattāri … **chār**\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COMPARE",
+              "instruction": "\"quattuor becomes cuatro, catvā́ri becomes chār\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COMPARE: \"quattuor → cuatro · catvā́ri → chār\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Sanskrit forms underlie tīn and chār? (Neuter trī́ṇi and catvā́ri.) What sits between Sanskrit and Hindi? (The Prakrits.) In trī́ṇi becomes tiṇṇi becomes tīn, what trades places? (The lost r is paid for by a double consonant, then the simplified double by a long vowel.) Next: follow the nasal that stayed inside pāṁch."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C06-paanch-nasal",
+      "sequence": 230,
+      "title": "पाँच (pāṁch) — the nasal moved into the vowel",
+      "headword": "पाँच",
+      "romanization": "pāṁch",
+      "gloss": "Sanskrit's nasal consonant survives inside the Hindi vowel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b20a5bf68c0e2db5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tīn moved weight between consonants and vowels. Pāṁch moves a whole nasal sound into the vowel itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — The nasal that stayed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit pañca becomes Hindi pāṁch. The n did not vanish; Sanskrit's ñ consonant became Hindi's nasalised ā. The ँ chandrabindu records that nasality above the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Say pāṁch and pañca one after the other. You can hear the nasal migrating backward from its own consonant into the vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pañca … pāṁch\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pañca … pāṁch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HUM",
+              "instruction": "hold the nasal through the vowel in pāṁch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HUM: hold the nasal through the vowel in *pāṁch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ँ, the moon-dot that records it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **ँ**, the moon-dot that records it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Did the nasal in pañca disappear? (No — it moved into the vowel.) What records it in पाँच? (The chandrabindu.) Count one to five once more. (Ek, do, tīn, chār, pāṁch.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

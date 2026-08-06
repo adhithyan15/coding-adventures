@@ -90,6 +90,11 @@
 
 import type { LessonBodyBlock } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
+import {
+  DEFAULT_LINEARISABLE_TABLE_COLUMNS as SPEAKABLE_TABLE_COLUMNS,
+  hasUnspeakableTable,
+  splitTableRow,
+} from "./speech.js";
 
 // ---------------------------------------------------------------------------
 // The vocabulary
@@ -139,15 +144,19 @@ export const SIGHT_CUES: readonly string[] = [
 /**
  * How many columns a table may have and still be read aloud.
  *
- * Zero, on purpose. HL08 sequences the work: the narration exporter that linearises
- * a two-column table into "*X* means *Y*" is migration step 3, and the table
- * remediation pass is step 4. Until the lineariser exists, claiming a table is
- * speakable would be claiming a capability nothing implements — and the failure mode
- * is the worst one available, a learner told a lesson is drivable who then silently
- * misses the content the table carried. So today every table means eyes, and this
- * number moves to 2 the day the lineariser lands.
+ * This was **0** when modality first landed, on purpose: HL08 sequences the work, and
+ * until the lineariser existed, claiming a table was speakable would have claimed a
+ * capability nothing implemented. The failure mode there is the worst one available —
+ * a learner told a lesson is drivable who then silently misses whatever the table
+ * carried.
+ *
+ * The lineariser now exists (`speech.ts`), so the number is its measured default: see
+ * `DEFAULT_LINEARISABLE_TABLE_COLUMNS` there for why three columns is the honest line
+ * and four is not. Modality no longer decides this on its own — it asks the same
+ * lineariser the narration export uses, so "drivable" and "actually narratable" can
+ * never disagree.
  */
-export const DEFAULT_LINEARISABLE_TABLE_COLUMNS = 0;
+export const DEFAULT_LINEARISABLE_TABLE_COLUMNS = SPEAKABLE_TABLE_COLUMNS;
 
 /** Tunables, so the width above can be raised without editing a call site. */
 export interface ModalityOptions {
@@ -155,7 +164,13 @@ export interface ModalityOptions {
   maxLinearisableTableColumns?: number;
 }
 
-/** Why a lesson derived the modality it did — one entry per rule that fired. */
+/**
+ * Why a lesson derived the modality it did — one entry per rule that fired.
+ *
+ * `wide-table` is named for the common case but means the general one: *a table the
+ * narration lineariser refuses*, whether because it is too wide, has a blank heading,
+ * or has ragged rows.
+ */
 export type ModalityReasonCode =
   | "writing-type"
   | "writing-block"
@@ -398,37 +413,16 @@ export function lessonCoreText(lesson: ParsedLesson): string {
  * Count the columns in a Markdown table row.
  *
  * A GFM row is cells fenced by pipes — `| a | b | c |` — so the cell count is the
- * number of pipe-separated fields with the empty leading/trailing fields dropped. A
- * pipe escaped as `\|` is content, not a fence, so it is skipped. Hand-scanned
- * rather than regex-split: the scan is one linear pass with no backtracking, and it
- * is the only place that has to understand escaping.
+ * number of pipe-separated fields with the empty leading/trailing fields dropped.
+ * The splitting itself lives in `speech.ts`, because the narration exporter needs the
+ * *cells* and not merely how many there are; sharing the one scan keeps the count a
+ * lesson is judged on identical to the cells it is later narrated from.
  *
- *   | word | gloss |          -> 2 columns   (speakable once the lineariser lands)
+ *   | word | gloss |          -> 2 columns   (speakable: "word means gloss")
  *   | yo | tú | él | ella |   -> 4 columns   (a paradigm grid; eyes required)
  */
 export function tableRowColumns(line: string): number {
-  const fields: string[] = [];
-  let current = "";
-  for (let index = 0; index < line.length; index += 1) {
-    const character = line[index];
-    if (character === "\\" && line[index + 1] === "|") {
-      current += "|";
-      index += 1;
-      continue;
-    }
-    if (character === "|") {
-      fields.push(current);
-      current = "";
-      continue;
-    }
-    current += character;
-  }
-  fields.push(current);
-  // A fenced row opens and closes with a pipe, producing an empty field at each
-  // end. Those are the fence, not cells. An unfenced row (`a | b`) has neither.
-  if (fields.length > 0 && (fields[0] ?? "").trim() === "") fields.shift();
-  if (fields.length > 0 && (fields[fields.length - 1] ?? "").trim() === "") fields.pop();
-  return fields.length;
+  return splitTableRow(line).length;
 }
 
 /** A line that opens a Markdown table row: up to three spaces, then a pipe. */
@@ -570,7 +564,12 @@ export function deriveLessonModality(
   const cues = matchedSightCues(text);
   if (cues.length > 0) reasons.push("sight-cue");
   const tableColumns = widestTableColumns(text);
-  const wideTable = tableColumns > maxColumns;
+  // Not "is it wider than the limit" but "would the lineariser refuse it" — a
+  // strictly larger question. A three-column table sitting inside the limit is still
+  // unspeakable when its rows are ragged or a heading is blank, and asking the
+  // narration exporter's own judgement is the only way `voice` can be a promise the
+  // export is able to keep.
+  const wideTable = hasUnspeakableTable(text, { maxColumns });
   if (wideTable) reasons.push("wide-table");
 
   const derived: Modality =

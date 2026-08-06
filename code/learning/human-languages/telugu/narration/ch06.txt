@@ -1,0 +1,92 @@
+Telugu, chapter 6: Case Endings and Dative Subjects.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 2.
+-కు (-ku) — "to, for".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Your first case ending. English puts "to" in front as its own word. Telugu sticks it on the back — and that difference is the biggest structural fact about the language.
+
+You'll want to know: Adding it on.
+[a table of 2 rows, read aloud]
+word: పేరు pēru — name. + -ku: పేరుకు pēruku. meaning: to/for the name.
+word: పని pani — work. + -ku: పనికి paniki. meaning: for work.
+Notice the suffix appears as -కు -ku or -కి -ki depending on the vowel before it. Same suffix, adjusted to fit — the seam still shows.
+And with "I", which changes its body first:
+నేను nēnu ("I") becomes నాకు nāku ("to me").
+Nēnu becomes nā- before the ending. Nouns don't do this; they just take the suffix.
+
+Grammar Lens: Why this matters.
+[a table of 4 rows, read aloud]
+pins down the case? Telugu -ku: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.
+carries number? Telugu -ku: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.
+carries declension class? Telugu -ku: no. a Latin ending like -īs: yes — 1st/2nd only.
+can you see the seam? Telugu -ku: yes: pēru + ku. a Latin ending like -īs: no — one fused lump.
+Telugu stacks: each suffix means one thing and sits in a fixed order, so you can point at every piece of a long word. Latin fuses — -īs is case and plural and declension, indivisible, and it doesn't even settle which case. Telugu's -ku is never ambiguous.
+That's what "agglutinative" means, and it's why Telugu words grow long without growing hard: they are built, not memorised.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pēru … pēruku"]
+[pause 8 seconds for the answer]
+[your turn — say: "nēnu … nāku" — "I" … "to me"]
+[pause 8 seconds for the answer]
+[your turn — say: "paniki" — "for work," from Ch. 5's పని]
+[pause 8 seconds for the answer]
+[your turn — say: the principle — "one suffix, one meaning, visible seam"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -కు (-ku) mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (నాకు nāku — nēnu shrinks to nā- first.) Why does it sometimes appear as -కి? (It adjusts to the preceding vowel — same suffix.) How does that differ from Latin? (Latin fuses case+number+declension into one ending — and -īs doesn't even fix which case; Telugu's carries one meaning, unambiguously, with the seam visible.) Next: the sentence where Telugu leaves out the subject entirely.
+
+
+Lesson 2 of 2.
+నాకు తెలుగు వచ్చు (nāku telugu vaccu) — "I know Telugu".
+
+Warm-up.
+[pause 2 seconds]
+Chapter 5 taught you how to say "I speak Telugu." Now say "I know Telugu." Telugu won't let you use nēnu — and the verb it uses instead will surprise you.
+
+You'll want to know: The sentence.
+నాకు తెలుగు వచ్చు. nāku telugu vaccu. literally: "to-me Telugu comes."
+[a table of 3 rows, read aloud]
+piece: నాకు nāku, "to me" — the dative from the last lesson.
+piece: తెలుగు telugu, Telugu (Ch. 5).
+piece: వచ్చు vaccu, "comes" — the very verb you learned in Ch. 4.
+Two things at once. You are not the subject — nēnu is gone, moved into the dative, and what's left unmarked is telugu. And the verb is literally "to come": a language you know is a thing that comes to you.
+
+Grammar Lens: Why: things that happen to you.
+Telugu sorts experiences from actions. Speaking is something you do, so Ch. 5 used nēnu. But knowing, liking, wanting, being hungry — these arrive at you. Telugu marks that by putting the person in the dative.
+[a table of 3 rows, read aloud]
+English frames it as: I know Telugu. Telugu frames it as: Telugu comes to me.
+English frames it as: I like it. Telugu frames it as: it is pleasing to me.
+English frames it as: I am cold. Telugu frames it as: cold is to me.
+English keeps one fossil of exactly this: "methinks" — me is a dative, "it seems to me." Telugu made it the rule.
+
+The word, taken apart - All four sisters do it.
+[a table of 4 rows, read aloud]
+language: Telugu. "I know [the language]": nāku telugu vaccu. the dative: -ku.
+language: Tamil. "I know [the language]": enakku tamiḻ teriyum. the dative: -ukku.
+language: Kannada. "I know [the language]": nanage kannaḍa gottu. the dative: -ge.
+language: Malayalam. "I know [the language]": enikku malayāḷam aṟiyām. the dative: -ikku.
+One construction across four languages, with four suffixes that are visibly the same suffix — -ku / -ukku / -ge / -ikku. The Dravidian family showing its bones, just as blanc/bianco/branco did for Romance.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "nāku telugu vaccu"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "nēnu telugu māṭlāḍatānu" (I speak) … "nāku telugu vaccu" (comes to me)]
+[pause 8 seconds for the answer]
+[your turn — say: the literal — "to-me Telugu comes"]
+[pause 8 seconds for the answer]
+[your turn — say: the four cousins — "-ku, -ukku, -ge, -ikku"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does నాకు తెలుగు వచ్చు (nāku telugu vaccu) literally say? ("To-me Telugu comes.") Which verb is doing the work, and where did you meet it? (వచ్చు "to come" — Chapter 4.) What has English got that Telugu hasn't? (A nominative "I" — nēnu is replaced by the dative nāku.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)

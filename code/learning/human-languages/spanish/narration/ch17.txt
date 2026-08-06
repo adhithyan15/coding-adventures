@@ -1,0 +1,176 @@
+Spanish, chapter 17: Chapter 17.
+4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 4.
+hablaría — the same weld, one tense over.
+
+Warm-up.
+[pause 2 seconds]
+If you understood the last lesson, this one is nearly free. Same machine, one part swapped.
+
+The forms.
+Whole infinitive again, new endings:
+[a table of 5 rows, read aloud]
+yo, hablaría.
+tú, hablarías.
+él/ella/usted, hablaría.
+nosotros, hablaríamos.
+ellos/ustedes, hablarían.
+Look hard at those endings. You already know them. They are exactly the -er/-ir imperfect endings from Chapter 16: comía, comías, comíamos, comían.
+
+Why they're the same.
+Because they are the same. The future welded the infinitive to the present of haber; the conditional welds it to the imperfect of haber:
+[a table of 2 rows, read aloud]
+tense: future. infinitive +: haber present (he, has, ha…) result: hablaré.
+tense: conditional. infinitive +: haber imperfect (había, habías…) result: hablaría.
+(Strictly, what fused was the older, shorter avía — which is why you get hablaría and not hablarhabía. The modern había is the same word, un-worn.)
+One trick, two tenses of the same auxiliary. That is the whole chapter.
+And the accent does the job Chapter 16 taught: it breaks the diphthong, so hablar-í-a is separate syllables.
+
+What it's for.
+[a table of 3 rows, read aloud]
+use: would — hypothetical. example: Hablaría con él. "I would speak with him."
+use: politeness — softening. example: ¿Podrías ayudarme? "Could you help me?"
+use: future-in-the-past. example: Dijo que hablaría. "He said he would speak."
+That last one is neat: from a point in the past, the conditional is the future. Which makes sense if you remember the imperfect is inside it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hablaría, hablarías, hablaría, hablaríamos, hablarían"]
+[pause 8 seconds for the answer]
+[your turn — say: the echo — "comía … hablaría" — same endings]
+[pause 8 seconds for the answer]
+[your turn — say: "Me gustaría…" ("I would like…") — the politest thing in Spanish]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "hablar + he … hablar + ía"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do the conditional endings attach to? (The whole infinitive, as in the future.) Where have you seen -ía/-ías/-íamos before? (The Ch.16 imperfect of -er/-ir verbs.) Why are they identical? (Because the conditional is the infinitive + the imperfect of haber.) So what's the one-line summary of this chapter? (Infinitive + haber — present gives the future, imperfect gives the conditional.) Next: the nine verbs that bend the infinitive first.
+
+
+Lesson 2 of 4.
+serán las tres — future form, present guess.
+
+Guessing now.
+Spanish uses the future to express a present conjecture:
+[a table of 3 rows, read aloud]
+Spanish: ¿Dónde estará Juan? natural meaning: Where can Juan be? (now).
+Spanish: Serán las tres. natural meaning: It must be three o'clock.
+Spanish: ¿Quién será? natural meaning: Who could that be?
+The verb's form is future, but the uncertain situation is present.
+
+Guessing about the past.
+The conditional moves the same conjecture backward:
+Serían las tres cuando llegó. — It must have been three when he arrived.
+These tenses grew from constructions with haber, "have." The semantic path from "have to" toward obligation and likelihood helps the guessing use feel less arbitrary.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "¿Dónde estará?" — where can he be?]
+[pause 8 seconds for the answer]
+[your turn — say: "Serán las tres" — it must be three]
+[pause 8 seconds for the answer]
+[your turn — say: "Serían las tres" — it must have been three]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does serán las tres necessarily refer to later? (No — it can guess the time now.) Which form guesses about the past? (Conditional: serían.) What older meaning helps connect future form to likelihood? (The construction with haber, "have to.")
+
+
+Lesson 3 of 4.
+hablaré — the future, welded shut.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 10 gave you one future (voy a hablar). Here is the other.
+
+The forms.
+Take the whole infinitive and add the endings:
+[a table of 5 rows, read aloud]
+yo, hablaré.
+tú, hablarás.
+él/ella/usted, hablará.
+nosotros, hablaremos.
+ellos/ustedes, hablarán.
+Notice something odd: you don't drop -ar first. Every other tense you've learned strips the ending off. The future keeps the infinitive whole and builds on top of it — comer becomes comeré, vivir becomes viviré. One set of endings for all three conjugations.
+
+Why the infinitive survives.
+Latin's own future — amābō, "I will love" — died out. Speakers replaced it with a phrase:
+amāre habeō — "I have to love" becomes "I will love".
+Infinitive + the verb habēre, "to have." Exactly the English "I have to go," which also slides toward the future.
+Then the phrase fused. Say hablar he fast enough, often enough, for enough centuries, and it becomes one word:
+[a table of 3 rows, read aloud]
+stage: two words. form: hablar + he.
+stage: squeezed. form: hablar-he.
+stage: welded. form: hablaré.
+So the endings aren't endings at all, historically. They are the present tense of haber worn down to a suffix:
+[a table of 5 rows, read aloud]
+haber (present): he. future ending: -é.
+haber (present): has. future ending: -ás.
+haber (present): ha. future ending: -á.
+haber (present): hemos. future ending: -emos.
+haber (present): han. future ending: -án.
+Line them up and they're the same list. A compound tense that closed up into a simple one — the exact reverse of what French and Italian did with their compound past, which stayed open as two words.
+
+The seam is still visible in Portuguese.
+Portuguese welded its future too (falarei is one word). But in formal European Portuguese a pronoun can still be lodged inside it:
+falá-lo-ei — "I will speak it".
+That -lo- is sitting in the join, between falar and ei. A leftover, not the normal pattern — Brazilian Portuguese doesn't do it, and neither does speech. But it shows the seam Spanish sealed over completely is still faintly open next door.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hablaré, hablarás, hablará, hablaremos, hablarán"]
+[pause 8 seconds for the answer]
+[your turn — say: "comeré, viviré" — the infinitive stays whole]
+[pause 8 seconds for the answer]
+[your turn — say: the weld — "hablar + he becomes hablaré"]
+[pause 8 seconds for the answer]
+[your turn — say: the two futures — "voy a hablar … hablaré"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do you add the future endings to? (The whole infinitive — you don't strip it.) What happened to Latin's own future? (It died; Romance replaced it with a phrase.) What was that phrase? (Infinitive + habēre, "I have to speak.") So what are the endings really? (The present of haber, fused on.) Which language still shows the seam? (Portuguese — falá-lo-ei.) Next: the same trick, with a different tense of haber.
+
+
+Lesson 4 of 4.
+Practice — ten stems, two tenses.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the section called The ten, in three families until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A handful of verbs bend the infinitive before welding. The good news: the same bent stem serves both tenses, so you learn ten shapes once and get twenty conjugations.
+
+The ten, in three families.
+1. Drop the vowel. The infinitive's last vowel just goes:
+There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, stem, future, conditional. Come back and look at it when you have stopped.
+2. Drop the vowel, then wedge in a d. Dropping alone would leave -n'r- or -l'r- right here, and Old Spanish refused to leave it that way — so a d slid in to prop the cluster apart:
+There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, would be, becomes, future. Come back and look at it when you have stopped.
+(Not that modern Spanish can't say those clusters — honra, sonrisa, alrededor are fine. It's that when this particular squeeze happened, the language fixed it. It even tried a second solution first: medieval Spanish also said terné, porné, verné, swapping the consonants around instead. The d-forms won.)
+Recognise those four? Every one is a member of the -go club from Chapters 12–13. The club had six — and the other two, hacer and decir, are sitting in family 3 below. So all six of the -go verbs are irregular here too; they just split into two shapes. The oldest, most-used verbs misbehave in the same places over and over.
+3. Chop hard. Two verbs shorten drastically:
+[a table of 2 rows, read aloud]
+verb: decir. future: diré. conditional: diría.
+verb: hacer. future: haré. conditional: haría.
+
+The test.
+Every irregular here is irregular in the stem only. The endings never change:
+irregular stem + the same -é/-ás/-á… or -ía/-ías…
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the d-group — "tendré, pondré, vendré, saldré"]
+[pause 8 seconds for the answer]
+[your turn — say: the choppers — "diré, haré"]
+[pause 8 seconds for the answer]
+[your turn — say: one verb, both tenses — "tendré … tendría"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Do the irregulars change the endings or the stem? (The stem only.) Why does tener become tendr-? (Dropping the vowel squeezed -n'r- together, and a d wedged in to fix it — medieval Spanish also tried terné.) How do the -go club verbs fare here? (All six are irregular — four take the -dr-, and hacer/decir chop instead.) Which two verbs chop hardest? (Decir becomes diré, hacer becomes haré.) Do irregular stems change the endings? (No.)

@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 21,
+  "title": "Dog and Cat",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:e2a78a4d8d90f4df",
+  "lessons": [
+    {
+      "id": "ML-C21-naaya-poocha",
+      "sequence": 510,
+      "title": "നായ, പൂച്ച — matching Tamil closely on both counts",
+      "headword": "നായ, പൂച്ച",
+      "romanization": "",
+      "gloss": "dog and cat — naaya continues the solid, ancient native Dravidian dog-root shared with Kannada and Tamil, no mystery; poocha matches Tamil's everyday cat-word closely, part of the pattern where Dravidian genuinely splits on \"cat\" more than \"dog\"",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b76808f04d3669a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam keeps close company with its nearest cousin, Tamil, on both words this time — while still fitting into the honest, more fragmented Dravidian picture for \"cat.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നായ (nāya, \"dog\") continues the same solid, native Proto-Dravidian root as Kannada's ನಾಯಿ (nāyi) and Tamil's own word — no mystery here at all, unlike every dog-word you've met elsewhere in this entire arc."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൂച്ച (pūcha, \"cat\") closely matches Tamil's everyday word for cat — a different root from Kannada's ಬೆಕ್ಕು (bekku, related instead to the word for \"wildcat\") and Telugu's పిల్లి (pilli, a separate Proto-Dravidian root of its own, most likely the source behind Sanskrit's biḍāla and Hindi's billī). So \"cat\" genuinely splits three ways across just these four Dravidian languages, even though \"dog\" mostly agrees."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāya\" — dog, same solid root as Kannada and Tamil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāya\" — dog, same solid root as Kannada and Tamil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pūcha\" — cat, matching Tamil's everyday word closely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pūcha\" — cat, matching Tamil's everyday word closely]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does നായ share Kannada's nāyi root? (Yes — the same solid, native Proto-Dravidian root.) Does പൂച്ച match Kannada's bekku or Tamil's everyday cat-word? (Tamil's — Kannada's bekku and Telugu's pilli both come from different roots entirely.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

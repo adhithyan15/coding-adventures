@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:44a46feca59b14fa",
+  "lessons": [
+    {
+      "id": "TA-C19-vayathu",
+      "sequence": 410,
+      "title": "உனக்கு எத்தனை வயது ஆகிறது? — Tamil actually has BOTH shapes",
+      "headword": "உனக்கு எத்தனை வயது ஆகிறது?",
+      "romanization": "",
+      "gloss": "how old are you? — literally \"to you how many years is becoming?\"; the SAME Sanskrit vayas word as Kannada/Telugu/Malayalam; Tamil actually spans BOTH grammatical shapes seen so far, from a plain possessive in casual speech to this more formal dative+verb construction",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cd19cdfa68e405f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same Sanskrit word one more time — but be careful here: Tamil isn't locked into just one of the two grammatical shapes you've now seen. It has both, in different registers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வயது — the same Sanskrit \"vigor/age\" word, a fourth time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வயது (vayathu) = \"age\" — the same Sanskrit वयस् (vayas, \"age, vigor,\" PIE cousin of Latin vīs) you've now met four times across Kannada, Telugu, Malayalam, and Tamil. All four Dravidian languages borrowed this exact Sanskrit word for \"age\" — none of them built a native alternative for this particular concept, unlike some others you've seen in this course."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vayathu\" — age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vayathu\" — age]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "Sanskrit vayas, Tamil vayathu, Latin vīs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: Sanskrit *vayas* · Tamil *vayathu* · Latin *vīs*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is Tamil's வயது the same Sanskrit word borrowed by all four Dravidian languages here? (Yes — none built a native alternative for this concept.) What did vayas originally include besides age? (Vigor.) Next: choose between Tamil's casual possessive and formal dative-plus-become shapes."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C19-age-register-grammar",
+      "sequence": 420,
+      "title": "Your age what? / To you how many years becomes?",
+      "headword": "உன் வயசு என்ன? / உனக்கு எத்தனை வயது ஆகிறது?",
+      "romanization": "",
+      "gloss": "casual Tamil uses a possessive age question while formal Tamil uses dative plus become",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15d09bbc0d429868",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil did not choose one age construction. Register selects between two shapes already visible elsewhere in the family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: Casual possessive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உன் வயசு என்ன? — \"your age what?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Casual speech uses a plain possessive with no dative and no verb, like Kannada and Telugu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Formal dative plus \"become\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உனக்கு எத்தனை வயது ஆகிறது? — \"to you how many years is becoming?\" எனக்கு இருபது வயது ஆகிறது. — \"to me twenty years is becoming.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Formal/written Tamil uses the dative experiencer plus ஆகிறது (aakirathu, \"is becoming,\" from aaku). Malayalam uses a similar dative shape but chooses \"exists\" instead."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not compress these into \"Tamil's one grammar.\" Both live in the language; setting and register choose between them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"un vayasu enna?\" — casual",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"un vayasu enna?\" — casual]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"unakku ettanai vayathu aakirathu?\" — formal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"unakku ettanai vayathu aakirathu?\" — formal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "\"enakku irupathu vayathu aakirathu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: \"enakku irupathu vayathu aakirathu\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which shape is casual? (Possessive: \"your age what?\") Which is formal? (Dative + aakirathu, \"become.\") Does Malayalam use the same verb? (No — it uses \"exists.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

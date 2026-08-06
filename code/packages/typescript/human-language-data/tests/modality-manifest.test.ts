@@ -149,9 +149,11 @@ describe("the modality manifest", () => {
   });
 
   it("records the policy the numbers were measured under", () => {
-    expect(buildModalityManifest([]).policy).toEqual({ maxLinearisableTableColumns: 0 });
-    // Raising the linearisable width is the change HL08 migration step 3 makes. The
-    // manifest must say which world its counts came from, or a reader cannot tell a
+    // 3, not the 0 this shipped at. The knob was 0 while no lineariser existed —
+    // claiming a table was speakable would have claimed a capability nothing
+    // implemented. HL-C16 built it, so the default is now its measured value.
+    expect(buildModalityManifest([]).policy).toEqual({ maxLinearisableTableColumns: 3 });
+    // The manifest must say which world its counts came from, or a reader cannot tell a
     // remediated corpus from a relaxed detector.
     const relaxed = buildModalityManifest([lesson({ id: "ES-C01-a", body: TABLE_BODY })], {
       maxLinearisableTableColumns: 4,
@@ -652,24 +654,43 @@ describe("corpus regression", () => {
   // all and `unstartableChapters` gains one. Routing that content through `input` blocks
   // would have held the drivable share flat by mislabelling it; the honest classification
   // is the one that costs the metric.
+  // HL-C16 then built the narration lineariser and moved the shipped table width from
+  // 0 to 3. This is the largest single move the corpus has ever taken, and none of it
+  // is new content — it is the same 1,133 lessons, re-judged by a detector that can now
+  // actually say what it means to speak a table aloud:
+  //
+  //   voice   725 -> 956  (+231)      sight  355 -> 124  (-231)
+  //   pen      53 ->  53  (unchanged) totalLessons 1133 (unchanged)
+  //   drivablePercent 64 -> 84
+  //   drivablePrefixTotal   558 -> 824
+  //   fullyDrivableChapters 195 -> 284
+  //   unstartableChapters   122 ->  44
+  //
+  // Every lesson that moved went `sight` -> `voice` and nothing else changed: the +231
+  // on `voice` is exactly the -231 on `sight`, `pen` is untouched, and no lesson was
+  // created or lost. `modality.test.ts` asserts that equality directly, at both widths,
+  // so this snapshot is corroborated by a size-independent control rather than standing
+  // alone. The prefix and chapter rollups move much further than the raw counts because
+  // a single unspeakable table near the front of a chapter used to block everything
+  // behind it — which is why unstartable chapters fall by nearly two thirds.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
       totalLessons: 1133,
-      voice: 725,
-      sight: 355,
+      voice: 956,
+      sight: 124,
       pen: 53,
-      drivableLessons: 725,
-      drivablePercent: 64,
+      drivableLessons: 956,
+      drivablePercent: 84,
       trackCount: 22,
       chapterCount: 377,
-      // Prerequisite order costs a commuter 167 of the 725 ear-only lessons: they sit
-      // behind a blocker in their own chapter and are unreachable in the car until
-      // HL-C17 linearises the tables or HL-C41 splits the pen segments out.
-      drivablePrefixTotal: 558,
-      fullyDrivableChapters: 195,
-      unstartableChapters: 122,
+      // Prerequisite order still costs a commuter 132 of the 956 ear-only lessons:
+      // they sit behind a blocker in their own chapter and stay unreachable in the car
+      // until HL-C17 reshapes the remaining wide tables.
+      drivablePrefixTotal: 824,
+      fullyDrivableChapters: 284,
+      unstartableChapters: 44,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

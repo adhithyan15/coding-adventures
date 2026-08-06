@@ -1,0 +1,2518 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 1,
+  "title": "Greetings",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:84f0b9839e6e01b9",
+  "lessons": [
+    {
+      "id": "TA-W01-curves-va-ka",
+      "sequence": 100,
+      "title": "Tamil's curves — the writing surface leaves a trace",
+      "headword": "தமிழ் எழுத்து",
+      "romanization": "tamiḻ eḻuttu",
+      "gloss": "why Tamil writing is so round, with the palm-leaf account presented as a qualified explanation",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:52e873e570e7a21e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: The script is the shape of its writing surface",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The script is the shape of its writing surface and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the first letter, look at a line of Tamil and notice what isn't there:"
+            },
+            {
+              "kind": "speech",
+              "text": "வணக்கம் (vaṇakkam)."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing joins the letters together, and there are far fewer corners than in Devanagari — no hanging head-line, and a great deal of curve. (Straight strokes do exist: most of these letters have a flat bar across the top.) The roundness has a usual explanation, and it is the best story in this chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: The script is the shape of its writing surface",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil was written for centuries on palm leaves, scratched with a metal stylus and then rubbed with soot to make the scratches show."
+            },
+            {
+              "kind": "speech",
+              "text": "A palm leaf has a grain, like wood. Draw a long straight line along that grain and the stylus can split the leaf. The usual account is that scribes bent their strokes in response: a curve crosses the fibres at an angle instead of running with them."
+            },
+            {
+              "kind": "speech",
+              "text": "Treat that as the standard explanation rather than a settled fact. The earliest Tamil writing — Tamil-Brahmi, cut into stone and pottery — is noticeably angular; the rounding came later, through the Vaṭṭeḻuttu (\"round script\") stage. And Devanagari was written on the same leaves without going round. So the leaf is one pressure among several, not a complete answer."
+            },
+            {
+              "kind": "speech",
+              "text": "It is still worth carrying, because it makes the right general point: the tool leaves fingerprints on the letters. Latin's straight strokes suit a wax tablet and a chisel; Tamil's curves suit a stylus and a leaf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "a curve crossing the imagined grain of a palm leaf",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: a curve crossing the imagined grain of a palm leaf]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "angular Tamil-Brahmi, later rounded Vaṭṭeḻuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: angular Tamil-Brahmi · later rounded Vaṭṭeḻuttu]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the usual reason for the curves — \"a straight line can split the leaf\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the usual reason for the curves — \"a straight line can **split the leaf**\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is Tamil round? (The usual explanation: it was incised on palm leaves, where a straight stroke along the grain can split them — though early Tamil-Brahmi was angular, so it is not the whole story.) What broader point does the account teach? (Tools and surfaces leave fingerprints on scripts.) Next: the vowel hidden inside a consonant, then வ and க."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "TA-W01-curves-va-ka-writing-surface",
+              "prompt": "What writing surface is usually linked to Tamil's rounded shapes?",
+              "assesses": [
+                "TA-SCRIPT-CURVES-VA-KA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "palm leaves",
+                "palm leaf",
+                "leaves of palm"
+              ],
+              "feedback": {
+                "correct": "Correct: the usual account links Tamil's curves to writing on palm leaves.",
+                "incorrect": "The usual explanation points to palm leaves, which straight strokes along the grain could split."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W01-abugida-va-ka",
+      "sequence": 110,
+      "title": "வ and க — the vowel inside each consonant",
+      "headword": "வ, க",
+      "romanization": "va, ka",
+      "gloss": "the inherent vowel and the first two Tamil letters, including க's position-driven sounds",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a2fe0a66292e2a3b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: The vowel you get for free",
+          "Script you'll notice: வ — \"va\"",
+          "Script you'll notice: க — \"ka\"",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The vowel you get for free, Script you'll notice: வ — \"va\", Script you'll notice: க — \"ka\" and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil's letters do not join and they carry many curves. Now learn the sound that arrives for free inside every consonant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: The vowel you get for free",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil is an abugida, like Devanagari: a consonant already contains a vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "க is not \"k\". க is \"ka\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Every consonant carries a built-in a until a later mark removes or replaces it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: வ — \"va\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a near-closed loop on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "a full-height arm across the top, ending in a descender on the right."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script you'll notice: க — \"ka\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a straight horizontal top bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a bowl hanging from its left end."
+            },
+            {
+              "kind": "speech",
+              "text": "a short right stroke that hooks left below."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: One letter, three sounds",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Devanagari separates क, ख, ग, घ. Tamil uses க across that space: k at the start of a word and when doubled (க்க), g after a nasal (ங்க), and a softer h-like sound between vowels. Position, not a new spelling, selects the sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil therefore needs only 18 consonant letters where Devanagari needs 33; its native words do not depend on those written distinctions."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "வ — \"left loop, top arm, descender\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: வ — \"left loop, top arm, descender\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "க — \"top bar, left bowl, hooking right stroke\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: க — \"top bar, left bowl, hooking right stroke\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"க is ka, not k\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"க is **ka**, not k\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "initial k, after a nasal g, between vowels soft h",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: initial *k* · after a nasal *g* · between vowels soft *h*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does க say alone? (Ka — the vowel is inherent.) What kind of script is this? (An abugida.) Which sounds can க spell? (k, g, and a softer h-like sound, chosen by position.) Draw வ and க."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W02-ma-retroflex-na",
+      "sequence": 120,
+      "title": "ம and ண — a loop, and a curled tongue",
+      "headword": "ம, ண",
+      "romanization": "ma, ṇa",
+      "gloss": "write ம and retroflex ண while training the tongue to curl back",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6ce88d858a0ad284",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ம",
+          "Script you'll notice: ண",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ம, Script you'll notice: ண and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two more letters, and with them you'll have every letter of the course's first word. One is easy. The other is a sound you may not be able to hear yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ம",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a straight vertical stroke on the LEFT."
+            },
+            {
+              "kind": "speech",
+              "text": "a horizontal along the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "a rounded arch closing it on the RIGHT."
+            },
+            {
+              "kind": "speech",
+              "text": "Get the sides the right way round. The upright is on the left and the curve on the right — which is the reverse of what most people guess, and the reverse of the Devanagari habit of hanging a shape off a right-hand spine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: ண",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a straight top bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a loop on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "two arches."
+            },
+            {
+              "kind": "speech",
+              "text": "a straight vertical on the right, down to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "The dot under the romanization — ṇ, not plain n — is doing real work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: Retroflex",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say English n. Your tongue touches just behind your teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "Now curl the tip of your tongue up and back toward the roof of your mouth, and say it again. That is ṇ, and it is a different letter in Tamil."
+            },
+            {
+              "kind": "speech",
+              "text": "English has no such sound and no way to write one, which is why an English speaker typically cannot hear the difference at first. That is expected. The ear learns it after the hand does, which is one good argument for writing the letters rather than only reading them."
+            },
+            {
+              "kind": "speech",
+              "text": "Retroflex sounds are a signature of the languages of India — they show up across Tamil, Telugu, Kannada, Malayalam, Hindi and Sanskrit alike, in families that are otherwise unrelated to each other. It's one of the features that makes South Asia a linguistic area: neighbouring languages that borrowed a sound from each other rather than inheriting it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ம — \"left upright, bottom, right arch\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ம — \"left upright, bottom, **right** arch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ண — \"top bar, left loop, two arches, straight vertical\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ண — \"top bar, left loop, **two** arches, straight vertical\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plain n, then curl the tongue back — ṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: plain *n*, then curl the tongue back — **ṇ**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Draw ம — which side is the upright on? (The left; the arch closes it on the right.) Draw ண — what makes it not ன? (One extra arch: ண has two arches where ன has one. Both end in the same straight vertical.) What does the dot in ṇ mean? (Retroflex — the tongue curls back to the roof of the mouth.) Why can't you hear it yet? (English has no such sound; the ear learns it after the hand.) Next: place Tamil's three n's along one backward walk through the mouth."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W02-three-ns",
+      "sequence": 130,
+      "title": "ந, ன, ண (na, ṉa, ṇa) — three stops on one tongue-map",
+      "headword": "ந, ன, ண",
+      "romanization": "na, ṉa, ṇa",
+      "gloss": "Tamil writes dental, alveolar, and retroflex n with three separate letters",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0a6a4e9cd2c74425",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: The backward walk",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The backward walk and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English writes one n. Tamil keeps three tongue positions apart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: The backward walk",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "sound",
+                "tongue"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "letter: ந. sound: na. tongue: against the teeth (dental).",
+                "letter: ன. sound: ṉa. tongue: on the ridge behind the teeth (alveolar).",
+                "letter: ண. sound: ṇa. tongue: curled back to the roof (retroflex)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Move backward: teeth becomes ridge becomes curled roof. English spells all three with one letter and initially hears them as the same sound; Tamil uses separate letters because its words depend on the contrast."
+            },
+            {
+              "kind": "speech",
+              "text": "You will draw ந and ன when nandri needs them. For now compare the last pair: ண is ன with one extra arch. Both open with a top bar and loop and finish with the same vertical. ன has one middle arch; ண has two."
+            },
+            {
+              "kind": "speech",
+              "text": "Retroflex sounds occur across unrelated South Asian language families. That shared geography makes the region a linguistic area: neighbors can borrow a sound pattern without inheriting it from one ancestor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dental ந at the teeth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dental ந at the teeth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alveolar ன at the ridge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: alveolar ன at the ridge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "retroflex ண with the tongue curled back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: retroflex ண with the tongue curled back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "one arch in ன, two arches in ண",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: one arch in ன · two arches in ண]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many n-letters does Tamil have? (Three.) What separates them? (Tongue position: dental, alveolar, retroflex.) Which two differ by one arch? (ன has one; ண has two.) Next: remove the vowel from a consonant."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W03-pulli-vanakkam",
+      "sequence": 140,
+      "title": "் (puḷḷi) — the dot that leaves both letters visible",
+      "headword": "்",
+      "romanization": "puḷḷi",
+      "gloss": "the puḷḷi — a visible dot that removes the inherent vowel without creating a conjunct",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9d8862d16c87f51c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: The puḷḷi",
+          "Script you'll notice: What Tamil does not do",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The puḷḷi, Script you'll notice: What Tamil does not do and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every consonant carries a built-in a. So how do you write a consonant with no vowel — the k in vaṇakkam, or the m at the end?"
+            },
+            {
+              "kind": "speech",
+              "text": "One dot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: The puḷḷi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "க = ka becomes க் = k."
+            },
+            {
+              "kind": "speech",
+              "text": "புள்ளி (puḷḷi) means simply \"the dot.\" Written above a letter, it removes the inherent vowel. That's the whole rule."
+            },
+            {
+              "kind": "speech",
+              "text": "A standing note for this whole track. These lessons quote real Tamil words and examples, and most of them contain letters the track has not taught you to draw yet — puḷḷi's own name uses ப, ள and the ு sign, and the comparisons below reach for others again. Read anything printed here; only draw the letters a lesson has actually broken into strokes. The data file behind this track covers 11 letters so far and says so (complete: false) — it grows as the chapters need it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: What Tamil does not do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If you have done the Devanagari track, this is the moment to notice a real divergence."
+            },
+            {
+              "kind": "speech",
+              "text": "In Devanagari, killing the vowel makes the bare consonant fuse with the next one into a squeezed conjunct — स् + त becomes स्त, and the first letter loses its spine. The virama usually disappears into the ligature."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil doesn't do that. The dot stays visible, and both letters keep their full shape:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Devanagari, स् + त becomes स्त — a new fused shape.",
+                "Tamil, க் + க becomes க்க — two letters, dot intact."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The consequence is arithmetic. Tamil's whole set is 247 characters: 12 vowels + 18 consonants + the 216 consonant-vowel combinations + the āytam ஃ. That is genuinely all of them. Devanagari's conjuncts run to many hundreds of ligature shapes on top of its letters, each to be learned or at least recognised."
+            },
+            {
+              "kind": "speech",
+              "text": "(One honest exception: Tamil does have a few ligatures borrowed with Sanskrit words — க்ஷ kṣa and ஸ்ரீ śrī. They sit outside the 18 native consonants and outside the 247.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "க் — \"க, then the dot above\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: க் — \"க, then the dot above\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "க்க — two full letters, dot intact, no fusing",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: க்க — two full letters, dot intact, **no fusing**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the puḷḷi do, and what does the word mean? (Removes the inherent vowel; puḷḷi is simply \"the dot\".) What does Devanagari do that Tamil doesn't? (Fuses the letters into a conjunct — Tamil keeps both shapes and the dot.) What does Tamil get in exchange? (A much smaller character set — 247, with almost no ligatures: only the borrowed க்ஷ and ஸ்ரீ.) Next: assemble that visible dot into வணக்கம் (vaṇakkam)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W03-write-vanakkam",
+      "sequence": 150,
+      "title": "வணக்கம் (vaṇakkam) — the first whole written word",
+      "headword": "வணக்கம்",
+      "romanization": "vaṇakkam",
+      "gloss": "assemble the first greeting and hold its doubled consonant",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:19ea78f7643992a1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: Build the word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: Build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know the four letter bodies and the vowel-killing dot. Assemble them left to right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: Build the word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "piece: வ, va, Lesson 1.",
+                "piece: ண, ṇa, Lesson 2.",
+                "piece: க், k — க with the dot, last lesson.",
+                "piece: க, ka, Lesson 1.",
+                "piece: ம், m — ம with the dot, this lesson."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "வ, ண, க், க, ம் becomes வணக்கம் (vaṇakkam)."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear two details. க்க is a doubled consonant: hold it, vaṇak-kam, not vaṇakam. Tamil distinguishes single from double consonants. Final ம் is a bare m, so the word closes instead of trailing into ma."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the first word of the course, written by hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "க் — க with the dot",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: க் — க with the dot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "க்க — two full letters, dot intact",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: க்க — two full letters, dot intact]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "வணக்கம் (vaṇakkam) — five pieces, left to right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **வணக்கம்** — five pieces, left to right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vaṇak-kam\" — hold the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vaṇa**k-k**am\" — hold the middle]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write வணக்கம் (vaṇakkam). What is special about க்க? (It is doubled and held.) Why does the word end in m, not ma? (Final ம் carries a puḷḷi.) Next: write the letters and vowel sign inside nandri."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W04-vowel-signs-nandri",
+      "sequence": 160,
+      "title": "ந, ன, ற (na, ṉa, ṟa) — the letter bodies inside நன்றி",
+      "headword": "ந, ன, ற",
+      "romanization": "na, ṉa, ṟa",
+      "gloss": "write the remaining two n-letters and the hard r needed for நன்றி",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0396b3f438d3d484",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: The two remaining n's",
+          "Script you'll notice: ற — \"ṟa\", the hard r",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The two remaining n's, Script you'll notice: ற — \"ṟa\", the hard r and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Lesson 2 showed you that Tamil has three n-letters and promised you'd draw the other two when a word needed them. Chapter 1's thank you needs both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: The two remaining n's",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ந — na, the dental n, tongue against the teeth:"
+            },
+            {
+              "kind": "speech",
+              "text": "a straight top bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a vertical on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "a second vertical in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "a right stroke that curls below the baseline and sweeps left into a descender."
+            },
+            {
+              "kind": "speech",
+              "text": "ன — ṉa, the alveolar n, tongue on the ridge behind the teeth:"
+            },
+            {
+              "kind": "speech",
+              "text": "a straight top bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a loop on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "one arch."
+            },
+            {
+              "kind": "speech",
+              "text": "a straight vertical on the right, down to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare it with Lesson 2's ண: same top bar, same loop, same closing vertical. ண simply has a second arch inserted before that vertical. So ன is ண minus one arch — one arch for ன, two for ண. That is the whole contrast, and it is the cheapest way to keep them apart."
+            },
+            {
+              "kind": "speech",
+              "text": "With Lesson 2's ண (retroflex), that completes the set. Same consonant to an English ear; three letters, three tongue positions, in Tamil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: ற — \"ṟa\", the hard r",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "two arches side by side — giving it three legs down to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "the right leg keeps going below the baseline, sweeps left, and drops into a long descender."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the tallest thing you have drawn: most Tamil letters sit on the baseline, and ற hangs well beneath it."
+            },
+            {
+              "kind": "speech",
+              "text": "The dot under ṟ marks it as the hard or trilled r, distinct from Tamil's other r. You'll meet the contrast properly later; for now, learn the shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ந — \"top bar, two verticals, then the curl that sweeps left\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ந — \"top bar, **two** verticals, then the curl that sweeps left\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ன — \"top bar, left loop, one arch, straight vertical\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ன — \"top bar, left loop, **one** arch, straight vertical\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ற — \"two arches, then the leg that sweeps left and drops\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ற — \"two arches, then the leg that sweeps left and drops\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name Tamil's three n-letters and their tongue positions. (ந dental, ன alveolar, ண retroflex.) What are a consonant's three possibilities so far? (Keep the built-in a or remove it with the puḷḷi.) Which letter hangs below the baseline? (ற, the hard ṟ.) Next: replace the vowel, assemble நன்றி, and hear why English often writes nandri."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W04-i-sign-write-nandri",
+      "sequence": 170,
+      "title": "ி and நன்றி — replace the vowel, then hear ndr",
+      "headword": "ி, நன்றி",
+      "romanization": "i, naṉṟi / nandri",
+      "gloss": "replace the inherent vowel with i, assemble நன்றி, and hear nasal-triggered voicing",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fc6618acb28f2b17",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: The first vowel sign",
+          "Script you'll notice: Assemble நன்றி",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The first vowel sign, Script you'll notice: Assemble நன்றி and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A consonant can keep a or lose it under a puḷḷi. The third option is to replace it with a vowel sign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: The first vowel sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ற = ṟa becomes றி = ṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "ி is a hook above and to the right. The consonant keeps its shape; the sign hangs from it. Later, ை (ai) will appear before its consonant on the page but after it in speech, the same eye/ear trap as Devanagari ि."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: Assemble நன்றி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ந, ன், றி becomes நன்றி."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "piece: ந, na — dental, last lesson.",
+                "piece: ன், ṉ — alveolar, with puḷḷi, Lessons 3–4.",
+                "piece: றி, ṟi — ற plus the i-sign, this lesson."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: Why nandri has a d-sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ன் + ற is pronounced close to ndr. This follows a broader Tamil rule: a nasal voices the stop after it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "ந் + த, nd, வந்து vandu.",
+                "ண் + ட, ṇḍ, retroflex pair.",
+                "ன் + ற, ndr, நன்றி."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each n-letter creates its own cluster. That payoff explains both the three spellings and the common English romanization nandri, whose d is heard but not separately written."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "றி — ற plus the hook above right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: றி — ற plus the hook above right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "நன்றி — three pieces",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **நன்றி** — three pieces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ன் + ற = ndr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ன் + ற = **ndr**\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are a consonant's three vowel choices? (Keep inherent a, remove it with puḷḷi, or replace it with a vowel sign.) Where does ி attach? (Above and right.) Why is naṉṟi often written nandri? (ன் + ற is pronounced ndr because a nasal voices the following stop.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-aam",
+      "sequence": null,
+      "title": "ஆம் (ām) — \"yes\"",
+      "headword": "ஆம்",
+      "romanization": "",
+      "gloss": "yes (ām)",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2d5faca18cc1086b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A two-letter word, and your first look at how Tamil writes a vowel that stands on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Tamil.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ஆ = \"ā\" (a long \"aa\"). When a word starts with a vowel, Tamil uses a full independent vowel letter like this — not the little vowel sign you hook onto a consonant. (Compare: the \"i\" hooked onto ற to make றி last lesson; here the vowel leads, so it gets its own full letter.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ம் = \"m,\" with the puḷḷi dot removing its built-in a — the same bare m that ended vaṇakkam."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ஆ, ம் = ā-m, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "ஆம் = ām = \"yes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆம் (ām) is the plain \"yes.\" Stretch it for emphasis and you get ஆமாம் (āmām) — \"yes, indeed / that's right,\" a doubling-up that Tamil loves for warmth and certainty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: Tamil often answers by echoing the verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ām exists, but Tamil speakers frequently say \"yes\" by repeating the verb of the question instead. Asked \"vandāyā?\" (\"did you come?\"), a natural yes is \"vandēn\" (\"I came\"). English leans on a single all-purpose yes; Tamil often answers with the action itself. Bank ām as the simple word, and don't be surprised when a \"yes\" comes back as a whole verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā, m becomes \"ām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ā · m → \"ām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the emphatic \"āmām\" — \"yes, indeed\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the emphatic \"āmām\" — \"yes, indeed\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why ஆ is a full letter here (the word starts with the vowel)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why ஆ is a *full* letter here (the word starts with the vowel)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ஆம். Why is ஆ a full vowel letter rather than a vowel sign? (The word begins with the vowel — nothing to hook onto.) What's the emphatic \"yes\"? (āmām.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-illai",
+      "sequence": null,
+      "title": "இல்லை (illai) — \"no,\" and how Tamil says a thing is not",
+      "headword": "இல்லை",
+      "romanization": "",
+      "gloss": "no / there isn't (illai — the negative)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ba581d5f20e88ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The partner of ām. But where English \"no\" is a small flat word, Tamil's illai is really a tiny verb meaning \"it is not / there is not\" — and that's a window into how the language thinks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Tamil.)"
+            },
+            {
+              "kind": "speech",
+              "text": "இ = \"i\" — an independent vowel (the word starts with it, so it gets a full letter, exactly like ஆ in ām)."
+            },
+            {
+              "kind": "speech",
+              "text": "ல் = \"l,\" with the puḷḷi dot removing its vowel becomes bare l."
+            },
+            {
+              "kind": "speech",
+              "text": "லை = \"lai\" — the consonant ல (la) carrying the vowel sign ை, which makes \"ai.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: இ, ல், லை = i-l-lai, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "இல்லை = illai."
+            },
+            {
+              "kind": "speech",
+              "text": "(Notice ல் + லை — a bare l leaning into lai, giving the doubled \"ll.\")"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இல்லை (illai) is built on the root இல் (il), the idea of \"not-being, absence.\" So illai is not really the adjective \"no\" — it is the statement \"[it] is not,\" \"[there] is not.\" Its positive twin is உண்டு (uṇḍu), \"there is.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: Tamil negates by being, not by a \"not\"-word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English changes a sentence to negative by inserting not / no: \"there is a book\" becomes \"there is no book.\" Tamil instead swaps in the negative verb of existence:"
+            },
+            {
+              "kind": "speech",
+              "text": "puttakam uṇḍu — \"there is a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "puttakam illai — \"there is not a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So illai does double duty: on its own it's the everyday \"no,\" and inside a sentence it's the word that makes the whole thing negative. Learn it as \"is not,\" and both uses fall out naturally. (This — negation carried by a special verb rather than a particle — is a deeply Dravidian habit, quite unlike English or Hindi.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "i, l, lai becomes \"illai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: i · l · lai → \"illai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — ām (\"yes\") / illai (\"no\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *ām* (\"yes\") / *illai* (\"no\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"puttakam illai\" — \"there is no book\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"puttakam illai\" — \"there is no book\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read இல்லை. Literally, is it closer to \"no\" or to \"is not\"? (\"Is not / there is not.\") What is its positive twin? (uṇḍu, \"there is.\") How does Tamil make a sentence negative — with a particle like English not, or by swapping in a negative verb? (A negative verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-nandri",
+      "sequence": null,
+      "title": "நன்றி (naṉṟi) — \"thank you,\" literally \"goodness\"",
+      "headword": "நன்றி",
+      "romanization": "",
+      "gloss": "thank you (naṉṟi — \"goodness, gratitude\")",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ea833da2a696d9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word for gratitude — and the doorway to one of Tamil's most famous features: it hears differences between sounds English throws into one bin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Tamil.) Three consonants and a vowel sign:"
+            },
+            {
+              "kind": "speech",
+              "text": "ந = \"na\" — a dental n (tongue on the teeth, like the n in Spanish nada)."
+            },
+            {
+              "kind": "speech",
+              "text": "ன் = \"ṉ\" — a different n, alveolar (tongue on the ridge just behind the teeth), with a puḷḷi dot killing its vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "ற = \"ṟa\" — a hard r/ṟ sound made with a tap further back."
+            },
+            {
+              "kind": "speech",
+              "text": "ி is a vowel sign that changes the built-in a to \"i\": ற + ி becomes றி = \"ṟi.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ந, ன், றி = na-ṉ-ṟi, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "நன்றி = naṉṟi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நன்றி (naṉṟi) grows from the root நல் / நன் (nal / naṉ), \"good, goodness\" — the same root inside nanmai (\"good deed\"), nallavan (\"a good man\"). So naṉṟi is literally \"goodness\", and to say it is to name the good someone has done you. Gratitude, in Tamil, is just \"the good [you did].\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: Tamil hears three of every n, l, and r",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met ந (dental na), ன (alveolar ṉa), and last lesson ண (retroflex ṇa) — three n-letters, for three tongue positions:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Letter",
+                "Sound",
+                "Tongue"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Letter: ந. Sound: dental n. Tongue: on the teeth.",
+                "Letter: ன. Sound: alveolar ṉ. Tongue: on the ridge behind the teeth.",
+                "Letter: ண. Sound: retroflex ṇ. Tongue: curled back to the roof."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil does the same for l (ல ள ழ) and r (ர ற). English fuses all these into single letters and never notices; Tamil keeps them distinct, and they change meaning — so learning to hear them is learning to read. Don't drill the whole set now; just know the differences are real and will return word by word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na, ṉ, ṟi becomes \"naṉṟi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: na · ṉ · ṟi → \"naṉṟi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three n's — ந (teeth), ன (ridge), ண (curled back)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three *n*'s — ந (teeth), ன (ridge), ண (curled back)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nal — good; naṉṟi — the good you did\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nal — good; naṉṟi — the good you did\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read நன்றி. What does it literally mean, and from what root? (\"Goodness,\" from nal \"good.\") How many distinct n-sounds does Tamil write, and what tells them apart? (Three — dental, alveolar, retroflex — by tongue position.) Next: compare the gratitude word across the family and choose its register."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-nandri-family-register",
+      "sequence": null,
+      "title": "நன்றி — a native family word with a register edge",
+      "headword": "நன்றி / നന്ദി",
+      "romanization": "",
+      "gloss": "Tamil and Malayalam kept the native goodness-word while explicit thanks can sound marked among intimates",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b71da01982a1c62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Naṉṟi literally names goodness. Its family distribution mirrors the greeting split you just saw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Thanks\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Tamil. \"Thanks\": naṉṟi. Source: native nal, \"good\".",
+                "Language: Malayalam. \"Thanks\": nandi. Source: the same Dravidian word.",
+                "Language: Kannada. \"Thanks\": dhanyavāda. Source: Sanskrit.",
+                "Language: Telugu. \"Thanks\": dhanyavādamulu. Source: Sanskrit.",
+                "Language: Hindi. \"Thanks\": dhanyavād / shukriyā. Source: Sanskrit / Perso-Arabic."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil and its closest sister Malayalam kept the native word. Kannada and Telugu borrowed Sanskrit dhanyavāda, repeating the split seen with \"hello.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Where explicit thanks fits",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spoken naṉṟi can feel a little formal. Everyday warmth may live in a smile or nod; among close family an explicit thank-you can sound oddly distant. Use romba naṉṟi, \"many thanks,\" when you want to mark gratitude strongly."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a register tendency, not a ban: the relationship and moment determine whether naming the gratitude feels warm or ceremonious."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tamil naṉṟi, Malayalam nandi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Tamil *naṉṟi* · Malayalam *nandi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"romba naṉṟi\" — many thanks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"romba naṉṟi\" — many thanks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "close-family routine favor becomes warmth may be nonverbal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: close-family routine favor → warmth may be nonverbal]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which sister shares Tamil's native gratitude word? (Malayalam.) What did Kannada and Telugu borrow? (Sanskrit dhanyavāda.) Why can explicit naṉṟi sound marked? (Among intimates, gratitude may be assumed; the word can feel formal.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-practice",
+      "sequence": null,
+      "title": "Chapter 1 — recap, and how Tamil says goodbye",
+      "headword": "(recap)",
+      "romanization": "",
+      "gloss": "Chapter 1 recap + the Tamil farewell",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fc5ad0e85df4288",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five words, and with them a first handful of Tamil letters read straight off the page. Let's gather them — and add the farewell, which carries a small piece of Tamil culture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Read them back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sound each out, left to right, before checking:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Read",
+                "",
+                "Meaning"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Read: வணக்கம், vaṇakkam. Meaning: hello / greetings.",
+                "Read: நன்றி, naṉṟi. Meaning: thank you.",
+                "Read: ஆம், ām. Meaning: yes.",
+                "Read: இல்லை, illai. Meaning: no / there isn't.",
+                "Read: சரி, sari. Meaning: okay / correct."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The letters that did it: consonants carry a built-in \"a\"; a puḷḷi dot removes it; a vowel sign (like ி for \"i,\" ை for \"ai\") swaps the built-in vowel; and a word-initial vowel gets a full letter (ஆ, இ). Plus the big idea — Tamil hears three n's, three l's, two r's, and lets one letter stand for several stop-sounds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The farewell — why Tamil won't just say \"I'm leaving\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil has no casual \"bye.\" The everyday goodbye is:"
+            },
+            {
+              "kind": "speech",
+              "text": "போய் வருகிறேன் (pōy varugiṟēṉ) — literally \"I'll go and come [back].\""
+            },
+            {
+              "kind": "speech",
+              "text": "And the reply is போய் வா (pōy vā) — \"go, and come [back].\" You never sign off with a bare \"I am going\": saying only \"I go\" sounds ominous, like a final departure. So you promise a return — go and come back — every single time. It's a whole worldview folded into a goodbye. (You can also simply repeat வணக்கம் (vaṇakkam), which works to part as well as to meet.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — vaṇakkam, naṉṟi, ām, illai, sari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — vaṇakkam · naṉṟi · ām · illai · sari]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "greet and thank — \"vaṇakkam!\" … \"naṉṟi.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: greet and thank — \"vaṇakkam!\" … \"naṉṟi.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the farewell exchange — \"pōy varugiṟēṉ\" / \"pōy vā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the farewell exchange — \"pōy varugiṟēṉ\" / \"pōy vā\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read all five words aloud. What does the everyday Tamil goodbye literally mean, and why isn't it just \"I'm leaving\"? (\"I'll go and come back\" — a bare \"I go\" sounds like a final parting, so you promise a return.) What does a puḷḷi do? (Removes a consonant's built-in a.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: introducing yourself — en peyar… (\"my name…\"), and Tamil's nī / nīṅgaḷ (familiar / respectful \"you\")."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-sari",
+      "sequence": null,
+      "title": "சரி (sari) — \"okay,\" the word that oils every conversation",
+      "headword": "சரி",
+      "romanization": "",
+      "gloss": "okay / alright / correct (sari)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aad4a63947d1d3ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "If ām is \"yes\" and illai is \"no,\" sari is the easy middle: \"okay, alright, fine, agreed.\" You'll hear it constantly — and it hides a neat fact about the Tamil alphabet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Tamil.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ச = \"sa\" (here) — but this one letter also does the job of English s, ch, and j: at the start of a word it's often \"sa,\" between vowels it softens. Tamil simply doesn't give voiced/unvoiced or s/ch their own separate letters — context decides the sound. (You saw the same economy with க, which can be k, g, or h depending on where it sits.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ரி = \"ri\" — the consonant ர (ra) carrying the vowel sign ி for \"i.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ச, ரி = sa-ri, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "சரி = sari = \"okay / correct.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரி (sari) is the native Tamil word for \"correct, even, level,\" and by an easy hop, \"okay, agreed.\" It is the verbal nod of the language: propose a plan and the reply is a single warm \"sari.\" Repeat it — \"sari, sari\" — and it means \"yes yes, alright, enough said.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one letter, several sounds",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English mostly gives each sound its own letter; Tamil does the opposite for its stop-consonants — one letter per position of the mouth, and the voicing (k vs g, s vs ch) is filled in by rules of position. That's why a learner can't always predict the exact sound from the letter alone at first — but it also means Tamil has a strikingly small alphabet for the sounds it covers. You'll pick up the position-rules by ear, word by word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sa, ri becomes \"sari\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sa · ri → \"sari\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday triple — ām (yes), illai (no), sari (okay)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday triple — *ām* (yes) · *illai* (no) · *sari* (okay)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sari, sari\" — \"alright, alright\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sari, sari\" — \"alright, alright\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read சரி. What does it literally mean, and what does it do in conversation? (\"Correct/even\" becomes \"okay, agreed.\") Why can't you always predict whether ச is \"sa\" or \"cha\"? (Tamil uses one letter per mouth-position; the exact sound depends on where it sits in the word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-vanakkam",
+      "sequence": null,
+      "title": "வணக்கம் (vaṇakkam) — \"greetings,\" a small act of respect",
+      "headword": "வணக்கம்",
+      "romanization": "",
+      "gloss": "hello / greetings (vaṇakkam — \"reverence, homage\")",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d3f5255c32d643c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first Tamil word, and the one you'll use most. Like namaste, it is literally a gesture of respect turned into a word. You'll learn to read it and to understand it in the same breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(If you already read Tamil, skim this — it's here so the book needs no prior knowledge.) Tamil is written left to right, and — like the Indian scripts generally — every consonant carries a built-in \"a\" unless something removes it."
+            },
+            {
+              "kind": "speech",
+              "text": "வ = \"va\", க = \"ka\", ம = \"ma\" — each consonant with its built-in a."
+            },
+            {
+              "kind": "speech",
+              "text": "ண = \"ṇa\" — a retroflex n, made with the tongue curled back to the roof of the mouth. Tamil keeps several n-sounds and several l-sounds apart; this is the curled-back one. (More on that next lesson.)"
+            },
+            {
+              "kind": "speech",
+              "text": "க் — the dot on top (called a puḷḷi) kills the built-in vowel, leaving a bare \"k.\" So the double க்க is \"k-ka\" = a held \"kk.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Put them in order, left to right: வ, ண, க், க, ம் = va-ṇa-k-ka-m, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "வணக்கம் = vaṇakkam."
+            },
+            {
+              "kind": "speech",
+              "text": "You just read Tamil. Two facts did most of it: consonants carry a, and a puḷḷi dot removes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வணக்கம் (vaṇakkam) comes from the verb வணங்கு (vaṇaṅku), \"to bow, to bend, to pay homage.\" Add the ending that turns a verb into a noun of the action, and you get vaṇakkam = \"a bowing, an act of reverence\" — the same idea as Sanskrit namaste (\"I bow to you\"), but built from a native Tamil root, not a borrowed one."
+            },
+            {
+              "kind": "speech",
+              "text": "That last point is the whole personality of Tamil: it is an old language proud of its own word-stock, and it often keeps a home-grown word where its neighbours reached for Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read it left to right — va, ṇa, k, ka, m becomes \"vaṇakkam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read it left to right — va · ṇa · k · ka · m → \"vaṇakkam\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the puḷḷi dot on க் does (kills its vowel: ka becomes k)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the *puḷḷi* dot on க் does (kills its vowel: ka → k)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vaṇaṅku — to bow; vaṇakkam — an act of reverence\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vaṇaṅku — to bow; vaṇakkam — an act of reverence\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read வணக்கம் (vaṇakkam). What verb is it built from, and what does that verb mean? (vaṇaṅku, \"to bow / pay homage.\") What does a puḷḷi do to a consonant? (Removes its built-in a.) Is the root borrowed from Sanskrit? (No — it is native Tamil.) Next: compare that native greeting across the family and learn where it fits."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-vanakkam-family-register",
+      "sequence": null,
+      "title": "வணக்கம் (vaṇakkam) — one bow, two lexical loyalties",
+      "headword": "வணக்கம் / நமஸ்காரம்",
+      "romanization": "",
+      "gloss": "Tamil kept a native bow-word where its neighbors borrowed Sanskrit, and uses it across settings",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22c3d53d824d6cd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Vaṇakkam names a bow. Neighboring languages name the same gesture with a different inherited or borrowed root."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Hello\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Tamil. \"Hello\": vaṇakkam. Source: native Dravidian vaṇaṅku.",
+                "Language: Kannada. \"Hello\": namaskāra. Source: Sanskrit.",
+                "Language: Telugu. \"Hello\": namaskāram. Source: Sanskrit.",
+                "Language: Malayalam. \"Hello\": namaskāram. Source: Sanskrit.",
+                "Language: Hindi. \"Hello\": namaste. Source: Sanskrit.",
+                "Language: English. \"Hello\": hello. Source: Germanic hailing-call."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four tracks use Sanskrit namas-, \"bow.\" Tamil kept its own verb. The gesture and social meaning match; the lexical loyalty differs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Where the word fits",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say vaṇakkam with pressed palms or a small head-bow: the gesture is the word. It works as hello and goodbye, at any time, to almost anyone. It is respectful without being stiff; cinema and formal speech can also use it as a ringing one-word salutation to a whole room."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vaṇakkam\" with a small bow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vaṇakkam\" with a small bow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "Tamil vaṇaṅku, neighbors Sanskrit namas-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: Tamil *vaṇaṅku* · neighbors Sanskrit *namas-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "greeting or parting becomes வணக்கம் (vaṇakkam) works",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: greeting or parting → **வணக்கம்** works]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Dravidian language kept its native bow-word? (Tamil.) What did the neighbors borrow? (Sanskrit namas-.) Can vaṇakkam greet and part? (Yes — it is an all-day respectful salutation.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

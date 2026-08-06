@@ -4,6 +4,85 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added — HL08 narration export: the drivable course, out loud (HL-C16)
+
+- Add `src/speech.ts`: the shared judgement of **what can be said aloud**. Markdown
+  inline → words a voice can pronounce (emphasis, code fences, link destinations and
+  the linguist's reconstruction asterisk removed; `→` `←` `·` given spoken readings),
+  and Markdown tables → spoken utterances or a *reasoned refusal*. Both `modality.ts`
+  and `narration.ts` import it, so "this lesson is drivable" and "the export can
+  actually narrate this lesson" are the same question asked once.
+- Add `src/narration.ts`: the pure narration builder. From the canonical lesson AST it
+  produces typed segments — `speech`, `pause`, `repeat`, `prompt`, `table`,
+  `table-skipped`, `activity` — plus the continuous plain-text script rendered from
+  them. This is the **audio-script output HL04's one-source pipeline diagram has named
+  since it was written and which nothing had ever built**.
+- Add `src/narration-cli.ts`: `--write` / `--check`, modelled joint for joint on
+  `book-cli.ts`. Writes `<language>/narration/chNN.txt` and `.json` for all 375
+  chapters plus a hash manifest at `core/generated-narration-hashes.json`. `--check`
+  compares byte for byte and exits 1, so a lesson edited without re-running the
+  exporter fails the build instead of leaving a voice assistant confidently teaching a
+  lesson that no longer exists.
+- **`[PAUSE Ns]`, `[REPEAT xN]` and `[YOU …: …]` are preserved as structured
+  directives, not flattened into prose.** Cue parsing is a depth-tracking bracket scan,
+  because the corpus nests brackets inside cues for real
+  (`[YOU SAY: the pattern — "[nā] [pēru]"]`), and a Markdown link that is not a cue is
+  handed back intact rather than mistaken for one.
+- **A `[YOU SAY: …]` cue is never treated as an answer key.** Cues become `prompt`
+  segments with `scored: false`; only `hl-activity` contracts, compiled through
+  `compileLessonActivities`, become `activity` segments carrying `acceptedResponses`.
+  This is `activity.ts`'s own rule — runtime consumers use only the typed AST and never
+  recover prompts or answers from learner-facing Markdown — and the narration export
+  would have been the easiest place in the package to break it.
+- **Tables are linearised, never dropped.** A two-column word→gloss table becomes
+  *"नमस्ते means hello"*; a three-column table becomes labelled facts. A column with no
+  heading is spoken as a bare value rather than refused, because `| Read | | Meaning |`
+  — script, romanization, gloss — is the corpus's commonest practice-table shape and
+  the blank heading is one a sighted reader does not have either. A run of pipe rows
+  with no delimiter row is read as an unlabelled sequence for the same reason.
+- **A table that cannot be linearised is spoken, not skipped**: the learner hears its
+  size, its column headings, and why it needs eyes, and the lesson is marked `sight` so
+  they are told before they start. `sight` and `pen` lessons still export in full,
+  opening with a notice naming what they will need and which sections to leave until
+  they have stopped.
+- Target-script text carries its `romanization` alongside — *"خداحافظ (khodâ hâfez)"* —
+  drawn from the **whole chapter's** headwords, so a lesson can pair a word a
+  neighbouring lesson introduced. Pairing is whole-word only: the Arabic track teaches
+  ا (*alif*) as its own lesson, and a plain substring replace turned سلام into
+  `سلا (alif)م`, splicing the pronunciation guide into the middle of the word.
+- Report `narration-block-unrenderable` when a lesson carries a table the export cannot
+  speak yet claims `voice`, and `narration-activity-invalid` when an authored contract
+  will not compile. Both are collected, never thrown — one bad directive must not
+  silence a lesson.
+
+### Changed — `maxLinearisableTableColumns` moves from 0 to 3
+
+- The knob shipped at **0** in the modality slice on purpose: no lineariser existed,
+  and claiming a table was speakable would have claimed a capability nothing
+  implemented. The lineariser now exists, so the default is its measured value, **3**,
+  and it is authored in `core/chapter-policy.json` (validated on load: an integer from
+  0 through 16) rather than living only as a constant.
+- Three, and not four, because that is where a table stops being a list of labelled
+  facts a listener can hold — *"Language: Telugu. Hello: namaskāram. Source:
+  Sanskrit."* — and starts being a grid whose meaning lives in the comparison *across*
+  rows. The corpus's own four-column tables prove the point: `| | numeral | word | said |`
+  has an unlabelled first column that means something only because of where it sits on
+  the page. Measured over the 340 table-bearing lesson files: 99 are 2 columns wide,
+  173 are 3, 60 are 4, and 8 are 5 or more.
+- At width 3 the lineariser reads **371 of the corpus's 442 tables (84%)**, covering
+  272 of the 340 table-bearing files. The corpus moves from **694 drivable lessons
+  (63%) to 925 (84%)**. Of the 120 that still need eyes, 65 carry a wide table, 61
+  point at the page in prose, 7 have a `script` block, and **52 need eyes for a wide
+  table and nothing else** — HL08's table-remediation burn-down list, now measured.
+- `modality.ts`'s `wide-table` rule no longer means "wider than N". It means *"the
+  narration lineariser refuses it"*, which is strictly larger: a three-column table
+  inside the limit is still unspeakable when its rows are ragged. Asking the exporter's
+  own judgement is the only way `voice` can be a promise the export is able to keep.
+- `report-cli.ts` reads the same policy width, so the published drivable percentages
+  and the committed narration export can never be computed at different settings.
+- `tableRowColumns` now delegates its cell splitting to `speech.ts`, so the count a
+  lesson is judged on is produced by the same scan the narration is built from.
+
 ### Added — HL-C41 block-level modality: one lesson, two answers
 
 - Add the `writing` lesson-body block type (`## Writing: …`), for a section that
@@ -257,10 +336,11 @@ was updated with a comment naming this change as the cause; none was relaxed.
   table wider than the configured linearisable width → `sight`; otherwise `voice`.
 - Modality is monotonic — `pen` implies `sight` — exposed as `requiredChannels()`
   and `unionModalities()`, and a chapter's modality is the union of its lessons'.
-- `maxLinearisableTableColumns` defaults to **0**: until HL08's narration exporter
-  can linearise a two-column table into speech, no table is speakable, and claiming
-  otherwise would let a learner silently miss content they were never told they had
-  missed. The value is an option, so it moves to 2 the day the lineariser lands.
+- `maxLinearisableTableColumns` defaulted to **0** in this slice: until HL08's
+  narration exporter could linearise a two-column table into speech, no table was
+  speakable, and claiming otherwise would let a learner silently miss content they
+  were never told they had missed. (Superseded above: HL-C16 built the lineariser and
+  the default is now 3.)
 - Support an authored `modality:` frontmatter override. An override that
   *contradicts* the derivation requires a `modality_reason:`; unexplained overrides
   (`modality-unexplained-override`) and unrecognised values (`modality-unknown-value`,

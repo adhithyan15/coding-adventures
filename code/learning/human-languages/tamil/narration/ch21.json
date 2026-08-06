@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 21,
+  "title": "Dog and Cat",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:99b608014f6d04e5",
+  "lessons": [
+    {
+      "id": "TA-C21-naay-poonai",
+      "sequence": 450,
+      "title": "நாய், பூனை — solid ground to close the arc, and an honest three-way split",
+      "headword": "நாய், பூனை",
+      "romanization": "",
+      "gloss": "dog and cat — நாய் is THE solid, ancient, undisputed Dravidian root behind Kannada/Malayalam's dog-words too, the honest opposite of every mystery dog-word in this arc; பூனை is Tamil's everyday cat-word, one of (at least) three genuinely separate Dravidian cat-word families",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dd35c7accb9a520",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This whole ANIMALS arc kept finding mystery dog-words — Spanish's perro, English's dog, Hindi's kuttā, each one an unsolved puzzle displacing an older, expected word. Tamil's dog-word closes the arc on the complete opposite footing: total, undisputed solid ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நாய் — no mystery, anywhere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாய் (nāy, \"dog\") is a solid, native Proto-Dravidian root — the exact same one behind Kannada's ನಾಯಿ (nāyi) and Malayalam's നായ (nāya). There is no debate about its origin, no substrate mystery, nothing like the perro/dog/kuttā pattern that ran through Spanish, English, and Hindi. Three unrelated language families each lost their expected word for \"dog\" to an unexplained newcomer — and right here, in the Dravidian family, the expected word simply survived, plainly and solidly, across (at least) three of its languages."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - பூனை — Tamil's word, and an honest three-way Dravidian split",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பூனை (pūnai, \"cat\") is Tamil's own everyday word, matching Malayalam's പൂച്ച (pūcha) closely — but be honest that \"cat\" splits Dravidian in a way \"dog\" doesn't. Kannada's everyday word, ಬೆಕ್ಕು (bekku), comes from a different ancient root (related to the word for \"wildcat\"); Telugu's, పిల్లి (pilli), comes from yet another separate Proto-Dravidian root, most likely the very source behind Sanskrit's biḍāla and Hindi's billī. Tamil itself even keeps rarer, alternate cat-words — பில்லி and வெருகு — cognate with Telugu's and Kannada's everyday choices respectively, showing that all three roots were once available across the family; each language just settled on a different one as its everyday word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāy\" — dog, solid native Dravidian, no mystery anywhere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāy\" — dog, solid native Dravidian, no mystery anywhere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pūnai\" — cat, Tamil's everyday word, matching Malayalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pūnai\" — cat, Tamil's everyday word, matching Malayalam]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the honest split — Kannada's bekku and Telugu's pilli come from two other, separate ancient roots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the honest split — Kannada's bekku and Telugu's pilli come from two other, separate ancient roots]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is நாய் a mystery word, like Spanish's perro, English's dog, or Hindi's kuttā? (No — a solid, undisputed native Dravidian root, shared with Kannada and Malayalam.) Does பூனை share a root with Kannada's bekku or Telugu's pilli? (No — all three are genuinely separate ancient Dravidian roots; Tamil even keeps rarer alternate cat-words, pilli and veruku, echoing both of them.) Which Dravidian cat-word is most likely the source of Sanskrit's biḍāla and Hindi's billī? (Telugu's pilli.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

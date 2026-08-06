@@ -1,0 +1,132 @@
+Tamil, chapter 6: Dative Case and Dative Subjects.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+-உக்கு (-ukku) — "to, for".
+
+Warm-up.
+[pause 2 seconds]
+Your first case ending. English says "to me" with a separate word in front. Tamil says it with a piece stuck on the back — and that small difference is the biggest structural fact about the language.
+
+Grammar Lens: Adding it on.
+Take a noun you know and add -உக்கு (-ukku):
+[a table of 2 rows, read aloud]
+word: பெயர் peyar — name. + the dative: பெயருக்கு peyarukku. meaning: to/for the name.
+word: வேலை vēlai — work. + the dative: வேலைக்கு vēlaikku. meaning: for work.
+The suffix has two shapes — -உக்கு -ukku and -க்கு -kku — chosen by the sound the noun ends in. One case, two forms; the seam still shows.
+And with "I" — this one is irregular and worth memorising, because you'll use it constantly:
+நான் nāṉ ("I") becomes எனக்கு enakku ("to me").
+The pronoun changes its body (nāṉ becomes en-) before the suffix lands. Nouns don't — they just take the ending.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "peyar … peyarukku"]
+[pause 8 seconds for the answer]
+[your turn — say: "nāṉ … enakku" — "I" … "to me"]
+[pause 8 seconds for the answer]
+[your turn — say: "vēlaikku" — "for work," from Ch. 5's வேலை]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is "to me"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: compare that visible one-purpose suffix with a fused Latin ending.
+
+
+Lesson 2 of 4.
+-உக்கு (-ukku) — one carriage in a suffix train.
+
+Warm-up.
+[pause 2 seconds]
+You can point to peyar and -ukku separately. That visible seam is the structural lesson.
+
+Grammar Lens: Stacking versus fusion.
+[a table of 4 rows, read aloud]
+fixes the case? Tamil -ukku: dative, always. Latin -īs: dative or ablative.
+carries number? Tamil -ukku: no; another suffix can. Latin -īs: plural is baked in.
+carries declension? Tamil -ukku: no. Latin -īs: first/second class is baked in.
+visible seam? Tamil -ukku: peyar + ukku. Latin -īs: one fused ending.
+Tamil stacks. Each suffix contributes one meaning in a fixed order, like a train carriage. Latin fuses case, number, and class into an indivisible ending, and -īs does not even identify one case by itself.
+This is agglutinative structure: long words remain buildable because their pieces stay legible. The comparison is not about simplicity; it is about where the grammatical information lives.
+
+Guided Practice.
+[pause 1 second]
+[your turn — segment: peyar + ukku]
+[pause 8 seconds for the answer]
+[your turn — say: "one suffix, one meaning, visible seam"]
+[pause 8 seconds for the answer]
+[your turn — contrast: Tamil stacks, Latin fuses]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -ukku contribute? (Dative to/for, one meaning.) What does Latin -īs fuse? (Case, plural number, and declension class.) Which system leaves the seam visible? (Tamil's agglutinative stack.)
+
+
+Lesson 3 of 4.
+எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) — "I know Tamil".
+
+Warm-up.
+[pause 2 seconds]
+In Chapter 5 you said நான் தமிழ் பேசுகிறேன் — "I speak Tamil," with nāṉ as the subject. Now say "I know Tamil." Tamil will not let you use nāṉ.
+
+You'll want to know: The sentence.
+எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum). enakku tamiḻ teriyum. literally: "to-me Tamil is-known."
+Word by word:
+[a table of 3 rows, read aloud]
+piece: எனக்கு(த்) enakku(t), "to me" — the dative from the last lesson.
+piece: தமிழ் tamiḻ, Tamil (Ch. 5).
+piece: தெரியும் teriyum, "is known / is apparent".
+That extra த் on enakku is sandhi — a joining consonant Tamil inserts between certain words to smooth the seam. It belongs to neither word on its own; it exists only because they are next to each other. Nothing to learn yet, but worth noticing, because you will see it constantly.
+You are not the subject. Nāṉ is gone — the person has been moved into the dative. What's left in the plain, unmarked form is tamiḻ: the sentence is now about the language, and you are merely the one it is known to.
+(Grammarians call enakku the dative subject, because it behaves like the subject even though it isn't in the subject case. The odd feeling of the sentence is exactly that split.)
+
+Grammar Lens: Why: things that happen to you.
+Tamil sorts verbs by whether you do something or something happens to you. Speaking is something you do — so Ch. 5 used nāṉ. But knowing, liking, wanting, being hungry, being cold: these arrive at you. Tamil marks that by putting the person in the dative.
+[a table of 3 rows, read aloud]
+English frames it as: I know Tamil. Tamil frames it as: Tamil is known to me.
+English frames it as: I like it. Tamil frames it as: it is pleasing to me.
+English frames it as: I am cold. Tamil frames it as: cold is to me.
+English does this occasionally and archaically — "methinks" is exactly it (me is dative: "it seems to me"). Tamil made it a rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "enakku tamiḻ teriyum"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "nāṉ tamiḻ pēsugiṟēṉ" (I speak) … "enakku tamiḻ teriyum" (known to me)]
+[pause 8 seconds for the answer]
+[your turn — say: the literal — "to-me Tamil is-known"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) literally say? ("To-me Tamil is-known.") Which word has English got that Tamil hasn't? (A nominative "I" — nāṉ is replaced by the dative enakku.) Why does Tamil use the dative here? (Because knowing happens to you; you don't do it.) Which English word preserves the same idea? (Methinks — "it seems to me".) Next: watch all four Dravidian sisters use the same experiencer shape.
+
+
+Lesson 4 of 4.
+-ukku, -ku, -ge, -ikku — the family shows its bones.
+
+Warm-up.
+[pause 2 seconds]
+Tamil says knowing happens to you. Its three closest sisters make the same grammatical choice.
+
+Grammar Lens: Four sentences, one construction.
+[a table of 4 rows, read aloud]
+language: Tamil. "I know [the language]": enakku tamiḻ teriyum. dative: -ukku.
+language: Telugu. "I know [the language]": nāku telugu vaccu. dative: -ku.
+language: Kannada. "I know [the language]": nanage kannaḍa gottu. dative: -ge.
+language: Malayalam. "I know [the language]": enikku malayāḷam aṟiyām. dative: -ikku.
+The verbs differ, but the experiencer sits in a dative whose forms visibly belong together: -ukku / -ku / -ge / -ikku. This is family evidence, just as blanc/bianco/branco exposes Romance kinship.
+The comparison also makes cross-language practice useful: once you recognize "to me," you can search for the known or apparent thing rather than forcing an English subject onto the sentence.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "-ukku, -ku, -ge, -ikku"]
+[pause 8 seconds for the answer]
+[once you have stopped driving — point: the experiencer in each sentence]
+[your turn — paraphrase: "the language is known to me"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Do the four sisters agree on dative experiencers? (Yes.) Which four suffix shapes reveal the relationship? (-ukku, -ku, -ge, -ikku.) What stays plain in the sentence? (The thing known or experienced.)

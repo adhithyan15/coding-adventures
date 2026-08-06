@@ -1,0 +1,303 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 19,
+  "title": "Yes and No",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:348146303665aa93",
+  "lessons": [
+    {
+      "id": "ES-C19-si",
+      "sequence": 640,
+      "title": "sí — yes",
+      "headword": "sí",
+      "romanization": "sí",
+      "gloss": "yes",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df0f47319db22908",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The smallest useful word — and the accent on it is doing real work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: sí and si",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sí = yes. One syllable, said see."
+            },
+            {
+              "kind": "speech",
+              "text": "The written accent is not decoration — it is the whole difference between two words:"
+            },
+            {
+              "kind": "speech",
+              "text": "sí (with the accent) = yes."
+            },
+            {
+              "kind": "speech",
+              "text": "si (no accent) = if."
+            },
+            {
+              "kind": "speech",
+              "text": "They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = \"Yes, if you want.\" Miss the accent and you've written \"if\" where you meant \"yes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: where sí comes from",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sí is Latin sīc, \"thus, so\" — answering a question with \"just so,\" exactly the move Latin also made with ita (\"thus\" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Latin sīc",
+                ", which gives:"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Latin sīc: Spanish. , which gives:: sí.",
+                "Latin sīc: Italian. , which gives:: sì.",
+                "Latin sīc: Portuguese. , which gives:: sim."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "French is the odd one out — it went a completely different way for \"yes\" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sí\" — see, and picture the accent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sí\" — *see*, and picture the accent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"sí\" (yes) vs \"si\" (if)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"sí\" (yes) vs \"si\" (if)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — \"sí, sì, sim\" — all from Latin sīc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — \"sí, sì, sim\" — all from Latin *sīc*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say yes in Spanish? (sí.) What is the only difference between sí \"yes\" and si \"if\"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — \"thus, so\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C19-no",
+      "sequence": 650,
+      "title": "no — no / not",
+      "headword": "no",
+      "romanization": "no",
+      "gloss": "no / not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41b35806ec2b71a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The easiest word yet — and it quietly does two jobs Spanish never splits apart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: no",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "no = no. Said noh, a clean single vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Latin nōn",
+                ", which gives:"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Latin nōn: Spanish. , which gives:: no.",
+                "Latin nōn: Italian. , which gives:: no.",
+                "Latin nōn: French. , which gives:: non."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one word, two jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the thing English splits and Spanish doesn't. English has \"no\" (the answer) and \"not\" (inside a sentence) — two different words. Spanish uses no for both:"
+            },
+            {
+              "kind": "speech",
+              "text": "as the answer: ¿Hablas inglés? — No."
+            },
+            {
+              "kind": "speech",
+              "text": "as the negator, placed right before the verb: No hablo inglés = \"I do not speak English.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So learning no gives you the whole of Spanish negation for free: to make any sentence negative, drop no in front of the verb. One little word, two everyday jobs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"no\" — noh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"no\" — *noh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "as an answer — \"¿Hablas inglés? No.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: as an answer — \"¿Hablas inglés? No.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "as a negator — \"No hablo inglés\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: as a negator — \"No hablo inglés\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? (\"no\" the answer and \"not\" the negator — No hablo = \"I do not speak.\") Where does no go to negate a sentence? (Right before the verb.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

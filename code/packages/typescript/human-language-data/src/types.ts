@@ -252,6 +252,15 @@ export interface ChapterPolicy {
   maxNewAtomsPerLesson: number;
   /** HL08: most a whole chapter may introduce, so splitting cannot game the rule. */
   maxNewAtomsPerChapter: number;
+  /**
+   * HL08: widest Markdown table the narration export will read aloud.
+   *
+   * A table beyond this width marks its lesson `sight`, so raising or lowering this
+   * number moves lessons in and out of the drivable course. Optional so that a policy
+   * file written before the lineariser existed still loads, falling back to the
+   * lineariser's own measured default.
+   */
+  maxLinearisableTableColumns?: number;
 }
 
 /** One authored chapter from an existing LaTeX book. */

@@ -1,0 +1,33 @@
+French, chapter 21: Weather.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+le temps, il pleut — the same Latin word, a different fate for "rain".
+
+Warm-up.
+[pause 2 seconds]
+You've seen Spanish's tiempo mean both "time" and "weather" at once, from Latin tempus. French has the exact same word, the exact same double meaning — because this widening happened within Latin itself, before French and Spanish went their separate ways.
+
+The two words: le temps — time and weather.
+le temps = both "time" and "weather" — from Latin tempus, same as Spanish's tiempo (English kept only the "time" half: temporal, tempo). So quel temps fait-il? ("what's the weather like?") is literally "what time does it make?" — the identical construction you met in Spanish's ¿qué tiempo hace?.
+
+Grammar Lens: il fait chaud / il fait froid.
+Il fait chaud. — "It's hot." — literally "it makes hot." Il fait froid. — "It's cold." — literally "it makes cold."
+Same hacer-style periphrasis as Spanish, just with French's own faire ("to make/do").
+
+The word, taken apart: il pleut.
+Il pleut. — "It's raining." — from pleuvoir from Latin pluere, "to rain" — the same Latin verb behind Spanish's llueve. But here's the honest difference: Spanish underwent the pl- becomes ll- shift (pluere becomes llover), while French kept the pl- cluster fully intact — pleuvoir still visibly starts with pl-, just like the Latin original. So the same Latin verb took two different sound-change paths in its two daughters: one eroded the cluster, one preserved it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "le temps" — time, or weather, depending on context]
+[pause 8 seconds for the answer]
+[your turn — say: "il fait chaud. il fait froid." — it's hot/cold]
+[pause 8 seconds for the answer]
+[your turn — say: "il pleut" — it's raining, pl- kept intact from Latin]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two things does le temps mean, and where does this polysemy come from? ("Time" and "weather" — from Latin tempus, already double-sensed before French/Spanish split apart.) Does French's il pleut show the same pl- becomes ll- shift as Spanish's llueve? (No — French kept the pl- cluster intact; only Spanish underwent that shift.)
