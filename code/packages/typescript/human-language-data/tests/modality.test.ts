@@ -519,20 +519,29 @@ describe("corpus regression", () => {
   // dangerously, a block field rename that makes every lesson look clean — moves it
   // and fails here instead of shipping a curriculum falsely advertised as drivable.
   //
-  // Reproduces the HL08 baseline: 51 `pen`, 7 script-block lessons, and 322
-  // table-bearing lessons among the remaining 1,038. HL08 records 695 drivable from
-  // 56 cue-bearing lessons; this implementation's published cue list matches 61 and
-  // therefore lands on 694. The spec's exact cue list was never recorded, and the
-  // detector is deliberately NOT tuned to close a one-lesson gap.
+  // The HL08 baseline was 51 `pen`, 7 script-block lessons and 322 table-bearing
+  // lessons among the remaining 1,038, giving 694 drivable at 63%. HL-C32 then
+  // remediated the Russian track: fourteen of its lessons were `sight` only because
+  // a cross-language word→gloss list had been set as a Markdown table, so the tables
+  // became speakable prose and the lessons became `voice`. That moved the corpus to
+  // 708 drivable (65%) and left 308 table-bearing lessons. The numbers below are
+  // re-pinned to that measurement, not relaxed — they still fail on any silent change
+  // to the parser, the table detector or the cue list, most dangerously a block field
+  // rename that would make every lesson look clean.
+  //
+  // HL08 itself recorded 695 drivable from 56 cue-bearing lessons; this
+  // implementation's published cue list matches 61 and therefore started one lesson
+  // lower. The spec's exact cue list was never recorded, and the detector is
+  // deliberately NOT tuned to close a one-lesson gap.
   it("pins the corpus-wide drivable count", () => {
     const { lessons } = loadEverything();
     const summary = summarizeModality(lessons);
     expect(summary.totalLessons).toBe(1096);
     expect(summary.pen).toBe(51);
-    expect(summary.voice).toBe(694);
-    expect(summary.sight).toBe(351);
+    expect(summary.voice).toBe(708);
+    expect(summary.sight).toBe(337);
     expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
-    expect(summary.drivablePercent).toBe(63);
+    expect(summary.drivablePercent).toBe(65);
   });
 
   it("pins the structural counts the derivation is built on", () => {
@@ -548,7 +557,7 @@ describe("corpus regression", () => {
     expect(remaining).toHaveLength(1038);
     expect(
       remaining.filter((entry) => widestTableColumns(lessonText(entry)) > 0),
-    ).toHaveLength(322);
+    ).toHaveLength(308);
   });
 
   it("keeps the corpus free of unexplained overrides", () => {
