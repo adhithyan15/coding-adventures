@@ -1039,11 +1039,114 @@ Uint8List? _compressBlock(Uint8List block) {
   return Uint8List.fromList(out);
 }
 
+/// Resolve a decoded Offset_Value into the actual match offset, per RFC 8878
+/// §3.1.1.3.2.1.1's Repeated_Offset (R1/R2/R3) mechanism — updating [rep] in
+/// place as a side effect.
+///
+/// [rep] is `[Repeated_Offset1, Repeated_Offset2, Repeated_Offset3]`, a
+/// **frame-scoped** 3-element offset history (the caller threads the same
+/// list across every Compressed block in a frame; RLE/Raw blocks pass
+/// through unchanged). "For the first block, the starting offset history is
+/// populated with Repeated_Offset1=1, Repeated_Offset2=4,
+/// Repeated_Offset3=8" (RFC 8878 §3.1.1.3.2.1.1).
+///
+/// ### Why every offset code needs this, not just a "repeat" mode
+///
+/// The wire encoding of a sequence's offset is not a plain distance:
+///
+/// ```
+///   Offset_Value = raw FSE-decoded symbol's baseline + extra bits
+///
+///   Offset_Value == 1, 2, or 3   -> a REFERENCE into the offset history
+///                                   (this function's job)
+///   Offset_Value >= 4            -> an explicit distance: actual_offset
+///                                   = Offset_Value - 3
+/// ```
+///
+/// Real offsets 1..3 are never sent as `Offset_Value - 3`; the codec biases
+/// every explicit offset by +3 specifically so raw distances 1, 2, 3 always
+/// land on Offset_Value 4, 5, 6 — leaving 1, 2, 3 free for this history
+/// mechanism (see [_encodeSequencesSection]'s `rawOff = seq.off + 3`, which
+/// this port's own encoder always uses, so it never *emits* a
+/// repeat-offset code — but real `zstd` uses repeat offsets constantly,
+/// since they let a repeated distance be re-encoded in as little as 1 FSE
+/// symbol + 0 extra bits instead of a full explicit offset).
+///
+/// ### The four cases (`of_code` = number of extra offset bits, `ll_is_zero`
+/// = whether this sequence's Literal_Length decoded to 0)
+///
+/// `of_code >= 2` guarantees `Offset_Value >= 4` (an explicit offset).
+/// `of_code <= 1` guarantees `Offset_Value` in `{1, 2, 3}` (a repeat
+/// reference), which collapses to one selector in `[0, 3]`:
+///
+/// ```
+///   selector = (ll_is_zero ? 1 : 0) + Offset_Value - 1
+/// ```
+///
+/// | selector | meaning                          | offset            | history update                          |
+/// |----------|-----------------------------------|--------------------|------------------------------------------|
+/// | 0        | Offset_Value=1, ll≠0               | rep[0] (R1)        | none — R1 is already most-recent         |
+/// | 1        | Offset_Value=2, ll≠0  OR  =1, ll=0 | rep[1] (R2)        | swap R1,R2 (R3 untouched)                |
+/// | 2        | Offset_Value=3, ll≠0  OR  =2, ll=0 | rep[2] (R3)        | rotate: R1,R2,R3 <- new,old R1,old R2    |
+/// | 3        | Offset_Value=3, ll=0                | R1 - 1             | rotate, same shape as selector 2         |
+///
+/// Explicit offsets (`of_code >= 2`) always rotate the same way as
+/// selectors 2/3: the newly-used distance becomes the new R1, bumping the
+/// old R1 -> R2 -> R3.
+///
+/// Cross-checked against RFC 8878 §3.1.1.3.2.1.1's prose, the reference
+/// decoder (`ZSTD_decodeSequence` in `facebook/zstd`'s
+/// `zstd_decompress_block.c`, fetched live rather than recalled — see
+/// Lesson 96/98's playbook of not trusting a single source), and the
+/// already-CLI-verified `c/zstd` port's `decompress_block` (PR #9941),
+/// which independently derived and fuzz-tested (1500 trials, ASan/UBSan
+/// clean) the identical selector formula.
+int _resolveOffset(int ofCode, int ofRaw, bool llIsZero, List<int> rep) {
+  if (ofCode >= 2) {
+    final offset = ofRaw - 3;
+    rep[2] = rep[1];
+    rep[1] = rep[0];
+    rep[0] = offset;
+    return offset;
+  }
+
+  final selector = (llIsZero ? 1 : 0) + ofRaw - 1;
+  int offset;
+  switch (selector) {
+    case 0:
+      // Reuse R1 unchanged — it is already the most-recently-used offset.
+      offset = rep[0];
+    case 1:
+      offset = rep[1];
+      rep[1] = rep[0];
+      rep[0] = offset;
+    case 2:
+      offset = rep[2];
+      rep[2] = rep[1];
+      rep[1] = rep[0];
+      rep[0] = offset;
+    default: // selector == 3
+      // Guard against underflow on a corrupt stream (rep[0] == 0 should
+      // never happen with a well-formed frame, since the history starts
+      // at {1, 4, 8} and every update stores a real >=1 offset — but a
+      // malformed/adversarial frame could otherwise drive this negative).
+      offset = rep[0] > 0 ? rep[0] - 1 : 0;
+      rep[2] = rep[1];
+      rep[1] = rep[0];
+      rep[0] = offset;
+  }
+  return offset;
+}
+
 /// Decompress one ZStd Compressed block.
 ///
 /// Reads the literals section, sequences section, and applies the sequences
 /// to [out] to reconstruct the original data.
-void _decompressBlock(Uint8List data, List<int> out) {
+///
+/// [rep] is the frame-scoped Repeated_Offset history `[R1, R2, R3]` (see
+/// [_resolveOffset]) — threaded in/out by the caller across every
+/// Compressed block in the frame.
+void _decompressBlock(Uint8List data, List<int> out, List<int> rep) {
   // ── Literals section ───────────────────────────────────────────────────────
   final (:lits, :consumed) = _decodeLiteralsSection(data, 0);
   var pos = consumed;
@@ -1133,16 +1236,16 @@ void _decompressBlock(Uint8List data, List<int> out) {
     //
     // Decode offset:
     //   of_raw = (1 << of_code) | extra_bits
-    //   actual_offset = of_raw - 3  (reverses the +3 encoder bias)
+    // of_raw >= 4 (of_code >= 2) is an explicit offset: actual_offset =
+    // of_raw - 3 (reverses the +3 encoder bias). of_raw in {1, 2, 3}
+    // (of_code <= 1) is a Repeated_Offset (R1/R2/R3) reference — resolved
+    // below via _resolveOffset once `ll` (needed for its Literal_Length==0
+    // special case) is known. See _resolveOffset's doc comment for the
+    // full RFC 8878 §3.1.1.3.2.1.1 selector table.
     final ofRaw = (1 << ofCode) | br.readBits(ofCode);
     final ml = mlInfo.$1 + br.readBits(mlInfo.$2);
     final ll = llInfo.$1 + br.readBits(llInfo.$2);
-    if (ofRaw < 3) {
-      throw FormatException(
-        'decoded offset underflow: of_raw=$ofRaw (expected >= 3)',
-      );
-    }
-    final offset = ofRaw - 3;
+    final offset = _resolveOffset(ofCode, ofRaw, ll == 0, rep);
 
     // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
     // 8878 §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
@@ -1420,6 +1523,16 @@ Uint8List decompress(Uint8List data) {
   // ── Blocks ──────────────────────────────────────────────────────────────────
   final out = <int>[];
 
+  // Repeated_Offset history (RFC 8878 §3.1.1.3.2.1.1) — FRAME-scoped, not
+  // block-scoped: "For the first block, the starting offset history is
+  // populated with Repeated_Offset1=1, Repeated_Offset2=4,
+  // Repeated_Offset3=8." Every later Compressed block in this frame
+  // continues from wherever the previous one's sequences left it; Raw and
+  // RLE blocks pass it through unchanged (they have no sequences to update
+  // it). See _resolveOffset for how each block's sequences read and update
+  // this list.
+  final rep = [1, 4, 8];
+
   for (;;) {
     // Each block begins with a 3-byte header (24 bits, little-endian).
     if (pos + 3 > data.length) {
@@ -1475,7 +1588,7 @@ Uint8List decompress(Uint8List data) {
         }
         final blockData = data.sublist(pos, pos + bsize);
         pos += bsize;
-        _decompressBlock(blockData, out);
+        _decompressBlock(blockData, out, rep);
 
       case 3:
         throw const FormatException('reserved block type 3');
