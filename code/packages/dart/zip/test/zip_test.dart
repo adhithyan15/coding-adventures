@@ -361,6 +361,56 @@ void main() {
     );
   });
 
+  // ── Additional coverage: encrypted entry per Central Directory flags ──────
+  //
+  // The Central Directory is the authoritative header (per the CMP09 spec
+  // and this package's own read() logic), so the encrypted check must
+  // catch a crafted archive whose CD flags mark encryption even when the
+  // Local Header's copy of the flags field disagrees.
+
+  test('encrypted entry per Central Directory (not Local Header) is rejected', () {
+    final archive = zipBytes([('f.txt', utf8Bytes('hi'))]);
+    final entry = ZipReader(archive).entries().single;
+    // Central Directory flags field is at offset 8 of the 46-byte CD
+    // header; Local Header flags (offset 6) is deliberately left alone.
+    final cdFlagsOffset =
+        archive.length - 22 - (46 + entry.name.length) + 8;
+    final tampered = Uint8List.fromList(archive);
+    tampered[cdFlagsOffset] |= 0x01;
+
+    final reader = ZipReader(tampered);
+    final tamperedEntry = reader.entries().single;
+    expect(tamperedEntry.isEncrypted, isTrue);
+    expect(
+      () => reader.read(tamperedEntry),
+      throwsA(isA<FormatException>()),
+    );
+  });
+
+  // ── Additional coverage: Central Directory entry-count mismatch ───────────
+  //
+  // A crafted archive can inflate one entry's name/extra/comment length so
+  // the parser's `pos` desyncs from the real next Central Directory header,
+  // which would otherwise make the parse loop's signature check fail and
+  // silently `break` out early — returning a truncated-but-plausible entry
+  // list with no error. Cross-checking the parsed count against the EOCD's
+  // own declared total catches this instead of losing entries silently.
+
+  test('Central Directory entry count mismatch is rejected', () {
+    final archive = zipBytes([
+      ('a.txt', utf8Bytes('AAA')),
+      ('b.txt', utf8Bytes('BBB')),
+    ]);
+    final tampered = Uint8List.fromList(archive);
+    // EOCD's entries_this_disk (offset 8) and entries_total (offset 10)
+    // fields, each a little-endian u16; claim one more entry than exists.
+    final eocdStart = archive.length - 22;
+    tampered[eocdStart + 8] += 1;
+    tampered[eocdStart + 10] += 1;
+
+    expect(() => ZipReader(tampered), throwsA(isA<FormatException>()));
+  });
+
   // ── Additional coverage: malformed archive has no EOCD ─────────────────────
 
   test('archive with no EOCD record throws', () {

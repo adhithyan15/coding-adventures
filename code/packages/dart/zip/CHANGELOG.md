@@ -38,19 +38,37 @@
     authoritative source for size/method/offset.
   - Entries with unsupported compression methods raise a clear error
     instead of producing garbage.
-  - Entries with the encrypted flag (GP flag bit 0) are rejected.
+  - Entries with the encrypted flag (GP flag bit 0) are rejected, checked
+    from the Central Directory's copy of the flags field (authoritative)
+    as well as the Local Header's — a crafted archive whose two copies of
+    the flags field disagree cannot slip an encrypted entry past the check
+    by clearing only the Local Header's bit.
   - Reading is capped at `defaultMaxOutputBytes` (256 MB) as a
     decompression-bomb guard, both on the declared and the actual
-    decompressed size.
+    decompressed size. The decoder accumulates output in a byte-native
+    growable buffer (`_ByteBuffer`, backed by `Uint8List`) rather than a
+    boxed `List<int>` — on the Dart VM a `List<int>` slot is a full 8-byte
+    word, so a `List<int>`-based accumulator bounded at "256 MB" of
+    *elements* would actually permit roughly 2 GB of real memory, silently
+    defeating the documented bound by close to an order of magnitude.
   - Archive entry counts are capped at 65535 (the natural ZIP64-less
     ceiling) both when writing and when parsing a Central Directory.
+  - The number of Central Directory headers actually parsed is
+    cross-checked against the EOCD's own declared entry count. Each
+    entry's advance to the next CD header trusts that entry's own
+    (attacker-controlled) name/extra/comment-length fields; without this
+    check, a crafted archive that inflates one of those fields desyncs the
+    parser from the real next header, which then fails its signature check
+    and silently stops — returning a truncated-but-plausible entry list
+    with no error, rather than the corruption it actually is.
   - All Central Directory / Local Header field reads are bounds-checked
     before indexing into the archive buffer.
-- Added 28 tests in `test/zip_test.dart` covering CMP09 spec TC-1 through
+- Added 30 tests in `test/zip_test.dart` covering CMP09 spec TC-1 through
   TC-12 (round-trip Stored/DEFLATE, multi-file, directory entries, CRC-32
   corruption detection, EOCD/random access, incompressible-data fallback,
   empty file, 100 KB compression ratio, real CLI interop in both
   directions, Unicode filenames, nested paths), plus CRC-32 unit tests,
   DEFLATE round-trip tests, the real-world dynamic-Huffman fixture, and
-  edge cases (missing entry, unsupported method, encrypted entry, missing
-  EOCD, MS-DOS epoch).
+  edge cases (missing entry, unsupported method, encrypted entry via both
+  Local Header and Central Directory flags, Central Directory entry-count
+  mismatch, missing EOCD, MS-DOS epoch).

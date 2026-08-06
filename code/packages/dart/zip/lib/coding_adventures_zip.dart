@@ -577,6 +577,47 @@ Uint8List deflateCompress(Uint8List data) {
 }
 
 // =============================================================================
+// Byte-native growable buffer
+// =============================================================================
+//
+// `_decodeHuffmanBlock` accumulates decoded output one byte (or one
+// back-reference copy) at a time, so it needs an append-friendly growable
+// buffer. A plain `List<int>` looks like the obvious choice, but on the
+// Dart VM each `List<int>` slot is a full boxed word (8 bytes on 64-bit),
+// not 1 byte — so bounding a `List<int>` accumulator at `maxOutput`
+// *elements* actually allows roughly `8 * maxOutput` bytes of real memory,
+// silently defeating a documented "256 MB decompression-bomb guard" by
+// close to an order of magnitude. This buffer wraps a `Uint8List` with
+// amortized-O(1) doubling growth instead, so the byte cap enforced
+// elsewhere (`out.length > maxOutput`) tracks actual memory 1:1.
+class _ByteBuffer {
+  Uint8List _buf;
+  int _length = 0;
+
+  _ByteBuffer([int initialCapacity = 64]) : _buf = Uint8List(initialCapacity);
+
+  int get length => _length;
+
+  int operator [](int index) => _buf[index];
+
+  void add(int byte) {
+    if (_length == _buf.length) _grow(_length + 1);
+    _buf[_length] = byte;
+    _length += 1;
+  }
+
+  void _grow(int minCapacity) {
+    var newCapacity = _buf.isEmpty ? 64 : _buf.length * 2;
+    if (newCapacity < minCapacity) newCapacity = minCapacity;
+    final newBuf = Uint8List(newCapacity);
+    newBuf.setRange(0, _length, _buf);
+    _buf = newBuf;
+  }
+
+  Uint8List toBytes() => Uint8List.sublistView(_buf, 0, _length);
+}
+
+// =============================================================================
 // RFC 1951 DEFLATE — Decompress (inflate): stored, fixed, and dynamic blocks
 // =============================================================================
 
@@ -668,7 +709,7 @@ const List<int> _clOrder = <int>[
 /// symbol (256).
 void _decodeHuffmanBlock(
   _BitReader br,
-  List<int> out,
+  _ByteBuffer out,
   _CanonicalDecoder llDecoder,
   _CanonicalDecoder? distDecoder,
   int maxOutput,
@@ -735,7 +776,7 @@ Uint8List inflate(
   int maxOutput = defaultMaxOutputBytes,
 }) {
   final br = _BitReader(data);
-  final out = <int>[];
+  final out = _ByteBuffer();
 
   while (true) {
     final bfinal = br.readBit();
@@ -785,7 +826,7 @@ Uint8List inflate(
     if (bfinal == 1) break;
   }
 
-  return Uint8List.fromList(out);
+  return out.toBytes();
 }
 
 // =============================================================================
@@ -1050,6 +1091,13 @@ class ZipEntry {
   /// Byte offset of this entry's Local File Header within the archive.
   final int localOffset;
 
+  /// True if the Central Directory's General_Purpose_Bit_Flag marks this
+  /// entry as encrypted (bit 0). Read from the Central Directory — the
+  /// authoritative header — rather than the Local Header, so a crafted
+  /// archive cannot hide encryption by disagreeing between the two copies
+  /// of the flags field.
+  final bool isEncrypted;
+
   const ZipEntry._({
     required this.name,
     required this.size,
@@ -1058,6 +1106,7 @@ class ZipEntry {
     required this.crc32,
     required this.isDirectory,
     required this.localOffset,
+    required this.isEncrypted,
   });
 
   @override
@@ -1115,6 +1164,7 @@ class ZipReader {
         throw const FormatException('zip: Central Directory entry truncated');
       }
 
+      final cdFlags = view.getUint16(pos + 8, Endian.little);
       final method = view.getUint16(pos + 10, Endian.little);
       final crc = view.getUint32(pos + 16, Endian.little);
       final compressedSize = view.getUint32(pos + 20, Endian.little);
@@ -1152,6 +1202,7 @@ class ZipReader {
           crc32: crc,
           isDirectory: isDirectory,
           localOffset: localOffset,
+          isEncrypted: cdFlags & 1 != 0,
         ),
       );
       if (entries.length > maxZipEntries) {
@@ -1161,6 +1212,22 @@ class ZipReader {
       }
 
       pos = nameEnd + extraLen + commentLen;
+    }
+
+    // Each entry's advance to the next header trusts that entry's own
+    // (attacker-controlled) name/extra/comment lengths. A crafted archive
+    // that inflates one of those fields desyncs `pos` from the real next
+    // header — the next signature check then fails and the loop above
+    // exits via `break`, silently returning a truncated entry list that
+    // still looks like a well-formed (if smaller) archive. Cross-check
+    // against the EOCD's own declared entry count so a desync is reported
+    // as corruption instead of silently dropping entries.
+    final declaredEntries = view.getUint16(eocdOffset + 10, Endian.little);
+    if (entries.length != declaredEntries) {
+      throw FormatException(
+        'zip: Central Directory declares $declaredEntries entries but only '
+        '${entries.length} were parsed (archive is truncated or corrupt)',
+      );
     }
 
     return ZipReader._(data, entries);
@@ -1182,6 +1249,15 @@ class ZipReader {
     int maxUncompressedBytes = defaultMaxOutputBytes,
   }) {
     if (entry.isDirectory) return Uint8List(0);
+
+    // Check the Central Directory's copy of the encrypted flag (the
+    // authoritative header) up front; the Local Header's copy is checked
+    // again below once it's been read, in case the two disagree.
+    if (entry.isEncrypted) {
+      throw FormatException(
+        "zip: entry '${entry.name}' is encrypted; not supported",
+      );
+    }
 
     if (entry.size > maxUncompressedBytes) {
       throw ArgumentError(
