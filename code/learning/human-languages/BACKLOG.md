@@ -26,19 +26,30 @@ discarding deep content.
 3. Finish a small vertical slice before starting the same migration everywhere.
 4. Keep the application, book, and canonical lesson content aligned.
 
-## P0 — Step-by-Step capability program (HL05–HL07)
+## P0 — Step-by-Step capability program (HL05–HL08)
 
 Specified in [HL05](../../specs/HL05-chapter-capability-and-step-by-step-shape.md),
-[HL06](../../specs/HL06-visual-system.md), and
-[HL07](../../specs/HL07-spine-expansion-to-b1.md). This program adds a chapter-level
-capability layer above the existing lessons, gives the books a visual system including
-inline script-writing instruction, and grows the spine far enough to carry a complete
-book. It rewrites no authored lesson content.
+[HL06](../../specs/HL06-visual-system.md),
+[HL07](../../specs/HL07-spine-expansion-to-b1.md), and
+[HL08](../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md). This program
+adds a chapter-level capability layer above the existing lessons, gives the books a
+visual system including inline script-writing instruction, grows the spine far enough
+to carry a complete book, and makes the corpus teachable aloud by a voice assistant
+while the learner drives. It rewrites no authored lesson content.
 
 The measured starting point: 379 chapters, **zero** of which declare a goal or a
 payoff; 11 spine nodes with **zero** at A2 or B1; **zero** images in any of the 20
 books; and a complete, font-validated stroke-path model in `strokes.ts` that holds one
 letter and is rendered nowhere.
+
+On modality and ramp, measured across all 1,096 lessons: 51 need a pen and 7 carry a
+script block, but of the remaining 1,038, some 322 contain a Markdown table and 56 a
+sight cue — so **695 lessons, about 63% of the corpus, are drivable exactly as
+authored**, and the table, not the script, is the main obstacle to the rest. The ramp
+is already gentle in aggregate (mean 2.31 new atoms per lesson, median 2, p90 3) but
+undefended: 52 lessons exceed a budget of 3 and the steepest teaches ten numbers at
+once. Length is explicitly not a cost — splitting for gentleness is the intended
+direction, and no gate may penalise page, lesson, or chapter count.
 
 | ID | Status | Work item | Completion signal |
 |---|---|---|---|
@@ -55,6 +66,11 @@ letter and is rendered nowhere.
 | HL-C11 | Queued | Author chapter capabilities and payoffs across all 20 tracks. | All 379 chapters declare a `canDo` and a closed, representative payoff; gates flip to errors per track as debt clears. |
 | HL-C12 | Queued | Add the Class C illustration pipeline with provenance sidecars and a size budget. | Every asset carries generator, model, prompt, date, and licence; CI fails any asset without a recorded licence in `_assets/LICENSE.md`. |
 | HL-C13 | Queued | Deploy Language Ladder to GitHub Pages. | The app is reachable at `/coding-adventures/language-ladder/`; it is currently referenced by no workflow and has never been published. |
+| HL-C14 | Queued | Derive modality (`voice`/`sight`/`pen`) for every lesson and each chapter's drivable prefix. | The gap report publishes per-track modality counts and the corpus-wide drivable percentage; overrides without a recorded reason are reported. |
+| HL-C15 | Queued | Print modality signs and the drivable prefix at every chapter opening. | The book shows 🚗/👁/✍ beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
+| HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
+| HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
+| HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
 
 Open decision for the project owner, recorded rather than assumed: the books are
 CC BY-SA 4.0, and the licence and attribution stance for generated illustrations is

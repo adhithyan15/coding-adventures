@@ -14,7 +14,11 @@ use immediately — is specified in
 [`HL05`](../../specs/HL05-chapter-capability-and-step-by-step-shape.md), with the
 book's visual system and inline script-writing figures in
 [`HL06`](../../specs/HL06-visual-system.md) and the spine's growth through B1 in
-[`HL07`](../../specs/HL07-spine-expansion-to-b1.md). This page is just an index.
+[`HL07`](../../specs/HL07-spine-expansion-to-b1.md).
+[`HL08`](../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md) marks which
+chapters need eyes or a pen and which can be learned entirely by ear, and defines the
+narration export a voice assistant reads aloud on a commute. This page is just an
+index.
 
 Every track shares the same shape:
 

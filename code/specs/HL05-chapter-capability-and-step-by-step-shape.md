@@ -100,6 +100,12 @@ Field contracts:
 `chapters.json` is authored intent, unlike `curriculum.json`'s `omits` and
 `relocates` ledgers, which are recomputed caches. A validator may not rewrite it.
 
+Two further chapter properties — its **modality signs** and its **drivable prefix** —
+are defined by [HL08](./HL08-modality-gentle-ramp-and-the-drivable-course.md) and are
+*derived*, never authored here. They print at the chapter opening beside the `canDo`,
+so a reader sees both what the chapter will let them do and whether they can do it in
+the car.
+
 ## Self-sufficiency — the rule that makes a chapter worth finishing
 
 HL04's closed-world rule stands unchanged: a lesson may require only atoms
@@ -117,7 +123,7 @@ the atoms that chapter introduces. This is the load-bearing rule. Without it a p
 is satisfiable by exercising one word, and a chapter can claim a capability it never
 delivered. The threshold is a configured constant, initially **0.5**, recorded in
 `core/chapter-policy.json` so it can be raised as the corpus matures rather than
-hard-coded at a call site.
+hard-coded at a call site. That same policy file carries HL08's gentle-ramp budgets.
 
 ### Why the ramp is slower than the trade book's, and what is deliberately not built
 
