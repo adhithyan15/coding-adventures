@@ -32,6 +32,13 @@
 //
 //   title-value        the editor's in-progress title text.
 //   body-value         the editor's in-progress body text.
+//   task-name-value    the editor's in-progress "attach to task" text —
+//                       a task NAME, not an id (Notes has no notion of
+//                       task ids; the host resolves name → id on Save,
+//                       the same discipline the Sheet Labels column
+//                       already uses — see
+//                       code/specs/task-app-notes-ui-v1.md's addendum).
+//                       Empty means "no attachment."
 //
 // Emit vocabulary
 // ---------------
@@ -50,6 +57,7 @@
 //                            addTask/addProject already use).
 //   onTitleChange ( value )   the title field's content changed.
 //   onBodyChange ( value )    the body field's content changed.
+//   onTaskNameChange ( value )  the attach-to-task field's content changed.
 //   onSave                    commit the edit buffer via upsertNote.
 //   onDelete                  delete the open note via deleteNote.
 //   onCancel                  discard the edit buffer without saving.
@@ -60,11 +68,13 @@ component Notes {
   slot selected-note-id : text ;
   slot title-value      : text ;
   slot body-value       : text ;
+  slot task-name-value  : text ;
 
   emit onSelectNote ( index : number ) ;
   emit onNewNote ;
   emit onTitleChange ( value : text ) ;
   emit onBodyChange ( value : text ) ;
+  emit onTaskNameChange ( value : text ) ;
   emit onSave ;
   emit onDelete ;
   emit onCancel ;
