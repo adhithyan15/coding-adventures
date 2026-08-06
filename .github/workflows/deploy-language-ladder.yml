@@ -72,8 +72,18 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # persist-credentials: false — checkout otherwise writes an x-access-token
+      # carrying this job's `contents: write` scope into .git/config, and the npm
+      # steps below then execute lifecycle scripts from the whole transitive dep
+      # tree in that same workspace. One compromised transitive package could read
+      # the token and push to the repo. peaceiris/actions-gh-pages builds its own
+      # authenticated remote from the github_token input and never consults the
+      # persisted credential, so dropping it costs nothing here. Precedent:
+      # build-ocaml.yml lines 48, 80, 198.
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
