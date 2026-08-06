@@ -77,6 +77,17 @@ The sequence bitstream is written **backwards**: the encoder writes the last
 sequence first so the decoder, reading forward, sees sequences in natural order.
 A sentinel bit in the last byte marks the boundary of valid data.
 
+### Repeated-Offset (R1/R2/R3) sequences
+
+RFC 8878 §3.1.1.3.2.1.1 lets a sequence's Offset_Value (1, 2, or 3) reference
+one of the three most-recently-used match offsets instead of encoding a fresh
+distance. This package's **encoder** never emits that shortcut (every match
+offset is coded explicitly), but the **decoder** fully implements it — real
+`zstd`'s encoder uses repeat offsets constantly, so a decoder that only
+understood explicit offsets would fail to interoperate with a meaningful
+fraction of real-world `.zst` files. See `code/specs/CMP07-zstd.md`'s
+"Repeat-Offset (R1/R2/R3) decode algorithm" section and `lessons.md` Lesson 99.
+
 ## Security
 
 - Output is capped at **256 MB** (`maxOutput`) to prevent decompression bombs.
@@ -94,4 +105,4 @@ A sentinel bit in the last byte marks the boundary of valid data.
 go test ./... -v -cover
 ```
 
-Expected: 51 tests pass, coverage ≥ 93%.
+Expected: 56 tests pass (plus sub-tests), coverage ≥ 90%.
