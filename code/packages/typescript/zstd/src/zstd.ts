@@ -710,8 +710,18 @@ function mlToCode(ml: number): number {
  * Example: input = "abcabc"
  *   lits = [a, b, c]
  *   seqs = [{ll:3, ml:3, off:3}]   (copy 3 bytes from 3 back)
+ *
+ * Exported (along with `encodeLiteralsSection`, `encodeSeqCount`, and
+ * `encodeSequencesSection` below) ONLY for white-box unit testing of the
+ * FSE sequences codec in isolation from the LZSS front-end — NOT re-exported
+ * from `index.ts`, so this does not add to the package's published API.
+ * This lets a test hand-craft an exact sequence list (e.g. specific
+ * `off` values below the repeat-offset threshold) that the real LZSS-driven
+ * `compress()` could never itself produce, to deterministically exercise
+ * every Repeated-Offset (R1/R2/R3) decode branch — see the "Repeated-Offset
+ * (R1/R2/R3) deterministic coverage" tests in tests/zstd.test.ts.
  */
-interface Seq {
+export interface Seq {
   ll: number;   // literal length
   ml: number;   // match length
   off: number;  // match offset (1-indexed: 1 = last byte written)
@@ -763,7 +773,7 @@ function tokensToSeqs(tokens: LzssToken[]): [Uint8Array, Seq[]] {
  *   bits [1:0] = Literals_Block_Type = 00 (Raw)
  *   bits [3:2] = Size_Format: 00=1-byte, 01=2-byte, 11=3-byte
  */
-function encodeLiteralsSection(lits: Uint8Array): number[] {
+export function encodeLiteralsSection(lits: Uint8Array): number[] {
   const n = lits.length;
   const out: number[] = [];
 
@@ -903,7 +913,7 @@ function decodeLiteralsSection(data: Uint8Array, offset: number): [Uint8Array, n
 // states in write order ML, OF, LL, so a forward reader sees LL, OF, ML.
 
 /** Encode sequence count as 1, 2, or 3 bytes. */
-function encodeSeqCount(count: number): number[] {
+export function encodeSeqCount(count: number): number[] {
   // RFC 8878 §3.1.1.3.1 layout — byte0 is the FORMAT MARKER:
   //   byte0 < 128            → 1-byte form, count = byte0
   //   byte0 ∈ [128, 254]     → 2-byte form, count = ((byte0 - 128) << 8) | byte1
@@ -952,7 +962,7 @@ function decodeSeqCount(data: Uint8Array, offset: number): [number, number] {
  *
  * Returns the raw FSE bitstream bytes (not including the count or modes byte).
  */
-function encodeSequencesSection(seqs: Seq[]): Uint8Array {
+export function encodeSequencesSection(seqs: Seq[]): Uint8Array {
   // Build encode tables (precomputed from predefined distributions).
   const [eeLl, stLl] = buildEncodeTable(LL_NORM, LL_ACC_LOG);
   const [eeMl, stMl] = buildEncodeTable(ML_NORM, ML_ACC_LOG);
@@ -1069,6 +1079,23 @@ function compressBlock(block: Uint8Array): Uint8Array | null {
 }
 
 /**
+ * The three Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1), threaded
+ * through every Compressed block in a frame.
+ *
+ * "For the first block, the starting offset history is populated with the
+ * following values: Repeated_Offset1 = 1, Repeated_Offset2 = 4,
+ * Repeated_Offset3 = 8" — `decompress()` creates one of these per frame and
+ * every Compressed block's sequences read AND update it. Raw and RLE blocks
+ * do not touch it; it survives across them unchanged, because the registers
+ * are FRAME-scoped, not block-scoped.
+ */
+interface RepOffsets {
+  r1: number;
+  r2: number;
+  r3: number;
+}
+
+/**
  * Decompress one ZStd compressed block.
  *
  * Reads the literals section, sequences section, and applies the sequences
@@ -1076,8 +1103,12 @@ function compressBlock(block: Uint8Array): Uint8Array | null {
  *
  * @param data  The compressed block content (no block header).
  * @param out   Output buffer to append decompressed bytes to.
+ * @param reps  Repeated-Offset registers (RFC 8878 §3.1.1.3.2.1.1) —
+ *              mutated in place; the caller threads the same object through
+ *              every Compressed block in a frame. See the module doc
+ *              comment on `RepOffsets` and the offset-decode step below.
  */
-function decompressBlock(data: Uint8Array, out: number[]): void {
+function decompressBlock(data: Uint8Array, out: number[], reps: RepOffsets): void {
   // ── Literals section ─────────────────────────────────────────────────
   const [lits, litConsumed] = decodeLiteralsSection(data, 0);
   let pos = litConsumed;
@@ -1153,12 +1184,88 @@ function decompressBlock(data: Uint8Array, out: number[]): void {
     // §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
     // required to decode offset. It does the same for Match_Length and then
     // for Literals_Length.").
-    // Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3
+    // `ofRaw` is the RFC's "Offset_Value": `(1 << of_code) | extra_bits`.
+    // The NUMBER of bits read is always exactly `ofCode`, regardless of how
+    // `ofRaw` is later interpreted below (explicit offset vs. repeat-offset
+    // reference) — the reference decoder never varies bit-consumption on
+    // that interpretation, only what it means.
     const ofRaw = (1 << ofCode) | Number(br.readBits(ofCode));
     const ml = mlInfo[0] + Number(br.readBits(mlInfo[1]));
     const ll = llInfo[0] + Number(br.readBits(llInfo[1]));
-    if (ofRaw < 3) throw new Error(`decoded offset underflow: raw=${ofRaw}`);
-    const offset = ofRaw - 3;
+
+    // `llCode === 0` is the only LL code with baseline 0 and 0 extra bits
+    // (see LL_CODES), so it is knowable from the PEEKED code alone — no
+    // extra bits need to be read yet to know whether the eventual `ll`
+    // value is 0. RFC 8878's repeat-offset mapping shifts by exactly this
+    // condition ("when Literals_Length is 0, repeated offsets are shifted
+    // by 1" — see below).
+    const llIsZero = llCode === 0;
+
+    // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including the
+    // Repeated_Offset (R1/R2/R3) mechanism. `of_code >= 2` guarantees
+    // `ofRaw = (1<<of_code)+extra >= 4`, i.e. Offset_Value > 3: an ordinary
+    // explicit offset — push it onto the offset history (full rotate) and
+    // use it directly. `of_code <= 1` guarantees `ofRaw` in {1, 2, 3}: a
+    // repeat-offset reference, whose slot additionally depends on
+    // `llIsZero`.
+    //
+    // The repeat case collapses to one selector in [0, 3]:
+    //     selector = llIsZero + ofRaw - 1
+    // (cross-checked against RFC 8878 prose AND the literal reference C
+    // source `ZSTD_decodeSequence` in zstd_decompress_block.c — specifically
+    // its non-aarch64 branch, which indexes `prevOffset[]` directly by a
+    // combined `ofBase + ll0 + extraBit` value using the ACTUAL predefined
+    // `OF_base` table (`OF_base[0]=0, OF_base[1]=1`, NOT `1 << code`); once
+    // that real table is used instead of a naive `1 << code` assumption,
+    // the two formulations agree exactly on all four (of_code, llIsZero,
+    // extraBit) combinations for of_code ∈ {0, 1}):
+    //   0 -> reuse rep1 unchanged (no rotation)
+    //   1 -> use rep2 (rep1, rep2 swap; rep3 untouched)
+    //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+    //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+    //
+    // Repeat-offset sequences are never emitted by this package's OWN
+    // encoder (`encodeSequencesSection` always writes `rawOff = offset + 3`,
+    // i.e. an explicit offset code >= 2, since the minimum LZ77 match offset
+    // is 1) — so this port's own compress()/decompress() round trip never
+    // exercises this branch. The real `zstd` CLI's encoder uses repeat
+    // offsets constantly (one of its main entropy wins, especially for
+    // periodic/repetitive data), so a decoder that only understood explicit
+    // offset codes would systematically fail to decode real-world `.zst`
+    // files using them. See lessons.md Lesson 98 (found while implementing
+    // `code/packages/c/zstd`, PR #9941) and TC-9's repeat-offset interop
+    // test below.
+    let offset: number;
+    if (ofCode >= 2) {
+      offset = ofRaw - 3;
+      reps.r3 = reps.r2;
+      reps.r2 = reps.r1;
+      reps.r1 = offset;
+    } else {
+      const selector = (llIsZero ? 1 : 0) + ofRaw - 1;
+      switch (selector) {
+        case 0:
+          offset = reps.r1;
+          break;
+        case 1:
+          offset = reps.r2;
+          reps.r2 = reps.r1;
+          reps.r1 = offset;
+          break;
+        case 2:
+          offset = reps.r3;
+          reps.r3 = reps.r2;
+          reps.r2 = reps.r1;
+          reps.r1 = offset;
+          break;
+        default: // 3
+          offset = reps.r1 > 0 ? reps.r1 - 1 : 0;
+          reps.r3 = reps.r2;
+          reps.r2 = reps.r1;
+          reps.r1 = offset;
+          break;
+      }
+    }
 
     // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC 8878
     // §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
@@ -1389,6 +1496,12 @@ export function decompress(data: Uint8Array): Uint8Array {
   // ── Blocks ───────────────────────────────────────────────────────────
   const out: number[] = [];
 
+  // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+  // default 1/4/8 "for the first block", then threaded unmodified through
+  // every Compressed block's sequences for the rest of the frame (Raw/RLE
+  // blocks don't touch them). See `RepOffsets` and `decompressBlock`.
+  const reps: RepOffsets = { r1: 1, r2: 4, r3: 8 };
+
   for (;;) {
     if (pos + 3 > data.length) throw new Error("truncated block header");
 
@@ -1426,7 +1539,7 @@ export function decompress(data: Uint8Array): Uint8Array {
       }
       const blockData = data.subarray(pos, pos + bsize);
       pos += bsize;
-      decompressBlock(blockData, out);
+      decompressBlock(blockData, out, reps);
     } else {
       throw new Error("reserved block type 3");
     }
