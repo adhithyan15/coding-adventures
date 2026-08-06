@@ -12,6 +12,7 @@ Longest effective lessons:
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
   725 voice, 355 sight, 53 pen of 1133 lessons; 64% drivable
   tables of more than 0 column(s) count as sight
+  725 lessons have a voice CORE; 0 carry a detachable writing segment (0 rescued for the hands-free view)
   arabic: 37 voice, 18 sight, 16 pen; 52% drivable; 27 chapters, 31 lessons reachable in chapter-prefix order
   bengali: 28 voice, 3 sight, 0 pen; 90% drivable; 6 chapters, 23 lessons reachable in chapter-prefix order
   chinese: 5 voice, 2 sight, 0 pen; 71% drivable; 1 chapters, 1 lessons reachable in chapter-prefix order
