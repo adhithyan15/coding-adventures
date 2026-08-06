@@ -25,6 +25,7 @@ import {
   ductusFrame,
   ductusSteps,
   escapeXml,
+  isSafeName,
   segmentEndFractions,
   svgMarkup,
   viewBoxFor,
@@ -420,5 +421,29 @@ describe("serialising to markup", () => {
 
   it("self-closes childless elements", () => {
     expect(svgMarkup({ tag: "circle", attrs: { r: 3 } })).toBe('<circle r="3"/>');
+  });
+
+  // An attribute NAME cannot be escaped — there is nowhere to put the entity —
+  // so a name is either legal or dropped. Every name this module emits is a
+  // literal, but `SvgNode` is public and the serialiser is meant to be reused.
+  it("drops attribute names that are not legal XML names", () => {
+    expect(isSafeName("stroke-width")).toBe(true);
+    expect(isSafeName("xlink:href")).toBe(true);
+    expect(isSafeName(`x" onload="alert(1)`)).toBe(false);
+    expect(isSafeName("2bad")).toBe(false);
+    const svg = svgMarkup({ tag: "rect", attrs: { [`x" onload="alert(1)`]: "1", width: 4 } });
+    expect(svg).toBe('<rect width="4"/>');
+  });
+
+  it("refuses event-handler attributes outright, prefix and all", () => {
+    // `onload` is a perfectly legal XML name AND a script. Reject the prefix
+    // rather than chase a list of handler names that keeps growing.
+    expect(isSafeName("onload")).toBe(false);
+    expect(isSafeName("OnClick")).toBe(false);
+    expect(svgMarkup({ tag: "svg", attrs: { onload: "alert(1)", onclick: "x" } })).toBe("<svg/>");
+  });
+
+  it("neutralises a hostile tag name rather than emitting it", () => {
+    expect(svgMarkup({ tag: "svg><script", attrs: {} })).toBe("<g/>");
   });
 });

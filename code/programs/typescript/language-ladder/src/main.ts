@@ -94,6 +94,7 @@ import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
   ductusFilmstrip,
   ductusFor,
+  isSafeName,
   type SvgNode,
 } from "./ductusview.ts";
 import tamilFontUrl from "../../../../learning/human-languages/_fonts/NotoSansTamil-Static.ttf?url";
@@ -1870,8 +1871,12 @@ function orderedListOf(items: string[]): HTMLElement {
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 function svgElement(node: SvgNode): SVGElement {
-  const element = document.createElementNS(SVG_NS, node.tag);
-  for (const [name, value] of Object.entries(node.attrs)) element.setAttribute(name, String(value));
+  const element = document.createElementNS(SVG_NS, isSafeName(node.tag) ? node.tag : "g");
+  for (const [name, value] of Object.entries(node.attrs)) {
+    // `setAttribute` cannot be escaped out of, but it CAN set an event handler
+    // if the name says so — same refusal as the string serialiser applies.
+    if (isSafeName(name)) element.setAttribute(name, String(value));
+  }
   if (node.text !== undefined) element.textContent = node.text;
   for (const child of node.children ?? []) element.appendChild(svgElement(child));
   return element;

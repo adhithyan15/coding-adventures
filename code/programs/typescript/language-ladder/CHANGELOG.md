@@ -29,7 +29,13 @@
 - Build the SVG in `main.ts` through `createElementNS`/`setAttribute`/
   `textContent` — no `innerHTML`. The string serialiser escapes every value that
   reaches an attribute or a text node, so a label can only ever become text.
-- Add `tests/ductusview.test.ts` (39 tests): path emission straight from
+- Reject illegal or `on*` attribute and tag NAMES in both the string serialiser
+  and the DOM builder. A name cannot be escaped — there is nowhere to put the
+  entity — so it is either a legal XML name or it is dropped, and `onload` is
+  refused by prefix rather than by a blocklist. Every name the module emits is
+  a literal today, but `SvgNode` is a public type and the serialiser is meant
+  to be reused by the book pipeline.
+- Add `tests/ductusview.test.ts` (42 tests): path emission straight from
   `penPathD`, the y-flip and a control proving an unflipped box would fail,
   progressive build-up fractions, shared viewBox across a letter's frames,
   graceful `undefined` for letters with no ductus (including inherited

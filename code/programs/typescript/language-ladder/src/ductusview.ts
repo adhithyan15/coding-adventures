@@ -511,15 +511,34 @@ export function escapeXml(value: string): string {
     .replace(/'/g, "&apos;");
 }
 
+// Escaping VALUES is only half the job. A tag or attribute NAME cannot be
+// escaped — there is nowhere for the entity to go — so a name is either a legal
+// XML name or it is dropped. Every name this module produces is a literal, but
+// `SvgNode` is a public type and this serialiser is meant to be reused, so the
+// guarantee belongs to the writer rather than to today's callers.
+//
+// `on*` is rejected on top of that: `onload` is a perfectly legal XML name, and
+// in SVG it is also a script. The check is deliberately not a blocklist of
+// specific handlers — there are dozens, and new ones appear — but a refusal of
+// the whole prefix.
+const XML_NAME = /^[A-Za-z_][A-Za-z0-9_.:-]*$/;
+
+/** Is this a legal XML name that cannot smuggle in markup or a handler? */
+export function isSafeName(name: string): boolean {
+  return XML_NAME.test(name) && !/^on/i.test(name);
+}
+
 /** Render a node tree to SVG text. Pure — no `document`, no globals. */
 export function svgMarkup(node: SvgNode): string {
+  const tag = isSafeName(node.tag) ? node.tag : "g";
   const attrs = Object.entries(node.attrs)
+    .filter(([k]) => isSafeName(k))
     .map(([k, v]) => ` ${k}="${escapeXml(String(v))}"`)
     .join("");
   const inner =
     (node.text !== undefined ? escapeXml(node.text) : "") +
     (node.children ?? []).map(svgMarkup).join("");
-  return inner === "" ? `<${node.tag}${attrs}/>` : `<${node.tag}${attrs}>${inner}</${node.tag}>`;
+  return inner === "" ? `<${tag}${attrs}/>` : `<${tag}${attrs}>${inner}</${tag}>`;
 }
 
 const round = (n: number) => Math.round(n * 10) / 10;
