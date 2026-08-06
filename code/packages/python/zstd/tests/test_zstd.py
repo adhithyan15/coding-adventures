@@ -29,6 +29,7 @@ from coding_adventures_zstd import (
     _build_decode_table,
     _decode_literals_section,
     _decode_seq_count,
+    _decompress_block,
     _encode_literals_section,
     _encode_seq_count,
     _encode_sequences_section,
@@ -625,6 +626,177 @@ class TestFSEEncodeDecode:
             assert off_dec == expected.off, f"seq {i} OFF"
 
 
+def _apply_seq_offsets(lits: bytes, seqs: list[tuple[int, int, int]]) -> bytes:
+    """Independently apply a list of ALREADY-RESOLVED (ll, ml, offset)
+    triples to ``lits``, mirroring the trivial "emit literals, then copy
+    ml bytes from offset positions back" step of ``_decompress_block``'s
+    main loop.
+
+    This is intentionally the ONLY piece of decode logic duplicated here —
+    it is not what TestRepeatOffsetDecode below is testing (that logic
+    predates this fix and is already covered by the FSE round-trip tests
+    above). What IS being tested is which `offset` value the decoder's new
+    Repeated_Offset (R1/R2/R3) selector logic computes for each sequence —
+    this helper just gives an independent way to turn "the offsets we
+    expect, by hand, per RFC 8878 / the reference decoder" into expected
+    OUTPUT BYTES, so the test can assert on `bytes(out)` instead of
+    re-deriving byte-for-byte content by hand (error-prone for 30+ bytes).
+    """
+    out = bytearray()
+    lit_pos = 0
+    for ll, ml, offset in seqs:
+        out.extend(lits[lit_pos:lit_pos + ll])
+        lit_pos += ll
+        copy_start = len(out) - offset
+        for i in range(ml):
+            out.append(out[copy_start + i])
+    return bytes(out)
+
+
+class TestRepeatOffsetDecode:
+    """Repeated-Offset (R1/R2/R3) sequence decoding — RFC 8878
+    §3.1.1.3.2.1.1 — lessons.md Lesson 98.
+
+    This package's own ENCODER never emits Offset_Value <= 3 (every LZSS
+    match offset is coded explicitly, ``raw_off = seq.off + 3 >= 4`` since
+    the minimum real match offset is 1), so the normal ``_Seq(off=...)``
+    API can't directly produce a repeat-offset code — a real back-reference
+    offset can never be small enough. To exercise the DECODER's
+    repeat-offset branch in isolation (independent of the real `zstd` CLI —
+    see TestCliInterop below for the end-to-end proof), these tests pass
+    ``_Seq.off`` values of 0, -1, and -2. Those are NOT real offsets (no
+    encoder would ever produce them from actual LZ77 matches) — they are a
+    deliberate trick that exploits `_encode_sequences_section`'s own
+    ``raw_off = seq.off + 3`` formula (the SAME formula the decoder inverts)
+    to land on a chosen (of_code, extra_bits) pair, i.e. a chosen
+    Offset_Value in {1, 2, 3}, letting the test drive the decoder's new
+    selector logic directly:
+
+        seq.off = -2  →  raw_off = 1  →  of_code=0, extra=0  →  Offset_Value=1
+        seq.off = -1  →  raw_off = 2  →  of_code=1, extra=0  →  Offset_Value=2
+        seq.off =  0  →  raw_off = 3  →  of_code=1, extra=1  →  Offset_Value=3
+
+    Combined with a chosen literal length (0 selects "ll_is_zero=True"; a
+    non-zero LL code 1..15 selects "ll_is_zero=False"), every one of the
+    four repeat-offset selectors (RFC 8878's "ll_is_zero + Offset_Value - 1"
+    shift, 0..3) is independently reachable and asserted below.
+    """
+
+    def test_all_four_selectors_and_frame_scoped_registers(self) -> None:
+        """Six sequences in one block: two explicit offsets seed R1/R2/R3
+        away from their frame-default [1, 4, 8], then four repeat-offset
+        sequences — one per selector (0, 1, 2, 3) — read and rotate them.
+
+        Expected offsets and register transitions below were derived BY
+        HAND from RFC 8878 §3.1.1.3.2.1.1 and cross-checked against the
+        literal `ZSTD_decodeSequence` reference C source (fetched from
+        github.com/facebook/zstd, not recalled from memory) before writing
+        this test — see the module comment above `_decompress_block` in
+        __init__.py for the full derivation. `_apply_seq_offsets` then
+        turns those hand-derived (ll, ml, offset) triples into expected
+        OUTPUT BYTES independently of `_decompress_block`, so this test
+        catches a wrong offset/register computation as either a byte
+        mismatch or (if the wrong offset is 0 or out of bounds) a
+        ValueError, not a silently-passing false positive.
+        """
+        lits = bytes(range(18))  # 18 arbitrary, distinct literal bytes
+
+        # (ll, ml, off) as fed to the ENCODER. `off` is a REAL offset for
+        # the two explicit sequences (A, B) and a repeat-offset "selector
+        # trick" value (see class docstring) for the other four.
+        seqs = [
+            _Seq(ll=5, ml=3, off=3),    # A: explicit -> offset 3
+            _Seq(ll=12, ml=3, off=20),  # B: explicit -> offset 20
+            _Seq(ll=0, ml=3, off=0),    # C: selector 3 (ll=0, Offset_Value=3)
+            _Seq(ll=1, ml=3, off=-2),   # D: selector 0 (ll>0, Offset_Value=1)
+            _Seq(ll=0, ml=3, off=-2),   # E: selector 1 (ll=0, Offset_Value=1)
+            _Seq(ll=0, ml=3, off=-1),   # F: selector 2 (ll=0, Offset_Value=2)
+        ]
+
+        block = bytearray()
+        block.extend(_encode_literals_section(lits))
+        block.extend(_encode_seq_count(len(seqs)))
+        block.append(0x00)  # symbol compression modes: all Predefined
+        block.extend(_encode_sequences_section(seqs))
+
+        out = bytearray()
+        rep = [1, 4, 8]  # frame defaults (RFC 8878 §3.1.1.3.2.1.1)
+        _decompress_block(bytes(block), out, rep)
+
+        # Hand-derived (ll, ml, resolved_offset) per sequence:
+        #   A explicit(3):    R=[1,4,8]  -> R=[3,1,4]
+        #   B explicit(20):   R=[3,1,4]  -> R=[20,3,1]
+        #   C selector3: offset=R1-1=19; full rotate -> R=[19,20,3]
+        #   D selector0: offset=R1=19;   no rotation  -> R=[19,20,3]
+        #   E selector1: offset=R2=20;   R1<->R2 swap -> R=[20,19,3]
+        #   F selector2: offset=R3=3;    full rotate  -> R=[3,20,19]
+        expected = _apply_seq_offsets(
+            lits,
+            [
+                (5, 3, 3),
+                (12, 3, 20),
+                (0, 3, 19),
+                (1, 3, 19),
+                (0, 3, 20),
+                (0, 3, 3),
+            ],
+        )
+        assert bytes(out) == expected
+        assert rep == [3, 20, 19]
+
+    def test_repeat_offset_persists_across_blocks_in_same_frame(self) -> None:
+        """The R1/R2/R3 registers are FRAME-scoped, not block-scoped: a
+        Compressed block's sequences must be able to reuse an offset an
+        EARLIER block in the same frame established, via the same `rep`
+        list threaded through both calls (mirroring what `decompress()`
+        does across the block loop).
+
+        Block 1's one explicit-offset(7) sequence rotates the frame
+        defaults [1, 4, 8] to [7, 1, 4] (R1=7, R2=1, R3=4 — note R2 is now
+        1, the OLD R1, not the original default 4; a naive "R2 is still
+        its startup default" assumption would be wrong here, which is
+        exactly why this test picks a selector-1 (R2) reference for block
+        2 rather than a selector-0 (R1) one). Block 2's sequence has
+        ll=0 and an Offset_Value of 1 (the ``off=-2`` selector trick, see
+        the class docstring) -> selector 1 -> "use R2" = 1.
+        """
+        lits1 = b"0123456789"
+        seqs1 = [_Seq(ll=10, ml=3, off=7)]  # explicit offset 7
+        block1 = bytearray()
+        block1.extend(_encode_literals_section(lits1))
+        block1.extend(_encode_seq_count(len(seqs1)))
+        block1.append(0x00)
+        block1.extend(_encode_sequences_section(seqs1))
+
+        lits2 = b""
+        seqs2 = [_Seq(ll=0, ml=3, off=-2)]  # selector 1 -> R2
+        block2 = bytearray()
+        block2.extend(_encode_literals_section(lits2))
+        block2.extend(_encode_seq_count(len(seqs2)))
+        block2.append(0x00)
+        block2.extend(_encode_sequences_section(seqs2))
+
+        out = bytearray()
+        rep = [1, 4, 8]
+        _decompress_block(bytes(block1), out, rep)
+        assert bytes(out) == _apply_seq_offsets(lits1, [(10, 3, 7)])
+        assert bytes(out) == b"0123456789345"
+        assert rep == [7, 1, 4]  # explicit offset 7 rotated in; R2 = old R1
+
+        _decompress_block(bytes(block2), out, rep)
+        # Block 2 has no literals of its own; its sequence copies 3 bytes
+        # at offset R2=1 from the TAIL of block 1's output (cross-block
+        # back-reference — only possible because `out` and `rep` both
+        # persist across the two _decompress_block calls, exactly as
+        # decompress() threads them across a frame's block loop).
+        # offset=1 with ml=3 self-overlaps: copy_start = 13-1 = 12, and
+        # each copied byte becomes readable by the next copy in the same
+        # loop, so it repeats out[12] ('5') three times, not a 3-byte slice.
+        assert bytes(out) == b"0123456789345" + b"555"
+        assert bytes(out) == b"0123456789345555"
+        assert rep == [1, 7, 4]  # selector 1: R1<->R2 swap, R3 untouched
+
+
 class TestWireFormat:
     """Test decompressor against manually constructed frames."""
 
@@ -839,19 +1011,66 @@ class TestCliInterop:
         compressed = _zstd_cli_compress(data, tmp_path)
         assert decompress(compressed) == data
 
-    def test_real_compress_our_decompress_rejects_unsupported_features(
+    def test_real_compress_our_decompress_repeat_offset_rle(
         self, tmp_path: Path
     ) -> None:
-        """Some real-`zstd`-compressed frames use features outside this
-        educational codec's supported subset — Repeat_Offset (R1/R2/R3)
-        shortcuts and Huffman-coded literals in particular (see the
-        'Educational simplification' note in the sibling java/zstd package
-        and code/specs/CMP07-zstd.md). Our decoder must REJECT these with a
-        clear ValueError, not crash or silently produce wrong output. This
-        was itself a real bug found via this same CLI-interop exercise: an
-        unchecked negative offset (from a Repeat_Offset code) caused an
-        uncaught IndexError instead of a clean error."""
-        data = b"A" * 500  # real zstd encodes this via a Repeat_Offset shortcut
+        """Regression test for lessons.md Lesson 98: `b"A" * 500` is exactly
+        the shape of input where the real `zstd` CLI's encoder reaches for a
+        Repeat_Offset (R1/R2/R3) shortcut — e.g. two literal bytes "AA"
+        followed by one long match with Offset_Value=1 ("reuse R1", whose
+        frame-default value is 1) — rather than this package's own RLE
+        block type. Before the Lesson 98 fix, this package's decoder didn't
+        understand Offset_Value <= 3 as a repeat reference and either raised
+        ValueError (an explicit reject, added as defence-in-depth after an
+        earlier revision crashed with an uncaught IndexError on the same
+        input) or, before that guard existed, corrupted output. It must now
+        decode to the exact original bytes.
+        """
+        data = b"A" * 500
         compressed = _zstd_cli_compress(data, tmp_path)
-        with pytest.raises(ValueError):
-            decompress(compressed)
+        assert decompress(compressed) == data
+
+    def test_real_compress_our_decompress_repeat_offset_periodic(
+        self, tmp_path: Path
+    ) -> None:
+        """Periodic data with a distinctive, non-trivial period gives the
+        real `zstd` CLI's encoder many back-to-back LZ77 matches at the
+        SAME distance (one full period apart) — the textbook case for
+        repeatedly reusing Repeated_Offset1 rather than re-encoding the
+        same explicit offset every time. Regression test for lessons.md
+        Lesson 98, using a period (53 bytes) chosen to avoid degenerating
+        into a single-byte RLE pattern (see test above) while still being
+        short enough, repeated enough times, to make repeat-offset reuse
+        very likely.
+        """
+        unit = bytes((i * 37 + 11) % 256 for i in range(53))
+        data = unit * 200  # 10,600 bytes; period 53 forces repeated matches
+        compressed = _zstd_cli_compress(data, tmp_path)
+        assert decompress(compressed) == data
+
+    def test_real_compress_our_decompress_still_rejects_huffman_literals(
+        self, tmp_path: Path
+    ) -> None:
+        """Huffman-coded literals remain outside this educational codec's
+        supported subset (see code/specs/CMP07-zstd.md's 'Educational
+        Simplification' table: 'Literals: Huffman or raw' -> 'Raw only').
+        This is UNCHANGED by the Lesson 98 repeat-offset fix — that fix is
+        decode-only support for a SEQUENCES-section feature (Offset_Value
+        <= 3), unrelated to the LITERALS-section encoding. High-entropy
+        data compressible enough for `zstd` to bother with Huffman, but
+        with enough symbol variety to make Huffman worthwhile over raw,
+        should still raise a clear ValueError rather than crash or silently
+        misdecode literals as if they were raw.
+        """
+        # A skewed-but-varied byte distribution: real zstd's heuristics
+        # reliably pick Huffman-coded literals for this shape over raw.
+        data = bytes((i * i) % 191 for i in range(20000))
+        compressed = _zstd_cli_compress(data, tmp_path)
+        try:
+            result = decompress(compressed)
+        except ValueError:
+            return  # expected: Huffman literals correctly rejected
+        # If the real CLI didn't actually choose Huffman literals for this
+        # input (heuristics can vary by zstd version), the least we require
+        # is that decode is still byte-exact — never silent corruption.
+        assert result == data

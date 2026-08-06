@@ -990,8 +990,35 @@ private func compressBlock(_ block: [UInt8]) -> [UInt8]? {
 /// - Parameters:
 ///   - data: The block payload (after the 3-byte block header).
 ///   - out:  Output buffer; decoded bytes are appended here.
-/// - Throws: `ZstdError` on malformed input.
-private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
+///   - rep1, rep2, rep3: The three Repeated_Offset registers (RFC 8878
+///     §3.1.1.3.2.1.1) — IN/OUT, because they are FRAME-scoped, not
+///     block-scoped. "For the first block, the starting offset history is
+///     populated with Repeated_Offset1=1, Repeated_Offset2=4,
+///     Repeated_Offset3=8" (RFC 8878), and every later Compressed block in
+///     the same frame continues from wherever the previous one left them.
+///     The caller (`decompress`) owns the registers and threads them
+///     through every Compressed block in the frame; Raw/RLE blocks don't
+///     touch them.
+///
+/// WHY THIS DECODER NEEDS THIS EVEN THOUGH THIS PACKAGE'S OWN ENCODER NEVER
+/// EMITS REPEAT-OFFSET SEQUENCES: `encodeSequencesSection`'s minimum
+/// possible LZ77 match offset is 1, so `rawOff = offset + 3 >= 4` always —
+/// `ofCode` is always >= 2, an explicit offset. That means this package's
+/// own `compress()`/`decompress()` round trip never touches the
+/// repeat-offset path. But the real `zstd` CLI's encoder uses repeat
+/// offsets constantly — reusing the previous match's distance is one of the
+/// format's principal entropy wins, especially for periodic/repetitive data
+/// — so a decoder that only understands explicit offset codes will
+/// systematically fail to decode a meaningful fraction of real-world `.zst`
+/// files. Algorithm cross-checked against both the RFC 8878 prose and the
+/// literal reference C source (`ZSTD_decodeSequence` in
+/// `zstd_decompress_block.c`, github.com/facebook/zstd) and against the
+/// already-verified fix in `code/packages/c/zstd` (PR #9941) — see
+/// lessons.md Lesson 98.
+private func decompressBlock(
+    _ data: [UInt8], out: inout [UInt8],
+    rep1: inout UInt32, rep2: inout UInt32, rep3: inout UInt32
+) throws {
     // ── Literals section ─────────────────────────────────────────────────
     let (lits, litConsumed) = try decodeLiteralsSection(data)
     var pos = litConsumed
@@ -1069,18 +1096,68 @@ private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
         let llInfo = llCodes[Int(llCode)]
         let mlInfo = mlCodes[Int(mlCode)]
 
+        // `llIsZero` feeds the Repeated_Offset "shifted by 1" rule below
+        // (RFC 8878 §3.1.1.3.2.1.1) and is knowable right now, from the
+        // PEEKED `llCode` alone — LL code 0 is the only code with baseline 0
+        // and 0 extra bits, so `llCode == 0` iff the eventual decoded `ll`
+        // value is 0. No extra bits need to be read yet to know this.
+        let llIsZero = (llCode == 0)
+
         // Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
         // §3.1.1.3.2.1.2 — decoding starts by reading the bits needed for
-        // offset, then match length, then literals length).
-        // Offset: raw = (1 << ofCode) | extra; offset = raw - 3.
+        // offset, then match length, then literals length). The NUMBER of
+        // bits read for the offset field is always exactly `ofCode`
+        // regardless of the Repeated_Offset interpretation below — the
+        // reference decoder never varies bit-consumption on `llIsZero`, only
+        // how the resulting value maps to an actual offset changes.
         let ofExtra = br.readBits(Int(ofCode))
         let ofRaw = (UInt32(1) << Int(ofCode)) | UInt32(ofExtra)
-        guard ofRaw >= 3 else {
-            throw ZstdError.decodingError("decoded offset underflow: ofRaw=\(ofRaw)")
-        }
-        let offset = ofRaw - 3
         let ml = mlInfo.0 + UInt32(br.readBits(Int(mlInfo.1)))
         let ll = llInfo.0 + UInt32(br.readBits(Int(llInfo.1)))
+
+        // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        // the Repeated_Offset (R1/R2/R3) mechanism this decoder must
+        // understand even though its own encoder never emits it — see the
+        // doc comment on `decompressBlock`.
+        //
+        // `ofCode >= 2` guarantees `ofRaw = (1 << ofCode) + extra >= 4`,
+        // i.e. Offset_Value > 3: an ordinary explicit offset. `ofCode <= 1`
+        // guarantees `ofRaw` in {1, 2, 3}: a repeat-offset reference.
+        //
+        // The repeat case collapses to one selector in [0, 3] (derived from,
+        // and verified against, the reference decoder's
+        // `ofBase + ll0 + extra_bit`, and against the PR #9941 `c/zstd` fix):
+        //   0 -> reuse rep1 unchanged (no rotation)
+        //   1 -> use rep2 (rep1, rep2 swap; rep3 untouched)
+        //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+        //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+        let offset: UInt32
+        if ofCode >= 2 {
+            offset = ofRaw - 3
+            rep3 = rep2
+            rep2 = rep1
+            rep1 = offset
+        } else {
+            let selector = (llIsZero ? 1 : 0) + Int(ofRaw) - 1
+            switch selector {
+            case 0:
+                offset = rep1
+            case 1:
+                offset = rep2
+                rep2 = rep1
+                rep1 = offset
+            case 2:
+                offset = rep3
+                rep3 = rep2
+                rep2 = rep1
+                rep1 = offset
+            default:  // 3
+                offset = rep1 > 0 ? rep1 - 1 : 0
+                rep3 = rep2
+                rep2 = rep1
+                rep1 = offset
+            }
+        }
 
         // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
         // 8878 §3.1.1.3.2.1.2), preparing the states the NEXT sequence's
@@ -1339,6 +1416,15 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
     // ── Blocks ────────────────────────────────────────────────────────────
     var out: [UInt8] = []
 
+    // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+    // default 1/4/8 "for the first block", then threaded unmodified through
+    // every Compressed block's sequences for the rest of the frame (Raw/RLE
+    // blocks don't touch them). See `decompressBlock`'s doc comment and
+    // lessons.md Lesson 98.
+    var rep1: UInt32 = 1
+    var rep2: UInt32 = 4
+    var rep3: UInt32 = 8
+
     while true {
         guard pos + 3 <= data.count else { throw ZstdError.blockTruncated }
 
@@ -1373,7 +1459,7 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
             guard pos + bsize <= data.count else { throw ZstdError.blockTruncated }
             let blockData = Array(data[pos..<(pos + bsize)])
             pos += bsize
-            try decompressBlock(blockData, out: &out)
+            try decompressBlock(blockData, out: &out, rep1: &rep1, rep2: &rep2, rep3: &rep3)
             guard out.count <= maxOutput else { throw ZstdError.outputLimitExceeded }
 
         default:  // 3 = Reserved

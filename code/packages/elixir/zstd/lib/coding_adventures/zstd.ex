@@ -945,9 +945,17 @@ defmodule CodingAdventures.Zstd do
   # ─── Block-level decompress ────────────────────────────────────────────────────
   #
   # Decompress one ZStd compressed block, appending output to `acc` (reversed list).
-  # Returns {:ok, new_acc} or {:error, reason}.
+  # Returns {:ok, new_acc, new_rep1, new_rep2, new_rep3} or {:error, reason}.
+  #
+  # `rep1`/`rep2`/`rep3` are the three Repeated_Offset registers (RFC 8878
+  # §3.1.1.3.2.1.1), threaded in from the caller and threaded back out —
+  # they are FRAME-scoped, so a block with no sequences (or this block's
+  # sequences, once decoded) must pass through/return whatever the running
+  # values are. See the module doc on apply_sequences/14 for why the decoder
+  # needs this even though this codec's own encoder never emits repeat-offset
+  # sequences (lessons.md Lesson 98).
 
-  defp decompress_block(data, acc) when is_binary(data) do
+  defp decompress_block(data, acc, rep1, rep2, rep3) when is_binary(data) do
     # ── Literals section ─────────────────────────────────────────────────────
     case decode_literals_section(data) do
       {:error, reason} ->
@@ -960,25 +968,26 @@ defmodule CodingAdventures.Zstd do
 
         # ── Sequences count ─────────────────────────────────────────────────
         if pos >= byte_size(data) do
-          # Block has only literals, no sequences — append directly.
-          {:ok, acc <> lits_bin}
+          # Block has only literals, no sequences — append directly. No
+          # sequences means the Repeated_Offset registers are untouched.
+          {:ok, acc <> lits_bin, rep1, rep2, rep3}
         else
           case decode_seq_count(data, pos) do
             {:error, reason} -> {:error, reason}
 
             {:ok, n_seqs, pos2} ->
               if n_seqs == 0 do
-                # No sequences — all content is literals.
-                {:ok, acc <> lits_bin}
+                # No sequences — all content is literals. Registers untouched.
+                {:ok, acc <> lits_bin, rep1, rep2, rep3}
               else
-                decompress_block_seqs(data, pos2, lits_bin, n_seqs, acc)
+                decompress_block_seqs(data, pos2, lits_bin, n_seqs, acc, rep1, rep2, rep3)
               end
           end
         end
     end
   end
 
-  defp decompress_block_seqs(data, pos, lits_bin, n_seqs, acc) do
+  defp decompress_block_seqs(data, pos, lits_bin, n_seqs, acc, rep1, rep2, rep3) do
     # ── Symbol compression modes ───────────────────────────────────────────
     if pos >= byte_size(data) do
       {:error, "missing symbol compression modes byte"}
@@ -1018,13 +1027,13 @@ defmodule CodingAdventures.Zstd do
             # Use binaries for the output buffer so back-references can use
             # binary_part/3 (O(1)) instead of Enum.at/2 (O(n)).
             # `acc` is the output so far from previous blocks.
-            apply_sequences(n_seqs, lits_bin, 0, acc, s_ll, s_ml, s_of, br, dt_ll, dt_ml, dt_of)
+            apply_sequences(n_seqs, lits_bin, 0, acc, s_ll, s_ml, s_of, br, dt_ll, dt_ml, dt_of, rep1, rep2, rep3)
         end
       end
     end
   end
 
-  defp apply_sequences(0, lits_bin, lit_pos, out, _s_ll, _s_ml, _s_of, _br, _dt_ll, _dt_ml, _dt_of) do
+  defp apply_sequences(0, lits_bin, lit_pos, out, _s_ll, _s_ml, _s_of, _br, _dt_ll, _dt_ml, _dt_of, rep1, rep2, rep3) do
     # Append any remaining trailing literals.
     n_lits = byte_size(lits_bin)
     if lit_pos < n_lits do
@@ -1033,14 +1042,14 @@ defmodule CodingAdventures.Zstd do
       if byte_size(out) + trailing_len > @max_output do
         {:error, "zstd: decompressed size exceeds limit of #{@max_output} bytes"}
       else
-        {:ok, out <> binary_part(lits_bin, lit_pos, trailing_len)}
+        {:ok, out <> binary_part(lits_bin, lit_pos, trailing_len), rep1, rep2, rep3}
       end
     else
-      {:ok, out}
+      {:ok, out, rep1, rep2, rep3}
     end
   end
 
-  defp apply_sequences(remaining, lits_bin, lit_pos, out, s_ll, s_ml, s_of, br, dt_ll, dt_ml, dt_of) do
+  defp apply_sequences(remaining, lits_bin, lit_pos, out, s_ll, s_ml, s_of, br, dt_ll, dt_ml, dt_of, rep1, rep2, rep3) do
     # Step 1 — PEEK all 3 symbols (LL, ML, OF) from the CURRENT states. This
     # is a bare table lookup (dt[state]) and consumes NO bits — the FSE
     # state itself already IS the decode-table index. Only the subsequent
@@ -1059,21 +1068,77 @@ defmodule CodingAdventures.Zstd do
         {ll_base, ll_extra_bits} = Enum.at(@ll_codes, ll_code)
         {ml_base, ml_extra_bits} = Enum.at(@ml_codes, ml_code)
 
+        # ll_is_zero is needed for the Repeated-Offset interpretation below
+        # (RFC 8878: "when Literals_Length is 0, repeated offsets are
+        # shifted by 1") and is knowable right now, from the PEEKED ll_code
+        # alone — LL code 0 is the only code with baseline 0 and 0 extra
+        # bits, so ll_code == 0 iff the eventual decoded `ll` value is 0. No
+        # extra bits need to be read yet to know this.
+        ll_is_zero = ll_code == 0
+
         # Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
         # §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
         # required to decode offset. It does the same for Match_Length and
         # then for Literals_Length."). An earlier revision of this codec
         # read these LL, ML, OF (and interleaved with the state updates
         # below in the wrong relative order) — see lessons.md Lesson 96.
+        #
+        # The NUMBER of bits read for the offset field is always exactly
+        # `of_code`, regardless of the Repeated-Offset interpretation below
+        # — the reference decoder never varies bit-consumption on
+        # `ll_is_zero`, only how the resulting value maps to an actual
+        # offset changes.
         {of_extra, br} = rbr_read_bits(br, of_code)
         {ml_extra, br} = rbr_read_bits(br, ml_extra_bits)
         {ll_extra, br} = rbr_read_bits(br, ll_extra_bits)
 
         ll = ll_base + ll_extra
         ml = ml_base + ml_extra
-        # Offset: of_raw = (1 << of_code) | of_extra; offset = of_raw - 3
+
+        # Offset_Value → actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        # the Repeated-Offset (R1/R2/R3) mechanism: real `zstd` encoders use
+        # repeat offsets constantly (one of their principal entropy wins,
+        # especially for periodic/repetitive data), even though THIS
+        # codec's own encoder never emits them (encode_sequences_section
+        # always writes an explicit offset code >= 2, since the minimum
+        # possible LZ77 match offset is 1, giving raw_off = offset + 3 >=
+        # 4 always) — so a decoder that only understood the explicit-offset
+        # path would silently mis-decode any real-world `.zst` frame that
+        # uses repeat offsets. See lessons.md Lesson 98 (found via the same
+        # audit that produced Lesson 96, and cross-checked here against
+        # RFC 8878 §3.1.1.3.2.1.1's prose, the real `ZSTD_decodeSequence`
+        # reference source, and the already-reviewed `code/packages/c/zstd`
+        # fix in PR #9941 — all three agree).
+        #
+        # of_raw = (1 << of_code) | of_extra. of_code >= 2 guarantees
+        # of_raw >= 4, i.e. Offset_Value > 3: an ordinary explicit offset.
+        # of_code <= 1 guarantees of_raw in {1, 2, 3}: a repeat-offset
+        # reference.
+        #
+        # The repeat case collapses to one selector in [0, 3]:
+        #     selector = ll_is_zero + of_raw - 1
+        #   0 -> reuse rep1 unchanged (no rotation)
+        #   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+        #   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+        #   3 -> use rep1-1 (full rotate, same shape as selector 2)
         of_raw = (1 <<< of_code) ||| of_extra
-        offset = of_raw - 3
+
+        {offset, new_rep1, new_rep2, new_rep3} =
+          if of_code >= 2 do
+            off = of_raw - 3
+            {off, off, rep1, rep2}
+          else
+            selector = (if ll_is_zero, do: 1, else: 0) + of_raw - 1
+
+            case selector do
+              0 -> {rep1, rep1, rep2, rep3}
+              1 -> {rep2, rep2, rep1, rep3}
+              2 -> {rep3, rep3, rep1, rep2}
+              _ ->
+                off = if rep1 > 0, do: rep1 - 1, else: 0
+                {off, off, rep1, rep2}
+            end
+          end
 
         # Step 3 — UPDATE states (consumes bits), order LL, ML, OF (RFC 8878
         # §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
@@ -1131,7 +1196,7 @@ defmodule CodingAdventures.Zstd do
                 copy_chunk = copy_with_overlap(out2, copy_start, offset, ml)
                 out3 = out2 <> copy_chunk
 
-                apply_sequences(remaining - 1, lits_bin, lit_end, out3, new_s_ll, new_s_ml, new_s_of, br, dt_ll, dt_ml, dt_of)
+                apply_sequences(remaining - 1, lits_bin, lit_end, out3, new_s_ll, new_s_ml, new_s_of, br, dt_ll, dt_ml, dt_of, new_rep1, new_rep2, new_rep3)
               end
             end
           end
@@ -1396,10 +1461,19 @@ defmodule CodingAdventures.Zstd do
 
     # ── Blocks ─────────────────────────────────────────────────────────────────
     # Use a binary accumulator for O(1) back-reference access and efficient append.
-    decompress_blocks(data, pos, <<>>)
+    #
+    # Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): FRAME-scoped, not
+    # block-scoped. "For the first block, the starting offset history is
+    # populated with Repeated_Offset1=1, Repeated_Offset2=4, Repeated_Offset3=8"
+    # — then every later Compressed block in the same frame continues from
+    # wherever the previous Compressed block's sequences left them. Raw and
+    # RLE blocks pass the registers through unchanged (they carry no
+    # sequences). See decompress_block/6 and apply_sequences/14 below, and
+    # lessons.md Lesson 98.
+    decompress_blocks(data, pos, <<>>, 1, 4, 8)
   end
 
-  defp decompress_blocks(data, pos, acc) do
+  defp decompress_blocks(data, pos, acc, rep1, rep2, rep3) do
     if pos + 3 > byte_size(data) do
       {:error, "truncated block header"}
     else
@@ -1415,7 +1489,7 @@ defmodule CodingAdventures.Zstd do
 
       case btype do
         0 ->
-          # Raw block: verbatim content.
+          # Raw block: verbatim content. Repeated_Offset registers untouched.
           if pos + bsize > byte_size(data) do
             {:error, "raw block truncated: need #{bsize} bytes at pos #{pos}"}
           else
@@ -1425,12 +1499,12 @@ defmodule CodingAdventures.Zstd do
               {:error, "decompressed size exceeds limit of #{@max_output} bytes"}
             else
               if is_last, do: {:ok, new_acc},
-                          else: decompress_blocks(data, pos + bsize, new_acc)
+                          else: decompress_blocks(data, pos + bsize, new_acc, rep1, rep2, rep3)
             end
           end
 
         1 ->
-          # RLE block: 1 byte repeated bsize times.
+          # RLE block: 1 byte repeated bsize times. Repeated_Offset registers untouched.
           if pos >= byte_size(data) do
             {:error, "RLE block missing byte"}
           else
@@ -1445,24 +1519,27 @@ defmodule CodingAdventures.Zstd do
               rle_chunk = :binary.copy(<<byte_val>>, bsize)
               new_acc = acc <> rle_chunk
               if is_last, do: {:ok, new_acc},
-                          else: decompress_blocks(data, pos + 1, new_acc)
+                          else: decompress_blocks(data, pos + 1, new_acc, rep1, rep2, rep3)
             end
           end
 
         2 ->
-          # Compressed block.
+          # Compressed block. Threads the Repeated_Offset registers through —
+          # decompress_block/6 both consumes and returns them, since its
+          # sequences may reference AND update R1/R2/R3.
           if pos + bsize > byte_size(data) do
             {:error, "compressed block truncated: need #{bsize} bytes"}
           else
             block_data = binary_part(data, pos, bsize)
-            case decompress_block(block_data, acc) do
+            case decompress_block(block_data, acc, rep1, rep2, rep3) do
               {:error, reason} -> {:error, reason}
-              {:ok, new_acc} ->
+              {:ok, new_acc, new_rep1, new_rep2, new_rep3} ->
                 if byte_size(new_acc) > @max_output do
                   {:error, "decompressed size exceeds limit of #{@max_output} bytes"}
                 else
-                  if is_last, do: {:ok, new_acc},
-                              else: decompress_blocks(data, pos + bsize, new_acc)
+                  if is_last,
+                    do: {:ok, new_acc},
+                    else: decompress_blocks(data, pos + bsize, new_acc, new_rep1, new_rep2, new_rep3)
                 end
             end
           end
