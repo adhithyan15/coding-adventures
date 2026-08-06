@@ -17,7 +17,7 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": null,
+  "active_pr": 9999,
   "last_manifest_check": {
     "objectives": 66,
     "coverage_roots": 6,
@@ -76,7 +76,7 @@
       "status": "in_progress",
       "depends_on": [],
       "branch": "feat/adj-wave2-place-value",
-      "pr_number": null,
+      "pr_number": 9999,
       "notes": "Next Wave 2 K-8 gap per ADJ-STDLIB-COVERAGE.md 5.1's elementary row: 'base-ten procedures, word-problem schemas' are named Major Gaps with nothing shipped yet (unlike fractions/decimals/percent, which arithmetic/ already covers: fraction.adj, percent.adj, average.adj). Shipped mathematics/place-value.adj: tens_and_ones_to_number(tens, ones) = sum(product(tens, 10), ones), composing arithmetic.adj (CCSS 1.NBT.B.2), cited to mathsisfun.com's positional-notation definition (trust consensus), WebFetch-verified live before writing. Scoped as COMPOSE-direction only (digits -> number); DECOMPOSE (number -> digits) needs floor/modulo division, not reachable from the plain-arithmetic surface grammar today (only `latex \"...\"` reaches ComputeOp::Floor/Mod) - see the new wave2-place-value-decompose item this discovered. Added manifest objective adj.math.k2.place_value and a dedicated e2e test (formula_place_value_e2e.rs, 2 tests, both executed against the real CLI)."
     },
     {
