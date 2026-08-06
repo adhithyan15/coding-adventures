@@ -232,6 +232,29 @@ describe("hand-written chapters", () => {
     }
   });
 
+  it("refuses a hand-written output that escapes the curriculum root", () => {
+    // Same containment rule the generation targets obey. These paths are only read today,
+    // but reading is still an file open, and the guard belongs at the boundary.
+    const sandbox = fixture();
+    const config = join(sandbox, "core", "book-generation.json");
+    writeFileSync(
+      config,
+      `${JSON.stringify({
+        ...JSON.parse(readFileSync(config, "utf8")),
+        handwritten: [
+          {
+            language: "test",
+            chapter: 9,
+            title: "Escape",
+            label: "ch:escape",
+            output: "../../../etc/passwd.tex",
+          },
+        ],
+      })}\n`,
+    );
+    expect(() => handwrittenBookChapters(sandbox)).toThrow(/unsafe generated book output/);
+  });
+
   it("never lists the same chapter as both generated and hand-written", () => {
     for (const entry of handwritten) {
       const clash = config.targets.find(

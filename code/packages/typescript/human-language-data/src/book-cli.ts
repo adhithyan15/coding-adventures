@@ -91,7 +91,14 @@ function safeOutput(root: string, relative: string): string {
 export function handwrittenBookChapters(
   root = defaultCurriculumRoot(),
 ): HandwrittenBookChapter[] {
-  return loadConfig(root).handwritten ?? [];
+  const handwritten = loadConfig(root).handwritten ?? [];
+  // Nothing here is written today, only read — but `output` is still a path, and the
+  // containment rule it has to satisfy is exactly the one `targets[]` already obeys.
+  // Checking at the boundary means a later caller that *does* open one of these cannot
+  // inherit a traversal hole from a malformed manifest, rather than each caller having
+  // to remember the check for itself.
+  for (const entry of handwritten) safeOutput(root, entry.output);
+  return handwritten;
 }
 
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
