@@ -34,13 +34,18 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
-3. **Phase 9 — App-shell assembly + progressive disclosure.** Partially done already via ad hoc
-   UI-design passes ([#8970](https://github.com/adhithyan15/coding-adventures/pull/8970), [#8983](https://github.com/adhithyan15/coding-adventures/pull/8983), [#9112](https://github.com/adhithyan15/coding-adventures/pull/9112), [#8994](https://github.com/adhithyan15/coding-adventures/pull/8994), [#9110](https://github.com/adhithyan15/coding-adventures/pull/9110), [#9127](https://github.com/adhithyan15/coding-adventures/pull/9127), [#9136](https://github.com/adhithyan15/coding-adventures/pull/9136))
-   — theming, project switching, nested-project hierarchy, shell/groups/status/cards all landed.
-   Remaining: package it as a reusable `mosaic-pkg-project-nav` (nested-project tree + view
-   switcher), and the per-project/task **complexity config** (board-only ↔ full CPM) that the
-   spec calls "the single most important product rule" (§2.3) — currently every project exposes
-   the same surface regardless of how simple it is.
+3. **Phase 9 — per-project/task complexity config (board-only ↔ full CPM).** The
+   nested-project tree half of Phase 9 shipped as `mosaic-pkg-project-nav` (see Resolved
+   below); this is what's left. The spec calls it "the single most important product
+   rule" (§2.3) but doesn't define what "board only" actually hides (Timeline tab?
+   Sheet columns? which task-detail fields?), whether it's a project setting, a task
+   setting, or both (the spec's own wording is "per project/task", literally
+   ambiguous), or what middle tiers if any look like — `code/specs/task-app-ui-design.md`
+   has no further elaboration either. The engine has no field to hang this on yet
+   (`ProjectSettings` is calendar/unit conventions only, no complexity/tier field) — this
+   is new `task-core` model work gated on a product decision the spec doesn't make, not
+   a UI-only slice. Whoever picks this up next should write a short decision addendum
+   (concrete tiers, what each hides, per-project vs. per-task) before touching code.
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
@@ -80,6 +85,19 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Phase 9 — nested-project tree extracted to `mosaic-pkg-project-nav`.** The
+  add/add-subproject composer + nested-project list, extracted verbatim from
+  `TaskApp`'s own rail block — same part names, same styling (both themes), same
+  layout structure. A refactor, not a redesign; `code/specs/task-app-project-nav-v1.md`
+  has the full rationale. The brand row and the view-switcher deliberately stayed in
+  TaskApp — the latter is a single, deeply-coupled 36-button block edited in every
+  recent view-addition PR, and extracting it right after several rapid additions would
+  be a large, high-blast-radius refactor with no corresponding precedent to derisk it,
+  unlike the simpler, more self-contained project rail. Verified live,
+  behavior-identical to before: create a project, create a nested sub-project (indent
+  glyph renders), switch selection between projects (the "on" raised-card styling
+  follows). The remaining Phase 9 item (complexity config) is the "Next up" item
+  above — it needs a product decision this extraction didn't.
 - **Label management (create + assign).** Closes the gap the task-row-chips ship
   below disclosed. A "+ Label" composer wraps the Sheet tab in `TaskApp.mll`
   (deliberately TaskApp's own concern, not a `mosaic-pkg-sheet` slot — Sheet has no

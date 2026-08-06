@@ -20,6 +20,12 @@ component TaskApp {
   // glyph for a *nested* project, empty for a top-level one — which is what turns a
   // flat list into a visible hierarchy. Everything else in this interface (tasks,
   // summary, schedule) describes the active project.
+  //
+  // Straight pass-through to pkg::mosaic-pkg-project-nav::ProjectNav — see
+  // ProjectNav.mil for the full contract and
+  // code/specs/task-app-project-nav-v1.md for the extraction rationale
+  // (the tree + composer moved into the package; the brand row and the
+  // view-switcher deliberately did not).
   slot project-rows     : list<list<text>> ;
   slot new-project-name : text ;
 

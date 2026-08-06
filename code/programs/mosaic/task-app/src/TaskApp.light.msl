@@ -60,101 +60,10 @@ style TaskApp {
     color : "#2b2723" ;
   }
 
-  // ── rail: projects ──────────────────────────────────────────────────────
-  part rail-label {
-    font-size : 10.5 ;
-    font-weight : bold ;
-    color : "#9b9289" ;
-    letter-spacing : "0.08em" ;
-    text-transform : "uppercase" ;
-    padding-top : 0 ;
-    padding-right : 8 ;
-    padding-bottom : 6 ;
-    padding-left : 8 ;
-  }
-  part rail-projects {
-    gap : 2 ;
-  }
-  part rail-row {
-    gap : 4 ;
-    align : center-vertical ;
-  }
-  part project-indent {
-    color : "#9b9289" ;
-    font-size : 13 ;
-  }
-  // The project you are looking at. A quiet raised card — same "on" treatment the
-  // segmented switch uses — so "where am I" reads as a subtle lift, not a loud fill.
-  // (The honey accent is spent on the primary action / focus / *now*, not on this.)
-  part project-on {
-    width : 100% ;
-    background : "#fffdfa" ;
-    color : "#2b2723" ;
-    font-size : 13 ;
-    font-weight : bold ;
-    text-align : "left" ;
-    padding : 8 ;
-    border-radius : 8 ;
-    border-width : 0 ;
-    box-shadow : "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)" ;
-  }
-  part project-off {
-    width : 100% ;
-    background : "transparent" ;
-    color : "#6a625a" ;
-    font-size : 13 ;
-    text-align : "left" ;
-    padding : 8 ;
-    border-radius : 8 ;
-    border-width : 0 ;
-    state hover {
-      background : "#efe8dd" ;
-      color : "#2b2723" ;
-    }
-  }
-  part rail-composer {
-    gap : 6 ;
-    align : center-vertical ;
-  }
-  part project-input {
-    width : 100% ;
-    background : "#fffdfa" ;
-    color : "#2b2723" ;
-    font-size : 12 ;
-    padding : 7 ;
-    border-width : 1 ;
-    border-color : "#e6ded3" ;
-    border-radius : 8 ;
-    state focused {
-      border-color : "#e0942a" ;
-    }
-  }
-  part project-add {
-    background : "#fffdfa" ;
-    color : "#b6741a" ;
-    font-size : 15 ;
-    font-weight : bold ;
-    padding : 6 ;
-    border-width : 1 ;
-    border-color : "#e6ded3" ;
-    border-radius : 8 ;
-    state hover {
-      background : "#faedd6" ;
-      border-color : "#e0942a" ;
-    }
-  }
-  part project-sub {
-    background : "transparent" ;
-    color : "#9b9289" ;
-    font-size : 12 ;
-    text-align : "left" ;
-    padding : 6 ;
-    border-width : 0 ;
-    border-radius : 8 ;
-    state hover {
-      color : "#b6741a" ;
-    }
-  }
+  // rail-label/rail-projects/rail-row/project-indent/project-on/project-off/
+  // rail-composer/project-input/project-add/project-sub moved to
+  // mosaic-pkg-project-nav's own .msl themes — see
+  // code/specs/task-app-project-nav-v1.md.
 
   // ── topbar ──────────────────────────────────────────────────────────────
   part topbar {

@@ -17,34 +17,19 @@ layout TaskApp {
         Text [ brand-name ] ( content : "Planner" )
       }
 
-      Text [ rail-label ] ( content : "Projects" )
-      Column [ rail-projects ] {
-        For ( each: slot: project-rows , as: p , index: pi ) {
-          Row [ rail-row ] {
-            // A nested project gets a leading glyph; a top-level one has an empty
-            // indent cell and renders nothing, keeping the row flush left.
-            If ( when: ( p[2] ) ) {
-              Text [ project-indent ] ( content : ( p[2] ) )
-            }
-            If ( when: ( p[1] ) ) {
-              HostButton [ project-on ] ( label : ( p[0] ) , onClick : emit: onSelectProject )
-            }
-            Else {
-              HostButton [ project-off ] ( label : ( p[0] ) , onClick : emit: onSelectProject )
-            }
-          }
-        }
-      }
-
-      Row [ rail-composer ] {
-        HostInput [ project-input ] (
-          value : slot: new-project-name ,
-          placeholder : "New project" ,
-          onChange : emit: onNewProjectNameChange
-        )
-        HostButton [ project-add ] ( label : "+" , onClick : emit: onAddProject )
-      }
-      HostButton [ project-sub ] ( label : "+ Sub-project" , onClick : emit: onAddSubproject )
+      // The nested-project tree + add-project composer, extracted verbatim
+      // into pkg::mosaic-pkg-project-nav::ProjectNav — see
+      // code/specs/task-app-project-nav-v1.md. TaskApp adds no shaping of
+      // its own here.
+      pkg::mosaic-pkg-project-nav::ProjectNav (
+        nav-title : "Projects" ,
+        project-rows : slot: project-rows ,
+        new-project-name : slot: new-project-name ,
+        onSelectProject : emit: onSelectProject ,
+        onNewProjectNameChange : emit: onNewProjectNameChange ,
+        onAddProject : emit: onAddProject ,
+        onAddSubproject : emit: onAddSubproject
+      )
     }
 
     // ── MAIN ────────────────────────────────────────────────────────────────

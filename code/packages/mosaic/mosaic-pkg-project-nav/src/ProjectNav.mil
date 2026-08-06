@@ -1,0 +1,50 @@
+// ProjectNav.mil — interface for the nested-project tree + add-project
+// composer.
+//
+// Extracted verbatim from TaskApp's own rail block — see
+// code/specs/task-app-project-nav-v1.md for the extraction rationale and
+// what deliberately stayed in TaskApp (the brand row, the view-switcher).
+//
+// Fat engine, dumb UI: the host builds `project-rows` depth-first from the
+// workspace's project forest (see TaskApp.mil's original comment on this
+// shape, preserved below) — ProjectNav does no tree-walking, sorting, or
+// id-minting of its own.
+//
+// Slot vocabulary
+// ---------------
+//
+//   nav-title          the panel's heading (e.g. "Projects").
+//
+//   project-rows        the workspace's projects, depth-first so a
+//                       sub-project follows its parent. Each row is
+//                       [ name, active-marker, indent ]: the marker is
+//                       non-empty for exactly the project being shown
+//                       (rendered selected), and `indent` is a non-empty
+//                       glyph for a nested project, empty for a
+//                       top-level one — which is what turns a flat list
+//                       into a visible hierarchy.
+//
+//   new-project-name    the composer's in-progress text.
+//
+// Emit vocabulary
+// ---------------
+//
+//   onSelectProject ( index )   a row was clicked — payload is the
+//                               clicked row's index (HostButton's own
+//                               dedicated-primitive payload synthesis).
+//   onNewProjectNameChange ( value )   the composer's text changed.
+//   onAddProject                Create a new TOP-LEVEL project from the
+//                               composer's text.
+//   onAddSubproject              Create a new project NESTED under
+//                               whichever one is currently shown.
+
+component ProjectNav {
+  slot nav-title        : text ;
+  slot project-rows     : list<list<text>> ;
+  slot new-project-name : text ;
+
+  emit onSelectProject ( index : number ) ;
+  emit onNewProjectNameChange ( value : text ) ;
+  emit onAddProject ;
+  emit onAddSubproject ;
+}
