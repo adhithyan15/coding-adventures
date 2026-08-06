@@ -86,7 +86,19 @@ describe("per-language shared-spine maps", () => {
       "UR-C05-hafiz",
       "UR-C05-khuda-hafiz",
       "UR-C05-practice",
-    ]));
+          // Persian chapter 6 and Urdu chapter 6, the core-verb tranches. Both attach to
+      // SPINE-SAY-WHAT-I-DO, so they are mapped and must appear here.
+      "FA-C06-budan",
+      "FA-C06-raftan",
+      "FA-C06-amadan",
+      "FA-C06-goftan",
+      "FA-C06-danestan",
+      "UR-C06-hona",
+      "UR-C06-jana",
+      "UR-C06-ana",
+      "UR-C06-bolna",
+      "UR-C06-janna",
+]));
   });
 
   it("computes independent next steps before grouping shareable abilities", () => {

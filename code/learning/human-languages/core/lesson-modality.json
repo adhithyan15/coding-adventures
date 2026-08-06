@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:db01ffef1ffd7074",
+  "sourceHash": "fnv1a64:d16ffc440ae8a3ee",
   "summary": {
-    "totalLessons": 1160,
-    "voice": 983,
+    "totalLessons": 1170,
+    "voice": 993,
     "sight": 124,
     "pen": 53,
-    "drivableLessons": 983,
+    "drivableLessons": 993,
     "drivablePercent": 85,
     "trackCount": 22,
-    "chapterCount": 383,
-    "drivablePrefixTotal": 851,
-    "fullyDrivableChapters": 290,
+    "chapterCount": 385,
+    "drivablePrefixTotal": 861,
+    "fullyDrivableChapters": 292,
     "unstartableChapters": 44,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -4417,12 +4417,12 @@
     },
     {
       "language": "persian",
-      "lessonCount": 20,
-      "voice": 19,
+      "lessonCount": 25,
+      "voice": 24,
       "sight": 1,
       "pen": 0,
-      "drivablePercent": 95,
-      "drivablePrefixTotal": 17,
+      "drivablePercent": 96,
+      "drivablePrefixTotal": 22,
       "modalities": [
         "voice",
         "sight"
@@ -4519,6 +4519,26 @@
             "FA-C05-hafez",
             "FA-C05-khodahafez",
             "FA-C05-practice"
+          ]
+        },
+        {
+          "chapter": 6,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FA-C06-budan",
+            "FA-C06-raftan",
+            "FA-C06-amadan",
+            "FA-C06-goftan",
+            "FA-C06-danestan"
           ]
         }
       ]
@@ -6892,12 +6912,12 @@
     },
     {
       "language": "urdu",
-      "lessonCount": 20,
-      "voice": 18,
+      "lessonCount": 25,
+      "voice": 23,
       "sight": 2,
       "pen": 0,
-      "drivablePercent": 90,
-      "drivablePrefixTotal": 15,
+      "drivablePercent": 92,
+      "drivablePrefixTotal": 20,
       "modalities": [
         "voice",
         "sight"
@@ -6993,6 +7013,26 @@
           "drivableLessonIds": [
             "UR-C05-khuda",
             "UR-C05-hafiz"
+          ]
+        },
+        {
+          "chapter": 6,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "UR-C06-hona",
+            "UR-C06-jana",
+            "UR-C06-ana",
+            "UR-C06-bolna",
+            "UR-C06-janna"
           ]
         }
       ]
@@ -16016,6 +16056,71 @@
       "sourceHash": "fnv1a64:e9a02f25650f2fe7"
     },
     {
+      "id": "FA-C06-budan",
+      "language": "persian",
+      "chapter": 6,
+      "sequence": 210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2648a2da07145fb3"
+    },
+    {
+      "id": "FA-C06-raftan",
+      "language": "persian",
+      "chapter": 6,
+      "sequence": 220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d78d4cf6acd38d82"
+    },
+    {
+      "id": "FA-C06-amadan",
+      "language": "persian",
+      "chapter": 6,
+      "sequence": 230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7f73b025f73c432"
+    },
+    {
+      "id": "FA-C06-goftan",
+      "language": "persian",
+      "chapter": 6,
+      "sequence": 240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99d83661901b1619"
+    },
+    {
+      "id": "FA-C06-danestan",
+      "language": "persian",
+      "chapter": 6,
+      "sequence": 250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9c77c962f6bf2cf"
+    },
+    {
       "id": "PT-C01-bom",
       "language": "portuguese",
       "chapter": 1,
@@ -22120,6 +22225,71 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:447fa1578ed99c7f"
+    },
+    {
+      "id": "UR-C06-hona",
+      "language": "urdu",
+      "chapter": 6,
+      "sequence": 210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cb8964dab7062d5"
+    },
+    {
+      "id": "UR-C06-jana",
+      "language": "urdu",
+      "chapter": 6,
+      "sequence": 220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b42ee061c919368"
+    },
+    {
+      "id": "UR-C06-ana",
+      "language": "urdu",
+      "chapter": 6,
+      "sequence": 230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:042409b1029d7da3"
+    },
+    {
+      "id": "UR-C06-bolna",
+      "language": "urdu",
+      "chapter": 6,
+      "sequence": 240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:581ece084faa7e89"
+    },
+    {
+      "id": "UR-C06-janna",
+      "language": "urdu",
+      "chapter": 6,
+      "sequence": 250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2af8f0d723bc7015"
     }
   ],
   "findings": []

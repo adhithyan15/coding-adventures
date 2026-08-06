@@ -219,7 +219,7 @@ describe("corpus snapshot", () => {
 
     expect(summary.byLevel["pre-A1"]).toBe(657);
     expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(20);
+    expect(summary.byLevel.A2).toBe(36);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -231,7 +231,7 @@ describe("corpus snapshot", () => {
     expect(summary.mappedPercent).toBe(85);
   });
 
-  it("shows three tracks have reached A2, and four have not reached A1", () => {
+  it("shows six tracks have reached A2, and only two have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -240,13 +240,13 @@ describe("corpus snapshot", () => {
     // which is still the honest ceiling for the whole corpus.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
-    ).toEqual(["arabic", "latin", "russian"]);
+    ).toEqual(["arabic", "latin", "persian", "russian", "tamil", "urdu"]);
     expect(
       summary.tracks.every((track) => track.reach === null || levelRank(track.reach) <= levelRank("A2")),
     ).toBe(true);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
-    ).toEqual(["chinese", "japanese", "persian", "urdu"]);
+    ).toEqual(["chinese", "japanese"]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {
