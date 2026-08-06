@@ -56,13 +56,11 @@ English needs a separate "you're welcome," Russian just answers *спасибо*
 
 ## Across the family — "please" is a favour, everywhere
 
-| Language | "please" | literally |
-|---|---|---|
-| **Russian** | *pozhálusta* (пожалуйста) | "grant [me] a favour" |
-| French | *s'il vous plaît* | "if it pleases you" |
-| Spanish | *por favor* | "for a favour" |
-| English | *please* | "[if it] please [you]" |
-| German | *bitte* | "I request" (and, like Russian, also "you're welcome") |
+- Russian **пожалуйста** — "grant [me] a favour."
+- French **s'il vous plaît** — "if it pleases you."
+- Spanish **por favor** — "for a favour."
+- English **please** — "[if it] please [you]."
+- German **bitte** — "I request," and also "you're welcome."
 
 German *bitte* pulls the exact same double shift as *пожалуйста* — one word for
 both "please" and "you're welcome."

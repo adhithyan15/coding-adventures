@@ -90,6 +90,14 @@ import {
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
 import { bookHashStatus } from "./bookhashes.ts";
+import { parseFont, boundsOf, type Font } from "./truetype.ts";
+import {
+  ductusFilmstrip,
+  ductusFor,
+  isSafeName,
+  type SvgNode,
+} from "./ductusview.ts";
+import tamilFontUrl from "../../../../learning/human-languages/_fonts/NotoSansTamil-Static.ttf?url";
 import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy.json";
 import type { Taxonomy } from "@coding-adventures/human-language-data/src/types.ts";
 import {
@@ -592,7 +600,13 @@ function renderDetail(v: LetterView, siblings: Sibling[] = []): HTMLElement {
   // Only offer stroke order when we actually have it. The Dravidian syllabaries
   // are recognition-only (their ductus is a separate, paused effort), so showing
   // an empty "Write it" section would imply data we don't have.
-  if (v.strokeOrder.length > 0) {
+  // A handful of letters go further: an authored, font-validated PEN PATH, so
+  // the section becomes a stroke-by-stroke build-up instead of a list. Only ம
+  // has one today (`DUCTUS` admits no letter without a cited source), and every
+  // other letter falls back to the prose list below, unchanged.
+  if (ductusFor(v.glyph)) {
+    d.appendChild(section(`Write it — stroke order (${v.strokeOrderNote})`, renderDuctusSection(v)));
+  } else if (v.strokeOrder.length > 0) {
     d.appendChild(section(`Write it — stroke order (${v.strokeOrderNote})`, orderedListOf(v.strokeOrder)));
   }
   if (v.notes) {
@@ -1845,6 +1859,95 @@ function orderedListOf(items: string[]): HTMLElement {
     ol.appendChild(li);
   }
   return ol;
+}
+
+// --- the stroke-order filmstrip (HL-C08) ------------------------------------
+//
+// `ductusview.ts` describes the picture; this turns that description into real
+// nodes. Note what it does NOT do: there is no `innerHTML` here, exactly as
+// there is none anywhere else in this file. Every attribute goes in through
+// `setAttribute` and every caption through `textContent`, so a label can only
+// ever become text — never markup — no matter where the label came from.
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgElement(node: SvgNode): SVGElement {
+  const element = document.createElementNS(SVG_NS, isSafeName(node.tag) ? node.tag : "g");
+  for (const [name, value] of Object.entries(node.attrs)) {
+    // `setAttribute` cannot be escaped out of, but it CAN set an event handler
+    // if the name says so — same refusal as the string serialiser applies.
+    if (isSafeName(name)) element.setAttribute(name, String(value));
+  }
+  if (node.text !== undefined) element.textContent = node.text;
+  for (const child of node.children ?? []) element.appendChild(svgElement(child));
+  return element;
+}
+
+// The glyph outline must come from the FONT — never a hand-drawn shape, because
+// a subtly wrong letter looks perfect to precisely the audience that cannot yet
+// read the script (see truetype.ts). The font is a few hundred KB, so it is
+// fetched once, lazily, and only when a letter with authored ductus is opened.
+// Any failure resolves to null and the caller keeps the prose list.
+let tamilFontPromise: Promise<Font | null> | null = null;
+
+function tamilFont(): Promise<Font | null> {
+  if (!tamilFontPromise) {
+    tamilFontPromise = fetch(tamilFontUrl)
+      .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(`font ${r.status}`))))
+      .then((bytes) => parseFont(bytes))
+      .catch(() => null);
+  }
+  return tamilFontPromise;
+}
+
+/**
+ * The "Write it" section for a letter that HAS an authored, cited pen path.
+ *
+ * It starts as the prose stroke order — which is what every letter shows — and
+ * upgrades itself to the filmstrip once the font has arrived and the glyph has
+ * been found in it. If either never happens, the prose simply stays. That is
+ * the whole fallback story: the richer view is additive, never load-bearing.
+ */
+function renderDuctusSection(v: LetterView): HTMLElement {
+  const letter = ductusFor(v.glyph)!;
+  const holder = el("div", "ductus");
+  holder.appendChild(orderedListOf(v.strokeOrder));
+
+  void tamilFont().then((font) => {
+    const glyph = font?.glyphFor(letter.glyph);
+    if (!glyph || glyph.contours.length === 0) return; // keep the prose
+    const strip = ductusFilmstrip(letter, { path: glyph.path, bounds: boundsOf(glyph.contours) });
+
+    const film = el("div", "ductus__film");
+    for (const frame of strip.frames) film.appendChild(svgElement(frame));
+
+    const summary = el("p", "ductus__summary");
+    summary.textContent = strip.summary;
+
+    // Provenance, visible. The SHAPE of this path is checked against the font
+    // by strokes.test; its ORDER can only be vouched for by a citation, so the
+    // citation is shown rather than hidden in a comment.
+    const cite = el("p", "ductus__source");
+    const src = letter.source;
+    if (/^https?:\/\//.test(src.url)) {
+      const link = document.createElement("a");
+      link.href = src.url;
+      link.textContent = src.citation;
+      link.rel = "noopener noreferrer";
+      link.target = "_blank";
+      cite.append("Stroke order after ", link);
+    } else {
+      cite.textContent = `Stroke order after ${src.citation}`;
+    }
+    if (src.variation) {
+      const caveat = el("span", "ductus__variation");
+      caveat.textContent = ` — ${src.variation}`;
+      cite.appendChild(caveat);
+    }
+
+    holder.replaceChildren(film, summary, cite, orderedListOf(v.strokeOrder));
+  });
+
+  return holder;
 }
 
 render();

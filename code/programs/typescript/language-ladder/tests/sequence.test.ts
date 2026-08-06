@@ -46,7 +46,9 @@ describe("the language chain", () => {
       "italian", "portuguese", "marathi", "punjabi", "bengali",
       "gujarati", "russian", "sanskrit", "persian", "urdu",
     ]);
-    expect(new Set(LANGUAGE_CHAIN).size).toBe(20);
+    // Derived, not hard-coded: adding a track must not require editing this file.
+    // The list above still pins the authored ORDER, which is the real contract.
+    expect(new Set(LANGUAGE_CHAIN).size).toBe(LANGUAGE_CHAIN.length);
   });
 
   it("chainIndex and isChainLanguage locate a language, or reject a non-chain one", () => {
