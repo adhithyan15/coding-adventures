@@ -17,7 +17,7 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": null,
+  "active_pr": 9998,
   "last_manifest_check": {
     "objectives": 66,
     "coverage_roots": 6,
@@ -67,7 +67,7 @@
       "status": "in_progress",
       "depends_on": [],
       "branch": "feat/adj-wave2-k2-content",
-      "pr_number": null,
+      "pr_number": 9998,
       "notes": "New content per ADJ-STDLIB-COVERAGE.md 5.1. Checked adj-ladder rung0 for harvestable material - none (rung0_arithmetic is generic MCQ word-problem benchmark items, not cardinality/comparison/number-line pedagogical content). Shipped 3 library pairs in code/specs/data/adj-formula-stdlib/mathematics/: number-sequence.adj (next/previous, composes arithmetic.adj's sum/difference, K.CC.A.1/A.2), comparison.adj (greater_than via FL-8, K.CC.C.6/C.7), cardinality.adj (total_cardinality composing sum, K.CC.B.4/B.5). All 3 citations WebFetch-verified live against MathWorld before writing (CountingNumber/Greater/CardinalNumber pages). Added 3 manifest.json objectives (adj.math.k2.*, band K-2, mathematics, ccss.math). Added a dedicated e2e test file (code/packages/rust/adj-lang-cli/tests/formula_k2_math_e2e.rs, 5 tests) actually executing each query file, not just structural checks. Also added the long-missing README.md/CHANGELOG.md at adj-formula-stdlib/ package root (flagged as a gap during Wave 0)."
     },
     {
