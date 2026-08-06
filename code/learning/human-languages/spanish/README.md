@@ -146,8 +146,28 @@ lesson never renumbers anything.
 See [`CHANGELOG.md`](./CHANGELOG.md) for the full history including the
 redesign.
 
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's HL05 capability ledger. Each
+entry says, in the reader's own voice, what finishing that chapter lets them
+*do* (`canDo`), and names the lesson that proves it (`payoff`) together with the
+knowledge atoms that payoff exercises. It is authored intent, not a derived
+cache — no validator may rewrite it.
+
+All 21 Spanish chapters that own a `core/book-generation.json` target are
+authored: **1–6** and **19–33**. Chapters **7–18** are deliberately absent.
+Their lessons are still schema v1 with no declared `practises.knowledge`, so
+there is no honest payoff to point at; a stub would destroy the very signal the
+HL05 gap report exists to measure. That absence is tracked debt, and it clears
+when those chapters migrate to schema v2.
+
+Chapters 1–6 end in a terminal `practice-mix` lesson, which is the payoff.
+Chapters 19–33 have no practice lesson, so the payoff is the chapter's last
+lesson by sequence — the one carrying its recombination and wrap-up recall.
+
 ## Files
 
+- [`chapters.json`](./chapters.json) — the HL05 chapter capability ledger.
 - [`lessons/`](./lessons/) — the deep one-word practice lessons (current model).
 - [`pronunciation-reference.md`](./pronunciation-reference.md) — sounds, to
   look up on demand.

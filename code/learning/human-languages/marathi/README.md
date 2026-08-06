@@ -39,6 +39,23 @@ Chapters 1–6 are in the book. Chapter 6 is generated from the same canonical
 schema-v2 lesson AST and source hashes that Language Ladder loads, while the
 first five chapters retain their authored long-form narrative during migration.
 
+## What each chapter lets you do
+
+[`chapters.json`](./chapters.json) is the HL05 capability ledger: per chapter, one
+first-person can-do sentence and the lesson that pays it off.
+
+- **Chapter 6** — *"I can count from one to five in Marathi, say चार as tsār
+  rather than chār, and tell which of Marathi's differences from Hindi is an
+  innovation and which is Hindi holding on to something older."* Payoff:
+  [`MR-C06-number-differences`](./lessons/MR-C06-number-differences.md), a task —
+  **दोन**'s borrowed *-n*, **पाच**'s missing nasal, and the *ts* hiding behind an
+  unchanged spelling.
+
+Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
+still schema v1, so their lessons declare no knowledge atoms and no payoff there
+could honestly claim to assess anything. A placeholder would hide debt the HL05
+gap report is meant to surface; the entries land as those chapters migrate.
+
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font

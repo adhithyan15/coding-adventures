@@ -26,6 +26,12 @@
       "action": "write",
       "target": "../../learning/human-languages/core/generated-book-hashes.json",
       "justification": "The explicit generate:books command refreshes the deterministic app/book source-hash manifest; CI normally verifies it without writing."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/lesson-modality.json",
+      "justification": "The explicit generate:modality command refreshes the derived per-lesson modality manifest that lets the complete book, the app, and the driving edition be filtered from one source; CI normally uses the read-only check:modality drift gate."
     }
   ],
   "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit book generator writes only configured LaTeX chapters and their shared source-hash manifest. No network or process access is needed."

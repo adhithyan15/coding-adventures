@@ -116,9 +116,54 @@ Pick a script, pick a letter, and the detail panel shows:
 - the **glyph**, big, with its sound and role;
 - **Break it apart** — the letter's component pieces (the "a vertical + two
   stacked bowls" of Cyrillic *в*);
-- **Write it** — a conventional stroke order, numbered;
+- **Write it** — a conventional stroke order, numbered; and for letters with an
+  authored pen path, the **stroke-order filmstrip** below;
 - a **⚠ false friend** badge for letters that look like a Latin letter but
   aren't (Cyrillic *в*=v, *р*=r, *с*=s, *н*=n) — the fastest way into the script.
+
+### The stroke-order filmstrip
+
+A numbered list tells you *what* to draw. It does not tell you where the pen
+starts, which way it travels, or — the thing a picture of the finished letter
+can never show — where the hand **lifts**. For letters that have an authored
+pen path, "Write it" becomes a strip of panels instead, each one showing the
+letter a little further written:
+
+```
+┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐
+│ ▏      │  │ ▏      │  │ ▏    ▕ │  │ ▏ ⌒  ▕ │  │ ▏ ⌒▕ ▕ │
+│ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │  │ ▁▁▁▁▁▁ │
+└────────┘  └────────┘  └────────┘  └────────┘  └────────┘
+ 1. down     2. along    3. up the   4. over     5. down
+ the left    the bottom  right side  the top     the middle
+```
+
+Behind every panel, in pale grey, sits the **finished letter — the outline read
+straight out of the shipped font**, never a drawing of one. In front of it, in
+ink, sits as much of the pen path as the hand has travelled so far, with a dot
+showing where the pen is. Underneath sits the cited source for the stroke
+*order*, because unlike the shape, the order is not something a font can vouch
+for.
+
+Three modules meet to make one picture:
+
+| module | knows | checked by |
+|---|---|---|
+| `src/truetype.ts` | what the letter *looks like* — the real outline | the font itself |
+| `src/strokes.ts` | how it is *written* — pen path, parts, lifts | `strokes.test.ts`: every point on real ink, every join < 2 font units, whole letter traced |
+| `src/ductusview.ts` | how to *draw that* — SVG frames, no DOM | `ductusview.test.ts` |
+
+Font units are **y-up**; SVG is **y-down**. The glyph and the pen path are both
+in font units, and `ductusview.ts` flips them together with exactly **one**
+`scale(1,-1)` group — so a mistake cannot leave a plausible-looking stroke
+sitting upside down on a correct letter.
+
+**Only Tamil ம has an authored pen path today.** `DUCTUS` admits no letter
+without a citation for its stroke order, and hand-drawing a letter is forbidden
+outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
+cannot yet read Tamil, so the error would ship *as the lesson*). Every other
+letter falls back to the numbered prose list, unchanged. Extending the coverage
+is HL-C09, and it needs a cited source per letter.
 
 ## Where it fits
 
@@ -221,7 +266,15 @@ read-only — `letters` / `isSyllabary` / the matrix untouched).
   `scriptSummary`, `isFalseFriend`, `falseFriends`. No DOM, no globals; this is
   where the pedagogy is tested.
 - **`src/data.ts`** — the only place that imports the canonical script JSON.
-- **`src/main.ts`** — a deliberately framework-free vanilla-DOM shell.
+- **`src/truetype.ts`** — a small zero-dependency TrueType reader, so every
+  letter this app *draws* comes from the font rather than from a hand.
+- **`src/strokes.ts`** — the pen-path model: strokes as pen-down runs, segments
+  as labelled parts that must meet head-to-tail, with cited provenance.
+- **`src/ductusview.ts`** — the two above, composed into SVG. Pure: it returns a
+  tree of plain objects plus a serialiser, and never touches `document`.
+- **`src/main.ts`** — a deliberately framework-free vanilla-DOM shell. It walks
+  the `ductusview` tree with `createElementNS`/`setAttribute`/`textContent`;
+  there is no `innerHTML` anywhere in the app.
 
 ## Develop
 
