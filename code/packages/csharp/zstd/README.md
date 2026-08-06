@@ -8,6 +8,10 @@ Pure C# implementation of the repository's CMP07 educational Zstandard format.
 - Raw, run-length encoded, and compressed blocks
 - Raw literal sections and predefined FSE sequence tables
 - LZSS-generated literal and match sequences through the native C# `lzss` package
+- Repeated-Offset (R1/R2/R3) sequence **decoding** (RFC 8878 §3.1.1.3.2.1.1)
+  — needed to read real-world `.zst` files, which use repeat offsets
+  constantly, even though this package's own **encoder** never emits them
+  (see `CHANGELOG.md` and lessons.md Lesson 98)
 - A 256 MiB decompression limit and strict malformed-frame checks
 
 This package follows the repository's established CMP07 teaching format. It is
