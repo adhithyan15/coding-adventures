@@ -27,8 +27,12 @@ One configured host program contains a non-empty absolute executable path and
 at most 128 fixed arguments. The adapter never invokes a shell or performs
 ambient `PATH` resolution. It launches the program
 with piped standard input and output and with the verified package directory as
-its working directory. Standard error is inherited so diagnostics do not share
-the authenticated protocol stream.
+its working directory. After the configured fixed arguments, the adapter appends
+the reserved pair `--package-runtime deno` or `--package-runtime skill`. The
+value comes only from the just-verified package layout, so the single configured
+host program can select its runtime adapter without trusting a manifest reread,
+registry field, environment variable, or caller-supplied argument. Standard
+error is inherited so diagnostics do not share the authenticated protocol stream.
 
 Standard input and output carry binary records:
 
