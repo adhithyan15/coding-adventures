@@ -75,6 +75,12 @@ Decompress a ZStd frame. Supports:
 - Raw, RLE, and Compressed block types
 - Single-segment and multi-segment layouts
 - Predefined FSE modes (no per-frame table description)
+- **Repeated-Offset (R1/R2/R3) sequences** (RFC 8878 §3.1.1.3.2.1.1) — the
+  three most-recently-used match offsets, tracked per frame and referenced by
+  offset codes 0–3 instead of an explicit distance. This package's own
+  `compress()` never emits them (see "Compression levels" below), but the
+  real `zstd` CLI's encoder uses them constantly, so decoding real-world
+  `.zst` files requires understanding them. See lessons.md Lesson 98.
 
 Throws on bad magic, truncated data, or unsupported features (non-predefined
 FSE tables, Huffman-coded literals).
@@ -164,6 +170,13 @@ This implementation uses a fixed compression strategy (no level parameter):
 - Max match: 255 bytes
 - Min match: 3 bytes
 - Always Raw_Literals (no Huffman coding of literals)
+- `compress()`'s own offset encoding always writes an explicit offset code
+  (never a Repeated-Offset R1/R2/R3 reference) — the minimum LZ77 match
+  offset is 1, so `raw_offset = offset + 3 >= 4` always selects an explicit
+  code. `decompress()` still has to understand Repeated-Offset sequences,
+  because real `zstd`-compressed input uses them; see the "Repeated-Offset"
+  note under `decompress()` above and lessons.md Lesson 98.
 
 Higher compression is possible by adding Huffman-coded literals, larger
-windows, and content-aware parsing — left as exercises.
+windows, content-aware parsing, and repeat-offset-aware encoding — left as
+exercises.

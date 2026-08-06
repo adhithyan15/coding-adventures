@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "note": "Tunable thresholds for the HL05 chapter payoff rule and the HL08 gentle-ramp budgets. Values are chosen from the corpus's own measured distribution so they are defensible rather than invented, and they live here rather than as constants in code so they can be tightened as debt burns down. Length is never a cost: no threshold here may penalise page, lesson, or chapter count.",
+  "payoffRepresentativeness": 0.5,
+  "maxNewAtomsPerLesson": 3,
+  "maxNewAtomsPerChapter": 12,
+  "provenance": {
+    "measuredAt": "2026-08-06",
+    "corpus": "1096 lessons, 531 schema-v2, 277 schema-v2 chapters",
+    "atomsPerLesson": { "mean": 2.31, "median": 2, "p90": 3, "max": 7 },
+    "atomsPerChapter": { "median": 3, "p75": 5, "p90": 10, "max": 31 },
+    "rationale": "maxNewAtomsPerLesson sits at the existing p90, so the median lesson is already compliant and only genuine spikes are flagged (52 lessons). maxNewAtomsPerChapter sits just above the chapter p90 of 10, flagging 17 chapters. payoffRepresentativeness starts at half a chapter's introduced atoms; it is a floor to be raised, not a target."
+  }
+}
