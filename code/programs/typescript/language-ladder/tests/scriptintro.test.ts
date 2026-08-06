@@ -36,7 +36,8 @@ describe("scriptOf / LANGUAGE_SCRIPT", () => {
   });
 
   it("every chain language has a mapping", () => {
-    expect(Object.keys(LANGUAGE_SCRIPT).length).toBe(20);
+    // 21 since Chinese registered as the corpus's 21st track (HL-C39).
+    expect(Object.keys(LANGUAGE_SCRIPT).length).toBe(21);
   });
 });
 
