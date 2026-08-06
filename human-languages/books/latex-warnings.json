@@ -41,6 +41,23 @@
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
+        "missing_character": 6,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/chinese/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "chinese"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
         "underfull": 0

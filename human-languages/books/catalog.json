@@ -140,6 +140,13 @@
       "family": "Indo-Aryan",
       "script": "urdu-nastaliq",
       "file": "urdu.pdf"
+    },
+    {
+      "id": "chinese",
+      "name": "Mandarin Chinese",
+      "family": "Sinitic",
+      "script": "chinese",
+      "file": "chinese.pdf"
     }
   ]
 }

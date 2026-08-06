@@ -11,9 +11,9 @@
     "effectiveDuration": "max(declared, computed)"
   },
   "summary": {
-    "registeredTracks": 20,
-    "totalLessons": 1118,
-    "authoredBooks": 20,
+    "registeredTracks": 21,
+    "totalLessons": 1125,
+    "authoredBooks": 21,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
@@ -21,8 +21,8 @@
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
-    "version2SchemaTracks": 1,
-    "drivableLessons": 719,
+    "version2SchemaTracks": 2,
+    "drivableLessons": 724,
     "drivablePercent": 64,
     "chaptersWithoutDrivablePrefix": 121,
     "unexplainedModalityOverrides": 0
@@ -57,6 +57,11 @@
         "lessonId": "BN-C04-abar",
         "language": "bengali",
         "chapter": 4
+      },
+      {
+        "lessonId": "ZH-C01-tones",
+        "language": "chinese",
+        "chapter": 1
       },
       {
         "lessonId": "FR-C01-salut",
@@ -1458,6 +1463,19 @@
         "missingBookChapters": [],
         "orphanBookChapters": [],
         "coveragePercent": 100
+      },
+      {
+        "language": "chinese",
+        "hasBook": true,
+        "lessonChapters": [
+          1
+        ],
+        "bookChapters": [
+          1
+        ],
+        "missingBookChapters": [],
+        "orphanBookChapters": [],
+        "coveragePercent": 100
       }
     ]
   },
@@ -1641,14 +1659,22 @@
           "1": 4,
           "2": 16
         }
+      },
+      {
+        "language": "chinese",
+        "status": "version-2",
+        "lessonCount": 7,
+        "versions": {
+          "2": 7
+        }
       }
     ]
   },
   "modality": {
     "maxLinearisableTableColumns": 0,
-    "totalLessons": 1118,
-    "voice": 719,
-    "sight": 346,
+    "totalLessons": 1125,
+    "voice": 724,
+    "sight": 348,
     "pen": 53,
     "drivablePercent": 64,
     "tracks": [
@@ -2111,6 +2137,31 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "BN-C06-numbers-1-5"
+          }
+        ]
+      },
+      {
+        "language": "chinese",
+        "lessonCount": 7,
+        "voice": 5,
+        "sight": 2,
+        "pen": 0,
+        "drivablePercent": 71,
+        "drivablePrefixTotal": 1,
+        "chapters": [
+          {
+            "language": "chinese",
+            "chapter": 1,
+            "lessonCount": 7,
+            "voice": 5,
+            "sight": 2,
+            "pen": 0,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-C01-ni"
           }
         ]
       },
