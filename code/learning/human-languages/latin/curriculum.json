@@ -226,12 +226,14 @@
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "LA-C19-quid-agis",
-        "LA-C19-valeo-family"
+        "LA-C19-valeo-family",
+        "LA-C19-practice"
       ],
       "before": [],
       "inline": [],
       "after": [
-        "LA-EXT-019-ETYMOLOGY"
+        "LA-EXT-019-ETYMOLOGY",
+        "LA-EXT-019-CONSOLIDATION"
       ]
     },
     {
@@ -242,6 +244,7 @@
         "LA-C20-name-case-variation",
         "LA-C21-volup-est-convenisse",
         "LA-C21-meeting-phrase-context",
+        "LA-C21-practice",
         "LA-C22-tu-vos"
       ],
       "before": [],
@@ -249,7 +252,9 @@
         "LA-EXT-020-GRAMMAR",
         "LA-EXT-020-CULTURE-PRAGMATICS"
       ],
-      "after": []
+      "after": [
+        "LA-EXT-020-CONSOLIDATION"
+      ]
     },
     {
       "id": "LA-PATH-021",
@@ -294,10 +299,12 @@
         "LA-C32-bonum-mane",
         "LA-C33-vesper",
         "LA-C33-vesper-afterlives",
+        "LA-C33-practice",
         "LA-C34-bonum-vesperum",
         "LA-C35-meridies",
         "LA-C36-salve-post-meridiem",
-        "LA-C36-timeless-salve"
+        "LA-C36-timeless-salve",
+        "LA-C36-practice"
       ],
       "before": [],
       "inline": [
@@ -305,7 +312,8 @@
         "LA-EXT-024-ETYMOLOGY"
       ],
       "after": [
-        "LA-EXT-024-CULTURE-PRAGMATICS"
+        "LA-EXT-024-CULTURE-PRAGMATICS",
+        "LA-EXT-024-CONSOLIDATION"
       ]
     }
   ],
@@ -609,6 +617,17 @@
       ]
     },
     {
+      "id": "LA-EXT-019-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run a whole short Latin wellbeing exchange, from the greeting to the farewell.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C19-practice"
+      ]
+    },
+    {
       "id": "LA-EXT-020-GRAMMAR",
       "stage": "pre-A1",
       "kind": "required",
@@ -628,6 +647,17 @@
       "prerequisites": [],
       "lessons": [
         "LA-C21-meeting-phrase-context"
+      ]
+    },
+    {
+      "id": "LA-EXT-020-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can trade names on a first meeting and use the attested Plautine phrase where it really belongs.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C21-practice"
       ]
     },
     {
@@ -661,6 +691,18 @@
       "prerequisites": [],
       "lessons": [
         "LA-C36-timeless-salve"
+      ]
+    },
+    {
+      "id": "LA-EXT-024-CONSOLIDATION",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can sort a European evening word into its real Latin family and greet across a whole Roman day.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C33-practice",
+        "LA-C36-practice"
       ]
     }
   ]

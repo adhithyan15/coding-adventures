@@ -55,6 +55,30 @@ on.
 4.0. The book prints no audio prompts and no timing cues; the practice pieces
 keep them, because that is what they are for.
 
+`book/` is a LaTeX book, compiled with XeLaTeX (`fontspec` + `polyglossia`
+— required later for Arabic/Devanagari/Dravidian scripts, so it's the
+standard from day one even though Spanish itself doesn't need it).
+Licensed CC BY-SA 4.0. To build it locally:
+
+```
+cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
+```
+
+Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
+TeX Live). The compiled PDF isn't committed — it's regenerated from source,
+same as build artifacts elsewhere in this repo.
+
+Chapters 1–6 and 19–33 are generated from the same 90 canonical lesson ASTs
+consumed by Language Ladder. Run `npm run build && npm run generate:books` from
+`code/packages/typescript/human-language-data` after editing those lessons; CI
+rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
+handwritten LaTeX during the staged one-source migration. `units/` is legacy
+source material, not a second canonical copy. The complete PDF builds without
+missing glyphs, layout-box warnings, bookmark warnings, duplicate destinations,
+LaTeX warnings, or font fallbacks. (The 214-page figure last verified predates
+the HL-C18 splits, which add eighteen lessons across eleven generated chapters;
+length is not a cost here, so the count is expected to rise.)
+
 ## Progress
 
 The track was **redesigned** after early feedback: from coarse units (ten
@@ -71,16 +95,23 @@ exactly where a word needs it:
 - **Chapter 2 — The Rest of the Greetings**: tarde → buenas tardes
   (**feminine** agreement) → noche → buenas noches → practice.
 - **Chapter 3 — Introducing Yourself**: me → llamar → me llamo (**reflexive
-  verbs**) → **tú / usted** (informal vs formal "you") → the *vuestra merced*
-  origin of *usted* → cómo → the Latin *qu-* question family → se llama →
-  ¿cómo se llama usted? → mucho → mucho gusto → practice.
-- **Chapter 4 — How Are You**: gracias → de nada → estar → ¿cómo está usted? →
-  regular → practice.
+  verbs**) → **tú / usted** (the two words) → tú *or* usted (**register**, and
+  why *usted* takes he/she forms) → the *vuestra merced* origin of *usted* →
+  cómo → ¿cómo? (the **¿** and the question accent) → the Latin *qu-* question
+  family → se llama → ¿cómo se llama usted? → mucho → mucho gusto → practice.
+- **Chapter 4 — How Are You**: gracias → de nada → estar (the verb and *stāre*)
+  → estás / está (**state and location**) → ¿cómo está usted? → regular →
+  practice.
 - **Chapter 5 — Farewells**: adiós → hasta → hasta luego / mañana / pronto.
 - **Chapter 6 — The First Verbs**: por favor → hablar (the *-ar* template) →
   trabajar → estudiar → hablo español.
 - **Chapter 7 — The *-er* and *-ir* Verbs**: comer → vivir → beber → qué →
   dónde.
+
+- **Chapter 6 — The First Verbs**: por favor → hablar (the word) → hablo,
+  hablas, habla (the ***-ar* template** and pro-drop) → trabajar → estudiar →
+  español → hablo español.
+- **Chapter 7 — The *-er* and *-ir* Verbs**: comer → vivir → beber → qué → dónde.
 - **Chapter 8 — Numbers and Age**: números 1–5, 6–10 → tener → ¿cuántos años?
 - **Chapter 9 — *Ser* and *Estar***: ser → ser vs estar → soy de → está en.
 - **Chapter 10 — Going, and the Near Future**: ir → ir a + infinitive →
@@ -98,12 +129,14 @@ exactly where a word needs it:
   weld, twice).
 - **Chapter 18 — The Subjunctive**: subjuntivo → quiero que (the mood of the
   not-yet-real).
-- **Chapters 19–23 — Everyday building blocks**: yes/no → apology and empathy →
-  weekdays → colors → parents and siblings.
+- **Chapters 19–23 — Everyday building blocks**: yes/no → lo siento, then
+  perdón → weekdays → negro/blanco (and blanco's Germanic loan) then rojo, then
+  azul → parents and siblings, then hermano's silent *h*.
 - **Chapters 24–28 — Body, seasons, food, and time**: head and hand → seasons →
-  water, wine, and bread → months → noon and midnight.
-- **Chapters 29–33 — Daily description**: telling time → weather → numbers
-  eleven through twenty → dog and cat → green and yellow.
+  agua, then vino, then pan → months → noon and midnight.
+- **Chapters 29–33 — Daily description**: telling time → el tiempo, hace calor,
+  llueve → once–quince, dieciséis–diecinueve, Latin's subtractive teens, veinte
+  → gato then perro → verde then amarillo.
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
 to its root. **All 33 chapters are authored and in the book (214 pages);
@@ -118,6 +151,20 @@ need reconciliation through Chapter 33; this is tracked as HL-M09 in the shared
 backlog. - **`units/` (legacy)**: the pre-redesign coarse-grained content (old
 Part 0 + Part I). Kept as source material to be re-excavated into deep lessons;
 **superseded**, not the current model. Being migrated `units/` → `lessons/`.
+
+to its root. **All 33 chapters are authored and in the book; Chapters 1–6 and
+19–33 are generated from canonical lessons.**
+Lessons are named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives
+in the book (which LaTeX auto-numbers) and in `session-map.md`, so inserting a
+lesson never renumbers anything.
+- **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
+  (look-up reference, not a chapter).
+- **Progression metadata**: [`roadmap.md`](./roadmap.md) and
+  [`session-map.md`](./session-map.md) still need reconciliation through
+  Chapter 33; this is tracked as HL-M09 in the shared backlog.
+- **`units/` (legacy)**: the pre-redesign coarse-grained content (old Part 0
+  + Part I). Kept as source material to be re-excavated into deep lessons;
+  **superseded**, not the current model. Being migrated `units/` → `lessons/`.
 
 See [`CHANGELOG.md`](./CHANGELOG.md) for the full history including the
 redesign.

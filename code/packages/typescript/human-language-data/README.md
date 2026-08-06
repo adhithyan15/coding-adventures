@@ -98,7 +98,9 @@ import { summarizeModality, deriveLessonModality, loadEverything } from "@coding
 
 const { lessons } = loadEverything();
 const modality = summarizeModality(lessons);
-modality.drivablePercent;              // 63 — the share learnable by ear alone
+modality.drivablePercent;              // 84 — the share learnable by ear alone
+
+modality.drivablePercent;              // 65 — the share a hands-free view can deliver
 modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLesson: "…", … }
 deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
 ```
@@ -126,16 +128,58 @@ structure instead:
    linearisable width → `sight`;
 3. otherwise → `voice`.
 
-`maxLinearisableTableColumns` defaults to **0** — until the HL08 narration exporter
-can turn a two-column table into "*X* means *Y*", no table is speakable, and
-claiming otherwise would let a learner silently miss content. Raise it via
-`summarizeModality(lessons, { maxLinearisableTableColumns: 2 })` when the lineariser
-lands.
+`maxLinearisableTableColumns` defaults to **3**, and modality does not decide that on
+its own — it asks the *same* lineariser the narration export uses (`speech.ts`), so
+"drivable" can never mean something the export cannot actually deliver. A table is
+`sight` when the lineariser refuses it, whether because it is too wide, its rows are
+ragged, or it has a heading row with nothing under it. The knob lives in
+`core/chapter-policy.json`; the pre-lineariser behaviour is still one argument away
+(`summarizeModality(lessons, { maxLinearisableTableColumns: 0 })`).
+
+Raising it from 0 to 3 moved the corpus from **63% drivable to 84%** (694 → 925 of
+1,096 lessons). See the narration section below for why three columns is the honest
+line and four is not.
 
 A **chapter's drivable prefix** is how many of its lessons, in authored `sequence`
-order, are `voice` before the first that is not — deliberately not "how many voice
-lessons does it contain", because chapters are prerequisite-ordered and a voice
+order, have a `voice` core before the first that does not — deliberately not "how many
+voice lessons does it contain", because chapters are prerequisite-ordered and a voice
 lesson sitting behind a sight one is not reachable in the car.
+
+#### One lesson, two modalities (HL-C41)
+
+The three rules above give a lesson one answer, which is right for the **book** — it
+prints every block and needs one honest sign at the chapter opening. It is wrong for a
+lesson that is voice throughout except for a short section teaching the hand to form a
+letter met earlier. Under one answer per lesson those two minutes cost all five.
+
+So modality is derived at two scales:
+
+| Field | Reads | Answers |
+|---|---|---|
+| `modality` | the whole lesson | what the **book** signs |
+| `coreModality` | the lesson minus its **detachable** blocks | what a hands-free view can deliver |
+
+```ts
+const entry = deriveLessonModality(lesson);
+entry.modality;         // "pen"   — the book prints a writing segment
+entry.coreModality;     // "voice" — a listener still gets the rest
+entry.writingSegments;  // ["Writing: మ — the tick on top"]
+entry.blocks[1];        // { type: "writing", modality: "pen", detachable: true, … }
+```
+
+A block type is **detachable** when nothing later in the lesson depends on it. Exactly
+one is today — `writing` (heading `## Writing: …`), which teaches the *hand*, as
+against `script`, which teaches the *eye* and is not detachable. Detachable means "a
+non-visual renderer may set this aside", never "optional content": **the book prints
+every block, in full.** A future dictation-friendly edition is a separate output view
+over the same source, and `coreModality` is the metadata it reads.
+
+`drivablePercent` and the drivable prefix are counted on the core; the
+`voice`/`sight`/`pen` counts still describe the book, and `coreVoice` is published
+beside them so the two reconcile. An authored `modality:` override caps the core, so
+the core is never stronger than the full modality. A lesson that is not `type: writing`
+may carry **one** writing segment; more is reported as
+`modality-writing-segment-not-separable`.
 
 An author may override with `modality:` in frontmatter; an override that
 *contradicts* the derivation additionally requires `modality_reason:`. Unexplained
@@ -144,9 +188,81 @@ walks the whole corpus and returns every finding at once. This slice ships **no
 gates**, per the HL-V01 precedent.
 
 Measured over all 1,096 lessons: 51 `pen`, 7 with `script` blocks, and among the
+remaining 1,038, 322 carry a Markdown table — the single largest obstacle to a
+hands-free course, and a far more tractable one than the script. With the lineariser
+shipped, **925 lessons (84%) are drivable**, up from 694 (63%) when every table meant
+eyes. Of the 120 that still need eyes: 65 carry a table of four columns or more, 61
+point at something on the page in prose, and 7 have a `script` block. **52 need eyes
+for a wide table and nothing else** — that is HL08's table-remediation burn-down list,
+and reshaping just those tables would move 52 more lessons into the car.
+
+### The narration export (HL08)
+
+The audio-script output [`HL04`](../../../specs/HL04-shared-spine-and-content-pipeline.md)'s
+pipeline diagram has always named. It turns the lesson AST into something an AI voice
+assistant can read aloud while the learner drives — HL08's stated purpose, in the
+project owner's own words: *"I want to be able to have one of the AI chatbots with
+voice capabilities read through and teach me while I am driving."*
+
+```bash
+npm run build
+npm run generate:narration   # writes <language>/narration/chNN.{txt,json}
+npm run check:narration      # byte-for-byte; exits 1 on drift
+```
+
+Two views per chapter:
+
+- **`chNN.txt`** — one continuous script. Hand it to any voice assistant with "read
+  this to me". Directives appear as bracketed stage directions (`[pause 2 seconds]`,
+  `[your turn — say: …]`, `[question — say your answer, then pause 9 seconds]`),
+  because that is a form every model already reads as an *instruction to the reader*
+  rather than words to pronounce.
+- **`chNN.json`** — the same script with its joints intact: typed segments a voice
+  agent can act on, so it pauses where the lesson says pause, waits where it says
+  `[YOU SAY: …]`, and **scores a spoken answer against the compiled activity contract
+  from `activity.ts`** — never against prose.
+
+That last point is the module's governing rule. Lessons contain two similar-looking
+things and this export never conflates them:
+
+| In the lesson | Becomes | Scored? |
+|---|---|---|
+| `[YOU SAY: "hola" — OH-la]` | a `prompt` segment | ❌ — a rehearsal, no answer key |
+| `<!-- hl-activity: {…} -->` | an `activity` segment | ✅ — `acceptedResponses` from `compileLessonActivities` |
+
+**Tables are linearised, never dropped.** A two-column word→gloss table becomes
+*"नमस्ते means hello"*; a three-column table becomes labelled facts, *"Language:
+Telugu. Hello: namaskāram. Source: Sanskrit."* Three columns is where a table stops
+being a list of facts a listener can hold and starts being a grid whose meaning lives
+in the comparison *across* rows — the corpus's own four-column tables prove it, with an
+unlabelled first column that only means something because of where it sits on the
+page. At that width the lineariser reads **371 of the corpus's 442 tables (84%)**,
+covering 272 of the 340 table-bearing lesson files.
+
+A table it refuses is **spoken, not skipped**: the learner hears its size, its column
+headings, and why it needs eyes, and the lesson is marked `sight` so they are warned
+before they start. `sight` and `pen` lessons still export in full, opening with a
+notice naming what they will need and which sections to leave until they have stopped.
+
+Target-script text carries its `romanization` alongside — *"خداحافظ (khodâ hâfez)"* —
+using the whole chapter's headwords, so a lesson can pair a word a neighbouring lesson
+introduced. Pairing is whole-word only: the Arabic track teaches ا (*alif*) as its own
+lesson, and a substring replace once turned سلام into `سلا (alif)م`.
+
+The export is hash-gated exactly like the generated `.tex`:
+`core/generated-narration-hashes.json` records an FNV-1a fingerprint of each chapter's
+lesson AST and of the two files generated from it, so a lesson edited without
+re-running the exporter fails `--check` instead of leaving a voice assistant
+confidently teaching a lesson that no longer exists.
+
+**Out of scope, per HL04 and HL08:** no audio. No TTS, no voice selection, no
+recordings. This is a script *for* a voice agent.
+
 remaining 1,038, 308 carry a Markdown table — the single largest obstacle to a
 hands-free course, and a far more tractable one than the script. **708 lessons
-(65%) are drivable exactly as authored.**
+(65%) are drivable exactly as authored.** No track has yet authored an interspersed
+writing segment, so every lesson's core equals its full modality and the two-scale
+derivation currently moves no number; the regression test pins that.
 
 ### The modality manifest — two editions from one source (HL-C44)
 
@@ -180,8 +296,8 @@ have them. Chapters add the drivable prefix and the ids in it; tracks and a corp
 Two design decisions are worth knowing before consuming it:
 
 - **`modality` is permanently the strongest channel the lesson needs anywhere.** It is
-  the conservative filter. HL-C41 is adding *block-level* modality — a lesson core that
-  is `voice` beside a short, separable, optional `pen` segment — and it lands as a new
+  the conservative filter. HL-C41 has now added *block-level* modality — a lesson core
+  that is `voice` beside a short, separable `pen` segment — and it landed as a new
   optional `coreModality` key beside `modality`, never as a change to it. A consumer
   reads `entry.coreModality ?? entry.modality` and is correct both before and after;
   one that never learns about the new key keeps producing a merely *pessimistic*
@@ -240,12 +356,19 @@ until the existing corpus has been split.
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
+| `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
+| `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
+
 | `modality-manifest.ts` | that derivation as an emittable, filterable JSON artifact | ✅ |
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
+| `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
+
+Only `loader.ts`, `cli.ts`, `report-cli.ts`, `book-cli.ts`, and `narration-cli.ts` touch the filesystem (declared in
+
 | `modality-cli.ts` | writes or checks `core/lesson-modality.json` | ⛔ (fs) |
 
 Only `loader.ts`, `cli.ts`, `report-cli.ts`, `book-cli.ts`, and `modality-cli.ts` touch the filesystem (declared in

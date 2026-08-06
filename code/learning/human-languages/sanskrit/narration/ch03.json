@@ -1,0 +1,759 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 3,
+  "title": "Chapter 3",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0294567d2aa4f6ee",
+  "lessons": [
+    {
+      "id": "SA-C03-aham",
+      "sequence": null,
+      "title": "अहम् (aham) — \"I,\" the ancestor of ego and I",
+      "headword": "अहम्",
+      "romanization": "",
+      "gloss": "I",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5ac8458c8c04d4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To answer \"how are you?\" you first need \"I\" — and it is the grandparent of both English I and the word ego."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अ (independent a) + ह (ha) + म् (bare m, halant) becomes अहम् (aham)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अहम् (aham, \"I\") is from Proto-Indo-European h₁eǵ(H)om — the direct ancestor of Latin ego (whence English ego, egotist), Greek egō, and, worn all the way down, English I itself. So Sanskrit aham, Latin ego, and English I are one word across three continents of time. Its possessive is the मम (mama, \"my\") from Chapter 2 — and, curiously, \"I\" (aham) and \"my\" (mama) come from different ancient roots (eǵ- and me-), a quirk Sanskrit shares with English (I vs. my/me)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"I\" can be dropped",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit verbs carry the person in their ending — asmi already means \"I am\" — so aham is often left out. You still learn it first, because the answer to katham asi? begins with it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aham\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aham\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — aham / Latin ego / English I",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — *aham* / Latin *ego* / English **I**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the odd pair — \"I\" (aham, root eǵ-) and \"my\" (mama, root me-) differ, as in English I vs. my",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the odd pair — \"I\" (*aham*, root *\\*eǵ-*) and \"my\" (*mama*, root *\\*me-*) differ, as in English *I* vs. *my*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What PIE root is aham from, and its cousins? (h₁eǵ(H)om; Latin ego, English I.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C03-bhavan-katham-asti",
+      "sequence": null,
+      "title": "भवान् कथम् अस्ति? (bhavān katham asti?) — \"how are you?\"",
+      "headword": "भवान् कथम् अस्ति?",
+      "romanization": "",
+      "gloss": "how are you? (respectful)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c818ed9314a76d14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words you own, assembled into the first thing you ask after hello."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भवान् कथम् अस्ति? = भवान् (bhavān, respectful \"you\") + कथम् (katham, \"how\") + अस्ति (asti, \"is\") — literally \"your honour how is?\" Recall from Chapter 2 that bhavān (\"your honour\") takes a third-person verb — so it is asti (\"is\"), not \"are.\" The familiar version uses tvam and the second-person verb: त्वं कथम् असि? (tvaṁ katham asi? — asi, \"you are\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the copula, three persons",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now hold the \"to be\" verb across persons: अस्मि (asmi, \"I am\"), असि (asi, \"you are\"), अस्ति (asti, \"is\") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. \"How are you?\" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the respectful question — bhavān katham asti?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the respectful question — *bhavān katham asti?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar version — tvaṁ katham asi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar version — *tvaṁ katham asi?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the copula trio — asmi (am), asi (are), asti (is)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the copula trio — *asmi* (am), *asi* (are), *asti* (is)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is it asti (\"is\") with bhavān, and what are the three copula forms? (Bhavān = \"your honour,\" a 3rd-person subject; asmi/asi/asti — am / you are / is.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C03-katham",
+      "sequence": null,
+      "title": "कथम् (katham) — \"how,\" another of the ka- questions",
+      "headword": "कथम्",
+      "romanization": "",
+      "gloss": "how",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f33ba19199bd217",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met किम् (kim, \"what\") in Chapter 2. Here is its sibling in the question-family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क (ka) + थ (tha) + म् (bare m, halant) becomes कथम् (katham)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कथम् (katham, \"how, in what way\") is from the interrogative stem क- (ka-), PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā (\"a telling, a story\" — \"the how of a thing\"), and, worn down, Hindi's kaise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"katham\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"katham\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ka- question family — kim, kaḥ, kadā, kutra, katham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ka- question family — *kim, kaḥ, kadā, kutra, katham*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root do Sanskrit's question-words share, and its western cousins? (The interrogative ka-, PIE kʷo-; English wh-, Latin qu-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C03-kushalam",
+      "sequence": null,
+      "title": "कुशलम् (kuśalam) — \"well-being,\" and how to answer",
+      "headword": "कुशलम्",
+      "romanization": "",
+      "gloss": "well-being — and the reply \"अहं कुशली अस्मि\"",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b8e0008fd9fc833",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that answers \"how are you?\" — one that once meant, of all things, \"skill in cutting sacred grass.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कु (ku) + श (śa, a palatal sh) + ल (la) + म् (m, halant) becomes कुशलम् (kuśalam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुशलम् (kuśalam, \"well-being, welfare, all-being-well\") is native Sanskrit, famously derived from कुश (kuśa, the sacred grass) + a root of \"cutting\" — so it first meant \"skilled [at gathering kuśa grass properly],\" hence \"adept, fit, in good order,\" hence \"well.\" A whole idea of wellness grew from a ritual skill. Its adjective is कुशली (kuśalī, \"one who is well\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "The reply",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अहं कुशली अस्मि (ahaṁ kuśalī asmi) — \"I am well\" (aham \"I\" + kuśalī \"well\" + asmi \"am\"). Or simply kuśalam (\"[all is] well\"). The exchange:"
+            },
+            {
+              "kind": "speech",
+              "text": "— bhavān katham asti? (\"How are you?\") — ahaṁ kuśalī asmi, dhanyavādaḥ. (\"I am well, thank you.\")"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kuśalam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kuśalam\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full reply — ahaṁ kuśalī asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full reply — *ahaṁ kuśalī asmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the surprising root (kuśa, the sacred grass becomes \"skilled\" becomes \"well\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the surprising root (*kuśa*, the sacred grass → \"skilled\" → \"well\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the reply to bhavān katham asti?, and kuśalam's surprising origin. (Ahaṁ kuśalī asmi; from kuśa grass becomes \"skilled\" becomes \"well.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C03-na-cinta",
+      "sequence": null,
+      "title": "न चिन्ता (na cintā) — \"no worry\"",
+      "headword": "न चिन्ता",
+      "romanization": "",
+      "gloss": "no worry / it's nothing / you're welcome",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9502af13d3fdfe7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When someone thanks you, this gentle reply says, simply, \"don't give it a thought.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "न (na, \"not,\" from Chapter 1) + चिन्ता (cintā, \"worry, anxious thought,\" with the conjunct न्त nt) becomes न चिन्ता (na cintā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "न चिन्ता literally means \"[there is] no worry / no anxiety\" — used for \"never mind / no trouble / you're welcome.\" Two atoms: न (na, \"not\"), the ancient negative from Chapter 1 — PIE ne, behind English no, not, Latin nōn, and every Indo-Aryan \"no.\" And चिन्ता (cintā, \"anxious thought\"), from the root चिन्त् (cint, \"to think, ponder\") — the same cintā borrowed into Hindi and Urdu (cintā mat karo, \"don't worry\"). So the reply pairs the family's oldest negative with a verb of thinking: \"think nothing of it.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"na cintā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"na cintā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its two atoms (na \"not\" + cintā \"worry\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its two atoms (*na* \"not\" + *cintā* \"worry\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange — dhanyavādaḥ / na cintā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange — *dhanyavādaḥ* / *na cintā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does na cintā literally say, and what is its negative na cousin to? (\"No worry\"; PIE ne — English no/not, Latin nōn.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C03-practice",
+      "sequence": null,
+      "title": "Chapter 3 — The how-are-you exchange",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 3 recap — the how-are-you exchange",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:852bd85b8bf75efc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. The whole responding cycle, from atoms you now own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How are you?\" (respectful) — bhavān katham asti?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How are you?\" (respectful) — *bhavān katham asti?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am well, thank you.\" — ahaṁ kuśalī asmi, dhanyavādaḥ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am well, thank you.\" — *ahaṁ kuśalī asmi, dhanyavādaḥ.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"No worry / you're welcome.\" — na cintā.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"No worry / you're welcome.\" — *na cintā.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar question — tvaṁ katham asi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar question — *tvaṁ katham asi?*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The atoms",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ka- question-word for \"how\" (katham)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ka- question-word for \"how\" (*katham*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I\" and the copula trio (aham; asmi/asi/asti)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I\" and the copula trio (*aham*; *asmi/asi/asti*)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Roots you now carry (the taproot, both ways)",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "katham from the interrogative ka- (PIE kʷo-) becomes English how/what, Latin qu-."
+            },
+            {
+              "kind": "speech",
+              "text": "aham from h₁eǵ(H)om becomes Latin ego, English I."
+            },
+            {
+              "kind": "speech",
+              "text": "asmi from h₁es- becomes English am; asti becomes is, hai."
+            },
+            {
+              "kind": "speech",
+              "text": "na (in na cintā) from ne becomes English no/not, Latin nōn."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A respected stranger asks bhavān katham asti? — give a full reply, and answer their thanks. (Ahaṁ kuśalī asmi, dhanyavādaḥ — and to thanks, na cintā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

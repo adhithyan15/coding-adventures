@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 18,
+  "title": "Telling Time",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:39e6627618aef15f",
+  "lessons": [
+    {
+      "id": "ML-C18-mani",
+      "sequence": 470,
+      "title": "മണി — one word in Malayalam's dictionaries, two in Tamil's",
+      "headword": "മണി",
+      "romanization": "",
+      "gloss": "hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related mani, which its own dictionaries split into two unrelated homophones",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27f91cf7f0a0d28f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada and Telugu both borrowed Sanskrit's \"bell\" word for \"hour.\" Malayalam's story is genuinely murkier — and it's about to disagree with its closest cousin, Tamil, on how this exact word is even structured."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മണി (mani) = \"hour, o'clock\" — and it also means \"bell, gong\" and \"gem, jewel, pearl.\" Here's the honest, slightly untidy part: Malayalam's own dictionary tradition treats all three of these senses as ONE word, borrowed from Sanskrit मणि (maṇi, \"gem, jewel, pearl\") — the same Sanskrit word behind names like Manipravalam and the mantra syllable in \"om mani padme hum.\" Under this account, \"bell/hour\" isn't a separate native word at all — it's just another meaning that grew out of the same borrowed \"gem\" word (a bell-shaped gem or ornament, perhaps, extending to the bell itself, and then to the hour it announces)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's what makes this genuinely interesting rather than settled: Tamil's closely related cognate மணி is analyzed very differently by Tamil's own reference dictionaries — as two separate, unrelated words that happen to be spelled and pronounced identically: a native Dravidian \"bell, gong\" word (which extends to \"hour\"), and a completely separate Sanskrit loan meaning \"gem.\" The broader comparative Dravidian dictionary (DEDR) does list Malayalam among the languages sharing that native \"bell\" word too — but even DEDR flags a possible Sanskrit connection for the whole word-family as unresolved. So: two closest-cousin languages, and even the specialists don't fully agree on whether this is one Sanskrit word wearing three meanings, or a native word and a Sanskrit word that just happen to sound alike."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: telling the time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒരു മണി. — \"One o'clock.\" (oru mani, \"one hour/bell\") രണ്ട് മണി. — \"Two o'clock.\" (raṇṭŭ mani, \"two hour/bell\")."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mani\" — hour, also \"bell,\" also \"gem\" — genuinely debated whether that's one word or two",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mani\" — hour, also \"bell,\" also \"gem\" — genuinely debated whether that's one word or two]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"oru mani\" — one o'clock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"oru mani\" — one o'clock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the honest point — Malayalam's own dictionaries call it one Sanskrit word; Tamil's call the bell/hour sense a separate, native word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the honest point — Malayalam's own dictionaries call it one Sanskrit word; Tamil's call the bell/hour sense a separate, native word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "According to Malayalam's own dictionary tradition, are \"hour,\" \"bell,\" and \"gem\" one word or two? (One — all traced to Sanskrit maṇi, \"gem.\") How does Tamil's own dictionary tradition treat its cognate word differently? (As two separate, unrelated homophones — a native \"bell/hour\" word and a distinct Sanskrit \"gem\" loan.) Is this fully settled? (No — even the comparative Dravidian dictionary flags the Sanskrit connection as an open question.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

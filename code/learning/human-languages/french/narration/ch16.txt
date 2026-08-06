@@ -1,0 +1,148 @@
+French, chapter 16: Chapter 16.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+être — “to be”.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 14 gave you avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”
+
+The six forms.
+[a table of 3 rows, read aloud]
+je suis, nous sommes.
+tu es, vous êtes.
+il/elle est, ils/elles sont.
+These forms are old and frequent, so sound change has worn away any neat modern pattern. Learn the row as a rhythm:
+suis, es, est — sommes, êtes, sont.
+Use the subject pronoun every time; unlike Spanish or Italian, French verb sounds often do not identify the person by themselves.
+Examples:
+Je suis français. — I am French.
+Elle est fatiguée. — She is tired.
+Nous sommes prêts. — We are ready.
+The present forms continue Latin esse, “to be”: suis beside sum, est beside est, sommes beside sumus, and sont beside sunt. Other tenses draw on different roots; the next micro-lesson maps those seams.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “je suis, tu es, il est”]
+[pause 8 seconds for the answer]
+[your turn — say: “nous sommes, vous êtes, ils sont”]
+[pause 8 seconds for the answer]
+[your turn — say: “Je suis français. Elle est fatiguée.”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Suis, es, est — sommes, êtes, sont.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the six present forms. (Suis, es, est, sommes, êtes, sont.) Which pronoun goes with êtes? (Vous.) Which Latin verb supplies this row? (Esse.) Next: find the fu- and ét- pieces inside the wider paradigm.
+
+
+Lesson 2 of 4.
+suis / fus / étais — three stems.
+
+Warm-up.
+[pause 2 seconds]
+The present of être comes from Latin esse. Its other forms expose two more historical pieces.
+[a table of 3 rows, read aloud]
+French: suis, es, est, sommes, êtes, sont. source: Latin esse, “be”.
+French: fus, fut. source: ancient perfect stem fuī.
+French: été, étant, étais, était. source: Latin stāre, “stand”.
+Every ét- form comes from the standing verb: participle été, present participle étant, imperfect étais / était. A paradigm patched from different roots is suppletive, like English go / went.
+The fu- stem is related to the root of English be. The ét- limb is even more striking because Spanish kept the same stāre source as a separate verb, estar.
+[a table of 2 rows, read aloud]
+language: Spanish. what happened to esse and stāre: kept ser and estar separate.
+language: French. what happened to esse and stāre: kept être and absorbed a whole ét- limb.
+French also preserves stāre outside être, for example in rester, “stay.” But it no longer has a separate standing-based “to be.”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “suis from esse”]
+[pause 8 seconds for the answer]
+[your turn — say: “fus from fuī”]
+[pause 8 seconds for the answer]
+[your turn — say: “été, étant, étais from stāre”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Es-, fu-, ét-: three stems, one verb.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which root supplies the present? (Esse.) Which supplies fus? (Fuī.) Which supplies every ét- form? (Stāre, “stand.”) What is such patching called? (Suppletion.) What did Spanish do differently? (Kept the two verbs separate.) Next: build the compound past with être.
+
+
+Lesson 3 of 4.
+Je suis allé — the past built from “be”.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 15 built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject.
+
+Start with aller.
+[a table of 5 rows, read aloud]
+je suis allé, I went.
+tu es allé, you went.
+il est allé, he went.
+nous sommes allés, we went.
+ils sont allés, they went.
+The family centres on arriving, leaving, and changing state: aller, venir, partir, arriver, entrer, sortir, naître, mourir, rester, tomber.
+Do not interpret that as “every verb involving movement.” Marcher, courir, nager, and danser take avoir. Some verbs switch with a direct object: je suis monté (“I went up”) but j’ai monté les valises (“I took the suitcases up”).
+
+Agreement with the subject.
+[a table of 4 rows, read aloud]
+subject: il. sentence: Il est allé.
+subject: elle. sentence: Elle est allée.
+subject: ils. sentence: Ils sont allés.
+subject: elles. sentence: Elles sont allées.
+The participle takes the subject’s gender and number like an adjective. That is its history: elle est allée began as “she is gone,” with gone describing her state just as fatiguée would.
+This connects both auxiliary systems:
+with avoir, agreement can follow a preceding object;
+with être, agreement follows the subject.
+Underneath both, the participle was an adjective agreeing with what it described.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “je suis allé; elle est allée”]
+[pause 8 seconds for the answer]
+[your turn — say: “ils sont allés; elles sont allées”]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — “j’ai parlé; je suis allé”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which broad family takes être? (Arriving, leaving, and change of state.) Does courir? (No: j’ai couru.) What does the participle agree with here? (The subject.) Why? (It began as an adjective.) Next: the special agreement logic of pronominal verbs.
+
+
+Lesson 4 of 4.
+Elle s’est lavée — pronominal past agreement.
+
+Warm-up.
+[pause 2 seconds]
+All pronominal verbs use être in the compound past: je me suis levé, elle s’est lavée. Their agreement, however, follows the direct object rather than blindly following the subject.
+[a table of 3 rows, read aloud]
+sentence: Elle s’est lavée. why: se means “herself,” a preceding direct object.
+sentence: Elle s’est lavé les mains. why: direct object les mains follows, so no agreement.
+sentence: Elles se sont parlé. why: se means “to each other,” an indirect object.
+The auxiliary looks like être, but the decision is the same one used with avoir: agree with a preceding direct object.
+Ask two questions:
+What received the action directly?
+Does that direct object come before the participle?
+In elle s’est lavée, se is direct and precedes, so add -e. In elle s’est lavé les mains, les mains is direct but follows, so leave lavé unchanged. In se parler, the person is indirect — you speak to someone — so there is no agreement.
+
+Verbs that exist only pronominally.
+Verbs such as se souvenir (remember), s’enfuir (flee), and s’évanouir (faint) have no ordinary non-reflexive partner. They simply agree with the subject: elles se sont souvenues.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “Elle s’est lavée.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Elle s’est lavé les mains.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Elles se sont parlé.”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which auxiliary do pronominal verbs take? (Être.) Do they always agree with the subject? (No.) What controls ordinary pronominal agreement? (A preceding direct object.) Why no agreement in se sont parlé? (Se is indirect.) How do inherently pronominal verbs behave? (They agree with the subject.)

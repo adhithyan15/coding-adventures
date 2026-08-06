@@ -1,0 +1,491 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 14,
+  "title": "Chapter 14",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:6bfd206207773458",
+  "lessons": [
+    {
+      "id": "ES-C14-hablar-preterite",
+      "sequence": null,
+      "title": "hablé — the regular past, built on an accent",
+      "headword": "hablé",
+      "romanization": "hablé",
+      "gloss": "the regular -ar preterite — hablé, hablaste, habló — and why the accent matters",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b93bb30072baaa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Fui was irregular; now the pattern that covers thousands of verbs. Take any regular -ar verb, drop the -ar, and add the preterite endings. The whole tense hangs on one small mark: the accent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "accent-acute — the written ´ marks the stressed vowel: habl-É, habl-Ó. Say the stress at the very end and the past tense announces itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The regular -ar preterite",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop -ar from hablar (\"to speak\") and add:"
+            },
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, hablé, (accent on é).",
+                "tú, hablaste, blank.",
+                "él/ella/usted, habló, (accent on ó).",
+                "nosotros, hablamos, (no accent).",
+                "ellos/ustedes, hablaron, blank."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Compare it with the present you learned in Chapter 6 — hablo, hablas, habla — and the difference is almost entirely where the stress lands: HABlo (I speak, now) vs hablÉ (I spoke, done). The accent is not decoration; it carries the tense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Where the endings come from",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These endings are worn-down Latin perfect forms. Latin amāvī (\"I loved\") becomes amé; amāvistī becomes amaste; amāvit becomes amó. The -āv- dissolved and left the stressed final vowel that Spanish now crowns with an accent. So hablé is (fabulāvī) with the middle chewed away — the same erosion you've watched all along, applied to a whole tense."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "One trap — hablamos",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hablamos is the same in present and preterite (\"we speak\" / \"we spoke\"). Only context — or a time-word like ayer (\"yesterday\") — tells them apart: hablamos ayer = \"we spoke yesterday.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the set — \"hablé, hablaste, habló, hablamos, hablaron\" — hit the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the set — \"hablé, hablaste, habló, hablamos, hablaron\" — hit the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "present vs past — \"hablo / hablé\", \"habla / habló\" — the accent flips it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: present vs past — \"hablo / hablé\", \"habla / habló\" — the accent flips it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ayer hablé con María\" (\"Yesterday I spoke with María\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ayer hablé con María\" (\"Yesterday I spoke with María\")]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the -ar preterite of hablar. (Hablé, hablaste, habló, hablamos, hablaron.) What single feature separates hablo (present) from habló (preterite)? (The accent — where the stress falls.) Which form is identical in present and preterite, and what disambiguates it? (Hablamos — context / a time-word like ayer.) Next: practice — past vs present, side by side."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C14-practice",
+      "sequence": null,
+      "title": "Practice — the preterite, past against present",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "past vs present — fui, hablé, and the forms that look the same",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:528631b16e43cd5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter gave you the past: the shared ser/ir preterite (fui) and the regular -ar pattern (hablé). Time to switch between now and then without stumbling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Drill 1 — say the two paradigms",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "fui (ser/ir): fui, fuiste, fue, fuimos, fueron."
+            },
+            {
+              "kind": "speech",
+              "text": "hablé (regular -ar): hablé, hablaste, habló, hablamos, hablaron."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Drill 2 — the accent flips the tense",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say each present form, then its preterite twin — the stress jumps to the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablo (I speak) becomes hablé (I spoke)."
+            },
+            {
+              "kind": "speech",
+              "text": "habla (s/he speaks) becomes habló (s/he spoke)."
+            },
+            {
+              "kind": "speech",
+              "text": "trabajo (I work) becomes trabajé (I worked)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What one thing changed? (The accent — the stressed syllable moved to the end.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Drill 3 — ser or ir? (context decides)",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "For each fui/fue, say whether it's \"to be\" or \"to go\":"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Fui a la escuela.\" becomes? (ir — \"I went.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Fui estudiante.\" becomes? (ser — \"I was a student.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ella fue muy amable.\" becomes? (ser — \"She was very kind.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ellos fueron a España.\" becomes? (ir — \"They went.\")"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Drill 4 — put it to use",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say each out loud:"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ayer hablé con mi madre.\" — \"Yesterday I spoke with my mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "\"Fui al mercado y compré pan.\" — \"I went to the market and bought bread.\""
+            },
+            {
+              "kind": "speech",
+              "text": "\"Fuimos amigos.\" — \"We were friends.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two verbs share the preterite fui/fue? (ser and ir.) How does the accent change hablo into habló? (It moves the stress to the end — present becomes preterite.) In \"Fui a casa,\" be/go? (Go — ir.) You can now speak in the past — the course has crossed from \"what is\" to \"what happened.\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C14-ser-ir-preterite",
+      "sequence": null,
+      "title": "fui — the past tense arrives, and two verbs become one",
+      "headword": "fui",
+      "romanization": "fui",
+      "gloss": "the preterite (past) — and the astonishing fact that \"I was\" and \"I went\" are the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e940d842f1a80dd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A big moment: your first past tense. Spanish's everyday past is the preterite — \"I spoke, I went, I was.\" And it opens with the strangest, most memorable fact in the whole language: the verbs ser (\"to be\") and ir (\"to go\") have the exact same preterite. Fui means both \"I was\" and \"I went.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stress-final — the preterite loves the final syllable: fui, fue (one-syllable), then fuiste, fuimos, fueron."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The shared forms",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "ser / ir (same!)"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "yo. ser / ir (same!): fui.",
+                "tú. ser / ir (same!): fuiste.",
+                "él/ella/usted. ser / ir (same!): fue.",
+                "nosotros. ser / ir (same!): fuimos.",
+                "ellos/ustedes. ser / ir (same!): fueron."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One set of forms, two verbs. There is no separate past for \"to go\" — Spanish just reuses \"to be.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Why? A tale of two \"be\" verbs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fui comes from Latin fuī, \"I have been\" — but here is the twist: Latin had two roots for \"to be.\" The present sum/es/est ( becomes soy/eres/es) came from PIE es-; the perfect fuī came from a different root, PIE bʰuH-, \"to grow, become\" — the very root of English be, been, and (through Greek and Latin) future and physics. Spanish stitched the two roots into one verb — that's suppletion, like English go/went."
+            },
+            {
+              "kind": "speech",
+              "text": "Then ir (\"to go\") borrowed fuī too, because Latin's own past of īre had worn away. So \"to be\" and \"to go\" merged in the past — and only context tells them apart:"
+            },
+            {
+              "kind": "speech",
+              "text": "Fui a Madrid. — \"I went to Madrid.\" (movement becomes ir)."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui profesor. — \"I was a teacher.\" (state becomes ser)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the set — \"fui, fuiste, fue, fuimos, fueron\" — stress the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the set — \"fui, fuiste, fue, fuimos, fueron\" — stress the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two meanings — \"Fui a casa\" (I went) vs \"Fui feliz\" (I was happy)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two meanings — \"Fui a casa\" (I went) vs \"Fui feliz\" (I was happy)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"same form, context decides — ser and ir share one past\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"same form, context decides — ser and ir share one past\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What tense is fui, and which two verbs does it belong to? (The preterite — both ser and ir.) Give all five forms. (Fui, fuiste, fue, fuimos, fueron.) In \"Fui a España,\" is it ser or ir, and how do you know? (Ir — \"I went\"; the a + place signals movement.) Next: the regular -ar preterite — hablé, hablaste."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

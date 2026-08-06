@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 18,
+  "title": "Telling Time",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b8039d88f5603008",
+  "lessons": [
+    {
+      "id": "KA-C18-gante",
+      "sequence": 460,
+      "title": "ಗಂಟೆ — the same \"bell\" word as Hindi, borrowed through Prakrit",
+      "headword": "ಗಂಟೆ",
+      "romanization": "",
+      "gloss": "hour — the SAME Sanskrit \"bell\" word behind Hindi's ghantā, borrowed via Prakrit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c3ffdf9f20e84bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've already met Hindi's ghanṭā — \"hour,\" literally \"bell.\" Kannada has the exact same word, arriving by the exact same logic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: ಗಂಟೆ — bell AND hour, again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಂಟೆ (gaṇṭe) = \"hour\" — and, just like Hindi, it means \"bell, gong\" just as commonly. It's related to the same Sanskrit घण्टा (ghaṇṭā, \"bell\"). The semantic shift is identical to Hindi's: temples, towns, and clock towers announced the hour by striking a bell, so the bell-word became the hour-word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: this is Kannada matching Hindi, not matching Tamil",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a genuinely different picture from what you'll see in Tamil. Kannada's gaṇṭe, like Hindi's ghanṭā, is a Sanskrit-derived \"bell becomes hour\" word. Tamil, by contrast, most likely uses a native Dravidian word for exactly the same \"bell becomes hour\" idea — a different root entirely, arrived at independently (though even specialists don't call this fully settled). So the pattern (bell-word becomes hour-word) repeats across languages, but the word itself splits along the same Sanskrit/native line you've seen before in this course (compare madhyāhna vs. Tamil's naḷ-based words for noon)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: telling the time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂದು ಗಂಟೆ. — \"One o'clock.\" (ondu gaṇṭe, \"one hour/bell\")."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ಗಂಟೆ. — \"Two o'clock.\" (eraḍu gaṇṭe)."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada simply pairs the cardinal number with gaṇṭe — no ordinal/cardinal split like Arabic's, no singular/plural verb switch like Hindi's bajnā."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"gaṇṭe\" — hour, also \"bell\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"gaṇṭe\" — hour, also \"bell\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ondu gaṇṭe\" — one o'clock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ondu gaṇṭe\" — one o'clock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eraḍu gaṇṭe\" — two o'clock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eraḍu gaṇṭe\" — two o'clock]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಂಟೆ mean besides \"hour,\" and what Sanskrit word is it related to? (\"Bell, gong\" — related to Sanskrit ghaṇṭā.) Is this the same root Hindi uses for \"hour\"? (Yes — Hindi's ghanṭā is the same Sanskrit word.) Does Tamil use this same Sanskrit root for \"hour\"? (Most likely not — it uses a native Dravidian word instead, arrived at independently.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

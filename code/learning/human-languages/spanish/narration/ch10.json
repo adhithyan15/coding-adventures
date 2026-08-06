@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 10,
+  "title": "Chapter 10",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:45eb64c530fd2523",
+  "lessons": [
+    {
+      "id": "ES-C10-ir",
+      "sequence": null,
+      "title": "ir — \"to go,\" stitched from three verbs",
+      "headword": "ir",
+      "romanization": "ir",
+      "gloss": "to go (the most irregular Spanish verb — three Latin verbs in one)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfbc7b80522ef5b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've met two suppletive verbs now — ser (soy/eres/es…) and, in a way, estar. ir, \"to go,\" is the extreme case: its forms come from three different Latin verbs fused into one. English does the very same thing with go / went, so the idea is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-i — the infinitive ir is just eer, two letters, one of the shortest verbs in Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "diphthong-oy — voy = boy (a b/v sound + \"oy\"), sharing the -oy tail of soy, estoy, doy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — suppletion, in the extreme",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three Latin verbs meaning \"go\" collapsed into Spanish ir:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where it shows up",
+                "from Latin",
+                "note"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "where it shows up: the infinitive ir. from Latin: īre \"to go\". note: gives English exit (ex-īre \"go out\"), transit, ambition.",
+                "where it shows up: the present voy, vas, va, vamos, van. from Latin: vādere \"to advance, rush\". note: gives English invade, evade, wade.",
+                "where it shows up: the past fui (later). from Latin: esse/fuī \"to be\". note: the same fu- as ser's past."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the present tense doesn't come from ir at all — it comes from vādere:"
+            },
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, voy, (the -oy, like soy/estoy/doy).",
+                "tú, vas, blank.",
+                "él/ella/usted, va, blank.",
+                "nosotros, vamos, (this is also \"let's go!\")",
+                "ellos/ustedes, van, blank."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This is suppletion — the exact phenomenon behind English go (present) vs went (past, borrowed from an old verb wend). Spanish just does it inside a single tense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: voy a + place (going somewhere)",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point ir at a destination with a (\"to,\" from Latin ad):"
+            },
+            {
+              "kind": "speech",
+              "text": "Voy a Madrid. — \"I'm going to Madrid.\" Vamos a casa. — \"We're going home / Let's go home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "a + el contracts to al: voy al café (\"to the café\"). Next lesson, this same voy a… becomes a way to talk about the future."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ir\" then the present set — \"voy, vas, va, vamos, van\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ir\" then the present set — \"voy, vas, va, vamos, van\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"voy\" / English \"invade\", \"evade\" — the vādere family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"voy\" / English \"invade\", \"evade\" — the *vādere* family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Voy a Madrid,\" \"Vamos a casa\" — ir a + a place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Voy a Madrid,\" \"Vamos a casa\" — *ir a* + a place]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What three Latin verbs feed Spanish ir? (īre — infinitive; vādere — the present voy/vas…; esse/fuī — the past.) What English pair shows the same suppletion? (go / went.) Give the present of ir. (Voy, vas, va, vamos, van.) Next: turn voy a… into the future."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C10-ir-a-futuro",
+      "sequence": null,
+      "title": "voy a + infinitive — the \"going-to\" future",
+      "headword": "voy a + infinitive",
+      "romanization": "voy a + infinitive",
+      "gloss": "the near future — \"I'm going to…\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4484f041a323695",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here's a gift: Spanish builds its everyday future exactly like English. English says \"I'm going to speak\"; Spanish says \"voy a hablar.\" Same metaphor — the verb to go, aimed at what's coming — so you already know how to think it. You get a whole tense for almost free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The pattern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the present of ir, add a, add any infinitive (the dictionary form of a verb — hablar, comer, vivir, all of which you own):"
+            },
+            {
+              "kind": "speech",
+              "text": "voy a + infinitive becomes voy a hablar = \"I'm going to speak.\""
+            },
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, voy a hablar, \"I'm going to speak\".",
+                "tú, vas a comer, \"you're going to eat\".",
+                "él/ella/usted, va a estudiar, \"she's going to study\".",
+                "nosotros, vamos a vivir, \"we're going to live\".",
+                "ellos/ustedes, van a trabajar, \"they're going to work\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Only ir changes; the second verb stays a bare infinitive, never conjugated — just as English keeps \"to speak\" unchanged after \"going to.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: why \"go\" becomes \"future\" (in both languages)",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "It's one of the most natural metaphors in human language: movement toward something becomes time approaching it. If you're going to a place, you haven't arrived — it's ahead of you; so \"going to (do)\" comes to mean \"about to, soon.\" French does it too (je vais parler), and English, and Spanish — three languages, the same picture. Spanish even keeps the little a (\"to,\" from ad) that English drops in speech (\"gonna\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"voy a hablar, vas a comer, va a estudiar\" — ir + a + infinitive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"voy a hablar, vas a comer, va a estudiar\" — *ir* + a + infinitive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "build three about your day — \"Voy a trabajar,\" \"Voy a comer,\" \"Vamos a casa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: build three about your day — \"Voy a trabajar,\" \"Voy a comer,\" \"Vamos a casa\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "English \"I'm going to…\" then Spanish \"voy a…\" — feel the identical metaphor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: English \"I'm going to…\" then Spanish \"voy a…\" — feel the identical metaphor]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Spanish form the near future? (ir in the present + a + an infinitive: voy a hablar.) Does the second verb change? (No — it stays an infinitive.) What English construction is it a mirror of? (\"Going to\" + verb.) Next: whose things are they — the possessives mi/tu/su."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C10-mi-tu-su",
+      "sequence": null,
+      "title": "mi, tu, su — my, your, his/her",
+      "headword": "mi, tu, su",
+      "romanization": "mi, tu, su",
+      "gloss": "my, your, his/her/your-formal (the possessives)",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:6331a08eb76e60e3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The words, taken apart"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To say whose something is, Spanish puts a small word before the noun: mi casa \"my house,\" tu café \"your coffee.\" These come straight from Latin and line up neatly with the pronouns you already know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 3,
+              "headers": [
+                "Spanish",
+                "from Latin",
+                "means",
+                "English cousin"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, means, English cousin. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things to notice:"
+            },
+            {
+              "kind": "speech",
+              "text": "tu vs tú. The possessive tu (\"your\") has no accent; the pronoun tú (\"you\") does. Same split you met in the writing chapter (el/él, si/sí) — the accent (tilde diacrítica) separates two look-alike words."
+            },
+            {
+              "kind": "speech",
+              "text": "su does a lot of work. Because it covers his, her, its, your-formal, and their all at once, context tells you which. Su casa = \"his/her/your/their house\"; if it's genuinely unclear, Spanish adds de él, de ella… (\"of him, of her\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: they agree in NUMBER, not gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Unlike most Spanish modifiers, mi/tu/su don't change for masculine/feminine — mi casa (fem.) and mi café (masc.) both use mi. They only change for number: add -s for a plural noun."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "singular",
+                "plural"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "singular: mi libro becomes mis libros. plural: \"my book becomes my books\".",
+                "singular: tu casa becomes tus casas. plural: \"your house becomes your houses\".",
+                "singular: su amigo becomes sus amigos. plural: \"his friend becomes his friends\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "(nuestro/nuestra \"our,\" from noster, is the one that does flex for gender — you'll meet it fully later.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mi, tu, su\" — my / your / his-her",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mi, tu, su\" — my / your / his-her]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mi casa, tu café, su amigo\" — before a noun, no gender change",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mi casa, tu café, su amigo\" — before a noun, no gender change]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pluralize — \"mis libros, tus casas, sus amigos\" — the -s for number",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pluralize — \"mis libros, tus casas, sus amigos\" — the *-s* for number]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"my / your / his,\" and one Latin source. (Mi/tu/su, from meus/ tuus/suus.) What's the difference between tu and tú? (No accent = \"your\"; accent = \"you.\") Do possessives agree in gender or number? (Number only — add -s: mis/tus/sus.) Next: practice the whole chapter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C10-practice",
+      "sequence": null,
+      "title": "Practice — ir, the near future, and possessives",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "going places, the near future, and whose things",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9c77a572314fc48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three new powers this chapter: you can go places, talk about the future, and say whose things are whose. Drill the irregular ir until voy/vas/va/vamos/van is automatic, because the whole future rides on it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Conjugate and build",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ir, present: voy, vas, va, vamos, van (from vādere — the -oy of voy, like soy/estoy/doy)."
+            },
+            {
+              "kind": "speech",
+              "text": "the near future: ir + a + infinitive — voy a hablar, vas a comer, va a estudiar (\"I'm/you're/she's going to…\")."
+            },
+            {
+              "kind": "speech",
+              "text": "possessives: mi, tu, su (+ plural mis, tus, sus) — agree in number, not gender."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Say something real",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Qué vas a hacer hoy? — Voy a estudiar en mi casa, y luego voy a trabajar. ¿Y tú? — Voy a comer con mis amigos. Vamos a un café."
+            },
+            {
+              "kind": "speech",
+              "text": "Two chapters working together: voy a estudiar / voy a comer (near future becomes ir), mi casa / mis amigos (possessives), vamos a un café (ir a + place)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ir — \"to go,\" the most suppletive Spanish verb (infinitive from īre; present voy/vas/va/vamos/van from vādere becomes invade/evade), the same go/went trick English plays."
+            },
+            {
+              "kind": "speech",
+              "text": "the near future — ir a + infinitive (voy a hablar = \"I'm going to speak\"), Spanish building tomorrow out of the verb \"to go,\" exactly as English and French do."
+            },
+            {
+              "kind": "speech",
+              "text": "mi/tu/su ( from meus/tuus/suus becomes my/thy) — possessives that agree in number (mis/tus/sus), not gender; and tu \"your\" vs tú \"you\" (the accent again)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conjugate ir fully — \"voy, vas, va, vamos, van\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: conjugate *ir* fully — \"voy, vas, va, vamos, van\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three near-future plans — \"Voy a … \" with hablar / comer / trabajar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three near-future plans — \"Voy a … \" with hablar / comer / trabajar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mi casa, mis amigos, tu café, su libro\" — possessives + number",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mi casa, mis amigos, tu café, su libro\" — possessives + number]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"¿Qué vas a hacer? — Voy a … con mis amigos.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the present of ir. (Voy, vas, va, vamos, van.) Build \"we're going to eat.\" (Vamos a comer.) How do mi/tu/su change for a plural noun, and do they change for gender? (Add -s becomes mis/tus/sus; no gender change.) Next chapter takes these rules further — the course now runs on grammar, not phrases."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

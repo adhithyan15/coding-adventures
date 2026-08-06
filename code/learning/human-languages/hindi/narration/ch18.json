@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 18,
+  "title": "Telling Time",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:a720d6b0f6833ce7",
+  "lessons": [
+    {
+      "id": "HI-C18-ghanta",
+      "sequence": 400,
+      "title": "घंटा — \"hour,\" literally \"bell\"",
+      "headword": "घंटा",
+      "romanization": "",
+      "gloss": "hour — literally \"bell,\" from the historical practice of striking a bell to mark the hour",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:feb6c6d4810251db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here's a word that wears its history on its sleeve: Hindi's word for \"hour\" is the exact same word as \"bell.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — घंटा — bell AND hour, one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घंटा (ghanṭā) = \"hour\" — and it means \"bell, gong\" just as commonly. It comes from Sanskrit घण्टा (ghaṇṭā), \"bell, gong.\" The connection isn't a coincidence: temples, towns, and later clock towers historically marked the passing of time by striking a bell — the hour was announced by sound, not read off a face — so the word for the bell itself came to mean the unit of time it announced. Compare this to English o'clock, itself a worn-down \"of the clock,\" or French's il est … heures: different languages, but time-telling vocabulary keeps circling back to the instrument used to mark it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: बजना — \"to strike, to toll\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi tells the time with the verb बजना (bajnā), \"to strike, to toll\" — the same imagery as a bell striking the hour:"
+            },
+            {
+              "kind": "speech",
+              "text": "एक बज रहा है। — \"It is one o'clock.\" (literally \"one is striking\") दो बज रहे हैं। — \"It is two o'clock.\" (literally \"two are striking\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Just like Spanish switches from singular es to plural son after \"one,\" Hindi switches बज रहा है (singular) to बज रहे हैं (plural) once the count passes one — matching the number, not just tacking on \"o'clock.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ghanṭā\" — hour, also \"bell\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ghanṭā\" — hour, also \"bell\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ek baj raha hai\" — it is one o'clock, \"one is striking\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ek baj raha hai\" — it is one o'clock, \"one is striking\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"do baj rahe hain\" — it is two o'clock, \"two are striking\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"do baj rahe hain\" — it is two o'clock, \"two are striking\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घंटा literally mean besides \"hour\"? (\"Bell, gong\" — from Sanskrit ghaṇṭā.) Why did \"bell\" come to mean \"hour\"? (Because clocks/towns historically struck a bell to announce the hour.) What verb does Hindi use to tell the time, and what does it literally mean? (बजना, bajnā — \"to strike, to toll,\" as in ek baj raha hai, \"one is striking.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

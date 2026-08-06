@@ -1,0 +1,170 @@
+Italian, chapter 16: Being, Going, and the Past with Essere.
+4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 4.
+essere — “to be”.
+
+Warm-up.
+[pause 2 seconds]
+You have known one Italian “to be” since Chapter 2: stare, from Latin stāre, “to stand.” Now meet essere, from Latin esse, “to be.”
+
+You'll want to know: the six forms.
+[a table of 3 rows, read aloud]
+io sono, noi siamo.
+tu sei, voi siete.
+lui/lei è, loro sono.
+Italian normally drops the subject pronoun because the ending identifies the person: Sono italiano means “I am Italian.” One collision needs care: io sono and loro sono are identical. Keep loro when context would not make “they” clear.
+
+Grammar Lens: one accent and two words.
+È with the grave accent is the verb “is.” Plain e is “and”:
+Marco è italiano. — Marco is Italian.
+Marco e Anna. — Marco and Anna.
+The two words sound different enough in careful speech, but the accent makes the contrast unmistakable on the page. Never drop it from the verb.
+
+The word, taken apart: two living roots.
+[a table of 2 rows, read aloud]
+Latin: esse. picture: being or identity. Italian: essere.
+Latin: stāre. picture: standing or state. Italian: stare.
+Italian kept both verbs. The next micro-lesson shows the surprising place where their histories overlap.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “sono, sei, è, siamo, siete, sono”]
+[pause 8 seconds for the answer]
+[your turn — say: “Marco è italiano” — then “Marco e Anna”]
+[pause 8 seconds for the answer]
+[your turn — say: “essere — be; stare — stand/state”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Sono, sei, è — siamo, siete, sono.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the six forms of essere. (Sono, sei, è, siamo, siete, sono.) What does the accent distinguish? (È, “is,” from e, “and.”) Which older verbs became essere and stare? (Latin esse and stāre.) Next: why both verbs share stato.
+
+
+Lesson 2 of 4.
+essere becomes stato — a borrowed piece.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Italian kept both Latin “be” verbs as essere and stare. Now look at the piece they unexpectedly share.
+
+Grammar Lens: one participle for two verbs.
+[a table of 2 rows, read aloud]
+verb: stare. past participle: stato.
+verb: essere. past participle: stato.
+Essere’s own participle did not survive. Latin esse never supplied a useful one, so Italian filled the empty slot with stare’s stato. A verb assembled from historically different roots is suppletive, like English go / went.
+That shared piece creates a real ambiguity:
+sono stato = “I have been” or “I have stayed”.
+Only the surrounding sentence tells you which verb is meant.
+
+What you've built: three Romance solutions.
+The same Latin material took a different shape in each sister language:
+[a table of 3 rows, read aloud]
+language: Spanish. result: ser and estar: two verbs kept fully separate.
+language: French. result: être: one verb with old stāre pieces inside its forms.
+language: Italian. result: essere and stare: two verbs that share stato.
+Italian sits between the other two: less separated than Spanish, less fused than French. You do not need either sister language to use Italian; the comparison simply makes the borrowed piece visible.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “stare becomes stato”]
+[pause 8 seconds for the answer]
+[your turn — say: “essere becomes stato”]
+[pause 8 seconds for the answer]
+[your turn — say: “sono stato — I have been / I have stayed”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Two verbs, one stato.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is essere’s participle? (Stato, borrowed from stare.) What can sono stato mean? (“I have been” or “I have stayed.”) Which language keeps the two verbs fully separate? (Spanish.) Which fuses them most? (French.) Next: the two-stem verb andare, “to go.”
+
+
+Lesson 3 of 4.
+andare — “to go,” on two stems.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 2 gave you Come va?, “How’s it going?” The va inside it belongs to andare, “to go.” Learn the whole verb before using it to build the past.
+
+You'll want to know: the forms.
+[a table of 3 rows, read aloud]
+io vado, noi andiamo.
+tu vai, voi andate.
+lui/lei va, loro vanno.
+Past participle: andato.
+The table has a visible seam:
+[a table of 2 rows, read aloud]
+stem: vad- / va-. forms: vado, vai, va, vanno. history: Latin vādere, “to stride”.
+stem: and-. forms: andare, andiamo, andate, andato. history: origin disputed; perhaps ambitāre.
+Notice that vanno belongs with vado, not with andiamo. The split is not “singular versus plural.” It is two old verbs patched into one modern paradigm — another case of suppletion, like essere borrowing stare’s stato.
+Spanish shows the same kind of seam in voy beside andar. The comparison is a memory aid; the Italian forms above are the only ones you need here.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “vado, vai, va”]
+[pause 8 seconds for the answer]
+[your turn — say: “andiamo, andate, vanno”]
+[pause 8 seconds for the answer]
+[your turn — say: the infinitive and participle — “andare, andato”]
+[pause 8 seconds for the answer]
+[your turn — say: the Chapter 2 callback — “Come va?”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Vado, vai, va — andiamo, andate, vanno.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the six present forms. (Vado, vai, va, andiamo, andate, vanno.) Which plural form belongs to the vad- side? (Vanno.) What is the participle? (Andato.) Which familiar question already used va? (Come va?) Next: combine essere + andato and make the ending agree.
+
+
+Lesson 4 of 4.
+sono andato — the past built on essere.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 15 built the past with avere: ho parlato. You now know the other auxiliary, essere, plus the participles stato and andato. Combine them, then watch the participle’s ending change.
+
+You'll want to know: start with stato.
+[a table of 4 rows, read aloud]
+sono stato, I have been / stayed.
+sei stato, you have been / stayed.
+è stato, he has been / stayed.
+siamo stati, we have been / stayed.
+The plural stati is the first clue: with essere, the participle describes the subject and therefore agrees with it.
+
+Grammar Lens: motion, change, and agreement.
+Many verbs of motion or change of state take essere: andare (go), venire (come), arrivare (arrive), partire (leave), nascere (be born), morire (die), diventare (become), plus essere and stare.
+Use the four adjective endings you already know:
+[a table of 4 rows, read aloud]
+subject: Marco. sentence: Marco è andato.
+subject: Anna. sentence: Anna è andata.
+subject: the boys. sentence: I ragazzi sono andati.
+subject: the girls. sentence: Le ragazze sono andate.
+A woman therefore says sono andata, not sono andato. The ending agrees with the subject, in gender and number: -o, -a, -i, -e.
+
+Why it's said this way: agreement.
+The participle began as an adjective: Anna è andata was “Anna is gone-away,” with andata describing Anna just as stanca (“tired”) would. French keeps the same agreement (elle est allée); German uses a similar auxiliary split but no agreement (sie ist gegangen). The systems developed alongside one another, but only the Romance sisters preserve this adjective fossil visibly.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “sono stato, sei stato, siamo stati”]
+[pause 8 seconds for the answer]
+[your turn — say: “sono andato” — then, as a woman, “sono andata”]
+[pause 8 seconds for the answer]
+[your turn — say: “andato, andata, andati, andate”]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — “ho parlato; sono andato”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which auxiliary do many motion and change verbs take? (Essere.) What does the participle agree with? (The subject.) Give all four endings. (-o, -a, -i, -e.) How does a woman say “I went”? (Sono andata.) Why does agreement survive? (The participle began as an adjective.)

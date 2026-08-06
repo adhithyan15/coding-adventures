@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Pass the authenticated package runtime to the single configured host program
+  as the reserved final `--package-runtime deno|skill` argument pair.
+
 ## 0.1.0
 
 - Add exact package re-verification before every host spawn.

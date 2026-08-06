@@ -1,0 +1,558 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 15,
+  "title": "Chapter 15",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:8749ab0a4a2c672b",
+  "lessons": [
+    {
+      "id": "ES-C15-comer-vivir-preterite",
+      "sequence": null,
+      "title": "comí, viví — two conjugations become one",
+      "headword": "comí, viví",
+      "romanization": "comí, viví",
+      "gloss": "the regular -er/-ir preterite — where two conjugations collapse into one",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:16ca99df1a1c073e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have the -ar past (hablé). Now the other two. And here Spanish does you a favour it never does in the present tense: -er and -ir verbs take the exact same preterite endings. Learn one set, get both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "One set of endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop -er or -ir, add: -í, -iste, -ió, -imos, -ieron."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "comer (\"to eat\")",
+                "vivir (\"to live\")"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo. comer (\"to eat\"): comí. vivir (\"to live\"): viví.",
+                "tú. comer (\"to eat\"): comiste. vivir (\"to live\"): viviste.",
+                "él/ella/usted. comer (\"to eat\"): comió. vivir (\"to live\"): vivió.",
+                "nosotros. comer (\"to eat\"): comimos. vivir (\"to live\"): vivimos.",
+                "ellos/ustedes. comer (\"to eat\"): comieron. vivir (\"to live\"): vivieron."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look down the two columns: the endings are identical. That is not true in the present, where -er and -ir pull apart (comemos vs vivimos). In the past, the two conjugations merge."
+            },
+            {
+              "kind": "speech",
+              "text": "The accent works exactly as in Chapter 14: it marks the stressed final vowel — comí, comió. Stress at the end = the past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Where they come from",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These endings are worn-down Latin perfect forms — -ī, -istī, -it. The middle one barely changed at all: Latin -istī becomes Spanish -iste (comiste, viviste). Two thousand years, one dropped vowel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "One trap",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For -ir verbs, nosotros is the same in present and preterite — vivimos means both \"we live\" and \"we lived\" (just like hablamos from Chapter 14). But for -er verbs it differs: comemos (we eat) vs comimos (we ate)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"comí, comiste, comió, comimos, comieron\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"comí, comiste, comió, comimos, comieron\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"viví, viviste, vivió, vivimos, vivieron\" — hear the same endings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"viví, viviste, vivió, vivimos, vivieron\" — hear the same endings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"comemos / comimos differ; vivimos / vivimos don't\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"comemos / comimos differ; vivimos / vivimos don't\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ayer comí paella\" (\"Yesterday I ate paella\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ayer comí paella\" (\"Yesterday I ate paella\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the five -er/-ir preterite endings. (-í, -iste, -ió, -imos, -ieron.) What's the favour Spanish does here? (-er and -ir share one set — though their presents differ.) Which Latin ending is still almost intact? (-istī becomes -iste.) Which nosotros form is ambiguous, and which isn't? (Vivimos is; comemos/comimos are distinct.) Next: the strong preterites, where the accent disappears entirely."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C15-practice",
+      "sequence": null,
+      "title": "Practice — three families, one question",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the whole preterite — -ar, -er/-ir, and strong, told apart by where the stress lands",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:f60f008428500914",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The whole map"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The whole map until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You now have the entire everyday past tense. Three families — and one question sorts them: where does the stress land?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The whole map",
+          "segments": [
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 6,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "yo",
+                "tú",
+                "él/ella",
+                "nosotros",
+                "ellos"
+              ],
+              "text": "There is a table here I cannot read to you — 6 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, yo, tú, él/ella, nosotros, ellos. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Rows 2 and 3 are the same: -er and -ir merged. Rows 1–3 carry accents only on yo and él, where the ending is stressed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The stress test",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read any preterite and ask: is the loud syllable the last one?"
+            },
+            {
+              "kind": "speech",
+              "text": "Yes becomes regular. Accent on yo and él/ella (hablé, hablÓ, comí, comió)."
+            },
+            {
+              "kind": "speech",
+              "text": "No, it's the stem becomes strong. No accent (TUve, HIce, ESTUvo)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Drill — past or present?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Use context for forms shared by two tenses:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "could be",
+                "which?"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "form: hablamos. could be: we speak / we spoke. which?: either — context decides.",
+                "form: vivimos. could be: we live / we lived. which?: either — context decides.",
+                "form: comemos / comimos. could be: we eat / we ate. which?: distinct — the vowel tells you.",
+                "form: fui. could be: I was / I went. which?: either — ser and ir share it."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo-forms across all five rows — \"hablé, comí, viví, tuve, fui\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: yo-forms across all five rows — \"hablé, comí, viví, tuve, fui\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ayer hablé con mi madre y comí en casa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ayer hablé con mi madre y comí en casa\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hice la comida\" (\"I made the food\") — stem stress, no accent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hice la comida\" (\"I made the food\") — stem stress, no accent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Fui al mercado\" (\"I went to the market\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Fui al mercado\" (\"I went to the market\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the diagnostic aloud — \"last syllable loud becomes accent; stem loud becomes none\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the diagnostic aloud — \"last syllable loud → accent; stem loud → none\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two rows are identical? (-er and -ir.) Which forms take a written accent? (Yo and él/ella of the regular verbs only.) What single test separates regular from strong? (Where the stress lands — ending vs stem.) Which form means both \"I was\" and \"I went\"? (Fui.) Which nosotros forms are tense-ambiguous? (Hablamos, vivimos — but not comimos.) Next chapter: talking about the past that kept going — the imperfect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C15-preterite-fuertes",
+      "sequence": null,
+      "title": "tuve, hice, estuve — the strong preterites",
+      "headword": "tuve, hice, estuve",
+      "romanization": "tuve, hice, estuve",
+      "gloss": "the strong preterites — where the stress moves off the ending and the accent disappears",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:51b0f34d77b634bd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for 2 tables that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Three of them, all verbs you know",
+          "The accent rule, inverted"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Three of them, all verbs you know and The accent rule, inverted until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything so far pushed the stress to the end: hablÉ, comÍ, comIÓ. Now meet the verbs that do the opposite. They pull the stress back into the stem — and so they lose their accent marks entirely. Spanish calls them pretéritos fuertes, \"strong\" preterites: strong because the stem carries the weight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Three of them, all verbs you know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The stem changes, then one shared set of endings: -e, -iste, -o, -imos, -ieron."
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "tener becomes tuv-",
+                "hacer becomes hic-",
+                "estar becomes estuv-"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, tener becomes tuv-, hacer becomes hic-, estar becomes estuv-. Come back and look at it when you have stopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The accent rule, inverted",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare the yo and él forms across the three families:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 5,
+              "rowCount": 3,
+              "headers": [
+                "family",
+                "yo",
+                "él/ella",
+                "stressed syllable",
+                "accent?"
+              ],
+              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: family, yo, él/ella, stressed syllable, accent?. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Say them out loud back to back: hablÓ … TUvo. The written accent isn't decoration — it's telling you where the stress went. No accent on a strong preterite because the stress never left the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the yo ending too: -e, not -é (tuve, not tuvé)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "One spelling swerve",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hacer gives hizo, not hico — Spanish swaps c becomes z before o to keep the sound the same. The letter changes so the pronunciation won't."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Why these are irregular",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Because they're old. Latin had two ways to build a perfect, and these verbs kept the \"strong\" one, inherited whole rather than rebuilt: tenuī becomes tuve, fēcī becomes hice, stetī/stāre becomes estuve. The regular -ar/-er/-ir patterns are the tidy replacements that spread later; the strong verbs are the most-used ones, worn smooth by frequency and never re-made. Notice tuv- and estuv- even share the same -uv- shape."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tuve, tuviste, tuvo, tuvimos, tuvieron\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tuve, tuviste, tuvo, tuvimos, tuvieron\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hice, hiciste, hizo\" — hear the z",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hice, hiciste, hizo\" — hear the **z**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast pair — \"hablÓ … TUvo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast pair — \"hablÓ … TUvo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ayer estuve en casa\" (\"Yesterday I was at home\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ayer estuve en casa\" (\"Yesterday I was at home\")]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why \"strong\"? (The stem carries the stress.) So why no accent marks? (Because the stress never reaches the ending — the accent only ever marked that.) What's the yo ending? (-e, not -é.) Why hizo and not hico? (c becomes z before o, to protect the sound.) Where do they come from? (Latin's strong perfects — tenuī, fēcī — inherited, not rebuilt.) Next: all three families side by side."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

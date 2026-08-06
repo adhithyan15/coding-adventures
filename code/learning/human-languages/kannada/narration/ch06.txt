@@ -1,0 +1,125 @@
+Kannada, chapter 6: Case Endings and Dative Subjects.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 3.
+-ಗೆ (-ge) — "to, for".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Your first case ending. English puts "to" in front, as a separate word. Kannada sticks it on the back — the biggest structural fact about the language, in one suffix.
+
+You'll want to know: Adding it on.
+[a table of 2 rows, read aloud]
+word: ಹೆಸರು hesaru — name. + -ge: ಹೆಸರಿಗೆ hesarige. meaning: to/for the name.
+word: ಕೆಲಸ kelasa — work. + -ge: ಕೆಲಸಕ್ಕೆ kelasakke. meaning: for work.
+Two shapes, one suffix: -ige after some stems, -kke after others. Kannada adjusts it to fit the word in front — but you can still see exactly where the noun stops and the ending starts.
+And with "I", which reshapes first:
+ನಾನು nānu ("I") becomes ನನಗೆ nanage ("to me").
+
+The word, taken apart: The g that was once a k.
+All four descend from one Proto-Dravidian dative, -k(k)u. Look at what became of its k:
+[a table of 4 rows, read aloud]
+language: Tamil. dative: -ukku.
+language: Telugu. dative: -ku / -ki.
+language: Malayalam. dative: -ikku / -inu.
+language: Kannada. dative: -ge / -ige.
+Kannada is the one that voiced it — k becomes g between vowels — and carried that change into the dative, where its sisters kept the hard consonant. Note the other Kannada form, -kke: a doubled consonant resists voicing, so the geminate preserved the original k. The two Kannada shapes are the same suffix caught on either side of a sound change.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hesaru … hesarige"]
+[pause 8 seconds for the answer]
+[your turn — say: "nānu … nanage" — "I" … "to me"]
+[pause 8 seconds for the answer]
+[your turn — say: "kelasakke" — "for work," from Ch. 5's ಕೆಲಸ]
+[pause 8 seconds for the answer]
+[your turn — say: the family — "-ukku, -ku, -ge, -ikku"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -ಗೆ (-ge) mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (ನನಗೆ nanage.) Why does Kannada have g where its sisters have k? (Kannada voiced the k between vowels; doubled -kke resisted and kept the old hard form.)
+
+
+Lesson 2 of 3.
+-ಗೆ (-ge) — one suffix, one job.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+You can now attach -ಗೆ (-ge) and make ನನಗೆ “to me.” Look at what that visible seam tells you about how Kannada builds longer words.
+
+Grammar Lens: Stacking versus fusion.
+[a table of 4 rows, read aloud]
+pins down the case? Kannada -ge: yes — dative, always. a Latin ending like -īs: no — dative or ablative.
+carries number? Kannada -ge: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.
+carries declension class? Kannada -ge: no. a Latin ending like -īs: yes — first or second.
+can you see the seam? Kannada -ge: yes: hesar + ige. a Latin ending like -īs: no — one fused lump.
+Kannada stacks suffixes. Each suffix carries one meaning and sits in a fixed order, so the learner can see where the noun ends and the case marker begins. That is what agglutinative means here: longer words are assembled from pieces whose jobs remain visible.
+Latin fuses several jobs into one ending. -īs carries case, plural number, and declension class at once—and it does not even settle whether the case is dative or ablative. Kannada -ಗೆ (-ge) carries one unambiguous job: “to/for.”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: hesar + ige — a visible noun-plus-case seam]
+[pause 8 seconds for the answer]
+[your turn — say: Kannada -ge — one job, dative]
+[pause 8 seconds for the answer]
+[your turn — say: Latin -īs — case, plural, and declension fused]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why is Kannada called agglutinative? (It stacks visible pieces, each with one job.) How many jobs can Latin -īs fuse? (Case, number, and declension class—and its case can still be dative or ablative.)
+[question — say your answer, then pause 8 seconds]
+Why is Kannada called agglutinative?
+
+
+Lesson 3 of 3.
+ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) — "I know Kannada".
+
+Warm-up.
+[pause 2 seconds]
+Chapter 5 gave you ನಾನು ಕನ್ನಡ — "I speak Kannada" — with the verb ಮಾತನಾಡುತ್ತೇನೆ. Now say "I know Kannada." Kannada will not let you use nānu.
+
+You'll want to know: The sentence.
+ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು. nanage kannaḍa gottu. literally: "to-me Kannada [is] known."
+[a table of 3 rows, read aloud]
+piece: ನನಗೆ nanage, "to me" — the dative from the last lesson.
+piece: ಕನ್ನಡ kannaḍa, Kannada (Ch. 5).
+piece: ಗೊತ್ತು gottu, "known".
+Two things to notice. You are not the subject — nānu is gone, moved into the dative, leaving kannaḍa as the unmarked word the sentence is about. And gottu isn't really a verb doing an action; it's closer to "[is] known." So nothing in this sentence is doing anything at all.
+
+Grammar Lens: Why: things that happen to you.
+Kannada separates what you do from what happens to you. Speaking is an action, so Ch. 5 used nānu. But knowing, liking, wanting, being hungry — these arrive. Kannada marks that by putting the person in the dative.
+[a table of 3 rows, read aloud]
+English frames it as: I know Kannada. Kannada frames it as: Kannada is known to me.
+English frames it as: I like it. Kannada frames it as: it is pleasing to me.
+English frames it as: I am cold. Kannada frames it as: cold is to me.
+English keeps one fossil of the same idea: "methinks" — where me is a dative, "it seems to me." Kannada made it a rule.
+
+Grammar Lens: All four sisters do it.
+[a table of 4 rows, read aloud]
+language: Kannada. "I know [the language]": nanage kannaḍa gottu. the dative: -ge.
+language: Tamil. "I know [the language]": enakku tamiḻ teriyum. the dative: -ukku.
+language: Telugu. "I know [the language]": nāku telugu vaccu. the dative: -ku.
+language: Malayalam. "I know [the language]": enikku malayāḷam aṟiyām. the dative: -ikku.
+One construction, four languages, four suffixes that are visibly the same suffix — Kannada's g being the softened k of the others. The Dravidian family showing its bones, exactly as blanc/bianco/branco did for Romance.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "nanage kannaḍa gottu"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "nānu kannaḍa mātanāḍuttēne" (I speak) … "nanage kannaḍa gottu" (known to me)]
+[pause 8 seconds for the answer]
+[your turn — say: the literal — "to-me Kannada known"]
+[pause 8 seconds for the answer]
+[your turn — say: the four cousins — "-ge, -ukku, -ku, -ikku"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) literally say? ("To-me Kannada known.") What has English got that Kannada hasn't? (A nominative "I" — nānu is replaced by the dative nanage.) Is gottu an action verb? (No — it's "[is] known"; nothing is doing anything.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)

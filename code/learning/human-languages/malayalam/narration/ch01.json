@@ -1,0 +1,977 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 1,
+  "title": "Chapter 1",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:466190a4496f5073",
+  "lessons": [
+    {
+      "id": "ML-C01-athe",
+      "sequence": null,
+      "title": "അതെ (athe) — \"yes,\" literally \"that [is so]\"",
+      "headword": "അതെ",
+      "romanization": "",
+      "gloss": "yes (athe — \"that [is so]\")",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9774d8c3e4314d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The plain \"yes\" — and a small window into how Malayalam thinks, because the word is really the pointing-word \"that.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Malayalam.)"
+            },
+            {
+              "kind": "speech",
+              "text": "അ = \"a\" — an independent vowel (the word starts with a vowel, so it gets a full letter)."
+            },
+            {
+              "kind": "speech",
+              "text": "തെ = \"the\" — ത (tha, a soft th as in this) with the \"e\" vowel sign written in front of the consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: അ, തെ = a-the, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ = athe = \"yes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അതെ (athe) is native Malayalam, and it grows from അത് (athu), \"that.\" To say \"yes,\" Malayalam essentially says \"that [is so]\" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, \"[it is] not that\" — the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: yes and no as \"that is\" / \"not that\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Malayalam's yes/no pair are demonstratives in disguise: athe (\"that [is so]\") and alla (\"not that\"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, \"[I] came,\" for \"did you come?\"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a, the becomes \"athe\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a · the → \"athe\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "note the \"e\" sign sits before ത but is read after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: note the \"e\" sign sits *before* ത but is read *after* it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"athe\" — \"yes, that's so\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"athe\" — \"yes, that's so\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read അതെ. What everyday word is it built from, and so what does \"yes\" literally assert? (athu, \"that\" — so \"yes\" = \"that [is so]\".) Where does the \"e\" vowel sign sit, and where is it read? (Written before the consonant, read after.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C01-illa",
+      "sequence": null,
+      "title": "ഇല്ല (illa) — \"no,\" the word Malayalam and Tamil share almost exactly",
+      "headword": "ഇല്ല",
+      "romanization": "",
+      "gloss": "no / there isn't (illa — the negative)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80ad38e397f1e428",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The partner of athe, and more family evidence: this Malayalam \"no\" is essentially the same word as Tamil's illai and Kannada's illa — the old Dravidian il- runs right through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Malayalam.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ഇ = \"i\" — an independent vowel (word-initial, so a full letter, like അ in athe)."
+            },
+            {
+              "kind": "speech",
+              "text": "ല്ല = \"lla\" — a conjunct: ല (la) loses its vowel and joins another ല (la) into a doubled, held \"ll.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ഇ, ല്ല = i-lla, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "ഇല്ല = illa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇല്ല (illa) is built on the ancient Dravidian root il, \"not-being, absence\" — so, exactly like Tamil illai, it really means \"[it] is not, [there] is not,\" and serves as the everyday \"no.\" Its positive twin is ഉണ്ട് (uṇṭŭ), \"there is.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: Dravidian negates by being",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English inserts not / no. Malayalam — like Tamil and Kannada — instead swaps in the negative verb of existence:"
+            },
+            {
+              "kind": "speech",
+              "text": "pustakam uṇṭŭ — \"there is a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "pustakam illa — \"there is not a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So illa is both the plain \"no\" and the word that negates a whole sentence. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Across the family — the same idea, five ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"No / isn't\"",
+                "Note"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Malayalam. \"No / isn't\": illa (ഇല്ല). Note: native, root il-.",
+                "Language: Tamil. \"No / isn't\": illai (இல்லை). Note: the same root.",
+                "Language: Kannada. \"No / isn't\": illa (ಇಲ್ಲ). Note: the same root.",
+                "Language: Telugu. \"No / isn't\": lēdu (లేదు). Note: native, a different root.",
+                "Language: Hindi. \"No / isn't\": nahīṁ (नहीं). Note: Indo-European (unrelated)."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "i, lla becomes \"illa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: i · lla → \"illa\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — athe (\"yes\") / illa (\"no\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *athe* (\"yes\") / *illa* (\"no\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pustakam illa\" — \"there is no book\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pustakam illa\" — \"there is no book\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ഇല്ല. Literally, is it closer to \"no\" or \"is not\"? (\"Is not / there is not.\") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C01-namaskaram",
+      "sequence": null,
+      "title": "നമസ്കാരം (namaskāram) — \"greetings,\" a making of a bow",
+      "headword": "നമസ്കാരം",
+      "romanization": "",
+      "gloss": "hello / greetings (namaskāram — \"a making of a bow\")",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c43845351f531425",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first Malayalam word, and your first Malayalam letters. You'll learn to read it and to understand it in the same breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(If you already read Malayalam, skim this — it's here so the book needs no prior knowledge.) Malayalam is written left to right, and every consonant carries a built-in \"a\" unless something removes it."
+            },
+            {
+              "kind": "speech",
+              "text": "ന = \"na\", മ = \"ma\", ര = \"ra\" — each with its built-in a."
+            },
+            {
+              "kind": "speech",
+              "text": "കാ = \"kā\" — ക (ka) plus the long-\"ā\" vowel sign."
+            },
+            {
+              "kind": "speech",
+              "text": "സ്ക — സ (sa) loses its vowel (a mark called the chandrakkala does the removing) and joins ക (ka) as a conjunct, \"ska.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ം — the anusvāram, a little circle that adds a final nasal \"-m.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ന, മ, സ്, കാ, ര, ം = na-ma-s-kā-ram, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "നമസ്കാരം = namaskāram."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നമസ്കാരം (namaskāram) is Sanskrit: namas (\"a bow, homage\") + kāra (\"a making,\" from the root kṛ, \"to do\"), with a Malayalam ending. Literally \"the making of a bow\" — the same word as Hindi namaskār and Telugu namaskāram."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth marking, because Malayalam is otherwise the closest sister of Tamil — the two split apart only about a thousand years ago. Yet for a formal greeting Malayalam, unlike Tamil, uses the Sanskrit namaskāram: over centuries it absorbed an enormous Sanskrit layer (the old Maṇipravāḷam style freely mixed the two), even as it kept a deeply Tamil-like everyday core — as the next words will show."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Across the family — the same idea, five ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Hello\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Malayalam. \"Hello\": namaskāram (നമസ്കാരം). Source: Sanskrit.",
+                "Language: Telugu. \"Hello\": namaskāram (నమస్కారం). Source: Sanskrit.",
+                "Language: Kannada. \"Hello\": namaskāra (ನಮಸ್ಕಾರ). Source: Sanskrit.",
+                "Language: Hindi. \"Hello\": namaste (नमस्ते). Source: Sanskrit.",
+                "Language: Tamil. \"Hello\": vaṇakkam (வணக்கம்). Source: native Dravidian.",
+                "Language: English. \"Hello\": hello. Source: Germanic."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its own."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "namaskāram is said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na, ma, s, kā, ram becomes \"namaskāram\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: na · ma · s · kā · ram → \"namaskāram\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the chandrakkala does to സ (removes its vowel, for the conjunct)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the *chandrakkala* does to സ (removes its vowel, for the conjunct)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"namaskāram,\" with a small bow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"namaskāram,\" with a small bow]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read നമസ്കാരം. Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") Which language is Malayalam's closest sister? (Tamil.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C01-nandi",
+      "sequence": null,
+      "title": "നന്ദി (nandi) — \"thank you,\" and the Tamil kinship made visible",
+      "headword": "നന്ദി",
+      "romanization": "",
+      "gloss": "thank you (nandi — the native Dravidian word, Tamil's cousin)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71619d799967562e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After a Sanskrit greeting, the native core shows itself: Malayalam's \"thank you\" is not the Sanskrit word its neighbours Kannada and Telugu use. It is nandi — the very cousin of Tamil's naṉṟi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Malayalam.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ന = \"na.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ന്ദി = \"ndi\" — a conjunct: ന (na) loses its vowel and joins ദ (da) into \"nd,\" then the \"i\" vowel sign gives \"ndi.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ന, ന്ദി = na-ndi, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "നന്ദി = nandi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നന്ദി (nandi) is native Dravidian, from the same root nal / nan (\"good\") that gives Tamil naṉṟi (\"goodness becomes gratitude\"). Malayalam and Tamil split from one language about a thousand years ago, so their oldest, most everyday words are near-twins — and \"thanks\" is a perfect example: Malayalam nandi, Tamil naṉṟi, one word lightly reshaped."
+            },
+            {
+              "kind": "speech",
+              "text": "Its neighbours went the other way: Kannada and Telugu use the Sanskrit dhanyavāda. So the map of \"thanks\" traces the family's fault-line exactly — Tamil and Malayalam on the native side, Kannada and Telugu on the Sanskrit side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Across the family — the same idea, five ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Thanks\"",
+                "Note"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Malayalam. \"Thanks\": nandi (നന്ദി). Note: native (root nal, \"good\").",
+                "Language: Tamil. \"Thanks\": naṉṟi (நன்றி). Note: the same native root.",
+                "Language: Kannada. \"Thanks\": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit.",
+                "Language: Telugu. \"Thanks\": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit.",
+                "Language: Hindi. \"Thanks\": dhanyavād / shukriyā. Note: Sanskrit / Perso-Arabic."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Like naṉṟi in Tamil, nandi is a touch formal — among close family it can feel oddly stiff, as if you were thanking a stranger; warmth is usually assumed and shown in tone. The explicit word is for when you want to mark the gratitude. (In casual speech you'll also hear the English thanks.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na, ndi becomes \"nandi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: na · ndi → \"nandi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair across the split — Malayalam nandi, Tamil naṉṟi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair across the split — Malayalam *nandi*, Tamil *naṉṟi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how ന്ദ joins two consonants into one \"nd\" block",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how ന്ദ joins two consonants into one \"nd\" block]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read നന്ദി. Is it native or a Sanskrit loan, and which language has the twin word? (Native — root nal, \"good\"; Tamil's naṉṟi.) Which two Dravidian languages use the Sanskrit word for thanks instead? (Kannada, Telugu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C01-practice",
+      "sequence": null,
+      "title": "Chapter 1 — recap, and how Malayalam says goodbye",
+      "headword": "(recap)",
+      "romanization": "",
+      "gloss": "Chapter 1 recap + the Malayalam farewell",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:5f48e1f8ca2ef8d8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Read them back"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five words, and a first handful of Malayalam letters read straight off the page. Let's gather them — and add the farewell, which is almost word-for-word the Tamil one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Read them back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sound each out, left to right, before checking:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "Read",
+                "",
+                "Meaning",
+                "Origin"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Origin. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "The letters that did it: consonants carry a built-in \"a\"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ, ല്ല); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ, ഇ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice how Tamil-like the native core is: four of the five everyday words (nandi, athe, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The farewell — nearly the Tamil words exactly",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Malayalam, like Tamil, will not say a bare \"I'm leaving.\" The everyday goodbye is:"
+            },
+            {
+              "kind": "speech",
+              "text": "പോയി വരാം (pōyi varām) — literally \"having gone, I [will] come [back].\""
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview — never simply depart, always promise a return — and in Malayalam and Tamil, almost the same words. (Casually, Malayalam also uses śari — \"okay\" — to sign off, or repeats namaskāram.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — namaskāram, nandi, athe, illa, śari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — namaskāram · nandi · athe · illa · śari]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "greet and thank — \"namaskāram!\" … \"nandi.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: greet and thank — \"namaskāram!\" … \"nandi.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the farewell — \"pōyi varām,\" and its Tamil twin \"pōy varugiṟēṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the farewell — \"pōyi varām,\" and its Tamil twin \"pōy varugiṟēṉ\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāram. Native: nandi, athe, illa, śari.) What does the Malayalam goodbye literally mean, and which Tamil farewell does it almost exactly match? (\"Having gone, I'll come back\" — Tamil pōy varugiṟēṉ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "That completes the four Dravidian first chapters — Tamil, Kannada, Telugu, Malayalam. Next chapter: introducing yourself — enṟe pēru… (\"my name…\") — and Malayalam's nī / niṅṅaḷ (familiar / respectful \"you\")."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C01-sari",
+      "sequence": null,
+      "title": "ശരി (śari) — \"okay,\" the whole-family word once more",
+      "headword": "ശരി",
+      "romanization": "",
+      "gloss": "okay / alright / correct (śari)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11736a060797bc74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The easy middle between \"yes\" and \"no\": \"okay, alright, correct.\" You have now met it in four languages — Tamil and Kannada sari, Telugu sarē, and here Malayalam śari."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Malayalam.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ശ = \"śa\" — a sh-sound (the palatal ś). Malayalam, having borrowed so much Sanskrit, keeps the full set of Sanskrit sibilants (ś, ṣ, s) as separate letters — more than Tamil, which makes do with one."
+            },
+            {
+              "kind": "speech",
+              "text": "രി = \"ri\" — ര (ra) with the \"i\" vowel sign."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ശ, രി = śa-ri, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "ശരി = śari = \"okay / correct.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശരി (śari) is the pan-Dravidian \"correct, right becomes okay, agreed,\" the verbal nod of Malayalam. It is the same family word carried by Tamil and Kannada as sari and Telugu as sarē; Malayalam simply spells its opening sound with ശ (ś). Doubled, śari śari, it means \"yes yes, fine.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one word, four scripts",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason this curriculum teaches the four side by side."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śa, ri becomes \"śari\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: śa · ri → \"śari\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday triple — athe (yes), illa (no), śari (okay)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday triple — *athe* (yes) · *illa* (no) · *śari* (okay)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word across the family — sari / sarē / śari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word across the family — *sari* / *sarē* / *śari*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ശരി. What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? (\"Okay, correct\"; sari, sari, sarē.) Why does Malayalam keep a separate ശ (ś) letter where Tamil uses one all-purpose sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant letters.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

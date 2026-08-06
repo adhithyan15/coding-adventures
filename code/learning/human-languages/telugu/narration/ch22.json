@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 22,
+  "title": "Green and Yellow",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:07cbedbaa5b02653",
+  "lessons": [
+    {
+      "id": "TE-C22-pacha-pasupu",
+      "sequence": 500,
+      "title": "పచ్చ, పసుపు — two colors, one Dravidian root",
+      "headword": "పచ్చ, పసుపు",
+      "romanization": "",
+      "gloss": "green and yellow — a genuine Telugu doublet pair, both from the same Proto-Dravidian pac- root, unlike Kannada, where the yellow word broke away as a Sanskrit loan",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0fe9f377036d9b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In Kannada, green stayed native but yellow got borrowed from Sanskrit. Telugu tells a tighter story: its green word and its yellow word turn out to be doublets of the same root, wearing two different faces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - పచ్చ — the native Dravidian green, again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పచ్చ (pacca, \"green\") comes from Proto-Dravidian pac- — the same root already behind Tamil's பச்சை (paccai) and Kannada's ಹಸಿರು (hasiru, via Old Kannada pasir). No surprise here; this is the same pan-Dravidian green family from the last lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - పసుపు — a genuine doublet of pacca, not a separate word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పసుపు (pasupu, \"yellow, turmeric\") is, remarkably, also a direct descendant of that same Proto-Dravidian pac- root — a true doublet of pacca itself, not a separate borrowing the way Kannada's haḷadi was. Tamil even keeps a matching cognate, பசுப்பு (pacuppu), sitting alongside its own paccai. So where Kannada split green and yellow into two unrelated families (native Dravidian vs. a Sanskrit turmeric-loan), Telugu kept both colors inside the same native word-family — pacca and pasupu are, at root, doublets of the same word, one settling on \"green\" and the other on \"yellow, turmeric-colored.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"పచ్చ\" — green, from Proto-Dravidian pac-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"పచ్చ\" — green, from Proto-Dravidian *pac-]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"పసుపు\" — yellow/turmeric, a true doublet of pacca, same root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"పసుపు\" — yellow/turmeric, a true doublet of pacca, same root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast with Kannada — Telugu kept both colors in one native family; Kannada's yellow broke away as a Sanskrit loan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast with Kannada — Telugu kept both colors in one native family; Kannada's yellow broke away as a Sanskrit loan]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Are పచ్చ and పసుపు two unrelated words, or doublets of the same root? (Doublets — both from Proto-Dravidian pac-.) Does Telugu's yellow word follow the same pattern as Kannada's haḷadi (a Sanskrit loan)? (No — Telugu kept its yellow word native, unlike Kannada.) What Tamil word is pasupu's direct cognate? (பசுப்பு, pacuppu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

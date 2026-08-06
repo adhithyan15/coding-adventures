@@ -76,7 +76,13 @@ export interface CurriculumGapReport {
     legacySchemaTracks: number;
     mixedSchemaTracks: number;
     version2SchemaTracks: number;
-    /** HL08: lessons learnable by ear alone, and that share of the whole corpus. */
+    /**
+     * HL08: lessons a hands-free view can deliver, and that share of the corpus.
+     *
+     * Counted on the lesson CORE — the lesson minus any detachable writing segment —
+     * so a lesson that is voice apart from a short interspersed writing aside counts
+     * here. The book still prints the segment; see `modality.ts`.
+     */
     drivableLessons: number;
     drivablePercent: number;
     /** Chapters a commuter cannot even start — drivable prefix 0. */
@@ -421,7 +427,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       legacySchemaTracks: schemas.filter((track) => track.status === "legacy").length,
       mixedSchemaTracks: schemas.filter((track) => track.status === "mixed").length,
       version2SchemaTracks: schemas.filter((track) => track.status === "version-2").length,
-      drivableLessons: modality.voice,
+      drivableLessons: modality.coreVoice,
       drivablePercent: modality.drivablePercent,
       chaptersWithoutDrivablePrefix,
       unexplainedModalityOverrides: modality.findings.filter(
@@ -479,12 +485,22 @@ function renderModalitySection(modality: CurriculumGapReport["modality"]): strin
     `  ${modality.voice} voice, ${modality.sight} sight, ${modality.pen} pen ` +
       `of ${modality.totalLessons} lessons; ${modality.drivablePercent}% drivable`,
     `  tables of more than ${modality.maxLinearisableTableColumns} column(s) count as sight`,
+    // The book prints every block, so the voice/sight/pen counts above describe the
+    // book. Drivability is counted on the CORE — the lesson minus its detachable
+    // writing segments — because that is what a hands-free view can deliver. The two
+    // numerators are identical until a track carries an interspersed writing segment,
+    // and this line is where the difference becomes visible instead of silent.
+    `  ${modality.coreVoice} lessons have a voice CORE; ` +
+      `${modality.lessonsWithWritingSegments} carry a detachable writing segment ` +
+      `(${modality.coreVoice - modality.voice} rescued for the hands-free view)`,
   ];
   for (const track of modality.tracks) {
+    const rescued = track.coreVoice - track.voice;
     lines.push(
       `  ${track.language}: ${track.voice} voice, ${track.sight} sight, ${track.pen} pen; ` +
         `${track.drivablePercent}% drivable; ${track.chapters.length} chapters, ` +
-        `${track.drivablePrefixTotal} lessons reachable in chapter-prefix order`,
+        `${track.drivablePrefixTotal} lessons reachable in chapter-prefix order` +
+        (rescued > 0 ? `; ${rescued} rescued by a detachable writing segment` : ""),
     );
   }
 

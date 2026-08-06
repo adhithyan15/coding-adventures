@@ -1,0 +1,51 @@
+Tamil, chapter 28: Afternoon.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+பிற்பகல் (piṟpakal) — "afternoon," a similar sandhi trick to நண்பகல்.
+
+Warm-up.
+[pause 2 seconds]
+You already met a sandhi-driven surface change in Chapter 17 — நள் resurfacing as நண். This lesson's afternoon word does a similar kind of trick, with a different word — though be honest that the two changes aren't identical.
+
+You'll want to know: பிற்பகல் — பின் (after) + பகல் (daytime), a similar sandhi story.
+பிற்பகல் (piṟpakal) — "afternoon" — is a transparent compound: பின் (piṉ, "after") plus பகல் (pakal, "daytime," already met inside நண்பகல், TA-C17 — though be aware the பிற்பகல் Wiktionary page itself glosses பகல் as "noon" in its own etymology line, a small inconsistency across Wiktionary's own entries, not something this lesson introduces). Here's the familiar pattern: பின் doesn't stay பின் in this compound — it surfaces as பிற்- before the following ப — a similar kind of consonant sandhi to the one already taught in Chapter 17, where நள் became நண் before its own following ப. Be honest, though: Wiktionary's own etymology for பிற்பகல் doesn't discuss this mechanism at all, and the two changes move in different phonetic directions (nasal becomes stop here, lateral becomes nasal there) — this is the lesson's own observation, not a sourced equivalence. Wiktionary labels this word formal register.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "piṟpakal" — "afternoon," piṉ ("after") + pakal ("daytime")]
+[pause 8 seconds for the answer]
+[your turn — say: the sandhi echo — piṉ surfaces as piṟ-, a similar kind of change to TA-C17's naḷ becomes naṇ, though not phonetically identical]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does பிற்பகல் literally build from, and what sandhi change happens to the first piece? (பின் "after" + பகல் "daytime" — பின் surfaces as பிற்-, a similar kind of sandhi to TA-C17's naḷ becomes naṇ, though the two changes move in different phonetic directions, not identical mechanisms.) What register does the fetched page label? (Formal.) Next: inspect the real noon/afternoon boundary blur and the separate matiyam root.
+
+
+Lesson 2 of 2.
+Noon or afternoon? — let the sources keep their blur.
+
+Warm-up.
+[pause 2 seconds]
+Piṟpakal transparently says after-daytime. Dictionaries still do not draw a perfectly hard semantic boundary around its synonyms.
+
+You'll want to know: நடுப்பகல் overlaps.
+Wiktionary's piṟpakal page lists நடுப்பகல் as an afternoon synonym, while the earlier noon lesson documents the same word as a synonym of நண்பகல், "noon." This is genuine noon/afternoon boundary blur, not an inconsistency to erase. Time-period categories can widen differently across speakers and sources.
+
+The word, taken apart - மதியம் is related but distinct.
+மதியம் (matiyam) is a Sanskrit tatsama from madhya, "middle," the same root used by Kannada and Telugu. The fetched entry gives it noon, a synonym of naṇpakal, not a dedicated afternoon meaning.
+An initial search summary claimed matiyam once meant "moon," but that claim is absent from the actual fetched page. It is therefore not asserted. Source inspection outranks a search snippet.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: naṭuppakal can overlap noon and afternoon]
+[pause 8 seconds for the answer]
+[your turn — say: matiyam — Sanskrit madhya, "middle," listed as noon]
+[pause 8 seconds for the answer]
+[once you have stopped driving — label: the moon claim unsupported]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does the source draw a hard noon/afternoon line? (No.) What is matiyam's sourced root and sense? (Sanskrit madhya, "middle," and noon.) Is "originally moon" confirmed? (No.)

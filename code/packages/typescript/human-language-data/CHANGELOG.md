@@ -42,6 +42,256 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Regenerated all 270 chapters. Source hashes are unchanged: no lesson file was
   edited, and `core/generated-book-hashes.json` is byte-identical.
 
+### Added — HL08 narration export: the drivable course, out loud (HL-C16)
+
+- Add `src/speech.ts`: the shared judgement of **what can be said aloud**. Markdown
+  inline → words a voice can pronounce (emphasis, code fences, link destinations and
+  the linguist's reconstruction asterisk removed; `→` `←` `·` given spoken readings),
+  and Markdown tables → spoken utterances or a *reasoned refusal*. Both `modality.ts`
+  and `narration.ts` import it, so "this lesson is drivable" and "the export can
+  actually narrate this lesson" are the same question asked once.
+- Add `src/narration.ts`: the pure narration builder. From the canonical lesson AST it
+  produces typed segments — `speech`, `pause`, `repeat`, `prompt`, `table`,
+  `table-skipped`, `activity` — plus the continuous plain-text script rendered from
+  them. This is the **audio-script output HL04's one-source pipeline diagram has named
+  since it was written and which nothing had ever built**.
+- Add `src/narration-cli.ts`: `--write` / `--check`, modelled joint for joint on
+  `book-cli.ts`. Writes `<language>/narration/chNN.txt` and `.json` for all 375
+  chapters plus a hash manifest at `core/generated-narration-hashes.json`. `--check`
+  compares byte for byte and exits 1, so a lesson edited without re-running the
+  exporter fails the build instead of leaving a voice assistant confidently teaching a
+  lesson that no longer exists.
+- **`[PAUSE Ns]`, `[REPEAT xN]` and `[YOU …: …]` are preserved as structured
+  directives, not flattened into prose.** Cue parsing is a depth-tracking bracket scan,
+  because the corpus nests brackets inside cues for real
+  (`[YOU SAY: the pattern — "[nā] [pēru]"]`), and a Markdown link that is not a cue is
+  handed back intact rather than mistaken for one.
+- **A `[YOU SAY: …]` cue is never treated as an answer key.** Cues become `prompt`
+  segments with `scored: false`; only `hl-activity` contracts, compiled through
+  `compileLessonActivities`, become `activity` segments carrying `acceptedResponses`.
+  This is `activity.ts`'s own rule — runtime consumers use only the typed AST and never
+  recover prompts or answers from learner-facing Markdown — and the narration export
+  would have been the easiest place in the package to break it.
+- **Tables are linearised, never dropped.** A two-column word→gloss table becomes
+  *"नमस्ते means hello"*; a three-column table becomes labelled facts. A column with no
+  heading is spoken as a bare value rather than refused, because `| Read | | Meaning |`
+  — script, romanization, gloss — is the corpus's commonest practice-table shape and
+  the blank heading is one a sighted reader does not have either. A run of pipe rows
+  with no delimiter row is read as an unlabelled sequence for the same reason.
+- **A table that cannot be linearised is spoken, not skipped**: the learner hears its
+  size, its column headings, and why it needs eyes, and the lesson is marked `sight` so
+  they are told before they start. `sight` and `pen` lessons still export in full,
+  opening with a notice naming what they will need and which sections to leave until
+  they have stopped.
+- Target-script text carries its `romanization` alongside — *"خداحافظ (khodâ hâfez)"* —
+  drawn from the **whole chapter's** headwords, so a lesson can pair a word a
+  neighbouring lesson introduced. Pairing is whole-word only: the Arabic track teaches
+  ا (*alif*) as its own lesson, and a plain substring replace turned سلام into
+  `سلا (alif)م`, splicing the pronunciation guide into the middle of the word.
+- Report `narration-block-unrenderable` when a lesson carries a table the export cannot
+  speak yet claims `voice`, and `narration-activity-invalid` when an authored contract
+  will not compile. Both are collected, never thrown — one bad directive must not
+  silence a lesson.
+
+### Changed — `maxLinearisableTableColumns` moves from 0 to 3
+
+- The knob shipped at **0** in the modality slice on purpose: no lineariser existed,
+  and claiming a table was speakable would have claimed a capability nothing
+  implemented. The lineariser now exists, so the default is its measured value, **3**,
+  and it is authored in `core/chapter-policy.json` (validated on load: an integer from
+  0 through 16) rather than living only as a constant.
+- Three, and not four, because that is where a table stops being a list of labelled
+  facts a listener can hold — *"Language: Telugu. Hello: namaskāram. Source:
+  Sanskrit."* — and starts being a grid whose meaning lives in the comparison *across*
+  rows. The corpus's own four-column tables prove the point: `| | numeral | word | said |`
+  has an unlabelled first column that means something only because of where it sits on
+  the page. Measured over the 340 table-bearing lesson files: 99 are 2 columns wide,
+  173 are 3, 60 are 4, and 8 are 5 or more.
+- At width 3 the lineariser reads **371 of the corpus's 442 tables (84%)**, covering
+  272 of the 340 table-bearing files. The corpus moves from **694 drivable lessons
+  (63%) to 925 (84%)**. Of the 120 that still need eyes, 65 carry a wide table, 61
+  point at the page in prose, 7 have a `script` block, and **52 need eyes for a wide
+  table and nothing else** — HL08's table-remediation burn-down list, now measured.
+- `modality.ts`'s `wide-table` rule no longer means "wider than N". It means *"the
+  narration lineariser refuses it"*, which is strictly larger: a three-column table
+  inside the limit is still unspeakable when its rows are ragged. Asking the exporter's
+  own judgement is the only way `voice` can be a promise the export is able to keep.
+- `report-cli.ts` reads the same policy width, so the published drivable percentages
+  and the committed narration export can never be computed at different settings.
+- `tableRowColumns` now delegates its cell splitting to `speech.ts`, so the count a
+  lesson is judged on is produced by the same scan the narration is built from.
+
+### Added — HL-C41 block-level modality: one lesson, two answers
+
+- Add the `writing` lesson-body block type (`## Writing: …`), for a section that
+  teaches the **hand** to form a letter — as against `script`, which teaches the
+  **eye** to recognise one. It is the first and so far only **detachable** block type:
+  nothing later in a lesson depends on it, so a renderer that cannot use a hand may
+  set it aside and still deliver a coherent lesson.
+- Derive modality at two scales. `LessonModality.modality` is unchanged and still
+  describes the whole lesson — what the **book** signs. New `coreModality` describes
+  the lesson minus its detachable blocks — what a hands-free view can deliver. New
+  `coreDerived`, `coreReasons`, `blocks` (per-block `BlockModality`) and
+  `writingSegments` expose the derivation. New `deriveBlockModality`,
+  `lessonCoreText`, `isDetachableBlock`, `DETACHABLE_BLOCK_TYPES`,
+  `strongerModality`, `weakerModality`.
+- **This is why it exists, and it is not what an earlier framing assumed.** The
+  project owner's ruling is that the book is a standalone artifact and keeps all
+  writing content in full; a dictation-friendly edition is a *separate output view*
+  over the same canonical source, exactly as the narration export is. `coreModality`
+  is the metadata that view reads. It is a strict improvement for that view: today a
+  lesson with any pen content is lost to a commuter wholesale, whereas block marking
+  lets them take the voice core and defer only the segment.
+- Sight cues and tables are now attributed to the block they occur in, so a cue inside
+  a writing segment does not follow it out into the core, while a cue in ordinary prose
+  still does.
+- An authored `modality:` override **caps** the core, giving the invariant a hands-free
+  view relies on: `coreModality` is never stronger than `modality`.
+- `drivablePrefix` and `drivablePercent` now count the core; `coreVoice` and
+  `lessonsWithWritingSegments` are published beside the unchanged `voice`/`sight`/`pen`
+  counts so the book's numbers and the hands-free numbers reconcile in the gap report.
+- New report-only finding `modality-writing-segment-not-separable`: a lesson that is
+  not `type: writing` may carry one writing segment; several means it should be split
+  or declared a writing lesson. `type: writing` lessons are exempt.
+- **Measured no-op.** No track has authored an interspersed writing segment yet, so
+  every lesson's core equals its full modality and no published number moves — the
+  regenerated `core/lesson-modality.json` is byte-identical in its summary (1,133
+  lessons, 725 `voice`, 64% drivable). Pinned as `coreVoice === voice` alongside
+  `lessonsWithWritingSegments === 0`, so the first interspersed lesson has to break the
+  equality deliberately. Deliberately *not* pinned as an absolute literal here: the
+  corpus totals live in one place, `modality-manifest.test.ts`, against the generated
+  manifest.
+- `features.blockModality` stays **false**: this change derives block modality but the
+  manifest does not yet emit block rows, and the flag exists precisely so a consumer can
+  tell those two states apart.
+- Amends [`HL08`](../../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md),
+  which had assumed one modality per lesson.
+
+### Changed — corpus pins moved by the Japanese track (HL-C40)
+
+No source change: the Japanese track is content, and the package loaded it without
+a code edit because `japanese/track.json` declares the script (the built-in
+`LANGUAGE_SCRIPT` map was deliberately left alone, proving that path works). The
+pinned corpus measurements moved, and each pin now records why:
+
+- `registeredTracks`, `authoredBooks`, `schemas.tracks`, `books.tracks`: 21 → **22**,
+  Japanese following Mandarin Chinese (HL-C39) as the 22nd track.
+- `modality-manifest.test.ts`: `totalLessons` 1125 → **1133**, `voice` 724 → **725**,
+  `sight` 348 → **355**, `chapterCount` 376 → **377**, `unstartableChapters`
+  121 → **122**; `pen` stays 53 and the drivable share stays **64%**.
+- `drivablePrefixTotal` does **not** move (558). Japanese ch1 opens on one of its
+  seven `script` lessons, so the chapter's drivable prefix is zero — which is also
+  why `unstartableChapters` gains one.
+- The compiled-activity id list gains the eight `JA-C01-*` activities.
+
+Seven of the eight Japanese lessons carry a `script` block and therefore derive as
+`sight`. That is the honest classification — a kana or kanji shape cannot be read
+aloud — and it was chosen over routing the same content through `input` blocks,
+which would have held the drivable percentage flat by mislabelling it.
+
+Added one integration test, `keeps the Japanese Chapter 1 mixed-script chain closed
+and under five minutes`, which asserts the property rather than only the counts:
+the same chapter carries a hiragana, a katakana, and a kanji headword; every lesson
+is schema-v2 with exactly one compiled activity; nothing exceeds the duration
+budget; and the plain and polite thanks keep distinct `register` values.
+
+### Added — tone in the script data model, and a `pronunciation` lesson type (HL-C39)
+
+Driven entirely by the Mandarin Chinese track, which was added as a scale test for
+whether the curriculum model generalises outside Indo-European and Dravidian.
+
+- `ScriptData` gains `tones?: Tone[]` and `toneSandhi?: ToneSandhiRule[]`.
+  `Letter.tone` already existed and labels the tone a *character* carries, which is
+  enough to tag a glyph and nothing more. It cannot say what tone 3 *is* (contour
+  214, low and creaky), and it cannot express **sandhi** — a rule that changes a
+  syllable's pitch because of the syllable *after* it while the characters and the
+  printed pinyin stay identical. Every previously modelled script encodes
+  pronunciation segmentally, and a segment always attaches to a glyph; tone is
+  suprasegmental, so the existing shape did not stretch. `data/scripts/chinese.json`
+  populates both fields.
+- `EXEMPT_TYPES` gains `pronunciation`. No earlier track ever needed a lesson
+  *about* sound, because segmental facts belong to letters and therefore live inside
+  the word lesson that first uses that letter (HL00, "Pronunciation & Script:
+  Inline, Never a Gate"). Folding Mandarin's tone system into its first character
+  lesson pushed that lesson to 352 effective seconds, past the five-minute contract,
+  and HL08's rule is to split rather than waive. `grammar` would have misfiled a
+  sound rule as morphology; an unrecognised type would have produced a permanent
+  validator warning. Like `grammar` and `etymology`, `pronunciation` is exempt from
+  the cross-language concept join because its progression lives in knowledge atoms.
+
+### Changed — corpus pins moved by the new track, never weakened
+
+Adding a 21st track necessarily moves whole-corpus measurements. Every pin below
+was updated with a comment naming this change as the cause; none was relaxed.
+
+- `integration.test.ts`: registered tracks, authored books, schema tracks and book
+  coverage 20 → 21; compiled activity ids 51 → 57. Duration violations and unknown
+  prerequisites remain **0**.
+- `cli.test.ts`: reported `registeredTracks` 20 → 21.
+- `modality-manifest.test.ts`: total lessons 1,118 → 1,125; `voice` 719 → 724;
+  `sight` 346 → 348; `trackCount` 20 → 21; `chapterCount` 375 → 376;
+  `drivablePrefixTotal` 557 → 558. The `pen` count (53) and the corpus-wide drivable
+  share (64%) are unchanged, because no Chinese lesson needs a pen and none carries a
+  table. The two `sight` lessons are `ZH-C01-ni` and `ZH-C01-hao`, which each teach a
+  character's components in a `script` block.
+- **No `modality.test.ts` edit, and no Language Ladder test edit.** Both used to hold
+  hard-coded track and corpus counts and were rewritten upstream to derive them —
+  `modality.test.ts` now asserts size-independent invariants, and the Language Ladder
+  suites read `LANGUAGE_ORDER.length` / `LANGUAGE_CHAIN.length` instead of the literal
+  20. Registering a track no longer requires touching any of them, which is why this
+  entry is shorter than the same entry would have been a week ago.
+
+### Fixed — HL-C26: hand-written chapters are described, not generated
+
+- Add a `handwritten[]` list to `core/book-generation.json` recording the **105**
+  chapters that have a committed `book/chapters/ch*.tex` but no `targets[]`
+  entry, with `title` and `label` transcribed from what each `\chapter{}` and
+  `\label{}` actually declares. These are the hand-authored prefixes of nearly
+  every book, written before the generator existed and mostly still schema-v1.
+- The obvious fix — giving them `targets[]` entries — would have **destroyed
+  them**. A target is not a description but an instruction: `generatedBookOutputs`
+  renders every target and `--write` writes the result over the file at `output`.
+  A separate array is used instead of a `generated: false` flag precisely because
+  the two fail in opposite directions; `generatedBookOutputs` only ever walks
+  `config.targets`, so nothing in `handwritten[]` can be rendered by a missed
+  branch. The worst a mistake there can do is leave a chapter unchecked.
+- Add `handwrittenBookChapters()`, which reads the list without rendering
+  anything. `check:books` output is unchanged, byte for byte.
+- `chapter-title-drift` previously **skipped** any chapter with no target, which
+  left those titles verified by nothing. It now checks them against
+  `handwritten[]`, and a new test fails if any ledger chapter is covered by
+  neither list — so the assertion cannot decay back into a silent `continue`.
+- Add tests that re-read every hand-written `.tex` to prove its recorded title and
+  label were transcribed rather than invented, that the two lists never claim the
+  same chapter, that no hand-written path appears in `generatedBookOutputs()`, and
+  that every committed chapter file is accounted for by one list or the other.
+- Add a check that every generation target's committed file opens with
+  `% GENERATED FILE.` (true of 270/270 generated and 0/105 hand-written chapters).
+  This is the only guard that catches a chapter *promoted* into `targets[]`, which
+  by leaving `handwritten[]` escapes every membership-based check.
+- Labels are recorded as declared, not normalised. Three conventions coexist — a
+  bare `ch:greetings` slug, an ISO-code `ch:fa-`/`ch:la-` prefix, and a
+  language-name `ch:persian-`/`ch:urdu-`/`ch:russian-` prefix — so Persian ch2 is
+  `ch:persian-name` beside a generated `ch:fa-ask-and-answer-names`. Rewriting a
+  `\label` breaks existing `\hyperref` cross-references, so the inconsistency is
+  recorded in the backlog for a deliberate decision rather than silently fixed.
+
+### Added — stroke-order provenance on `Letter`
+
+- Add `StrokeOrderSource` and two optional `Letter` fields, `penLifts` and
+  `strokeOrderSource`. A `strokeOrder` list names a letter's **parts** in writing
+  order; it has never counted **pen-down runs**, but a numbered list of three
+  reads to a learner as three strokes and two lifts. Tamil ம is the counter-
+  example that forced the distinction: its prose listed three parts while the
+  authored, font-checked pen path in Language Ladder's `strokes.ts` shows one
+  unbroken stroke with zero lifts. `penLifts` records that number only where a
+  verified path supports it — absent means *not verified*, never *none* — and
+  `strokeOrderSource` carries the citation, URL, and the honest `variation` note
+  for scripts (every Indic script, Arabic, Hebrew) that have no national
+  standard. Both are optional, so every existing script file still validates.
+- Document the parts-vs-strokes rule on `strokeOrder` itself, where the next
+  author writing one will actually read it.
+
 ### Added — HL-C44 the modality manifest, so two editions build from one source
 
 - Add `src/modality-manifest.ts` and `src/modality-cli.ts`, emitting
@@ -124,10 +374,11 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   table wider than the configured linearisable width → `sight`; otherwise `voice`.
 - Modality is monotonic — `pen` implies `sight` — exposed as `requiredChannels()`
   and `unionModalities()`, and a chapter's modality is the union of its lessons'.
-- `maxLinearisableTableColumns` defaults to **0**: until HL08's narration exporter
-  can linearise a two-column table into speech, no table is speakable, and claiming
-  otherwise would let a learner silently miss content they were never told they had
-  missed. The value is an option, so it moves to 2 the day the lineariser lands.
+- `maxLinearisableTableColumns` defaulted to **0** in this slice: until HL08's
+  narration exporter could linearise a two-column table into speech, no table was
+  speakable, and claiming otherwise would let a learner silently miss content they
+  were never told they had missed. (Superseded above: HL-C16 built the lineariser and
+  the default is now 3.)
 - Support an authored `modality:` frontmatter override. An override that
   *contradicts* the derivation requires a `modality_reason:`; unexplained overrides
   (`modality-unexplained-override`) and unrecognised values (`modality-unknown-value`,

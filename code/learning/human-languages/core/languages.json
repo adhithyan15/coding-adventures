@@ -20,6 +20,8 @@
     { "id": "russian", "name": "Russian", "family": "Slavic", "script": "cyrillic", "status": "active", "bridges": ["sanskrit", "german"] },
     { "id": "sanskrit", "name": "Sanskrit", "family": "Indo-Aryan", "script": "devanagari", "status": "active", "bridges": ["hindi", "marathi", "bengali", "gujarati", "punjabi"] },
     { "id": "persian", "name": "Persian", "family": "Iranian", "script": "perso-arabic", "status": "active", "bridges": ["arabic", "urdu", "hindi"] },
-    { "id": "urdu", "name": "Urdu", "family": "Indo-Aryan", "script": "urdu-nastaliq", "status": "active", "bridges": ["hindi", "persian", "arabic"] }
+    { "id": "urdu", "name": "Urdu", "family": "Indo-Aryan", "script": "urdu-nastaliq", "status": "active", "bridges": ["hindi", "persian", "arabic"] },
+    { "id": "chinese", "name": "Mandarin Chinese", "family": "Sinitic", "script": "chinese", "status": "active", "bridges": [] },
+    { "id": "japanese", "name": "Japanese", "family": "Japonic", "script": "japanese", "status": "active", "bridges": ["chinese", "portuguese", "german"] }
   ]
 }

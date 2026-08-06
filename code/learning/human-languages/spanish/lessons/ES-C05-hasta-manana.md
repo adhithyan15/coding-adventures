@@ -8,7 +8,7 @@ type: phrase
 headword: hasta mañana
 gloss: see you tomorrow (literally "until tomorrow")
 concept_tag: FAREWELL-TOMORROW
-prerequisites: [ES-C05-hasta-luego, ES-W02-enye]
+prerequisites: [ES-C05-hasta-luego, ES-W02-enye, ES-W02-enye-formas]
 sounds: [enye-ny, vowel-a]
 roots: [hatta-arabic, maneana-latin]
 etymology_hook: "mañana ← Latin (hora) maneana 'early hour' → morning → tomorrow; carries the ñ from the ñ-lesson"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C05-hasta-luego, ES-W02-enye]
+reviews_of: [ES-C05-hasta-luego, ES-W02-enye, ES-W02-enye-formas]
 ---
 
 # hasta mañana — "see you tomorrow" (and the ñ returns)

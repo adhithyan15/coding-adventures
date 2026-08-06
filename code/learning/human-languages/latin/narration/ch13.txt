@@ -1,0 +1,36 @@
+Latin, chapter 13: Telling Time.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+hōra — the source word, and an hour that wasn't always 60 minutes.
+
+Warm-up.
+[pause 2 seconds]
+You already met nōna hōra, "the ninth hour," in an earlier lesson — now meet the word itself, and an honest surprise about what a Roman "hour" actually was.
+
+You'll want to know: hōra from Greek hṓrā.
+hōra = "hour" — borrowed from Greek hṓrā, "a season, the right time, a time of day" (the Greek goddesses of the seasons, the Hōrai, share this root). Latin narrowed the broader Greek sense down to today's specific meaning: one twelfth of the day.
+
+Why it's said this way: Be honest: a Roman hōra was NOT a fixed length.
+Here's the part that trips people up: the Romans divided daylight — sunrise to sunset — into 12 equal hōrae, and night into another 12. But since daylight itself is longer in summer and shorter in winter, each hōra stretched or shrank with the seasons: a summer daytime hōra in Rome could run close to 75 modern minutes, a winter one closer to 45. Only at the two equinoxes did an hōra land close to today's fixed 60 minutes. This is exactly why nōna hōra ("the ninth hour," counted from sunrise) landed around 3 p.m. at the equinox but could shift earlier or later depending on the season — and why it drifted, over centuries, into the fixed clock-time we call "noon."
+
+The word, taken apart: The one Latin word, four different fates.
+[a table of 4 rows, read aloud]
+language: Spanish. word: hora. what happened: inherited almost unchanged.
+language: French. word: heure. what happened: inherited, worn down further.
+language: German. word: Uhr. what happened: not inherited — borrowed centuries later, separately.
+language: English. word: hour. what happened: inherited via French.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hōra" — the source word, Greek hṓrā underneath]
+[pause 8 seconds for the answer]
+[your turn — say: the honest surprise — a Roman hōra stretched and shrank with the seasons, it wasn't a fixed 60 minutes]
+[pause 8 seconds for the answer]
+[your turn — say: "hōra / hora / heure / hour" — one root, four different fates]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Greek word is hōra from, and what did it originally mean? (hṓrā — "a season, the right time.") Was a Roman hōra always 60 minutes long? (No — it was 1/12 of that day's actual daylight or nighttime span, so it stretched in summer and shrank in winter.) Which of Spanish, French, and German did not directly inherit this word from Latin? (German — it borrowed Uhr separately, much later.)

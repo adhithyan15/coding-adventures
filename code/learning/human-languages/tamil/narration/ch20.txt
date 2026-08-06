@@ -1,0 +1,62 @@
+Tamil, chapter 20: Numbers Eleven to Twenty and Weather.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+பதினொன்று–இருபது — shared Dravidian patterns.
+
+Warm-up.
+[pause 2 seconds]
+Here's how this arc closes: four completely different approaches to "twenty" across Sanskrit, Latin, Arabic — and then all four Dravidian languages quietly agreeing on the exact same compositional idea.
+
+You'll want to know: பதினொன்று–பத்தொன்பது — "ten" + digit.
+Tamil's teens echo பத்து (pathu, "ten") plus each digit — பதினொன்று (patiṉoṉḏṟu, 11), பன்னிரண்டு (paṉṉiraṇḍu, 12), and onward through பத்தொன்பது (pattoṉbatu, 19) — the same digit-plus- ten-echo compounding you've now seen across Kannada, Telugu, and Malayalam.
+
+You'll want to know: இருபது — transparently "two-tens".
+இருபது (irupathu, "twenty") = இரு (iru, an older word for "two," alongside the everyday இரண்டு iraṇḍu) + பத்து (pathu, "ten") — fully transparent as "two-tens," matching Malayalam's own irupathu almost letter-for-letter.
+
+Why it's said this way: Be honest: one shared Dravidian idea, four different other-family answers.
+This closes the numbers arc with a genuinely clean pattern. Every Dravidian language in this course builds "twenty" the same compositional way — some (Tamil, Malayalam) keeping it fully transparent on the surface today, some (Kannada) with the same compositional origin but no longer visibly matching the modern standalone words for "two" and "ten," some (Telugu) worn down further but most likely from the same root. Compare that to the other three families you've met: Sanskrit's विंशति (vimshati), Latin's vīgintī, and Arabic's عشرون (ʿishrūn) are each their own special, non-compositional word for twenty — none built transparently from "two" and "ten" the way every single Dravidian language in this course does.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "patiṉoṉḏṟu, paṉṉiraṇḍu" — 11, 12]
+[pause 8 seconds for the answer]
+[your turn — say: "iru" — an older word for two, "pathu" — ten]
+[pause 8 seconds for the answer]
+[your turn — say: "irupathu" — twenty, "two-tens," transparent]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two pieces build இருபது (twenty)? (இரு "two" + பத்து "ten" — "two-tens.") Do all four Dravidian languages in this course build "twenty" the same compositional way? (Yes — Tamil and Malayalam keep it fully transparent today; Kannada shares the same compositional origin but its modern "two"/"ten" words no longer visibly match; Telugu's is worn down further but most likely the same root.) Do Sanskrit, Latin, or Arabic build their word for twenty this way? (No — each has its own special, non-compositional standalone word instead.)
+
+
+Lesson 2 of 2.
+வானிலை — "the standing of the sky," most likely all native.
+
+Warm-up.
+[pause 2 seconds]
+You've now seen a Persian+Sanskrit hybrid (Kannada), a pure Sanskrit compound (Telugu), and a Sanskrit compound echoing "time" (Malayalam). Tamil most likely breaks the pattern one more time — with a word built entirely from native pieces.
+
+You'll want to know: வானிலை — vaanam + nilai.
+வானிலை (vāṉilai) = "weather" — built from:
+வானம் (vāṉam, "sky") — most likely a native Dravidian word, with confirmed cognates in Kannada ಬಾನು (bānu, "sky") and Telugu వాన (vāna, "rain," from the same sky/rain-cloud root) — distinct from the Sanskrit sky word ākāśa that those same two languages use elsewhere.
+நிலை (nilai, "state, standing, condition") — from நில் (nil, "to stand"), one of Tamil's most basic native verb roots.
+So vāṉilai literally means "the standing of the sky" or "the sky's state" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat "native" as the best current account rather than a fully settled fact, the same hedge you've seen elsewhere in this course — but both pieces are independently well-attested as old, native Dravidian vocabulary.)
+
+You'll want to know: மழை பெய்கிறது — "rain is falling".
+மழை பெய்கிறது. — "It's raining." — literally "rain is falling." (mazhai peykiRathu — from பெய் pey, "to fall/pour," specifically used for rain.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "vāṉilai" — weather, "the standing of the sky"]
+[pause 8 seconds for the answer]
+[your turn — say: "vāṉam" — sky, "nilai" — state, from "nil," to stand]
+[pause 8 seconds for the answer]
+[your turn — say: "mazhai peykiRathu" — it's raining, "rain is falling"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two pieces of வானிலை, and what does the whole word literally mean? (வானம், "sky," + நிலை, "state/standing" — "the standing of the sky.") Is either piece a Sanskrit or Persian/Arabic loan, unlike Kannada, Telugu, or Malayalam's weather words? (Most likely not — both pieces are native Dravidian.) What Tamil word does Malayalam's mazha match for "rain"? (மழை, mazhai.)

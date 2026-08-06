@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { loadEverything } from "./loader.js";
+import { defaultCurriculumRoot as defaultRoot, loadEverything } from "./loader.js";
+import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "./report.js";
 
 interface ReportOptions {
@@ -34,7 +35,15 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     return 2;
   }
   const { registry, lessons, books } = loadEverything(options.root);
-  const report = buildCurriculumGapReport({ registry, lessons, books });
+  // The report's drivable percentages and the committed narration export must be
+  // computed at the same table width, or the report will advertise a car-friendly
+  // corpus the export cannot actually deliver. One policy file, read by both.
+  const report = buildCurriculumGapReport({
+    registry,
+    lessons,
+    books,
+    modality: { maxLinearisableTableColumns: policyTableWidth(options.root ?? defaultRoot()) },
+  });
   const json = `${JSON.stringify(report, null, 2)}\n`;
   const text = renderCurriculumGapReport(report);
   process.stdout.write(options.format === "json" ? json : text);

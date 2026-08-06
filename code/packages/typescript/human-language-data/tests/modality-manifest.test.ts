@@ -149,9 +149,11 @@ describe("the modality manifest", () => {
   });
 
   it("records the policy the numbers were measured under", () => {
-    expect(buildModalityManifest([]).policy).toEqual({ maxLinearisableTableColumns: 0 });
-    // Raising the linearisable width is the change HL08 migration step 3 makes. The
-    // manifest must say which world its counts came from, or a reader cannot tell a
+    // 3, not the 0 this shipped at. The knob was 0 while no lineariser existed —
+    // claiming a table was speakable would have claimed a capability nothing
+    // implemented. HL-C16 built it, so the default is now its measured value.
+    expect(buildModalityManifest([]).policy).toEqual({ maxLinearisableTableColumns: 3 });
+    // The manifest must say which world its counts came from, or a reader cannot tell a
     // remediated corpus from a relaxed detector.
     const relaxed = buildModalityManifest([lesson({ id: "ES-C01-a", body: TABLE_BODY })], {
       maxLinearisableTableColumns: 4,
@@ -586,28 +588,109 @@ describe("corpus regression", () => {
   // every lesson look clean) moves them and fails here rather than shipping a
   // curriculum falsely advertised as drivable.
   //
-  // The lesson-level counts mirror the pins already in `modality.test.ts` and must
-  // agree with them: 1,096 lessons, 51 `pen`, 708 `voice`, 337 `sight`, 65% drivable
-  // after the HL-C32 Russian table remediation. The manifest adds the rollups that only
-  // it computes.
+  // This is now the ONLY place the corpus totals are pinned absolutely. `modality.test.ts`
+  // used to carry a mirror of them and no longer does — it was rewritten to assert
+  // size-independent invariants precisely because every content branch had to edit the
+  // same three lines and collided there. Drift protection lives here and in the generated
+  // `core/lesson-modality.json`, which `check:modality` compares byte for byte.
+  //
+  // The post-HL-C32 baseline was 1,096 lessons: 51 `pen`, 708 `voice`, 337 `sight`, 65%
+  // drivable, 551 reachable in prerequisite order. HL-C24 then added four Latin
+  // chapter-payoff lessons (ch19, ch21, ch33, ch36). All four are terminal consolidation
+  // lessons built only from already-taught material — no table, no sight cue, no pen — so
+  // they land as `voice` and move exactly four counters by exactly four:
+  //
+  //   totalLessons  1096 -> 1100      sight   337 -> 337  (unchanged)
+  //   voice          708 ->  712      pen      51 ->  51  (unchanged)
+  //   drivableLessons 708 -> 712      chapters 375 -> 375 (unchanged — no new chapters)
+  //   drivablePrefixTotal 551 -> 555
+  //
+  // `drivablePrefixTotal` moves with them because each payoff is appended to a chapter
+  // whose prefix already ran to its end, so each extends by one. `fullyDrivableChapters`
+  // holds at 199 for the same reason: appending a `voice` lesson cannot make a chapter
+  // stop being fully drivable, nor make a blocked one start.
+  //
+  // HL-C18A then split the fifteen over-budget Spanish lessons into thirty-three
+  // prerequisite-ordered micro-lessons, a net +18 (two of them `writing`):
+  //
+  //   totalLessons  1100 -> 1118      voice   712 -> 719  (+7)
+  //   sight          337 ->  346      pen      51 ->  53  (+2, the two `writing` splits)
+  //   drivablePercent 65 ->   64      drivablePrefixTotal 555 -> 557
+  //   fullyDrivableChapters 199 -> 195
+  //
+  // TWO COUNTERS MOVE THE WRONG WAY, AND THAT IS THE HONEST RESULT, NOT A REGRESSION TO
+  // PAPER OVER. Splitting a table-bearing lesson does not delete its table — it copies the
+  // relevant rows into several of the micro-lessons, so one `sight` lesson becomes several.
+  // That is why `sight` takes +9 of the +18 while `voice` takes only +7, why the drivable
+  // share rounds down from 65% to 64%, and why four chapters that were fully drivable no
+  // longer are. The gentle-ramp goal (zero over-budget Spanish lessons) is met; the tables
+  // those splits inherited belong to HL-C17, which linearises or honestly reclassifies
+  // them. Tuning the splits to protect this percentage would mean writing steeper lessons
+  // to flatter a metric, which is the exact trade the ramp budget exists to refuse.
+  // HL-C39 then added Mandarin Chinese as the 21st track, +7 Chapter 1 lessons:
+  //
+  //   totalLessons  1118 -> 1125      voice   719 -> 724  (+5)
+  //   sight          346 ->  348      pen      53 ->  53  (unchanged)
+  //   trackCount      20 ->   21      chapterCount 375 -> 376  (+1)
+  //   drivablePrefixTotal 557 -> 558
+  //
+  // The two `sight` lessons are `ZH-C01-ni` and `ZH-C01-hao`, which each carry a `script`
+  // block teaching a character's components — a shape cannot be read aloud. No Chinese
+  // lesson needs a pen and none carries a table, so `pen` holds and the drivable share
+  // stays at 64%. `drivablePrefixTotal` gains only 1 because Chinese ch1 opens with one
+  // `voice` lesson before its first character-composition lesson blocks the prefix.
+  // HL-C40 then added Japanese as the 22nd track, +8 Chapter 1 lessons — and its shape
+  // is the inverse of Chinese's, which is the finding worth keeping:
+  //
+  //   totalLessons  1125 -> 1133      voice   724 -> 725  (+1 only)
+  //   sight          348 ->  355      pen      53 ->  53  (unchanged)
+  //   trackCount      21 ->   22      chapterCount 376 -> 377  (+1)
+  //   drivablePrefixTotal 558 -> 558  unstartableChapters 121 -> 122  (+1)
+  //
+  // Seven of the eight Japanese lessons carry a `script` block and therefore derive as
+  // `sight`: a kana or kanji shape cannot be read aloud. Only the practice lesson is
+  // `voice`. Because the very first lesson of Japanese ch1 is one of the seven, the
+  // chapter's drivable prefix is 0 — which is why `drivablePrefixTotal` does not move at
+  // all and `unstartableChapters` gains one. Routing that content through `input` blocks
+  // would have held the drivable share flat by mislabelling it; the honest classification
+  // is the one that costs the metric.
+  // HL-C16 then built the narration lineariser and moved the shipped table width from
+  // 0 to 3. This is the largest single move the corpus has ever taken, and none of it
+  // is new content — it is the same 1,133 lessons, re-judged by a detector that can now
+  // actually say what it means to speak a table aloud:
+  //
+  //   voice   725 -> 956  (+231)      sight  355 -> 124  (-231)
+  //   pen      53 ->  53  (unchanged) totalLessons 1133 (unchanged)
+  //   drivablePercent 64 -> 84
+  //   drivablePrefixTotal   558 -> 824
+  //   fullyDrivableChapters 195 -> 284
+  //   unstartableChapters   122 ->  44
+  //
+  // Every lesson that moved went `sight` -> `voice` and nothing else changed: the +231
+  // on `voice` is exactly the -231 on `sight`, `pen` is untouched, and no lesson was
+  // created or lost. `modality.test.ts` asserts that equality directly, at both widths,
+  // so this snapshot is corroborated by a size-independent control rather than standing
+  // alone. The prefix and chapter rollups move much further than the raw counts because
+  // a single unspeakable table near the front of a chapter used to block everything
+  // behind it — which is why unstartable chapters fall by nearly two thirds.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1096,
-      voice: 708,
-      sight: 337,
-      pen: 51,
-      drivableLessons: 708,
-      drivablePercent: 65,
-      trackCount: 20,
-      chapterCount: 375,
-      // Prerequisite order costs a commuter 157 of the 708 ear-only lessons: they sit
-      // behind a blocker in their own chapter and are unreachable in the car until
-      // HL-C17 linearises the tables or HL-C41 splits the pen segments out.
-      drivablePrefixTotal: 551,
-      fullyDrivableChapters: 199,
-      unstartableChapters: 121,
+      totalLessons: 1133,
+      voice: 956,
+      sight: 124,
+      pen: 53,
+      drivableLessons: 956,
+      drivablePercent: 84,
+      trackCount: 22,
+      chapterCount: 377,
+      // Prerequisite order still costs a commuter 132 of the 956 ear-only lessons:
+      // they sit behind a blocker in their own chapter and stay unreachable in the car
+      // until HL-C17 reshapes the remaining wide tables.
+      drivablePrefixTotal: 824,
+      fullyDrivableChapters: 284,
+      unstartableChapters: 44,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

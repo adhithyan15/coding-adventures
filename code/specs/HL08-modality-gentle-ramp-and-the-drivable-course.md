@@ -66,14 +66,20 @@ Knowledge atoms introduced per schema-v2 lesson:
 | Mean | 2.31 |
 | Median | 2 |
 | p90 | 3 |
-| Max | **7** (`ES-C31-numeros-11-20`) |
+| Max | **7** (`ES-C31-numeros-11-20`, since split by HL-C18) |
 | Lessons introducing more than 3 | 52 |
 | Lessons introducing more than 5 | 5 |
 
 The curriculum is already gentle in aggregate. What it lacks is a floor: nothing stops
-the next lesson from introducing nine atoms, and the current worst case teaches ten
+the next lesson from introducing nine atoms, and the original worst case taught ten
 numbers at once — precisely the "drilling ten greetings" antipattern HL00 was written
 to reject.
+
+**Burn-down (HL-C18, Spanish slice).** The fifteen over-budget Spanish lessons became
+thirty-three prerequisite-ordered micro-lessons, dropping the corpus figure from 52 to
+37 and the corpus maximum from 7 to 6. `ES-C31-numeros-11-20` is now the four-lesson
+chain `ES-C31-once-quince` → `ES-C31-dieciseis-diecinueve` → `ES-C31-teens-latinos` →
+`ES-C31-veinte`. The remaining 37 belong to sixteen other tracks and are unchanged.
 
 ## Modality
 
@@ -87,6 +93,11 @@ Three channels, each naming what the learner must have available:
 
 Modality is **monotonic**: `pen` implies `sight`. A chapter's modality is the union of
 its lessons'.
+
+> **Amended (HL-C41).** This section originally gave each lesson exactly one modality.
+> That is still what the book prints, but it is no longer the whole model: modality is
+> now derived at two scales, the lesson and the block. See
+> [Block-level modality](#block-level-modality-hl-c41) below.
 
 ### Derived by default, overridable with a reason
 
@@ -157,10 +168,11 @@ prefix, the first blocker, and the prefix's lesson ids in order; per track the r
 and a corpus summary. This does **not** reverse the decision above: modality is still
 derived, not authored into 1,096 frontmatter files.
 
-**Reserved for block-level modality.** Modality is currently a whole-lesson property,
-and that is the model's real limit: a lesson taught entirely aloud that ends with a
-short "now trace the letter" segment is stamped `pen`, and the driving edition drops
-all of it. The manifest is shaped so per-block modality lands additively — every lesson
+**Reserved for block-level modality — since claimed by HL-C41, specified below.** At the
+time this manifest landed, modality was a whole-lesson property, and that was the model's
+real limit: a lesson taught entirely aloud that ends with a short "now trace the letter"
+segment is stamped `pen`, and the driving edition drops all of it. The manifest is shaped
+so per-block modality lands additively — every lesson
 row is an object, `modality` permanently means the strongest channel the lesson needs
 anywhere (so a consumer that never learns the new key stays correct, merely
 pessimistic), `coreModality` arrives beside it as an optional key read as
@@ -168,6 +180,105 @@ pessimistic), `coreModality` arrives beside it as an optional key read as
 announces whether a build carries block data. The shape of the companion block records
 is deliberately left unspecified here rather than guessed: an absent key is additive, a
 wrong one is a breaking change.
+
+## Block-level modality (HL-C41)
+
+### What the amendment is for
+
+The project owner asked for handwriting to be **interspersed**: a letter introduced
+earlier comes back for two minutes inside an ordinary five-minute lesson, building
+the hand up gradually, instead of being batched into separate writing lessons the way
+Hindi (11), Arabic (16) and Tamil (8) currently do.
+
+Under one-modality-per-lesson, those two minutes cost the whole lesson. Any `pen`
+content makes the lesson `pen`, so a listener loses all five minutes of it — including
+the four that were perfectly listenable. That is not a true statement about the
+lesson; it is a limitation of the model.
+
+### What it is *not* for
+
+An earlier framing of this work treated the amendment as a way to protect the drivable
+percentage — to keep books from being dragged back to `pen`. **That framing is
+rejected, and this section records the rejection so it is not re-derived later.**
+
+The project owner's ruling:
+
+> *"Remember that the book is a standalone artifact. We can publish a driving only book
+> later which doesn't teach writing. But for now, include the writing lessons in the
+> books. Then we can always add a dictation friendly book that can be used while
+> driving."*
+
+So:
+
+1. **The book keeps all writing content, in full.** No writing segment is omitted,
+   deferred, shortened, or moved in the book view. A reader with the PDF gets the
+   complete course, including how to form the letters. Nothing in this spec may
+   thin the book to serve driving.
+2. **A dictation-friendly edition is a separate output view** over the same canonical
+   source — the same relationship the narration export already has to the book. Block
+   modality is the metadata *that* view reads.
+3. **Drivability is a measure of that view's reach, not of book quality.** If honest
+   handwriting instruction lands in a track and the track's `pen` count rises, that is
+   the correct outcome and no gate here may push back on it.
+
+Read positively, block-level marking is a strict improvement for the driving edition
+too. Today a lesson with any pen content is lost to a commuter wholesale; with block
+marking they get the voice core and defer only the segment.
+
+### The model
+
+Two derivations over the same rules, differing only in what they read:
+
+| Scale | Reads | Answers |
+|---|---|---|
+| **full** | the whole lesson, every block | what the **book** signs at the chapter opening |
+| **core** | the lesson minus its **detachable** blocks | what a hands-free view can deliver |
+
+A block type is **detachable** when nothing later in the lesson depends on it, so a
+renderer that cannot use the channel it needs may skip that block whole and still
+deliver a coherent lesson. Exactly one block type is detachable today:
+
+| Block type | Heading | Modality | Detachable |
+|---|---|---|---|
+| `script` | `## Script — …` | `sight` — teaches the **eye** to recognise a letter | no |
+| `writing` | `## Writing: …` | `pen` — teaches the **hand** to form one | **yes** |
+
+The set is deliberately tiny. Every addition to it is a promise about content that only
+an author can make honestly, and "detachable" is a claim about *renderers*, never about
+readers: the book prints all of them.
+
+Rules, extending the three above rather than replacing them:
+
+1. `type: writing` → `pen`, for **both** scales. The whole lesson is the writing; there
+   is nothing separable to set aside.
+2. A `writing` **block** → the lesson's full modality is `pen`; the core is derived from
+   the remaining blocks. This is the interspersed case.
+3. Sight cues and tables are attributed to the block they occur in. A cue inside a
+   writing segment does not follow it out into the core; a cue in ordinary prose does.
+4. An authored `modality:` override speaks for the lesson as a whole and therefore
+   **caps** the core. The invariant that falls out — *the core is never stronger than
+   the full modality* — is what lets a hands-free view trust `coreModality` alone.
+
+### Separability, enforced
+
+An interspersed lesson carries **one** writing segment. A lesson that sprouts several
+has stopped being an ordinary lesson with an aside and should either be split or
+declared `type: writing` outright. Reported as `modality-writing-segment-not-separable`,
+report-only per the HL-V01 precedent. A `type: writing` lesson is exempt — many writing
+blocks are exactly what it is for.
+
+### What moves, and what does not
+
+- **The drivable prefix counts the core.** A lesson that is voice apart from a two-minute
+  writing aside no longer ends a commuter's run through a chapter.
+- **`drivablePercent` is computed from `coreVoice`**, not `voice`. The `voice`/`sight`/`pen`
+  counts still describe the book, and both numerators are published side by side so the
+  difference is visible rather than silent.
+- **Nothing else.** No track has yet authored an interspersed writing segment, so every
+  lesson's core equals its full modality and the published corpus figure is unmoved at
+  **708 drivable, 65%**. The implementation pins that as a regression test, along with
+  `lessonsWithWritingSegments === 0`, so the first interspersed lesson has to move the
+  number deliberately.
 
 ## The narration export
 
@@ -200,6 +311,42 @@ Rules:
 The export is a **script for a voice agent, not a recording**. Producing audio,
 selecting voices, and provenance-labelling recordings remain out of scope, as in HL04.
 
+### What shipped, and where it diverged (HL-C16)
+
+Migration step 3 is complete. `speech.ts`, `narration.ts` and `narration-cli.ts` write
+`<track>/narration/chNN.txt` and `.json` for all 375 chapters, hash-gated by
+`core/generated-narration-hashes.json` and checked byte-for-byte in CI. Three points
+where the implementation went further than, or differently from, the text above:
+
+1. **The width is 3, not 2.** This spec's worked example is a two-column table, but
+   the corpus's own distribution argues for three: of 340 table-bearing lesson files,
+   99 are 2 columns wide and 173 are 3. A three-column row reads aloud as labelled
+   facts — *"Language: Telugu. Hello: namaskāram. Source: Sanskrit."* — which a
+   listener holds without effort. Four is where the meaning moves into the comparison
+   *across* rows, and the corpus's four-column tables prove it: `| | numeral | word |
+   said |` has an unlabelled first column that means something only because of where
+   it sits on the page. At 3 the lineariser reads 371 of 442 tables, and the corpus
+   goes from **63% drivable to 84%** (694 → 925 of 1,096 lessons).
+
+2. **Modality asks the lineariser, rather than counting columns.** This spec says "a
+   table wider than the configured linearisable width → `sight`". The implementation
+   asks the exporter itself whether it can speak the table, which is strictly larger:
+   a three-column table inside the width is still unspeakable when its rows are ragged
+   or its heading row has nothing under it. Counting columns would have let `voice`
+   mean something the export could not deliver.
+
+3. **`narration-block-unrenderable` is a narration finding, not yet a
+   `validateCurriculum()` gate.** It is emitted per lesson and collected into the
+   export manifest, alongside a new `narration-activity-invalid` for a contract that
+   will not compile. Folding both into the validator's finding list is the remaining
+   piece of the gates table below.
+
+**Remaining table debt** (HL08 migration step 4, tracked as HL-C17): 71 tables across
+68 lesson files are four columns or wider. 52 lessons need eyes for a wide table and
+nothing else, so reshaping just those tables moves 52 more lessons into the car.
+Raising the width to 4 would reach the same number without earning it, and is
+explicitly not the fix.
+
 ## The gentle-ramp budget
 
 A new configured limit in `core/chapter-policy.json`:
@@ -231,6 +378,7 @@ reporting.
 |---|---|
 | `modality-unexplained-override` | an authored `modality` contradicting the derivation has no `modality_reason` |
 | `modality-unknown-value` | `modality` is not one of `voice`/`sight`/`pen` |
+| `modality-writing-segment-not-separable` | a lesson that is not `type: writing` carries more than one `writing` block |
 | `narration-block-unrenderable` | a block cannot be linearised into speech and the lesson is not marked `sight` |
 | `ramp-budget-exceeded-lesson` | a lesson introduces more than `maxNewAtomsPerLesson` |
 | `ramp-budget-exceeded-chapter` | a chapter introduces more than `maxNewAtomsPerChapter` |
@@ -255,6 +403,9 @@ lessons, each chapter's drivable prefix, and the corpus-wide drivable percentage
    linearised or its lesson honestly marked `sight`.
 5. **Ramp burn-down** — the 52 over-budget lessons split into prerequisite-ordered
    micro-lessons, longest first.
+6. **Interspersed writing** (HL-C41) — block modality derived and published; tracks
+   author `writing` segments inside ordinary lessons as their scripts' stroke data
+   becomes citable. The book prints them; the future dictation edition skips them.
 
 ## Acceptance criteria
 

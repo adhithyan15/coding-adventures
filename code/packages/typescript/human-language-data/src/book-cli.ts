@@ -13,11 +13,41 @@ interface ConfiguredBookGenerationTarget extends BookGenerationTarget {
   scriptSet?: string;
 }
 
+/**
+ * A chapter whose `.tex` a human wrote by hand, recorded so its title and label are
+ * still checkable — and deliberately NOT generated.
+ *
+ * Why a second list instead of a `generated: false` flag on `targets[]`?  Because the
+ * two options fail in opposite directions.  Everything in `targets[]` is rendered and
+ * then *written over* the file at `output` by `--write`; a flag would put hand-authored
+ * prose one forgotten `if` away from being overwritten by generated text.  A separate
+ * array cannot suffer that: `generatedBookOutputs` only ever walks `config.targets`, so
+ * the worst a mistake here can do is leave a chapter unchecked — the status quo — rather
+ * than destroy it.  The safe failure mode is the whole point.
+ *
+ * These chapters predate the manifest and are mostly schema-v1, so there are no canonical
+ * lessons to render them from anyway.  `title` and `label` are transcribed from what the
+ * `.tex` actually declares, never invented, and the tests below re-read the files to prove
+ * it.  Note that labels follow three different historical conventions (a bare `ch:greetings`
+ * slug, an ISO-code `ch:fa-`/`ch:la-` prefix, and a language-name `ch:persian-` prefix);
+ * they are recorded as-is, because rewriting a `\label` would break existing `\hyperref`
+ * cross-references.
+ */
+export interface HandwrittenBookChapter {
+  language: string;
+  chapter: number;
+  title: string;
+  label: string;
+  output: string;
+}
+
 interface BookGenerationConfig {
   version: 1;
   sourceBaseUrl: string;
   scriptSets?: Record<string, InlineRenderOptions[]>;
   targets: ConfiguredBookGenerationTarget[];
+  /** Never rendered. See {@link HandwrittenBookChapter}. */
+  handwritten?: HandwrittenBookChapter[];
 }
 
 interface GeneratedBookHashManifest {
@@ -52,6 +82,23 @@ function safeOutput(root: string, relative: string): string {
     throw new Error(`unsafe generated book output '${relative}'`);
   }
   return output;
+}
+
+/**
+ * The hand-written chapters, for callers that need to know a chapter's printed title and
+ * label without asking the generator to produce one.  Reading this never renders anything.
+ */
+export function handwrittenBookChapters(
+  root = defaultCurriculumRoot(),
+): HandwrittenBookChapter[] {
+  const handwritten = loadConfig(root).handwritten ?? [];
+  // Nothing here is written today, only read — but `output` is still a path, and the
+  // containment rule it has to satisfy is exactly the one `targets[]` already obeys.
+  // Checking at the boundary means a later caller that *does* open one of these cannot
+  // inherit a traversal hole from a malformed manifest, rather than each caller having
+  // to remember the check for itself.
+  for (const entry of handwritten) safeOutput(root, entry.output);
+  return handwritten;
 }
 
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {

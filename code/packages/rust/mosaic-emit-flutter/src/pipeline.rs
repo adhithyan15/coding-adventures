@@ -1008,6 +1008,11 @@ fn emit_widget_tree(
         "Box" => Some("Container"),
         "Row" => Some("Row"),
         "Column" => Some("Column"),
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a Column: the content still renders, it
+        // just isn't draggable here. Erroring instead would mean a layout using drag
+        // cannot be emitted to this backend AT ALL. See UI35-host-drag-drop.md.
+        "HostDraggable" | "HostDropTarget" => Some("Column"),
         "Stack" => Some("Stack"),
         // UI28-1 / U29-D1 — HostTable structural sub-tags lower to
         // `Column` containers on Flutter (Flutter has no semantic

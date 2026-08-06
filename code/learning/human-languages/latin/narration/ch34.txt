@@ -1,0 +1,29 @@
+Latin, chapter 34: Good Evening.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+bonum vesperum — the accusative rule returns, this time visibly.
+
+Warm-up.
+[pause 2 seconds]
+Two lessons ago, bonum māne couldn't show you Latin's real wish-grammar, because māne is neuter. This time it's back — because vesper isn't.
+
+Grammar Lens: bonum vesperum — masculine, and the case shows again.
+Bonum vesperum = "good evening." Like bonam noctem and bonum māne, this specific phrase is not classically attested as a fixed Roman greeting — the same honest gap, a third time. But the grammar here is different from bonum māne's: vesper is masculine, and Latin masculine nouns genuinely do distinguish nominative (vesper) from accusative (vesperum) — unlike neuter māne, where the two forms were always identical. So bonum vesperum does demonstrate the real Accusative-of-Exclamation rule again, the same wish-construction behind bonam noctem and the genuinely attested Fēlīcem nātālem! — just dressed in masculine endings instead of feminine ones.
+
+Grammar Lens: A feminine alternate: bonam vesperam.
+Latin also has a separate feminine noun for evening, vespera (distinct from masculine vesper, though built from the same root — both headwords appeared together last lesson, though without their genders spelled out). Paired with bonus, its accusative gives bonam vesperam — agreeing the same way bonam noctem does: the adjective, bonam, matches bonam exactly. But watch the nouns carefully — they do not share an ending. Vespera is 1st declension (accusative -am, vesperam), while nox is 3rd declension (accusative -em, noctem — not -am). Same adjective agreement, genuinely different noun declensions underneath.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "bonum vesperum" — "good evening," masculine accusative]
+[pause 8 seconds for the answer]
+[your turn — say: why this one shows the case rule, unlike bonum māne — vesper is masculine, not neuter]
+[pause 8 seconds for the answer]
+[your turn — say: "bonam vesperam" — the feminine alternate, matching bonam noctem's own shape]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is bonum vesperum itself directly attested as a classical Roman greeting? (No — a modern, pedagogical phrase, like bonam noctem and bonum māne.) Why does bonum vesperum show the real Accusative-of-Exclamation rule, when bonum māne couldn't? (Vesper is masculine, and masculine nouns distinguish nominative from accusative; māne is neuter, where the two are always identical.) What's the feminine alternate, and how does its adjective agreement compare to bonam noctem's? (Bonam vesperam — the adjective bonam matches bonam exactly, but the NOUNS don't share an ending: vesperam is 1st declension -am, while noctem is 3rd declension -em, not -am.)
