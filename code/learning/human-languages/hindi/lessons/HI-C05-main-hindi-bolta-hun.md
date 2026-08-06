@@ -5,11 +5,11 @@ type: phrase
 headword: मैं हिंदी बोलता हूँ
 gloss: I speak Hindi (gendered)
 concept_tag: HI-WORD-HINDI
-prerequisites: [HI-C05-bolna, HI-C03-main, HI-C03-hun]
+prerequisites: [HI-C05-bolta-hun, HI-C03-main, HI-C03-hun]
 sounds: [anusvara, matra-i]
 roots: [sindhu-river]
 est_minutes: 4
-reviews_of: [HI-C05-bolna, HI-C03-main, HI-C03-hun]
+reviews_of: [HI-C05-bolta-hun, HI-C03-main, HI-C03-hun]
 ---
 
 # मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) — "I speak Hindi"
@@ -36,17 +36,14 @@ Indus) → Persian *hind* (the land past that river) → *hindī* ("of Hind"). T
 same *sindhu* gave Greek *Indos* → English **India**, **Indus**, **Hindu**. The
 language is named, at two removes, after a river.
 
-## Grammar Lens: the present habitual = stem + -tā/-tī + honā
+## Grammar Lens: the frame you already have
 
-To say "I do X" in general, Hindi uses **stem + -tā/-tī (+ -e for plural) + the
-"to be" verb**:
+The verb here is the present habitual — **stem + -tā/-tī/-te + honā** — which
+[बोलता हूँ](./HI-C05-bolta-hun.md) built one lesson ago. Nothing about it is new;
+this sentence is the first place you get to *use* it on a real object.
 
-- a man: **मैं हिंदी बोलता हूँ** (*boltā hūṁ*)
-- a woman: **मैं हिंदी बोलती हूँ** (*boltī hūṁ*)
-- respectful "you": **आप हिंदी बोलते हैं** (*bolte haiṁ*)
-
-The *-tā/-tī/-te* agrees in gender and number; *hūṁ/hai/haiṁ* agrees in person.
-Two agreements, one small sentence — this is the engine of Hindi's present tense.
+What is new is the word order: **मैं हिंदी बोलता हूँ** puts the object *before*
+the verb frame, so the sentence ends on *hūṁ*. Hindi's verb goes last, always.
 
 ## Guided Practice
 

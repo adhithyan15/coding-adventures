@@ -654,6 +654,13 @@ describe("corpus regression", () => {
   // all and `unstartableChapters` gains one. Routing that content through `input` blocks
   // would have held the drivable share flat by mislabelling it; the honest classification
   // is the one that costs the metric.
+  //
+  // HL-C05-bolta-hun (the Hindi present-habitual paradigm, split out of the assembly
+  // lesson) then added one `voice` lesson: 1133 -> 1134, voice 956 -> 957. It is `voice`
+  // deliberately — its paradigm grid was narrowed from four columns to three so the
+  // narration lineariser can read it, and a \"once you see them as\" aside was reworded,
+  // because a lesson teaching the engine of the present tense is exactly the kind a
+  // commuter should not be locked out of.
   // HL-C16 then built the narration lineariser and moved the shipped table width from
   // 0 to 3. This is the largest single move the corpus has ever taken, and none of it
   // is new content — it is the same 1,133 lessons, re-judged by a detector that can now
@@ -677,18 +684,18 @@ describe("corpus regression", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1133,
-      voice: 956,
+      totalLessons: 1134,
+      voice: 957,
       sight: 124,
       pen: 53,
-      drivableLessons: 956,
+      drivableLessons: 957,
       drivablePercent: 84,
       trackCount: 22,
       chapterCount: 377,
-      // Prerequisite order still costs a commuter 132 of the 956 ear-only lessons:
+      // Prerequisite order still costs a commuter 132 of the 957 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 824,
+      drivablePrefixTotal: 825,
       fullyDrivableChapters: 284,
       unstartableChapters: 44,
       overriddenLessons: 0,
