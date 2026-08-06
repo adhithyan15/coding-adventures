@@ -1,9 +1,9 @@
 # Gujarati
 
-A track of the [Human Languages](../README.md) curriculum, on the same
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) framework:
-one word per lesson, slug ids, atom-first assembly, every atom traced to its
-root, script taught inline, a publishable LaTeX book.
+A track of the [Human Languages](../README.md) curriculum, built the same way
+as: one word per lesson, taken apart and traced to its root; the pieces taught
+before the whole; the script taught inside the words that need it; and a book
+you can read straight through.
 
 ## What's different about the Gujarati track
 
@@ -11,11 +11,11 @@ root, script taught inline, a publishable LaTeX book.
   **Indo-Aryan** — a granddaughter of Sanskrit, sister to Hindi and Marathi —
   but its script dropped the **top line** (*shirorekhā*) that Devanagari,
   Bengali, and Gurmukhi hang their letters from. A vendored Noto Sans Gujarati
-  font renders it; each word lesson introduces the letters it needs, and a reader
-  who already reads Gujarati simply skims. No gated reading course.
+  font renders it; each word lesson introduces the letters it needs, and a
+  reader who already reads Gujarati simply skims. No gated reading course.
 - **Three genders.** Where Hindi kept two, Gujarati (like Marathi) keeps
-  **three** — masculine / feminine / **neuter** — visible right away in the *-o /
-  -ī / -ũ* adjective endings (*sāro / sārī / sārũ*, "good").
+  **three** — masculine / feminine / **neuter** — visible right away in the *-o
+  / -ī / -ũ* adjective endings (*sāro / sārī / sārũ*, "good").
 - **A copula all its own.** Gujarati's "is" is **chhe** — not Hindi's *hai* nor
   Sanskrit's *asti* — one of the quickest tells that a sentence is Gujarati.
 - **The trade-language layer.** Gujaratis, a great seafaring merchant people,
@@ -30,19 +30,26 @@ root, script taught inline, a publishable LaTeX book.
   hā/nā, sārũ, āvjo ("come again"), practice.
 - **Chapter 2 — Introducing Yourself** ([`lessons/GU-C02-*`](./lessons/)): nām,
   mārũ, chhe, "my name is…", tũ / tame, shũ, "what's your name?", ānand.
-- **Chapter 3 — How Are You** ([`lessons/GU-C03-*`](./lessons/)): kem, "tame kem
-  chho?", hũ, majā, vāndho nahī.
-- **Chapter 4 — Farewells** ([`lessons/GU-C04-*`](./lessons/)): pāchhā, maḷīshũ,
-  "pāchhā maḷīshũ", kāle.
+- **Chapter 3 — How Are You** ([`lessons/GU-C03-*`](./lessons/)): kem, "tame
+  kem chho?", hũ, majā, vāndho nahī.
+- **Chapter 4 — Farewells** ([`lessons/GU-C04-*`](./lessons/)): pāchhā,
+  maḷīshũ, "pāchhā maḷīshũ", kāle.
 - **Chapter 5 — The First Verbs** ([`lessons/GU-C05-*`](./lessons/)): bolvũ,
   "hũ gujarātī bolũ chhũ", rahevũ, kām karvũ.
 - **Chapter 6 — Numbers 1–5** ([`lessons/GU-C06-*`](./lessons/)): a short
   counting lesson followed by a prerequisite-ordered history of why *be*
-  continues Sanskrit *dvé* and why *traṇ* regained an *r* after Prakrit lost it.
+  continues Sanskrit *dvé* and why *traṇ* regained an *r* after Prakrit lost
+  it.
 
-Chapters 1–6 are in the book. Chapter 6 is generated from the same canonical
-schema-v2 lesson AST and source hashes that Language Ladder loads, while the
-first five chapters retain their authored long-form narrative during migration.
+Chapters 1–6 are in the book.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## What each chapter lets you do
 

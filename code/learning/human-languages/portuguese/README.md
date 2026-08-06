@@ -1,8 +1,7 @@
 # Portuguese
 
-The eleventh track of the [Human Languages](../README.md) curriculum, on the
-same [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md)
-framework as [Spanish](../spanish/README.md): one word per lesson, slug ids,
+The eleventh track of the [Human Languages](../README.md) curriculum, built the
+same way as [Spanish](../spanish/README.md): one word per lesson, slug ids,
 gender-before-nouns, atom-first assembly, derivations shown, LaTeX book.
 
 ## What's different about the Portuguese track
@@ -21,19 +20,19 @@ uniquely agrees with the **speaker**, not the listener.
 - **Chapter 1 — Greetings** ([`lessons/PT-C01-*`](./lessons/)): olá, bom/boa,
   o/a (gender), dia, bom dia, tarde/boa tarde, noite/boa noite,
   obrigado/obrigada, practice. Legacy canonical lessons; in the book.
-- **Chapters 2–17**: 50 prerequisite-ordered schema-v2 micro-lessons spanning
-  conversation, verbs, numbers, time, family, food, colours, possession, past
-  tense, *ser/estar*, and the body. Every lesson is below five minutes and every
-  chapter is generated from the same typed lesson AST consumed by Language
-  Ladder.
 
 ## Book
 
-The 105-page edition compiles with XeLaTeX. It uses Latin Modern for Portuguese
-and the repository-vendored Noto Naskh Arabic only for preserved Arabic source
-forms in the etymology. The forced build is free of missing glyphs, layout
-boxes, duplicate destinations, Hyperref warnings, and LaTeX warnings. Run
-`latexmk -xelatex book.tex`.
+It uses Latin Modern for Portuguese and the repository-vendored Noto Naskh
+Arabic only for preserved Arabic source forms in the etymology.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities
 

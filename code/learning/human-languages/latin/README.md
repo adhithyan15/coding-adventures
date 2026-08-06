@@ -1,18 +1,17 @@
 # Latin
 
-A track of the [Human Languages](../README.md) curriculum, on the same
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) framework:
-one word per lesson, slug ids, atom-first assembly, derivations shown, LaTeX
-book.
+A track of the [Human Languages](../README.md) curriculum, built the same way
+as: one word per lesson, taken apart and traced to its root; the pieces taught
+before the whole; and a book you can read straight through.
 
 ## What's different about the Latin track
 
-- **A taproot track.** Latin is the ancestor of the Spanish, French, Italian, and
-  Portuguese tracks and the single largest source of English vocabulary after its
-  Germanic core. Almost every lesson pays a **double dividend**: you learn a Latin
-  word *and* see why a dozen English words — and their Romance cousins — look the
-  way they do. *Valē* ("goodbye") hands you *value*, *valid*, *valiant*,
-  *prevail* in one stroke.
+- **A taproot track.** Latin is the ancestor of the Spanish, French, Italian,
+  and Portuguese tracks and the single largest source of English vocabulary
+  after its Germanic core. Almost every lesson pays a **double dividend**: you
+  learn a Latin word *and* see why a dozen English words — and their Romance
+  cousins — look the way they do. *Valē* ("goodbye") hands you *value*,
+  *valid*, *valiant*, *prevail* in one stroke.
 - **Endings, not word order.** Latin carries meaning in its endings, so it can
   drop pronouns entirely (*agō* already means "I do"). The machinery is taught
   one piece at a time, where a real phrase needs it — never a front-loaded
@@ -39,6 +38,14 @@ book.
 - **All 36 chapters carry a capability entry** in
   [`chapters.json`](./chapters.json) — no chapter is skipped, and no entry is a
   stub.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capability ledger
 

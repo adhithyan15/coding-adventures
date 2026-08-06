@@ -2,10 +2,9 @@
 
 The seventh track of the [Human Languages](../README.md) curriculum, the
 second of the four Dravidian tracks (after [Tamil](../tamil/README.md), the
-anchor), on the same
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) framework:
-one word per lesson, slug ids, atom-first assembly, derivations shown, LaTeX
-book.
+anchor), built the same way as:
+one word per lesson, taken apart and traced to its root; the
+pieces taught before the whole; and a book you can read straight through.
 
 ## What's different about the Kannada track
 
@@ -39,27 +38,32 @@ book.
   hēgiddīrā?**, nānu, cennāgi, paravāgilla, practice. The verb *iru* ("to be,"
   same as Tamil); the Dravidian *illa*. In the book.
 - **Chapter 4 — Farewells** ([`lessons/KA-C04-*`](./lessons/)): hōgu/bā, **hōgi
-  baruttēne** ("I'll go and come back"), nāḷe sigōṇa, matte sigōṇa, practice. The
-  Dravidian promise-of-return goodbye. In the book.
-- **Chapter 5 — First Verbs** ([`lessons/KA-C05-*`](./lessons/)): mātanāḍu, **nānu
-  kannaḍa mātanāḍuttēne**, iru, kelasa māḍu, practice. Stem + tense + person; no
-  1st-person gender. In the book.
+  baruttēne** ("I'll go and come back"), nāḷe sigōṇa, matte sigōṇa, practice.
+  The Dravidian promise-of-return goodbye. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/KA-C05-*`](./lessons/)): mātanāḍu,
+  **nānu kannaḍa mātanāḍuttēne**, iru, kelasa māḍu, practice. Stem + tense +
+  person; no 1st-person gender. In the book.
 - **Chapters 6–9 — Case, counting, and courtesy**
-  ([`lessons/KA-C0{6,7,8,9}-*`](./lessons/)): the dative **-ಗೆ**, visible suffix
-  stacking, **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು**, numbers one through ten, **ದಯವಿಟ್ಟು**, and
-  **ಕ್ಷಮಿಸಿ**. In the book from canonical schema-v2 lessons.
+  ([`lessons/KA-C0{6,7,8,9}-*`](./lessons/)): the dative **-ಗೆ**, visible
+  suffix stacking, **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು**, numbers one through ten,
+  **ದಯವಿಟ್ಟು**, and **ಕ್ಷಮಿಸಿ**. In the book.
 - **Chapters 10–22 — Calendar and everyday domains**
-  ([`lessons/KA-C{10..22}-*`](./lessons/)): days, colours, family, body, seasons,
-  food, months, clock time, age, numbers 11–20, weather, and animals. In the
-  book from canonical schema-v2 lessons.
+  ([`lessons/KA-C{10..22}-*`](./lessons/)): days, colours, family, body,
+  seasons, food, months, clock time, age, numbers 11–20, weather, and animals.
+  In the book.
 - **Chapters 23–31 — Dayparts and greetings**
   ([`lessons/KA-C{23..31}-*`](./lessons/)): day, night, morning, evening,
-  afternoon, and their register-aware greetings. In the book from canonical
-  schema-v2 lessons.
+  afternoon, and their register-aware greetings.
 
-All thirty later lessons remain below five effective minutes. Their twenty-six
-generated chapters carry the same source hashes Language Ladder recomputes from
-the browser-loaded lesson AST, so app and book cannot drift silently.
+All thirty later lessons remain below five effective minutes.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities
 

@@ -1,10 +1,10 @@
 # German
 
-The third track of the [Human Languages](../README.md) curriculum, on the
-same [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md)
-framework as [Spanish](../spanish/README.md) and [French](../french/README.md):
-one word per lesson, slug ids, gender-before-nouns, atom-first assembly,
-derivations shown, LaTeX book.
+The third track of the [Human Languages](../README.md) curriculum, built the
+same way as [Spanish](../spanish/README.md) and [French](../french/README.md):
+one word per lesson, taken apart and traced to its root; every noun's gender
+learned with the noun; the pieces taught before the whole; and a book you can
+read straight through.
 
 ## What's different about the German track
 
@@ -56,11 +56,15 @@ French *nuit* — one Indo-European word, split four ways.
 - **Chapter 22 — Dog and Cat**: *Hund*, *Katze*.
 - **Chapter 23 — Green and Yellow**: *grün*, *gelb*.
 
-**All twenty-three chapters are authored and in the book (104 pages).** Chapters
-17–23 are generated from the same canonical lesson AST and source hashes that
-Language Ladder verifies independently. The forced XeLaTeX build is warning-free:
-zero missing glyphs, overfull or underfull boxes, duplicate destinations,
-Hyperref warnings, or LaTeX warnings.
+**All twenty-three chapters are authored and in the book (104 pages).**
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities (HL05)
 

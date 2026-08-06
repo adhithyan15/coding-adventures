@@ -1,18 +1,17 @@
 # Russian
 
 A track of the [Human Languages](../README.md) curriculum — the first on the
-**Cyrillic** script — built on the same
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) framework:
-one word per lesson, stable slug ids, etymology-first, the script taught inline,
-grammar introduced only when a word needs it.
+**Cyrillic** script —, built the same way as:
+one word per lesson, taken apart and traced to its root; the script taught
+inside the words that need it; grammar introduced only when a word needs it.
 
 ## What's different about the Russian track
 
 - **Cyrillic taught inside the words — no reading course.** Each lesson has a
-  *"The letters in this word"* section introducing exactly the letters that word
-  needs. The track's spine is the **four false friends** — в=v, р=r, с=s, н=n —
-  the letters that look Latin and lie; by the end of Chapter 1 they're fixed.
-  Full per-letter decomposition lives in
+  *"The letters in this word"* section introducing exactly the letters that
+  word needs. The track's spine is the **four false friends** — в=v, р=r, с=s,
+  н=n — the letters that look Latin and lie; by the end of Chapter 1 they're
+  fixed. Full per-letter decomposition lives in
   [`data/scripts/cyrillic.json`](../data/scripts/cyrillic.json); the track
   points at it via [`track.json`](./track.json).
 - **English cousins through deep Indo-European roots.** Russian is Slavic —
@@ -25,15 +24,11 @@ grammar introduced only when a word needs it.
   for a favour and doubles as "you're welcome."
 - **Grammar inline**: the formal/informal split and *politeness = plural* rule
   arrive at *здравствуйте* (its polite *-те*).
-- **Objective Chapter 2 progression**: the closed chain from *я* through
-  *как вас зовут* uses typed knowledge boundaries, and Language Ladder checks
-  polite *вы* plus the cross-language *how/what* contrast before advancing.
 - **Drivable by ear.** 16 of the track's 22 lessons need only your ears; the
   other 6 are the five handwriting lessons and one cover-the-column retrieval
-  drill. Russian used to be the corpus's least drivable track at 9%, entirely
-  because its cross-language comparisons were set as Markdown tables rather than
-  said as sentences. They are sentences now. See the 0.7.0 entry in
-  [`CHANGELOG.md`](./CHANGELOG.md) for the measurement.
+  drill. Russian used to be the least drivable track here, entirely because its
+  cross-language comparisons were set as tables rather than said as sentences.
+  They are sentences now.
 
 ## Progress
 
@@ -51,6 +46,14 @@ grammar introduced only when a word needs it.
 See [`roadmap.md`](./roadmap.md) for the plan toward B1 and
 [`session-map.md`](./session-map.md) for how the lessons compose into commute
 sessions.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## What each chapter lets you do
 

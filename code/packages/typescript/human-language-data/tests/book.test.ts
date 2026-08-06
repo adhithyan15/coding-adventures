@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { renderBookChapter, renderInlineMarkdown } from "../src/book.js";
+import {
+  bookBlockTitle,
+  bookVoice,
+  renderBookChapter,
+  renderInlineMarkdown,
+} from "../src/book.js";
 import { parseLesson } from "../src/parse.js";
 
 function source(id: string, sequence: number, word: string): string {
@@ -33,11 +38,13 @@ variety: general
 
 ## Warm-up
 
-Recall **${word}**.
+[PAUSE 2s] Recall **${word}**.
 
 ## Guided Practice
 
+[PAUSE 1s]
 - [YOU SAY: **${word}**]
+- [YOU SAY: it again]
 
 ## Wrap-up Recall
 
@@ -63,7 +70,14 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(generated.tex.indexOf("lesson:A")).toBeLessThan(generated.tex.indexOf("lesson:B"));
     expect(generated.tex).toContain("\\begin{tcolorbox}");
     expect(generated.tex).toContain("\\begin{itemize}\n\\raggedright");
-    expect(generated.tex).toContain("\\item {[}YOU SAY: \\textbf{hello}{]}");
+    expect(generated.tex).toContain("\\item \\textbf{hello}");
+  });
+
+  it("prints no build-process blurb under the chapter title", () => {
+    const generated = renderBookChapter(target, [parseLesson(source("A", 10, "hello"), "test")]);
+    expect(generated.tex).not.toContain("canonical micro-lessons");
+    expect(generated.tex).not.toContain("Language Ladder");
+    expect(generated.tex).toContain("\\label{ch:first}\n\n\\section[hello]");
   });
 
   it("keeps arrows out of the PDF bookmark and running-header title", () => {
@@ -91,7 +105,7 @@ describe("canonical LaTeX chapter rendering", () => {
   it("keeps indented Markdown quote continuations in one LaTeX quote", () => {
     const lesson = parseLesson(
       source("A", 10, "hello").replace(
-        "- [YOU SAY: **hello**]",
+        "- [YOU SAY: **hello**]\n- [YOU SAY: it again]",
         '> **hello** — "a greeting\n  that continues."',
       ),
       "test",
@@ -158,29 +172,30 @@ describe("canonical LaTeX chapter rendering", () => {
     );
   });
 
-  it("preserves absolute links and resolves relative curriculum links", () => {
+  it("keeps external citations and unlinks repository-relative destinations", () => {
     expect(renderInlineMarkdown("[source](https://example.test/a_b?q=x&y=z#frag)")).toBe(
       "\\href{https://example.test/a\\_b?q=x\\&y=z\\#frag}{source}",
     );
     expect(renderInlineMarkdown("[draft](https://example.test/$value~draft)")).toBe(
       "\\href{https://example.test/\\%24value\\%7Edraft}{draft}",
     );
-    expect(
-      renderInlineMarkdown("Read [the next lesson](./TEST-C01-next.md).", undefined, {
-        linkBaseUrl:
-          "https://github.com/example/repo/blob/main/curriculum/test/lessons/TEST-C01-now.md",
-      }),
-    ).toBe(
-      "Read \\href{https://github.com/example/repo/blob/main/curriculum/test/lessons/" +
-        "TEST-C01-next.md}{the next lesson}.",
+    // The label survives; the unreachable destination does not.
+    expect(renderInlineMarkdown("Read [the next lesson](./TEST-C01-next.md).")).toBe(
+      "Read the next lesson.",
+    );
+    expect(renderInlineMarkdown("→ [reference](../pronunciation-reference.md)")).toBe(
+      "$\\to$ reference",
+    );
+    expect(renderInlineMarkdown("[**bien** / bueno](./ES-C01-bien.md) — the adjective")).toBe(
+      "\\textbf{bien} / bueno — the adjective",
     );
   });
 
-  it("fails closed for relative links without a source base and unsupported protocols", () => {
-    expect(() => renderInlineMarkdown("[next](./next.md)")).toThrow(/requires a source base URL/);
+  it("fails closed for empty destinations and unsupported protocols", () => {
     expect(() => renderInlineMarkdown("[mail](mailto:hello@example.test)")).toThrow(
       /unsupported Markdown link protocol 'mailto:'/,
     );
+    expect(() => renderInlineMarkdown("[empty]()")).toThrow(/must not be empty/);
   });
 
   it("wraps configured Unicode-script runs in the book's dedicated font command", () => {
@@ -237,5 +252,126 @@ describe("canonical LaTeX chapter rendering", () => {
   it("fails closed when a target includes a legacy lesson", () => {
     const legacy = parseLesson(source("A", 10, "hello").replace("schema_version: 2\n", ""), "test");
     expect(() => renderBookChapter(target, [legacy])).toThrow(/schema version 2/);
+  });
+});
+
+describe("the book voice", () => {
+  it("deletes pause cues, keeping whatever prose shared the line", () => {
+    expect(bookVoice("[PAUSE 2s] You already know **por favor**.")).toBe(
+      "You already know **por favor**.",
+    );
+    expect(bookVoice("[PAUSE 1s each] Two beats.")).toBe("Two beats.");
+    // A line that was nothing but a cue leaves no trace at all.
+    expect(bookVoice("[PAUSE 1s]\n- [YOU SAY: hola]")).toBe("- *Say it:* hola");
+    expect(bookVoice("First.\n\n[PAUSE 3s]\n\nSecond.")).toBe("First.\n\n\nSecond.");
+  });
+
+  it("says repetition in prose instead of printing the bracket", () => {
+    expect(bookVoice('[REPEAT x2] "Ça va ? — Ça va."')).toBe(
+      '*Twice through:* "Ça va ? — Ça va."',
+    );
+    expect(bookVoice("[REPEAT x3] Run the exchange.")).toBe(
+      "*3 times through:* Run the exchange.",
+    );
+    expect(bookVoice("[PAUSE 2s] [REPEAT x2] Both cues.")).toBe("*Twice through:* Both cues.");
+  });
+
+  it("gives a run of same-verb prompts one lead-in instead of three labels", () => {
+    expect(
+      bookVoice(
+        '- [YOU SAY: "siento" — I feel]\n- [YOU SAY: the cousin word — "perdón"]\n' +
+          "- [YOU SAY: both together]",
+      ),
+    ).toBe(
+      'Say these aloud:\n\n- "siento" — I feel\n- the cousin word — "perdón"\n- both together',
+    );
+    expect(bookVoice("- [YOU WRITE: क]\n- [YOU WRITE: त]")).toBe(
+      "Write these out:\n\n- क\n- त",
+    );
+  });
+
+  it("labels each prompt when a list mixes cue kinds or stands alone", () => {
+    expect(bookVoice("- [YOU SAY: नमस्ते]\n- [YOU WRITE: नमस्ते]")).toBe(
+      "- *Say it:* नमस्ते\n- *Write it:* नमस्ते",
+    );
+    expect(bookVoice("- [YOU SAY: alone]")).toBe("- *Say it:* alone");
+    expect(bookVoice("- plain bullet\n- [YOU SAY: a prompt]")).toBe(
+      "- plain bullet\n- *Say it:* a prompt",
+    );
+    // A verb with no plural lead-in keeps the per-bullet label.
+    expect(bookVoice("- [YOU POINT: the alif]\n- [YOU POINT: the bāʾ]")).toBe(
+      "- *Point to:* the alif\n- *Point to:* the bāʾ",
+    );
+    // A verb nobody has voiced yet still prints as English, never as a bracket.
+    expect(bookVoice("- [YOU WHISTLE: the tune]")).toBe("- *Whistle:* the tune");
+    // Including the one lesson that writes a whole phrase where a verb goes.
+    expect(bookVoice("- [YOU CHOOSE BY CONTEXT: clock → hour]")).toBe(
+      "- *Choose by context:* clock → hour",
+    );
+  });
+
+  it("keeps writing and tracing prompts as printed exercises", () => {
+    // Writing is teaching content, not audio scaffolding: it must survive.
+    expect(bookVoice("- [YOU TRACE: the shirorekhā first]\n- [YOU TRACE: then the body]")).toBe(
+      "Trace these:\n\n- the shirorekhā first\n- then the body",
+    );
+    expect(bookVoice("- [YOU READ: क, त, न]\n- [YOU READ: back to front]")).toBe(
+      "Read these aloud:\n\n- क, त, न\n- back to front",
+    );
+  });
+
+  it("handles brackets inside a prompt and wrapped bullets", () => {
+    expect(bookVoice('- [YOU SAY: "mā ismuka?" — "what [is] your name?"]')).toBe(
+      '- *Say it:* "mā ismuka?" — "what [is] your name?"',
+    );
+    expect(bookVoice('- [YOU SAY: "al-" and three English words —\n  al-gebra, al-cohol]')).toBe(
+      '- *Say it:* "al-" and three English words — al-gebra, al-cohol',
+    );
+  });
+
+  it("leaves ordinary lists and prose untouched", () => {
+    const plain = "- **lo** = it\n- **siento** = I feel\n\nSo it is literally *I feel it*.";
+    expect(bookVoice(plain)).toBe(plain);
+  });
+
+  it("keeps a blank line so a lead-in never welds onto the paragraph above", () => {
+    expect(bookVoice("Now the drill.\n- [YOU SAY: uno]\n- [YOU SAY: dos]")).toBe(
+      "Now the drill.\n\nSay these aloud:\n\n- uno\n- dos",
+    );
+  });
+
+  it("prints book headings for the internal block labels, and only those", () => {
+    expect(bookBlockTitle("Guided Practice")).toBe("Your turn");
+    expect(bookBlockTitle("You'll want to know first")).toBe("What to know first");
+    expect(bookBlockTitle("You'll want to know")).toBe("What to know first");
+    // Authored headings that already read like a book are left alone.
+    expect(bookBlockTitle("You'll want to know — The famous mātrā")).toBe(
+      "You'll want to know — The famous mātrā",
+    );
+    expect(bookBlockTitle("Grammar Lens: the verb goes last")).toBe(
+      "Grammar Lens: the verb goes last",
+    );
+    // A qualified label loses the label and keeps the qualifier.
+    expect(bookBlockTitle("Guided Practice: conjugate on command")).toBe(
+      "Your turn: conjugate on command",
+    );
+  });
+
+  it("titles the warm-up and recall blocks as a book would", () => {
+    const generated = renderBookChapter(target, [parseLesson(source("A", 10, "hello"), "test")]);
+    expect(generated.tex).not.toContain("Warm-up");
+    expect(generated.tex).not.toContain("Wrap-up");
+    expect(generated.tex).not.toContain("Guided Practice");
+    expect(generated.tex).toContain("\\begin{quote}\nRecall \\textbf{hello}.\n\\end{quote}");
+    expect(generated.tex).toContain("title={Before you move on}]");
+    expect(generated.tex).toContain("\\subsection*{Your turn}");
+  });
+
+  it("prints no delivery cue anywhere in a generated chapter", () => {
+    const generated = renderBookChapter(target, [parseLesson(source("A", 10, "hello"), "test")]);
+    expect(generated.tex).not.toMatch(/PAUSE/);
+    expect(generated.tex).not.toMatch(/YOU SAY/);
+    expect(generated.tex).not.toMatch(/REPEAT x/);
+    expect(generated.tex).toContain("Say these aloud:");
   });
 });
