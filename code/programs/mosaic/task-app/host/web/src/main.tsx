@@ -186,6 +186,52 @@ const isoToDays = (iso: string): number | null => {
 const daysToIso = (days: number): string =>
   new Date(days * DAY_MS).toISOString().slice(0, 10);
 
+// The calendar view — the engine's calendar(range, view) projection, built with
+// the same "no filter, whole workspace" View every other view starts from.
+// `shape: "calendar"` matches task-core's ViewShape::Calendar; the engine
+// itself only reads filter/sort from this (calendar() doesn't group or show
+// columns), but the View type requires the field to be present regardless.
+const CALENDAR_VIEW = (projectStart: number, start: number, end: number) => ({
+  view: {
+    id: "calendar",
+    name: "Calendar",
+    shape: "calendar",
+    filter: { statuses: [], completed: null, search: null },
+    groupBy: null,
+    sort: [{ field: { builtin: "name" }, ascending: true }],
+    visibleFields: [{ builtin: "name" }],
+  },
+  projectStart,
+  start,
+  end,
+});
+
+// Calendar month arithmetic. All UTC — `days` is already a UTC day-count (see
+// DAY_MS above), so mixing in local-timezone Date methods here would skew the
+// grid by a day near a DST boundary or a non-UTC system clock.
+const daysToDateUtc = (days: number): Date => new Date(days * DAY_MS);
+// The first day (UTC) of the month containing `days`.
+const monthStartDays = (days: number): number => {
+  const d = daysToDateUtc(days);
+  return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / DAY_MS);
+};
+// `monthStart` shifted by `delta` whole months, landing on that month's 1st.
+const shiftMonth = (monthStart: number, delta: number): number => {
+  const d = daysToDateUtc(monthStart);
+  return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + delta, 1) / DAY_MS);
+};
+const monthLabel = (monthStart: number): string =>
+  daysToDateUtc(monthStart).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+// The Sunday on/before `monthStart` — the grid's top-left cell. A fixed 42-cell
+// (6×7) grid from here always covers the whole month, the same shape
+// design/ui-prototype.html's own renderCalendar() builds.
+const gridStartDays = (monthStart: number): number =>
+  monthStart - daysToDateUtc(monthStart).getUTCDay();
+
 // State the controller can be seeded with on boot (restored from storage).
 interface ControllerInit {
   initialOrder?: string[];
@@ -208,9 +254,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let newName = "";
   let newDue = "";
   let newProject = "";
-  // Which view is showing. A string rather than a set of booleans, so the four
+  // Which view is showing. A string rather than a set of booleans, so the five
   // states can't contradict each other.
-  let view: "list" | "board" | "timeline" | "sheet" = "list";
+  let view: "list" | "board" | "timeline" | "sheet" | "calendar" = "list";
   // Sheet toolbar state.
   let sheetFilterText = "";
   let sheetSortField = ""; // a SHEET_FIELDS label, or "" for unsorted
@@ -232,6 +278,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
   const order: string[] = [...initialOrder]; // task ids in creation order
   let counter = initialCounter;
   const today = Math.floor(Date.now() / DAY_MS);
+  // Calendar nav state: the first day (UTC) of the currently shown month,
+  // seeded to the current month.
+  let calendarMonthStart = monthStartDays(today);
 
   // Every project, flattened depth-first so a sub-project immediately follows its
   // parent, carrying the depth so the bar can show the hierarchy. The engine stores
@@ -394,6 +443,40 @@ function makeController(engine: any, init: ControllerInit = {}) {
     };
   };
 
+  // The calendar's own cell/event derivation — analogous to sheetRows(), keyed
+  // to whichever month `calendarMonthStart` currently names rather than a
+  // fixed range. Cell/event row shapes match Calendar.mil exactly.
+  const calendarData = (): { cells: string[][]; events: string[][] } => {
+    const gridStart = gridStartDays(calendarMonthStart);
+    const gridEnd = gridStart + 41; // 42 cells, inclusive
+    const cells: string[][] = [];
+    for (let i = 0; i < 42; i += 1) {
+      const day = gridStart + i;
+      cells.push([String(daysToDateUtc(day).getUTCDate()), daysToIso(day), day === today ? "today" : ""]);
+    }
+    const raw = engine.calendar(CALENDAR_VIEW(today, gridStart, gridEnd)).data;
+    const events: string[][] = [];
+    for (const ev of (raw?.events ?? []) as any[]) {
+      // One row PER DAY the event spans, clipped to the visible grid — a
+      // multi-day event renders on every day it covers rather than only its
+      // start day (see task-app-calendar-v1.md: the engine already computed
+      // the real span; collapsing to the start day would discard it).
+      const from = Math.max(ev.start as number, gridStart);
+      const to = Math.min(ev.finish as number, gridEnd);
+      for (let day = from; day <= to; day += 1) {
+        events.push([
+          ev.task as string,
+          ev.label as string,
+          daysToIso(day),
+          ev.critical ? "critical" : "",
+          ev.completed ? "done" : "",
+          ev.overdue ? "overdue" : "",
+        ]);
+      }
+    }
+    return { cells, events };
+  };
+
   return {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
@@ -485,6 +568,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
       // below: an engine query the current view doesn't need shouldn't run on every
       // keystroke elsewhere in the app.
       const sheet = view === "sheet" ? sheetRows() : { ids: [], cells: [] };
+      // Computed only while the calendar is showing — same "don't run a query
+      // the current view doesn't need" discipline as `sheet`/`boardCards`.
+      const cal = view === "calendar" ? calendarData() : { cells: [], events: [] };
       const boardCards: string[][] = (() => {
         if (view !== "board") return [];
         const pct = progress();
@@ -530,6 +616,10 @@ function makeController(engine: any, init: ControllerInit = {}) {
         sheetSortOptions: SHEET_FIELDS.filter((f) => f.sortable).map((f) => f.label),
         sheetSortOpen,
         sheetSortAscending,
+        calendarMode: view === "calendar" ? "calendar" : "",
+        calendarTitle: view === "calendar" ? monthLabel(calendarMonthStart) : "",
+        calendarCells: cal.cells,
+        calendarEvents: cal.events,
         timelineScale: tl.scale,
         timelineRows: tl.rows,
         newTaskName: newName,
@@ -569,6 +659,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         case "showSheet":
           view = "sheet";
+          break;
+        case "showCalendar":
+          view = "calendar";
           break;
         case "cardDropped": {
           // A drop is a PROPOSAL. The engine owns what a status change means; the host
@@ -612,6 +705,32 @@ function makeController(engine: any, init: ControllerInit = {}) {
             ok = ran("un-start", engine.setPercentComplete({ id: event.key, percent: 0 }));
           }
           if (!ok) break;
+          persist();
+          break;
+        }
+        case "calendarPrev":
+          calendarMonthStart = shiftMonth(calendarMonthStart, -1);
+          break;
+        case "calendarNext":
+          calendarMonthStart = shiftMonth(calendarMonthStart, 1);
+          break;
+        case "calendarEventDropped": {
+          // A drop is a PROPOSAL — same reasoning as cardDropped above. The
+          // calendar's own display precedence favours a computed schedule
+          // over the deadline fallback (see task-app-calendar-v1.md), so a
+          // MustStartOn constraint is what actually moves the event on
+          // screen — setDeadline alone would silently no-op for any task the
+          // CPM pass already dated.
+          const targetDay = isoToDays(event.targetKey);
+          if (targetDay == null) break; // not a valid day-key
+          const res = engine.setConstraint({
+            id: event.key,
+            constraint: { mustStartOn: targetDay },
+          });
+          if (res?.ok === false) {
+            console.error("Calendar reschedule failed:", res.error ?? res);
+            break;
+          }
           persist();
           break;
         }

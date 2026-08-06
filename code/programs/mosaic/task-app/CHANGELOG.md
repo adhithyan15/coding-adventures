@@ -4,6 +4,40 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - calendar (month grid) view
+
+Phase 7 of the roadmap: a new `mosaic-pkg-calendar` package, wired to
+task-core's `calendar(range, view)` projection (no new engine work needed —
+that projection shipped in #8726) plus the UI35 drag kernel for drag-to-move
+rescheduling. See `code/specs/task-app-calendar-v1.md` for the full scope.
+
+- Month grid: 42 cells (6×7, Sunday-first), today gets a filled badge,
+  multi-day events render on every day they span (not just their start
+  day — the engine already computes the real span).
+- Drag an event onto a different day and it reschedules for real: the host
+  calls `engine.setConstraint({ id, constraint: { mustStartOn } })`, which
+  feeds the CPM pass — not `setDeadline`, which the calendar's own display
+  precedence (computed schedule beats the deadline fallback) would have
+  silently ignored for any already-scheduled task. Verified live: the
+  project's own projected-finish date recomputed after a drop.
+- Critical/completed/overdue events get a conditional text chip, the same
+  "one draggable part, conditional child chips for state" trade-off Board's
+  `card-crit` already established (not a per-state container restyle).
+- Both themes, palette taken directly from `design/ui-prototype.html`'s
+  `.cal-*` classes.
+
+Deferred to a follow-up (tracked in `BACKLOG.md`): week/day views, resize
+(the UI35 kernel doesn't support it), time-blocking (needs a time-of-day
+field on `TaskSchedule` that doesn't exist yet — an engine gap), and
+weekend/out-of-month cell tinting (would need a 4-way branch duplicating
+the whole drop-target + event-loop for a colour difference — not judged
+worth it, matching Board's own deferred critical-border-vs-chip gap).
+
+Found and fixed one real bug before shipping, not after: an empty day's
+`HostDropTarget` had zero intrinsic height (no events inside it, no
+explicit sizing), leaving nothing for a pointer to actually land on —
+fixed with `flex-grow: 1` so it fills the cell's 96px `min-height`.
+
 ### Changed - re-closed the design-fidelity gap (partial pass)
 
 A prior pass (`### Changed - the app now looks like the design`, below) brought the app

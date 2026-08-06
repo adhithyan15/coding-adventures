@@ -1,0 +1,229 @@
+// Calendar.dark.msl — default dark theme style for the Calendar component.
+//
+// Same structure as Calendar.light.msl, dark-theme token values from
+// design/ui-prototype.html's `:root[data-theme="dark"]` (see
+// task-app-calendar-v1.md).
+
+style Calendar {
+  part calendar-root {
+    background     : "#252019" ;
+    border-width   : 1 ;
+    border-color   : "#352e25" ;
+    border-style   : "solid" ;
+    border-radius  : 10 ;
+    box-shadow     : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+
+  part calendar-head {
+    align          : center-vertical ;
+    padding-top    : 14 ;
+    padding-right  : 18 ;
+    padding-bottom : 14 ;
+    padding-left   : 18 ;
+    border-bottom-width : 1 ;
+    border-bottom-color : "#2c2620" ;
+    border-bottom-style : "solid" ;
+  }
+
+  part calendar-title {
+    width      : 100% ;
+    font-size  : 16 ;
+    font-weight: bold ;
+    color      : "#f1ebe1" ;
+  }
+
+  part calendar-nav {
+    gap: 6 ;
+  }
+
+  part calendar-prev {
+    padding       : 6 ;
+    border-radius : 6 ;
+    border-width  : 0 ;
+    background    : "transparent" ;
+    color         : "#f1ebe1" ;
+    font-size     : 14 ;
+    state hover {
+      background: "#2c2620" ;
+    }
+  }
+
+  part calendar-next {
+    padding       : 6 ;
+    border-radius : 6 ;
+    border-width  : 0 ;
+    background    : "transparent" ;
+    color         : "#f1ebe1" ;
+    font-size     : 14 ;
+    state hover {
+      background: "#2c2620" ;
+    }
+  }
+
+  part calendar-dow {
+    border-bottom-width : 1 ;
+    border-bottom-color : "#2c2620" ;
+    border-bottom-style : "solid" ;
+  }
+
+  // Sun..Sat: identical bodies, one part name each (moslayout requires a
+  // distinct part name per literal instance — see Calendar.mll's comment).
+  part calendar-dow-sun {
+    width          : "14.2857%" ;
+    text-align     : "center" ;
+    padding-top    : 8 ;
+    padding-bottom : 8 ;
+    font-size      : 10.5 ;
+    font-weight    : bold ;
+    letter-spacing : "0.06em" ;
+    text-transform : "uppercase" ;
+    color          : "#867c70" ;
+  }
+  part calendar-dow-mon {
+    width          : "14.2857%" ;
+    text-align     : "center" ;
+    padding-top    : 8 ;
+    padding-bottom : 8 ;
+    font-size      : 10.5 ;
+    font-weight    : bold ;
+    letter-spacing : "0.06em" ;
+    text-transform : "uppercase" ;
+    color          : "#867c70" ;
+  }
+  part calendar-dow-tue {
+    width          : "14.2857%" ;
+    text-align     : "center" ;
+    padding-top    : 8 ;
+    padding-bottom : 8 ;
+    font-size      : 10.5 ;
+    font-weight    : bold ;
+    letter-spacing : "0.06em" ;
+    text-transform : "uppercase" ;
+    color          : "#867c70" ;
+  }
+  part calendar-dow-wed {
+    width          : "14.2857%" ;
+    text-align     : "center" ;
+    padding-top    : 8 ;
+    padding-bottom : 8 ;
+    font-size      : 10.5 ;
+    font-weight    : bold ;
+    letter-spacing : "0.06em" ;
+    text-transform : "uppercase" ;
+    color          : "#867c70" ;
+  }
+  part calendar-dow-thu {
+    width          : "14.2857%" ;
+    text-align     : "center" ;
+    padding-top    : 8 ;
+    padding-bottom : 8 ;
+    font-size      : 10.5 ;
+    font-weight    : bold ;
+    letter-spacing : "0.06em" ;
+    text-transform : "uppercase" ;
+    color          : "#867c70" ;
+  }
+  part calendar-dow-fri {
+    width          : "14.2857%" ;
+    text-align     : "center" ;
+    padding-top    : 8 ;
+    padding-bottom : 8 ;
+    font-size      : 10.5 ;
+    font-weight    : bold ;
+    letter-spacing : "0.06em" ;
+    text-transform : "uppercase" ;
+    color          : "#867c70" ;
+  }
+  part calendar-dow-sat {
+    width          : "14.2857%" ;
+    text-align     : "center" ;
+    padding-top    : 8 ;
+    padding-bottom : 8 ;
+    font-size      : 10.5 ;
+    font-weight    : bold ;
+    letter-spacing : "0.06em" ;
+    text-transform : "uppercase" ;
+    color          : "#867c70" ;
+  }
+
+  part calendar-grid {
+    flex-wrap: "wrap" ;
+  }
+
+  part calendar-cell {
+    width          : "14.2857%" ;
+    min-height     : 96 ;
+    padding        : 6 ;
+    gap            : 3 ;
+    border-right-width  : 1 ;
+    border-right-color  : "#2c2620" ;
+    border-right-style  : "solid" ;
+    border-bottom-width : 1 ;
+    border-bottom-color : "#2c2620" ;
+    border-bottom-style : "solid" ;
+  }
+
+  part calendar-daynum {
+    font-size : 12 ;
+    color     : "#b3a99c" ;
+  }
+
+  part calendar-daynum-today {
+    width         : 21 ;
+    height        : 21 ;
+    border-radius : 20 ;
+    text-align    : "center" ;
+    font-size     : 11 ;
+    font-weight   : bold ;
+    background    : "#eaa63f" ;
+    color         : "#1a1714" ;
+  }
+
+  // flex-grow fills the remaining height of calendar-cell's 96px min-height —
+  // without it, an empty day (no events, no intrinsic content height) leaves
+  // a zero-height drop target, so a real pointer drag has nothing to land on.
+  part calendar-cell-drop {
+    width      : 100% ;
+    flex-grow  : 1 ;
+    gap        : 3 ;
+  }
+
+  part calendar-event {
+    width          : 100% ;
+    padding-top    : 2 ;
+    padding-right  : 7 ;
+    padding-bottom : 2 ;
+    padding-left   : 7 ;
+    border-radius  : 5 ;
+    border-left-width : 3 ;
+    border-left-color : "#eaa63f" ;
+    border-left-style : "solid" ;
+    background     : "#3a2c17" ;
+    color          : "#eaa63f" ;
+    font-size      : 11 ;
+    overflow       : "hidden" ;
+    white-space    : "nowrap" ;
+    text-overflow  : "ellipsis" ;
+  }
+
+  part calendar-event-label {
+    font-size : 11 ;
+  }
+
+  part calendar-event-crit {
+    font-size  : 10 ;
+    font-weight: bold ;
+    color      : "#e26a52" ;
+  }
+
+  part calendar-event-done {
+    font-size  : 10 ;
+    color      : "#6fb489" ;
+  }
+
+  part calendar-event-over {
+    font-size  : 10 ;
+    font-weight: bold ;
+    color      : "#e26a52" ;
+  }
+}

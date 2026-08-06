@@ -68,12 +68,13 @@ layout TaskApp {
         // clicking the view you are already on is a no-op instead of a swap.
         Row [ seg ] {
           // Part names are unique layout-wide, even across mutually-exclusive
-          // branches, so each of the four buttons gets its own name in each of
-          // the four branches (one "on" + three "off" variants per button).
+          // branches, so each of the five buttons gets its own name in each of
+          // the five branches (one "on" + four "off" variants per button).
           If ( when: slot: timeline-mode ) {
             HostButton [ seg-list-off ] ( label : "List" , onClick : emit: onShowList )
             HostButton [ seg-board-off ] ( label : "Board" , onClick : emit: onShowBoard )
             HostButton [ seg-sheet-off ] ( label : "Sheet" , onClick : emit: onShowSheet )
+            HostButton [ seg-cal-off ] ( label : "Calendar" , onClick : emit: onShowCalendar )
             HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
           }
           Else {
@@ -81,6 +82,7 @@ layout TaskApp {
               HostButton [ seg-list-off2 ] ( label : "List" , onClick : emit: onShowList )
               HostButton [ seg-board-on ] ( label : "Board" , onClick : emit: onShowBoard )
               HostButton [ seg-sheet-off2 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+              HostButton [ seg-cal-off2 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
               HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
             }
             Else {
@@ -88,13 +90,24 @@ layout TaskApp {
                 HostButton [ seg-list-off3 ] ( label : "List" , onClick : emit: onShowList )
                 HostButton [ seg-board-off3 ] ( label : "Board" , onClick : emit: onShowBoard )
                 HostButton [ seg-sheet-on ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                HostButton [ seg-cal-off3 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
                 HostButton [ seg-tl-off3 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
               }
               Else {
-                HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
-                HostButton [ seg-board-off4 ] ( label : "Board" , onClick : emit: onShowBoard )
-                HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
-                HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                If ( when: slot: calendar-mode ) {
+                  HostButton [ seg-list-off4 ] ( label : "List" , onClick : emit: onShowList )
+                  HostButton [ seg-board-off5 ] ( label : "Board" , onClick : emit: onShowBoard )
+                  HostButton [ seg-sheet-off4 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                  HostButton [ seg-cal-on ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                  HostButton [ seg-tl-off4 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                }
+                Else {
+                  HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
+                  HostButton [ seg-board-off4 ] ( label : "Board" , onClick : emit: onShowBoard )
+                  HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                  HostButton [ seg-cal-off4 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                  HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                }
               }
             }
           }
@@ -190,6 +203,20 @@ layout TaskApp {
           )
         }
         Else {
+        If ( when: slot: calendar-mode ) {
+          // Every calendar-* slot/emit is a straight pass-through to the
+          // package — TaskApp adds no shaping of its own, see Calendar.mil
+          // for the contract and task-app-calendar-v1.md for the scope.
+          pkg::mosaic-pkg-calendar::Calendar (
+            calendar-title : slot: calendar-title ,
+            calendar-cells : slot: calendar-cells ,
+            calendar-events : slot: calendar-events ,
+            onPrev : emit: onCalendarPrev ,
+            onNext : emit: onCalendarNext ,
+            onEventDropped : emit: onCalendarEventDropped
+          )
+        }
+        Else {
           Column [ list-wrap ] {
             Row [ composer ] {
               HostInput [ name-input ] (
@@ -248,6 +275,7 @@ layout TaskApp {
               }
             }
           }
+        }
         }
         }
         }
