@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 4 onward are authored in HL-C11; their absence here is real, measurable debt and must not be papered over with placeholders.",
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Hola and Buenos Días",
+      "label": "ch:first-words",
+      "canDo": "I can greet someone in Spanish, say how I am, and wish them a good day.",
+      "spineNodes": ["SPINE-MEET-GREET"],
+      "payoff": {
+        "lesson": "ES-C01-practice",
+        "kind": "dialogue",
+        "summary": "A short doorway greeting: hola, an answer to how you are, and buenos días on the way in.",
+        "assesses": [
+          "ES-LEX-HOLA",
+          "ES-LEX-BIEN",
+          "ES-LEX-DIA",
+          "ES-LEX-BUENOS-DIAS",
+          "ES-MORPH-BUENO-BUENA",
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-GRAMMAR-NOUN-NUMBER",
+          "ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "The Rest of the Greetings",
+      "label": "ch:greetings",
+      "canDo": "I can greet someone correctly at any hour — morning, afternoon, or night.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "ES-C02-practice",
+        "kind": "dialogue",
+        "summary": "The same greeting exchange run three times across the day, choosing the right form for each hour.",
+        "assesses": [
+          "ES-LEX-HOLA",
+          "ES-LEX-BUENOS-DIAS",
+          "ES-LEX-BUENAS-TARDES",
+          "ES-LEX-BUENAS-NOCHES",
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL",
+          "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "canDo": "I can give my name, ask someone else's, and say it was a pleasure to meet them.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "ES-C03-practice",
+        "kind": "dialogue",
+        "summary": "A first meeting start to finish: greet, exchange names at the right level of formality, and close with mucho gusto.",
+        "assesses": [
+          "ES-LEX-HOLA",
+          "ES-LEX-BUENOS-DIAS",
+          "ES-LEX-ME-LLAMO",
+          "ES-LEX-TU",
+          "ES-LEX-USTED",
+          "ES-LEX-COMO-SE-LLAMA",
+          "ES-LEX-TE-LLAMAS",
+          "ES-LEX-MUCHO-GUSTO"
+        ]
+      }
+    }
+  ]
+}
