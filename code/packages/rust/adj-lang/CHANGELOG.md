@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.73.0] - 2026-08-06 - floor/mod on the plain-arithmetic surface (FL-9)
+
+- `floor(x)` and `mod(a, b)` join `RUNTIME_BUILTIN_FORMULAS` as recognized-by-name built-ins in
+  `expand_rec`, the same mechanism `round_to`/`round_sig`/`to_scientific`/`to_percent`/
+  `to_currency` already use — no grammar change, since the plain surface's `factor` production
+  already includes `apply`. `floor(x)` maps onto the existing `ExprAst::Floor` node and `mod(a,
+  b)` onto the existing `ExprAst::Bin(ArithOp::Mod, …)` node (both already reachable from the
+  `latex "…"` frontend for `\lfloor x\rfloor`/`a \bmod b`) — purely a new surface path to
+  pre-existing machinery, so no new `ExprAst`/`ComputeOp` variant and no new exhaustive-match
+  site anywhere. The existing `RUNTIME_BUILTIN_FORMULAS` reserved-name collision check
+  (`LowerError::ReservedFormulaName`) covers both automatically. Unblocks base-ten place-value
+  decomposition (`tens_digit(n) = floor(n / 10)`, `ones_digit(n) = mod(n, 10)`) without needing
+  a `latex "…"` escape for one sub-expression.
+
 ## [0.72.0] - 2026-08-06 - comparison formulas (FL-8) and replayable formula guard traces
 
 - `formula`'s final body expression (`formula_relation`) may now end in a single trailing

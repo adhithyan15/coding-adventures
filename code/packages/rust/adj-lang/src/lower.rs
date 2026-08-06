@@ -573,6 +573,8 @@ pub enum FormulaBodyTrace {
 ///
 /// Sorted, so a reader can see at a glance that nothing is duplicated.
 pub const RUNTIME_BUILTIN_FORMULAS: &[&str] = &[
+    "floor",
+    "mod",
     "round_sig",
     "round_to",
     "to_currency",
@@ -3126,6 +3128,39 @@ fn expand_rec(
                 let value = expand_rec(&args[0], context, depth, state, d)?;
                 return Ok(ExprAst::RoundTo(Box::new(value), spec));
             }
+            // FL-9 built-in: `floor(x)` — the greatest integer <= x. Recognised by NAME
+            // here, before the user-formula lookup, on the same comma-list application
+            // grammar. Maps directly onto the EXISTING `ExprAst::Floor` node — the same
+            // one the `latex "…"` frontend already reaches for `\lfloor x\rfloor` — so
+            // this is a new surface path to old machinery, not a new node. Exactly one
+            // argument; the wrong count is a clean compile error.
+            if name == "floor" {
+                if args.len() != 1 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 1,
+                        got: args.len(),
+                    });
+                }
+                let value = expand_rec(&args[0], context, depth, state, d)?;
+                return Ok(ExprAst::Floor(Box::new(value)));
+            }
+            // FL-9 built-in: `mod(a, b)` — the remainder of `a` divided by `b`, carrying
+            // the sign of the dividend. Recognised by NAME here; maps onto the EXISTING
+            // `ExprAst::Bin(ArithOp::Mod, …)` node — the same one the `latex "…"`
+            // frontend already reaches for `a \bmod b`. Exactly two arguments.
+            if name == "mod" {
+                if args.len() != 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let a = expand_rec(&args[0], context, depth, state, d)?;
+                let b = expand_rec(&args[1], context, depth, state, d)?;
+                return Ok(ExprAst::Bin(ArithOp::Mod, Box::new(a), Box::new(b)));
+            }
             // NUM-6c built-in: `to_scientific(x [, figures])` — the scientific-notation
             // rendering. Recognised by NAME here, before the user-formula lookup, on the
             // same comma-list application grammar. `figures` is OPTIONAL: `to_scientific(x)`
@@ -4179,6 +4214,109 @@ mod tests {
         assert!(
             message.contains("DimensionMismatch"),
             "expected a DimensionMismatch, got {message}"
+        );
+    }
+
+    // ---- FL-9: floor/mod on the plain-arithmetic surface ----
+
+    #[test]
+    fn floor_builtin_computes_the_greatest_integer_at_most_x() {
+        let src = r#"
+            formulabook place_value {
+                formula tens(n) = floor(n / 10)
+                    source "positional notation" trust consensus
+            }
+            observe n(47)
+            ? tens(n)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("tens").expect("applied floor");
+        assert_eq!(d.value, 4.0, "floor(47 / 10) = 4");
+    }
+
+    #[test]
+    fn mod_builtin_computes_the_remainder_carrying_the_dividends_sign() {
+        let src = r#"
+            formulabook place_value {
+                formula ones(n) = mod(n, 10)
+                    source "positional notation" trust consensus
+            }
+            observe n(47)
+            ? ones(n)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("ones").expect("applied mod");
+        assert_eq!(d.value, 7.0, "47 mod 10 = 7");
+    }
+
+    #[test]
+    fn floor_and_mod_compose_to_recover_the_original_number() {
+        // The DECOMPOSE direction place-value.adj's own header names as a
+        // follow-up: tens*10 + ones must round-trip the original value.
+        let src = r#"
+            formulabook place_value {
+                formula tens(n) = floor(n / 10)
+                    source "positional notation" trust consensus
+                formula ones(n) = mod(n, 10)
+                    source "positional notation" trust consensus
+                formula recomposed(n) = tens(n) * 10 + ones(n)
+                    source "positional notation" trust consensus
+            }
+            observe n(83)
+            ? recomposed(n)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered
+            .kb
+            .derived_for("recomposed")
+            .expect("applied composed floor/mod");
+        assert_eq!(d.value, 83.0, "floor(83/10)*10 + 83 mod 10 = 83");
+    }
+
+    #[test]
+    fn floor_wrong_arity_is_a_clean_error() {
+        // The arity check runs at EXPANSION time (when the formula is actually
+        // applied), not declaration time, matching every other built-in — so
+        // the query is what triggers it, same as `arity_mismatch_in_
+        // application_is_a_clean_error` for a user formula.
+        let src = r#"
+            formulabook bad {
+                formula broken(a, b) = floor(a, b)
+                    source "x" trust consensus
+            }
+            observe a(1)
+            observe b(2)
+            ? broken(a, b)
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::FormulaArity {
+                    ref formula, expected: 1, got: 2
+                })) if formula == "floor"
+            ),
+            "floor takes exactly one argument"
+        );
+    }
+
+    #[test]
+    fn mod_wrong_arity_is_a_clean_error() {
+        let src = r#"
+            formulabook bad {
+                formula broken(a) = mod(a)
+                    source "x" trust consensus
+            }
+            observe a(1)
+            ? broken(a)
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::FormulaArity {
+                    ref formula, expected: 2, got: 1
+                })) if formula == "mod"
+            ),
+            "mod takes exactly two arguments"
         );
     }
 
@@ -7768,6 +7906,8 @@ rule { head: r(a) when: x(t) }";
     fn every_reserved_name_is_really_dispatched_by_the_runtime() {
         // Applications that are well-formed for each built-in's own signature.
         let applications = [
+            ("floor", "floor(a)"),
+            ("mod", "mod(a, 3)"),
             ("round_sig", "round_sig(a, 2)"),
             ("round_to", "round_to(a, 2)"),
             // The currency code is a bare identifier read verbatim, and the ADJ

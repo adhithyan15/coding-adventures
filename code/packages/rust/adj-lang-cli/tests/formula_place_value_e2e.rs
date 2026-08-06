@@ -1,8 +1,10 @@
 //! End-to-end test for `mathematics/place-value.adj` — CCSS-M 1.NBT.B.2
-//! (a two-digit number is composed of tens and ones), driven through the
-//! built CLI binary against the SHIPPED stdlib. Composes `arithmetic.adj`'s
-//! `product`/`sum` (a cross-directory import, like `cockcroft_gault.adj` and
-//! `mathematics/number-sequence.adj`/`cardinality.adj`).
+//! (a two-digit number is composed of, and decomposes into, tens and ones),
+//! driven through the built CLI binary against the SHIPPED stdlib. COMPOSE
+//! composes `arithmetic.adj`'s `product`/`sum` (a cross-directory import,
+//! like `cockcroft_gault.adj` and `mathematics/number-sequence.adj`/
+//! `cardinality.adj`); DECOMPOSE uses ADJ-FORMULA-LIBRARIES FL-9's
+//! `floor`/`mod` built-ins.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -102,5 +104,113 @@ fn zero_ones_is_a_clean_multiple_of_ten() {
     assert!(
         s.contains("\"name\":\"tens_and_ones_to_number\"") && s.contains("\"value\":30"),
         "tens_and_ones_to_number(3, 0) = 30: {s}"
+    );
+}
+
+#[test]
+fn tens_digit_decomposes_via_floor() {
+    let dir = scratch("decompose_tens");
+    place_at(&dir, "arithmetic/arithmetic.adj", "arithmetic/arithmetic.adj");
+    place_at(
+        &dir,
+        "mathematics/place-value.adj",
+        "mathematics/place-value.adj",
+    );
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"mathematics/place-value.adj\"\n\
+         observe n(47)\n\
+         ? tens_digit(n)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    assert!(
+        s.contains("\"name\":\"tens_digit\"") && s.contains("\"value\":4"),
+        "tens_digit(47) = 4: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"consensus\"")
+            && s.contains("mathsisfun.com/definitions/positional-notation.html"),
+        "carries the positional-notation citation: {s}"
+    );
+}
+
+#[test]
+fn ones_digit_decomposes_via_mod() {
+    let dir = scratch("decompose_ones");
+    place_at(&dir, "arithmetic/arithmetic.adj", "arithmetic/arithmetic.adj");
+    place_at(
+        &dir,
+        "mathematics/place-value.adj",
+        "mathematics/place-value.adj",
+    );
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"mathematics/place-value.adj\"\n\
+         observe n(47)\n\
+         ? ones_digit(n)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(
+        s.contains("\"name\":\"ones_digit\"") && s.contains("\"value\":7"),
+        "ones_digit(47) = 7: {s}"
+    );
+}
+
+#[test]
+fn decompose_and_compose_round_trip() {
+    // Decomposing 83 (tens_digit/ones_digit) and independently recomposing
+    // the digits it should yield (tens_and_ones_to_number(8, 3)) both land on
+    // 83 — the algebraic-inverse relationship the library's own header
+    // documents. Two top-level queries rather than nesting one application
+    // inside another's query arguments: `? f(g(x))` parses its argument list
+    // as logic TERMS (for relational recall queries), not the compute-`expr`
+    // grammar a formula BODY uses, so cross-formula composition happens
+    // inside a formula body (as `tens_and_ones_to_number` itself already
+    // demonstrates via `product`/`sum`), not at the top-level query site.
+    let dir = scratch("round_trip");
+    place_at(&dir, "arithmetic/arithmetic.adj", "arithmetic/arithmetic.adj");
+    place_at(
+        &dir,
+        "mathematics/place-value.adj",
+        "mathematics/place-value.adj",
+    );
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"mathematics/place-value.adj\"\n\
+         observe n(83)\n\
+         ? tens_digit(n)\n\
+         ? ones_digit(n)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    assert!(
+        s.contains("\"name\":\"ones_digit\"") && s.contains("\"value\":3"),
+        "ones_digit(83) = 3 (the second query wins the shared per-name derived slot): {s}"
+    );
+
+    // Independently: composing the digits 83 decomposes into recovers 83.
+    std::fs::write(
+        dir.join("recompose.adj"),
+        "import \"mathematics/place-value.adj\"\n\
+         observe tens(8)\n\
+         observe ones(3)\n\
+         ? tens_and_ones_to_number(tens, ones)\n",
+    )
+    .unwrap();
+    let (ok2, s2) = run(&dir.join("recompose.adj"));
+    assert!(ok2, "CLI exited non-zero: {s2}");
+    assert!(
+        s2.contains("\"name\":\"tens_and_ones_to_number\"") && s2.contains("\"value\":83"),
+        "tens_and_ones_to_number(8, 3) = 83, recovering the original n: {s2}"
     );
 }
