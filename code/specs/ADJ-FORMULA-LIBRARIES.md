@@ -243,6 +243,39 @@ to `fully_verified` is ordinary Wave 1 migration work, unblocked but not done by
 
 ---
 
+## 3C. FL-9 — `floor(x)`/`mod(a, b)` on the plain-arithmetic surface
+
+**Status: shipped.** Base-ten place value's DECOMPOSE direction (a two-digit number → its tens
+and ones digits, CCSS 1.NBT.B.2's other half — the COMPOSE direction shipped in
+`mathematics/place-value.adj`) needs integer floor and modulo: `tens(n) = floor(n / 10)`,
+`ones(n) = mod(n, 10)`. Both already exist engine-side — `ExprAst::Floor` and
+`ArithOp::Mod`/`ComputeOp::Mod` are used today by the `latex "…"` frontend (`\lfloor x\rfloor`,
+`a \bmod b`) — but neither was reachable from the **plain** (non-LaTeX) arithmetic surface a
+`formula` body normally uses, so a stdlib formula could not express "how many tens" without
+dropping into LaTeX for one sub-expression.
+
+**The fix, additive, no grammar change:** `floor`/`mod` join `RUNTIME_BUILTIN_FORMULAS`
+(`code/packages/rust/adj-lang/src/lower.rs`) — the same recognized-by-name built-in mechanism
+`round_to`/`round_sig`/`to_scientific`/`to_percent`/`to_currency` already use. The plain grammar's
+`factor` production already includes `apply` (an ordinary `name(args, …)` call), so no
+`.grammar`/`.tokens` edit or parser regen is needed — `expand_rec` recognizes the name **before**
+consulting the user-formula map and maps it directly onto the existing node:
+
+```adj
+formula tens(n) = floor(n / 10)
+formula ones(n) = mod(n, 10)
+```
+
+`floor(x)` takes exactly one argument and lowers to `ExprAst::Floor`; `mod(a, b)` takes exactly
+two and lowers to `ExprAst::Bin(ArithOp::Mod, a, b)` — both pre-existing nodes, so no new
+`ExprAst`/`ComputeOp` variant, no new exhaustive-match site, and no change to `plan_expr`'s JSON
+export or the CAS-provenance replay surface. `RUNTIME_BUILTIN_FORMULAS`'s existing reserved-name
+collision check (`LowerError::ReservedFormulaName`) covers `floor`/`mod` automatically, since it
+already consults this same list — a `formulabook` declaring its own `floor`/`mod` formula is
+rejected the same way declaring its own `round_to` already is.
+
+---
+
 ## 4. The curriculum — kindergarten → medical school (a DAG of libraries)
 
 Each library = **grounded dictionary terms** (provenanced where the term itself is a claim) +

@@ -17,9 +17,9 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": 9999,
+  "active_pr": 10001,
   "last_manifest_check": {
-    "objectives": 66,
+    "objectives": 67,
     "coverage_roots": 6,
     "valid": true,
     "checked_at": "2026-08-06"
@@ -73,20 +73,29 @@
     {
       "id": "wave2-elementary-place-value",
       "title": "Elementary math: base-ten place value and word-problem schemas",
-      "status": "in_progress",
+      "status": "done",
       "depends_on": [],
-      "branch": "feat/adj-wave2-place-value",
+      "branch": null,
       "pr_number": 9999,
       "notes": "Next Wave 2 K-8 gap per ADJ-STDLIB-COVERAGE.md 5.1's elementary row: 'base-ten procedures, word-problem schemas' are named Major Gaps with nothing shipped yet (unlike fractions/decimals/percent, which arithmetic/ already covers: fraction.adj, percent.adj, average.adj). Shipped mathematics/place-value.adj: tens_and_ones_to_number(tens, ones) = sum(product(tens, 10), ones), composing arithmetic.adj (CCSS 1.NBT.B.2), cited to mathsisfun.com's positional-notation definition (trust consensus), WebFetch-verified live before writing. Scoped as COMPOSE-direction only (digits -> number); DECOMPOSE (number -> digits) needs floor/modulo division, not reachable from the plain-arithmetic surface grammar today (only `latex \"...\"` reaches ComputeOp::Floor/Mod) - see the new wave2-place-value-decompose item this discovered. Added manifest objective adj.math.k2.place_value and a dedicated e2e test (formula_place_value_e2e.rs, 2 tests, both executed against the real CLI)."
     },
     {
       "id": "wave2-place-value-decompose",
       "title": "Wire floor/mod into the plain-arithmetic surface grammar to unblock place-value decomposition",
+      "status": "in_progress",
+      "depends_on": [],
+      "branch": "feat/adj-wave2-floor-mod",
+      "pr_number": 10001,
+      "notes": "Confirmed the hypothesis: floor/mod needed NO grammar change, just two new recognized-by-name built-ins in lower.rs's expand_rec (RUNTIME_BUILTIN_FORMULAS), mapping directly onto the pre-existing ExprAst::Floor/ExprAst::Bin(ArithOp::Mod,..) nodes -- zero new exhaustive-match sites, much smaller than FL-8. Spec'd in ADJ-FORMULA-LIBRARIES.md 3C (FL-9). Extended mathematics/place-value.adj with tens_digit(n)=floor(n/10) and ones_digit(n)=mod(n,10), verified as algebraic inverses of the existing tens_and_ones_to_number (round-trip e2e test). No new manifest objective needed (same adj.math.k2.place_value objective/library file). Full test coverage (adj-lang unit/e2e including arity-error and reserved-name anti-drift tests, adj-lang-cli e2e), clippy clean. adj-lang bumped 0.72.0->0.73.0; adj-lang-cli NOT bumped (test-only addition, matching this repo's convention of only bumping on actual source changes)."
+    },
+    {
+      "id": "wave3-cas-wiring",
+      "title": "CAS-wiring rung (ADJ-FORMULA-LIBRARIES 3A): embed symbolic-vm as a Backend in adj-lang",
       "status": "pending",
-      "depends_on": ["wave2-elementary-place-value"],
+      "depends_on": ["wave2-place-value-decompose"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered while shipping place-value.adj (COMPOSE direction: tens+ones -> number, via product/sum). DECOMPOSE (a two-digit number -> its tens/ones digits, the other half of CCSS 1.NBT.B.2) needs floor(n/10) and n mod 10, but ExprAst::Floor/ComputeOp::Mod are currently only reachable from the `latex \"...\"` frontend (e.g. `latex \"\\lfloor x \\rfloor\"`), not the plain arithmetic surface grammar's `factor` production. This is a small, well-scoped language rung (much smaller than FL-8): either add `floor(x)`/`mod(a, b)` as recognized built-in Apply names in the plain grammar (mirroring how round_to/round_sig/to_scientific are already recognized-by-name built-ins per ADJ-NUMERIC-SUBSTRATE 4.1, not a grammar change) or extend factor's surface directly. Research the exact mechanism (check lower.rs's expand_rec built-in-name dispatch, the same site round_to/to_percent/to_currency use) before implementing, same rigor as FL-8. Unblocks place-value decomposition and any other elementary-math content needing integer division/remainder (e.g. 'how many groups of 10' word problems)."
+      "notes": "Next per policy.selection_rule's Wave 0 -> 2 -> CAS-wiring -> 3 -> 4 order, once the smaller Wave-2 elementary-math gaps (measurement, data displays, word-problem schemas per ADJ-STDLIB-COVERAGE.md 5.1/5.2) are judged sufficiently covered or explicitly deprioritized. THIS IS A MUCH BIGGER UNDERTAKING than FL-8/FL-9: wiring an entire existing symbolic-math engine (symbolic-ir + symbolic-vm + the cas-* crate suite - cas-solve, cas-simplify, cas-algebraic, cas-factor, etc.) into adj-lang as a new `symbolic`/CAS surface construct, unlocking algebra (solve for a variable, simplify) as an ordinary importable stdlib capability with the same provenance contract as formulas. Per ADJ-FORMULA-LIBRARIES.md 3A this is 'wiring an existing, tested engine to the language, not writing a CAS' but still a substantial language-surface design (new grammar construct, new AST, a Backend trait impl, provenance envelope for symbolic identities). Given the size and the number of open design questions (what does a `symbolic` block's syntax look like, how does a solved-for-x result flow into a formula/query, how is a symbolic identity's own citation represented), this likely warrants a dedicated design/scoping session -- and given how much autonomous work has already landed this session (9 merged PRs: 3 manifest backfills + FL-8 + FL-9 + K-2 content + place-value, both directions), this may be a good natural point to check in with the user before committing to a rung of this size, rather than diving straight in the way FL-8/FL-9 were small enough to just execute. Do not start implementation without either (a) a much deeper Explore/Plan-agent research pass producing a concrete design, reviewed the same way as everything else in this loop, or (b) explicit user confirmation that this is the right next slice."
     }
   ]
 }
