@@ -59,6 +59,8 @@ export {
   loadLanguageRegistry,
   loadCurriculumSpine,
   loadLanguageCurricula,
+  loadTrackChapters,
+  loadChapterPolicy,
   loadBookCorpus,
   loadLessons,
   loadScripts,

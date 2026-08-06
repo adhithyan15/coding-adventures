@@ -9,6 +9,7 @@ import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import type {
   BookChapter,
   BookCorpus,
+  ChapterPolicy,
   CurriculumSpine,
   Dataset,
   LanguageCurriculum,
@@ -16,6 +17,7 @@ import type {
   Script,
   ScriptData,
   Taxonomy,
+  TrackChapters,
 } from "./types.js";
 
 /** Default curriculum root: code/learning/human-languages, relative to this package. */
@@ -52,6 +54,36 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
     out.push(JSON.parse(readFileSync(path, "utf8")) as LanguageCurriculum);
   }
   return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/**
+ * Read each track's authored chapter capability ledger (HL05).
+ *
+ * Tracks without a `chapters.json` are skipped rather than defaulted. That is
+ * deliberate: an absent ledger means "not yet authored", which the gap report must
+ * be able to distinguish from "authored and empty". Inventing a placeholder here
+ * would erase exactly the debt the report exists to measure.
+ */
+export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters[] {
+  const out: TrackChapters[] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "chapters.json");
+    if (!existsSync(path)) continue;
+    out.push(JSON.parse(readFileSync(path, "utf8")) as TrackChapters);
+  }
+  return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/**
+ * Read the tunable chapter policy. Unlike the ledgers above, this file is required:
+ * a missing policy would silently disable the payoff and ramp rules, and a gate that
+ * quietly stops running is worse than one that fails loudly.
+ */
+export function loadChapterPolicy(root = defaultCurriculumRoot()): ChapterPolicy {
+  return JSON.parse(
+    readFileSync(join(root, "core", "chapter-policy.json"), "utf8"),
+  ) as ChapterPolicy;
 }
 
 /**

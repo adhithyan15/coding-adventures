@@ -118,13 +118,28 @@ the books currently lack.
 
 ### Licensing
 
-The books are published CC BY-SA 4.0. The licence and attribution stance for
-generated illustrations is a **project-owner decision, not a validator default**. The
-proposed default is to licence them CC BY-SA 4.0 alongside the book with full
-per-asset provenance recorded, following the precedent already set by `_fonts/OFL.txt`.
-Until that decision is recorded in `_assets/LICENSE.md`, CI must fail any Class C
-asset — an unlicensed image in a freely published book is a real problem, not a
-formality.
+**Decided by the project owner on 2026-08-06 and recorded in
+[`_assets/LICENSE.md`](../learning/human-languages/_assets/LICENSE.md).** The books stay
+**CC BY-SA 4.0** — no relicensing. Generated Class C illustrations are marked
+**`CC0-1.0` with `rightsAsserted: false`**, each with a provenance sidecar.
+
+The reasoning, in short: a Creative Commons licence grants copyright permissions, and
+purely AI-generated output likely lacks the human authorship copyright requires (US
+Copyright Office — *Zarya of the Dawn*, *Thaler v. Perlmutter*, and subsequent
+guidance). Stamping CC BY-SA on such an image asserts a right that may not exist, and
+its ShareAlike clause would bind readers to an obligation that may be unenforceable.
+CC0 is safe whichever way the law settles. Jurisdictions differ — UK CDPA s9(3) grants
+50 years for computer-generated works — which is why per-asset provenance matters more
+than a single global claim. This is a recorded project decision, not legal advice.
+
+Two operational constraints ride along with the decision: prompts must avoid living
+artists, brands, and recognizable characters; and each generator's output terms must be
+checked per asset, against the terms in force on the generation date.
+
+CI still gates on the record, not on the outcome of the decision: every Class C asset
+must carry a provenance sidecar with all required fields and a recorded licence, and
+its `sha256` must match the committed file. An asset missing either fails the build —
+an unlicensed image in a freely published book is a real problem, not a formality.
 
 ## Class D — the design system
 
