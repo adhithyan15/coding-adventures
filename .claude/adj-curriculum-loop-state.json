@@ -17,40 +17,40 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": null,
+  "active_pr": 9990,
   "last_manifest_check": {
-    "objectives": 10,
+    "objectives": 24,
     "coverage_roots": 6,
     "valid": true,
-    "checked_at": "2026-08-04"
+    "checked_at": "2026-08-06"
   },
   "items": [
     {
       "id": "wave0-backfill-physics",
-      "title": "Manifest objectives for the 11 physics formula libraries",
-      "status": "in_progress",
+      "title": "Manifest objectives for the 13 physics formula libraries",
+      "status": "done",
       "depends_on": [],
-      "branch": "feat/adj-curriculum-k12-to-medical",
-      "pr_number": null,
-      "notes": "Content-only: add band/domain/competency/prerequisites manifest entries for the already-shipped, already-tested physics/*.adj libraries (density, electric-charge, electricity, energy-work, frequency-period, gravitation, hookes-law, kinematics, mechanics-laws, momentum, power, pressure, wave-speed). No new .adj content."
+      "branch": null,
+      "pr_number": 9918,
+      "notes": "Landed together with wave0-backfill-mathematics in the same PR. State file was not updated after merge (loop was idle/unresumed); reconciled 2026-08-06."
     },
     {
       "id": "wave0-backfill-mathematics",
       "title": "Manifest objective for mathematics/geometry-formulas.adj",
-      "status": "pending",
+      "status": "done",
       "depends_on": [],
       "branch": null,
-      "pr_number": null,
-      "notes": "Single-file domain, cheap batch."
+      "pr_number": 9918,
+      "notes": "Confirmed via manifest.json: adj.math.geometry.basic_shapes objective present, libraries=[mathematics/geometry-formulas.adj]. Landed in PR #9918 alongside the physics backfill."
     },
     {
       "id": "wave0-backfill-reference",
-      "title": "Manifest objectives for the ~35 reference unit-conversion libraries",
-      "status": "pending",
+      "title": "Manifest objectives for the 39 reference unit-conversion libraries",
+      "status": "in_progress",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Large but mechanical/uniform. Likely split across 2-3 PRs by unit family."
+      "branch": "feat/adj-wave0-backfill-reference-1",
+      "pr_number": 9990,
+      "notes": "39 .adj/.query.adj pairs under code/specs/data/adj-formula-stdlib/reference/, all `table` constructs (not `formula`), zero manifest objectives currently. Splitting into ~3 PRs by unit family. PR #9990 (opened 2026-08-06, auto-merge enabled) covers 13: length/area/mass (CCSS math) + mass-density/linear-mass-density/acceleration/density-of-heat/dynamic-viscosity/energy/force/heat-flux-density/kinematic-viscosity/moment-of-force (NGSS science). Remaining 26 (7 electrical: capacitance/charge/conductance/current/inductance/potential/resistance; 4 radiological: absorbed-dose/dose-equivalent/exposure/radioactivity; 15 misc: illuminance/luminance/magnetic-flux/magnetic-flux-density/power/pressure/si-prefixes/specific-energy/specific-heat-capacity/speed/temperature-interval/thermal-conductivity/time/volume/wave-number) queued for follow-up PRs once #9990 merges (maximum_active_prs: 1)."
     },
     {
       "id": "wave2-k2-math-cardinality-comparison",
