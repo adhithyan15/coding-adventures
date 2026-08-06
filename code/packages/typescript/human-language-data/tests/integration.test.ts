@@ -37,6 +37,37 @@ describe("real curriculum", () => {
     }));
   });
 
+  // HL-C10: the spine reaches above A1.
+  //
+  // This is not bookkeeping. Schema v2 REQUIRES a canonical `spine_node`, and until this
+  // tranche existed every node was an A1 social function — greeting, taking leave,
+  // counting to five — with nothing covering verbs or tense. A lesson teaching the present
+  // tense had no node it could legally declare, so the entire Easy-to-Advanced grammar arc
+  // was unauthorable in v2 for all 22 tracks. These five nodes are what unblock it.
+  it("carries an A2 tranche, and every track declares where it stands on it", () => {
+    const a2 = spine.nodes.filter((node) => node.stage === "A2");
+    expect(a2.map((node) => node.id).sort()).toEqual([
+      "SPINE-NEGATE-AND-ASK",
+      "SPINE-SAY-WHAT-I-DO",
+      "SPINE-SAY-WHAT-I-WANT",
+      "SPINE-TALK-ABOUT-FUTURE",
+      "SPINE-TALK-ABOUT-PAST",
+    ]);
+
+    // Every track answers for every A2 node. An unrealized node is declared as such and
+    // must name the concepts it is omitting — "we have not built this yet" is a recorded
+    // position, never an absent key, so the debt is countable rather than invisible.
+    for (const curriculum of curricula) {
+      for (const node of a2) {
+        const entry = curriculum.spine[node.id];
+        expect(entry, `${curriculum.language} omits ${node.id}`).toBeDefined();
+        if (entry!.segments.length === 0) {
+          expect([...entry!.omits].sort()).toEqual([...node.concepts].sort());
+        }
+      }
+    }
+  });
+
   it("loads one prerequisite-safe realization map for every language", () => {
     expect(curricula.map((curriculum) => curriculum.language).sort())
       .toEqual(registry.languages.map((language) => language.id).sort());

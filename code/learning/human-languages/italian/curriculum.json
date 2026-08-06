@@ -391,6 +391,43 @@
         "NUMBER-ONE-TO-FIVE"
       ],
       "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
     }
   },
   "extensions": [

@@ -15,14 +15,28 @@
       "core": false,
       "notes": "bonjour / Guten Tag / buongiorno / bom dia. Distinct from GREETING-MORNING and from the noun TIME-DAY."
     },
-    "GREETING-MORNING": { "family": "GREETING", "gloss": "good morning", "core": false },
-    "GREETING-AFTERNOON": { "family": "GREETING", "gloss": "good afternoon", "core": false },
-    "GREETING-EVENING": { "family": "GREETING", "gloss": "good evening (said on meeting)", "core": false },
+    "GREETING-MORNING": {
+      "family": "GREETING",
+      "gloss": "good morning",
+      "core": false
+    },
+    "GREETING-AFTERNOON": {
+      "family": "GREETING",
+      "gloss": "good afternoon",
+      "core": false
+    },
+    "GREETING-EVENING": {
+      "family": "GREETING",
+      "gloss": "good evening (said on meeting)",
+      "core": false
+    },
     "GREETING-GOODNIGHT": {
       "family": "GREETING",
       "gloss": "good night (said on parting / before sleep)",
       "core": false,
-      "retires": ["GREETING-NIGHT"],
+      "retires": [
+        "GREETING-NIGHT"
+      ],
       "notes": "Parting greeting, distinct from the meeting greeting GREETING-EVENING. Retires Spanish/Italian's older GREETING-NIGHT tag; where a track's 'noches/notte' word doubles as the evening noun, the noun is TIME-NIGHT."
     },
     "GREETING-FORMAL": {
@@ -45,7 +59,9 @@
       "family": "GREETING",
       "gloss": "goodbye / parting word",
       "core": true,
-      "retires": ["GREETING-GOODBYE"],
+      "retires": [
+        "GREETING-GOODBYE"
+      ],
       "notes": "Unifies the parting word across tracks (valē, āshi, alvidā, येतो/येते). The plain goodbye (adiós, au revoir, auf Wiedersehen); the time-specific 'see you …' partings are FAREWELL-LATER/TOMORROW/SOON."
     },
     "FAREWELL-LATER": {
@@ -72,19 +88,24 @@
       "core": false,
       "notes": "The informal parting distinct from the neutral FAREWELL: German tschüss, French salut/tchao, Italian ciao, Portuguese tchau."
     },
-
     "COURTESY-THANKS": {
       "family": "COURTESY",
       "gloss": "thank you (neutral / default register)",
       "core": true,
-      "retires": ["THANKS", "GRATITUDE-THANKS", "THANKS-FORMAL"],
+      "retires": [
+        "THANKS",
+        "GRATITUDE-THANKS",
+        "THANKS-FORMAL"
+      ],
       "notes": "The default 'thank you'. Where a track teaches a second, more colloquial word (often Perso-Arabic), that one is COURTESY-THANKS-CASUAL."
     },
     "COURTESY-THANKS-CASUAL": {
       "family": "COURTESY",
       "gloss": "thanks (casual / colloquial register)",
       "core": false,
-      "retires": ["THANKS-CASUAL"],
+      "retires": [
+        "THANKS-CASUAL"
+      ],
       "notes": "e.g. Hindi shukriyā, Punjabi shukrīā — the everyday, often Perso-Arabic-derived alternative to the Sanskritic COURTESY-THANKS."
     },
     "COURTESY-PLEASE": {
@@ -99,107 +120,270 @@
       "core": false,
       "notes": "Apology/attention formula: Spanish lo siento (regret) vs. perdón (fault/attention), German Entschuldigung vs. es tut mir leid, Arabic āsif, Hindi māf kījiye. Many languages split this into two words — one for regret/sympathy, one for fault/forgiveness or getting someone's attention — track both where a language has the split."
     },
-
     "RESPONSE-YES": {
       "family": "RESPONSE",
       "gloss": "yes",
       "core": true,
       "notes": "Tracks that teach yes and no in a single lesson use RESPONSE-YESNO until that lesson is split during the parity pass."
     },
-    "RESPONSE-NO": { "family": "RESPONSE", "gloss": "no", "core": true },
+    "RESPONSE-NO": {
+      "family": "RESPONSE",
+      "gloss": "no",
+      "core": true
+    },
     "RESPONSE-YESNO": {
       "family": "RESPONSE",
       "gloss": "yes / no (taught together in one lesson)",
       "core": false,
-      "retires": ["FUNCTION-YESNO"],
+      "retires": [
+        "FUNCTION-YESNO"
+      ],
       "notes": "A single lesson realizing both yes and no (ita/nōn, hāṇ/nahīṇ, hyã/nā, ām/na). Split into RESPONSE-YES + RESPONSE-NO when the track reaches parity."
     },
     "RESPONSE-OKAY": {
       "family": "RESPONSE",
       "gloss": "okay / alright",
       "core": false,
-      "retires": ["OKAY", "FUNCTION-OKAY"]
+      "retires": [
+        "OKAY",
+        "FUNCTION-OKAY"
+      ]
     },
-
-    "QUESTION-WHAT": { "family": "QUESTION", "gloss": "what", "core": true, "retires": ["WHAT"] },
-    "QUESTION-HOW": { "family": "QUESTION", "gloss": "how", "core": false, "retires": ["HOW"] },
-    "QUESTION-WHERE": { "family": "QUESTION", "gloss": "where", "core": false, "retires": ["WHERE"] },
-
+    "QUESTION-WHAT": {
+      "family": "QUESTION",
+      "gloss": "what",
+      "core": true,
+      "retires": [
+        "WHAT"
+      ]
+    },
+    "QUESTION-HOW": {
+      "family": "QUESTION",
+      "gloss": "how",
+      "core": false,
+      "retires": [
+        "HOW"
+      ]
+    },
+    "QUESTION-WHERE": {
+      "family": "QUESTION",
+      "gloss": "where",
+      "core": false,
+      "retires": [
+        "WHERE"
+      ]
+    },
     "INTRO-MY-NAME-IS": {
       "family": "INTRO",
       "gloss": "\"my name is …\"",
       "core": true,
-      "retires": ["MY-NAME-IS"]
+      "retires": [
+        "MY-NAME-IS"
+      ]
     },
     "INTRO-WHATS-YOUR-NAME": {
       "family": "INTRO",
       "gloss": "\"what's your name?\"",
       "core": true,
-      "retires": ["WHATS-YOUR-NAME"]
+      "retires": [
+        "WHATS-YOUR-NAME"
+      ]
     },
     "INTRO-NICE-TO-MEET-YOU": {
       "family": "INTRO",
       "gloss": "pleased to meet you",
       "core": true,
-      "retires": ["PLEASED-TO-MEET"],
+      "retires": [
+        "PLEASED-TO-MEET"
+      ],
       "notes": "Some tracks realize this with a bare 'joy/happiness' noun (khushī, magizhchi, santōṣa); that word is the realization."
     },
-
-    "PRONOUN-I": { "family": "PRONOUN", "gloss": "I (first-person subject)", "core": false },
-    "PRONOUN-ME": { "family": "PRONOUN", "gloss": "me / myself (object / reflexive)", "core": false },
+    "PRONOUN-I": {
+      "family": "PRONOUN",
+      "gloss": "I (first-person subject)",
+      "core": false
+    },
+    "PRONOUN-ME": {
+      "family": "PRONOUN",
+      "gloss": "me / myself (object / reflexive)",
+      "core": false
+    },
     "PRONOUN-YOU": {
       "family": "PRONOUN",
       "gloss": "you (with informal / formal forms)",
       "core": true
     },
-    "PRONOUN-MY": { "family": "PRONOUN", "gloss": "my (first-person possessive)", "core": false, "retires": ["MY"] },
-
-    "TIME-DAY": { "family": "TIME", "gloss": "day (noun)", "core": false, "retires": ["DIA", "JOUR", "TAG", "DAY"] },
-    "TIME-NIGHT": { "family": "TIME", "gloss": "night (noun)", "core": false, "retires": ["NOCHE", "NUIT", "NACHT"] },
-    "TIME-MORNING": { "family": "TIME", "gloss": "morning (noun)", "core": false, "retires": ["MORGEN"] },
-    "TIME-AFTERNOON": { "family": "TIME", "gloss": "afternoon (noun)", "core": false, "retires": ["TARDE"] },
-    "TIME-EVENING": { "family": "TIME", "gloss": "evening (noun)", "core": false, "retires": ["ABEND", "SOIR"] },
-
+    "PRONOUN-MY": {
+      "family": "PRONOUN",
+      "gloss": "my (first-person possessive)",
+      "core": false,
+      "retires": [
+        "MY"
+      ]
+    },
+    "TIME-DAY": {
+      "family": "TIME",
+      "gloss": "day (noun)",
+      "core": false,
+      "retires": [
+        "DIA",
+        "JOUR",
+        "TAG",
+        "DAY"
+      ]
+    },
+    "TIME-NIGHT": {
+      "family": "TIME",
+      "gloss": "night (noun)",
+      "core": false,
+      "retires": [
+        "NOCHE",
+        "NUIT",
+        "NACHT"
+      ]
+    },
+    "TIME-MORNING": {
+      "family": "TIME",
+      "gloss": "morning (noun)",
+      "core": false,
+      "retires": [
+        "MORGEN"
+      ]
+    },
+    "TIME-AFTERNOON": {
+      "family": "TIME",
+      "gloss": "afternoon (noun)",
+      "core": false,
+      "retires": [
+        "TARDE"
+      ]
+    },
+    "TIME-EVENING": {
+      "family": "TIME",
+      "gloss": "evening (noun)",
+      "core": false,
+      "retires": [
+        "ABEND",
+        "SOIR"
+      ]
+    },
     "NUMBER-ONE-TO-FIVE": {
       "family": "NUMBER",
       "gloss": "the cardinal numbers one through five",
       "core": false,
       "notes": "A shared retrieval ability whose language-specific realizations may add script, sound-change, agreement, classifier, or etymology extensions."
     },
-
-    "WORD-GOOD": { "family": "WORD", "gloss": "good (adjective)", "core": false, "retires": ["BON", "GOOD", "GUT"] },
-    "WORD-WELL": { "family": "WORD", "gloss": "well / fine (adverb)", "core": false, "retires": ["BIEN"] },
-    "WORD-NAME": { "family": "WORD", "gloss": "name (noun)", "core": false, "retires": ["NAME"] },
-    "WORD-IS": { "family": "WORD", "gloss": "is (copula, third person)", "core": false, "retires": ["IS"] },
-
+    "WORD-GOOD": {
+      "family": "WORD",
+      "gloss": "good (adjective)",
+      "core": false,
+      "retires": [
+        "BON",
+        "GOOD",
+        "GUT"
+      ]
+    },
+    "WORD-WELL": {
+      "family": "WORD",
+      "gloss": "well / fine (adverb)",
+      "core": false,
+      "retires": [
+        "BIEN"
+      ]
+    },
+    "WORD-NAME": {
+      "family": "WORD",
+      "gloss": "name (noun)",
+      "core": false,
+      "retires": [
+        "NAME"
+      ]
+    },
+    "WORD-IS": {
+      "family": "WORD",
+      "gloss": "is (copula, third person)",
+      "core": false,
+      "retires": [
+        "IS"
+      ]
+    },
     "GRAMMAR-THE": {
       "family": "GRAMMAR",
       "gloss": "the (definite article / gender marker)",
       "core": false,
-      "retires": ["ARTICLES-EL-LA", "ARTICLES-LE-LA", "ARTICLES-DER-DIE-DAS", "ARTICLE-GENDER", "ARTICLE"],
+      "retires": [
+        "ARTICLES-EL-LA",
+        "ARTICLES-LE-LA",
+        "ARTICLES-DER-DIE-DAS",
+        "ARTICLE-GENDER",
+        "ARTICLE"
+      ],
       "notes": "One join key for 'the'; the realization holds each language's specific forms (el/la, der/die/das, il/la/lo, o/a, al-)."
     },
-
     "COURTESY-YOUREWELCOME": {
       "family": "COURTESY",
       "gloss": "you're welcome (the standard reply to thanks)",
       "core": false,
-      "retires": ["YOURE-WELCOME", "WELCOME-REPLY"],
+      "retires": [
+        "YOURE-WELCOME",
+        "WELCOME-REPLY"
+      ],
       "notes": "The reply that closes a thanks exchange (de nada, prego, bitte, не за что). Distinct from GREETING-WELCOME (svāgatam), which welcomes an arrival."
     },
     "STATE-HOW-ARE-YOU": {
       "family": "STATE",
       "gloss": "how are you? (asking after someone's state)",
       "core": false,
-      "retires": ["HOW-ARE-YOU", "HOWAREYOU"],
+      "retires": [
+        "HOW-ARE-YOU",
+        "HOWAREYOU"
+      ],
       "notes": "The realization holds each language's phrasing and register split (¿cómo está usted? / ¿cómo estás?). Builds on QUESTION-HOW plus the state verb."
     },
     "WORD-SOSO": {
       "family": "WORD",
       "gloss": "so-so / not bad (a middling answer to 'how are you?')",
       "core": false,
-      "retires": ["SO-SO", "SOSO"],
+      "retires": [
+        "SO-SO",
+        "SOSO"
+      ],
       "notes": "The neither-good-nor-bad reply (regular / más o menos, così così, comme ci comme ça)."
+    },
+    "VERB-INFINITIVE": {
+      "family": "VERB",
+      "gloss": "the dictionary form of a verb, and the stem inside it",
+      "core": true
+    },
+    "VERB-PRESENT-HABITUAL": {
+      "family": "VERB",
+      "gloss": "saying what someone does, in general",
+      "core": true
+    },
+    "VERB-NEGATE": {
+      "family": "VERB",
+      "gloss": "saying that something is not so",
+      "core": true
+    },
+    "QUESTION-POLAR": {
+      "family": "QUESTION",
+      "gloss": "a question answerable yes or no",
+      "core": true
+    },
+    "VERB-PAST": {
+      "family": "VERB",
+      "gloss": "saying what happened before now",
+      "core": true
+    },
+    "VERB-FUTURE": {
+      "family": "VERB",
+      "gloss": "saying what will happen, or what one intends",
+      "core": true
+    },
+    "VERB-WANT": {
+      "family": "VERB",
+      "gloss": "saying what one wants or needs",
+      "core": true
     }
   },
   "namespaced": {
