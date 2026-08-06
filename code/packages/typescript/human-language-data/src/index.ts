@@ -65,6 +65,8 @@ export {
   loadChapterPolicy,
   loadBookCorpus,
   loadLessons,
+  loadModalityManifest,
+  modalityManifestById,
   loadScripts,
   loadEverything,
 } from "./loader.js";
@@ -96,6 +98,20 @@ export {
   type ModalitySummary,
 } from "./modality.js";
 export {
+  MODALITY_MANIFEST_PATH,
+  MODALITY_MANIFEST_VERSION,
+  modalityCorpusHash,
+  buildModalityManifest,
+  serializeModalityManifest,
+  type ModalityManifest,
+  type ModalityManifestFeatures,
+  type ModalityManifestPolicy,
+  type ModalityManifestLesson,
+  type ModalityManifestChapter,
+  type ModalityManifestTrack,
+  type ModalityManifestSummary,
+} from "./modality-manifest.js";
+export {
   DURATION_THRESHOLD_SECONDS,
   estimateLessonDuration,
   buildCurriculumGapReport,
@@ -107,3 +123,4 @@ export {
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
+export { generatedModalityOutputs, runModalityManifest } from "./modality-cli.js";

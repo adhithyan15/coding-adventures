@@ -8,6 +8,8 @@
     "build": "tsc",
     "generate:books": "node dist/book-cli.js --write",
     "check:books": "node dist/book-cli.js --check",
+    "generate:modality": "node dist/modality-cli.js --write",
+    "check:modality": "node dist/modality-cli.js --check",
     "report": "node dist/report-cli.js",
     "validate": "vitest run tests/integration.test.ts",
     "test": "vitest run",
