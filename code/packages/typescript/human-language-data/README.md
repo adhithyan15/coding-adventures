@@ -98,7 +98,7 @@ import { summarizeModality, deriveLessonModality, loadEverything } from "@coding
 
 const { lessons } = loadEverything();
 const modality = summarizeModality(lessons);
-modality.drivablePercent;              // 63 — the share learnable by ear alone
+modality.drivablePercent;              // 65 — the share a hands-free view can deliver
 modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLesson: "…", … }
 deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
 ```
@@ -133,9 +133,45 @@ claiming otherwise would let a learner silently miss content. Raise it via
 lands.
 
 A **chapter's drivable prefix** is how many of its lessons, in authored `sequence`
-order, are `voice` before the first that is not — deliberately not "how many voice
-lessons does it contain", because chapters are prerequisite-ordered and a voice
+order, have a `voice` core before the first that does not — deliberately not "how many
+voice lessons does it contain", because chapters are prerequisite-ordered and a voice
 lesson sitting behind a sight one is not reachable in the car.
+
+#### One lesson, two modalities (HL-C41)
+
+The three rules above give a lesson one answer, which is right for the **book** — it
+prints every block and needs one honest sign at the chapter opening. It is wrong for a
+lesson that is voice throughout except for a short section teaching the hand to form a
+letter met earlier. Under one answer per lesson those two minutes cost all five.
+
+So modality is derived at two scales:
+
+| Field | Reads | Answers |
+|---|---|---|
+| `modality` | the whole lesson | what the **book** signs |
+| `coreModality` | the lesson minus its **detachable** blocks | what a hands-free view can deliver |
+
+```ts
+const entry = deriveLessonModality(lesson);
+entry.modality;         // "pen"   — the book prints a writing segment
+entry.coreModality;     // "voice" — a listener still gets the rest
+entry.writingSegments;  // ["Writing: మ — the tick on top"]
+entry.blocks[1];        // { type: "writing", modality: "pen", detachable: true, … }
+```
+
+A block type is **detachable** when nothing later in the lesson depends on it. Exactly
+one is today — `writing` (heading `## Writing: …`), which teaches the *hand*, as
+against `script`, which teaches the *eye* and is not detachable. Detachable means "a
+non-visual renderer may set this aside", never "optional content": **the book prints
+every block, in full.** A future dictation-friendly edition is a separate output view
+over the same source, and `coreModality` is the metadata it reads.
+
+`drivablePercent` and the drivable prefix are counted on the core; the
+`voice`/`sight`/`pen` counts still describe the book, and `coreVoice` is published
+beside them so the two reconcile. An authored `modality:` override caps the core, so
+the core is never stronger than the full modality. A lesson that is not `type: writing`
+may carry **one** writing segment; more is reported as
+`modality-writing-segment-not-separable`.
 
 An author may override with `modality:` in frontmatter; an override that
 *contradicts* the derivation additionally requires `modality_reason:`. Unexplained
@@ -146,7 +182,9 @@ gates**, per the HL-V01 precedent.
 Measured over all 1,096 lessons: 51 `pen`, 7 with `script` blocks, and among the
 remaining 1,038, 308 carry a Markdown table — the single largest obstacle to a
 hands-free course, and a far more tractable one than the script. **708 lessons
-(65%) are drivable exactly as authored.**
+(65%) are drivable exactly as authored.** No track has yet authored an interspersed
+writing segment, so every lesson's core equals its full modality and the two-scale
+derivation currently moves no number; the regression test pins that.
 
 ### The modality manifest — two editions from one source (HL-C44)
 
@@ -180,8 +218,8 @@ have them. Chapters add the drivable prefix and the ids in it; tracks and a corp
 Two design decisions are worth knowing before consuming it:
 
 - **`modality` is permanently the strongest channel the lesson needs anywhere.** It is
-  the conservative filter. HL-C41 is adding *block-level* modality — a lesson core that
-  is `voice` beside a short, separable, optional `pen` segment — and it lands as a new
+  the conservative filter. HL-C41 has now added *block-level* modality — a lesson core
+  that is `voice` beside a short, separable `pen` segment — and it landed as a new
   optional `coreModality` key beside `modality`, never as a change to it. A consumer
   reads `entry.coreModality ?? entry.modality` and is correct both before and after;
   one that never learns about the new key keeps producing a merely *pessimistic*

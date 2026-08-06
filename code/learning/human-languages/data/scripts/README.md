@@ -61,6 +61,26 @@ at a time on paper. `strokeOrder` is the common handwriting convention and is
 always flagged as such — freely-licensed authoritative stroke data does not exist
 for most of these scripts.
 
+## Handwriting: parts, not the grid
+
+The abugida files are large — Telugu, Kannada and Malayalam hold 455, 455 and 468
+syllables each — and it would be a category error to author handwriting for all of
+them. A syllable is not a shape the hand learns. It is an **assembly** of two shapes
+the hand already knows: a **base consonant** and a **vowel sign**. క is a shape; కి
+is క with the *i* sign on it.
+
+So handwriting data follows one rule:
+
+> Only **base consonants** and **vowel signs** are ever authored. A syllable's
+> figure is composed from its parts' figures, never authored separately.
+
+In a generated syllabary file the base consonants are the entries whose
+`components` list has a single line (`క  ka — base consonant (inherent "a")`); the
+vowel signs are the `marks`, where a file has them. Both inventories are small —
+about 36 consonants and a dozen signs per script — which is what makes authoring
+them by hand, from a cited source, tractable at all.
+
+
 ## `strokeOrder` lists PARTS. It must not imply pen lifts.
 
 **Read this before writing a `strokeOrder`.** It is the one place in this schema
@@ -114,6 +134,10 @@ Only **ம** currently has an authored ductus. The remaining prose stroke orders
 `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10,
 `urdu-nastaliq` 13) — are **unverified for pen lifts** and are tracked as
 `HL-C19` in the [backlog](../../BACKLOG.md).
+
+**Telugu, Kannada and Malayalam currently have zero authored letters** and
+therefore no `penLifts` anywhere. See [`BACKLOG.md`](../../BACKLOG.md) HL-C41 for
+the source-availability finding that keeps it that way.
 
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)
 

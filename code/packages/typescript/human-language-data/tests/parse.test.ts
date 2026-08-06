@@ -98,6 +98,21 @@ describe("parseLesson", () => {
     ]);
   });
 
+  it("recognizes a 'Writing:' heading as the detachable writing block", () => {
+    // `script` teaches the EYE to recognise a letter; `writing` teaches the HAND to
+    // form one. The two headings sit next to each other in an interspersed lesson,
+    // and only the second is one a hands-free renderer may set aside — so they must
+    // classify apart, not collapse into one type.
+    const parsed = parseBodyBlocks([
+      "## Script — the tick on top",
+      "Where to look.",
+      "",
+      "## Writing: మ — the letter you met on Monday",
+      "Take a pen.",
+    ].join("\n"));
+    expect(parsed.blocks.map((block) => block.type)).toEqual(["script", "writing"]);
+  });
+
   it("marks unregistered headings as unknown instead of discarding them", () => {
     expect(parseBodyBlocks("## A surprising section\nKeep me.").blocks).toEqual([
       { type: "unknown", title: "A surprising section", markdown: "Keep me." },

@@ -86,8 +86,11 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C32 | Complete in this PR | Diagnose and repair the Russian track, worst in the corpus on two independent measurements: 9% drivable with **zero** lessons reachable by ear in either chapter, and payoff representativeness of 0.20. | Russian measures 73% drivable (16 `voice`, 1 `sight`, 5 `pen`) with 15 lessons reachable in chapter-prefix order, and Chapter 2's payoff representativeness is 0.67 against the 0.5 floor. Zero new validation errors, zero duration violations. |
 | HL-C39 | Complete in this PR | Add Mandarin Chinese as the 21st track — a **scale test** for whether the curriculum model generalises beyond Indo-European and Dravidian. Chapter 1 only, authored deep rather than swept wide. | A complete, CI-green track: 7 schema-v2 Chapter 1 lessons, an 11-node `curriculum.json` ledger, an HL05 capability with a payoff assessing 10 of 11 chapter atoms, and a generated book chapter. Three findings reported rather than hidden: **(1)** the cousin web does **not** transfer — Chinese shares no ancestor with English, so character composition replaces etymology and is honestly a weaker hook, since it anchors to knowledge being acquired in the same breath rather than knowledge the reader already had; **(2)** HL00's word→letter script rule becomes word→character→component, three levels not two, and for Chinese the "letters in this word" and "the word, taken apart" sections collapse into one analysis; **(3)** tone needed a data-layer extension (`ScriptData.tones` and `ScriptData.toneSandhi`) because `Letter.tone` can label a glyph but cannot express an inventory or a rule that changes pitch across a *sequence*. Also added the `pronunciation` lesson type, because no earlier track ever needed a lesson about sound. |
 | HL-C40 | Complete in this PR | Add **Japanese** as a track, Chapter 1 only, as the corpus's hardest scale test: three writing systems at once, kanji with multiple readings, grammatical politeness, and no shared ancestry with English. | 21st registered track; 8 schema-v2 lessons; a ledger entry for all 11 spine nodes; `data/scripts/japanese.json` covering hiragana, katakana, and kanji in one inventory; `_fonts/NotoSansJP-Subset.ttf` with `subset-jp.sh`; generated Chapter 1 compiling under XeLaTeX with zero overfull boxes and zero missing glyphs. Findings recorded below. |
-| HL-C41 | Queued | Structure the `register` field, which Japanese has outgrown. Today it is an open string, adequate for a *tú*/*usted* word choice and inadequate for a system where politeness is verb morphology on every predicate and keigo swaps the verb outright (言う → おっしゃる / 申す). | `register` becomes a small record — speech level, addressee honorification, referent honorification — that the 20 existing tracks map onto losslessly and that Japanese Chapter 3's honorific prefix **お-** can express without a free-text convention. |
+| HL-C41 | Complete in this PR (modality half); Telugu half blocked | Derive modality per BLOCK as well as per lesson, so a voice lesson can carry one detachable `writing` segment — the interspersed-writing pattern. Teach Telugu handwriting. | `deriveBlockModality` and `coreModality` ship with the `writing` block type; the drivable prefix counts the core; HL08 records the amendment and the project owner's ruling that the book keeps all writing content. The Telugu ductus is **not** shipped: no citable stroke-order source for a single letter could be reached, so zero letters were authored rather than any uncited ones. See Findings from HL-C41. |
 | HL-C42 | Queued | Let a track declare more than one script. HL01 gives a track exactly one `script` id and validates headword glyphs against exactly one inventory, so Japanese's hiragana, katakana, and kanji share one file with a per-sign `role` doing the separating. | A track declares `scripts: [...]`, `uncoveredGlyphs` resolves a character against any declared inventory, and a lesson can say which system a word is written in without a naming convention inside `role`. |
+| HL-C45 | Queued | Structure the `register` field, which Japanese has outgrown. Today it is an open string, adequate for a *tú*/*usted* word choice and inadequate for a system where politeness is verb morphology on every predicate and keigo swaps the verb outright (言う → おっしゃる / 申す). | `register` becomes a small record — speech level, addressee honorification, referent honorification — that the 20 existing tracks map onto losslessly and that Japanese Chapter 3's honorific prefix **お-** can express without a free-text convention. |
+| HL-C46 | Queued | Author the first interspersed `writing` segment, in a track whose ductus is already sourced. | One ordinary Tamil lesson carries a `## Writing: ம` segment citing the UT Austin primer; the book prints it, `coreModality` stays `voice`, and the corpus regression pin moves deliberately. |
+| HL-C47 | Blocked on provenance | Author Telugu / Kannada / Malayalam base-consonant ductus. | One openable published primer with numbered stroke arrows per script; then ~36 base consonants and the vowel signs per script pass the three `strokes.ts` font invariants with citation and URL. Blocked, not queued: no source was reachable in HL-C41. |
 | HL-C27 | Complete in this PR | Run the book catalog builder's tests in CI. `test_build_human_language_book_catalog.py` existed but was executed by no workflow, so the script that writes the published `index.html` and `catalog.json` shipped with its tests never running. | `human-languages-books.yml` runs the suite in its own named step before the expensive XeLaTeX build, and both the workflow's `paths:` trigger and the `detect` job's `git diff` list include the test file so a change to it re-runs the job. |
 
 The project owner decided on 2026-08-06 that the curriculum ships **two editions from
@@ -2126,6 +2129,64 @@ generalises and the fix does not.
   purposes, and `RU-C02-practice` now sorts ahead of its own schema-v1
   prerequisite. Neither affects validation or the drivable prefix, and neither is
   worth a cosmetic patch.
+
+## Findings from HL-C41
+
+HL-C41 set out to teach Telugu handwriting and to design the interspersed-writing
+pattern the project owner asked for. **One half landed and one half is blocked**, and
+the blocked half is worth recording precisely, because the block is not a scheduling
+problem.
+
+- **Telugu handwriting is blocked on provenance, not on effort.** `strokes.ts` admits
+  a letter only with a `citation` and a `url` for its stroke ORDER — the shape is
+  checked against the font, the order cannot be, so it must trace to a real source.
+  No such source could be reached for a single Telugu letter. The owner's pointer
+  (`youtube.com/watch?v=57LhnFmilLs`) returns HTTP 403 and was treated as unverified.
+  The candidates a search surfaced — Vemuri's *The Shapes of Telugu* (UC Davis), the
+  Peace Corps *Conversational Telugu*, Wikisource's 1857 Brown grammar, Omniglot,
+  `teluguaksharalu.com` — were all unreachable from the working session, and none
+  could be opened to confirm what it says about any individual letter. A GitHub-wide
+  search for an Indic stroke-order dataset returns nothing.
+  **Zero letters authored, ~36 base consonants skipped.** Fewer letters honestly beats
+  more letters invented, and the same conclusion holds for Kannada and Malayalam.
+  What is needed is one openable primer with numbered stroke arrows; with it, the
+  base-consonant inventory is a day's work, because the font-validation half of the
+  pipeline already exists and `_fonts/NotoSansTelugu-Static.ttf` is vendored.
+- **The one substantive claim that *is* attested is a warning, not a shortcut.** The
+  premise behind the request — that Telugu is written largely without lifting the pen
+  — is a simplification. The recurring published statement about Telugu stroke
+  direction is that *the order of the strokes is not uniform across the letters; for
+  some it is clockwise and for others counter-clockwise.* Telugu's roundness makes
+  many letters **loop-continuous**, which is a real and teachable property, but it is
+  not the same claim as "one stroke, no lifts", and the `talakattu` tick that crowns
+  most consonants is widely described as a separate mark. So `penLifts` for Telugu is
+  exactly the field that must stay ABSENT — meaning NOT VERIFIED — until a path is
+  authored and checked.
+- **The parts-vs-strokes rule is now written down** in
+  [`data/scripts/README.md`](./data/scripts/README.md) and in the syllabary
+  generator's own header, where the next author will meet it: only base consonants
+  and vowel signs are ever authored, a syllable's figure is assembled from its parts,
+  `penLifts` absent means NOT VERIFIED, and it must never be inferred from
+  `strokeOrder.length`. Authoring 455 Telugu syllables was never the work; authoring
+  ~36 shapes is.
+- **Block-level modality landed, with its purpose corrected mid-flight.** The first
+  framing — protect the drivable percentage from interspersed writing — was rejected
+  by the project owner: *"the book is a standalone artifact… include the writing
+  lessons in the books."* The amendment is therefore metadata for a future
+  dictation-friendly edition, not a lever on the book. It is a strict improvement for
+  that edition: today a lesson with any pen content is lost to a commuter wholesale;
+  with block marking they get the voice core and defer only the segment.
+- **The amendment is a measured no-op today, on purpose.** No track has authored an
+  interspersed `writing` segment yet, so every lesson's core equals its full modality
+  and the corpus figure is unmoved at **708 drivable, 65%** — pinned as a regression
+  test alongside `lessonsWithWritingSegments === 0`, so the first interspersed lesson
+  must move the number deliberately rather than by accident.
+- **No demonstration lesson shipped, and that is the finding.** The interspersed
+  pattern is implemented and unit-tested against synthetic lessons, but no Telugu
+  lesson demonstrates it, because a writing segment for Telugu would have to assert a
+  stroke order this repository cannot cite. HL-C42 carries that forward: the first
+  interspersed lesson should land in a track whose ductus is already sourced —
+  Tamil's ம traces to the UT Austin primer — rather than waiting on Telugu.
 
 ## Completed foundations
 
