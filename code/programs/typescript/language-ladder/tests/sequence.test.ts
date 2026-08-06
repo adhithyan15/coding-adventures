@@ -45,8 +45,9 @@ describe("the language chain", () => {
       "hindi", "tamil", "kannada", "telugu", "malayalam",
       "italian", "portuguese", "marathi", "punjabi", "bengali",
       "gujarati", "russian", "sanskrit", "persian", "urdu",
+      "japanese",
     ]);
-    expect(new Set(LANGUAGE_CHAIN).size).toBe(20);
+    expect(new Set(LANGUAGE_CHAIN).size).toBe(21);
   });
 
   it("chainIndex and isChainLanguage locate a language, or reject a non-chain one", () => {

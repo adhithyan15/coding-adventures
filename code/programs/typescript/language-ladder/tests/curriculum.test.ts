@@ -12,7 +12,9 @@ import {
 describe("per-language shared-spine maps", () => {
   it("bundles one complete map for every active language", () => {
     expect(LANGUAGE_CURRICULA.map((curriculum) => curriculum.language)).toEqual(LANGUAGE_ORDER);
-    expect(LANGUAGE_CURRICULA).toHaveLength(20);
+    // 21 with Japanese registered (HL-C40). Becomes 22 once Chinese (#9984)
+    // also lands -- these two PRs both increment this line and will conflict.
+    expect(LANGUAGE_CURRICULA).toHaveLength(21);
     for (const curriculum of LANGUAGE_CURRICULA) {
       expect(Object.keys(curriculum.spine)).toEqual(SPINE_NODES.map((node) => node.id));
     }

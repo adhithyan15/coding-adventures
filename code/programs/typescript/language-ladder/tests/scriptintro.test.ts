@@ -36,7 +36,8 @@ describe("scriptOf / LANGUAGE_SCRIPT", () => {
   });
 
   it("every chain language has a mapping", () => {
-    expect(Object.keys(LANGUAGE_SCRIPT).length).toBe(20);
+    // 21 with Japanese registered (HL-C40); 22 once Chinese (#9984) lands too.
+    expect(Object.keys(LANGUAGE_SCRIPT).length).toBe(21);
   });
 });
 
