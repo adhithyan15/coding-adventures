@@ -1775,6 +1775,19 @@
       "tex": "persian/book/chapters/ch05-take-leave.tex"
     },
     {
+      "language": "persian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:45fe9072e4bc2575",
+      "lessonIds": [
+        "FA-C06-budan",
+        "FA-C06-raftan",
+        "FA-C06-amadan",
+        "FA-C06-goftan",
+        "FA-C06-danestan"
+      ],
+      "tex": "persian/book/chapters/ch06-core-verbs.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "sourceHash": "fnv1a64:b696688c2654a2d3",

@@ -38,6 +38,8 @@ lessons will introduce them only when a useful word needs them.
 | `gh` | use the modern Iranian Persian voiced back-of-the-mouth sound for **غ** | **خوشوقتم** *khoshvaghtam* |
 | `vav-o` | let **و** carry the learned *o* value in this word | **چطور** *chetor* |
 | `persian-question-mark` | recognize **؟** at the left end of a right-to-left question | **اسم شما چیست؟** |
+| `alef-madde` | read **آ** — alef under a wavy *madde* — as a word-initial long *â* | **آمدن** *âmadan* |
+| `persian-gaf` | read **گ** *gâf* as English *g* in “go”; it is a Persian addition to the Arabic set | **گفتن** *goftan* |
 
 ## Read the current word before the whole alphabet
 
@@ -55,6 +57,10 @@ lessons will introduce them only when a useful word needs them.
 - **خدا** reuses **خ** and long-*â* **ا**; **حافظ** adds a clear initial *h* and
   a final **ظ** pronounced *z* in modern Persian. The complete farewell is
   normally joined in Persian as **خداحافظ**.
+- **بودن**, **رفتن**, and **دانستن** need no new letters at all; the verb
+  chapter adds only **آ** (alef wearing a *madde*, for a word opening on long
+  *â*) inside **آمدن**, and **گ** *gâf* inside **گفتن** — the second of the four
+  Persian additions **پ چ ژ گ** the learner has now met.
 
 One spelling symbol can do more than one job in later words—especially **و**
 and **ی**—so read from the word and context rather than assigning each shape one

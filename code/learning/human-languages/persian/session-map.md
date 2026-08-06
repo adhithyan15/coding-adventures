@@ -1,6 +1,6 @@
-# Persian Session Map — Authored Chapters 1–5
+# Persian Session Map — Authored Chapters 1–6
 
-This is the authoritative order for the twenty authored Persian lessons. Every
+This is the authoritative order for the twenty-five authored Persian lessons. Every
 lesson is an independent, prerequisite-safe step of three or four minutes. A
 study session may combine the new step with the reviews shown here, but it never
 turns the combined session into one indivisible lesson.
@@ -63,29 +63,43 @@ farewells remain later spine work.
 | **S19** | [`FA-C05-khodahafez`](./lessons/FA-C05-khodahafez.md): **خداحافظ** | *na* *(N+15)*; *chetor* *(N+7)*; Chapter 4 practice *(N+3)*; *hâfez* *(N+1)* | join the spelling and end an interaction |
 | **S20** | [`FA-C05-practice`](./lessons/FA-C05-practice.md): open and close | *esm-e man ... ast* *(N+15)*; the wellbeing question *(N+7)*; *khodâ* *(N+3)*; *khodâ hâfez* *(N+1)* | choose **salâm** at the start and **khodâ hâfez** at the end |
 
+## Chapter 6 — Name a verb, find its stem
+
+Chapter 6 fills five sessions, one verb each. Every session adds exactly two
+facts — an infinitive and the present stem that travels with it — so no session
+has to carry a paradigm. The present tense itself is deliberately later work.
+
+| Session | New lesson | Reviews due | Cumulative practice |
+|---|---|---|---|
+| **S21** | [`FA-C06-budan`](./lessons/FA-C06-budan.md): **بودن** *budan* | *shomâ / to* *(N+15)*; *khub* *(N+7)*; *hâfez* *(N+3)*; Chapter 5 practice *(N+1)* | name the *-tan/-dan* ending on a real verb |
+| **S22** | [`FA-C06-raftan`](./lessons/FA-C06-raftan.md): **رفتن** *raftan* | *chist* *(N+15)*; *khubam* *(N+7)*; *khodâ hâfez* *(N+3)*; *budan* *(N+1)* | say the pair **raftan, rav-** in one breath |
+| **S23** | [`FA-C06-amadan`](./lessons/FA-C06-amadan.md): **آمدن** *âmadan* | the name question *(N+15)*; Chapter 4 practice *(N+7)*; Chapter 5 practice *(N+3)*; *raftan* *(N+1)* | contrast going out with coming in |
+| **S24** | [`FA-C06-goftan`](./lessons/FA-C06-goftan.md): **گفتن** *goftan* | *khoshvaghtam* *(N+15)*; *khodâ* *(N+7)*; *budan* *(N+3)*; *âmadan* *(N+1)* | rebuild **goftogu** from its two stems |
+| **S25** | [`FA-C06-danestan`](./lessons/FA-C06-danestan.md): **دانستن** *dânestan* | Chapter 3 practice *(N+15)*; *hâfez* *(N+7)*; *raftan* *(N+3)*; *goftan* *(N+1)* | run all five infinitive-and-stem pairs from memory |
+
 ## Carry-forward review ledger
 
-Future chapters may supply the new lesson in these sessions. Until then, use
+Chapter 7 will supply the new lesson in these sessions. Until then, use
 the due item as a short retrieval session and fill the optional bonus queue only
 with already learned material.
 
 | Session | Fixed review due |
 |---|---|
-| **S21** | *shomâ / to* *(N+15)*; *khub* *(N+7)*; *hâfez* *(N+3)*; Chapter 5 practice *(N+1)* |
-| **S22** | *chist* *(N+15)*; *khubam* *(N+7)*; *khodâ hâfez* *(N+3)* |
-| **S23** | the name question *(N+15)*; Chapter 4 practice *(N+7)*; Chapter 5 practice *(N+3)* |
-| **S24** | *khoshvaghtam* *(N+15)*; *khodâ* *(N+7)* |
-| **S25** | Chapter 3 practice *(N+15)*; *hâfez* *(N+7)* |
 | **S26** | *hâl* *(N+15)*; *khodâ hâfez* *(N+7)* |
 | **S27** | *chetor* *(N+15)*; Chapter 5 practice *(N+7)* |
-| **S28** | the wellbeing question *(N+15)* |
-| **S29** | *khub* *(N+15)* |
-| **S30** | *khubam* *(N+15)* |
-| **S31** | Chapter 4 practice *(N+15)* |
-| **S32** | *khodâ* *(N+15)* |
+| **S28** | the wellbeing question *(N+15)*; *budan* *(N+7)* |
+| **S29** | *khub* *(N+15)*; *raftan* *(N+7)* |
+| **S30** | *khubam* *(N+15)*; *âmadan* *(N+7)* |
+| **S31** | Chapter 4 practice *(N+15)*; *goftan* *(N+7)* |
+| **S32** | *khodâ* *(N+15)*; *dânestan* *(N+7)* |
 | **S33** | *hâfez* *(N+15)* |
 | **S34** | *khodâ hâfez* *(N+15)* |
 | **S35** | Chapter 5 practice *(N+15)* |
+| **S36** | *budan* *(N+15)* |
+| **S37** | *raftan* *(N+15)* |
+| **S38** | *âmadan* *(N+15)* |
+| **S39** | *goftan* *(N+15)* |
+| **S40** | *dânestan* *(N+15)* |
 
 Sessions not listed in the ledger have no fixed starter item due; use their
 bonus queue for adaptive or cumulative retrieval.
@@ -96,7 +110,7 @@ review; the fixed ledger remains the book's no-tracking fallback.
 
 ## Schedule check
 
-Every Chapter 1–5 lesson now has all four fixed resurfacing sessions through
-S35. The app may pull a missed item forward, but it cannot skip the local
-prerequisites. A future Chapter 6 can begin in S21 while this ledger continues
+Every Chapter 1–6 lesson now has all four fixed resurfacing sessions through
+S40. The app may pull a missed item forward, but it cannot skip the local
+prerequisites. A future Chapter 7 can begin in S26 while this ledger continues
 in the review portion of each session.
