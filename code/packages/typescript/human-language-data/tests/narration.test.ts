@@ -266,10 +266,19 @@ describe("cues become structured directives, not prose", () => {
     // An unbalanced `[` makes the scan run to the end of the paragraph and then
     // advance one character. Unbounded, 40k opening brackets is 1.6 billion character
     // comparisons in a build step. Bounded, it is linear and the output is unchanged.
+    // The budget is deliberately loose. Its job is to separate LINEAR from
+    // QUADRATIC, not to police milliseconds. Unbounded, 40k opening brackets is
+    // ~1.6 billion comparisons and takes minutes; bounded, it is linear —
+    // measured locally at 130/271/561/947 ms for 10k/20k/40k/80k, i.e. flat per
+    // character. A tight budget here only measures how contended the runner is:
+    // at 2_000 ms this failed CI at 10,677 ms while the implementation was
+    // correct. lessons.md records the general rule — "CI is ~25x slower than
+    // local for compute-heavy tests" — so pick a threshold a quadratic scan
+    // still cannot meet and a loaded runner comfortably can.
     const started = Date.now();
     const parts = splitNarrationCues("[".repeat(40_000));
     expect(parts).toEqual([{ text: "[".repeat(40_000) }]);
-    expect(Date.now() - started).toBeLessThan(2_000);
+    expect(Date.now() - started).toBeLessThan(30_000);
   });
 
   it("preserves the cues of a real lesson as directives in the narrated blocks", () => {
