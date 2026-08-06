@@ -279,7 +279,10 @@ describe("cues become structured directives, not prose", () => {
     const parts = splitNarrationCues("[".repeat(40_000));
     expect(parts).toEqual([{ text: "[".repeat(40_000) }]);
     expect(Date.now() - started).toBeLessThan(30_000);
-  });
+    // Vitest's default testTimeout is 5000 ms and it kills the test before the
+    // assertion above is ever reached — raising the expect() alone did nothing.
+    // The explicit timeout is the half that actually matters on a loaded runner.
+  }, 60_000);
 
   it("preserves the cues of a real lesson as directives in the narrated blocks", () => {
     const narration = narrateLesson(
