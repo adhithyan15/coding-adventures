@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "latin",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. All 36 Latin chapters are authored here. Only Chapter 1 owns a terminal practice lesson; every other chapter's payoff is its last lesson by sequence, which is where that chapter's recombination and wrap-up recall actually live. Chapter 1's title and label come from its hand-written book/chapters/ch01-greetings.tex, the only Latin chapter with no core/book-generation.json target.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. All 36 Latin chapters are authored here. Chapters 1, 19, 21, 33 and 36 own a terminal consolidation lesson that recombines the chapter's material; every other chapter's payoff is still its last lesson by sequence, which is where that chapter's recombination and wrap-up recall currently live. Chapter 1's title and label come from its hand-written book/chapters/ch01-greetings.tex, the only Latin chapter with no core/book-generation.json target.",
   "chapters": [
     {
       "chapter": 1,
@@ -404,12 +404,13 @@
         "SPINE-CHECK-WELLBEING"
       ],
       "payoff": {
-        "lesson": "LA-C19-valeo-family",
+        "lesson": "LA-C19-practice",
         "kind": "dialogue",
-        "summary": "Run the exchange both ways: ask ut valēs?, answer valeō, and close with valē — all three from one verb.",
+        "summary": "A five-line exchange run end to end: salvē, quid agis?, valeō with grātiās tibi agō, ut valēs?, and valē from both voices.",
         "assesses": [
           "LA-PRAGMATICS-QUID-AGIS-01",
-          "LA-LEX-VALEO-FAMILY-01"
+          "LA-LEX-VALEO-FAMILY-01",
+          "LA-DIALOGUE-WELLBEING-01"
         ]
       }
     },
@@ -442,13 +443,14 @@
         "SPINE-EXCHANGE-NAMES"
       ],
       "payoff": {
-        "lesson": "LA-C21-meeting-phrase-context",
+        "lesson": "LA-C21-practice",
         "kind": "dialogue",
-        "summary": "Say tē volup est convēnisse in its real scene — two acquaintances meeting by chance — and mark the modern alternative as modern.",
+        "summary": "Two meeting scenes: names traded with quid tibi nōmen est? between strangers, and volup est convēnisse kept for the chance re-encounter Plautus actually wrote it for.",
         "assesses": [
           "LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01",
           "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-01",
-          "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-02"
+          "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-02",
+          "LA-DIALOGUE-MEETING-01"
         ]
       }
     },
@@ -703,13 +705,14 @@
         "SPINE-TIME-OF-DAY"
       ],
       "payoff": {
-        "lesson": "LA-C33-vesper-afterlives",
-        "kind": "production",
-        "summary": "Say vesper, then follow the evening root through Hesperia, víspera, and vespers, and set sērus aside as the source of soir.",
+        "lesson": "LA-C33-practice",
+        "kind": "task",
+        "summary": "Sort any European evening word into the vesper family or the sērus family, then produce vesper and the everyday vespere Cicero uses for in the evening.",
         "assesses": [
           "LA-ETYMON-VESPER-01",
           "LA-LEX-VESPER-AFTERLIVES-01",
-          "LA-ETYMON-VESPER-AFTERLIVES-02"
+          "LA-ETYMON-VESPER-AFTERLIVES-02",
+          "LA-TASK-VESPER-TRIAGE-01"
         ]
       }
     },
@@ -770,12 +773,13 @@
         "SPINE-TIME-OF-DAY"
       ],
       "payoff": {
-        "lesson": "LA-C36-timeless-salve",
+        "lesson": "LA-C36-practice",
         "kind": "dialogue",
-        "summary": "Greet one person with salvē and several with salvēte in the afternoon, and state that neither encodes a time of day.",
+        "summary": "One Roman day in four meetings — morning, afternoon, evening, and parting at night — with salvē and valē marked as the attested pair and the three bonus phrases marked as modern.",
         "assesses": [
           "LA-PRAGMATICS-SALVE-POST-MERIDIEM-01",
-          "LA-PRAGMATICS-TIMELESS-SALVE-01"
+          "LA-PRAGMATICS-TIMELESS-SALVE-01",
+          "LA-DIALOGUE-DAY-CYCLE-01"
         ]
       }
     }

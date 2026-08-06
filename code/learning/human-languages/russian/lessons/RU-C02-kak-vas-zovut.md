@@ -45,11 +45,8 @@ that Russian asks a different question from English.
 
 Taken apart:
 
-| | | |
-|---|---|---|
-| **как** | *kak* | **how** |
-| **вас** / **тебя** | *vas* / *tebya* | **you** (object form) |
-| **зовут** | *zovut* | they call |
+**как** — *kak* — **how**. **вас** or **тебя** — *vas* / *tebya* — **you**, in
+the object form. **зовут** — *zovut* — they call.
 
 So: **"How do they call you?"**
 
@@ -59,11 +56,9 @@ So: **"How do they call you?"**
 Last lesson's *меня* has partners, and they follow the same logic — the person
 being called is the **object**, so the word changes shape:
 
-| subject | object | |
-|---|---|---|
-| я | **меня** | me |
-| ты | **тебя** | you (informal) |
-| вы | **вас** | you (formal/plural) |
+- **я** becomes **меня** — me.
+- **ты** becomes **тебя** — you, informal.
+- **вы** becomes **вас** — you, formal or plural.
 
 You now have a matched pair: **Как вас зовут?** — **Меня зовут…**
 

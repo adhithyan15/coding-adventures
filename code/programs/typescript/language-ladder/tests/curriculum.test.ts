@@ -12,8 +12,9 @@ import {
 describe("per-language shared-spine maps", () => {
   it("bundles one complete map for every active language", () => {
     expect(LANGUAGE_CURRICULA.map((curriculum) => curriculum.language)).toEqual(LANGUAGE_ORDER);
-    // 21 since Chinese registered as the corpus's 21st track (HL-C39).
-    expect(LANGUAGE_CURRICULA).toHaveLength(21);
+    // Derived from the registry: registering a track must not require editing
+    // this file. The assertion above already pins that the two agree in order.
+    expect(LANGUAGE_CURRICULA).toHaveLength(LANGUAGE_ORDER.length);
     for (const curriculum of LANGUAGE_CURRICULA) {
       expect(Object.keys(curriculum.spine)).toEqual(SPINE_NODES.map((node) => node.id));
     }

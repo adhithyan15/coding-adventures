@@ -64,18 +64,12 @@ the thousand — *sputnik*, *pizza*, *computer* — but nobody borrows a word fo
 *I*. So *я* has simply been inherited, without interruption, for as long as
 there has been an Indo-European family:
 
-| | |
-|---|---|
-| Russian | **я** |
-| Latin | *ego* |
-| German | *ich* |
-| English | **I** |
-| Greek | *egṓ* |
+Russian **я**, Latin *ego*, German *ich*, English **I**, Greek *egṓ*.
 
 All from PIE \**eǵh₂(om)*. Russian's route ran through Proto-Slavic \**azъ*,
 which East Slavic reshaped — a *j-* was added at the front (\**azъ* → *язъ*) and
 the ending fell away — leaving the **one letter** you now say. It is the most
-extreme change in the table, and the reason *я* looks nothing like *ego* while
+extreme change in the family, and the reason *я* sounds nothing like *ego* while
 being the same word.
 
 Latin *ego* is the one English borrowed back, whole and untranslated, for the

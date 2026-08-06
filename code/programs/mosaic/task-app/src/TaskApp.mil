@@ -39,6 +39,22 @@ component TaskApp {
   // data-driven sizing (`width: ( t[n] )`). `timeline-scale` is the matching date
   // ruler, and a non-empty `critical-marker` means the row is on the critical path.
   slot timeline-mode     : text ;
+
+  // Board (kanban). `board-mode` is non-empty when the board is showing.
+  //
+  //   board-columns : one per status column, [ title, key ]
+  //   board-cards   : one per task,          [ name, column-key, task-id, critical ]
+  //
+  // A card is placed by comparing its column-key with the column's, rather than by
+  // nesting a list inside a list — the layout can express that with a single `If`,
+  // and it keeps both loops flat enough to read.
+  //
+  // Dropping carries KEYS, never indices: that is what makes the drag kernel usable
+  // from a nested loop at all, since an inner loop's index would otherwise shadow the
+  // outer one and a card would report the wrong row.
+  slot board-mode    : text ;
+  slot board-columns : list<list<text>> ;
+  slot board-cards   : list<list<text>> ;
   slot timeline-scale    : text ;
   slot timeline-rows     : list<list<text>> ;
 
@@ -72,7 +88,13 @@ component TaskApp {
   // Choose a view. Two explicit events rather than one toggle, so clicking the view
   // you are already on is a no-op instead of switching away from it.
   emit onShowList ;
+  emit onShowBoard ;
   emit onShowTimeline ;
+
+  // A drop is a PROPOSAL: the engine decides whether the move is legal and performs
+  // it. The payload is the UI35 contract — what moved, of what kind, onto which
+  // target, and where within it.
+  emit onCardDropped ( key : text , kind : text , targetKey : text , position : text ) ;
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;

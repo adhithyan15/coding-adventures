@@ -38,13 +38,14 @@ in the language.
 
 ## Across the family — the shapes of "yes"
 
-| Language | "yes" | built from |
-|---|---|---|
-| **Russian** | *da* (да) | old Slavic affirmative |
-| Spanish | *sí* | Latin *sic*, "thus, so" |
-| French | *oui* | Latin *hoc ille*, "that's it" |
-| German | *ja* | old Germanic *ja* |
-| Latin | *ita / sic* | "thus, so" |
+Every language improvised its own "yes," and you can hear where each one came
+from:
+
+- Russian **да** — an old Slavic affirmative.
+- Spanish **sí** — Latin *sic*, "thus, so."
+- French **oui** — Latin *hoc ille*, "that's it."
+- German **ja** — old Germanic *ja*.
+- Latin **ita** or **sic** — "thus, so."
 
 Notice how many languages say "yes" with a word that means **"so / thus"**
 (*sí*, *sic*, *ita*). Russian's *да* is its own thing — but its side-job as a

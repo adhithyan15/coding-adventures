@@ -2176,6 +2176,25 @@ fn emit_view_tree(
         // view modifier on the wrapped child (macOS / iOS 16+), and
         // `HostNumberInput` to `TextField` with the `.number`
         // format binding (iOS 15+/macOS 12+).
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a plain vertical container: the card and the column still
+        // render, they just aren't draggable here.
+        //
+        // The alternative — erroring on an unknown primitive — means a layout that
+        // uses drag cannot be emitted to this backend AT ALL, which took down the
+        // task-app cross-backend tests the moment the app grew a board. Degrading to
+        // the content is the behaviour UI35 asks for: the view is still usable, minus
+        // the interaction. See `code/specs/UI35-host-drag-drop.md`.
+        "HostDraggable" | "HostDropTarget" => container(
+            "VStack",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
+
         "HostLink" => emit_host_link(node, indent, emits, for_payload)?,
         "HostTooltip" => emit_host_tooltip(node, indent, part_styles, emits, for_payload)?,
         "HostNumberInput" => emit_host_number_input(node, indent)?,

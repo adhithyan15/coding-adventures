@@ -16,6 +16,7 @@ import {
   defaultCurriculumRoot,
   loadLessons,
 } from "../src/loader.js";
+import { handwrittenBookChapters } from "../src/book-cli.js";
 import type { TrackChapters, ChapterPolicy } from "../src/types.js";
 
 const policy = loadChapterPolicy();
@@ -135,6 +136,48 @@ describe("chapter capability ledgers", () => {
         if (!target) continue;
         expect(chapter.title).toBe(target.title);
         expect(chapter.label).toBe(target.label);
+      }
+    }
+  });
+
+  it("matches the titles and labels of the hand-written chapters too", () => {
+    // The generator owns only part of each book. Early chapters were written by hand
+    // before the manifest existed, so the check above found no target and skipped them
+    // — which left their ledger titles verified by nothing at all. `handwritten[]`
+    // closes that hole: every chapter a ledger claims is now checked against one of the
+    // two lists, so HL-C04 cannot silently rename a printed chapter on the way through.
+    const handwritten = handwrittenBookChapters();
+    for (const ledger of ledgers) {
+      for (const chapter of ledger.chapters) {
+        const entry = handwritten.find(
+          (h) => h.language === ledger.language && h.chapter === chapter.chapter,
+        );
+        if (!entry) continue;
+        expect(chapter.title, `${ledger.language} ch${chapter.chapter} title`).toBe(entry.title);
+        expect(chapter.label, `${ledger.language} ch${chapter.chapter} label`).toBe(entry.label);
+      }
+    }
+  });
+
+  it("leaves no ledger chapter unchecked by either list", () => {
+    // The guard on the two tests above: without this, deleting an entry from either list
+    // would turn a real assertion into a silent `continue` and nothing would notice.
+    const config = JSON.parse(
+      readFileSync(join(defaultCurriculumRoot(), "core", "book-generation.json"), "utf8"),
+    ) as { targets: { language: string; chapter: number }[] };
+    const handwritten = handwrittenBookChapters();
+    for (const ledger of ledgers) {
+      for (const chapter of ledger.chapters) {
+        const covered =
+          config.targets.some(
+            (t) => t.language === ledger.language && t.chapter === chapter.chapter,
+          ) ||
+          handwritten.some(
+            (h) => h.language === ledger.language && h.chapter === chapter.chapter,
+          );
+        expect(covered, `${ledger.language} ch${chapter.chapter} has no title/label source`).toBe(
+          true,
+        );
       }
     }
   });

@@ -40,6 +40,7 @@ The machine-readable layer alongside the tracks is:
 core/languages.json             complete active-language registry and default mix order
 core/spine.json                 ordered, language-independent can-do spine
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
+core/lesson-modality.json       generated: per-lesson voice/sight/pen and per-chapter drivable prefix
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
@@ -65,6 +66,19 @@ against `core/latex-warning-baseline.json`; a track fails only when it exceeds i
 recorded numbers, and a track recorded as `null` has not been measured yet, so it is
 reported and never failed. Until this gate existed, every track's "builds with zero
 warnings" claim was prose that nothing checked.
+
+`core/lesson-modality.json` is generated, never authored. It records for every lesson
+whether it needs `voice`, `sight`, or a `pen`, and for every chapter how many of its
+lessons a commuter can do in the car before hitting the first that needs eyes. This is
+what lets **two editions build from one source**: the complete book keeps everything,
+including the handwriting instruction, while the planned dictation-friendly driving
+edition filters on `drivable` and keeps only what a driver can actually do. The same
+job that builds the books runs `check:modality`, so the manifest cannot drift away from
+the lessons it describes — a lesson that silently gained a paradigm table would
+otherwise still advertise itself as safe to learn at 70mph. Modality stays derived
+rather than written into 1,096 frontmatter files, which would be 1,096 places for it to
+go stale; the authored `modality:` override with a `modality_reason:` remains available
+for the genuinely exceptional lesson.
 
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
 losslessly and checks that each authored book chapter maps to its short Markdown

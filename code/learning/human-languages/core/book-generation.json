@@ -2127,5 +2127,742 @@
       "unicodeScript": "Han",
       "scriptCommand": "zh"
     }
+  ],
+  "handwritten": [
+    {
+      "language": "arabic",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "arabic/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "arabic/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "bengali/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "bengali/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "bengali/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "bengali/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "bengali/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "french/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "french/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:how-are-you",
+      "output": "french/book/chapters/ch03-how-are-you.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "french/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "french/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:numbers-1-10",
+      "output": "french/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 7,
+      "title": "The Days of the Week",
+      "label": "ch:days",
+      "output": "french/book/chapters/ch07-days.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 8,
+      "title": "Telling the Time",
+      "label": "ch:time",
+      "output": "french/book/chapters/ch08-time.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:months-seasons",
+      "output": "french/book/chapters/ch09-months-seasons.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:family",
+      "output": "french/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 11,
+      "title": "Bread, Water, Wine",
+      "label": "ch:food",
+      "output": "french/book/chapters/ch11-food.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:numbers-11-20",
+      "output": "french/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:colours",
+      "output": "french/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 14,
+      "title": "To Have, and How Old You Are",
+      "label": "ch:avoir-age",
+      "output": "french/book/chapters/ch14-avoir-age.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 15,
+      "title": "The Compound Past",
+      "label": "ch:passe-compose",
+      "output": "french/book/chapters/ch15-passe-compose.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 16,
+      "title": "To Be, and the Past That Takes It",
+      "label": "ch:etre",
+      "output": "french/book/chapters/ch16-etre.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "german/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "german/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:how-are-you",
+      "output": "german/book/chapters/ch03-how-are-you.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "german/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "german/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:numbers-1-10",
+      "output": "german/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 7,
+      "title": "The Days of the Week",
+      "label": "ch:days",
+      "output": "german/book/chapters/ch07-days.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 8,
+      "title": "Telling the Time",
+      "label": "ch:time",
+      "output": "german/book/chapters/ch08-time.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:months-seasons",
+      "output": "german/book/chapters/ch09-months-seasons.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:family",
+      "output": "german/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 11,
+      "title": "Bread, Water, Wine",
+      "label": "ch:food",
+      "output": "german/book/chapters/ch11-food.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:numbers-11-20",
+      "output": "german/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:colours",
+      "output": "german/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 14,
+      "title": "To Have, and How Old You Are",
+      "label": "ch:haben-alter",
+      "output": "german/book/chapters/ch14-haben-alter.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 15,
+      "title": "The Two Past Tenses",
+      "label": "ch:perfekt",
+      "output": "german/book/chapters/ch15-perfekt.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 16,
+      "title": "To Be, and the Past That Takes It",
+      "label": "ch:sein",
+      "output": "german/book/chapters/ch16-sein.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "gujarati/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "gujarati/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "gujarati/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "gujarati/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "gujarati/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "hindi/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "hindi/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "hindi/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "hindi/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "hindi/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "italian/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "kannada/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "kannada/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "kannada/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "kannada/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "kannada/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "latin/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "malayalam/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "malayalam/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "malayalam/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "malayalam/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "malayalam/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "marathi/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "marathi/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "marathi/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "marathi/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "marathi/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 1,
+      "title": "Greetings and responses",
+      "label": "ch:persian-greetings",
+      "output": "persian/book/chapters/ch01-greetings-and-responses.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 2,
+      "title": "Give your name",
+      "label": "ch:persian-name",
+      "output": "persian/book/chapters/ch02-give-your-name.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "portuguese/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "punjabi/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "punjabi/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "punjabi/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "punjabi/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "punjabi/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 1,
+      "title": "Greetings and courtesy",
+      "label": "ch:russian-greetings",
+      "output": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 2,
+      "title": "Introducing yourself",
+      "label": "ch:russian-introductions",
+      "output": "russian/book/chapters/ch02-introducing-yourself.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "sanskrit/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "sanskrit/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "sanskrit/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "sanskrit/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "sanskrit/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 7,
+      "title": "Eating, Drinking, Living --- the \\emph{-er} and \\emph{-ir} Verbs",
+      "label": "ch:er-ir-verbs",
+      "output": "spanish/book/chapters/ch07-er-ir-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 8,
+      "title": "Numbers, and How Old You Are",
+      "label": "ch:numbers-and-age",
+      "output": "spanish/book/chapters/ch08-numbers-and-age.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 9,
+      "title": "\\emph{Ser} and \\emph{Estar} --- Two Ways to Be",
+      "label": "ch:ser-y-estar",
+      "output": "spanish/book/chapters/ch09-ser-y-estar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 10,
+      "title": "Going, and the Future You Can Already Say",
+      "label": "ch:ir-y-futuro",
+      "output": "spanish/book/chapters/ch10-ir-y-futuro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 11,
+      "title": "Verbs That Break in the Middle --- the Stem Changers",
+      "label": "ch:stem-changes",
+      "output": "spanish/book/chapters/ch11-stem-changes.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 12,
+      "title": "\\emph{Hacer}, \\emph{Decir}, and the \\emph{-go} Verb Club",
+      "label": "ch:yo-go-verbs",
+      "output": "spanish/book/chapters/ch12-yo-go-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 13,
+      "title": "\\emph{Poner}, \\emph{Salir}, \\emph{Venir} --- Completing the \\emph{-go} Club",
+      "label": "ch:completing-go-club",
+      "output": "spanish/book/chapters/ch13-completing-go-club.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 14,
+      "title": "The Preterite --- Your First Past Tense",
+      "label": "ch:preterite",
+      "output": "spanish/book/chapters/ch14-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 15,
+      "title": "Completing the Preterite --- Three Families, One Question",
+      "label": "ch:completing-preterite",
+      "output": "spanish/book/chapters/ch15-completing-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 16,
+      "title": "The Imperfect --- the Past That Kept Going",
+      "label": "ch:imperfect",
+      "output": "spanish/book/chapters/ch16-imperfect.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 17,
+      "title": "The Future and the Conditional --- One Weld, Twice",
+      "label": "ch:future-conditional",
+      "output": "spanish/book/chapters/ch17-future-conditional.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 18,
+      "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
+      "label": "ch:subjunctive",
+      "output": "spanish/book/chapters/ch18-subjunctive.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "tamil/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "tamil/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "tamil/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "tamil/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "tamil/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "output": "telugu/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "telugu/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "output": "telugu/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "telugu/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "telugu/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 1,
+      "title": "Greetings and responses",
+      "label": "ch:urdu-greetings",
+      "output": "urdu/book/chapters/ch01-greetings-and-responses.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 2,
+      "title": "Give your name",
+      "label": "ch:urdu-name",
+      "output": "urdu/book/chapters/ch02-give-your-name.tex"
+    }
   ]
 }

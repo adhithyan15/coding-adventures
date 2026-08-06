@@ -23,9 +23,14 @@ book.
 
 ## Progress
 
-- **Chapters 1–36 are authored** as 53 prerequisite-ordered lessons, from
+- **Chapters 1–36 are authored** as 57 prerequisite-ordered lessons, from
   greetings and numbers through names, time, everyday courtesy, and the honest
   limits of reconstructed conversational phrases.
+- **Five chapters end on a dedicated payoff lesson** — 1, 19, 21, 33, and 36.
+  Chapters 19, 21, and 36 close on a real Latin exchange assembled only from
+  words the reader has already been taught; chapter 33 closes on a sorting task,
+  because its material is etymological and would not honestly support a
+  conversation.
 - **Chapters 2–36 are generated from the same schema-v2 lessons used by Language
   Ladder.** Chapter 1 remains the hand-authored opening; deterministic source
   hashes keep every later app/book chapter pair aligned.
@@ -57,15 +62,21 @@ Each entry carries:
 Two properties of this track are worth stating plainly, because the ledger is
 where they become visible:
 
-1. **Only Chapter 1 has a terminal practice lesson.** `LA-C01-practice` is the
-   track's single `type: practice` step. Every other chapter's payoff is its last
-   lesson by `sequence` — which is genuinely where that chapter's recombination
-   and wrap-up recall happen, but is not a dedicated consolidation step. A future
-   tranche that adds practice lessons should update the payoff pointers here.
+1. **Five chapters have a terminal consolidation lesson; 31 do not.** Chapters 1,
+   19, 21, 33, and 36 own a `practice`/`practice-mix` step. Every other chapter's
+   payoff is still its last lesson by `sequence` — which is genuinely where that
+   chapter's recombination and wrap-up recall happen, but is not a dedicated
+   consolidation step. A future tranche that adds practice lessons should update
+   the payoff pointers here.
 2. **`assesses` is copied from the payoff lesson, never invented.** Each list is
    exactly that lesson's own `practises.knowledge`, so the ledger cannot overstate
    what a chapter delivers. On that basis every Latin chapter's payoff exercises
    100% of the atoms its chapter introduces.
+3. **100% representativeness does not mean the payoff is usable.** The share was
+   already 100% for all 36 chapters when every payoff was just the chapter's last
+   teaching lesson, because that lesson cumulatively practises the whole chapter.
+   The measure that actually moved with the four new lessons is a different one:
+   how many chapters end on something the reader *does*.
 
 ## Book
 

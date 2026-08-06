@@ -37,11 +37,135 @@ was updated with a comment naming this change as the cause; none was relaxed.
   coverage 20 → 21; compiled activity ids 51 → 57. Duration violations and unknown
   prerequisites remain **0**.
 - `cli.test.ts`: reported `registeredTracks` 20 → 21.
-- `modality.test.ts`: total lessons 1,096 → 1,103; `voice` 694 → 699; `sight`
-  351 → 353; non-writing lessons carrying a `script` block 7 → 9; the remainder
-  1,038 → 1,043. The `pen` count (51), the table-bearing count (322) and the
-  corpus-wide drivable share (63%) are unchanged, because no Chinese lesson needs a
-  pen and none carries a table.
+- `modality-manifest.test.ts`: total lessons 1,118 → 1,125; `voice` 719 → 724;
+  `sight` 346 → 348; `trackCount` 20 → 21; `chapterCount` 375 → 376;
+  `drivablePrefixTotal` 557 → 558. The `pen` count (53) and the corpus-wide drivable
+  share (64%) are unchanged, because no Chinese lesson needs a pen and none carries a
+  table. The two `sight` lessons are `ZH-C01-ni` and `ZH-C01-hao`, which each teach a
+  character's components in a `script` block.
+- **No `modality.test.ts` edit, and no Language Ladder test edit.** Both used to hold
+  hard-coded track and corpus counts and were rewritten upstream to derive them —
+  `modality.test.ts` now asserts size-independent invariants, and the Language Ladder
+  suites read `LANGUAGE_ORDER.length` / `LANGUAGE_CHAIN.length` instead of the literal
+  20. Registering a track no longer requires touching any of them, which is why this
+  entry is shorter than the same entry would have been a week ago.
+
+### Fixed — HL-C26: hand-written chapters are described, not generated
+
+- Add a `handwritten[]` list to `core/book-generation.json` recording the **105**
+  chapters that have a committed `book/chapters/ch*.tex` but no `targets[]`
+  entry, with `title` and `label` transcribed from what each `\chapter{}` and
+  `\label{}` actually declares. These are the hand-authored prefixes of nearly
+  every book, written before the generator existed and mostly still schema-v1.
+- The obvious fix — giving them `targets[]` entries — would have **destroyed
+  them**. A target is not a description but an instruction: `generatedBookOutputs`
+  renders every target and `--write` writes the result over the file at `output`.
+  A separate array is used instead of a `generated: false` flag precisely because
+  the two fail in opposite directions; `generatedBookOutputs` only ever walks
+  `config.targets`, so nothing in `handwritten[]` can be rendered by a missed
+  branch. The worst a mistake there can do is leave a chapter unchecked.
+- Add `handwrittenBookChapters()`, which reads the list without rendering
+  anything. `check:books` output is unchanged, byte for byte.
+- `chapter-title-drift` previously **skipped** any chapter with no target, which
+  left those titles verified by nothing. It now checks them against
+  `handwritten[]`, and a new test fails if any ledger chapter is covered by
+  neither list — so the assertion cannot decay back into a silent `continue`.
+- Add tests that re-read every hand-written `.tex` to prove its recorded title and
+  label were transcribed rather than invented, that the two lists never claim the
+  same chapter, that no hand-written path appears in `generatedBookOutputs()`, and
+  that every committed chapter file is accounted for by one list or the other.
+- Add a check that every generation target's committed file opens with
+  `% GENERATED FILE.` (true of 270/270 generated and 0/105 hand-written chapters).
+  This is the only guard that catches a chapter *promoted* into `targets[]`, which
+  by leaving `handwritten[]` escapes every membership-based check.
+- Labels are recorded as declared, not normalised. Three conventions coexist — a
+  bare `ch:greetings` slug, an ISO-code `ch:fa-`/`ch:la-` prefix, and a
+  language-name `ch:persian-`/`ch:urdu-`/`ch:russian-` prefix — so Persian ch2 is
+  `ch:persian-name` beside a generated `ch:fa-ask-and-answer-names`. Rewriting a
+  `\label` breaks existing `\hyperref` cross-references, so the inconsistency is
+  recorded in the backlog for a deliberate decision rather than silently fixed.
+
+### Added — stroke-order provenance on `Letter`
+
+- Add `StrokeOrderSource` and two optional `Letter` fields, `penLifts` and
+  `strokeOrderSource`. A `strokeOrder` list names a letter's **parts** in writing
+  order; it has never counted **pen-down runs**, but a numbered list of three
+  reads to a learner as three strokes and two lifts. Tamil ம is the counter-
+  example that forced the distinction: its prose listed three parts while the
+  authored, font-checked pen path in Language Ladder's `strokes.ts` shows one
+  unbroken stroke with zero lifts. `penLifts` records that number only where a
+  verified path supports it — absent means *not verified*, never *none* — and
+  `strokeOrderSource` carries the citation, URL, and the honest `variation` note
+  for scripts (every Indic script, Arabic, Hebrew) that have no national
+  standard. Both are optional, so every existing script file still validates.
+- Document the parts-vs-strokes rule on `strokeOrder` itself, where the next
+  author writing one will actually read it.
+
+### Added — HL-C44 the modality manifest, so two editions build from one source
+
+- Add `src/modality-manifest.ts` and `src/modality-cli.ts`, emitting
+  `code/learning/human-languages/core/lesson-modality.json`. HL-C14 already derived
+  `voice`/`sight`/`pen` per lesson and a drivable prefix per chapter, but only at
+  runtime and only into the human-readable gap report — a paragraph of English is not
+  something a book builder can filter on. This slice makes the derivation *data*, so
+  the complete book, the app, and the forthcoming dictation-friendly driving edition
+  (HL-C43) each filter the same canonical corpus rather than maintaining three copies.
+- **Per lesson:** `id`, `language`, `chapter`, `sequence`, `modality`, `derived`,
+  `drivable`, `reasons`, and the lesson AST's `sourceHash`. The three override fields
+  (`authored`, `authoredReason`, `overridden`) are emitted only on the lessons that
+  have them, rather than a thousand copies of the empty string. The monotone closure
+  (`pen` implies `sight`) is deliberately *not* emitted: it is a three-entry lookup
+  table, and restating it beside every pen lesson would add sixty kilobytes of
+  duplicating `requiredChannels()`.
+- **Per chapter:** the drivable prefix, `firstNonVoiceLesson`, the modality union,
+  whether the whole chapter is drivable, and `drivableLessonIds` — the prefix spelled
+  out in order, so a driving-edition renderer never has to re-implement "authored
+  order" and quietly disagree with the generator about it.
+- **Per corpus:** a `summary` pinned by tests — 1,096 lessons, 708 `voice`, 337
+  `sight`, 51 `pen`, 65% drivable, 20 tracks, 375 chapters, 551 lessons reachable in
+  the car once prerequisite order is respected, 199 fully drivable chapters, 121 that
+  cannot be started by ear at all, zero overrides, zero chapterless lessons.
+- **Designed for HL-C41's block-level modality to land additively.** Every lesson row
+  is a JSON object, not a positional tuple. `modality` keeps its meaning permanently —
+  the strongest channel the lesson needs *anywhere* — so a consumer that never learns
+  about block modality keeps producing a correct, merely pessimistic driving edition,
+  which is the safe direction to be wrong in. `coreModality` arrives as a new optional
+  key beside it (`entry.coreModality ?? entry.modality` is correct before and after),
+  and the header's `features.blockModality` flag says at a glance whether a build
+  carries block data. The shape of the companion block records is deliberately not
+  guessed here: an absent key is additive, a wrong key is a breaking change.
+- **Nothing is authored.** The manifest is derived, exactly like
+  `core/generated-book-hashes.json`. HL08 refused to add `modality:` to 1,096
+  frontmatter files precisely because that is 1,096 places for a computed fact to go
+  stale, and this artifact does not reintroduce the problem.
+- Add `npm run generate:modality` / `npm run check:modality`, mirroring the
+  `generate:books` / `check:books` contract: `generatedModalityOutputs()` returns a
+  path → content map so `--write` and `--check` consume identical bytes, `--check`
+  compares byte for byte and exits 1 on any drift, and the corpus is fingerprinted with
+  `fnv1a64` from `hash.ts`.
+- Wire `npm run check:modality` into `human-languages-books.yml` beside
+  `check:books`. A stale manifest is not cosmetic: a lesson that gained a paradigm
+  table would still read `drivable: true`, and the driving edition would tell somebody
+  at 70mph to look at a chart. The `books-gate` job's name expression and pass/fail
+  contract are untouched.
+- Add `loadModalityManifest()` and `modalityManifestById()` to `loader.ts`, exported
+  from `index.ts` with the manifest types. The index returns a `Map`, never a plain
+  object: the keys come out of parsed JSON, and `index[lesson.id] = lesson` with an id
+  of `__proto__` writes the prototype instead of a property.
+- Ordering is total and null-last (track, chapter, `sequence`, id), so the file is
+  byte-stable regardless of directory-walk order — otherwise `--check` would fail on a
+  colleague's machine for no reason. The corpus fingerprint sorts by id rather than
+  reusing `combineLessonHashes`, whose `sequence`-first ordering degenerates on the
+  many lessons that carry no sequence (`Number(undefined)` is `NaN`, and every
+  comparison against `NaN` is false).
+- `safeOutput()` fails closed on path escape, checking containment *after* `resolve`
+  rather than scanning the input string for `..`, and requires a `.json` extension so a
+  mistake cannot land on an authored `.tex` chapter or `.md` lesson.
+- 33 new tests: manifest round-trip, order-independent bytes, drift detection
+  (including a byte-level reformat), the missing-manifest case, the full path-escape
+  matrix, the `__proto__` index case, the additive-`coreModality` read, and the corpus
+  summary pinned field by field. `modality-manifest.ts` reaches 100% statement
+  coverage. No existing assertion was weakened.
 
 ### Added — HL08 modality and the drivable prefix (report only, no gates)
 

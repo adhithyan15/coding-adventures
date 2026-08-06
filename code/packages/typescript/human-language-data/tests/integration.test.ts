@@ -127,11 +127,16 @@ describe("real curriculum", () => {
       "IT-C03-practice-drop-io",
       "KA-C06-dative-stacking-agglutinative",
       "LA-C01-practice-vale-root",
+      "LA-C19-practice-answer-line",
+      "LA-C21-practice-name-reply",
+      "LA-C33-practice-soir-family",
+      "LA-C36-practice-afternoon-line",
       "ML-C23-naal-survival",
       "MR-C06-number-differences-don-ending",
       "PA-C06-panj-convergence-borrowing",
       "PT-C02-practice-neutral-question",
       "RU-C02-kak-cross-language-what-language",
+      "RU-C02-practice-informal-question",
       "RU-C02-vy-formality-safe-default",
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",
@@ -174,7 +179,8 @@ describe("real curriculum", () => {
         lesson.realization.chapter >= 1 &&
         lesson.realization.chapter <= 3,
     );
-    expect(pilot).toHaveLength(24);
+    // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
+    expect(pilot).toHaveLength(26);
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(

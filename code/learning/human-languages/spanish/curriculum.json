@@ -83,11 +83,13 @@
         "ES-C03-llamar",
         "ES-C03-me-llamo",
         "ES-C03-tu-usted",
+        "ES-C03-tu-usted-register",
         "ES-C03-usted-origin"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-007-LANGUAGE-SPECIFIC"
+        "ES-EXT-007-LANGUAGE-SPECIFIC",
+        "ES-EXT-007-REGISTER"
       ],
       "after": [
         "ES-EXT-007-ETYMOLOGY"
@@ -98,10 +100,13 @@
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "ES-C03-como",
+        "ES-C03-como-acento",
         "ES-C03-familia-qu"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-008-SCRIPT"
+      ],
       "after": [
         "ES-EXT-008-ETYMOLOGY"
       ]
@@ -140,6 +145,7 @@
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "ES-C04-estar",
+        "ES-C04-estar-estado",
         "ES-C04-como-esta",
         "ES-C04-como-estas-register",
         "ES-C04-regular",
@@ -147,6 +153,7 @@
         "ES-W01-acento",
         "ES-W01-tilde-diacritica",
         "ES-W02-enye",
+        "ES-W02-enye-formas",
         "ES-W03-inverted",
         "ES-W03-question-span",
         "ES-C04-practice"
@@ -154,7 +161,8 @@
       "before": [],
       "inline": [
         "ES-EXT-011-LANGUAGE-SPECIFIC",
-        "ES-EXT-011-REGISTER"
+        "ES-EXT-011-REGISTER",
+        "ES-EXT-011-GRAMMAR"
       ],
       "after": [
         "ES-EXT-011-SCRIPT",
@@ -189,9 +197,11 @@
         "ES-C06-cafe",
         "ES-C06-por-favor",
         "ES-C06-hablar",
+        "ES-C06-ar-presente",
         "ES-C06-trabajar",
         "ES-C06-estudiar",
         "ES-C06-espanol",
+        "ES-C06-hablo-espanol",
         "ES-C06-practice"
       ],
       "before": [],
@@ -258,10 +268,13 @@
       "id": "ES-PATH-018",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
-        "ES-C20-lo-siento"
+        "ES-C20-lo-siento",
+        "ES-C20-perdon"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-018-LANGUAGE-SPECIFIC"
+      ],
       "after": []
     },
     {
@@ -282,7 +295,9 @@
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "ES-C22-negro-blanco",
-        "ES-C22-rojo-azul"
+        "ES-C22-blanco-germanico",
+        "ES-C22-rojo",
+        "ES-C22-azul"
       ],
       "before": [],
       "inline": [
@@ -295,7 +310,8 @@
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
         "ES-C23-padre-madre",
-        "ES-C23-hermano-hermana"
+        "ES-C23-hermano-hermana",
+        "ES-C23-hermano-hache"
       ],
       "before": [],
       "inline": [
@@ -332,7 +348,8 @@
       "id": "ES-PATH-024",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
-        "ES-C26-agua-vino",
+        "ES-C26-agua",
+        "ES-C26-vino",
         "ES-C26-pan"
       ],
       "before": [],
@@ -348,7 +365,9 @@
         "ES-C27-los-meses",
         "ES-C28-mediodia-medianoche",
         "ES-C29-la-hora",
-        "ES-C30-el-tiempo"
+        "ES-C30-el-tiempo",
+        "ES-C30-hace-calor",
+        "ES-C30-llueve"
       ],
       "before": [],
       "inline": [
@@ -360,7 +379,10 @@
       "id": "ES-PATH-026",
       "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
-        "ES-C31-numeros-11-20"
+        "ES-C31-once-quince",
+        "ES-C31-dieciseis-diecinueve",
+        "ES-C31-teens-latinos",
+        "ES-C31-veinte"
       ],
       "before": [],
       "inline": [
@@ -372,8 +394,10 @@
       "id": "ES-PATH-027",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C32-perro-gato",
-        "ES-C33-verde-amarillo"
+        "ES-C32-gato",
+        "ES-C32-perro",
+        "ES-C33-verde",
+        "ES-C33-amarillo"
       ],
       "before": [],
       "inline": [
@@ -572,6 +596,17 @@
       ]
     },
     {
+      "id": "ES-EXT-007-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Spanish form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-tu-usted-register"
+      ]
+    },
+    {
       "id": "ES-EXT-008-ETYMOLOGY",
       "stage": "pre-A1",
       "kind": "supporting",
@@ -580,6 +615,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C03-familia-qu"
+      ]
+    },
+    {
+      "id": "ES-EXT-008-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Spanish script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-como-acento"
       ]
     },
     {
@@ -639,6 +685,7 @@
         "ES-W01-acento",
         "ES-W01-tilde-diacritica",
         "ES-W02-enye",
+        "ES-W02-enye-formas",
         "ES-W03-inverted",
         "ES-W03-question-span"
       ]
@@ -652,6 +699,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C04-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Spanish-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-estar-estado"
       ]
     },
     {
@@ -697,9 +755,11 @@
       "lessons": [
         "ES-C06-cafe",
         "ES-C06-hablar",
+        "ES-C06-ar-presente",
         "ES-C06-trabajar",
         "ES-C06-estudiar",
-        "ES-C06-espanol"
+        "ES-C06-espanol",
+        "ES-C06-hablo-espanol"
       ]
     },
     {
@@ -750,6 +810,17 @@
       ]
     },
     {
+      "id": "ES-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C20-perdon"
+      ]
+    },
+    {
       "id": "ES-EXT-019-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
@@ -770,7 +841,9 @@
       "prerequisites": [],
       "lessons": [
         "ES-C22-negro-blanco",
-        "ES-C22-rojo-azul"
+        "ES-C22-blanco-germanico",
+        "ES-C22-rojo",
+        "ES-C22-azul"
       ]
     },
     {
@@ -782,7 +855,8 @@
       "prerequisites": [],
       "lessons": [
         "ES-C23-padre-madre",
-        "ES-C23-hermano-hermana"
+        "ES-C23-hermano-hermana",
+        "ES-C23-hermano-hache"
       ]
     },
     {
@@ -816,7 +890,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C26-agua-vino",
+        "ES-C26-agua",
+        "ES-C26-vino",
         "ES-C26-pan"
       ]
     },
@@ -831,7 +906,9 @@
         "ES-C27-los-meses",
         "ES-C28-mediodia-medianoche",
         "ES-C29-la-hora",
-        "ES-C30-el-tiempo"
+        "ES-C30-el-tiempo",
+        "ES-C30-hace-calor",
+        "ES-C30-llueve"
       ]
     },
     {
@@ -842,7 +919,10 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C31-numeros-11-20"
+        "ES-C31-once-quince",
+        "ES-C31-dieciseis-diecinueve",
+        "ES-C31-teens-latinos",
+        "ES-C31-veinte"
       ]
     },
     {
@@ -853,8 +933,10 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C32-perro-gato",
-        "ES-C33-verde-amarillo"
+        "ES-C32-gato",
+        "ES-C32-perro",
+        "ES-C33-verde",
+        "ES-C33-amarillo"
       ]
     }
   ]

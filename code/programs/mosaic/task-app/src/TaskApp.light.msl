@@ -218,6 +218,60 @@ style TaskApp {
     border-radius : 7 ;
     box-shadow : "0 1px 2px rgba(60,45,25,.07)" ;
   }
+  part seg-board-on {
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(60,45,25,.07)" ;
+  }
+  part seg-board-off {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-board-off2 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-list-off2 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-tl-off2 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
   part seg-list-off {
     background : "transparent" ;
     color : "#6a625a" ;
@@ -241,6 +295,60 @@ style TaskApp {
     }
   }
 
+  // ── board (kanban) ──────────────────────────────────────────────────────
+  part board {
+    gap : 14 ;
+  }
+  part board-col {
+    width : 260 ;
+    flex-shrink : 0 ;
+    background : "#f7f2ea" ;
+    padding : 12 ;
+    gap : 10 ;
+    border-width : 1 ;
+    border-color : "#efe8dd" ;
+    border-radius : 13 ;
+  }
+  part col-head {
+    font-size : 11 ;
+    font-weight : bold ;
+    color : "#6a625a" ;
+    letter-spacing : "0.07em" ;
+    text-transform : "uppercase" ;
+  }
+  // The drop target fills its column, so the whole column is a landing zone rather
+  // than only the strip of cards already in it — dropping into an empty column has
+  // to work.
+  part col-drop {
+    min-height : 60 ;
+    gap : 9 ;
+    // HostDropTarget lowers to a bare <div> with no built-in display, unlike Column —
+    // so without these the gap is inert and the cards stack flush against each other.
+    display : "flex" ;
+    flex-direction : "column" ;
+  }
+  part board-card {
+    background : "#fffdfa" ;
+    padding : 11 ;
+    gap : 6 ;
+    border-width : 1 ;
+    border-color : "#e6ded3" ;
+    border-radius : 9 ;
+    box-shadow : "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)" ;
+    cursor : "grab" ;
+    state hover {
+      border-color : "#e0942a" ;
+    }
+  }
+  part card-name {
+    font-size : 13 ;
+    color : "#2b2723" ;
+  }
+  part card-crit {
+    font-size : 11 ;
+    font-weight : bold ;
+    color : "#cf4b34" ;
+  }
   // ── list ────────────────────────────────────────────────────────────────
   part list-wrap {
     max-width : 760 ;
