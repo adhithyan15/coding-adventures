@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ec285ffdf2590cc0",
+  "sourceHash": "fnv1a64:c79bbb8df3d255e8",
   "summary": {
-    "totalLessons": 1133,
-    "voice": 956,
+    "totalLessons": 1134,
+    "voice": 957,
     "sight": 124,
     "pen": 53,
-    "drivableLessons": 956,
+    "drivableLessons": 957,
     "drivablePercent": 84,
     "trackCount": 22,
     "chapterCount": 377,
-    "drivablePrefixTotal": 824,
+    "drivablePrefixTotal": 825,
     "fullyDrivableChapters": 284,
     "unstartableChapters": 44,
     "overriddenLessons": 0,
@@ -1626,12 +1626,12 @@
     },
     {
       "language": "hindi",
-      "lessonCount": 84,
-      "voice": 70,
+      "lessonCount": 85,
+      "voice": 71,
       "sight": 3,
       "pen": 11,
-      "drivablePercent": 83,
-      "drivablePrefixTotal": 54,
+      "drivablePercent": 84,
+      "drivablePrefixTotal": 55,
       "modalities": [
         "voice",
         "sight",
@@ -1715,19 +1715,20 @@
         },
         {
           "chapter": 5,
-          "lessonCount": 5,
-          "voice": 4,
+          "lessonCount": 6,
+          "voice": 5,
           "sight": 1,
           "pen": 0,
           "modalities": [
             "voice",
             "sight"
           ],
-          "drivablePrefix": 4,
+          "drivablePrefix": 5,
           "firstNonVoiceLesson": "HI-C05-rahna",
           "drivable": false,
           "drivableLessonIds": [
             "HI-C05-bolna",
+            "HI-C05-bolta-hun",
             "HI-C05-karna",
             "HI-C05-main-hindi-bolta-hun",
             "HI-C05-practice"
@@ -11203,6 +11204,19 @@
       "sourceHash": "fnv1a64:96d065e73903a163"
     },
     {
+      "id": "HI-C05-bolta-hun",
+      "language": "hindi",
+      "chapter": 5,
+      "sequence": null,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6aed02a1964d754d"
+    },
+    {
       "id": "HI-C05-karna",
       "language": "hindi",
       "chapter": 5,
@@ -11226,7 +11240,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a7eb469a4013d3f"
+      "sourceHash": "fnv1a64:5316fa9dbfd1dad1"
     },
     {
       "id": "HI-C05-practice",
