@@ -17,7 +17,7 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": null,
+  "active_pr": 9995,
   "last_manifest_check": {
     "objectives": 63,
     "coverage_roots": 6,
@@ -58,7 +58,7 @@
       "status": "in_progress",
       "depends_on": [],
       "branch": "feat/adj-fl8-comparison-formulas",
-      "pr_number": null,
+      "pr_number": 9995,
       "notes": "Discovered while scoping wave2-k2-math-cardinality-comparison: ADJ had no way to express a citable, queryable, parameterized 'is A greater than B' — `formula` bodies were arithmetic-only, and `constrain`/`check` (the language's only comparison surface) carries no provenance tail and isn't `?`-queryable. Researched the AST/evaluator/formula_audit.rs blast radius first (compiler-enforced exhaustive matches; confirmed the CAS-provenance agent's adj_stdlib_provenance.py verify only touches its own registered manifest, so an unmigrated comparison formula fails closed, never crashes CI) before implementing. Adds `formula_relation = expr [ relop expr ]` (grammar-additive, every existing formula still parses), `ExprAst::Compare`, 6 new `ComputeOp::Cmp*` variants (dimensionless 1/0 result, exact when operands are, mirrors `Sign`'s dimension-collapse). Spec'd in ADJ-FORMULA-LIBRARIES.md §3B (FL-8). Full test coverage (logic-engine + adj-lang unit/e2e + formula_source_map), clippy clean. Ships as its own PR ahead of the K-2 content PR that will actually use it (comparison.adj)."
     },
     {
