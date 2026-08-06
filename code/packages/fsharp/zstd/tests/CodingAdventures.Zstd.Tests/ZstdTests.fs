@@ -283,6 +283,52 @@ type ZstdTests() =
             Assert.Equal<byte array>(input, decompressedByCli)
 
     [<Fact>]
+    member _.``TC-9: real zstd CLI Repeated-Offset (R1/R2/R3) sequences decode correctly``() =
+        // Regression coverage for lessons.md Lesson 98 (see PR #9941,
+        // c/zstd): this package's own encoder is, by design, incapable of
+        // emitting an Offset_Value <= 3 (the minimum LZSS match offset is
+        // 1, so `rawOffset = offset + 3 >= 4` always) — so a self round
+        // trip, and every existing TC-9 test above (which only compresses
+        // WITH this package's own encoder, or decompresses a real-CLI frame
+        // built from non-repetitive prose), never exercises the decoder's
+        // handling of Offset_Value 1/2/3 as a Repeated-Offset reference
+        // (RFC 8878 §3.1.1.3.2.1.1) rather than a literal `code - 3`.
+        //
+        // Real `zstd`'s own encoder uses repeat offsets constantly — long
+        // constant-byte runs are an easy, reliable way to force it: 4713
+        // bytes of a single repeated byte compresses (at the default level,
+        // WITHOUT --no-check so the interop path also covers a real
+        // checksum trailer) to a single Compressed block whose one sequence
+        // is 2 literal bytes ("ZZ") + a match with Offset_Value=1 — i.e.
+        // "reuse Repeated_Offset1", which starts at its RFC-mandated
+        // default of 1. Before the Lesson-98 fix, DecompressBlock computed
+        // `matchOffset = rawOffset - 3` unconditionally, so `rawOffset = 1`
+        // underflowed to a huge bogus offset that the existing
+        // offset-bounds check (`matchOffset > output.Count`) correctly
+        // rejected as malformed — even though the frame is perfectly valid,
+        // just encoded via a mechanism the decoder didn't understand yet.
+        if ZstdCli.isAvailable () then
+            let input = Array.create 4713 (byte 'Z')
+            let compressedByCli = ZstdCli.run [ "-c" ] input
+            Assert.Equal<byte array>(input, Zstd.Decompress compressedByCli)
+
+    [<Fact>]
+    member _.``TC-9: real zstd CLI Repeated-Offset sequences decode correctly across a periodic pattern``() =
+        // A second, independent Repeated-Offset repro using a periodic
+        // (non-constant) pattern rather than a single repeated byte, so the
+        // regression coverage doesn't depend on real zstd's RLE-via-
+        // repeat-offset heuristic for constant-byte runs specifically.
+        // Six-byte cycles over many repetitions give real zstd's encoder
+        // many equal-distance matches, which its cost model strongly
+        // favours encoding as Repeated-Offset (R1) references once the same
+        // offset has been used twice in a row.
+        if ZstdCli.isAvailable () then
+            let cycle = Encoding.ASCII.GetBytes "ABCDEF"
+            let input = Array.init 3000 (fun index -> cycle[index % cycle.Length])
+            let compressedByCli = ZstdCli.run [ "-c" ] input
+            Assert.Equal<byte array>(input, Zstd.Decompress compressedByCli)
+
+    [<Fact>]
     member _.``malformed frames are rejected``() =
         let malformed =
             [| [||]
