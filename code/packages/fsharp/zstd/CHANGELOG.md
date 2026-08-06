@@ -2,6 +2,64 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] - 2026-08-05
+
+Audited against a second, independent RFC 8878 conformance gap — this one a
+decode-only FEATURE GAP rather than the FSE-codec class fixed in 0.1.1 —
+first found and fixed in `code/packages/c/zstd` (PR #9941, `lessons.md`
+Lesson 98). This package inherited the identical gap.
+
+### Fixed
+
+- **`DecompressBlock` never implemented Repeated-Offset (R1/R2/R3) sequence
+  decoding (RFC 8878 §3.1.1.3.2.1.1).** An `Offset_Value` of 1, 2, or 3 is a
+  reference into a three-entry offset history (`Repeated_Offset1/2/3`,
+  frame-scoped, defaulting to 1/4/8 for the first block and updated after
+  every Compressed block's sequences), not a literal `Offset_Value - 3`
+  computation. `DecompressBlock` computed `matchOffset = rawOffset - 3`
+  unconditionally, so any `rawOffset` of 1-3 underflowed to a bogus huge
+  offset — rejected by the existing offset-bounds check as "malformed" even
+  though the frame was perfectly valid, just encoded via a mechanism the
+  decoder didn't understand.
+- Why this package's own round-trip tests never caught it: `EncodeSequences`
+  is, by design, incapable of emitting `Offset_Value <= 3` (the minimum
+  LZSS match offset is 1, so `rawOffset = offset + 3 >= 4` always) — the
+  "no repeat-offset shortcuts" educational simplification is entirely an
+  ENCODER-side choice. But the real `zstd` CLI's encoder uses repeat offsets
+  constantly (one of its principal entropy wins, especially for
+  periodic/repetitive data), so this package's decoder systematically failed
+  to decode a meaningful fraction of real-world `.zst` files. Even the
+  existing TC-9 CLI-interop tests (added in 0.1.1) never exercised this path
+  — their fixed prose corpus never happened to produce a real-`zstd`-encoded
+  sequence with `Offset_Value <= 3`.
+- Fixed by threading the three `Repeated_Offset` registers (frame-scoped, as
+  `byref<int>` parameters) from `Decompress` through every Compressed
+  block's `DecompressBlock` call, and implementing the full
+  peek-then-select-then-rotate mechanism per RFC 8878 §3.1.1.3.2.1.1 —
+  including the "when `Literals_Length` is 0, repeated offsets are shifted
+  by 1" special case (using the peeked, not-yet-extra-bit-read literal-length
+  code, which is sufficient to know whether the eventual literal length is
+  zero). Cross-checked against both the RFC 8878 prose and the literal
+  reference C source (`ZSTD_decodeSequence` in `zstd_decompress_block.c`
+  from github.com/facebook/zstd), per the Lesson-96/98 playbook of never
+  re-deriving wire-format semantics from memory alone. The encoder is
+  deliberately left unchanged — still never emits repeat-offset codes; this
+  is a decode-only fix.
+
+### Added
+
+- Two new TC-9 regression tests: `4713` bytes of a single repeated byte
+  (real `zstd` compresses this to one Compressed block whose one sequence is
+  2 literal bytes + a match with `Offset_Value=1`, i.e. "reuse
+  `Repeated_Offset1`" — an unmistakable RLE-via-repeat-offset pattern that
+  reproduced the pre-fix bug directly), and a periodic 6-byte-cycle pattern
+  as an independent repro not dependent on real zstd's constant-byte
+  heuristic specifically.
+- Ad hoc (not committed) verification: a 42-case fuzz sweep against the real
+  `zstd` CLI (constant, periodic at several cycle lengths, ramp, random, and
+  prose patterns, at sizes from 16 bytes to 20 KB) — all round-tripped
+  byte-exact after the fix.
+
 ## [0.1.1] - 2026-08-03
 
 Audited against a real RFC 8878 conformance bug confirmed present in

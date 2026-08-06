@@ -1065,8 +1065,36 @@ private fun compressBlock(block: ByteArray): ByteArray? {
  *
  * Reads the literals section, sequences section, and applies the sequences
  * to the output buffer to reconstruct the original data.
+ *
+ * [rep] holds the three Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1),
+ * `rep[0]` = Repeated_Offset1, `rep[1]` = Repeated_Offset2, `rep[2]` =
+ * Repeated_Offset3 — IN/OUT, because they are **frame-scoped, not
+ * block-scoped**: "For the first block, the starting offset history is
+ * populated with Repeated_Offset1=1, Repeated_Offset2=4, Repeated_Offset3=8"
+ * (RFC 8878), and every later Compressed block in the same frame continues
+ * from wherever the previous one's sequences left them. The caller
+ * ([Zstd.decompress]) owns the array and threads it through every
+ * Compressed block in a frame (Raw/RLE blocks never touch it).
+ *
+ * WHY THIS DECODER NEEDS THIS EVEN THOUGH ITS OWN ENCODER NEVER EMITS
+ * REPEAT-OFFSET SEQUENCES: [encodeSequencesSection] always writes an
+ * explicit offset code (>= 2, since this package's minimum LZ77 match
+ * offset is 1, giving `rawOff = offset + 3 >= 4`), so this package's own
+ * `compress()`/`decompress()` round trip never touches the repeat-offset
+ * path. But the real `zstd` CLI's encoder uses repeat offsets constantly —
+ * they're one of its principal entropy wins, especially for periodic or
+ * highly repetitive data — so a decoder that only understands explicit
+ * offset codes systematically fails to decode a meaningful fraction of
+ * real-world `.zst` files (see lessons.md Lesson 98, and PR #9941's
+ * `c/zstd` fix, which found this exact gap via real-CLI fuzzing: 4713
+ * bytes of a single repeated byte compresses to a Compressed block whose
+ * one sequence has `Offset_Value=1`, i.e. "reuse Repeated_Offset1" — an
+ * unmistakable RLE-via-repeat-offset pattern that a bare `code - 3`
+ * computation underflows on). Algorithm cross-checked against both the RFC
+ * 8878 prose and the literal reference C source (`ZSTD_decodeSequence` in
+ * `zstd_decompress_block.c`), not re-derived from memory.
  */
-private fun decompressBlock(data: ByteArray, output: GrowableByteBuffer) {
+private fun decompressBlock(data: ByteArray, output: GrowableByteBuffer, rep: LongArray) {
     // Every place below that grows `output` re-checks this bound: a
     // Compressed block's *sequences* (not just its on-wire byte count) are
     // what can blow up the output size, so the guard has to live at the
@@ -1151,18 +1179,79 @@ private fun decompressBlock(data: ByteArray, output: GrowableByteBuffer) {
         if (llCode >= LL_CODES.size) throw IOException("invalid LL code $llCode")
         if (mlCode >= ML_CODES.size) throw IOException("invalid ML code $mlCode")
 
+        // llIsZero is needed for the repeat-offset interpretation below
+        // (RFC 8878's "when Literals_Length is 0, repeated offsets are
+        // shifted by 1" rule) and is knowable right now, from the PEEKED
+        // llCode alone -- LL code 0 is the only code with baseline 0 and 0
+        // extra bits, so llCode == 0 iff the eventual decoded `ll` value is
+        // 0. No extra bits need to be read yet to know this.
+        val llIsZero = llCode == 0
+
         // RFC 8878: "Decoding starts by reading the Number_of_Bits required
         // to decode offset. It does the same for Match_Length and then for
-        // Literals_Length." — extra bits are read OF, then ML, then LL.
+        // Literals_Length." — extra bits are read OF, then ML, then LL. The
+        // NUMBER of bits read for the offset field is always exactly
+        // `ofCode`, regardless of the repeat-offset interpretation below
+        // (the reference decoder never varies bit-consumption on
+        // llIsZero -- only how the resulting value maps to an actual
+        // offset changes).
         val ofRaw = (1L shl ofCode) or br.readBits(ofCode)
-        if (ofRaw < 3L) throw IOException("decoded offset underflow: of_raw=$ofRaw")
-        val offset = ofRaw - 3L
 
         val mlInfo = ML_CODES[mlCode]
         val ml = mlInfo[0] + br.readBits(mlInfo[1].toInt())
 
         val llInfo = LL_CODES[llCode]
         val ll = llInfo[0] + br.readBits(llInfo[1].toInt())
+
+        // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        // the Repeated_Offset (R1/R2/R3) mechanism -- see decompressBlock's
+        // doc comment for why this decoder needs it even though its own
+        // encoder never emits it.
+        //
+        // ofCode >= 2 guarantees ofRaw = (1 shl ofCode) + extra >= 4, i.e.
+        // Offset_Value > 3: an ordinary explicit offset. ofCode <= 1
+        // guarantees ofRaw in {1, 2, 3}: a repeat-offset reference.
+        //
+        // The repeat case collapses to one selector in [0, 3]:
+        //     selector = llIsZero + ofRaw - 1
+        // (derived from, and verified against, the reference decoder's
+        // `ofBase + ll0 + extra_bit` -- see PR #9941's c/zstd fix, which
+        // this was cross-checked against alongside the RFC prose):
+        //   0 -> reuse rep[0] unchanged (no rotation)
+        //   1 -> use rep[1] (rep[0],rep[1] swap; rep[2] untouched)
+        //   2 -> use rep[2] (full rotate: rep <- new,old_rep[0],old_rep[1])
+        //   3 -> use rep[0]-1 (full rotate, same shape as selector 2)
+        val offset: Long
+        if (ofCode >= 2) {
+            offset = ofRaw - 3L
+            rep[2] = rep[1]
+            rep[1] = rep[0]
+            rep[0] = offset
+        } else {
+            val selector = (if (llIsZero) 1 else 0) + ofRaw.toInt() - 1
+            when (selector) {
+                0 -> {
+                    offset = rep[0]
+                }
+                1 -> {
+                    offset = rep[1]
+                    rep[1] = rep[0]
+                    rep[0] = offset
+                }
+                2 -> {
+                    offset = rep[2]
+                    rep[2] = rep[1]
+                    rep[1] = rep[0]
+                    rep[0] = offset
+                }
+                else -> { // 3
+                    offset = if (rep[0] > 0L) rep[0] - 1L else 0L
+                    rep[2] = rep[1]
+                    rep[1] = rep[0]
+                    rep[0] = offset
+                }
+            }
+        }
 
         // RFC 8878: "If it is not the last sequence in the block, the next
         // operation is to update states. ... Literals_Length_State is
@@ -1388,6 +1477,13 @@ object Zstd {
         // their own incremental check inside decompressBlock, not just here).
         val output = GrowableByteBuffer()
 
+        // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+        // default 1/4/8 "for the first block", then threaded unmodified
+        // through every Compressed block's sequences for the rest of the
+        // frame (Raw/RLE blocks don't touch them). See decompressBlock's doc
+        // comment.
+        val rep = longArrayOf(1L, 4L, 8L)
+
         while (true) {
             if (pos + 3 > data.size) throw IOException("truncated block header")
 
@@ -1441,7 +1537,7 @@ object Zstd {
                     }
                     val blockData = data.copyOfRange(pos, pos + bsize)
                     pos += bsize
-                    decompressBlock(blockData, output)
+                    decompressBlock(blockData, output, rep)
                 }
                 3 -> throw IOException("reserved block type 3")
                 else -> throw IOException("unknown block type $btype")
