@@ -4,6 +4,23 @@ All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
+## 0.2.2 — 2026-08-06 — Cell's click was never wired to its own emit
+
+### Fixed
+
+- **A click on a cell did nothing.** `Cell.mil` declares `emit onClick`, and
+  every call site — including `Grid.mll`'s own `Cell(onClick: emit:
+  onNavigate, ...)` — supplies a handler for it, but `Cell.mll`'s `Box[cell]`
+  never actually referenced `emit: onClick` anywhere in its own body. The
+  package resolver's `rewrite_bindings` step had nothing to substitute the
+  call site's binding into, so the wiring silently went nowhere. This shipped
+  invisibly in 0.2.0/0.2.1 because no real application had driven `Grid`
+  through an actual emitter pipeline until task-app's sheet view did — the
+  package's own frontend-only smoke tests never click anything. Fixed by
+  wiring `Box[cell]`'s `onClick` to `emit: onClick`, the same pattern
+  `Grid.mll` already uses one level up for `Cell`'s `onChange`/`onCommit`/
+  `onCancel`.
+
 ## 0.2.1 — 2026-06-04 — UI34 package-resolver compatibility
 
 End-to-end resolver compatibility: with UI34 PRs #4969 (resolver) +

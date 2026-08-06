@@ -68,22 +68,34 @@ layout TaskApp {
         // clicking the view you are already on is a no-op instead of a swap.
         Row [ seg ] {
           // Part names are unique layout-wide, even across mutually-exclusive
-          // branches, so each of the four states gets its own name.
+          // branches, so each of the four buttons gets its own name in each of
+          // the four branches (one "on" + three "off" variants per button).
           If ( when: slot: timeline-mode ) {
             HostButton [ seg-list-off ] ( label : "List" , onClick : emit: onShowList )
             HostButton [ seg-board-off ] ( label : "Board" , onClick : emit: onShowBoard )
+            HostButton [ seg-sheet-off ] ( label : "Sheet" , onClick : emit: onShowSheet )
             HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
           }
           Else {
             If ( when: slot: board-mode ) {
               HostButton [ seg-list-off2 ] ( label : "List" , onClick : emit: onShowList )
               HostButton [ seg-board-on ] ( label : "Board" , onClick : emit: onShowBoard )
+              HostButton [ seg-sheet-off2 ] ( label : "Sheet" , onClick : emit: onShowSheet )
               HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
             }
             Else {
-              HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
-              HostButton [ seg-board-off2 ] ( label : "Board" , onClick : emit: onShowBoard )
-              HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+              If ( when: slot: sheet-mode ) {
+                HostButton [ seg-list-off3 ] ( label : "List" , onClick : emit: onShowList )
+                HostButton [ seg-board-off3 ] ( label : "Board" , onClick : emit: onShowBoard )
+                HostButton [ seg-sheet-on ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                HostButton [ seg-tl-off3 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+              }
+              Else {
+                HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
+                HostButton [ seg-board-off4 ] ( label : "Board" , onClick : emit: onShowBoard )
+                HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+              }
             }
           }
         }
@@ -150,6 +162,34 @@ layout TaskApp {
           }
         }
         Else {
+        If ( when: slot: sheet-mode ) {
+          // Every sheet-* slot/emit is a straight pass-through to the package —
+          // TaskApp adds no shaping of its own, see Sheet.mil for the contract.
+          pkg::mosaic-pkg-sheet::Sheet (
+            viewport-rows : slot: sheet-viewport-rows ,
+            column-headers : slot: sheet-column-headers ,
+            column-widths : slot: sheet-column-widths ,
+            selected-row : slot: sheet-selected-row ,
+            selected-col : slot: sheet-selected-col ,
+            edit-row : slot: sheet-edit-row ,
+            edit-col : slot: sheet-edit-col ,
+            edit-content : slot: sheet-edit-content ,
+            filter-text : slot: sheet-filter-text ,
+            sort-field : slot: sheet-sort-field ,
+            sort-options : slot: sheet-sort-options ,
+            sort-open : slot: sheet-sort-open ,
+            sort-ascending : slot: sheet-sort-ascending ,
+            onNavigate : emit: onSheetNavigate ,
+            onFormulaChange : emit: onSheetFormulaChange ,
+            onEditCommit : emit: onSheetEditCommit ,
+            onEditCancel : emit: onSheetEditCancel ,
+            onFilterChange : emit: onSheetFilterChange ,
+            onSortFieldChange : emit: onSheetSortFieldChange ,
+            onToggleSortOpen : emit: onSheetToggleSortOpen ,
+            onToggleSortDirection : emit: onSheetToggleSortDirection
+          )
+        }
+        Else {
           Column [ list-wrap ] {
             Row [ composer ] {
               HostInput [ name-input ] (
@@ -208,6 +248,7 @@ layout TaskApp {
               }
             }
           }
+        }
         }
         }
       }

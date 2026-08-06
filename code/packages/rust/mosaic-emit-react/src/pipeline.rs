@@ -925,7 +925,7 @@ fn emit_jsx_tree(
     // onCommit/onCancel patterns are kept identical so existing host wiring
     // continues to work bit-for-bit.
     if node.tag == "HostInput" {
-        return emit_host_input_jsx(node, indent, part_styles);
+        return emit_host_input_jsx(node, indent, part_styles, emits);
     }
 
     // UI29 §2.1 — `HostButton` is the kernel-canonical clickable. It lowers
@@ -1790,6 +1790,7 @@ fn emit_host_input_jsx(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1863,9 +1864,27 @@ fn emit_host_input_jsx(
         if let Some(emit) = commit_emit {
             let t = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_emit_name(&t)?;
-            h.push_str(&format!(
-                " if (e.key === \"Enter\") dispatch({{ type: \"{t}\" }});"
-            ));
+            // A payload-carrying onCommit (e.g. mosaic-pkg-grid's Cell/Grid, which
+            // declares `onEditCommit(value: text)`) needs the input's current text on
+            // the dispatch, or the TypeScript union requires a `value` field the
+            // generated code never supplies — a real bug the sheet view surfaced, the
+            // first HostInput onCommit consumer in this repo with a declared payload.
+            // A void emit (no declared params) stays payload-less: adding an unwanted
+            // field there would trip object-literal excess-property checking instead.
+            let carries_value = emits.iter().any(|e| e.name == emit && !e.params.is_empty());
+            if carries_value {
+                // `e.currentTarget`, not `e.target`: React's KeyboardEvent<T> types
+                // `target` as the loose `EventTarget` (no `.value`) but narrows
+                // `currentTarget` to `T` — unlike ChangeEvent<T>, where `target` is
+                // itself already narrowed (see the onChange handler above).
+                h.push_str(&format!(
+                    " if (e.key === \"Enter\") dispatch({{ type: \"{t}\", value: e.currentTarget.value }});"
+                ));
+            } else {
+                h.push_str(&format!(
+                    " if (e.key === \"Enter\") dispatch({{ type: \"{t}\" }});"
+                ));
+            }
         }
         if let Some(emit) = cancel_emit {
             let t = to_camel_case_first_lower(&strip_on_prefix(emit));
@@ -6652,6 +6671,52 @@ mod tests {
         assert!(
             out.contains("if (e.key === \"Enter\") dispatch({ type: \"save\" });"),
             "expected Enter branch dispatching `save`, got:\n{out}"
+        );
+    }
+
+    /// A payload-carrying `onCommit` (mosaic-pkg-grid's `Cell`/`Grid` declare
+    /// `onEditCommit(value: text)`, and so does mosaic-pkg-sheet's `Sheet`) must
+    /// carry the input's current text on the dispatch. Before this fix the
+    /// generic onKeyDown handler always dispatched `{ type: "..." }` with no
+    /// payload regardless of the target emit's declared params — which the
+    /// TypeScript union required, so the generated component failed to
+    /// typecheck. Found building the sheet view, the first HostInput onCommit
+    /// consumer in the repo with a declared payload (mosaic-pkg-grid shipped
+    /// untested against a real app until then).
+    #[test]
+    fn host_input_on_commit_with_declared_payload_carries_the_value() {
+        let m = component("X", vec![], vec![emit("onEditCommit", vec![param("value", EmitPayloadType::Text)])]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "onCommit".to_string(),
+            value: LayoutPropValue::EmitRef("onEditCommit".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains(
+                "if (e.key === \"Enter\") dispatch({ type: \"editCommit\", value: e.currentTarget.value });"
+            ),
+            "expected Enter branch to carry the input's current value, got:\n{out}"
+        );
+    }
+
+    /// Sibling case: a VOID onCommit (no declared params, as tested just above
+    /// by `host_input_on_commit_emits_enter_key_handler`) must stay
+    /// payload-less — adding an unwanted `value` field to a zero-param emit's
+    /// dispatch would trip TypeScript's excess-property check on the object
+    /// literal instead of fixing anything.
+    #[test]
+    fn host_input_on_commit_without_declared_payload_stays_void() {
+        let m = component("X", vec![], vec![emit("onSave", vec![])]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "onCommit".to_string(),
+            value: LayoutPropValue::EmitRef("onSave".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            !out.contains("value: e.currentTarget.value"),
+            "a void emit must not gain an unrequested payload field:\n{out}"
         );
     }
 

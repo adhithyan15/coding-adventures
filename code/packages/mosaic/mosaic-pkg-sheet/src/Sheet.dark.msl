@@ -1,0 +1,56 @@
+// Sheet.dark.msl — dark theme style for the Sheet component.
+//
+// Styles only Sheet's own toolbar parts. The wrapped Grid and Select
+// bring their own styling (Grid.dark.msl, Select.dark.msl) — Sheet's
+// call sites for both deliberately carry no part-name override, so
+// nothing here can (or should) reach into them. Palette mirrors
+// mosaic-pkg-toolkit's own dark theme (Input.dark.msl) for a
+// consistent toolbar-adjacent-to-toolkit look.
+
+style Sheet {
+  part sheet-root {
+    gap: 8 ;
+  }
+
+  part sheet-toolbar {
+    gap: 8 ;
+  }
+
+  part sheet-filter {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#1e293b" ;
+    color         : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    font-size     : 14 ;
+  }
+
+  part sheet-sort-dir-asc {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#1e293b" ;
+    color         : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    font-size     : 14 ;
+
+    state hover {
+      background: "#334155" ;
+    }
+  }
+
+  part sheet-sort-dir-desc {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#1e293b" ;
+    color         : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    font-size     : 14 ;
+
+    state hover {
+      background: "#334155" ;
+    }
+  }
+}

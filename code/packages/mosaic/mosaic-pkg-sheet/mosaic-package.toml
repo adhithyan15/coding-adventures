@@ -1,0 +1,33 @@
+# mosaic-package.toml — manifest for mosaic-pkg-sheet.
+#
+# A filterable, sortable, editable spreadsheet view over a table(view)
+# projection. Composed from mosaic-pkg-grid (the raw cell grid) plus
+# mosaic-pkg-toolkit (the filter input and sort-field select) — no
+# bespoke per-backend code of its own. Conforms to the UI29 §4.2
+# package-manifest shape.
+#
+# v0.1.0 scope
+# ------------
+# Filter (a single search box, forwarded to the host so it can rebuild
+# its View's `filter.search`) and sort (a field-name Select + a
+# direction toggle, likewise forwarded so the host rebuilds `sort`) are
+# both engine-driven: this package never filters or sorts data itself,
+# it only collects the two inputs and hands them to the host. Column
+# show/hide is deferred — see the package README's "Not in v0.1.0"
+# section.
+
+[package]
+name = "mosaic-pkg-sheet"
+version = "0.1.0"
+description = "Filterable, sortable, editable spreadsheet view wired to task-core's table(view) projection"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Sheet"]
+
+[dependencies]
+mosaic-pkg-grid = "0.2.2"
+mosaic-pkg-toolkit = "0.11.0"
+
+[kernel]
+version = "1"
