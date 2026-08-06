@@ -1,0 +1,25 @@
+# mosaic-package.toml — manifest for mosaic-pkg-project-nav.
+#
+# Nested-project tree + add-project composer, extracted verbatim from
+# TaskApp's own rail block (see code/specs/task-app-project-nav-v1.md for
+# the extraction rationale and what stayed behind in TaskApp). Built
+# entirely from kernel primitives — no dependency on another package.
+#
+# v0.1.0 scope: the nested-project LIST + add/add-subproject composer
+# only. The view-switcher (List/Board/Sheet/Calendar/Notes/Timeline tabs)
+# named alongside "view switcher" in task-app-super-app.md §4's package
+# description stays inline in TaskApp — see the spec for why.
+
+[package]
+name = "mosaic-pkg-project-nav"
+version = "0.1.0"
+description = "Nested-project tree + add-project composer, extracted from TaskApp's rail"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["ProjectNav"]
+
+[dependencies]
+
+[kernel]
+version = "1"
