@@ -1,0 +1,121 @@
+% Preamble for "Mandarin, Step by Step, Character by Character" (HL00 book format).
+% XeLaTeX only. Uses the vendored NotoSansSC-Subset.ttf (see _fonts/), loaded by
+% relative path so local and CI builds are identical. Follows the same shape as
+% tamil/book/preamble.tex, the reference non-Latin preamble.
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+% Pinyin marks tone with a diacritic over the vowel, and the caron vowels are the
+% ones Latin Modern is least likely to carry precomposed. Compose them from the
+% accent command instead, which works in any font, so a tone mark can never be
+% silently dropped -- and a dropped tone mark here would not be a cosmetic loss,
+% it would change the word.
+\usepackage{newunicodechar}
+\newunicodechar{ǎ}{\v{a}}
+\newunicodechar{ě}{\v{e}}
+\newunicodechar{ǐ}{\v{\i}}
+\newunicodechar{ǒ}{\v{o}}
+\newunicodechar{ǔ}{\v{u}}
+\newunicodechar{ǖ}{\={\"u}}
+\newunicodechar{ǘ}{\'{\"u}}
+\newunicodechar{ǚ}{\v{\"u}}
+\newunicodechar{ǜ}{\`{\"u}}
+\newunicodechar{ḿ}{\'{m}}
+\newunicodechar{ǹ}{\`{n}}
+\newunicodechar{ǵ}{\'{g}}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\setlength{\tabcolsep}{5pt}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+
+% The vendored Chinese font. It is a fonttools SUBSET of Noto Sans SC covering
+% exactly the characters in data/scripts/chinese.json -- the full family is ~17 MB,
+% which is too much to vendor for a handful of greetings. Every requested shape is
+% mapped to the same file so a bold or italic teaching context cannot fall back to
+% a system font and emit a substitution warning.
+% (No `Script=` key: Han needs no complex shaping, and naming a script tag the
+% subset does not declare would only produce a fontspec warning for no gain.)
+\newfontfamily\chinesefont[
+  Path=../../_fonts/,
+  BoldFont=NotoSansSC-Subset.ttf,
+  ItalicFont=NotoSansSC-Subset.ttf,
+  BoldItalicFont=NotoSansSC-Subset.ttf
+]{NotoSansSC-Subset.ttf}
+
+% Inline Chinese snippet within English text. The book generator emits \zh{...}
+% around every run of Han-script characters (see core/book-generation.json).
+\newcommand{\zh}[1]{{\chinesefont #1}}
+\pdfstringdefDisableCommands{%
+  \def\zh#1{#1}% Keep the characters in PDF bookmarks, drop the font switch.
+  \def\chinesefont{}%
+  % The tone accents above expand to accent commands, which hyperref cannot put
+  % in a PDF string. Drop the accent rather than emit a warning per bookmark;
+  % the bookmark text stays readable and the printed page keeps its tone marks.
+  \def\v#1{#1}%
+  \def\=#1{#1}%
+}
+
+% Micro-lessons end at natural pause points rather than stretching their callout
+% boxes to force every page to the same depth.
+\raggedbottom
+\emergencystretch=2em
+\hbadness=2000
+
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
+
+\hypersetup{
+  pdftitle={Mandarin, Step by Step, Character by Character},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={A composition-driven introduction to standard Mandarin},
+  pdfkeywords={Mandarin, Chinese, hanzi, tone, pinyin, language learning}
+}
+
+% The cousin-web box every other track uses is deliberately renamed here: Chinese
+% shares no ancestor with English, so there are no cousins to show. What the box
+% actually holds is the character's composition.
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart --- what its characters are made of}
+}
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+\newtcolorbox{grammarlens}[1][]{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}, #1
+}
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The sounds and tones in this word}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}

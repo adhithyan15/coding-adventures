@@ -519,18 +519,25 @@ describe("corpus regression", () => {
   // dangerously, a block field rename that makes every lesson look clean — moves it
   // and fails here instead of shipping a curriculum falsely advertised as drivable.
   //
-  // Reproduces the HL08 baseline: 51 `pen`, 7 script-block lessons, and 322
-  // table-bearing lessons among the remaining 1,038. HL08 records 695 drivable from
-  // 56 cue-bearing lessons; this implementation's published cue list matches 61 and
-  // therefore lands on 694. The spec's exact cue list was never recorded, and the
-  // detector is deliberately NOT tuned to close a one-lesson gap.
+  // The HL08 baseline was 1,096 lessons: 51 `pen`, 7 script-block lessons, and 322
+  // table-bearing lessons among the remaining 1,038, giving 694 drivable. (HL08's
+  // prose says 695 from 56 cue-bearing lessons; this implementation's published cue
+  // list matches 61 and therefore lands on 694. The spec's exact cue list was never
+  // recorded, and the detector is deliberately NOT tuned to close a one-lesson gap.)
+  //
+  // HL-C39 added Mandarin Chinese, +7 lessons: 1,096 -> 1,103. Five are `voice`
+  // (694 -> 699) and two are `sight` (351 -> 353), because `ZH-C01-ni` and
+  // `ZH-C01-hao` each carry a `script` block teaching a character's components
+  // (7 -> 9 script-block lessons). No Chinese lesson needs a pen, and none carries
+  // a table, so the 51 `pen` and 322 table-bearing counts are unchanged and the
+  // corpus-wide drivable share stays at 63%.
   it("pins the corpus-wide drivable count", () => {
     const { lessons } = loadEverything();
     const summary = summarizeModality(lessons);
-    expect(summary.totalLessons).toBe(1096);
+    expect(summary.totalLessons).toBe(1103);
     expect(summary.pen).toBe(51);
-    expect(summary.voice).toBe(694);
-    expect(summary.sight).toBe(351);
+    expect(summary.voice).toBe(699);
+    expect(summary.sight).toBe(353);
     expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
     expect(summary.drivablePercent).toBe(63);
   });
@@ -541,11 +548,11 @@ describe("corpus regression", () => {
     const nonWriting = lessons.filter((entry) => entry.realization.type !== "writing");
     expect(
       nonWriting.filter((entry) => entry.blocks.some((block) => block.type === "script")),
-    ).toHaveLength(7);
+    ).toHaveLength(9);
     const remaining = nonWriting.filter(
       (entry) => !entry.blocks.some((block) => block.type === "script"),
     );
-    expect(remaining).toHaveLength(1038);
+    expect(remaining).toHaveLength(1043);
     expect(
       remaining.filter((entry) => widestTableColumns(lessonText(entry)) > 0),
     ).toHaveLength(322);

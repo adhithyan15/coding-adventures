@@ -47,6 +47,17 @@ export const CONTENT_TYPES = new Set(["word", "phrase"]);
  *
  * `grammar` and `etymology` are short support lessons whose progression lives
  * in knowledge atoms rather than the cross-language vocabulary join.
+ *
+ * `pronunciation` is the newest member, and it exists because of Mandarin. Every
+ * earlier track's pronunciation facts are *segmental* — "the h is silent", "this
+ * vowel is long" — and a segmental fact belongs to a letter, so it lives inside
+ * the word lesson that first uses that letter (HL00, "Pronunciation & Script:
+ * Inline, Never a Gate"). A tone does not belong to a letter. It rides on a whole
+ * syllable, it is phonemic, and third-tone sandhi changes it because of the
+ * NEXT syllable, which makes it a fact about a sequence rather than about any
+ * glyph. There was no lesson type for that: `grammar` would misfile a sound rule
+ * as morphology, and folding it into a word lesson pushed that lesson over the
+ * five-minute budget. Adding the type is the smaller, more honest change.
  */
 export const EXEMPT_TYPES = new Set([
   "practice",
@@ -56,6 +67,7 @@ export const EXEMPT_TYPES = new Set([
   // Short support lessons are ordered by knowledge atoms, not concept joins.
   "grammar",
   "etymology",
+  "pronunciation",
 ]);
 
 /** A language-local concept id: two-letter lang prefix + SCREAMING-KEBAB name. */

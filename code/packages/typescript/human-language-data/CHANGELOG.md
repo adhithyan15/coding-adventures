@@ -4,6 +4,45 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added — tone in the script data model, and a `pronunciation` lesson type (HL-C39)
+
+Driven entirely by the Mandarin Chinese track, which was added as a scale test for
+whether the curriculum model generalises outside Indo-European and Dravidian.
+
+- `ScriptData` gains `tones?: Tone[]` and `toneSandhi?: ToneSandhiRule[]`.
+  `Letter.tone` already existed and labels the tone a *character* carries, which is
+  enough to tag a glyph and nothing more. It cannot say what tone 3 *is* (contour
+  214, low and creaky), and it cannot express **sandhi** — a rule that changes a
+  syllable's pitch because of the syllable *after* it while the characters and the
+  printed pinyin stay identical. Every previously modelled script encodes
+  pronunciation segmentally, and a segment always attaches to a glyph; tone is
+  suprasegmental, so the existing shape did not stretch. `data/scripts/chinese.json`
+  populates both fields.
+- `EXEMPT_TYPES` gains `pronunciation`. No earlier track ever needed a lesson
+  *about* sound, because segmental facts belong to letters and therefore live inside
+  the word lesson that first uses that letter (HL00, "Pronunciation & Script:
+  Inline, Never a Gate"). Folding Mandarin's tone system into its first character
+  lesson pushed that lesson to 352 effective seconds, past the five-minute contract,
+  and HL08's rule is to split rather than waive. `grammar` would have misfiled a
+  sound rule as morphology; an unrecognised type would have produced a permanent
+  validator warning. Like `grammar` and `etymology`, `pronunciation` is exempt from
+  the cross-language concept join because its progression lives in knowledge atoms.
+
+### Changed — corpus pins moved by the new track, never weakened
+
+Adding a 21st track necessarily moves whole-corpus measurements. Every pin below
+was updated with a comment naming this change as the cause; none was relaxed.
+
+- `integration.test.ts`: registered tracks, authored books, schema tracks and book
+  coverage 20 → 21; compiled activity ids 51 → 57. Duration violations and unknown
+  prerequisites remain **0**.
+- `cli.test.ts`: reported `registeredTracks` 20 → 21.
+- `modality.test.ts`: total lessons 1,096 → 1,103; `voice` 694 → 699; `sight`
+  351 → 353; non-writing lessons carrying a `script` block 7 → 9; the remainder
+  1,038 → 1,043. The `pen` count (51), the table-bearing count (322) and the
+  corpus-wide drivable share (63%) are unchanged, because no Chinese lesson needs a
+  pen and none carries a table.
+
 ### Added — HL08 modality and the drivable prefix (report only, no gates)
 
 - Add `src/modality.ts`: a pure module deriving each lesson's required channel

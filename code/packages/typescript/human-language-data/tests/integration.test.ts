@@ -85,13 +85,17 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     expect(report.schemaVersion).toBe(1);
     expect(report.durationModel.version).toBe(2);
-    expect(report.summary.registeredTracks).toBe(20);
+    // 20 -> 21 in HL-C39: Mandarin Chinese joined the registry with its own
+    // authored book, so the track, schema, and book-coverage counts all move
+    // together. Duration violations stay at zero — the new track's seven Chapter 1
+    // lessons are each under 300 effective seconds.
+    expect(report.summary.registeredTracks).toBe(21);
     expect(report.summary.totalLessons).toBe(lessons.length);
-    expect(report.summary.authoredBooks).toBe(20);
+    expect(report.summary.authoredBooks).toBe(21);
     expect(report.summary.durationViolations).toBe(0);
     expect(report.summary.unknownPrerequisites).toBe(0);
-    expect(report.schemas.tracks).toHaveLength(20);
-    expect(report.books.tracks).toHaveLength(20);
+    expect(report.schemas.tracks).toHaveLength(21);
+    expect(report.books.tracks).toHaveLength(21);
   });
 
   it("compiles the cross-language objective activities from canonical blocks", () => {
@@ -148,6 +152,15 @@ describe("real curriculum", () => {
       "UR-C05-khuda-hafiz-goodbye",
       "UR-C05-khuda-meaning",
       "UR-C05-practice-final-line",
+      // HL-C39 added Mandarin Chinese: one activity per Chapter 1 lesson, so the
+      // corpus total moves from 51 to 57.
+      "ZH-C01-hao-components",
+      "ZH-C01-hao-fond-tone",
+      "ZH-C01-ni-meaning",
+      "ZH-C01-nihao-greeting",
+      "ZH-C01-practice-greet",
+      "ZH-C01-tone-sandhi-spoken",
+      "ZH-C01-tones-count",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);

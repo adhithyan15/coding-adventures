@@ -2117,6 +2117,15 @@
       "output": "urdu/book/chapters/ch05-take-leave.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
+    },
+    {
+      "language": "chinese",
+      "chapter": 1,
+      "title": "Nǐ Hǎo — Hello, Character by Character",
+      "label": "ch:zh-nihao",
+      "output": "chinese/book/chapters/ch01-nihao.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
     }
   ]
 }

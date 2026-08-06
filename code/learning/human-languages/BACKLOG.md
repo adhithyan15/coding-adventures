@@ -7,11 +7,12 @@ session, remains the source of truth.
 
 Last prioritized: 2026-08-06, when the Step-by-Step capability program (HL05–HL07)
 was specified and placed ahead of the remaining roadmap and migration work. Current
-baseline after the Persian and Urdu Chapter 5 shared-spine tranche:
-20 registered tracks, 1,096 Markdown lessons, 20 downloadable LaTeX books, zero
-duration violations, and 20 validated realization maps containing 350 ordered
-path segments, 277 typed extension nodes, and 926 prerequisite-closed mapped
-lessons. Twenty-five mapped non-lexical lessons across 18 tracks now carry
+baseline after the Mandarin Chinese scale-test track (HL-C39):
+21 registered tracks, 1,103 Markdown lessons, 21 downloadable LaTeX books, zero
+duration violations, and 21 validated realization maps. The preceding Persian and
+Urdu Chapter 5 baseline measured 20 tracks, 1,096 lessons, 350 ordered path
+segments, 277 typed extension nodes, and 926 prerequisite-closed mapped lessons;
+Mandarin adds one segment, six extension nodes, and seven mapped lessons. Twenty-five mapped non-lexical lessons across 18 tracks now carry
 compiled objective activities; 94 mapped non-lexical lessons remain explicit
 activity-coverage debt, including 16 legacy lessons that first need schema-v2
 body contracts. HL-V01 keeps the remaining migration debt reproducible in both
@@ -71,6 +72,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
 | HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
 | HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
+| HL-C39 | Complete in this PR | Add Mandarin Chinese as the 21st track — a **scale test** for whether the curriculum model generalises beyond Indo-European and Dravidian. Chapter 1 only, authored deep rather than swept wide. | A complete, CI-green track: 7 schema-v2 Chapter 1 lessons, an 11-node `curriculum.json` ledger, an HL05 capability with a payoff assessing 10 of 11 chapter atoms, and a generated book chapter. Three findings reported rather than hidden: **(1)** the cousin web does **not** transfer — Chinese shares no ancestor with English, so character composition replaces etymology and is honestly a weaker hook, since it anchors to knowledge being acquired in the same breath rather than knowledge the reader already had; **(2)** HL00's word→letter script rule becomes word→character→component, three levels not two, and for Chinese the "letters in this word" and "the word, taken apart" sections collapse into one analysis; **(3)** tone needed a data-layer extension (`ScriptData.tones` and `ScriptData.toneSandhi`) because `Letter.tone` can label a glyph but cannot express an inventory or a rule that changes pitch across a *sequence*. Also added the `pronunciation` lesson type, because no earlier track ever needed a lesson about sound. |
 | HL-C27 | Complete in this PR | Run the book catalog builder's tests in CI. `test_build_human_language_book_catalog.py` existed but was executed by no workflow, so the script that writes the published `index.html` and `catalog.json` shipped with its tests never running. | `human-languages-books.yml` runs the suite in its own named step before the expensive XeLaTeX build, and both the workflow's `paths:` trigger and the `detect` job's `git diff` list include the test file so a change to it re-runs the job. |
 
 The illustration licensing question HL06 raised is **settled**. The project owner
