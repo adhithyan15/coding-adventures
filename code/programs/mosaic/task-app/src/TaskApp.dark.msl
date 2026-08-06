@@ -512,6 +512,136 @@ style TaskApp {
     }
   }
 
+  // Notes tab. "on" mirrors seg-cal-on's raised-card treatment; every "off"
+  // variant mirrors seg-cal-off's plain transparent-with-hover treatment.
+  part seg-notes-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part seg-notes-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off2 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off3 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off4 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
+  // The new notes-mode branch also needs an "off" instance of every OTHER
+  // family (list/board/sheet/calendar/timeline) — next unused numeric
+  // suffix per family (see TaskApp.mll's seg block for the mapping).
+  part seg-list-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-board-off6 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-sheet-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-cal-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-tl-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
   // ── board (kanban) ──────────────────────────────────────────────────────
   part board {
     gap : 14 ;

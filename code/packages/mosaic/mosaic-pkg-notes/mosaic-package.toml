@@ -1,0 +1,27 @@
+# mosaic-package.toml — manifest for mosaic-pkg-notes.
+#
+# A list-plus-editor view over task-core's Note entity (upsert_note/
+# delete_note). Adapted from mosaic-pkg-note-editor (built for a different
+# domain — Anki-style flashcard notes: note types, decks, focused-field
+# editing — none of which apply to a plain title+body note). Built entirely
+# from kernel primitives, plus one deliberate use of the legacy `Input`
+# primitive for its `multiline` textarea support (UI29's kernel HostInput
+# is single-line only — see code/specs/task-app-notes-ui-v1.md).
+#
+# v0.1.0 scope — see code/specs/task-app-notes-ui-v1.md for the full
+# rationale. Create/edit/delete a note (title + plain-text body), standalone
+# only (no attachment picker yet), no tags, no rich text, no search.
+
+[package]
+name = "mosaic-pkg-notes"
+version = "0.1.0"
+description = "List-plus-editor view over task-core's Note entity (create/edit/delete)"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Notes"]
+
+[dependencies]
+
+[kernel]
+version = "1"

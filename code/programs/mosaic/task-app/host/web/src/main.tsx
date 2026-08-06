@@ -254,14 +254,25 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let newName = "";
   let newDue = "";
   let newProject = "";
-  // Which view is showing. A string rather than a set of booleans, so the five
+  // Which view is showing. A string rather than a set of booleans, so the six
   // states can't contradict each other.
-  let view: "list" | "board" | "timeline" | "sheet" | "calendar" = "list";
+  let view: "list" | "board" | "timeline" | "sheet" | "calendar" | "notes" = "list";
   // Sheet toolbar state.
   let sheetFilterText = "";
   let sheetSortField = ""; // a SHEET_FIELDS label, or "" for unsorted
   let sheetSortAscending = true;
   let sheetSortOpen = false;
+  // Notes editor state. `selectedNoteId` is the open note's id, or "" for
+  // none — including while composing a brand-new, not-yet-saved note: its id
+  // is minted the moment "+ New note" is clicked (the same host-mints-ids-
+  // upfront pattern addTask/addProject already use), NOT deferred to Save.
+  // That keeps `selected-note-id` a reliable non-empty "editor is open"
+  // marker throughout — Notes.mll shows the editor purely off its
+  // truthiness. Cancelling (or navigating away) before ever saving simply
+  // discards the draft; the engine never heard about it.
+  let selectedNoteId = "";
+  let noteTitleDraft = "";
+  let noteBodyDraft = "";
   // Grid's edit-cursor slots. -1/"" means "none", matching Grid's own contract
   // (see Grid.mil).
   let sheetSelectedRow = -1;
@@ -477,6 +488,25 @@ function makeController(engine: any, init: ControllerInit = {}) {
     return { cells, events };
   };
 
+  // The notes list — read straight off `workspace()` (no dedicated query
+  // exists, or is needed: see task-app-notes-entity-v1.md, the whole-project
+  // dump already includes `notes` for free once the field exists). Sorted
+  // alphabetically by title, the same "read the way a person would expect"
+  // call `projects()` already makes for sibling project names — raw
+  // BTreeMap/id order is just creation order, which reads worse for a list
+  // meant to be scanned.
+  const noteRows = (): { ids: string[]; rows: string[][] } => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const notesMap = (ws.projects?.[activeId]?.notes ?? {}) as Record<string, any>;
+    const entries = Object.values(notesMap) as any[];
+    entries.sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? "")));
+    return {
+      ids: entries.map((n) => n.id as string),
+      rows: entries.map((n) => [n.id as string, String(n.title ?? "").trim() || "Untitled"]),
+    };
+  };
+
   return {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
@@ -571,6 +601,8 @@ function makeController(engine: any, init: ControllerInit = {}) {
       // Computed only while the calendar is showing — same "don't run a query
       // the current view doesn't need" discipline as `sheet`/`boardCards`.
       const cal = view === "calendar" ? calendarData() : { cells: [], events: [] };
+      // Computed only while the notes view is showing — same discipline.
+      const notes = view === "notes" ? noteRows() : { ids: [], rows: [] };
       const boardCards: string[][] = (() => {
         if (view !== "board") return [];
         const pct = progress();
@@ -620,6 +652,12 @@ function makeController(engine: any, init: ControllerInit = {}) {
         calendarTitle: view === "calendar" ? monthLabel(calendarMonthStart) : "",
         calendarCells: cal.cells,
         calendarEvents: cal.events,
+        notesMode: view === "notes" ? "notes" : "",
+        notesTitle: "Notes",
+        noteRows: notes.rows,
+        selectedNoteId,
+        noteTitleValue: noteTitleDraft,
+        noteBodyValue: noteBodyDraft,
         timelineScale: tl.scale,
         timelineRows: tl.rows,
         newTaskName: newName,
@@ -662,6 +700,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         case "showCalendar":
           view = "calendar";
+          break;
+        case "showNotes":
+          view = "notes";
           break;
         case "cardDropped": {
           // A drop is a PROPOSAL. The engine owns what a status change means; the host
@@ -734,6 +775,73 @@ function makeController(engine: any, init: ControllerInit = {}) {
           persist();
           break;
         }
+        case "selectNote": {
+          // Resolve through the SAME ordered id list the rows were drawn
+          // from — same discipline as expandTask/selectProject, so a click
+          // can't land on the wrong note.
+          const { ids } = noteRows();
+          const id = ids[event.index];
+          if (!id) break;
+          const ws = engine.workspace().data;
+          const activeId = engine.activeProject().data as string;
+          const note = ws.projects?.[activeId]?.notes?.[id];
+          if (!note) break;
+          selectedNoteId = id;
+          noteTitleDraft = String(note.title ?? "");
+          noteBodyDraft = String(note.body ?? "");
+          break;
+        }
+        case "newNote":
+          // Mint the id now, not on Save — see selectedNoteId's own comment
+          // on why the editor needs a non-empty id to stay open at all.
+          selectedNoteId = `n${++counter}`;
+          noteTitleDraft = "";
+          noteBodyDraft = "";
+          break;
+        case "noteTitleChange":
+          noteTitleDraft = event.value;
+          break;
+        case "noteBodyChange":
+          noteBodyDraft = event.value;
+          break;
+        case "saveNote": {
+          if (!selectedNoteId) break;
+          // upsertNote is create-or-replace by id either way — whether this
+          // is a brand-new note (first Save) or an edit to an existing one
+          // makes no difference to the op itself.
+          const res = engine.upsertNote({
+            id: selectedNoteId,
+            title: noteTitleDraft,
+            body: noteBodyDraft,
+            attachedTask: null,
+          });
+          if (res?.ok === false) {
+            console.error("Note save failed:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "deleteNote": {
+          if (!selectedNoteId) break;
+          // Harmless (a no-op, per task-core's own contract) if the note was
+          // never actually saved — Delete works uniformly either way.
+          const res = engine.deleteNote({ id: selectedNoteId });
+          if (res?.ok === false) {
+            console.error("Note delete failed:", res.error ?? res);
+            break;
+          }
+          selectedNoteId = "";
+          noteTitleDraft = "";
+          noteBodyDraft = "";
+          persist();
+          break;
+        }
+        case "cancelNote":
+          selectedNoteId = "";
+          noteTitleDraft = "";
+          noteBodyDraft = "";
+          break;
         case "sheetNavigate": {
           sheetSelectedRow = event.row;
           sheetSelectedCol = event.col;

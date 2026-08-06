@@ -89,6 +89,19 @@ component TaskApp {
   slot calendar-cells  : list<list<text>> ;
   slot calendar-events : list<list<text>> ;
 
+  // Notes (list + editor). `notes-mode` is non-empty when the notes view is
+  // showing. Every `notes-*` slot is a straight pass-through to
+  // `pkg::mosaic-pkg-notes::Notes` — see Notes.mil for the full contract
+  // and code/specs/task-app-notes-ui-v1.md for the scope. The host builds
+  // note-rows from task-core's Note entities (via `workspace()`) and owns
+  // the in-progress edit buffer.
+  slot notes-mode          : text ;
+  slot notes-title         : text ;
+  slot note-rows           : list<list<text>> ;
+  slot selected-note-id    : text ;
+  slot note-title-value    : text ;
+  slot note-body-value     : text ;
+
   // One row per task, in schedule order. Each row is a list of pre-formatted cells:
   //
   //   [ 0 ] done-glyph      [ 5 ] expanded-marker  — non-empty for the ONE open row
@@ -123,6 +136,7 @@ component TaskApp {
   emit onShowTimeline ;
   emit onShowSheet ;
   emit onShowCalendar ;
+  emit onShowNotes ;
 
   // A drop is a PROPOSAL: the engine decides whether the move is legal and performs
   // it. The payload is the UI35 contract — what moved, of what kind, onto which
@@ -143,6 +157,15 @@ component TaskApp {
   emit onCalendarPrev ;
   emit onCalendarNext ;
   emit onCalendarEventDropped ( key : text , kind : text , targetKey : text , position : text ) ;
+
+  // Notes emits — straight pass-through to/from pkg::mosaic-pkg-notes::Notes.
+  emit onSelectNote ( index : number ) ;
+  emit onNewNote ;
+  emit onNoteTitleChange ( value : text ) ;
+  emit onNoteBodyChange ( value : text ) ;
+  emit onSaveNote ;
+  emit onDeleteNote ;
+  emit onCancelNote ;
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;
