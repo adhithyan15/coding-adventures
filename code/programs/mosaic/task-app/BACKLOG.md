@@ -31,21 +31,15 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
      paragraph in the detail panel. `task-core` already has labels/priority as
      first-class fields (shipped) — this is wiring them into `main.tsx`'s row-building
      and `TaskApp.mil`/`.mll`'s row-cell layout, not new engine work.
-   - Calendar view — this IS the existing Phase 7 item below, not a separate task; the
-     mock having one is corroborating evidence for that roadmap phase, not new scope.
+   - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
+     was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
-3. **Phase 7 — Calendar component.** `mosaic-pkg-calendar`, wired to the engine's `calendar(range,
-   view)` projection (already shipped, [#8726](https://github.com/adhithyan15/coding-adventures/pull/8726)) + the UI35 drag kernel for
-   drag-to-reschedule/resize. Month/week/day views, time-blocking, auto-schedule placement around
-   fixed commitments. The drag kernel is proven end-to-end now (board PR found and fixed three
-   real bugs in it), so this should be smoother than the board was.
-
-4. **Phase 8 — Notes component + entity.** The engine has **no notes entity at all** yet — this
+3. **Phase 8 — Notes component + entity.** The engine has **no notes entity at all** yet — this
    needs a `task-core` model addition (standalone notes + attachable to any task/project) before
    the `mosaic-pkg-notes` UI (adapted from `mosaic-pkg-note-editor`, which was built for a
    different domain — Anki notes — and needs re-pointing at generic entities).
 
-5. **Phase 9 — App-shell assembly + progressive disclosure.** Partially done already via ad hoc
+4. **Phase 9 — App-shell assembly + progressive disclosure.** Partially done already via ad hoc
    UI-design passes ([#8970](https://github.com/adhithyan15/coding-adventures/pull/8970), [#8983](https://github.com/adhithyan15/coding-adventures/pull/8983), [#9112](https://github.com/adhithyan15/coding-adventures/pull/9112), [#8994](https://github.com/adhithyan15/coding-adventures/pull/8994), [#9110](https://github.com/adhithyan15/coding-adventures/pull/9110), [#9127](https://github.com/adhithyan15/coding-adventures/pull/9127), [#9136](https://github.com/adhithyan15/coding-adventures/pull/9136))
    — theming, project switching, nested-project hierarchy, shell/groups/status/cards all landed.
    Remaining: package it as a reusable `mosaic-pkg-project-nav` (nested-project tree + view
@@ -57,12 +51,21 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 - **Native drag support for HostDraggable/HostDropTarget.** Every non-web backend (SwiftUI,
   Compose, Qt, Flutter, WinUI/XAML, webcomponent) currently degrades the drag family to a plain
-  static container — see `code/specs/UI35-host-drag-drop.md`. This means the board (and, once
-  built, the calendar) is fully interactive on web but inert on every native shell. Spec-deferred
+  static container — see `code/specs/UI35-host-drag-drop.md`. This means the board and the
+  calendar are both fully interactive on web but inert on every native shell. Spec-deferred
   intentionally (native shells are Phase 10+), but tracked as a spawned task:
   [background task](task_239f7f69) "Wire HostDraggable/HostDropTarget into mosaic-emit-xaml" — do
   XAML first since it's the most-built-out native backend, then fan out the same pattern to the
   rest.
+- **Calendar week/day views, resize, and time-blocking.** Deferred from the Phase 7 ship —
+  see `code/specs/task-app-calendar-v1.md` for the full rationale (resize isn't supported by
+  the UI35 kernel today; time-blocking needs a time-of-day field on `TaskSchedule` that
+  doesn't exist yet, an engine-side gap, not a UI one).
+- **Calendar weekend/out-of-month cell tinting.** Deferred alongside the critical-card border
+  gap below — mosstyle can't vary one part's background per data value, only per branch, and
+  a 4-way branch duplicating the whole drop-target + event-loop wasn't judged worth it for a
+  colour difference. Today's badge shipped (it only needed a small conditional child, the
+  same trick Board's `card-crit` chip already uses).
 - Recurring tasks / reminders UX.
 - Automation rules (Butler-style).
 - Resource-leveling UI (the engine's `constraint-*` leveling exists; no UI surfaces it).
@@ -72,6 +75,17 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Phase 7 — Calendar component.** `mosaic-pkg-calendar` — month grid + drag-to-move,
+  see `code/specs/task-app-calendar-v1.md` for the full scope. The engine's
+  `calendar(range, view)` projection needed zero new work (shipped in #8726); this PR was
+  pure UI. Verified live: month grid renders correctly (42-cell Sunday-first, both themes),
+  prev/next navigation, and dragging an event onto a new day calls `setConstraint` with a
+  `mustStartOn` date — confirmed the project's own projected-finish date recomputed after
+  the drop, proving it's a real CPM reschedule, not a UI-only move. Found and fixed one real
+  bug before shipping: an empty day's `HostDropTarget` had zero intrinsic height (no events,
+  no explicit sizing), leaving nothing for a pointer to land on — fixed with `flex-grow: 1`
+  so it fills the cell's `min-height`. Week/day views, resize, time-blocking, and cell
+  weekend/out-of-month tinting deferred — see the two Backlog items above.
 - **Phase 5 — Sheet component, now fully editable.** `mosaic-pkg-sheet` shipped
   read-only first, then editing landed as a fast-follow once the emitter gap was
   fixed properly ([UI37](../../../specs/UI37-generic-payload-dispatch.md) +

@@ -78,6 +78,17 @@ component TaskApp {
   slot sheet-sort-open        : bool ;
   slot sheet-sort-ascending   : bool ;
 
+  // Calendar (month grid). `calendar-mode` is non-empty when the calendar is
+  // showing. Every `calendar-*` slot is a straight pass-through to
+  // `pkg::mosaic-pkg-calendar::Calendar` — see Calendar.mil for the full
+  // contract and code/specs/task-app-calendar-v1.md for the scope. The host
+  // builds calendar-cells/calendar-events from the SAME `calendar(range,
+  // view)` engine call each time the visible month changes.
+  slot calendar-mode   : text ;
+  slot calendar-title  : text ;
+  slot calendar-cells  : list<list<text>> ;
+  slot calendar-events : list<list<text>> ;
+
   // One row per task, in schedule order. Each row is a list of pre-formatted cells:
   //
   //   [ 0 ] done-glyph      [ 5 ] expanded-marker  — non-empty for the ONE open row
@@ -111,6 +122,7 @@ component TaskApp {
   emit onShowBoard ;
   emit onShowTimeline ;
   emit onShowSheet ;
+  emit onShowCalendar ;
 
   // A drop is a PROPOSAL: the engine decides whether the move is legal and performs
   // it. The payload is the UI35 contract — what moved, of what kind, onto which
@@ -126,6 +138,11 @@ component TaskApp {
   emit onSheetSortFieldChange     ( value : text ) ;
   emit onSheetToggleSortOpen ;
   emit onSheetToggleSortDirection ;
+
+  // Calendar emits — straight pass-through to/from pkg::mosaic-pkg-calendar::Calendar.
+  emit onCalendarPrev ;
+  emit onCalendarNext ;
+  emit onCalendarEventDropped ( key : text , kind : text , targetKey : text , position : text ) ;
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;
