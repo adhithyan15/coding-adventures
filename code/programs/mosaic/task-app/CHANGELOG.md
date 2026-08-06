@@ -4,6 +4,25 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed - project rail extracted to mosaic-pkg-project-nav
+
+Phase 9's first half: the nested-project tree + add/add-subproject
+composer moved out of `TaskApp.mil`/`.mll`/`.msl` into a standalone
+`mosaic-pkg-project-nav` package, per the roadmap's reuse map. A refactor,
+not a redesign — same part names, same styling, same layout, in both
+themes. The brand row and the view-switcher deliberately stayed in
+TaskApp; see `code/specs/task-app-project-nav-v1.md` for why.
+
+Verified live, behavior-identical to before: create a project, create a
+nested sub-project (indent glyph renders), switch selection between
+projects (the "on" raised-card styling follows). Zero console errors.
+
+**Still open** (see `BACKLOG.md`): the per-project/task complexity config
+(board-only ↔ full CPM) that the spec calls "the single most important
+product rule" (§2.3) — not addressed here; it needs a product decision
+the spec doesn't make (what exactly "board only" hides is undefined),
+unlike this extraction, which needed none.
+
 ### Added - label management (create + assign)
 
 Closes the gap the previous entry disclosed: labels can now actually be

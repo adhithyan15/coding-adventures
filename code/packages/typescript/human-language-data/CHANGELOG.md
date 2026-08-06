@@ -49,6 +49,7 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   mapping that names a specific foreign ladder without the awarding body's backing — it
   caught a bare Persian/AMFA correspondence during this change.
 
+
 ### Added — HL-C10: the shared spine reaches above A1
 
 - Add an **A2 tranche** of five spine nodes — `SPINE-SAY-WHAT-I-DO`,
