@@ -72,9 +72,32 @@ duplicate-destination, bookmark, LaTeX, or font-shape warnings. Open-right blank
 versos are intentionally retained for print and contain no running header or
 page number.
 
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's
+[`HL05`](../../../specs/HL05-chapter-capability-and-step-by-step-shape.md)
+capability ledger. Each entry says, in the reader's own first-person words, what
+finishing that chapter lets them do, and names the lesson that proves it:
+
+```json
+{
+  "chapter": 17,
+  "title": "Asking Someone's Age",
+  "canDo": "I can ask how old someone is in Arabic and give my own age without using a verb.",
+  "payoff": { "lesson": "AR-C17-kam-umruka", "kind": "dialogue", "assesses": ["…"] }
+}
+```
+
+The file is **authored intent**, not a derived cache — no validator may rewrite
+it. Chapters 3–27 are covered. Chapters 1 and 2 are deliberately left out: their
+recap lessons are still schema v1 with no declared knowledge atoms, so a payoff
+there could only be invented. That absence is honest, measurable debt and is
+reported as such.
+
 ## Files
 
-- [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
+- [`lessons/`](./lessons/) · [`chapters.json`](./chapters.json)
+  · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 
