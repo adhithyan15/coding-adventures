@@ -22,7 +22,9 @@ describe("runCurriculumGapReport", () => {
     try {
       expect(runCurriculumGapReport(["--format", "json"])).toBe(0);
       const json = out.mock.calls.map((call) => String(call[0])).join("");
-      expect(JSON.parse(json).summary.registeredTracks).toBe(20);
+      // 21 since HL-C39 registered Mandarin Chinese, the first track outside the
+      // Indo-European and Dravidian families.
+      expect(JSON.parse(json).summary.registeredTracks).toBe(21);
       out.mockClear();
       expect(runCurriculumGapReport(["--format", "text"])).toBe(0);
       expect(out.mock.calls.map((call) => String(call[0])).join("")).toContain(

@@ -121,6 +121,7 @@ edition is authored.
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1-2 authored (lessons + book) |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | Five authored shared-spine chapters; 20 canonical lessons |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |
+| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese (vendored font subset) | Chapter 1 authored; 7 canonical lessons, book chapter generated. **Scale test** — see that README for what the method does and does not carry outside Indo-European |
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already
@@ -128,6 +129,15 @@ knows (see `HL00`). Non-Latin scripts are taught **inline** — letters introduc
 inside the word that first needs them, never as a gated reading course — using
 vendored static Noto fonts (see [`_fonts/`](./_fonts/)) so local and CI builds
 render identically.
+
+**Mandarin is the scale test.** The first twenty tracks are Indo-European or
+Dravidian, and the method's engine — anchoring each new word to English words the
+reader already owns through a shared ancestor — depends on that shared ancestry.
+Chinese has none, is logographic rather than alphabetic, and is tonal. Its track
+was added to find out which parts of the framework describe language in general
+and which quietly described Indo-European, and
+[`chinese/README.md`](./chinese/README.md) states the answers plainly, including
+the one place the signature device does not transfer at all.
 
 **Latin and Sanskrit are taproot tracks.** Rather than being learned for
 conversation, they are the classical sources the other tracks keep pointing back

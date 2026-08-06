@@ -257,6 +257,21 @@
       "tex": "bengali/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:b740a5126cc6bad6",
+      "lessonIds": [
+        "ZH-C01-tones",
+        "ZH-C01-ni",
+        "ZH-C01-hao",
+        "ZH-C01-nihao",
+        "ZH-C01-tone-sandhi",
+        "ZH-C01-hao-fond",
+        "ZH-C01-practice"
+      ],
+      "tex": "chinese/book/chapters/ch01-nihao.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:bb8682839ab17ed4",

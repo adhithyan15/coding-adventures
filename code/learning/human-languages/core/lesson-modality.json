@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 0
   },
-  "sourceHash": "fnv1a64:0611a2ebbc70046e",
+  "sourceHash": "fnv1a64:623d3c50be4d6958",
   "summary": {
-    "totalLessons": 1118,
-    "voice": 719,
-    "sight": 346,
+    "totalLessons": 1125,
+    "voice": 724,
+    "sight": 348,
     "pen": 53,
-    "drivableLessons": 719,
+    "drivableLessons": 724,
     "drivablePercent": 64,
-    "trackCount": 20,
-    "chapterCount": 375,
-    "drivablePrefixTotal": 557,
+    "trackCount": 21,
+    "chapterCount": 376,
+    "drivablePrefixTotal": 558,
     "fullyDrivableChapters": 195,
     "unstartableChapters": 121,
     "overriddenLessons": 0,
@@ -604,6 +604,38 @@
           "firstNonVoiceLesson": "BN-C06-numbers-1-5",
           "drivable": false,
           "drivableLessonIds": []
+        }
+      ]
+    },
+    {
+      "language": "chinese",
+      "lessonCount": 7,
+      "voice": 5,
+      "sight": 2,
+      "pen": 0,
+      "drivablePercent": 71,
+      "drivablePrefixTotal": 1,
+      "modalities": [
+        "voice",
+        "sight"
+      ],
+      "chapters": [
+        {
+          "chapter": 1,
+          "lessonCount": 7,
+          "voice": 5,
+          "sight": 2,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "ZH-C01-ni",
+          "drivable": false,
+          "drivableLessonIds": [
+            "ZH-C01-tones"
+          ]
         }
       ]
     },
@@ -7842,6 +7874,97 @@
         "wide-table"
       ],
       "sourceHash": "fnv1a64:b90d02828e8f4352"
+    },
+    {
+      "id": "ZH-C01-tones",
+      "language": "chinese",
+      "chapter": 1,
+      "sequence": 10,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b569881c35225c0"
+    },
+    {
+      "id": "ZH-C01-ni",
+      "language": "chinese",
+      "chapter": 1,
+      "sequence": 20,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fd5fc68c6af29500"
+    },
+    {
+      "id": "ZH-C01-hao",
+      "language": "chinese",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8856bfa06cfb62bd"
+    },
+    {
+      "id": "ZH-C01-nihao",
+      "language": "chinese",
+      "chapter": 1,
+      "sequence": 40,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33e6c06570cdddcc"
+    },
+    {
+      "id": "ZH-C01-tone-sandhi",
+      "language": "chinese",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be0bd150e6d245de"
+    },
+    {
+      "id": "ZH-C01-hao-fond",
+      "language": "chinese",
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c8bd26e8b670b97"
+    },
+    {
+      "id": "ZH-C01-practice",
+      "language": "chinese",
+      "chapter": 1,
+      "sequence": 70,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20a7dc4c3eefeed6"
     },
     {
       "id": "FR-C01-bien",

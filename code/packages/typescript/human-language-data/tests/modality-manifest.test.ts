@@ -625,22 +625,34 @@ describe("corpus regression", () => {
   // those splits inherited belong to HL-C17, which linearises or honestly reclassifies
   // them. Tuning the splits to protect this percentage would mean writing steeper lessons
   // to flatter a metric, which is the exact trade the ramp budget exists to refuse.
+  // HL-C39 then added Mandarin Chinese as the 21st track, +7 Chapter 1 lessons:
+  //
+  //   totalLessons  1118 -> 1125      voice   719 -> 724  (+5)
+  //   sight          346 ->  348      pen      53 ->  53  (unchanged)
+  //   trackCount      20 ->   21      chapterCount 375 -> 376  (+1)
+  //   drivablePrefixTotal 557 -> 558
+  //
+  // The two `sight` lessons are `ZH-C01-ni` and `ZH-C01-hao`, which each carry a `script`
+  // block teaching a character's components — a shape cannot be read aloud. No Chinese
+  // lesson needs a pen and none carries a table, so `pen` holds and the drivable share
+  // stays at 64%. `drivablePrefixTotal` gains only 1 because Chinese ch1 opens with one
+  // `voice` lesson before its first character-composition lesson blocks the prefix.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1118,
-      voice: 719,
-      sight: 346,
+      totalLessons: 1125,
+      voice: 724,
+      sight: 348,
       pen: 53,
-      drivableLessons: 719,
+      drivableLessons: 724,
       drivablePercent: 64,
-      trackCount: 20,
-      chapterCount: 375,
-      // Prerequisite order costs a commuter 162 of the 719 ear-only lessons: they sit
+      trackCount: 21,
+      chapterCount: 376,
+      // Prerequisite order costs a commuter 166 of the 724 ear-only lessons: they sit
       // behind a blocker in their own chapter and are unreachable in the car until
       // HL-C17 linearises the tables or HL-C41 splits the pen segments out.
-      drivablePrefixTotal: 557,
+      drivablePrefixTotal: 558,
       fullyDrivableChapters: 195,
       unstartableChapters: 121,
       overriddenLessons: 0,

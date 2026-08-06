@@ -45,6 +45,7 @@ describe("the language chain", () => {
       "hindi", "tamil", "kannada", "telugu", "malayalam",
       "italian", "portuguese", "marathi", "punjabi", "bengali",
       "gujarati", "russian", "sanskrit", "persian", "urdu",
+      "chinese",
     ]);
     // Derived, not hard-coded: adding a track must not require editing this file.
     // The list above still pins the authored ORDER, which is the real contract.
