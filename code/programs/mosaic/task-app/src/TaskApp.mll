@@ -307,6 +307,9 @@ layout TaskApp {
                       If ( when: ( row[8] ) ) {
                         Text [ detail-free ] ( content : ( row[8] ) )
                       }
+                      If ( when: ( row[12] ) ) {
+                        Text [ detail-deps ] ( content : ( row[12] ) )
+                      }
                     }
                   }
                 }

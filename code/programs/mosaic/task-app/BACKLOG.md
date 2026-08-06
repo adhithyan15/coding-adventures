@@ -27,10 +27,18 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Richer Gantt: day-grid columns, weekend/today shading, milestone diamonds,
      dependency arrows, hover tooltips, a legend. Current timeline is a simple
      proportional-bar-per-row view.
-   - Richer task rows: labels/priority chips shipped (see Resolved below). Still
-     missing: critical/slack chips, dependency list, notes paragraph in the detail
-     panel — the notes-paragraph item can now pull from the real `Note` entity
-     (shipped in Phase 8) via an `attached_task` lookup, not just `Task.notes`.
+   - Richer task rows: labels/priority chips and the dependency list shipped (see
+     Resolved below). Still missing: critical/slack *chips* (today the detail panel's
+     scheduling prose already says "on the critical path" / states slack in prose —
+     a dedicated chip would be a value-only restyle, low priority) and a notes
+     paragraph in the detail panel. The notes paragraph turned out to be
+     **blocked on the "Notes: attachment picker" item below**, not just an engine
+     lookup as previously written here: `Note.attached_task` exists and a
+     `detail-notes` cell would be trivial to wire, but there is no UI anywhere to
+     ever set `attached_task` — v1's notes are permanently standalone. Ship both
+     together: the attach control (however it ends up scoped — a name-matching
+     text field mirroring the Labels column's discipline is the obvious minimal
+     shape) and the detail-panel cell that reads it, in the same PR.
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
@@ -70,7 +78,9 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   ship — see `code/specs/task-app-notes-ui-v1.md`. v1's notes are always standalone (no
   UI to set `attached_task`); tags are generic and reusable in `mosaic-pkg-notes` but
   nothing drives them; `Note.body` is plain text, matching every other free-text field
-  in the engine; no search box (mirrors Sheet's own v1 scope cut).
+  in the engine; no search box (mirrors Sheet's own v1 scope cut). The attach picker
+  specifically is now also the blocker for the "Next up" design-fidelity item's
+  task-detail notes paragraph above — ship them together.
 - **Label colour picker + duplicate-name prevention + per-label removal.** Deferred
   from the label-management ship (see Resolved below) — `Label.color` is set (always
   `""` in v1) but nothing renders it; two labels can share a name (mirrors project
@@ -85,6 +95,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Task-detail dependency list.** The open task's detail panel shows its CPM
+  dependencies (`→ Build the prototype (FS)` / `← Design the wireframes (FS)`),
+  read from `task-core`'s existing `flowchart()` projection — zero new engine
+  work. A matching notes paragraph was drafted alongside this but pulled back
+  out before shipping: it would have read `Note.attached_task`, but no UI
+  anywhere sets that field yet (see the "Notes: attachment picker" backlog item
+  above, now updated to note it blocks this too). Verified live in both themes,
+  zero console errors.
 - **Phase 9 — nested-project tree extracted to `mosaic-pkg-project-nav`.** The
   add/add-subproject composer + nested-project list, extracted verbatim from
   `TaskApp`'s own rail block — same part names, same styling (both themes), same
