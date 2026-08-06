@@ -37,7 +37,11 @@ sha256() { command -v sha256sum >/dev/null && sha256sum "$1" | cut -d' ' -f1 || 
 if [[ ! -f "$SRC" ]]; then
   mkdir -p "$(dirname "$SRC")"
   echo "Fetching NotoSansJP variable font -> $SRC"
-  curl -fsSL --proto '=https' --max-time 300 -o "$SRC" \
+  # --proto pins the FIRST request to https; --proto-redir pins every redirect
+  # too, so -L cannot be walked down to plain http by a redirect we do not
+  # control. The SHA-256 check below would still catch tampering, but a
+  # downgrade should fail at the transport, not after the bytes are on disk.
+  curl -fsSL --proto '=https' --proto-redir '=https' --max-time 300 -o "$SRC" \
     "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf"
 fi
 
