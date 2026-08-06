@@ -397,7 +397,7 @@ style TaskApp {
       background : "#d4922f" ;
     }
     state pressed {
-      background : "#a96816" ;
+      background : "#b87822" ;
     }
   }
 
