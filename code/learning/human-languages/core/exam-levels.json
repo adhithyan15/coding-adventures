@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "note": "How the shared spine's CEFR stages line up with the language-specific proficiency exams a learner might actually sit. CEFR is the backbone because the spine already speaks it (core/spine.json declares pre-A1, A1, A2, B1) and because most of the corpus's European tracks certify against it directly. Everything else maps ONTO CEFR rather than replacing it, so one level field serves every track and a 'ramp to A1' book is a filter, not a separate corpus.",
+  "provenance": "Alignments are the published or widely-cited official ones where the awarding body states a CEFR correspondence, and are marked approximate where the body deliberately does not. They are recorded here, with the caveat attached, rather than hard-coded at a call site — the same reason core/chapter-policy.json exists.",
+  "cefrStages": ["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"],
+  "note_pre_a1": "pre-A1 is NOT a CEFR level. CEFR starts at A1. It is the curriculum's own label for the ramp below A1 — the greetings-and-first-words stretch this project exists to make gentle — and it is exactly the material an exam syllabus assumes you already have. Keeping it named means the ramp is measurable instead of invisible.",
+  "exams": {
+    "cefr-native": {
+      "appliesTo": ["spanish", "french", "german", "italian", "portuguese", "russian"],
+      "exams": ["DELE", "DELF/DALF", "Goethe-Zertifikat", "CILS/CELI", "CAPLE", "TORFL"],
+      "mapping": "identity",
+      "note": "These awarding bodies certify against CEFR directly, so a stage IS the exam level. TORFL (Russian) publishes its own ladder (TEU/TBU/TRKI-1…) but states CEFR equivalences."
+    },
+    "jlpt": {
+      "appliesTo": ["japanese"],
+      "mapping": { "N5": "A1", "N4": "A2", "N3": "B1", "N2": "B2", "N1": "C1" },
+      "approximate": true,
+      "note": "The Japan Foundation does not publish an official CEFR alignment and has said the two measure different things; these are the widely-used research correspondences. N1 is often argued to reach C1 rather than sit at it. Treat as guidance, never as a claim on the certificate."
+    },
+    "hsk": {
+      "appliesTo": ["chinese"],
+      "mapping": { "HSK1": "A1", "HSK2": "A1", "HSK3": "A2", "HSK4": "B1", "HSK5": "B2", "HSK6": "C1" },
+      "approximate": true,
+      "note": "Hanban's own alignment for the pre-2021 six-band HSK. The 2021 HSK 3.0 redefines the bands (nine levels) and shifts the correspondence upward; this file records the six-band version the corpus's Chinese track currently targets, and should be revisited when that track passes HSK3 material."
+    },
+    "no-standard-exam": {
+      "appliesTo": [
+        "latin", "sanskrit", "hindi", "tamil", "telugu", "kannada", "malayalam",
+        "marathi", "punjabi", "bengali", "gujarati", "urdu", "persian", "arabic"
+      ],
+      "mapping": "cefr",
+      "note": "Per the project owner: where a track has no widely-sat level exam, follow the CEFR syllabus of the tracks that do, as closely as the language allows. Several of these DO have exams that are not CEFR-aligned or not widely sat outside one country (Arabic ALPT/ILR; Hindi and the Indian languages have national board and Dakshina Bharat Hindi Prachar Sabha ladders; Persian has AMFA). Those are deliberately not mapped yet rather than mapped on a guess — an invented alignment would be worse than an honest gap."
+    }
+  }
+}

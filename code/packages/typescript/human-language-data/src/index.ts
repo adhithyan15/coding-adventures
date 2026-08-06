@@ -178,6 +178,19 @@ export {
   type ChapterGateReport,
   type TrackChapterCoverage,
 } from "./chapters.js";
+export {
+  CEFR_LEVELS,
+  levelRank,
+  levelsUpTo,
+  lessonSpineNodes,
+  deriveLessonLevel,
+  summarizeLevels,
+  lessonsUpToLevel,
+  type CefrLevel,
+  type LessonLevel,
+  type LevelSummary,
+  type TrackLevelCoverage,
+} from "./levels.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
