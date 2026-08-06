@@ -1,16 +1,16 @@
 Human Languages curriculum gap report
 ====================================
-21 tracks, 1125 lessons, 21 books
+22 tracks, 1133 lessons, 22 books
 0 lessons at or above 300 effective seconds
 0 unknown prerequisites; 35 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
-0 legacy, 19 mixed, 2 version-2 schema tracks
-724 drivable lessons (64% of the corpus)
+0 legacy, 19 mixed, 3 version-2 schema tracks
+725 drivable lessons (64% of the corpus)
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  724 voice, 348 sight, 53 pen of 1125 lessons; 64% drivable
+  725 voice, 355 sight, 53 pen of 1133 lessons; 64% drivable
   tables of more than 0 column(s) count as sight
   arabic: 37 voice, 18 sight, 16 pen; 52% drivable; 27 chapters, 31 lessons reachable in chapter-prefix order
   bengali: 28 voice, 3 sight, 0 pen; 90% drivable; 6 chapters, 23 lessons reachable in chapter-prefix order
@@ -20,6 +20,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   gujarati: 28 voice, 5 sight, 0 pen; 85% drivable; 6 chapters, 27 lessons reachable in chapter-prefix order
   hindi: 62 voice, 11 sight, 11 pen; 74% drivable; 33 chapters, 41 lessons reachable in chapter-prefix order
   italian: 25 voice, 33 sight, 0 pen; 43% drivable; 17 chapters, 13 lessons reachable in chapter-prefix order
+  japanese: 1 voice, 7 sight, 0 pen; 13% drivable; 1 chapters, 0 lessons reachable in chapter-prefix order
   kannada: 46 voice, 14 sight, 0 pen; 77% drivable; 31 chapters, 43 lessons reachable in chapter-prefix order
   latin: 47 voice, 10 sight, 0 pen; 82% drivable; 36 chapters, 45 lessons reachable in chapter-prefix order
   malayalam: 51 voice, 13 sight, 0 pen; 80% drivable; 31 chapters, 49 lessons reachable in chapter-prefix order
@@ -34,7 +35,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   telugu: 47 voice, 13 sight, 0 pen; 78% drivable; 31 chapters, 45 lessons reachable in chapter-prefix order
   urdu: 16 voice, 4 sight, 0 pen; 80% drivable; 5 chapters, 7 lessons reachable in chapter-prefix order
 
-Chapters that cannot be started by ear (drivable prefix 0): 121
+Chapters that cannot be started by ear (drivable prefix 0): 122
   arabic ch3: 0 of 9 (first blocker AR-W07-hook-family-ha-kha)
   arabic ch4: 0 of 8 (first blocker AR-W10-ayn)
   arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis)

@@ -147,6 +147,13 @@
       "family": "Sinitic",
       "script": "chinese",
       "file": "chinese.pdf"
+    },
+    {
+      "id": "japanese",
+      "name": "Japanese",
+      "family": "Japonic",
+      "script": "japanese",
+      "file": "japanese.pdf"
     }
   ]
 }

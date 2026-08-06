@@ -11,9 +11,9 @@
     "effectiveDuration": "max(declared, computed)"
   },
   "summary": {
-    "registeredTracks": 21,
-    "totalLessons": 1125,
-    "authoredBooks": 21,
+    "registeredTracks": 22,
+    "totalLessons": 1133,
+    "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
@@ -21,10 +21,10 @@
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
-    "version2SchemaTracks": 2,
-    "drivableLessons": 724,
+    "version2SchemaTracks": 3,
+    "drivableLessons": 725,
     "drivablePercent": 64,
-    "chaptersWithoutDrivablePrefix": 121,
+    "chaptersWithoutDrivablePrefix": 122,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -177,6 +177,11 @@
         "lessonId": "IT-C06-numeri-1-5",
         "language": "italian",
         "chapter": 6
+      },
+      {
+        "lessonId": "JA-C01-hai",
+        "language": "japanese",
+        "chapter": 1
       },
       {
         "lessonId": "KA-C01-namaskara",
@@ -1476,6 +1481,19 @@
         "missingBookChapters": [],
         "orphanBookChapters": [],
         "coveragePercent": 100
+      },
+      {
+        "language": "japanese",
+        "hasBook": true,
+        "lessonChapters": [
+          1
+        ],
+        "bookChapters": [
+          1
+        ],
+        "missingBookChapters": [],
+        "orphanBookChapters": [],
+        "coveragePercent": 100
       }
     ]
   },
@@ -1667,14 +1685,22 @@
         "versions": {
           "2": 7
         }
+      },
+      {
+        "language": "japanese",
+        "status": "version-2",
+        "lessonCount": 8,
+        "versions": {
+          "2": 8
+        }
       }
     ]
   },
   "modality": {
     "maxLinearisableTableColumns": 0,
-    "totalLessons": 1125,
-    "voice": 724,
-    "sight": 348,
+    "totalLessons": 1133,
+    "voice": 725,
+    "sight": 355,
     "pen": 53,
     "drivablePercent": 64,
     "tracks": [
@@ -3580,6 +3606,31 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "IT-C17-testa"
+          }
+        ]
+      },
+      {
+        "language": "japanese",
+        "lessonCount": 8,
+        "voice": 1,
+        "sight": 7,
+        "pen": 0,
+        "drivablePercent": 13,
+        "drivablePrefixTotal": 0,
+        "chapters": [
+          {
+            "language": "japanese",
+            "chapter": 1,
+            "lessonCount": 8,
+            "voice": 1,
+            "sight": 7,
+            "pen": 0,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-C01-hai"
           }
         ]
       },
