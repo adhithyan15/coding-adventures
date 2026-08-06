@@ -27,10 +27,7 @@ chapter.
 
 Literally: **"very pleasant."**
 
-| | | |
-|---|---|---|
-| **очень** | *ochen* | very |
-| **приятно** | *priyatno* | pleasant, agreeable |
+**очень** — *ochen* — very. **приятно** — *priyatno* — pleasant, agreeable.
 
 There is no "to meet you" and no "I am." Russian states the **quality of the
 moment** and leaves the rest understood — the same economy as *меня зовут*, which
@@ -47,11 +44,10 @@ toward" — which gives Russian **приятель** (*priyátel'*), a friend.
 That root goes back to PIE \**preyH-*, "to love, to please." And it went into
 Germanic too:
 
-| | |
-|---|---|
-| Russian | **приятно** — pleasant · **приятель** — friend |
-| English | **friend** — literally "one who is loving," an old participle of a verb meaning *to love* |
-| German | *Freund* |
+- Russian **приятно**, pleasant, and **приятель**, a friend.
+- English **friend** — literally "one who is loving," an old participle of a
+  verb meaning *to love*.
+- German *Freund*.
 
 So *приятно* and *friend* are the same root, arriving from opposite ends of
 Europe.

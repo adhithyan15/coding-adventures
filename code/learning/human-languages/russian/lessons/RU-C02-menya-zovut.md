@@ -45,10 +45,8 @@ worth taking apart slowly.
 
 Now the literal reading:
 
-| | | |
-|---|---|---|
-| **меня** | *menya* | **me** (object form) |
-| **зовут** | *zovut* | **they call** |
+**меня** — *menya* — **me**, the object form. **зовут** — *zovut* —
+**they call**.
 
 So: **"[they] call me Anna."**
 
@@ -70,16 +68,13 @@ English has the same trick and doesn't notice it:
 ## Grammar Lens: меня is not я
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-MENYA-OBJECT-CASE]; assesses=[] -->
 
-This is the important part, and the course's first look at **case**.
+This is the important part, and the course's first taste of **case**.
 
 You learned **я** for "I" last lesson. But here it is **меня** — because *I* is
 now the **object** of the calling, not the one doing it. Russian changes the
 **shape of the word** to mark that job:
 
-| | |
-|---|---|
-| **я** | I — the one acting |
-| **меня** | me — the one acted on |
+**я** is *I*, the one acting; **меня** is *me*, the one acted on.
 
 English does this with about six **pairs** — *I/me*, *he/him*, *she/her*,
 *we/us*, *they/them*, *who/whom*, plus the archaic *thou/thee*. Russian does it with **every noun and
