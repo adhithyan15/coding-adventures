@@ -3799,11 +3799,22 @@ fn apply_symbolic(
 /// constant (`Integer` or `Rational`) — the boundary between adj-lang's own
 /// KB-scale exactness and the CAS IR. The established i64-extraction idiom
 /// (`adj-constraint-solver`'s numerator/denominator round-trip, via
-/// [`cas_solve::frac::Frac`]); `None` only on overflow, never silently
-/// truncated.
+/// [`cas_solve::frac::Frac`]); `None` on overflow, never silently truncated —
+/// including the `i64::MIN` boundary specifically, which `parse::<i64>()`
+/// accepts but neither `Frac::new` nor `symbolic_ir::rat` can safely carry
+/// (both negate a negative denominator with plain `i64` arithmetic, and
+/// `-i64::MIN` itself overflows `i64`).
+fn checked_i64(value: &bignum_core::BigInteger) -> Option<i64> {
+    let n: i64 = value.to_string().parse().ok()?;
+    if n == i64::MIN {
+        return None;
+    }
+    Some(n)
+}
+
 fn exact_rational_to_irnode(value: &ExactRational) -> Option<symbolic_ir::IRNode> {
-    let numer: i64 = value.numerator().to_string().parse().ok()?;
-    let denom: i64 = value.denominator().to_string().parse().ok()?;
+    let numer = checked_i64(value.numerator())?;
+    let denom = checked_i64(value.denominator())?;
     Some(cas_solve::frac::Frac::new(numer, denom).to_irnode())
 }
 
@@ -3881,8 +3892,8 @@ fn expr_to_irnode(
             // a / b  ⇒  a * (1/b) — `solve_linear_system`'s linear extraction
             // has no `Div` case, only `Mul` by a constant factor.
             let reciprocal_ir = symbolic_ir::rat(
-                divisor.denominator().to_string().parse().ok().ok_or_else(overflow)?,
-                divisor.numerator().to_string().parse().ok().ok_or_else(overflow)?,
+                checked_i64(divisor.denominator()).ok_or_else(overflow)?,
+                checked_i64(divisor.numerator()).ok_or_else(overflow)?,
             );
             let a_ir = expr_to_irnode(a, target, kb, formulas, symbolic_name)?;
             Ok(symbolic_ir::apply(
@@ -4940,6 +4951,27 @@ mod tests {
                 }) if symbolic == "ohms"
             ),
             "{err:?}"
+        );
+    }
+
+    #[test]
+    fn checked_i64_rejects_the_i64_min_boundary() {
+        // `i64::MIN` parses successfully from its own decimal string, but
+        // `Frac::new`/`symbolic_ir::rat` negate a negative denominator with
+        // plain `i64` arithmetic — `-i64::MIN` overflows `i64` — so this
+        // boundary must be rejected here, not passed through, or a crafted
+        // equation whose coefficient lands exactly on it panics (debug) or
+        // silently corrupts the solved sign (release).
+        use bignum_core::BigInteger;
+        assert_eq!(checked_i64(&BigInteger::from_i128(i64::MIN as i128)), None);
+        assert_eq!(
+            checked_i64(&BigInteger::from_i128((i64::MIN as i128) + 1)),
+            Some(i64::MIN + 1)
+        );
+        assert_eq!(checked_i64(&BigInteger::from_i128(0)), Some(0));
+        assert_eq!(
+            checked_i64(&BigInteger::from_i128(i64::MAX as i128)),
+            Some(i64::MAX)
         );
     }
 
