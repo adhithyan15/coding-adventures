@@ -71,7 +71,9 @@ interface SheetField {
   width: number;
   editable: boolean;
   sortable: boolean;
-  write?: (id: string, value: string) => any;
+  // `ctx` is optional and only the Labels column reads it (name→id lookup) — every
+  // other column's `write` ignores the third argument entirely.
+  write?: (id: string, value: string, ctx?: { labelsByName: Map<string, string> }) => any;
 }
 const PRIORITY_VALUES = ["low", "normal", "high", "urgent"];
 const SHEET_FIELDS: SheetField[] = [
@@ -156,6 +158,29 @@ const SHEET_FIELDS: SheetField[] = [
   { field: { builtin: "overdue" }, label: "Overdue", width: 90, editable: false, sortable: false },
   { field: { builtin: "start" }, label: "Start", width: 100, editable: false, sortable: false },
   { field: { builtin: "finish" }, label: "Finish", width: 100, editable: false, sortable: false },
+  {
+    field: { builtin: "labels" },
+    label: "Labels",
+    width: 160,
+    editable: true,
+    sortable: false,
+    // Comma-separated EXISTING label names, matched case-insensitively — the same
+    // "reject an unrecognised value rather than sending it through" discipline the
+    // Priority column above already uses. This deliberately does NOT create a label
+    // on an unmatched name: a typo would otherwise mint a throwaway label silently.
+    // Label *creation* is its own composer (see the label-composer row wrapping the
+    // Sheet in TaskApp.mll) — assignment here only ever references what already exists.
+    write: (id, value, ctx) => {
+      const names = value.split(",").map((s) => s.trim()).filter(Boolean);
+      const ids: string[] = [];
+      for (const name of names) {
+        const labelId = ctx?.labelsByName.get(name.toLowerCase());
+        if (!labelId) return null; // unknown name — reject the whole edit, not a partial one
+        ids.push(labelId);
+      }
+      return { op: "setTaskLabels", args: { id, labels: ids } };
+    },
+  },
 ];
 
 // Sheet toolbar/state → the View the engine actually evaluates. Rebuilt every
@@ -256,6 +281,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let newName = "";
   let newDue = "";
   let newProject = "";
+  let newLabel = "";
   // Which view is showing. A string rather than a set of booleans, so the six
   // states can't contradict each other.
   let view: "list" | "board" | "timeline" | "sheet" | "calendar" | "notes" = "list";
@@ -509,6 +535,21 @@ function makeController(engine: any, init: ControllerInit = {}) {
     };
   };
 
+  // Existing labels, keyed by lowercased name — read straight off `workspace()`
+  // (no dedicated query needed, same reasoning as `noteRows()`). The Sheet's Labels
+  // column uses this to resolve a typed name back to the id `setTaskLabels` needs;
+  // an unmatched name is rejected there, not created here.
+  const labelsByName = (): Map<string, string> => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const map = (ws.projects?.[activeId]?.labels ?? {}) as Record<string, any>;
+    const out = new Map<string, string>();
+    for (const l of Object.values(map) as any[]) {
+      out.set(String(l.name ?? "").toLowerCase(), l.id as string);
+    }
+    return out;
+  };
+
   return {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
@@ -658,6 +699,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
         sheetSortOptions: SHEET_FIELDS.filter((f) => f.sortable).map((f) => f.label),
         sheetSortOpen,
         sheetSortAscending,
+        newLabelName: newLabel,
         calendarMode: view === "calendar" ? "calendar" : "",
         calendarTitle: view === "calendar" ? monthLabel(calendarMonthStart) : "",
         calendarCells: cal.cells,
@@ -886,7 +928,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           sheetEditCol = -1;
           sheetEditContent = "";
           if (!id || !col?.write) break;
-          const change = col.write(id, event.value);
+          const change = col.write(id, event.value, { labelsByName: labelsByName() });
           if (!change) break; // the column rejected the value (e.g. an unknown priority)
           const res = (engine as any)[change.op](change.args);
           if (res?.ok === false) {
@@ -909,6 +951,27 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "sheetToggleSortDirection":
           sheetSortAscending = !sheetSortAscending;
           break;
+        case "newLabelNameChange":
+          newLabel = event.value;
+          break;
+        case "addLabel": {
+          const name = newLabel.trim();
+          if (!name) break;
+          // Label ids share the same monotonic counter tasks/notes already mint from
+          // (`t${n}`/`n${n}`) — the "l" prefix keeps the namespace distinct, so no
+          // collision is possible across entity kinds.
+          const id = `l${++counter}`;
+          // No colour picker in v1 (see BACKLOG.md) — a fixed empty string. The
+          // engine only ever round-trips this field verbatim; nothing reads it yet.
+          const res = engine.upsertLabel({ id, name, color: "" });
+          if (res?.ok === false) {
+            console.error("Could not create the label:", res.error ?? res);
+            break;
+          }
+          newLabel = "";
+          persist();
+          break;
+        }
         case "newProjectNameChange":
           newProject = event.value;
           break;

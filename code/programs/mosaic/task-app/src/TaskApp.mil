@@ -78,6 +78,14 @@ component TaskApp {
   slot sheet-sort-open        : bool ;
   slot sheet-sort-ascending   : bool ;
 
+  // The label composer wrapping the Sheet (see TaskApp.mll's sheet-mode branch).
+  // Deliberately TaskApp's own concern, not a mosaic-pkg-sheet slot — Sheet is a
+  // generic grid+toolbar wrapper and has no business knowing about labels
+  // specifically. Assignment (typing an existing label's name into a task's Labels
+  // cell) goes through the Sheet's own editable-cell mechanism instead; this
+  // composer is creation only.
+  slot new-label-name : text ;
+
   // Calendar (month grid). `calendar-mode` is non-empty when the calendar is
   // showing. Every `calendar-*` slot is a straight pass-through to
   // `pkg::mosaic-pkg-calendar::Calendar` — see Calendar.mil for the full
@@ -155,6 +163,10 @@ component TaskApp {
   emit onSheetSortFieldChange     ( value : text ) ;
   emit onSheetToggleSortOpen ;
   emit onSheetToggleSortDirection ;
+
+  // Label composer (TaskApp's own — see the new-label-name slot's note).
+  emit onNewLabelNameChange ( value : text ) ;
+  emit onAddLabel ;
 
   // Calendar emits — straight pass-through to/from pkg::mosaic-pkg-calendar::Calendar.
   emit onCalendarPrev ;

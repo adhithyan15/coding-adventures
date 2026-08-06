@@ -4,6 +4,37 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - label management (create + assign)
+
+Closes the gap the previous entry disclosed: labels can now actually be
+created and assigned, not just displayed.
+
+- **Creation**: a small composer ("+ Label") wrapping the Sheet tab in
+  `TaskApp.mll` — deliberately TaskApp's own concern, not a
+  `mosaic-pkg-sheet` slot, since Sheet is a generic grid+toolbar wrapper
+  with no business knowing about labels specifically. Calls the engine's
+  existing `upsertLabel({ id, name, color: "" })`; no colour picker in v1
+  (a fixed empty string — nothing reads the field yet).
+- **Assignment**: a new "Labels" column on the Sheet, editable like every
+  other column. Accepts comma-separated *existing* label names, matched
+  case-insensitively (`"urgent"` resolves to a label named "Urgent").
+  An unrecognised name **rejects the whole edit** rather than creating a
+  throwaway label or silently dropping it — the same "reject an
+  unrecognised value rather than sending it through" discipline the
+  Priority column already uses.
+
+Verified live end-to-end: created a label named "Urgent", assigned it to
+a task by typing "urgent" (lowercase) into its Sheet Labels cell — matched
+case-insensitively — confirmed the chip renders on the List tab; then
+confirmed typing an unknown name leaves the existing assignment untouched
+rather than corrupting it. Both themes. Zero console errors.
+
+**Still deferred**: colour picker (the `Label.color` field is set but
+inert — nothing renders it yet), duplicate-name prevention (creating two
+labels with the same name is allowed, mirroring how project names aren't
+deduped either), and a way to *remove* a single label from a task without
+retyping the whole comma-separated list.
+
 ### Added - priority and labels shown on task rows
 
 The list view now shows a task's priority (e.g. "High") and labels (comma-

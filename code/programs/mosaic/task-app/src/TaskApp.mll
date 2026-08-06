@@ -191,31 +191,43 @@ layout TaskApp {
         }
         Else {
         If ( when: slot: sheet-mode ) {
-          // Every sheet-* slot/emit is a straight pass-through to the package —
-          // TaskApp adds no shaping of its own, see Sheet.mil for the contract.
-          pkg::mosaic-pkg-sheet::Sheet (
-            viewport-rows : slot: sheet-viewport-rows ,
-            column-headers : slot: sheet-column-headers ,
-            column-widths : slot: sheet-column-widths ,
-            selected-row : slot: sheet-selected-row ,
-            selected-col : slot: sheet-selected-col ,
-            edit-row : slot: sheet-edit-row ,
-            edit-col : slot: sheet-edit-col ,
-            edit-content : slot: sheet-edit-content ,
-            filter-text : slot: sheet-filter-text ,
-            sort-field : slot: sheet-sort-field ,
-            sort-options : slot: sheet-sort-options ,
-            sort-open : slot: sheet-sort-open ,
-            sort-ascending : slot: sheet-sort-ascending ,
-            onNavigate : emit: onSheetNavigate ,
-            onFormulaChange : emit: onSheetFormulaChange ,
-            onEditCommit : emit: onSheetEditCommit ,
-            onEditCancel : emit: onSheetEditCancel ,
-            onFilterChange : emit: onSheetFilterChange ,
-            onSortFieldChange : emit: onSheetSortFieldChange ,
-            onToggleSortOpen : emit: onSheetToggleSortOpen ,
-            onToggleSortDirection : emit: onSheetToggleSortDirection
-          )
+          // TaskApp wraps the Sheet with its own label composer, above the grid —
+          // deliberately NOT inside mosaic-pkg-sheet (see new-label-name's slot
+          // comment on TaskApp.mil for why). Every sheet-* slot/emit below is still
+          // a straight pass-through to the package itself.
+          Column [ sheet-view-wrap ] {
+            Row [ label-composer ] {
+              HostInput [ label-name-input ] (
+                value : slot: new-label-name ,
+                placeholder : "New label" ,
+                onChange : emit: onNewLabelNameChange
+              )
+              HostButton [ label-add-btn ] ( label : "+ Label" , onClick : emit: onAddLabel )
+            }
+            pkg::mosaic-pkg-sheet::Sheet (
+              viewport-rows : slot: sheet-viewport-rows ,
+              column-headers : slot: sheet-column-headers ,
+              column-widths : slot: sheet-column-widths ,
+              selected-row : slot: sheet-selected-row ,
+              selected-col : slot: sheet-selected-col ,
+              edit-row : slot: sheet-edit-row ,
+              edit-col : slot: sheet-edit-col ,
+              edit-content : slot: sheet-edit-content ,
+              filter-text : slot: sheet-filter-text ,
+              sort-field : slot: sheet-sort-field ,
+              sort-options : slot: sheet-sort-options ,
+              sort-open : slot: sheet-sort-open ,
+              sort-ascending : slot: sheet-sort-ascending ,
+              onNavigate : emit: onSheetNavigate ,
+              onFormulaChange : emit: onSheetFormulaChange ,
+              onEditCommit : emit: onSheetEditCommit ,
+              onEditCancel : emit: onSheetEditCancel ,
+              onFilterChange : emit: onSheetFilterChange ,
+              onSortFieldChange : emit: onSheetSortFieldChange ,
+              onToggleSortOpen : emit: onSheetToggleSortOpen ,
+              onToggleSortDirection : emit: onSheetToggleSortDirection
+            )
+          }
         }
         Else {
         If ( when: slot: calendar-mode ) {
