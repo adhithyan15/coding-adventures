@@ -1290,14 +1290,45 @@ public final class Zstd {
      * <p>Reads the literals section, sequences section, and applies the
      * sequences to the output buffer to reconstruct the original data.</p>
      *
+     * <p>{@code rep1}/{@code rep2}/{@code rep3} are the three Repeated_Offset
+     * registers (RFC 8878 §3.1.1.3.2.1.1), each passed as a 1-element array
+     * used as an in/out cell — they are FRAME-scoped, not block-scoped:
+     * "For the first block, the starting offset history is populated with
+     * Repeated_Offset1=1, Repeated_Offset2=4, Repeated_Offset3=8" (RFC 8878),
+     * and every later Compressed block in the same frame continues from
+     * wherever the previous block's sequences left them. The caller
+     * ({@link #decompress}) owns the three registers and threads them
+     * through every Compressed block in a frame.</p>
+     *
+     * <p><b>Why this decoder needs repeat-offset support even though this
+     * port's own encoder never emits it:</b> {@link #encodeSequencesSection}
+     * always writes an explicit offset code (&gt;= 2, since the minimum
+     * possible LZ77 match offset is 1, giving raw offset = offset + 3
+     * &gt;= 4), so this port's own {@code compress()}/{@code decompress()}
+     * round trip never touches the repeat-offset path. But the real
+     * {@code zstd} CLI's encoder uses repeat offsets constantly (they are
+     * one of its main entropy wins, especially for periodic/repetitive
+     * data), so a decoder that only understands explicit offset codes will
+     * fail to decode real-world {@code .zst} data that happens to use them
+     * — see lessons.md Lesson 99, cross-checked against both the RFC 8878
+     * prose and the literal reference C source ({@code ZSTD_decodeSequence}
+     * in {@code zstd_decompress_block.c}), and independently confirmed by
+     * PR #9941's {@code c/zstd} port, which found the same gap and fixed it
+     * the same way ({@code rust/zstd} already has it too; other language
+     * ports may still share this gap and should be audited separately).</p>
+     *
      * @param data       the full compressed data array
      * @param blockStart offset where the block payload begins
      * @param blockLen   length of the block payload
      * @param output     the growing output buffer
+     * @param rep1       Repeated_Offset1 register, 1-element in/out cell
+     * @param rep2       Repeated_Offset2 register, 1-element in/out cell
+     * @param rep3       Repeated_Offset3 register, 1-element in/out cell
      * @throws IOException if the block is malformed
      */
     private static void decompressBlock(
-            byte[] data, int blockStart, int blockLen, ByteBuf output)
+            byte[] data, int blockStart, int blockLen, ByteBuf output,
+            int[] rep1, int[] rep2, int[] rep3)
             throws IOException {
 
         // ── Literals section ─────────────────────────────────────────────────
@@ -1389,17 +1420,73 @@ public final class Zstd {
             int[] llInfo = LL_CODES[llCode];
             int[] mlInfo = ML_CODES[mlCode];
 
+            // llIsZero is needed for the repeat-offset interpretation below
+            // (RFC 8878's "when Literals_Length is 0, repeated offsets are
+            // shifted by 1" rule) and is knowable right now, from the
+            // PEEKED llCode alone — LL code 0 is the only LL code with
+            // baseline 0 and 0 extra bits (see LL_CODES), so llCode == 0 iff
+            // the eventual decoded `ll` value is 0. No extra bits need to be
+            // read yet to know this.
+            boolean llIsZero = (llCode == 0);
+
             // Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
             // §3.1.1.3.2.1.2 — "Decoding starts by reading the Number_of_Bits
             // required to decode offset. It does the same for Match_Length
-            // and then for Literals_Length.").
-            // Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3
+            // and then for Literals_Length."). The NUMBER of bits read for
+            // the offset field is always exactly `ofCode` regardless of the
+            // repeat-offset interpretation below — the reference decoder
+            // never varies bit-consumption on llIsZero, only how the
+            // resulting value maps to an actual offset changes.
             int ofRaw = (1 << ofCode) | (int) br.readBits(ofCode);
             int ml = mlInfo[0] + (int) br.readBits(mlInfo[1]);
             int ll = llInfo[0] + (int) br.readBits(llInfo[1]);
-            if (ofRaw < 3)
-                throw new IOException("decoded offset underflow: of_raw=" + ofRaw);
-            int matchOffset = ofRaw - 3;
+
+            // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1),
+            // including the Repeated_Offset (R1/R2/R3) mechanism this
+            // decoder must understand even though this port's own encoder
+            // never emits it — see decompressBlock's doc comment and
+            // lessons.md Lesson 99.
+            //
+            // ofCode >= 2 guarantees ofRaw = (1<<ofCode)+extra >= 4, i.e.
+            // Offset_Value > 3: an ordinary explicit offset. ofCode <= 1
+            // guarantees ofRaw in {1, 2, 3}: a repeat-offset reference.
+            //
+            // The repeat case collapses to one selector in [0, 3]
+            // (selector = llIsZero(0/1) + ofRaw - 1), matching the
+            // reference decoder's `ofBase + ll0 + extra_bit`:
+            //   0 -> reuse rep1 unchanged (no rotation)
+            //   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+            //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+            //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+            int matchOffset;
+            if (ofCode >= 2) {
+                matchOffset = ofRaw - 3;
+                rep3[0] = rep2[0];
+                rep2[0] = rep1[0];
+                rep1[0] = matchOffset;
+            } else {
+                int selector = (llIsZero ? 1 : 0) + ofRaw - 1;
+                switch (selector) {
+                    case 0 -> matchOffset = rep1[0];
+                    case 1 -> {
+                        matchOffset = rep2[0];
+                        rep2[0] = rep1[0];
+                        rep1[0] = matchOffset;
+                    }
+                    case 2 -> {
+                        matchOffset = rep3[0];
+                        rep3[0] = rep2[0];
+                        rep2[0] = rep1[0];
+                        rep1[0] = matchOffset;
+                    }
+                    default -> { // 3
+                        matchOffset = (rep1[0] > 0) ? rep1[0] - 1 : 0;
+                        rep3[0] = rep2[0];
+                        rep2[0] = rep1[0];
+                        rep1[0] = matchOffset;
+                    }
+                }
+            }
 
             // Step 3 — update FSE states (consumes bits), order LL, ML, OF
             // (RFC 8878 §3.1.1.3.2.1.2 — "Literals_Length_State is updated,
@@ -1687,6 +1774,16 @@ public final class Zstd {
         // block case, where MAX_BLOCK_SIZE alone is not sufficient).
         ByteBuf output = new ByteBuf();
 
+        // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): FRAME-scoped —
+        // default 1/4/8 "for the first block", then threaded unmodified
+        // through every Compressed block's sequences for the rest of the
+        // frame (Raw/RLE blocks don't touch them). See decompressBlock's doc
+        // comment and lessons.md Lesson 99. Each is a 1-element array used
+        // as a mutable in/out cell, since decompressBlock updates them.
+        int[] rep1 = {1};
+        int[] rep2 = {4};
+        int[] rep3 = {8};
+
         while (true) {
             if (pos + 3 > data.length)
                 throw new IOException("truncated block header");
@@ -1735,7 +1832,7 @@ public final class Zstd {
                     if (pos + bsize > data.length)
                         throw new IOException("compressed block truncated: need " + bsize +
                                 " bytes");
-                    decompressBlock(data, pos, bsize, output);
+                    decompressBlock(data, pos, bsize, output, rep1, rep2, rep3);
                     pos += bsize;
                 }
                 case 3 -> throw new IOException("reserved block type 3");
