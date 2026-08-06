@@ -198,16 +198,25 @@ describe("exam alignment", () => {
 describe("corpus snapshot", () => {
   // The measured answer to "how far is each track from A1, and from Advanced?"
   //
-  // Ratchet these as content lands. `A2: 0` is the headline: the A2 spine tranche exists
-  // but NO track has realized a single node of it, so the whole corpus sits at or below
-  // A1 and "Advanced" does not exist anywhere yet.
+  // Ratchet these as content lands. `A2: 0` was the headline for a long time: the A2
+  // spine tranche existed but NO track had realized a single node of it.
+  //
+  // That changed with Latin chapter 37, the eight core verbs (sum, habeō, eō, veniō,
+  // dīcō, videō, sciō, dō). They attach to SPINE-SAY-WHAT-I-DO, which the shared spine
+  // declares at stage A2, so the level is DERIVED rather than claimed — the eight are the
+  // corpus's first A2 lessons anywhere:
+  //
+  //   A2  0 -> 8      pre-A1 657 (unchanged)   A1 307 (unchanged)
+  //
+  // `unmapped` and `mappedPercent` do not move: the eight are in a realization-path
+  // segment (LA-PATH-025), so every one of them has a derivable level.
   it("pins where the corpus actually stands on the ladder", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
     expect(summary.byLevel["pre-A1"]).toBe(657);
     expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(0);
+    expect(summary.byLevel.A2).toBe(8);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -219,10 +228,19 @@ describe("corpus snapshot", () => {
     expect(summary.mappedPercent).toBe(85);
   });
 
-  it("shows no track has reached A2, and five have not reached A1", () => {
+  it("shows exactly one track has reached A2, and five have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
-    expect(summary.tracks.every((track) => track.reach !== "A2")).toBe(true);
+    // `reach` is the highest level a track has ANY lesson at, so this names the tracks
+    // rather than counting them: "no track is at A2" has become "latin and only latin
+    // is", and listing it keeps the assertion as tight as the original. Nothing has
+    // reached B1 or beyond, which is still the honest ceiling for the whole corpus.
+    expect(
+      summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
+    ).toEqual(["latin"]);
+    expect(
+      summary.tracks.every((track) => track.reach === null || levelRank(track.reach) <= levelRank("A2")),
+    ).toBe(true);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
     ).toEqual(["chinese", "japanese", "persian", "russian", "urdu"]);

@@ -680,23 +680,42 @@ describe("corpus regression", () => {
   // alone. The prefix and chapter rollups move much further than the raw counts because
   // a single unspeakable table near the front of a chapter used to block everything
   // behind it — which is why unstartable chapters fall by nearly two thirds.
+  //
+  // The Latin core-verb chapter (chapter 37: sum, habeō, eō, veniō, dīcō, videō, sciō,
+  // dō) then added eight lessons, and every one of them is `voice`:
+  //
+  //   totalLessons  1134 -> 1142      voice   957 -> 965  (+8)
+  //   sight          124 ->  124      pen      53 ->  53  (both unchanged)
+  //   drivableLessons 957 ->  965     drivablePercent 84 -> 85
+  //   chapterCount    377 ->  378     fullyDrivableChapters 284 -> 285
+  //   drivablePrefixTotal 825 -> 833  unstartableChapters 44 -> 44 (unchanged)
+  //
+  // All eight counters that move, move together and by the same eight, which is the
+  // signature of a chapter that needs no eyes at all: each lesson teaches one verb, its
+  // six present-tense forms as a bullet list rather than a paradigm grid, and its English
+  // cousins in prose. No table, no script block, no pen. Because the whole chapter is
+  // `voice` and it is a NEW chapter, its drivable prefix runs to its full length — so
+  // `drivablePrefixTotal` gains the full 8 and `fullyDrivableChapters` gains the one new
+  // chapter, while `unstartableChapters` cannot move: an all-voice chapter is startable
+  // by definition. The drivable share crossing from 84% to 85% is a real ratchet, not a
+  // rounding accident — 965/1142 is 84.5%, which rounds up.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1134,
-      voice: 957,
+      totalLessons: 1142,
+      voice: 965,
       sight: 124,
       pen: 53,
-      drivableLessons: 957,
-      drivablePercent: 84,
+      drivableLessons: 965,
+      drivablePercent: 85,
       trackCount: 22,
-      chapterCount: 377,
-      // Prerequisite order still costs a commuter 132 of the 957 ear-only lessons:
+      chapterCount: 378,
+      // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 825,
-      fullyDrivableChapters: 284,
+      drivablePrefixTotal: 833,
+      fullyDrivableChapters: 285,
       unstartableChapters: 44,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,

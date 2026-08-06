@@ -220,8 +220,13 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
-    expect(report.summary.bookChapters).toBe(377);
-    expect(report.summary.declaredChapters).toBe(279);
+    // Latin chapter 37 (the eight core verbs) added one book chapter AND its own
+    // capability ledger entry, so both totals move by one and the debt count does not:
+    // bookChapters 377 -> 378, declaredChapters 279 -> 280, chaptersWithoutCapability
+    // holds at 98. A new chapter that shipped without a `canDo`/`payoff` would have
+    // pushed the debt to 99, which is exactly what this trio is here to catch.
+    expect(report.summary.bookChapters).toBe(378);
+    expect(report.summary.declaredChapters).toBe(280);
     expect(report.summary.chaptersWithoutCapability).toBe(98);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);

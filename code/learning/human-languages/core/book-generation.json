@@ -2025,6 +2025,13 @@
       "output": "latin/book/chapters/ch36-good-afternoon.tex"
     },
     {
+      "language": "latin",
+      "chapter": 37,
+      "title": "Eight Verbs at the Core",
+      "label": "ch:la-core-verbs",
+      "output": "latin/book/chapters/ch37-core-verbs.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",
