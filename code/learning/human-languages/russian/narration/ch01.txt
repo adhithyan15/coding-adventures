@@ -16,12 +16,12 @@ The word, taken apart.
 So the first word you can say is also one of the most common little glue-words in the language.
 
 Across the family — the shapes of "yes".
-[a table of 5 rows, read aloud]
-Language: Russian. "yes": da (да). built from: old Slavic affirmative.
-Language: Spanish. "yes": sí. built from: Latin sic, "thus, so".
-Language: French. "yes": oui. built from: Latin hoc ille, "that's it".
-Language: German. "yes": ja. built from: old Germanic ja.
-Language: Latin. "yes": ita / sic. built from: "thus, so".
+Every language improvised its own "yes," and you can hear where each one came from:
+Russian да (da) — an old Slavic affirmative.
+Spanish sí — Latin sic, "thus, so."
+French oui — Latin hoc ille, "that's it."
+German ja — old Germanic ja.
+Latin ita or sic — "thus, so."
 Notice how many languages say "yes" with a word that means "so / thus" (sí, sic, ita). Russian's да (da) is its own thing — but its side-job as a "so/and" word rhymes with that pattern.
 
 Guided Practice.
@@ -62,13 +62,7 @@ And that little не is one of the deepest words in the whole Indo-European fami
 When you say нет (nyet), you are pronouncing a cousin of no that has meant "not" for six thousand years.
 
 Across the family — one ancient "no".
-[a table of 5 rows, read aloud]
-Language: Russian. "no": nyet (нет). from PIE ne: ✓ (не = "not").
-Language: English. "no": no / not. from PIE ne: ✓.
-Language: Latin. "no": nōn. from PIE ne: ✓.
-Language: French. "no": non. from PIE ne: ✓.
-Language: Sanskrit. "no": na. from PIE ne: ✓.
-Unlike "yes" — where every language improvised — the world's "no" is astonishingly one word, stretched across the whole family. нет (nyet) is Russia's share of it.
+Unlike "yes" — where every language improvised — the world's "no" is astonishingly one word, stretched across the whole family. Russian нет (nyet) carries не; English says no and not; Latin said nōn, French says non, Sanskrit said na. All of them are the same ancient ne, and нет (nyet) is Russia's share of it.
 
 Guided Practice.
 [pause 1 second]
@@ -103,12 +97,11 @@ So under the politeness sits "grant [me this], do me the kindness." It is a requ
 And then it does a second job English splits off: the reply to thanks. Where English needs a separate "you're welcome," Russian just answers спасибо (spasíbo) with пожалуйста (pozhálusta) — "[it was] a favour freely given."
 
 Across the family — "please" is a favour, everywhere.
-[a table of 5 rows, read aloud]
-Language: Russian. "please": pozhálusta (пожалуйста). literally: "grant [me] a favour".
-Language: French. "please": s'il vous plaît. literally: "if it pleases you".
-Language: Spanish. "please": por favor. literally: "for a favour".
-Language: English. "please": please. literally: "[if it] please [you]".
-Language: German. "please": bitte. literally: "I request" (and, like Russian, also "you're welcome").
+Russian пожалуйста (pozhálusta) — "grant [me] a favour."
+French s'il vous plaît — "if it pleases you."
+Spanish por favor — "for a favour."
+English please — "[if it] please [you]."
+German bitte — "I request," and also "you're welcome."
 German bitte pulls the exact same double shift as пожалуйста (pozhálusta) — one word for both "please" and "you're welcome."
 
 Why it's said this way.
@@ -137,11 +130,10 @@ Six words, and — more importantly — you can now read Cyrillic well enough to
 
 The four false friends, one more time.
 These are the letters that look Latin and lie. Say each sound aloud:
-[a table of 4 rows, read aloud]
-looks like: в (Latin B). actually says: v. in the word: привет (privét).
-looks like: р (Latin P). actually says: r. in the word: привет (privét).
-looks like: с (Latin C). actually says: s. in the word: спасибо (spasíbo).
-looks like: н (Latin H). actually says: n. in the word: нет (nyet).
+в wears the shape of a Latin B and says v — as in привет (privét).
+р wears the shape of a Latin P and says r — as in привет (privét).
+с wears the shape of a Latin C and says s — as in спасибо (spasíbo).
+н wears the shape of a Latin H and says n — as in нет (nyet).
 And the two easy vowel traps: у = "oo" (not y), е = "ye."
 
 Read them cold.
@@ -246,12 +238,11 @@ English bless you after a sneeze.
 спасибо (spasíbo) belongs to that family: a little "God save you," said so often the prayer wore invisible.
 
 Across the family — thanks, and where it comes from.
-[a table of 5 rows, read aloud]
-Language: Russian. "thank you": spasíbo (спасибо). its root idea: "God save you".
-Language: Spanish. "thank you": gracias. its root idea: Latin gratia, "grace".
-Language: French. "thank you": merci. its root idea: Latin merces, "reward, mercy".
-Language: German. "thank you": danke. its root idea: "think of / be mindful".
-Language: English. "thank you": thank you. its root idea: "think" — I'll hold you in thought.
+Russian спасибо (spasíbo) — "God save you."
+Spanish gracias — Latin gratia, "grace."
+French merci — Latin merces, "reward, mercy."
+German danke — "think of, be mindful."
+English thank you — "think": I'll hold you in thought.
 Every culture built "thanks" from a different metaphor — grace, reward, mindful thought — and Russian built it from a blessing.
 
 Why it's said this way.

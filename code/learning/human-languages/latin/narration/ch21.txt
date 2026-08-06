@@ -1,8 +1,8 @@
 Latin, chapter 21: Nice to Meet You.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 volup est convēnisse — the phrase Latin uses instead of a fixed idiom.
 
 Warm-up.
@@ -30,7 +30,7 @@ Wrap-up Recall.
 Does Classical Latin have one single fixed idiom for "nice to meet you"? (No — Romans expressed the sentiment according to context.) What real, attested phrase can do the job, and where does it come from? ("Volup est convēnisse", literally "to have met [you] is a pleasure" — Plautus, Miles Gloriosus.) What kind of infinitive is convēnisse? (Perfect — "to have met.")
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 Useful phrase, honest context — the attested phrase greets a chance encounter between people who already know each other, so it is useful but not an exact first-introduction formula.
 
 Warm-up.
@@ -56,3 +56,37 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Is the Plautine line a first-time introduction? (No — it is a chance encounter between acquaintances.) Is it still genuinely attested? (Yes.) Is mihi pergrātum est tē convenīre bad grammar? (No.) Is it classically attested? (No — it is a modern spoken-Latin formula.)
+
+
+Lesson 3 of 3.
+Practice — two meetings, each with the right words.
+
+Warm-up.
+[pause 2 seconds]
+English uses one formula for both meetings. Latin does not, and the chapter told you why. So you get two scenes, and the payoff is knowing which words go in which.
+
+The exchange — scene one: strangers, so trade names.
+A: Salvē! Quid tibi nōmen est? Be well! What is the name to you?
+B: Mihi nōmen est Mārcus. Quid tibi nōmen est? The name to me is Marcus.
+A: Mihi nōmen est Iūlia.
+B: Valē! A: Valē!
+Mārcus and Iūlia are only slots — put your own name there. Notice what is missing: no verb for "have," no verb for "be called." The dative tibi/mihi carries the possession by itself, and nōmen stays the subject.
+Scene two is the chance re-encounter — the situation Plautus actually wrote the line for:
+A: Salvē! Quid agis?
+B: Valeō. Volup est convēnisse! I fare well. It is a pleasure to have met [you].
+A: Valē!
+
+Guided Practice.
+[pause 1 second]
+[your turn — run: scene one with your own name in the slot]
+[pause 8 seconds for the answer]
+[your turn — choose: a stranger becomes names; someone you already know becomes volup est convēnisse]
+[pause 8 seconds for the answer]
+[your turn — choose: greeting several people at once becomes salvēte]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which case does mihi sit in, and what work does it do? (Dative; it owns the name without any verb.) Cicero would write puerō nōmen est Mārcus; who prefers Mārcō? (Livy and Sallust.) Is mihi pergrātum est tē convenīre good Latin, and is it Roman? (Good grammar; not attested — modern.)
+[question — say your answer, then pause 9 seconds]
+You have been asked quid tibi nomen est? Type the first three Latin words of your reply.

@@ -1,8 +1,8 @@
 Spanish, chapter 3: Introducing Yourself.
-12 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+14 lessons. You can do the first 7 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 12.
+Lesson 1 of 14.
 me — your first pronoun, and a real English twin.
 
 Warm-up.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 Is Spanish me a true cousin of English me, or a coincidence like hola/hello? (A true cousin — both from the same ancient root.) What part of speech is it? (A pronoun.)
 
 
-Lesson 2 of 12.
+Lesson 2 of 14.
 llamo — "I call," from a root that shouts.
 
 Warm-up.
@@ -66,7 +66,7 @@ Wrap-up Recall.
 What does the root clamare mean? (To shout / cry out.) Latin cl- becomes which two letters in Spanish? (ll- — clamare becomes llamar.)
 
 
-Lesson 3 of 12.
+Lesson 3 of 14.
 me llamo — "I call myself".
 
 Warm-up.
@@ -100,23 +100,18 @@ Wrap-up Recall.
 Literally, what is me llamo? ("I call myself.") What makes it reflexive? (The me — the action loops back on you.)
 
 
-Lesson 4 of 12.
-tú and usted — two words for "you," and why you must choose.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 4 of 14.
+tú and usted — two words for "you".
 
 Warm-up.
 [pause 2 seconds]
-English has one word for "you." Spanish has two, and picking the wrong one can send the wrong social signal. This lesson gives you both and shows the everyday choice. The remarkable history of usted comes next.
+English has one word for "you." Spanish has two. Today you get both words and what each one is for. What the choice means socially — and the odd grammar usted drags along with it — comes in the next lesson.
 
 The two words.
-tú — "you," informal. For friends, family, children, peers, anyone you're on easy terms with.
+tú — "you," informal. For friends, family, children, peers, anyone you are on easy terms with.
 Root: Latin tū. This is a true cousin of English thou — the word English used to have for exactly this job, the intimate "you" (thou/thee/thy), before it faded out around 400 years ago. Both tú and thou come straight from the same ancient root (tu-). So Spanish still uses, every day, the pronoun English quietly retired.
-usted — "you," formal. For strangers, elders, officials, customers, anyone you're showing respect or keeping distance with.
-
-Grammar Lens: the choice English lost.
-Both are subject pronouns — the "doer" word, like yo ("I"). But they carry a second layer English dropped when thou died: social register. Choosing tú vs. usted tells the listener how you see the relationship — close or respectful. English "you" is one-size-fits-all; a Spanish speaker must decide every time.
-One structural surprise, because it explains the next lessons: usted takes he/she verb forms, not the informal "you" forms. That's why "what's your name?" formally is ¿cómo se llama usted? (the se llama you'd use for "he calls himself") and not te llamas. The next micro-lesson explains the history behind that third-person pattern.
+usted — "you," formal. For strangers, elders, officials, customers, anyone you are showing respect or keeping distance with.
+Both are subject pronouns — the "doer" word, like yo ("I"). Say them enough times that they come out without hunting: tú, one syllable with the accent; usted, stress on the second, with a very soft final d.
 
 Guided Practice.
 [pause 1 second]
@@ -129,10 +124,46 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which is formal, tú or usted? (usted.) What English pronoun is the lost twin of tú? (Thou.) Which verb pattern does usted take? (The same form used with "he" or "she.")
+Which is formal, tú or usted? (Usted.) What English pronoun is the lost twin of tú, and what happened to it? (Thou — it faded out of English around 400 years ago.) Next: what picking one of them tells your listener.
 
 
-Lesson 5 of 12.
+Lesson 5 of 14.
+tú or usted — a choice you have to make every time.
+
+Warm-up.
+[pause 2 seconds]
+You have both words. Now the hard part: Spanish makes you choose one every time you speak to someone, and the choice is never neutral.
+
+You'll want to know first.
+tú / usted — the two words themselves.
+
+Why it's said this way: the layer English dropped.
+Tú and usted do not differ in meaning — both are "you," singular, one person. They differ in register: the social distance you are claiming.
+[a table of 2 rows, read aloud]
+you say: tú. you are signalling: closeness, equality, ease.
+you say: usted. you are signalling: respect, deference, distance.
+English used to carry this too, with thou against you — and when thou died, English lost the ability to say it at all. One-size-fits-all "you" means an English speaker never has to decide. A Spanish speaker decides every single time, and getting it wrong is not a grammar mistake but a social one: tú to a stranger can read as presumptuous, usted to a friend as cold.
+The safe default when you cannot tell: usted. Over-formal is recoverable; over-familiar is awkward.
+
+Grammar Lens: usted takes he/she forms.
+One structural surprise, because it shapes every lesson after this: usted takes the he/she verb forms, not the informal "you" forms.
+That is why "what's your name?" formally is ¿cómo se llama usted? — using the se llama you would otherwise use for "he calls himself" — and not te llamas. Grammatically, usted behaves as though you were talking about the person rather than to them. That is a fossil of where the word came from, and the next lesson digs it up.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tú" and name someone you would use it with]
+[pause 8 seconds for the answer]
+[your turn — say: "usted" and name someone you would use it with]
+[pause 8 seconds for the answer]
+[your turn — say: which verb pattern usted takes — the he/she one]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Do tú and usted differ in meaning or in register? (Register — both mean "you"; they signal closeness versus respect.) Which do you pick when unsure? (Usted.) Which verb forms does usted take? (The same forms used with he or she.)
+
+
+Lesson 6 of 14.
 vuestra merced becomes usted — respect compressed into one word.
 
 Warm-up.
@@ -163,47 +194,75 @@ Wrap-up Recall.
 What did vuestra merced mean? ("Your grace" or "your mercy.") Why does usted take the he/she verb form? (It began as a third-person title.)
 
 
-Lesson 6 of 12.
+Lesson 7 of 14.
 cómo — "how," your first question word.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-To ask someone's name or how they are, you need this word first. cómo — "how" — and it carries a little word for "manner" you already own in English.
-
-Sounds you'll need.
-inverted-marks — Spanish questions open with an upside-down ¿ so you see the question coming: ¿cómo…?
-accent-mark — the accent on ó marks the stress and flags it as a question word (see below): CÓ-mo.
+To ask someone's name or how they are, you need this word first. Cómo — "how" — and hiding inside it is a little Latin word for "manner" that you already own a dozen English versions of.
 
 The word, taken apart.
-cómo — "how." Root: Latin quomodo — a fused little phrase, quo modo, "in what manner."
+cómo — "how." Root: Latin quo modo — not a word but a two-word phrase, "in what manner."
 The two halves, and their English cousins:
 modo ("manner, measure") becomes English mode, modal, model, moderate, modify, commodity.
-quo ("in what") is the Latin question-stem qu- — the seed of almost every Spanish question word (see the family below).
-How quomodo became cómo — the wearing-down. Spanish didn't borrow cómo ready-made; it eroded out of quomodo over centuries of everyday speech. The final -do fell off and the middle collapsed:
+quo ("in what") is the Latin question-stem qu-, the seed of nearly every Spanish question word.
+How the phrase became one word — the wearing-down. Spanish did not borrow cómo ready-made; it eroded out of quo modo over centuries of everyday speech. The final -do fell off and the middle collapsed:
 quomodo becomes quomo becomes como.
-The qu- (a kw sound) flattened to a plain k (written c before o). What's left is quomodo worn smooth — the way a pebble loses its edges in a river. The same erosion gave Italian come, Portuguese como, French comme. The accent in cómo is the one late addition: Spanish stamps it on to mark the question (vs. accent-less como, "like / as").
-
-Grammar Lens: the accent that marks a question.
-Watch the accent mark do real work. cómo (with the accent) = "how?", the question word. como (no accent) = "like / as," or "I eat." Same letters, and the written accent is the only thing telling you it's a question:
-¿Cómo estás? — "How are you?"
-Como tú. — "Like you." / Yo como. — "I eat."
-English has no such marker — it relies on word order and context. Spanish puts a visible flag on the question word. Every question word you'll learn (qué, dónde, cuándo, quién…) carries this accent for the same reason.
+The qu- (a kw sound) flattened to a plain k, written c before o. What is left is a whole Latin phrase worn smooth — the way a pebble loses its edges in a river. The same erosion gave Italian come, Portuguese como, French comme.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "¿cómo?" — with question intonation]
+[your turn — say: "cómo" — CÓ-mo, stress on the first syllable]
 [pause 8 seconds for the answer]
 [your turn — say: "cómo" then English "mode", "model" — the modo root]
+[pause 8 seconds for the answer]
+[your turn — say: the erosion — "quo modo, quomo, como"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Walk the erosion: quomodo becomes? becomes cómo (quomo becomes como, then the question-accent). What changes when the accent disappears? (como is no longer the question word "how.")
+What does cómo mean? ("How.") Walk the erosion: quo modo becomes? becomes cómo. (Quomo becomes como.) What did the two Latin halves mean? (Quo, "in what"; modo, "manner" — the root of English mode and model.) Next: the two marks Spanish puts on a question.
 
 
-Lesson 7 of 12.
+Lesson 8 of 14.
+¿cómo? — the two marks that say "this is a question".
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the upside-down opener until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You have the word cómo. Written down, it wears two marks that English has no equivalent for — and neither of them is decoration. Both do a job English leaves to word order and guesswork.
+
+You'll want to know first.
+cómo — the word itself, and where it came from.
+
+Script — the upside-down opener.
+Spanish questions open with an upside-down ¿ and close with a normal?: ¿cómo?
+Why? Spanish word order often does not change in a question — cómo estás looks the same whether you are asking or reporting. A reader coming to a long sentence would not know to raise their pitch until they hit the mark at the very end, by which time it is too late. The ¿ is a piece of engineering: it tells your voice, in advance, what shape the sentence has. Only the question part gets bracketed, not necessarily the whole line.
+
+Grammar Lens: the accent that marks a question.
+Now watch the accent mark do real work:
+[a table of 2 rows, read aloud]
+cómo means "how?" — the question word.
+como means "like / as" — or "I eat".
+Same letters, same sound. The written accent is the only thing marking the difference:
+¿Cómo estás? — "How are you?"
+Como tú. — "Like you." / Yo como. — "I eat."
+Every question word you will meet — qué, dónde, cuándo, quién — carries this accent for exactly this reason. It is not about stress (the stress is the same either way); it is a flag that says "asking."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "¿cómo?" — with question intonation, opening high]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "cómo" (how?) then "como" (like / I eat)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why does Spanish open a question with ¿? (Word order often does not change, so the reader needs the warning before the sentence, not after.) What changes when the accent disappears from cómo? (It stops being the question word — como means "like / as," or "I eat.")
+
+
+Lesson 9 of 14.
 The qu- question family — one ancient pattern, many clues.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -240,7 +299,7 @@ Wrap-up Recall.
 Which old stem connects qué, quién, cuándo, and cómo? (qu-.) Which word in the preview is the exception? (Dónde.)
 
 
-Lesson 8 of 12.
+Lesson 10 of 14.
 se llama — the reflexive that fits usted.
 
 Warm-up.
@@ -281,7 +340,7 @@ Wrap-up Recall.
 Which reflexive goes with usted — te or se? (se — because usted takes third-person forms.) What's the "self/apart" root inside secede and separate? (Latin se-.)
 
 
-Lesson 9 of 12.
+Lesson 11 of 14.
 ¿cómo se llama usted? — assembling the question, and answering it.
 
 Warm-up.
@@ -316,7 +375,7 @@ Wrap-up Recall.
 Formal vs. informal "what's your name"? (¿Cómo se llama usted? / ¿Cómo te llamas?) Does Spanish literally ask "what" or "how" is your name? ("How" — cómo.)
 
 
-Lesson 10 of 12.
+Lesson 12 of 14.
 mucho — "much," and a sound-change you've already seen.
 
 Warm-up.
@@ -345,7 +404,7 @@ Wrap-up Recall.
 mucho comes from Latin multus — what English words keep the -lt-? (multiple, multitude, multiply.) What Latin cluster melted into the -ch-? (-lt-, like -ct- did in noche.)
 
 
-Lesson 11 of 12.
+Lesson 13 of 14.
 gusto becomes mucho gusto — "much pleasure".
 
 Warm-up.
@@ -378,7 +437,7 @@ Wrap-up Recall.
 What does mucho gusto literally mean? ("Much pleasure.") Is el gusto masculine or feminine? (Masculine.) And the English cousin of gusto built from dis-? (Disgust — "distaste.")
 
 
-Lesson 12 of 12.
+Lesson 14 of 14.
 Practice — introducing yourself.
 
 Warm-up.

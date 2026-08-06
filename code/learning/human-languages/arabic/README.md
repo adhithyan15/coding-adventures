@@ -60,6 +60,30 @@ Their twenty-five generated chapters carry the same source hashes Language
 Ladder recomputes from the browser-loaded lesson AST, so app and book cannot
 drift silently.
 
+## Can you learn this track in the car?
+
+Partly. Under [`HL08`](../../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md)
+each lesson is `voice` 🚗, `sight` 👁 or `pen` ✍, and Arabic measures 37 / 18 / 16
+— **52% drivable**, with 31 lessons reachable in chapter-prefix order.
+
+The instinct is to blame the script, and it is wrong. **All 18 of the `sight`
+lessons are `sight` because of a Markdown table, none because of a script
+block.** Chapters 3 and 4 do open with writing lessons, but moving them would
+change nothing: a chapter's drivable prefix can only start with a lesson that
+has no in-chapter prerequisite, and Chapter 3's only candidates are
+`AR-W07-hook-family-ha-kha` (`pen`) and `AR-C03-kayfa` (`sight`, table), while
+Chapter 4's only candidate is `AR-W10-ayn` — `AR-C04-maa-with` requires it,
+because مع cannot be read without ʿayn. Both chapters are prefix 0 under *every*
+legal ordering, and would still be at 0 with the writing lessons deleted. The
+work that actually frees this track is table linearisation (HL-C17), not
+resequencing.
+
+Chapters 1 and 2 are, separately, **undercounted**: their lessons are still
+schema v1 and carry no `sequence`, so the modality report falls back to
+alphabetical order and reports prefixes of 4 and 6 where the authored path in
+`curriculum.json` gives 7 and 7. That is a measurement artifact of the mixed
+schema, not a curriculum defect.
+
 ## Book / fonts
 
 The book compiles with XeLaTeX using **vendored** Noto Naskh Arabic and Noto
@@ -72,9 +96,32 @@ duplicate-destination, bookmark, LaTeX, or font-shape warnings. Open-right blank
 versos are intentionally retained for print and contain no running header or
 page number.
 
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's
+[`HL05`](../../../specs/HL05-chapter-capability-and-step-by-step-shape.md)
+capability ledger. Each entry says, in the reader's own first-person words, what
+finishing that chapter lets them do, and names the lesson that proves it:
+
+```json
+{
+  "chapter": 17,
+  "title": "Asking Someone's Age",
+  "canDo": "I can ask how old someone is in Arabic and give my own age without using a verb.",
+  "payoff": { "lesson": "AR-C17-kam-umruka", "kind": "dialogue", "assesses": ["…"] }
+}
+```
+
+The file is **authored intent**, not a derived cache — no validator may rewrite
+it. Chapters 3–27 are covered. Chapters 1 and 2 are deliberately left out: their
+recap lessons are still schema v1 with no declared knowledge atoms, so a payoff
+there could only be invented. That absence is honest, measurable debt and is
+reported as such.
+
 ## Files
 
-- [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
+- [`lessons/`](./lessons/) · [`chapters.json`](./chapters.json)
+  · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 

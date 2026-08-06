@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Three Writing Systems in One Doorway",
+      "label": "ch:ja-three-scripts",
+      "canDo": "I can greet someone in the daytime, answer yes or no, and thank them politely, reading each word in the script Japanese actually uses for it.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC",
+        "SPINE-MEET-GREET",
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "JA-C01-practice",
+        "kind": "dialogue",
+        "summary": "A six-line daytime doorway exchange that mixes hiragana and kanji and uses no untaught word.",
+        "assesses": [
+          "JA-LEX-KONNICHIWA",
+          "JA-LEX-NIHONGO",
+          "JA-LEX-HAI",
+          "JA-LEX-IIE",
+          "JA-LEX-ARIGATOU-GOZAIMASU",
+          "JA-REGISTER-TEINEIGO",
+          "JA-PARTICLE-WA-SPELLING",
+          "JA-SCRIPT-HIRAGANA-MORA",
+          "JA-SCRIPT-KANJI-READINGS",
+          "JA-DIALOGUE-DOORWAY"
+        ]
+      }
+    }
+  ]
+}

@@ -85,13 +85,18 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     expect(report.schemaVersion).toBe(1);
     expect(report.durationModel.version).toBe(2);
-    expect(report.summary.registeredTracks).toBe(20);
+    // 20 -> 21 in HL-C39 (Mandarin Chinese) -> 22 in HL-C40 (Japanese). Each joined
+    // the registry with its own authored book, so the track, schema, and
+    // book-coverage counts all move together and stay equal to the registry.
+    // Duration violations stay at zero: Chinese's seven and Japanese's eight
+    // Chapter 1 lessons are each under 300 effective seconds.
+    expect(report.summary.registeredTracks).toBe(22);
     expect(report.summary.totalLessons).toBe(lessons.length);
-    expect(report.summary.authoredBooks).toBe(20);
+    expect(report.summary.authoredBooks).toBe(22);
     expect(report.summary.durationViolations).toBe(0);
     expect(report.summary.unknownPrerequisites).toBe(0);
-    expect(report.schemas.tracks).toHaveLength(20);
-    expect(report.books.tracks).toHaveLength(20);
+    expect(report.schemas.tracks).toHaveLength(22);
+    expect(report.books.tracks).toHaveLength(22);
   });
 
   it("compiles the cross-language objective activities from canonical blocks", () => {
@@ -121,13 +126,26 @@ describe("real curriculum", () => {
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
       "IT-C03-practice-drop-io",
+      "JA-C01-arigatou-dakuten",
+      "JA-C01-gozaimasu-level",
+      "JA-C01-hai-beats",
+      "JA-C01-iie-length",
+      "JA-C01-konnichiwa-particle",
+      "JA-C01-koohii-bar",
+      "JA-C01-nihongo-readings",
+      "JA-C01-practice-final-line",
       "KA-C06-dative-stacking-agglutinative",
       "LA-C01-practice-vale-root",
+      "LA-C19-practice-answer-line",
+      "LA-C21-practice-name-reply",
+      "LA-C33-practice-soir-family",
+      "LA-C36-practice-afternoon-line",
       "ML-C23-naal-survival",
       "MR-C06-number-differences-don-ending",
       "PA-C06-panj-convergence-borrowing",
       "PT-C02-practice-neutral-question",
       "RU-C02-kak-cross-language-what-language",
+      "RU-C02-practice-informal-question",
       "RU-C02-vy-formality-safe-default",
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",
@@ -148,6 +166,15 @@ describe("real curriculum", () => {
       "UR-C05-khuda-hafiz-goodbye",
       "UR-C05-khuda-meaning",
       "UR-C05-practice-final-line",
+      // HL-C39 added Mandarin Chinese: one activity per Chapter 1 lesson, so the
+      // corpus total moves from 51 to 57.
+      "ZH-C01-hao-components",
+      "ZH-C01-hao-fond-tone",
+      "ZH-C01-ni-meaning",
+      "ZH-C01-nihao-greeting",
+      "ZH-C01-practice-greet",
+      "ZH-C01-tone-sandhi-spoken",
+      "ZH-C01-tones-count",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
@@ -161,7 +188,8 @@ describe("real curriculum", () => {
         lesson.realization.chapter >= 1 &&
         lesson.realization.chapter <= 3,
     );
-    expect(pilot).toHaveLength(24);
+    // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
+    expect(pilot).toHaveLength(26);
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(
@@ -248,6 +276,41 @@ describe("real curriculum", () => {
     )!;
     expect(persianFarewell.frontmatter.headword).toBe("خداحافظ");
     expect(urduFarewell.frontmatter.headword).toBe("خدا حافظ");
+  });
+
+  it("keeps the Japanese Chapter 1 mixed-script chain closed and under five minutes", () => {
+    // Japanese is the corpus's first track that needs more than one writing system
+    // at a time, so this asserts the property rather than only the counts: the same
+    // chapter must actually carry hiragana, katakana, and kanji headwords, and the
+    // closing exchange must still be reachable without an untaught atom.
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    const chapter = lessons.filter(
+      (lesson) => lesson.language === "japanese" && lesson.realization.chapter === 1,
+    );
+    expect(chapter).toHaveLength(8);
+    expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+    expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+    expect(
+      report.duration.violations.filter((lesson) => lesson.language === "japanese"),
+    ).toEqual([]);
+    expect(
+      report.prerequisites.laterChapterWithoutPrerequisites.filter(
+        (lesson) => lesson.language === "japanese",
+      ),
+    ).toEqual([]);
+
+    const headwords = new Map(
+      chapter.map((lesson) => [lesson.realization.lessonId, lesson.realization.headword]),
+    );
+    expect(headwords.get("JA-C01-konnichiwa")).toBe("こんにちは"); // hiragana
+    expect(headwords.get("JA-C01-nihongo")).toBe("日本語"); // kanji
+    expect(headwords.get("JA-C01-koohii")).toBe("コーヒー"); // katakana
+    // The register field carries two genuinely different grammatical levels here,
+    // not two synonyms, so the plain and polite thanks must not collapse into one.
+    const plain = lessons.find((lesson) => lesson.realization.lessonId === "JA-C01-arigatou")!;
+    const polite = lessons.find((lesson) => lesson.realization.lessonId === "JA-C01-gozaimasu")!;
+    expect(plain.frontmatter.register).toBe("plain-casual");
+    expect(polite.frontmatter.register).toBe("teineigo-polite");
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {

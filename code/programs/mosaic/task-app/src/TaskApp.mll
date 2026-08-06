@@ -71,11 +71,20 @@ layout TaskApp {
           // branches, so each of the four states gets its own name.
           If ( when: slot: timeline-mode ) {
             HostButton [ seg-list-off ] ( label : "List" , onClick : emit: onShowList )
+            HostButton [ seg-board-off ] ( label : "Board" , onClick : emit: onShowBoard )
             HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
           }
           Else {
-            HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
-            HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+            If ( when: slot: board-mode ) {
+              HostButton [ seg-list-off2 ] ( label : "List" , onClick : emit: onShowList )
+              HostButton [ seg-board-on ] ( label : "Board" , onClick : emit: onShowBoard )
+              HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+            }
+            Else {
+              HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
+              HostButton [ seg-board-off2 ] ( label : "Board" , onClick : emit: onShowBoard )
+              HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+            }
           }
         }
       }
@@ -101,6 +110,41 @@ layout TaskApp {
                   }
                 }
                 Text [ tl-window ] ( content : ( t[3] ) )
+              }
+            }
+          }
+        }
+        Else {
+        If ( when: slot: board-mode ) {
+          // The board is what the UI35 drag family exists for: each column is a drop
+          // target, each card a draggable. A drop dispatches a PROPOSAL — the engine
+          // decides whether the move is legal and performs it; the UI never moves a
+          // card itself.
+          Row [ board ] {
+            For ( each: slot: board-columns , as: col , index: ci ) {
+              Column [ board-col ] {
+                Text [ col-head ] ( content : ( col[0] ) )
+                HostDropTarget [ col-drop ] (
+                  drop-key : ( col[1] ) ,
+                  onDrop : emit: onCardDropped
+                ) {
+                  For ( each: slot: board-cards , as: card , index: cdi ) {
+                    // Place a card by comparing keys rather than nesting a list in a
+                    // list — one `If` says everything, and both loops stay flat.
+                    If ( when: ( card[1] == col[1] ) ) {
+                      HostDraggable [ board-card ] (
+                        drag-key : ( card[2] ) ,
+                        drag-kind : "task" ,
+                        drag-label : ( card[0] )
+                      ) {
+                        Text [ card-name ] ( content : ( card[0] ) )
+                        If ( when: ( card[3] ) ) {
+                          Text [ card-crit ] ( content : ( card[3] ) )
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -164,6 +208,7 @@ layout TaskApp {
               }
             }
           }
+        }
         }
       }
     }

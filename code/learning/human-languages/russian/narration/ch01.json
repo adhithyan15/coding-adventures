@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Chapter 1",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:67195f243e754ae0",
+  "sourceHash": "fnv1a64:945bc040fc4ba72c",
   "lessons": [
     {
       "id": "RU-C01-da",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d261a2222bf09af5",
+      "sourceHash": "fnv1a64:ad76bd6ec3c7ff35",
       "notice": null,
       "blocks": [
         {
@@ -66,21 +66,28 @@
           "title": "Across the family — the shapes of \"yes\"",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"yes\"",
-                "built from"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "Language: Russian. \"yes\": da (да). built from: old Slavic affirmative.",
-                "Language: Spanish. \"yes\": sí. built from: Latin sic, \"thus, so\".",
-                "Language: French. \"yes\": oui. built from: Latin hoc ille, \"that's it\".",
-                "Language: German. \"yes\": ja. built from: old Germanic ja.",
-                "Language: Latin. \"yes\": ita / sic. built from: \"thus, so\"."
-              ]
+              "kind": "speech",
+              "text": "Every language improvised its own \"yes,\" and you can hear where each one came from:"
+            },
+            {
+              "kind": "speech",
+              "text": "Russian да (da) — an old Slavic affirmative."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish sí — Latin sic, \"thus, so.\""
+            },
+            {
+              "kind": "speech",
+              "text": "French oui — Latin hoc ille, \"that's it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "German ja — old Germanic ja."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ita or sic — \"thus, so.\""
             },
             {
               "kind": "speech",
@@ -160,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30829460749dad5e",
+      "sourceHash": "fnv1a64:9be8d98be29726be",
       "notice": null,
       "blocks": [
         {
@@ -246,25 +253,8 @@
           "title": "Across the family — one ancient \"no\"",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"no\"",
-                "from PIE ne"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "Language: Russian. \"no\": nyet (нет). from PIE ne: ✓ (не = \"not\").",
-                "Language: English. \"no\": no / not. from PIE ne: ✓.",
-                "Language: Latin. \"no\": nōn. from PIE ne: ✓.",
-                "Language: French. \"no\": non. from PIE ne: ✓.",
-                "Language: Sanskrit. \"no\": na. from PIE ne: ✓."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Unlike \"yes\" — where every language improvised — the world's \"no\" is astonishingly one word, stretched across the whole family. нет (nyet) is Russia's share of it."
+              "text": "Unlike \"yes\" — where every language improvised — the world's \"no\" is astonishingly one word, stretched across the whole family. Russian нет (nyet) carries не; English says no and not; Latin said nōn, French says non, Sanskrit said na. All of them are the same ancient ne, and нет (nyet) is Russia's share of it."
             }
           ]
         },
@@ -340,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:801ffb3857f60785",
+      "sourceHash": "fnv1a64:ca51aaccb8210809",
       "notice": null,
       "blocks": [
         {
@@ -406,21 +396,24 @@
           "title": "Across the family — \"please\" is a favour, everywhere",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"please\"",
-                "literally"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "Language: Russian. \"please\": pozhálusta (пожалуйста). literally: \"grant [me] a favour\".",
-                "Language: French. \"please\": s'il vous plaît. literally: \"if it pleases you\".",
-                "Language: Spanish. \"please\": por favor. literally: \"for a favour\".",
-                "Language: English. \"please\": please. literally: \"[if it] please [you]\".",
-                "Language: German. \"please\": bitte. literally: \"I request\" (and, like Russian, also \"you're welcome\")."
-              ]
+              "kind": "speech",
+              "text": "Russian пожалуйста (pozhálusta) — \"grant [me] a favour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "French s'il vous plaît — \"if it pleases you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish por favor — \"for a favour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English please — \"[if it] please [you].\""
+            },
+            {
+              "kind": "speech",
+              "text": "German bitte — \"I request,\" and also \"you're welcome.\""
             },
             {
               "kind": "speech",
@@ -511,7 +504,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:505e7e00c2fb4981",
+      "sourceHash": "fnv1a64:0950a92805f6dabf",
       "notice": null,
       "blocks": [
         {
@@ -541,20 +534,20 @@
               "text": "These are the letters that look Latin and lie. Say each sound aloud:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "looks like",
-                "actually says",
-                "in the word"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "looks like: в (Latin B). actually says: v. in the word: привет (privét).",
-                "looks like: р (Latin P). actually says: r. in the word: привет (privét).",
-                "looks like: с (Latin C). actually says: s. in the word: спасибо (spasíbo).",
-                "looks like: н (Latin H). actually says: n. in the word: нет (nyet)."
-              ]
+              "kind": "speech",
+              "text": "в wears the shape of a Latin B and says v — as in привет (privét)."
+            },
+            {
+              "kind": "speech",
+              "text": "р wears the shape of a Latin P and says r — as in привет (privét)."
+            },
+            {
+              "kind": "speech",
+              "text": "с wears the shape of a Latin C and says s — as in спасибо (spasíbo)."
+            },
+            {
+              "kind": "speech",
+              "text": "н wears the shape of a Latin H and says n — as in нет (nyet)."
             },
             {
               "kind": "speech",
@@ -887,7 +880,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:915a07bc45e1217c",
+      "sourceHash": "fnv1a64:8d9039e851a00c86",
       "notice": null,
       "blocks": [
         {
@@ -977,21 +970,24 @@
           "title": "Across the family — thanks, and where it comes from",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"thank you\"",
-                "its root idea"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "Language: Russian. \"thank you\": spasíbo (спасибо). its root idea: \"God save you\".",
-                "Language: Spanish. \"thank you\": gracias. its root idea: Latin gratia, \"grace\".",
-                "Language: French. \"thank you\": merci. its root idea: Latin merces, \"reward, mercy\".",
-                "Language: German. \"thank you\": danke. its root idea: \"think of / be mindful\".",
-                "Language: English. \"thank you\": thank you. its root idea: \"think\" — I'll hold you in thought."
-              ]
+              "kind": "speech",
+              "text": "Russian спасибо (spasíbo) — \"God save you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish gracias — Latin gratia, \"grace.\""
+            },
+            {
+              "kind": "speech",
+              "text": "French merci — Latin merces, \"reward, mercy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "German danke — \"think of, be mindful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English thank you — \"think\": I'll hold you in thought."
             },
             {
               "kind": "speech",

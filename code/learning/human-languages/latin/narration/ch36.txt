@@ -1,8 +1,8 @@
 Latin, chapter 36: Good Afternoon.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 salvē (post merīdiem) — the one that isn't there.
 
 Warm-up.
@@ -24,7 +24,7 @@ Wrap-up Recall.
 Does Latin have a two-word phrase for "good afternoon" the way it has bonum vesperum for evening? (No — Latin has no simplex noun for "afternoon" for bonus to pair with.) Is there ANY grammatical Latin phrase at all? (Yes — bonum tempus pōmerīdiānum is real grammar, but a three-word periphrasis, not attested as an actual greeting.) What did Romans say in the afternoon instead? (Salvē — the same everyday greeting from Chapter 1.) Why doesn't bonum post merīdiem work grammatically? (Post merīdiem is a whole prepositional phrase, not a single noun bonus can agree with.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 salvē — the greeting that does not watch the clock.
 
 Warm-up.
@@ -52,3 +52,36 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What can one Roman say on meeting another in the afternoon? (Salvē.) What is the plural? (Salvēte.) Do these words encode a time of day? (No.) Why is there no conversational gap? (The everyday greeting already works whenever people meet.)
+
+
+Lesson 3 of 3.
+Practice — one whole day, in the words you have.
+
+Warm-up.
+[pause 2 seconds]
+Nine chapters of time-of-day words end here. This is the one place they all have to work at once — four meetings, one day, and no inventing.
+
+The exchange — morning to night, with the honest label on each line.
+Morning. A: Salvē! Quid agis? B: Valeō. Salvē!
+Afternoon. A: Salvē! B: Salvē!
+Evening. A: Bonum vesperum! B: Salvē!
+Parting at night. A: Bonam noctem! B: Valē!
+Now the label, which is half the payoff. Salvē, salvēte and valē are genuinely Roman and carry no clock inside them, so they work in every one of those four rows. The three bonus phrases — bonum māne, bonum vesperum, bonam noctem — are well-formed modern teaching phrases, not lines from any surviving Roman text. And the afternoon row has only salvē in it, because Latin never had a noun for "afternoon" for bonus to agree with.
+So the safe rule you leave with: when in doubt, salvē on arrival and valē on departure, at any hour.
+
+Guided Practice.
+[pause 1 second]
+[your turn — run: all four rows aloud, both voices]
+[pause 8 seconds for the answer]
+[your turn — choose: mid-afternoon, and you want to be Roman becomes salvē]
+[pause 8 seconds for the answer]
+[your turn — say: why it is noctem and vesperum, not nox and vesper — Latin wishes take the accusative]
+[pause 8 seconds for the answer]
+[your turn — choose: a room full of people becomes salvēte]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two words in the whole day-cycle are genuinely attested? (Salvē and valē.) What did Rome actually have in the morning instead of a phrase? (The salūtātiō — a dawn visit, an action.) Why can bonum māne not show the accusative rule? (Māne is neuter; neuters never distinguish the two cases.)
+[question — say your answer, then pause 8 seconds]
+You meet one person at three in the afternoon and want words a Roman would have used. Type them.

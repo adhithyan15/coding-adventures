@@ -6,7 +6,7 @@
   "system": "abugida",
   "signature": "Rounded and looping like Telugu (its sister script), most letters topped by a small curved headstroke; no continuous top line.",
   "complete": false,
-  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Recognition only — stroke order is a separate, source-gated effort and is omitted.",
+  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Recognition only — stroke order is a separate, source-gated effort and is omitted. Parts, not the grid: when stroke data does arrive it is authored only for the base consonants (the entries with a single `components` line) and for the vowel signs; a syllable's figure is assembled from its parts and is never authored separately. `penLifts` is absent from every entry here, and absent means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
   "letters": [
     {
       "glyph": "ಕ",

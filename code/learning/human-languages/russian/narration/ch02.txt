@@ -1,11 +1,9 @@
-Russian, chapter 2: Chapter 2.
-10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Russian, chapter 2: Introducing yourself.
+10 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 10.
 я (ya) — "I".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
@@ -20,13 +18,8 @@ It is also the last letter of the alphabet, 33rd of 33, and Russian has a rebuke
 
 The word, taken apart — the oldest word you will learn.
 Pronouns are the least borrowable part of a language. Nouns come and go by the thousand — sputnik, pizza, computer — but nobody borrows a word for I. So я (ya) has simply been inherited, without interruption, for as long as there has been an Indo-European family:
-[a table of 5 rows, read aloud]
-Russian, я (ya).
-Latin, ego.
-German, ich.
-English, I.
-Greek, egṓ.
-All from PIE eǵh₂(om). Russian's route ran through Proto-Slavic azъ, which East Slavic reshaped — a j- was added at the front (azъ becomes язъ) and the ending fell away — leaving the one letter you now say. It is the most extreme change in the table, and the reason я (ya) looks nothing like ego while being the same word.
+Russian я (ya), Latin ego, German ich, English I, Greek egṓ.
+All from PIE eǵh₂(om). Russian's route ran through Proto-Slavic azъ, which East Slavic reshaped — a j- was added at the front (azъ becomes язъ) and the ending fell away — leaving the one letter you now say. It is the most extreme change in the family, and the reason я (ya) sounds nothing like ego while being the same word.
 Latin ego is the one English borrowed back, whole and untranslated, for the part of the mind that says I.
 
 Guided Practice.
@@ -46,22 +39,20 @@ Say "I". (Я — one letter, said ya.) What must you not mistake it for? (A Lati
 Lesson 2 of 10.
 ты, вы (ty, vy) — the two words for "you".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart — the oldest words you will learn until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 Chapter 1 gave you two ways to say hello, split by formality. That split runs through the whole language — and here is the place it matters most: Russian has two words for "you."
 
 The two words.
-[a table of 2 rows, read aloud]
-ты, ty, you — one person you're familiar with.
-вы, vy, you — formal, or more than one person.
+ты — ty — you, one person you're familiar with. вы — vy — you, formal, or more than one person.
 Both turn on ы, which is the hardest vowel in Russian for an English speaker: not the ee of ты's look-alike, but a tighter, further-back sound made with the tongue pulled towards the throat. Say English ill, then try to say it with your tongue drawn back. The writing track hasn't reached ы either.
 
 The word, taken apart — the oldest words you will learn.
 Pronouns are the least borrowable part of a language. Nouns come and go; I and you stay. So the first two line up almost too neatly:
-There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Russian, Latin, English, German. Come back and look at it when you have stopped.
-The first two rows are the same word four times over. The third row is only half a set: вы and vōs both continue PIE wos, but English you and German ihr come from the other stem in that paradigm, yūs. Cousins, not twins — worth marking rather than smoothing over.
+я (ya) (last lesson) — Latin ego, English I, German ich.
+ты — Latin tū, English thou, German du.
+вы — Latin vōs, with no English or German survivor to set beside it.
+The first two lines are the same word four times over. The third is only half a set: вы and vōs both continue PIE wos, but English you and German ihr come from the other stem in that paradigm, yūs. Cousins, not twins — worth marking rather than smoothing over.
 ты and tū and thou are the same word, barely touched in four thousand years. Thou fell out of standard English through the 1600s (it survives in Quaker usage, northern dialect and liturgy), leaving you for everyone — which is why the ты/вы choice feels foreign to English speakers. English had it.
 
 Guided Practice.
@@ -88,11 +79,10 @@ Give the pair: ты for one familiar person; вы for more than one person — o
 Grammar Lens: one social job, several grammatical routes.
 Russian вы is a plural used for one person as a mark of respect. French does the same job with second-person plural vous. Chapter 1's здравствуйте already carried the matching polite-plural ending -те.
 Other languages reached respect differently:
-[a table of 4 rows, read aloud]
-Language: Russian. respectful form: вы. route: second-person plural.
-Language: French. respectful form: vous. route: second-person plural.
-Language: German. respectful form: Sie. route: third-person plural, not ordinary ihr.
-Language: Spanish. respectful form: usted. route: title vuestra merced, "your grace".
+Russian вы — the second-person plural.
+French vous — the second-person plural, the very same route.
+German Sie — the third-person plural, not the ordinary ihr.
+Spanish usted — a worn-down title, vuestra merced, "your grace."
 Russian's polite вы is generally treated as an eighteenth-century import from French and German social usage, not a pattern Russian invented alone.
 
 Why it's said this way: when to use which.
@@ -119,8 +109,6 @@ Which Russian form is safest with an adult when you are unsure?
 Lesson 4 of 10.
 меня зовут… (menyá zovút) — "my name is…"
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
 Warm-up.
 [pause 2 seconds]
 Every other track in this course says "my name is" with a word for my and a word for name. Russian says something quite different, and it is worth taking apart slowly.
@@ -128,9 +116,7 @@ Every other track in this course says "my name is" with a word for my and a word
 The exchange.
 Меня зовут Анна. — Menyá zovút Anna. — "My name is Anna."
 Now the literal reading:
-[a table of 2 rows, read aloud]
-меня, menya, me (object form).
-зовут, zovut, they call.
+меня — menya — me, the object form. зовут — zovut — they call.
 So: "[they] call me Anna."
 There is no word for "my" and no word for "name" in the sentence. Russian reports what people call you, not what you possess.
 
@@ -140,11 +126,9 @@ English has the same trick and doesn't notice it:
 They call me Anna. — Who are they? Nobody. Everybody.
 
 Grammar Lens: меня is not я.
-This is the important part, and the course's first look at case.
+This is the important part, and the course's first taste of case.
 You learned я (ya) for "I" last lesson. But here it is меня — because I is now the object of the calling, not the one doing it. Russian changes the shape of the word to mark that job:
-[a table of 2 rows, read aloud]
-я (ya), I — the one acting.
-меня, me — the one acted on.
+я (ya) is I, the one acting; меня is me, the one acted on.
 English does this with about six pairs — I/me, he/him, she/her, we/us, they/them, who/whom, plus the archaic thou/thee. Russian does it with every noun and pronoun in the language. That system is called case, and it is the main thing standing between you and Russian.
 You do not need to learn it yet. You need to notice that меня is a different shape of я (ya), and that the shape carries the meaning.
 
@@ -174,18 +158,14 @@ You can say your own name. Now ask for someone else's — and notice that Russia
 The exchange.
 Как вас зовут? — Kak vas zovút? — formal, or to more than one person. Как тебя зовут? — Kak tebyá zovút? — informal, to one person you know.
 Taken apart:
-[a table of 3 rows, read aloud]
-как, kak, how.
-вас / тебя, vas / tebya, you (object form).
-зовут, zovut, they call.
+как — kak — how. вас or тебя — vas / tebya — you, in the object form. зовут — zovut — they call.
 So: "How do they call you?"
 
 Grammar Lens: the object forms again.
 Last lesson's меня has partners, and they follow the same logic — the person being called is the object, so the word changes shape:
-[a table of 3 rows, read aloud]
-subject: я (ya). object: меня, me.
-subject: ты. object: тебя, you (informal).
-subject: вы. object: вас, you (formal/plural).
+я (ya) becomes меня — me.
+ты becomes тебя — you, informal.
+вы becomes вас — you, formal or plural.
 You now have a matched pair: Как вас зовут? — Меня зовут…
 
 Guided Practice.
@@ -212,11 +192,10 @@ In Как вас зовут?, which word means "how"? (Как.)
 Grammar Lens: one question, two ways to organize it.
 English asks what your name is, treating the name as a thing you have. Russian asks how people call you, treating naming as something people do.
 English is the odd one out in this small comparison:
-[a table of 4 rows, read aloud]
-Language: Russian. question frame: Как вас зовут? — how.
-Language: French. question frame: Comment vous appelez-vous? — how.
-Language: Spanish. question frame: ¿Cómo se llama? — how.
-Language: English. question frame: What is your name? — what.
+Russian asks Как вас зовут? — how.
+French asks Comment vous appelez-vous? — how.
+Spanish asks ¿Cómo se llama? — how.
+English asks What is your name? — what.
 Three languages organize the question around an action; English organizes it around a possession. The answer is the same social fact, but the route to it differs.
 
 Guided Practice.
@@ -236,6 +215,44 @@ Which language in this comparison asks what instead of how?
 
 
 Lesson 7 of 10.
+Chapter 2 practice — run the exchange.
+
+Warm-up.
+[pause 2 seconds]
+Give the three words the chapter opened with: I, familiar you, formal you. (Я, ты, вы (ty, vy).) Everything below is built from those.
+
+The exchange.
+Two strangers meet. Say both voices aloud, one after the other:
+— Здравствуйте! — Как вас зовут? — Меня зовут Анна. А вас? — Меня зовут Иван. Очень приятно.
+Everything in it is formal, because вы is the safe opening with an adult you do not know.
+
+Grammar Lens: what moves when the exchange goes informal.
+With one friend, exactly two pieces change:
+the greeting — Здравствуйте becomes Привет;
+the object pronoun — вас becomes тебя.
+So Как вас зовут? becomes Как тебя зовут? The verb зовут does not move, and меня in the answer does not move either — you are still the one being called, whoever is asking.
+
+Grammar Lens: why the shapes change at all.
+Я becomes меня because the calling lands on you rather than coming from you; ты and вы become тебя and вас for the same reason.
+And зовут is a plural verb with nobody behind it — "they call me," where they is no one in particular. That is why the Russian question asks how people call you, not what your name is: naming is something people do, not something you own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the full formal exchange, both voices]
+[pause 8 seconds for the answer]
+[your turn — say: the same exchange to one friend]
+[pause 8 seconds for the answer]
+[your turn — say: your own answer — "Меня зовут…" and your name]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Turn Как вас зовут? into the form you use with one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Run the formal exchange from memory, then switch it for one friend. Which two pieces changed? (The greeting, and вас becomes тебя.) Which word never moved? (Зовут.) Which form do you choose for an adult you have just met, and why? (Вы — a plural used as respect, and the safer default.) Who is doing the calling in меня зовут? (Nobody in particular — a bare plural verb.) And why is the question как rather than что? (Russian asks how people call you.)
+
+
+Lesson 8 of 10.
 очень приятно (óchen priyátno) — "pleased to meet you".
 
 Warm-up.
@@ -245,19 +262,16 @@ The reply that closes an introduction — and the best etymology in the chapter.
 The phrase.
 Очень приятно. — Óchen priyátno. — "Pleased to meet you."
 Literally: "very pleasant."
-[a table of 2 rows, read aloud]
-очень, ochen, very.
-приятно, priyatno, pleasant, agreeable.
+очень — ochen — very. приятно — priyatno — pleasant, agreeable.
 There is no "to meet you" and no "I am." Russian states the quality of the moment and leaves the rest understood — the same economy as меня зовут, which left out "my" and "name."
 Both ч (ch) and я (ya) are letters the writing track hasn't reached. Read them; you'll draw them later.
 
 приятно is related to "friend".
 Приятно comes from Slavic prijati, "to favour, to be well-disposed toward" — which gives Russian приятель (priyátel'), a friend.
 That root goes back to PIE preyH-, "to love, to please." And it went into Germanic too:
-[a table of 3 rows, read aloud]
-Russian, приятно — pleasant, приятель — friend.
-English, friend — literally "one who is loving," an old participle of a verb meaning to love.
-German, Freund.
+Russian приятно, pleasant, and приятель, a friend.
+English friend — literally "one who is loving," an old participle of a verb meaning to love.
+German Freund.
 So приятно and friend are the same root, arriving from opposite ends of Europe.
 Free almost certainly belongs to the family too. The usual account: the word first meant "belonging to the beloved household" — the members of a family as opposed to the slaves in it — and only later meant "not in bondage." Free and friend start in the same place.
 Saying очень приятно (óchen priyátno) is, at the root, calling the meeting friendly.
@@ -274,44 +288,6 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say "pleased to meet you." (Очень приятно.) What does it literally mean? ("Very pleasant" — no "I am," no "to meet you.") What is приятно related to? (Slavic prijati "to favour" becomes приятель "friend" — and, from the same PIE root preyH-, English friend and German Freund.) And free? (Most likely the same family — originally "belonging to the beloved household," i.e. not a slave.) Next: putting the chapter together.
-
-
-Lesson 8 of 10.
-Chapter 2 practice — run the exchange.
-
-Warm-up.
-[pause 2 seconds]
-The chapter's words now add up to a real conversation. Run it first with a stranger, then make the two changes that turn it informal.
-
-Formal exchange.
-Say both halves aloud:
-[a table of 4 rows, read aloud]
-— Здравствуйте!, Hello.
-— Как вас зовут?, What's your name?
-— Меня зовут Анна. А вас?, My name is Anna. And you?
-— Меня зовут Иван. Очень приятно., My name is Ivan. Pleased to meet you.
-
-Informal switch.
-With one friend, change only two pieces:
-[a table of 2 rows, read aloud]
-formal: Здравствуйте! informal: Привет!
-formal: Как вас зовут? informal: Как тебя зовут?
-The greeting and object pronoun change. The verb зовут stays exactly where it was.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the full formal exchange, both voices]
-[pause 8 seconds for the answer]
-[your turn — say: the same exchange informally]
-[pause 8 seconds for the answer]
-[your turn — say: the two pieces that change — greeting and pronoun]
-[pause 8 seconds for the answer]
-[your turn — say: как, not что — naming is framed as an action]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Run the formal exchange without looking. Then switch it for one friend. What changed? (The greeting and вас becomes тебя.) What stayed fixed? (Зовут.)
 
 
 Lesson 9 of 10.
@@ -361,10 +337,9 @@ Warm-up.
 Russian often says less than the English translation. Name only the words that are genuinely absent; do not erase a verb that is really there.
 
 Three phrases, three English expansions.
-[a table of 3 rows, read aloud]
-Russian: Меня зовут Анна. literal reading: "they call me Anna". English adds: my, name.
-Russian: Очень приятно. literal reading: "very pleasant". English adds: it is, to meet you.
-Russian: Как вас зовут? literal reading: "how do they call you?" English adds: what, your.
+Меня зовут Анна reads literally "they call me Anna"; English adds my and name.
+Очень приятно reads literally "very pleasant"; English adds it is and to meet you.
+Как вас зовут? reads literally "how do they call you?"; English adds what and your.
 Only the middle sentence has no verb at all. In present-tense descriptions, Russian normally drops the linking verb: Очень приятно needs no spoken "is."
 The other two sentences do contain зовут, "they call." They lack "is" because they are not "X is Y" sentences in Russian; English simply translates them that way.
 Russian also has a present-tense есть. Chapter 1 already hid it inside нет = не + есть, "not-is." The next chapter will reuse it. So the careful rule is not "Russian has no is"; it is "Russian usually omits the linking verb in a present-tense description."

@@ -1,67 +1,124 @@
-Spanish, chapter 22: Chapter 22.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 22: Black, White, Red, and Blue.
+4 lessons. All 4 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-negro, blanco — one inherited, one borrowed.
+Lesson 1 of 4.
+negro, blanco — two colours, and one of their histories.
 
 Warm-up.
 [pause 2 seconds]
-Two colors, two very different histories. One is straight-line Latin. The other arrived with Germanic settlers — and Spanish isn't even alone in borrowing it that way.
+Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next.
 
 The words, taken apart: negro.
-negro ("black") from Latin niger. Nothing surprising here: the same Latin root that gives English denigrate ("to blacken someone's name") and the Romance family's other words for black (French noir, Italian nero).
+negro ("black") from Latin niger. Nothing surprising: the same Latin root gives English denigrate ("to blacken someone's name") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language.
+Hold that in mind as the baseline. It is what a colour word normally does.
 
-The words, taken apart: blanco.
-You'd expect Latin albus ("white"). Spanish doesn't use it. Instead it says blanco, from Germanic blank — "shining, gleaming" — a loan traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome's collapse (though, unlike French's case below, no surviving Gothic text actually preserves this exact word, so the precise route in is a plausible traditional account rather than a directly documented one). French, meanwhile, took the very same Germanic word (blanc) — this time well-attested as a borrowing from a different Germanic people, the Franks. Either way, two Romance sister languages ended up with the same borrowed word for white.
-Why would a "shining" word beat Latin's own "white"? Color words often lose out to something more vivid — blank didn't just mean pale, it meant bright, gleaming — a flashier idea than plain albus.
-
-Why it's said this way: where albus went.
-Latin's own white didn't vanish — it just stopped being the everyday color word:
-[a table of 4 rows, read aloud]
-word: alba. meaning: dawn. the white inside: the sky going white.
-word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil use, mostly literary now.
-word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.
-word: albino (Eng./Sp.) meaning: albino. the white inside: white-skinned.
-So Latin's white is still around — tucked into alba and álbum, just not where a learner would first look.
+The two words in use.
+blanco ("white") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca).
+But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish "white" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "negro, blanco"]
 [pause 8 seconds for the answer]
-[your turn — say: the pairing — "negro from Latin, blanco from the Visigoths"]
+[your turn — say: with a noun — "el gato negro, la casa blanca"]
 [pause 8 seconds for the answer]
-[your turn — say: "el alba" — dawn — and hear the old Latin white inside it]
+[your turn — say: "negro" then English "denigrate" — the niger root]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two is inherited from Latin? (Negro from niger.) Where does blanco come from? (Germanic blank, "shining" — brought by the Visigoths.) Which other language borrowed the very same Germanic word, from a different tribe? (French blanc, via the Franks.) Where did Latin's albus end up? (Alba, "dawn" — no longer the everyday color word.)
+Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's "white" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)
 
 
-Lesson 2 of 2.
-rojo, azul — an old word (taken a different path) and a borrowed one.
+Lesson 2 of 4.
+blanco — the colour Spanish did not inherit.
 
 Warm-up.
 [pause 2 seconds]
-Last lesson: one inherited color, one borrowed. This lesson repeats the shape — but red takes a subtly different road than you might expect from French, and blue flips which word is "the everyday one."
+Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in.
 
-The words, taken apart: rojo.
-rojo ("red") from Latin russus — a more everyday, expressive Latin color-word for red. That's a different specific Latin word from the one behind French rouge ( from rubeus). Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — the root behind English red, rust, ruddy, and Latin ruber itself. So rojo and rouge (and English red) are all cousins — just via two different branches of the same very old family, not one borrowed from the other.
+You'll want to know first.
+negro, blanco — the two colour words.
 
-The words, taken apart: azul.
-azul ("blue") from Arabic لازورد (lāzaward), "lapis lazuli" — the same ultimate source as the English word azure. Spanish picked this up during centuries of Arabic-speaking rule in Iberia (al-Andalus).
-Here's the honest contrast worth knowing: in French, azur exists too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur), while the everyday French blue is the Germanic loan bleu. In Spanish, it's the reverse: azul is the plain, everyday word for blue — there's no separate Germanic blue-word competing with it.
+The word, taken apart: blanco.
+blanco comes from Germanic blank — "shining, gleaming." It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed.
+Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings.
+Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in "bright white."
+
+Why it's said this way: where albus went.
+Latin's white did not vanish. It stopped being the everyday word and survived in corners:
+[a table of 4 rows, read aloud]
+word: alba. meaning: dawn. the white inside: the sky going white.
+word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.
+word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.
+word: albino. meaning: albino. the white inside: white-skinned.
+That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "rojo, azul"]
+[your turn — say: the pairing — "negro from Latin, blanco from Germanic"]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins — "rojo, rouge, red," three descendants of one PIE root]
+[your turn — say: "el alba" — dawn — and hear the old Latin white inside it]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "azul is Spanish's everyday blue; French's azur is only poetic"]
+[your turn — say: "blanco" then French "blanc" — the same loan, twice over]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is rojo the same Latin word as French's rouge? (No — rojo from russus, rouge from rubeus — different Latin words, but true cousins via the shared PIE root h₁rewdʰ-.) Where does azul come from? (Arabic lāzaward, "lapis lazuli" — the same root as English azure.) How does azul's role in Spanish differ from azur's role in French? (Azul is Spanish's everyday blue; French's azur is only a secondary, poetic word, with bleu as the everyday one.)
+Where does blanco come from, and what did it mean? (Germanic blank, "shining" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba "dawn," álbum, albino — no longer the everyday colour word.)
+
+
+Lesson 3 of 4.
+rojo — the same family as red, by a different branch.
+
+Warm-up.
+[pause 2 seconds]
+So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess.
+
+The word, taken apart: rojo.
+rojo ("red") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one.
+Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink).
+So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "rojo"]
+[pause 8 seconds for the answer]
+[your turn — say: the cousins — "rojo, rouge, red", three branches, one root]
+[pause 8 seconds for the answer]
+[your turn — say: the three so far — "negro inherited, blanco borrowed, rojo cousin"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely.
+
+
+Lesson 4 of 4.
+azul — a stone from Afghanistan, in your everyday vocabulary.
+
+Warm-up.
+[pause 2 seconds]
+Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether.
+
+The word, taken apart: azul.
+azul ("blue") from Arabic لازورد (lāzaward), "lapis lazuli" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli.
+So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour.
+
+Why it's said this way: everyday here, poetic there.
+Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all.
+Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all four — "negro, blanco, rojo, azul"]
+[pause 8 seconds for the answer]
+[your turn — say: sort them — "negro inherited, blanco Germanic, rojo cousin of red, azul Arabic"]
+[pause 8 seconds for the answer]
+[your turn — say: "azul" then English "azure" — the same lapis lazuli]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)

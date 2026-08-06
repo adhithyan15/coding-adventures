@@ -23,6 +23,25 @@
 # source-gated effort and stays paused — these entries carry `strokeOrder: []`.
 # This file is for READING (recognition), which the glyph + romanization + the
 # consonant⊕vowel-sign decomposition fully support.
+#
+# ---------------------------------------------------------------------------
+# PARTS, NOT THE GRID — the rule that governs any future stroke data here
+# ---------------------------------------------------------------------------
+# These files hold hundreds of syllables each, and it would be a category error
+# to author a pen path for every one. A syllable is not a shape a hand learns; it
+# is an ASSEMBLY of two shapes it already knows — a base consonant and a vowel
+# sign. So when stroke data does arrive:
+#
+#   • only the BASE CONSONANTS (the `components`-of-length-1 entries below) and
+#     the VOWEL SIGNS are ever authored. They are the parts;
+#   • a syllable's figure is composed from its parts' figures. Never authored.
+#
+# `penLifts` — how many times the hand leaves the paper — is ABSENT from every
+# entry in these files, and absent means **NOT VERIFIED**. It never means "none",
+# and it must never be inferred from `len(strokeOrder)`: a prose step list records
+# the parts a reader can see, while a lift is a fact about the unbroken path the
+# hand travels, and the two are different measurements. A letter gets `penLifts`
+# only once a font-checked pen path with cited provenance supports the number.
 # ---------------------------------------------------------------------------
 
 import json
@@ -186,7 +205,12 @@ def build_script(script_id: str, name: str, base: int, font: str, signature: str
             "consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. "
             "The independent (word-initial) vowels are in `independentVowels`; the "
             "script's own digits are in `digits`. "
-            "Recognition only — stroke order is a separate, source-gated effort and is omitted."
+            "Recognition only — stroke order is a separate, source-gated effort and is omitted. "
+            "Parts, not the grid: when stroke data does arrive it is authored only for the base "
+            "consonants (the entries with a single `components` line) and for the vowel signs; a "
+            "syllable's figure is assembled from its parts and is never authored separately. "
+            "`penLifts` is absent from every entry here, and absent means NOT VERIFIED — never "
+            "none — and must never be inferred from the length of `strokeOrder`."
         ),
         "letters": letters,
         "independentVowels": independent,

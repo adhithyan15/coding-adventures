@@ -2,9 +2,9 @@
   "version": 1,
   "language": "spanish",
   "chapter": 24,
-  "title": "Chapter 24",
+  "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bcdb0fd59edf434d",
+  "sourceHash": "fnv1a64:cb85e3f2de32dd93",
   "lessons": [
     {
       "id": "ES-C24-cabeza",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6677ee70c2bc4141",
+      "sourceHash": "fnv1a64:1ca9e2018cf8fbe1",
       "notice": null,
       "blocks": [
         {

@@ -2,9 +2,9 @@
   "version": 1,
   "language": "spanish",
   "chapter": 4,
-  "title": "Chapter 4",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c113ab52f6dfbba9",
+  "title": "How Are You?",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:5410c6a8b2635804",
   "lessons": [
     {
       "id": "ES-C04-gracias",
@@ -285,14 +285,14 @@
       "title": "estar — \"to be,\" the standing kind",
       "headword": "estar",
       "romanization": "estar",
-      "gloss": "to be (a state or location — temporary)",
+      "gloss": "to be — but the standing kind, straight from Latin stāre",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1a836dbcc0f493d",
+      "sourceHash": "fnv1a64:c48ba479e91735af",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "To ask how are you? Spanish needs a verb for being. Today: estar — the verb used for how someone is right now and where someone is. Spanish has another identity verb later; you do not need it yet."
+              "text": "To ask how are you? Spanish needs a verb for being. Today just the verb itself and where it came from; how to use it, and its two forms, come next."
             }
           ]
         },
@@ -319,7 +319,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "st-no-e — Spanish never starts a word with a bare st-; it props it up with an e: es-TAR. (That reflex is why Spanish speakers say e-Spain, e-student — the same e that Latin stare grew to become estar.)"
+              "text": "st-no-e — Spanish never starts a word with a bare st-; it props it up with an e: es-TAR. (That reflex is why Spanish speakers say e-Spain, e-student — the same e that Latin stāre grew to become estar.)"
             },
             {
               "kind": "speech",
@@ -334,19 +334,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "estar comes straight from Latin stāre, \"to stand.\" And \"to stand\" is exactly the right picture for the temporary be-verb: how you are standing at this moment — well, tired, here, there — not what you permanently are."
+              "text": "estar comes straight from Latin stāre, \"to stand.\" Hold onto that picture: it is the whole reason this verb behaves the way it does. How you are standing at this moment — well, tired, here, there — is a snapshot, not a permanent fact."
             },
             {
               "kind": "speech",
-              "text": "That root stā-/sta- (\"stand\") is one of the most productive in English. estar hands you a huge family:"
+              "text": "That root stā-/sta- is one of the most productive in English. Estar hands you a large family for free:"
             },
             {
               "kind": "speech",
-              "text": "stay, stand, stance, station, stable, stationary — to stand / stay put."
+              "text": "stay, stand, stance, station, stable, stationary — to stand or stay put."
             },
             {
               "kind": "speech",
-              "text": "state, status, statue, estate, e-state becomes estate — a way of standing (your state = how you stand)."
+              "text": "state, status, statue, estate — a way of standing (your state is how you stand)."
             },
             {
               "kind": "speech",
@@ -354,35 +354,12 @@
             },
             {
               "kind": "speech",
-              "text": "So ¿cómo estás? is, at the root, \"how are you standing?\" — a snapshot of right now."
+              "text": "So ¿cómo estás? is, at the root, \"how are you standing?\""
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: state and location use estar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Use estar for a current state or location. “How are you?” asks about a current state, so it takes estar. The other Spanish be-verb handles identity and arrives in its own later lesson; keeping it out of today's drill lets one contrast settle at a time."
-            },
-            {
-              "kind": "speech",
-              "text": "You only need two forms of it this chapter:"
-            },
-            {
-              "kind": "speech",
-              "text": "estás — \"you are\" (informal tú)."
-            },
-            {
-              "kind": "speech",
-              "text": "está — \"you are\" (formal usted) / \"he/she is\"."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -404,6 +381,143 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "\"estar\" then English \"stay, state, status, stable\" — all standing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"estar\" then English \"stay, state, status, stable\" — all *standing*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin verb is estar — \"to be\" or \"to stand\"? (To stand — stāre.) Why does Spanish put an e on the front? (It never begins a word with bare st-.) Name two English cousins. (Stay, state, status, stable, estate…) Next: the two forms you will actually ask with."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C04-estar-estado",
+      "sequence": 275,
+      "title": "estás / está — the two forms, and what they are for",
+      "headword": "estás / está",
+      "romanization": "estás / está",
+      "gloss": "what estar is for — a current state or location — and the only two forms you need this chapter",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c75d3f1d85a3378b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Estar is \"to stand.\" Now put it to work. Two forms, one job: saying how somebody is right now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estar — the verb and its Latin \"to stand\" root."
+            },
+            {
+              "kind": "speech",
+              "text": "tú or usted — why usted takes he/she forms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: state and location use estar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Use estar for a current state or a location — the two things that can change without changing what something is:"
+            },
+            {
+              "kind": "speech",
+              "text": "a state: estoy bien — \"I'm well\" (today; maybe not tomorrow)."
+            },
+            {
+              "kind": "speech",
+              "text": "a location: está aquí — \"it's here\" (for now)."
+            },
+            {
+              "kind": "speech",
+              "text": "\"How are you?\" asks about a current state, so it takes estar. Spanish has a second be-verb for identity, and it arrives in its own later lesson; keeping it out of today's drill lets one contrast settle at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the two forms you need",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "you're addressing",
+                "form",
+                "reads as"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "you're addressing: tú (informal). form: estás. reads as: \"you are\".",
+                "you're addressing: usted (formal). form: está. reads as: \"you are\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that está is also \"he is / she is.\" That is not a coincidence and not something extra to learn — it is the usted-takes-he/she-forms rule you already met, showing up for the first time in a real verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "\"estás\" … \"está\" — the two forms you'll ask with",
               "spoken": true,
               "scored": false,
@@ -413,11 +527,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"estar\" then English \"stay, state, status, stable\" — all standing",
+              "instruction": "which one goes with tú, which with usted",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"estar\" then English \"stay, state, status, stable\" — all *standing*]"
+              "source": "[YOU SAY: which one goes with *tú*, which with *usted*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a state, then a location — \"estás bien\", \"está aquí\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a state, then a location — \"estás bien\", \"está aquí\"]"
             }
           ]
         },
@@ -434,7 +557,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which Latin verb is estar — “to be” or “to stand”? (To stand — stāre.) Which verb do you use for how you feel right now? (estar.) Next lesson, you finally ask it: ¿cómo está usted?"
+              "text": "What two kinds of thing does estar cover? (Current state and location.) Which form goes with tú, and which with usted? (Estás; está.) Why is está also \"he/she is\"? (Because usted takes the he/she verb forms.) Next lesson, you finally ask it: ¿cómo está usted?"
             }
           ]
         }
@@ -453,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05ec6147c89cdf81",
+      "sourceHash": "fnv1a64:d1b2bd3bf645f43d",
       "notice": null,
       "blocks": [
         {
@@ -1245,7 +1368,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7cbe1d3299d1f2bc",
+      "sourceHash": "fnv1a64:54a1f5e3da8c51f6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1253,9 +1376,9 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — how to write it, and where the hat came from"
+          "Script — how to write it"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — how to write it, and where the hat came from until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — how to write it until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1271,7 +1394,7 @@
             },
             {
               "kind": "speech",
-              "text": "ñ is the one letter English doesn't have — and it has the best origin story in the alphabet. That wavy hat (, a tilde) is not decoration. It is a tiny second n, written on top to save space. Once you know that, you know both how to write it and why it sounds the way it does."
+              "text": "ñ is the one letter English does not have — and it has the best origin story in the alphabet. That wavy hat (, a tilde) is not decoration. It is a tiny second n, written on top to save space. Once you know that, you know both how to write it and why it sounds as it does."
             }
           ]
         },
@@ -1282,18 +1405,33 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ñ = the ny in \"canyon\" or \"onion\" — one squished sound, tongue flat against the roof of the mouth. English canyon is, in fact, Spanish cañón with the ñ spelled out as ny. Say \"onion,\" freeze on the middle: that's ñ."
+              "text": "ñ = the ny in \"canyon\" or \"onion\" — one squished sound, tongue flat against the roof of the mouth. English canyon is, in fact, Spanish cañón with the ñ spelled out as ny. Say \"onion,\" freeze on the middle: that is ñ."
             }
           ]
         },
         {
           "index": 2,
           "type": "script",
-          "title": "Script — how to write it, and where the hat came from",
+          "title": "Script — how to write it",
           "segments": [
             {
               "kind": "speech",
-              "text": "Write a normal n, then a small wavy floating above it. That wave is a medieval shorthand. Scribes copying Latin were forever writing double letters, so they saved a stroke by writing the letter once and putting a little mark above to mean \"...and one more of these.\" A bar/wave over a vowel meant a dropped n or m (Latin tantum becomes tãtum); a wave over an n meant nn."
+              "text": "Write a normal n, then a small wavy floating above it. Two strokes, one letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful: ñ is its own letter, not \"n with an accent.\" año (\"year\") and ano (a rather different word) are completely different words — the tilde is not an optional flourish, it is a distinct letter of the alphabet, with its own slot in the dictionary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the scribe's shortcut",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That wave is a medieval shorthand. Scribes copying Latin were forever writing double letters, so they saved a stroke: write the letter once, and put a little mark above meaning \"…and one more of these.\" A bar over a vowel meant a dropped n or m (Latin tantum becomes tãtum); a wave over an n meant nn."
             },
             {
               "kind": "speech",
@@ -1301,19 +1439,143 @@
             },
             {
               "kind": "speech",
-              "text": "Latin annus (\"year\") becomes anno becomes año — the nn collapsed into ñ. (That same annus gives English annual, anniversary, bi-ennial.)"
+              "text": "Latin annus (\"year\") becomes anno becomes año. (That same annus gives English annual, anniversary, bi-ennial.)"
             },
             {
               "kind": "speech",
-              "text": "Latin canna (“reed”) becomes caña; Latin domina becomes donna becomes doña."
+              "text": "Latin canna (\"reed\") becomes caña; Latin domina becomes donna becomes doña."
             },
             {
               "kind": "speech",
-              "text": "So the tilde on ñ is a frozen abbreviation: a thousand-year-old note that says \"there used to be two n's here.\" You are writing a scribe's shortcut."
+              "text": "So the tilde on ñ is a frozen abbreviation — a thousand-year-old note saying \"there used to be two n's here.\" You are writing a scribe's shortcut."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"año\" — AH-nyo, one squished ny; then English \"annual\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"año\" — *AH-nyo*, one squished *ny*; then English \"annual\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the doubled-n words — \"año, caña, doña\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the doubled-n words — \"año, caña, doña\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Careful: ñ is its own letter, not \"n with an accent.\" año (\"year\") and ano (a rather different word) are completely different words — the tilde is not optional flourish, it's a distinct letter of the alphabet."
+              "text": "What is the tilde on ñ, really? (A tiny second n — a scribe's shorthand for a doubled nn.) What Latin word gives año, and what English words share it? (Annus becomes annual, anniversary.) Is ñ a separate letter or an accented n? (A separate letter.) Next: the two everyday words you will be writing it in."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-W02-enye-formas",
+      "sequence": 345,
+      "title": "mañana, español — the ñ in the words you are about to need",
+      "headword": "mañana, español",
+      "romanization": "mañana, español",
+      "gloss": "the two ñ words you will meet next — and the second road to ñ, which is not a doubled n at all",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:50764998caf80a44",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the two forms"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the two forms until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can write ñ and you can say it. Two of the next words in the course carry it, and both are worth a minute on their own — because neither of them got its ñ from a doubled n."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ñ — the letter, the sound, and the scribe's shorthand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — the two forms",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mañana — \"tomorrow,\" and also \"morning.\" ma-NYA-na: the ñ is in the middle, and it is the stressed syllable."
+            },
+            {
+              "kind": "speech",
+              "text": "español — \"Spanish.\" es-pa-NYOL: the ñ is at the end, right before the -ol."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the honest footnote. The scribe's doubled nn is one road to ñ, the one you met with año. These two words took a different road: Latin's -ni- before a vowel. Mañana traces back through maneana to māne (\"morning\" — the root of English matinée); español comes from Hispaniolus, built on Hispania. In both, a ni sequence squeezed together into the same single palatal sound."
+            },
+            {
+              "kind": "speech",
+              "text": "So ñ is where two separate Latin sequences ended up — -nn- and -ni-. One letter, one sound, two histories."
             }
           ]
         },
@@ -1331,20 +1593,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"año\" — AH-nyo, one squished ny; then English \"annual\" — same Latin annus",
+              "instruction": "\"año, mañana, español\" — the ñ in three positions",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"año\" — *AH-nyo*, one squished *ny*; then English \"annual\" — same Latin *annus*]"
+              "source": "[YOU SAY: \"año, mañana, español\" — the ñ in three positions]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“año, mañana, español” — the ñ in three forms from this lesson",
+              "instruction": "the two roads — \"año, from -nn-\" then \"mañana, from -ni-\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “año, mañana, español” — the ñ in three forms from this lesson]"
+              "source": "[YOU SAY: the two roads — \"año, from -nn-\" then \"mañana, from -ni-\"]"
             }
           ]
         },
@@ -1361,7 +1623,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the tilde on ñ, really? (A tiny second n — a scribe's shorthand for a doubled nn.) What Latin word gives año, and what English words share it? (annus becomes annual, anniversary.) Is ñ a separate letter or just an accented n? (A separate letter.) Next writing lesson: the upside-down marks ¿ ¡."
+              "text": "Where does the ñ sit in mañana, and where in español? (Middle; end.) Did those two get their ñ from a doubled n? (No — from Latin -ni- before a vowel, a second road to the same letter.) What was the first road? (-nn-, the scribe's shorthand, as in año.)"
             }
           ]
         }

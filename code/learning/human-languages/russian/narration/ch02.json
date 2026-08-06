@@ -2,9 +2,9 @@
   "version": 1,
   "language": "russian",
   "chapter": 2,
-  "title": "Chapter 2",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c8a334a89542a5c8",
+  "title": "Introducing yourself",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:afc21c872d0eaee5",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -14,20 +14,13 @@
       "romanization": "ya",
       "gloss": "I — one letter, and one of the oldest words in Europe",
       "script": "cyrillic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdfbbd12196a9b3c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:be456798a468e226",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -83,24 +76,12 @@
               "text": "Pronouns are the least borrowable part of a language. Nouns come and go by the thousand — sputnik, pizza, computer — but nobody borrows a word for I. So я (ya) has simply been inherited, without interruption, for as long as there has been an Indo-European family:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "Russian, я (ya).",
-                "Latin, ego.",
-                "German, ich.",
-                "English, I.",
-                "Greek, egṓ."
-              ]
+              "kind": "speech",
+              "text": "Russian я (ya), Latin ego, German ich, English I, Greek egṓ."
             },
             {
               "kind": "speech",
-              "text": "All from PIE eǵh₂(om). Russian's route ran through Proto-Slavic azъ, which East Slavic reshaped — a j- was added at the front (azъ becomes язъ) and the ending fell away — leaving the one letter you now say. It is the most extreme change in the table, and the reason я (ya) looks nothing like ego while being the same word."
+              "text": "All from PIE eǵh₂(om). Russian's route ran through Proto-Slavic azъ, which East Slavic reshaped — a j- was added at the front (azъ becomes язъ) and the ending fell away — leaving the one letter you now say. It is the most extreme change in the family, and the reason я (ya) sounds nothing like ego while being the same word."
             },
             {
               "kind": "speech",
@@ -175,22 +156,13 @@
       "romanization": "ty, vy",
       "gloss": "you (informal) and you (formal) — the split English threw away",
       "script": "cyrillic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4930c4ab1a17b7d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The word, taken apart — the oldest words you will learn"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart — the oldest words you will learn until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:522d7a730d2c32c9",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -215,18 +187,8 @@
           "title": "The two words",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "ты, ty, you — one person you're familiar with.",
-                "вы, vy, you — formal, or more than one person."
-              ]
+              "kind": "speech",
+              "text": "ты — ty — you, one person you're familiar with. вы — vy — you, formal, or more than one person."
             },
             {
               "kind": "speech",
@@ -244,21 +206,20 @@
               "text": "Pronouns are the least borrowable part of a language. Nouns come and go; I and you stay. So the first two line up almost too neatly:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "Russian",
-                "Latin",
-                "English",
-                "German"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Russian, Latin, English, German. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "я (ya) (last lesson) — Latin ego, English I, German ich."
             },
             {
               "kind": "speech",
-              "text": "The first two rows are the same word four times over. The third row is only half a set: вы and vōs both continue PIE wos, but English you and German ihr come from the other stem in that paradigm, yūs. Cousins, not twins — worth marking rather than smoothing over."
+              "text": "ты — Latin tū, English thou, German du."
+            },
+            {
+              "kind": "speech",
+              "text": "вы — Latin vōs, with no English or German survivor to set beside it."
+            },
+            {
+              "kind": "speech",
+              "text": "The first two lines are the same word four times over. The third is only half a set: вы and vōs both continue PIE wos, but English you and German ihr come from the other stem in that paradigm, yūs. Cousins, not twins — worth marking rather than smoothing over."
             },
             {
               "kind": "speech",
@@ -338,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ab034d4e8f01c13",
+      "sourceHash": "fnv1a64:8cb35e836814f02f",
       "notice": null,
       "blocks": [
         {
@@ -372,20 +333,20 @@
               "text": "Other languages reached respect differently:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "respectful form",
-                "route"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "Language: Russian. respectful form: вы. route: second-person plural.",
-                "Language: French. respectful form: vous. route: second-person plural.",
-                "Language: German. respectful form: Sie. route: third-person plural, not ordinary ihr.",
-                "Language: Spanish. respectful form: usted. route: title vuestra merced, \"your grace\"."
-              ]
+              "kind": "speech",
+              "text": "Russian вы — the second-person plural."
+            },
+            {
+              "kind": "speech",
+              "text": "French vous — the second-person plural, the very same route."
+            },
+            {
+              "kind": "speech",
+              "text": "German Sie — the third-person plural, not the ordinary ihr."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish usted — a worn-down title, vuestra merced, \"your grace.\""
             },
             {
               "kind": "speech",
@@ -498,20 +459,13 @@
       "romanization": "menyá zovút",
       "gloss": "my name is… — literally 'they call me', with no word for 'my' and no word for 'name'",
       "script": "cyrillic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be8f646913246f3b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:1d3d69c6c4518117",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -544,18 +498,8 @@
               "text": "Now the literal reading:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "меня, menya, me (object form).",
-                "зовут, zovut, they call."
-              ]
+              "kind": "speech",
+              "text": "меня — menya — me, the object form. зовут — zovut — they call."
             },
             {
               "kind": "speech",
@@ -593,24 +537,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the important part, and the course's first look at case."
+              "text": "This is the important part, and the course's first taste of case."
             },
             {
               "kind": "speech",
               "text": "You learned я (ya) for \"I\" last lesson. But here it is меня — because I is now the object of the calling, not the one doing it. Russian changes the shape of the word to mark that job:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "я (ya), I — the one acting.",
-                "меня, me — the one acted on."
-              ]
+              "kind": "speech",
+              "text": "я (ya) is I, the one acting; меня is me, the one acted on."
             },
             {
               "kind": "speech",
@@ -703,7 +638,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4e07c09d983a2f9",
+      "sourceHash": "fnv1a64:ab5c929932a8ce45",
       "notice": null,
       "blocks": [
         {
@@ -737,19 +672,8 @@
               "text": "Taken apart:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "как, kak, how.",
-                "вас / тебя, vas / tebya, you (object form).",
-                "зовут, zovut, they call."
-              ]
+              "kind": "speech",
+              "text": "как — kak — how. вас or тебя — vas / tebya — you, in the object form. зовут — zovut — they call."
             },
             {
               "kind": "speech",
@@ -767,19 +691,16 @@
               "text": "Last lesson's меня has partners, and they follow the same logic — the person being called is the object, so the word changes shape:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "subject",
-                "object",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "subject: я (ya). object: меня, me.",
-                "subject: ты. object: тебя, you (informal).",
-                "subject: вы. object: вас, you (formal/plural)."
-              ]
+              "kind": "speech",
+              "text": "я (ya) becomes меня — me."
+            },
+            {
+              "kind": "speech",
+              "text": "ты becomes тебя — you, informal."
+            },
+            {
+              "kind": "speech",
+              "text": "вы becomes вас — you, formal or plural."
             },
             {
               "kind": "speech",
@@ -859,7 +780,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5a18bc4ca72b301",
+      "sourceHash": "fnv1a64:c47d172e1777208b",
       "notice": null,
       "blocks": [
         {
@@ -893,19 +814,20 @@
               "text": "English is the odd one out in this small comparison:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "question frame"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "Language: Russian. question frame: Как вас зовут? — how.",
-                "Language: French. question frame: Comment vous appelez-vous? — how.",
-                "Language: Spanish. question frame: ¿Cómo se llama? — how.",
-                "Language: English. question frame: What is your name? — what."
-              ]
+              "kind": "speech",
+              "text": "Russian asks Как вас зовут? — how."
+            },
+            {
+              "kind": "speech",
+              "text": "French asks Comment vous appelez-vous? — how."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish asks ¿Cómo se llama? — how."
+            },
+            {
+              "kind": "speech",
+              "text": "English asks What is your name? — what."
             },
             {
               "kind": "speech",
@@ -990,6 +912,175 @@
       ]
     },
     {
+      "id": "RU-C02-practice",
+      "sequence": 130,
+      "title": "Chapter 2 practice — run the exchange",
+      "headword": "Chapter 2 practice: the exchange",
+      "romanization": "zdravstvuyte / kak vas zovut / menya zovut",
+      "gloss": "run the whole introduction formally, then make the two changes that turn it informal",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01a9d848c5acbb2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three words the chapter opened with: I, familiar you, formal you. (Я, ты, вы (ty, vy).) Everything below is built from those."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two strangers meet. Say both voices aloud, one after the other:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Здравствуйте! — Как вас зовут? — Меня зовут Анна. А вас? — Меня зовут Иван. Очень приятно."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything in it is formal, because вы is the safe opening with an adult you do not know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what moves when the exchange goes informal",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With one friend, exactly two pieces change:"
+            },
+            {
+              "kind": "speech",
+              "text": "the greeting — Здравствуйте becomes Привет;"
+            },
+            {
+              "kind": "speech",
+              "text": "the object pronoun — вас becomes тебя."
+            },
+            {
+              "kind": "speech",
+              "text": "So Как вас зовут? becomes Как тебя зовут? The verb зовут does not move, and меня in the answer does not move either — you are still the one being called, whoever is asking."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: why the shapes change at all",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Я becomes меня because the calling lands on you rather than coming from you; ты and вы become тебя and вас for the same reason."
+            },
+            {
+              "kind": "speech",
+              "text": "And зовут is a plural verb with nobody behind it — \"they call me,\" where they is no one in particular. That is why the Russian question asks how people call you, not what your name is: naming is something people do, not something you own."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full formal exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full formal exchange, both voices]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same exchange to one friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same exchange to one friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own answer — \"Меня зовут…\" and your name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own answer — \"Меня зовут…\" and your name]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C02-practice-informal-question",
+              "prompt": "Turn Как вас зовут? into the form you use with one friend.",
+              "assesses": [
+                "RU-GRAMMAR-OBJECT-PRONOUNS"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "как тебя зовут?",
+                "kak tebya zovut?",
+                "как тебя зовут",
+                "kak tebya zovut"
+              ],
+              "feedback": {
+                "correct": "Correct: вас becomes тебя, and зовут stays exactly where it was.",
+                "incorrect": "Only the object pronoun changes: вас becomes тебя, giving Как тебя зовут?"
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the formal exchange from memory, then switch it for one friend. Which two pieces changed? (The greeting, and вас becomes тебя.) Which word never moved? (Зовут.) Which form do you choose for an adult you have just met, and why? (Вы — a plural used as respect, and the safer default.) Who is doing the calling in меня зовут? (Nobody in particular — a bare plural verb.) And why is the question как rather than что? (Russian asks how people call you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "RU-C02-ochen-priyatno",
       "sequence": null,
       "title": "очень приятно (óchen priyátno) — \"pleased to meet you\"",
@@ -1002,7 +1093,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb22d61f082d3ed1",
+      "sourceHash": "fnv1a64:97f4b12fe17053b5",
       "notice": null,
       "blocks": [
         {
@@ -1036,18 +1127,8 @@
               "text": "Literally: \"very pleasant.\""
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "очень, ochen, very.",
-                "приятно, priyatno, pleasant, agreeable."
-              ]
+              "kind": "speech",
+              "text": "очень — ochen — very. приятно — priyatno — pleasant, agreeable."
             },
             {
               "kind": "speech",
@@ -1073,18 +1154,16 @@
               "text": "That root goes back to PIE preyH-, \"to love, to please.\" And it went into Germanic too:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Russian, приятно — pleasant, приятель — friend.",
-                "English, friend — literally \"one who is loving,\" an old participle of a verb meaning to love.",
-                "German, Freund."
-              ]
+              "kind": "speech",
+              "text": "Russian приятно, pleasant, and приятель, a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "English friend — literally \"one who is loving,\" an old participle of a verb meaning to love."
+            },
+            {
+              "kind": "speech",
+              "text": "German Freund."
             },
             {
               "kind": "speech",
@@ -1154,161 +1233,6 @@
             {
               "kind": "speech",
               "text": "Say \"pleased to meet you.\" (Очень приятно.) What does it literally mean? (\"Very pleasant\" — no \"I am,\" no \"to meet you.\") What is приятно related to? (Slavic prijati \"to favour\" becomes приятель \"friend\" — and, from the same PIE root preyH-, English friend and German Freund.) And free? (Most likely the same family — originally \"belonging to the beloved household,\" i.e. not a slave.) Next: putting the chapter together."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "RU-C02-practice",
-      "sequence": null,
-      "title": "Chapter 2 practice — run the exchange",
-      "headword": "Chapter 2 practice: the exchange",
-      "romanization": "",
-      "gloss": "run the introduction formally and informally",
-      "script": "cyrillic",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:251460449e4c5be3",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The chapter's words now add up to a real conversation. Run it first with a stranger, then make the two changes that turn it informal."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Formal exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Say both halves aloud:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "— Здравствуйте!, Hello.",
-                "— Как вас зовут?, What's your name?",
-                "— Меня зовут Анна. А вас?, My name is Anna. And you?",
-                "— Меня зовут Иван. Очень приятно., My name is Ivan. Pleased to meet you."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Informal switch",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "With one friend, change only two pieces:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "formal",
-                "informal"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "formal: Здравствуйте! informal: Привет!",
-                "formal: Как вас зовут? informal: Как тебя зовут?"
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The greeting and object pronoun change. The verb зовут stays exactly where it was."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full formal exchange, both voices",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full formal exchange, both voices]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the same exchange informally",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the same exchange informally]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two pieces that change — greeting and pronoun",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two pieces that change — greeting and pronoun]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "как, not что — naming is framed as an action",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *как*, not *что* — naming is framed as an action]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run the formal exchange without looking. Then switch it for one friend. What changed? (The greeting and вас becomes тебя.) What stayed fixed? (Зовут.)"
             }
           ]
         }
@@ -1488,7 +1412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96763014d3c3ff21",
+      "sourceHash": "fnv1a64:97d645e1b389a3a3",
       "notice": null,
       "blocks": [
         {
@@ -1514,19 +1438,16 @@
           "title": "Three phrases, three English expansions",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Russian",
-                "literal reading",
-                "English adds"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "Russian: Меня зовут Анна. literal reading: \"they call me Anna\". English adds: my, name.",
-                "Russian: Очень приятно. literal reading: \"very pleasant\". English adds: it is, to meet you.",
-                "Russian: Как вас зовут? literal reading: \"how do they call you?\" English adds: what, your."
-              ]
+              "kind": "speech",
+              "text": "Меня зовут Анна reads literally \"they call me Anna\"; English adds my and name."
+            },
+            {
+              "kind": "speech",
+              "text": "Очень приятно reads literally \"very pleasant\"; English adds it is and to meet you."
+            },
+            {
+              "kind": "speech",
+              "text": "Как вас зовут? reads literally \"how do they call you?\"; English adds what and your."
             },
             {
               "kind": "speech",

@@ -1,8 +1,8 @@
 Latin, chapter 19: How Are You?.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 quid agis?, ut valēs? — "how are you?", two genuinely Roman ways.
 
 Warm-up.
@@ -29,7 +29,7 @@ Wrap-up Recall.
 What does quid agis? literally mean? ("What are you doing?") What verb connects ut valēs?, valeō, and the valē you already knew from Chapter 1? (Valēre, "to be strong/well.") Is quōmodo tē habēs? genuinely attested in classical Latin? (No — grammatically sound, but a modern pedagogical construction, not found in surviving Roman texts.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 valeō and valē — answer and farewell from one verb.
 
 Warm-up.
@@ -56,3 +56,34 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What verb unites ut valēs?, valeō, and valē? (Valēre, "to be strong or well.") Which form answers the question? (Valeō.) What does the farewell valē literally command? (Be well.)
+
+
+Lesson 3 of 3.
+Practice — open, check, answer, close.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new. You already own every word below; this lesson only puts them in order, so that for the first time you can carry a whole Latin exchange from the first breath to the last.
+
+The exchange — five lines, all of them already yours.
+A: Salvē! Quid agis? Be well! What are you doing? — "hello, how's it going?"
+B: Valeō, grātiās tibi agō. Ut valēs? I fare well, I give thanks to you. How do you fare?
+A: Valeō. — I fare well.
+B: Valē! — Be well!, the parting wish.
+A: Valē!
+Hear what holds it together. One verb, valēre ("to be strong, to be well"), supplies the second question (valēs), both answers (valeō), and the farewell (valē). Latin does not need a separate word for "I": the -ō of valeō and agō already is it. And the exchange opens and closes on the same wish — salvē "be well," valē "be well" — because a Roman greeting is a wish for the other person's health, coming and going.
+
+Guided Practice.
+[pause 1 second]
+[your turn — run: both voices, aloud, once straight through]
+[pause 8 seconds for the answer]
+[your turn — choose: you meet a whole room, not one person becomes salvēte]
+[pause 8 seconds for the answer]
+[your turn — say: the ending that already means "I" in valeō and agō — -ō]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Run the exchange once more without looking. Then: which single verb supplies valēs, valeō, and valē? (Valēre.) Which of the two Roman "how are you?" questions is not attested? (Neither — both quid agis? and ut valēs? are real; the modern one was quōmodo tē habēs?)
+[question — say your answer, then pause 8 seconds]
+Someone has just asked you ut vales? Type the one-word Latin answer.

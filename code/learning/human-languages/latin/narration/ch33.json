@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 33,
   "title": "Evening",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3ae7f1218b5dcee0",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7df24e4c500c2166",
   "lessons": [
     {
       "id": "LA-C33-vesper",
@@ -226,6 +226,140 @@
             {
               "kind": "speech",
               "text": "What is Hesperus? (The evening star.) What does Spanish víspera mean now? (The eve or day before an event.) Which Latin root supplies French soir and Italian sera? (Sērus, \"late.\") Name one direct English borrowing from vesper. (Vespers or vespertine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C33-practice",
+      "sequence": 585,
+      "title": "Practice — sort the evening words, then read the Latin",
+      "headword": "vesper — vespere — sērus",
+      "romanization": "vesper — vespere — sērus",
+      "gloss": "sort any European evening word into its real family and read the Latin time phrase — the usable skill this chapter actually hands you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6d7a6121f9b4bbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Be honest about what this chapter can give you. There is no Roman \"good evening\" yet — that arrives next chapter, and even then it is modern. What you can do today is triage: hear any European evening word and place it in the right family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the two families, and the test that separates them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything in this chapter falls into exactly two lines, and one question separates them: does the word still carry a v or an h from the sunset root, or does it come from \"late\"?"
+            },
+            {
+              "kind": "speech",
+              "text": "Sunset family — from vesper, or its Greek cousin hesperos: vespers, vespertine, víspera, Hesperus, Hesperia."
+            },
+            {
+              "kind": "speech",
+              "text": "Late family — from sērus, \"late\": French soir, Italian sera."
+            },
+            {
+              "kind": "speech",
+              "text": "Two traps worth naming. Víspera is in the sunset family but no longer means \"evening\" — it narrowed to \"the eve, the day before.\" And soir and sera look like the closest heirs of all, being the everyday words in Latin's two nearest daughters, yet they are the ones that are not descended from vesper at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SORT",
+              "instruction": "vespers, sera, Hesperus, soir, víspera becomes sunset or late",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SORT: vespers, sera, Hesperus, soir, víspera → sunset or late]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the noun — vesper; and \"in the evening\" — vespere, the form Cicero uses in his letters",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the noun — **vesper**; and \"in the evening\" — **vespere**, the form Cicero uses in his letters]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the deep link that started it — vesper and English west, one idea: where the sun goes down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the deep link that started it — *vesper* and English **west**, one idea: where the sun goes down]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sort these three without looking: vespertine, sera, Hesperia. (Sunset, late, sunset.) What does víspera mean in Spanish now? (The eve, the day before — narrowed, not lost.) And which everyday Latin form means \"in the evening\"? (Vespere.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-C33-practice-soir-family",
+              "prompt": "French soir and Italian sera descend from which Latin word?",
+              "assesses": [
+                "LA-TASK-VESPER-TRIAGE-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "serus",
+                "sērus",
+                "serus (late)"
+              ],
+              "feedback": {
+                "correct": "Right: serus, late — not vesper.",
+                "incorrect": "They come from serus, late; only the sunset family comes from vesper."
+              }
             }
           ]
         }

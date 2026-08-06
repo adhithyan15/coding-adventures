@@ -62,9 +62,41 @@ Language Ladder verifies independently. A forced XeLaTeX build is free of
 missing glyphs, layout boxes, duplicate destinations, Hyperref warnings, and
 LaTeX warnings.
 
+## Chapter capabilities (HL05)
+
+[`chapters.json`](./chapters.json) states what a reader can *do* when they
+finish a chapter, and names the lesson that proves it. It is authored intent —
+no validator may rewrite it.
+
+**Seven of twenty-three chapters are authored: 17–23.** Those are exactly the
+chapters whose lessons have been migrated to schema version 2 and so declare
+real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
+`practises.knowledge`, so a payoff written for them could only assess invented
+atoms. They are left out on purpose: an absent entry is debt the gap report can
+measure, a stub is a chapter falsely claiming a capability it never delivered.
+
+Representativeness — the share of a chapter's introduced atoms its payoff
+actually assesses, floored at 0.5 by `core/chapter-policy.json`:
+
+| Chapter | Payoff lesson | Assessed / introduced |
+|---|---|---|
+| 17 Head and Hand | `FR-C17-main` | 4 / 8 = 0.50 (on the floor) |
+| 18 Yes and No | `FR-C18-non` | 4 / 7 = 0.57 |
+| 19 Please | `FR-C19-sil-vous-plait` | 3 / 3 = 1.00 |
+| 20 Sorry | `FR-C20-je-suis-desole` | 3 / 3 = 1.00 |
+| 21 Weather | `FR-C21-le-temps` | 4 / 4 = 1.00 |
+| 22 Dog and Cat | `FR-C22-chien-chat` | 4 / 4 = 1.00 |
+| 23 Green and Yellow | `FR-C23-vert-jaune` | 5 / 5 = 1.00 |
+
+Chapters 17 and 18 have **no terminal consolidation lesson**, so their payoff is
+the last lesson by `sequence`. Chapter 18 still clears the floor because *non*
+reassesses *oui*; Chapter 17 sits exactly on it. Neither `assesses` list is
+padded — a shortfall is a signal that the chapter needs a real practice lesson.
+
 ## Files
 
 - [`lessons/`](./lessons/) — the deep one-word practice lessons.
+- [`chapters.json`](./chapters.json) — the HL05 chapter capability ledger.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) — French sounds,
   to look up on demand.
 - [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)

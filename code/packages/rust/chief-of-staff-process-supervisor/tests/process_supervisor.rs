@@ -56,6 +56,29 @@ impl TestPackage {
         Self { path, digest }
     }
 
+    fn skill(label: &str) -> Self {
+        let path = std::env::temp_dir().join(format!(
+            "chief-process-supervisor-{label}-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir_all(&path).unwrap();
+        fs::write(path.join("manifest.json"), b"{\"runtime\":\"skill\"}").unwrap();
+        fs::write(
+            path.join("SKILL.md"),
+            b"# Weather\n\nDescribe the weather.\n",
+        )
+        .unwrap();
+        fs::write(path.join("PUBKEY_ID"), TEST_KEY_ID).unwrap();
+        let digest = package_digest(&path);
+        let (_, secret_key) = generate_keypair(&TEST_SEED);
+        fs::write(path.join("SIGNATURE"), sign(&digest, &secret_key)).unwrap();
+        Self { path, digest }
+    }
+
     fn registration(&self, host: &str) -> HostRegistration {
         HostRegistration::new(
             HostName::new(host).unwrap(),
@@ -73,20 +96,33 @@ impl Drop for TestPackage {
 }
 
 fn package_digest(path: &Path) -> [u8; 32] {
-    let mut files = vec![
-        (
-            "code/agent_runtime.ts".to_owned(),
-            fs::read(path.join("code/agent_runtime.ts")).unwrap(),
-        ),
-        (
-            "launch.sh".to_owned(),
-            fs::read(path.join("launch.sh")).unwrap(),
-        ),
-        (
-            "manifest.json".to_owned(),
-            fs::read(path.join("manifest.json")).unwrap(),
-        ),
-    ];
+    let mut files = if path.join("SKILL.md").is_file() {
+        vec![
+            (
+                "SKILL.md".to_owned(),
+                fs::read(path.join("SKILL.md")).unwrap(),
+            ),
+            (
+                "manifest.json".to_owned(),
+                fs::read(path.join("manifest.json")).unwrap(),
+            ),
+        ]
+    } else {
+        vec![
+            (
+                "code/agent_runtime.ts".to_owned(),
+                fs::read(path.join("code/agent_runtime.ts")).unwrap(),
+            ),
+            (
+                "launch.sh".to_owned(),
+                fs::read(path.join("launch.sh")).unwrap(),
+            ),
+            (
+                "manifest.json".to_owned(),
+                fs::read(path.join("manifest.json")).unwrap(),
+            ),
+        ]
+    };
     for marker in [
         "EXIT_BEFORE_READY",
         "IGNORE_TERMINATE",
@@ -229,6 +265,31 @@ fn real_child_reaches_running_and_stops_gracefully() {
     );
     assert_eq!(exited.process_id(), None);
     supervisor.stop(registration.host_name()).unwrap();
+}
+
+#[test]
+fn signed_skill_package_receives_authenticated_runtime_dispatch() {
+    let package = TestPackage::skill("skill-runtime");
+    let registration = package.registration("skill-host");
+    let keyring = Arc::new(keyring());
+    let identity = Arc::new(generate_identity_keypair());
+    let mut supervisor = new_supervisor(
+        Arc::clone(&keyring),
+        Arc::clone(&identity),
+        Duration::from_secs(3),
+        Duration::from_secs(1),
+    );
+
+    supervisor.start(&registration).unwrap();
+    let running = await_phase(&mut supervisor, &registration, SupervisorPhase::Running);
+    assert_eq!(running.package_hash(), &package.digest);
+    supervisor.stop(registration.host_name()).unwrap();
+    let exited = await_phase(
+        &mut supervisor,
+        &registration,
+        SupervisorPhase::Exited { exit_code: Some(0) },
+    );
+    assert_eq!(exited.process_id(), None);
 }
 
 #[test]

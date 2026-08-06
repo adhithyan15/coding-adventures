@@ -2,9 +2,9 @@
   "version": 1,
   "language": "spanish",
   "chapter": 5,
-  "title": "Chapter 5",
+  "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6b08d82baacfa774",
+  "sourceHash": "fnv1a64:9914574b6e231c0f",
   "lessons": [
     {
       "id": "ES-C05-adios",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2593e009950321f",
+      "sourceHash": "fnv1a64:cfc7945c70776255",
       "notice": null,
       "blocks": [
         {

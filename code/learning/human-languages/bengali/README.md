@@ -44,6 +44,22 @@ book.
   book from the same canonical schema-v2 lesson AST and source hash that
   Language Ladder loads.
 
+## What each chapter lets you do
+
+[`chapters.json`](./chapters.json) is the HL05 capability ledger: per chapter, one
+first-person can-do sentence and the lesson that pays it off.
+
+- **Chapter 6** — *"I can count from one to five in Bengali script and say what
+  দুই kept that Hindi and Marathi flattened away."* Payoff:
+  [`BN-C06-numbers-1-5`](./lessons/BN-C06-numbers-1-5.md), a spoken production —
+  count the five, name the chandrabindu on **পাঁচ**, place *dui* against *do* and
+  *don*.
+
+Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
+still schema v1, so their lessons declare no knowledge atoms and no payoff there
+could honestly claim to assess anything. A placeholder would hide debt the HL05
+gap report is meant to surface; the entries land as those chapters migrate.
+
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font

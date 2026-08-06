@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 21,
   "title": "Nice to Meet You",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:51a83aba61a2bb64",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:0f93e9300f86bb34",
   "lessons": [
     {
       "id": "LA-C21-volup-est-convenisse",
@@ -238,6 +238,159 @@
             {
               "kind": "speech",
               "text": "Is the Plautine line a first-time introduction? (No — it is a chance encounter between acquaintances.) Is it still genuinely attested? (Yes.) Is mihi pergrātum est tē convenīre bad grammar? (No.) Is it classically attested? (No — it is a modern spoken-Latin formula.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C21-practice",
+      "sequence": 455,
+      "title": "Practice — two meetings, each with the right words",
+      "headword": "quid tibi nōmen est? — volup est convēnisse",
+      "romanization": "quid tibi nōmen est? — volup est convēnisse",
+      "gloss": "two honest meeting scenes — trade names on a first introduction, and use the Plautine phrase where it really belongs, on running into someone you already know",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ecece80fdd47b3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English uses one formula for both meetings. Latin does not, and the chapter told you why. So you get two scenes, and the payoff is knowing which words go in which."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — scene one: strangers, so trade names",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: Salvē! Quid tibi nōmen est? Be well! What is the name to you?"
+            },
+            {
+              "kind": "speech",
+              "text": "B: Mihi nōmen est Mārcus. Quid tibi nōmen est? The name to me is Marcus."
+            },
+            {
+              "kind": "speech",
+              "text": "A: Mihi nōmen est Iūlia."
+            },
+            {
+              "kind": "speech",
+              "text": "B: Valē! A: Valē!"
+            },
+            {
+              "kind": "speech",
+              "text": "Mārcus and Iūlia are only slots — put your own name there. Notice what is missing: no verb for \"have,\" no verb for \"be called.\" The dative tibi/mihi carries the possession by itself, and nōmen stays the subject."
+            },
+            {
+              "kind": "speech",
+              "text": "Scene two is the chance re-encounter — the situation Plautus actually wrote the line for:"
+            },
+            {
+              "kind": "speech",
+              "text": "A: Salvē! Quid agis?"
+            },
+            {
+              "kind": "speech",
+              "text": "B: Valeō. Volup est convēnisse! I fare well. It is a pleasure to have met [you]."
+            },
+            {
+              "kind": "speech",
+              "text": "A: Valē!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "scene one with your own name in the slot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: scene one with your own name in the slot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "a stranger becomes names; someone you already know becomes volup est convēnisse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: a stranger → names; someone you already know → *volup est convēnisse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "greeting several people at once becomes salvēte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: greeting several people at once → **salvēte**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which case does mihi sit in, and what work does it do? (Dative; it owns the name without any verb.) Cicero would write puerō nōmen est Mārcus; who prefers Mārcō? (Livy and Sallust.) Is mihi pergrātum est tē convenīre good Latin, and is it Roman? (Good grammar; not attested — modern.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-C21-practice-name-reply",
+              "prompt": "You have been asked quid tibi nomen est? Type the first three Latin words of your reply.",
+              "assesses": [
+                "LA-DIALOGUE-MEETING-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "mihi nomen est",
+                "mihi nōmen est"
+              ],
+              "feedback": {
+                "correct": "Right: mihi nomen est — the name is to me.",
+                "incorrect": "Reply mihi nomen est [name] — dative possessor, nomen as subject."
+              }
             }
           ]
         }

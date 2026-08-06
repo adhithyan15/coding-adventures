@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapter 1 is deliberately absent — all four of its lessons are still schema v1 with no declared knowledge atoms, so any payoff written for it would be invented rather than derived. That absence is real, measurable debt and must not be papered over with a placeholder.",
+  "chapters": [
+    {
+      "chapter": 2,
+      "title": "Give your name",
+      "label": "ch:urdu-name",
+      "canDo": "I can say my name in Urdu in one sentence, keeping hai at the end where Urdu puts it.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "UR-C02-mera-naam",
+        "kind": "production",
+        "summary": "One sentence with a slot for your own name: merā nām ... hai, with the copula held to the end of the line.",
+        "assesses": [
+          "UR-LEX-MERA-NAAM-HAI",
+          "UR-SCRIPT-MERA-NAAM-HAI",
+          "UR-GRAMMAR-COPULA-FINAL"
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Ask and Answer Names",
+      "label": "ch:ur-ask-and-answer-names",
+      "canDo": "I can ask someone's name with respectful āp, answer with my own, and close the introduction politely.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "UR-C03-practice",
+        "kind": "dialogue",
+        "summary": "A six-line first meeting: greet, ask āp kā nām kyā hai?, answer with your own name, and close with āp se mil kar khushī huī.",
+        "assesses": [
+          "UR-LEX-MERA-NAAM-HAI",
+          "UR-GRAMMAR-COPULA-FINAL",
+          "UR-LEX-AAP-TUM-TU",
+          "UR-PRAGMATICS-YOU-REGISTER",
+          "UR-LEX-KYA",
+          "UR-LEX-NAME-QUESTION",
+          "UR-GRAMMAR-AAP-KA",
+          "UR-SCRIPT-URDU-QUESTION-MARK",
+          "UR-LEX-NICE-TO-MEET",
+          "UR-DIALOGUE-NAME-EXCHANGE"
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "How Are You?",
+      "label": "ch:ur-how-are-you",
+      "canDo": "I can ask how someone is with respectful āp, choose kaise or kaisī for the person I am addressing, and reply that I am fine, thank you.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "UR-C04-practice",
+        "kind": "dialogue",
+        "summary": "The wellbeing exchange run both ways — āp kaise haiṅ? and āp kaisī haiṅ? — answered with the unchanging maiṅ ṭhīk hūṅ, shukriyā.",
+        "assesses": [
+          "UR-LEX-WELLBEING-QUESTION",
+          "UR-GRAMMAR-AAP-HAIN",
+          "UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE",
+          "UR-LEX-WELLBEING-REPLY",
+          "UR-GRAMMAR-WELLBEING-WORD-ORDER",
+          "UR-DIALOGUE-WELLBEING"
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Take Leave",
+      "label": "ch:ur-take-leave",
+      "canDo": "I can open a short Urdu conversation, ask how the other person is, and close it with khudā hāfiz.",
+      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "payoff": {
+        "lesson": "UR-C05-practice",
+        "kind": "dialogue",
+        "summary": "A four-line interaction with a beginning and an end: salām, the wellbeing check, then khudā hāfiz from both voices.",
+        "assesses": [
+          "UR-DIALOGUE-WELLBEING",
+          "UR-LEX-KHUDA-HAFIZ",
+          "UR-SCRIPT-KHUDA-HAFIZ-SPACED",
+          "UR-PRAGMATICS-STANDARD-FAREWELL",
+          "UR-DIALOGUE-TAKE-LEAVE"
+        ]
+      }
+    }
+  ]
+}

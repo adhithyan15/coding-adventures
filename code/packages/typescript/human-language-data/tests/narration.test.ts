@@ -605,7 +605,9 @@ describe("the whole corpus", () => {
     const chapters = narrationChapters(lessons, { maxLinearisableTableColumns: 3 });
     const narrated = chapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0);
     expect(narrated).toBe(lessons.length);
-    expect(chapters).toHaveLength(375);
+    // 377, not the 375 this was authored against: HL-C39 and HL-C40 each added a
+    // Chapter 1 (Mandarin Chinese and Japanese) while this branch waited to merge.
+    expect(chapters).toHaveLength(377);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {
@@ -640,7 +642,9 @@ describe("the whole corpus", () => {
         }
       }
     }
-    // 71 four-or-more-column tables across 68 lesson files, at the shipped width.
-    expect(refusals).toBe(71);
+    // 70 four-or-more-column tables at the shipped width. Authored as 71 against a
+    // 375-chapter corpus; the Spanish gentle-ramp split (HL-C18A) reshaped one of
+    // them out of existence when it broke its source lesson into micro-lessons.
+    expect(refusals).toBe(70);
   });
 });

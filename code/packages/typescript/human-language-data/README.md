@@ -99,6 +99,8 @@ import { summarizeModality, deriveLessonModality, loadEverything } from "@coding
 const { lessons } = loadEverything();
 const modality = summarizeModality(lessons);
 modality.drivablePercent;              // 84 — the share learnable by ear alone
+
+modality.drivablePercent;              // 65 — the share a hands-free view can deliver
 modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLesson: "…", … }
 deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
 ```
@@ -139,9 +141,45 @@ Raising it from 0 to 3 moved the corpus from **63% drivable to 84%** (694 → 92
 line and four is not.
 
 A **chapter's drivable prefix** is how many of its lessons, in authored `sequence`
-order, are `voice` before the first that is not — deliberately not "how many voice
-lessons does it contain", because chapters are prerequisite-ordered and a voice
+order, have a `voice` core before the first that does not — deliberately not "how many
+voice lessons does it contain", because chapters are prerequisite-ordered and a voice
 lesson sitting behind a sight one is not reachable in the car.
+
+#### One lesson, two modalities (HL-C41)
+
+The three rules above give a lesson one answer, which is right for the **book** — it
+prints every block and needs one honest sign at the chapter opening. It is wrong for a
+lesson that is voice throughout except for a short section teaching the hand to form a
+letter met earlier. Under one answer per lesson those two minutes cost all five.
+
+So modality is derived at two scales:
+
+| Field | Reads | Answers |
+|---|---|---|
+| `modality` | the whole lesson | what the **book** signs |
+| `coreModality` | the lesson minus its **detachable** blocks | what a hands-free view can deliver |
+
+```ts
+const entry = deriveLessonModality(lesson);
+entry.modality;         // "pen"   — the book prints a writing segment
+entry.coreModality;     // "voice" — a listener still gets the rest
+entry.writingSegments;  // ["Writing: మ — the tick on top"]
+entry.blocks[1];        // { type: "writing", modality: "pen", detachable: true, … }
+```
+
+A block type is **detachable** when nothing later in the lesson depends on it. Exactly
+one is today — `writing` (heading `## Writing: …`), which teaches the *hand*, as
+against `script`, which teaches the *eye* and is not detachable. Detachable means "a
+non-visual renderer may set this aside", never "optional content": **the book prints
+every block, in full.** A future dictation-friendly edition is a separate output view
+over the same source, and `coreModality` is the metadata it reads.
+
+`drivablePercent` and the drivable prefix are counted on the core; the
+`voice`/`sight`/`pen` counts still describe the book, and `coreVoice` is published
+beside them so the two reconcile. An authored `modality:` override caps the core, so
+the core is never stronger than the full modality. A lesson that is not `type: writing`
+may carry **one** writing segment; more is reported as
+`modality-writing-segment-not-separable`.
 
 An author may override with `modality:` in frontmatter; an override that
 *contradicts* the derivation additionally requires `modality_reason:`. Unexplained
@@ -220,6 +258,57 @@ confidently teaching a lesson that no longer exists.
 **Out of scope, per HL04 and HL08:** no audio. No TTS, no voice selection, no
 recordings. This is a script *for* a voice agent.
 
+remaining 1,038, 308 carry a Markdown table — the single largest obstacle to a
+hands-free course, and a far more tractable one than the script. **708 lessons
+(65%) are drivable exactly as authored.** No track has yet authored an interspersed
+writing segment, so every lesson's core equals its full modality and the two-scale
+derivation currently moves no number; the regression test pins that.
+
+### The modality manifest — two editions from one source (HL-C44)
+
+The derivation above is only useful to a *program* if it is a *file*. `core/lesson-modality.json`
+is that file: one row per lesson, generated and drift-gated, so the complete book, the
+app, and the forthcoming dictation-friendly driving edition can each filter the same
+canonical corpus instead of maintaining three copies of it.
+
+```bash
+npm run build
+npm run generate:modality   # write core/lesson-modality.json
+npm run check:modality      # fail (exit 1) if it drifted from the lessons
+```
+
+```ts
+import { loadModalityManifest, modalityManifestById } from "@coding-adventures/human-language-data";
+
+const manifest = loadModalityManifest();
+manifest.summary.drivablePercent;        // 65
+manifest.lessons.filter((l) => l.drivable);            // the driving edition's lessons
+manifest.tracks[0].chapters[0].drivableLessonIds;      // the prefix, already in order
+modalityManifestById(manifest).get("ES-C01-hola");     // a Map, never a plain object
+```
+
+Each lesson row carries `id`, `language`, `chapter`, `sequence`, `modality`, `derived`,
+`drivable`, `reasons`, and the lesson AST's `sourceHash`; the three override fields
+(`authored`, `authoredReason`, `overridden`) appear only on the handful of lessons that
+have them. Chapters add the drivable prefix and the ids in it; tracks and a corpus
+`summary` roll those up.
+
+Two design decisions are worth knowing before consuming it:
+
+- **`modality` is permanently the strongest channel the lesson needs anywhere.** It is
+  the conservative filter. HL-C41 has now added *block-level* modality — a lesson core
+  that is `voice` beside a short, separable `pen` segment — and it landed as a new
+  optional `coreModality` key beside `modality`, never as a change to it. A consumer
+  reads `entry.coreModality ?? entry.modality` and is correct both before and after;
+  one that never learns about the new key keeps producing a merely *pessimistic*
+  driving edition, which is the safe direction to be wrong in. `features.blockModality`
+  in the header says whether a given build carries block data.
+- **Nothing is authored.** The manifest is derived, exactly like
+  `core/generated-book-hashes.json`. HL08 deliberately refused to put `modality:` in
+  1,096 frontmatter files, because 1,096 authored copies of a computed fact are 1,096
+  places for it to go stale. `check:modality` runs in CI beside `check:books` so the
+  manifest cannot drift from the lessons it describes.
+
 Build the JSON and readable gap reports locally with:
 
 ```bash
@@ -269,6 +358,8 @@ until the existing corpus has been split.
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
+
+| `modality-manifest.ts` | that derivation as an emittable, filterable JSON artifact | ✅ |
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
@@ -277,6 +368,10 @@ until the existing corpus has been split.
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
 
 Only `loader.ts`, `cli.ts`, `report-cli.ts`, `book-cli.ts`, and `narration-cli.ts` touch the filesystem (declared in
+
+| `modality-cli.ts` | writes or checks `core/lesson-modality.json` | ⛔ (fs) |
+
+Only `loader.ts`, `cli.ts`, `report-cli.ts`, `book-cli.ts`, and `modality-cli.ts` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested
 against inline fixtures.
 

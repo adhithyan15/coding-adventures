@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 3,
   "title": "Introducing Yourself",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:11a05b47aeca6e6d",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:42fbffb8f2c9ee65",
   "lessons": [
     {
       "id": "ES-C03-me",
@@ -414,25 +414,18 @@
     {
       "id": "ES-C03-tu-usted",
       "sequence": 160,
-      "title": "tú and usted — two words for \"you,\" and why you must choose",
+      "title": "tú and usted — two words for \"you\"",
       "headword": "tú / usted",
       "romanization": "tú / usted",
-      "gloss": "you (informal / formal)",
+      "gloss": "the two words Spanish has for \"you\" — and the one English quietly retired",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c02a99d63e867f61",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ccef862fda339570",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -447,7 +440,7 @@
             },
             {
               "kind": "speech",
-              "text": "English has one word for \"you.\" Spanish has two, and picking the wrong one can send the wrong social signal. This lesson gives you both and shows the everyday choice. The remarkable history of usted comes next."
+              "text": "English has one word for \"you.\" Spanish has two. Today you get both words and what each one is for. What the choice means socially — and the odd grammar usted drags along with it — comes in the next lesson."
             }
           ]
         },
@@ -458,7 +451,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tú — \"you,\" informal. For friends, family, children, peers, anyone you're on easy terms with."
+              "text": "tú — \"you,\" informal. For friends, family, children, peers, anyone you are on easy terms with."
             },
             {
               "kind": "speech",
@@ -466,27 +459,16 @@
             },
             {
               "kind": "speech",
-              "text": "usted — \"you,\" formal. For strangers, elders, officials, customers, anyone you're showing respect or keeping distance with."
+              "text": "usted — \"you,\" formal. For strangers, elders, officials, customers, anyone you are showing respect or keeping distance with."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are subject pronouns — the \"doer\" word, like yo (\"I\"). Say them enough times that they come out without hunting: tú, one syllable with the accent; usted, stress on the second, with a very soft final d."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the choice English lost",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Both are subject pronouns — the \"doer\" word, like yo (\"I\"). But they carry a second layer English dropped when thou died: social register. Choosing tú vs. usted tells the listener how you see the relationship — close or respectful. English \"you\" is one-size-fits-all; a Spanish speaker must decide every time."
-            },
-            {
-              "kind": "speech",
-              "text": "One structural surprise, because it explains the next lessons: usted takes he/she verb forms, not the informal \"you\" forms. That's why \"what's your name?\" formally is ¿cómo se llama usted? (the se llama you'd use for \"he calls himself\") and not te llamas. The next micro-lesson explains the history behind that third-person pattern."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -526,7 +508,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -538,7 +520,157 @@
             },
             {
               "kind": "speech",
-              "text": "Which is formal, tú or usted? (usted.) What English pronoun is the lost twin of tú? (Thou.) Which verb pattern does usted take? (The same form used with \"he\" or \"she.\")"
+              "text": "Which is formal, tú or usted? (Usted.) What English pronoun is the lost twin of tú, and what happened to it? (Thou — it faded out of English around 400 years ago.) Next: what picking one of them tells your listener."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-tu-usted-register",
+      "sequence": 165,
+      "title": "tú or usted — a choice you have to make every time",
+      "headword": "tú o usted",
+      "romanization": "tú o usted",
+      "gloss": "the choice English lost — and the surprise that usted takes he/she verb forms",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cae1a32ffd9d433",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have both words. Now the hard part: Spanish makes you choose one every time you speak to someone, and the choice is never neutral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tú / usted — the two words themselves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the layer English dropped",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tú and usted do not differ in meaning — both are \"you,\" singular, one person. They differ in register: the social distance you are claiming."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "you say",
+                "you are signalling"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "you say: tú. you are signalling: closeness, equality, ease.",
+                "you say: usted. you are signalling: respect, deference, distance."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English used to carry this too, with thou against you — and when thou died, English lost the ability to say it at all. One-size-fits-all \"you\" means an English speaker never has to decide. A Spanish speaker decides every single time, and getting it wrong is not a grammar mistake but a social one: tú to a stranger can read as presumptuous, usted to a friend as cold."
+            },
+            {
+              "kind": "speech",
+              "text": "The safe default when you cannot tell: usted. Over-formal is recoverable; over-familiar is awkward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: usted takes he/she forms",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One structural surprise, because it shapes every lesson after this: usted takes the he/she verb forms, not the informal \"you\" forms."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why \"what's your name?\" formally is ¿cómo se llama usted? — using the se llama you would otherwise use for \"he calls himself\" — and not te llamas. Grammatically, usted behaves as though you were talking about the person rather than to them. That is a fossil of where the word came from, and the next lesson digs it up."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tú\" and name someone you would use it with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tú\" and name someone you would use it with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"usted\" and name someone you would use it with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"usted\" and name someone you would use it with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb pattern usted takes — the he/she one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb pattern *usted* takes — the he/she one]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Do tú and usted differ in meaning or in register? (Register — both mean \"you\"; they signal closeness versus respect.) Which do you pick when unsure? (Usted.) Which verb forms does usted take? (The same forms used with he or she.)"
             }
           ]
         }
@@ -557,7 +689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:147f7add647ef582",
+      "sourceHash": "fnv1a64:313935a54432e2fc",
       "notice": null,
       "blocks": [
         {
@@ -679,21 +811,152 @@
       "title": "cómo — \"how,\" your first question word",
       "headword": "cómo",
       "romanization": "cómo",
-      "gloss": "how",
+      "gloss": "how — a whole Latin phrase, quo modo, worn smooth into one word",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de29ae0d92ae73a9",
+      "sourceHash": "fnv1a64:9e4ea930fecfcd0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ask someone's name or how they are, you need this word first. Cómo — \"how\" — and hiding inside it is a little Latin word for \"manner\" that you already own a dozen English versions of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cómo — \"how.\" Root: Latin quo modo — not a word but a two-word phrase, \"in what manner.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The two halves, and their English cousins:"
+            },
+            {
+              "kind": "speech",
+              "text": "modo (\"manner, measure\") becomes English mode, modal, model, moderate, modify, commodity."
+            },
+            {
+              "kind": "speech",
+              "text": "quo (\"in what\") is the Latin question-stem qu-, the seed of nearly every Spanish question word."
+            },
+            {
+              "kind": "speech",
+              "text": "How the phrase became one word — the wearing-down. Spanish did not borrow cómo ready-made; it eroded out of quo modo over centuries of everyday speech. The final -do fell off and the middle collapsed:"
+            },
+            {
+              "kind": "speech",
+              "text": "quomodo becomes quomo becomes como."
+            },
+            {
+              "kind": "speech",
+              "text": "The qu- (a kw sound) flattened to a plain k, written c before o. What is left is a whole Latin phrase worn smooth — the way a pebble loses its edges in a river. The same erosion gave Italian come, Portuguese como, French comme."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"cómo\" — CÓ-mo, stress on the first syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"cómo\" — *CÓ-mo*, stress on the first syllable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"cómo\" then English \"mode\", \"model\" — the modo root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"cómo\" then English \"mode\", \"model\" — the *modo* root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the erosion — \"quo modo, quomo, como\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the erosion — \"quo modo, quomo, como\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cómo mean? (\"How.\") Walk the erosion: quo modo becomes? becomes cómo. (Quomo becomes como.) What did the two Latin halves mean? (Quo, \"in what\"; modo, \"manner\" — the root of English mode and model.) Next: the two marks Spanish puts on a question."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-como-acento",
+      "sequence": 185,
+      "title": "¿cómo? — the two marks that say \"this is a question\"",
+      "headword": "¿cómo?",
+      "romanization": "¿cómo?",
+      "gloss": "the two marks Spanish puts on a question — the opening ¿ and the accent that turns como into cómo",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bec544478750ac13",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Script — the upside-down opener"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the upside-down opener until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -709,57 +972,33 @@
             },
             {
               "kind": "speech",
-              "text": "To ask someone's name or how they are, you need this word first. cómo — \"how\" — and it carries a little word for \"manner\" you already own in English."
+              "text": "You have the word cómo. Written down, it wears two marks that English has no equivalent for — and neither of them is decoration. Both do a job English leaves to word order and guesswork."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know first",
           "segments": [
             {
               "kind": "speech",
-              "text": "inverted-marks — Spanish questions open with an upside-down ¿ so you see the question coming: ¿cómo…?"
-            },
-            {
-              "kind": "speech",
-              "text": "accent-mark — the accent on ó marks the stress and flags it as a question word (see below): CÓ-mo."
+              "text": "cómo — the word itself, and where it came from."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "script",
+          "title": "Script — the upside-down opener",
           "segments": [
             {
               "kind": "speech",
-              "text": "cómo — \"how.\" Root: Latin quomodo — a fused little phrase, quo modo, \"in what manner.\""
+              "text": "Spanish questions open with an upside-down ¿ and close with a normal?: ¿cómo?"
             },
             {
               "kind": "speech",
-              "text": "The two halves, and their English cousins:"
-            },
-            {
-              "kind": "speech",
-              "text": "modo (\"manner, measure\") becomes English mode, modal, model, moderate, modify, commodity."
-            },
-            {
-              "kind": "speech",
-              "text": "quo (\"in what\") is the Latin question-stem qu- — the seed of almost every Spanish question word (see the family below)."
-            },
-            {
-              "kind": "speech",
-              "text": "How quomodo became cómo — the wearing-down. Spanish didn't borrow cómo ready-made; it eroded out of quomodo over centuries of everyday speech. The final -do fell off and the middle collapsed:"
-            },
-            {
-              "kind": "speech",
-              "text": "quomodo becomes quomo becomes como."
-            },
-            {
-              "kind": "speech",
-              "text": "The qu- (a kw sound) flattened to a plain k (written c before o). What's left is quomodo worn smooth — the way a pebble loses its edges in a river. The same erosion gave Italian come, Portuguese como, French comme. The accent in cómo is the one late addition: Spanish stamps it on to mark the question (vs. accent-less como, \"like / as\")."
+              "text": "Why? Spanish word order often does not change in a question — cómo estás looks the same whether you are asking or reporting. A reader coming to a long sentence would not know to raise their pitch until they hit the mark at the very end, by which time it is too late. The ¿ is a piece of engineering: it tells your voice, in advance, what shape the sentence has. Only the question part gets bracketed, not necessarily the whole line."
             }
           ]
         },
@@ -770,7 +1009,24 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the accent mark do real work. cómo (with the accent) = \"how?\", the question word. como (no accent) = \"like / as,\" or \"I eat.\" Same letters, and the written accent is the only thing telling you it's a question:"
+              "text": "Now watch the accent mark do real work:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "means"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "cómo means \"how?\" — the question word.",
+                "como means \"like / as\" — or \"I eat\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same letters, same sound. The written accent is the only thing marking the difference:"
             },
             {
               "kind": "speech",
@@ -782,7 +1038,7 @@
             },
             {
               "kind": "speech",
-              "text": "English has no such marker — it relies on word order and context. Spanish puts a visible flag on the question word. Every question word you'll learn (qué, dónde, cuándo, quién…) carries this accent for the same reason."
+              "text": "Every question word you will meet — qué, dónde, cuándo, quién — carries this accent for exactly this reason. It is not about stress (the stress is the same either way); it is a flag that says \"asking.\""
             }
           ]
         },
@@ -800,20 +1056,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿cómo?\" — with question intonation",
+              "instruction": "\"¿cómo?\" — with question intonation, opening high",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿cómo?\" — with question intonation]"
+              "source": "[YOU SAY: \"¿cómo?\" — with question intonation, opening high]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"cómo\" then English \"mode\", \"model\" — the modo root",
+              "instruction": "the pair — \"cómo\" (how?) then \"como\" (like / I eat)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"cómo\" then English \"mode\", \"model\" — the *modo* root]"
+              "source": "[YOU SAY: the pair — \"cómo\" (how?) then \"como\" (like / I eat)]"
             }
           ]
         },
@@ -830,7 +1086,7 @@
             },
             {
               "kind": "speech",
-              "text": "Walk the erosion: quomodo becomes? becomes cómo (quomo becomes como, then the question-accent). What changes when the accent disappears? (como is no longer the question word \"how.\")"
+              "text": "Why does Spanish open a question with ¿? (Word order often does not change, so the reader needs the warning before the sentence, not after.) What changes when the accent disappears from cómo? (It stops being the question word — como means \"like / as,\" or \"I eat.\")"
             }
           ]
         }
@@ -849,7 +1105,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1f6b976deb3f0276",
+      "sourceHash": "fnv1a64:b17345e50849e2c0",
       "notice": {
         "modality": "sight",
         "needs": [

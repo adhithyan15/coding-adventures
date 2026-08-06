@@ -4,6 +4,44 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - board (kanban) view
+
+- **A third view: a board**, with Up next / In progress / Done columns. Cards drag
+  between them by **pointer or keyboard** — this is the first real use of the UI35 drag
+  kernel, and building it is what proved the kernel end-to-end in a running app.
+- A drop is a **proposal**: the card doesn't move itself. The host translates "landed in
+  this column" into the engine operation that expresses it, and the engine decides.
+- The columns come from the same classification the grouped list uses, so the two views
+  can never disagree about a task's state.
+
+Three bugs found while getting this working, each of which made the board look finished
+while being broken:
+
+- **"Up next" was permanently empty.** The column was derived from *"is it scheduled"*,
+  but the engine schedules every task that has a duration — so everything landed in "In
+  progress" and one column, plus its drop zone, was dead. It now reads **progress**,
+  which is both what a person means by "I've started this" and something that can
+  actually be set, which is what makes dragging between those columns work at all.
+- **`percentComplete` came back `undefined` for every task**: it's on `todos()`, not
+  `checklist()`. Reading the wrong projection scored every task 0. The map is now built
+  once per render from the right projection instead of issuing an engine query per card.
+- **`setPercentComplete` takes `percent`, not `percentComplete`** — the latter is what
+  the projections *return*. The call was failing the parse and coming back as an error
+  envelope that nothing read, so cards silently sprang back. Every board operation now
+  checks its result and logs a failure rather than assuming success.
+
+Also from security review: a drop's `targetKey` is validated against the known columns
+(an unrecognised one previously fell through and silently un-completed the task), and
+`HostDropTarget` is given a flex direction so its `gap` isn't inert — it lowers to a
+bare `<div>`, unlike `Column`, so cards were stacking flush.
+
+### Added - working backlog
+
+`BACKLOG.md` tracks the remaining super-app roadmap phases (sheet, calendar, notes,
+app-shell assembly) in priority order, plus lower-priority items the spec explicitly
+defers (native drag support, recurring/reminders, automation, resource leveling,
+portfolio dashboards). Kept current as phases ship and new gaps are discovered.
+
 ### Added - native pressed feedback through Mosaic
 
 The add-task button now declares its pressed background in the shared MSL

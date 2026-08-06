@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 36,
   "title": "Good Afternoon",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f53ba68fee383655",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:467e8562c765f453",
   "lessons": [
     {
       "id": "LA-C36-salve-post-meridiem",
@@ -222,6 +222,156 @@
             {
               "kind": "speech",
               "text": "What can one Roman say on meeting another in the afternoon? (Salvē.) What is the plural? (Salvēte.) Do these words encode a time of day? (No.) Why is there no conversational gap? (The everyday greeting already works whenever people meet.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C36-practice",
+      "sequence": 630,
+      "title": "Practice — one whole day, in the words you have",
+      "headword": "salvē — bonum vesperum — bonam noctem — valē",
+      "romanization": "salvē — bonum vesperum — bonam noctem — valē",
+      "gloss": "run one Roman day end to end, saying what actually fits each hour and marking which of those a Roman would have recognised",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b953d8c26b573452",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nine chapters of time-of-day words end here. This is the one place they all have to work at once — four meetings, one day, and no inventing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — morning to night, with the honest label on each line",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Morning. A: Salvē! Quid agis? B: Valeō. Salvē!"
+            },
+            {
+              "kind": "speech",
+              "text": "Afternoon. A: Salvē! B: Salvē!"
+            },
+            {
+              "kind": "speech",
+              "text": "Evening. A: Bonum vesperum! B: Salvē!"
+            },
+            {
+              "kind": "speech",
+              "text": "Parting at night. A: Bonam noctem! B: Valē!"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the label, which is half the payoff. Salvē, salvēte and valē are genuinely Roman and carry no clock inside them, so they work in every one of those four rows. The three bonus phrases — bonum māne, bonum vesperum, bonam noctem — are well-formed modern teaching phrases, not lines from any surviving Roman text. And the afternoon row has only salvē in it, because Latin never had a noun for \"afternoon\" for bonus to agree with."
+            },
+            {
+              "kind": "speech",
+              "text": "So the safe rule you leave with: when in doubt, salvē on arrival and valē on departure, at any hour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "all four rows aloud, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: all four rows aloud, both voices]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "mid-afternoon, and you want to be Roman becomes salvē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: mid-afternoon, and you want to be Roman → **salvē**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why it is noctem and vesperum, not nox and vesper — Latin wishes take the accusative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why it is *noctem* and *vesperum*, not *nox* and *vesper* — Latin wishes take the accusative]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "a room full of people becomes salvēte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: a room full of people → **salvēte**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two words in the whole day-cycle are genuinely attested? (Salvē and valē.) What did Rome actually have in the morning instead of a phrase? (The salūtātiō — a dawn visit, an action.) Why can bonum māne not show the accusative rule? (Māne is neuter; neuters never distinguish the two cases.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-C36-practice-afternoon-line",
+              "prompt": "You meet one person at three in the afternoon and want words a Roman would have used. Type them.",
+              "assesses": [
+                "LA-DIALOGUE-DAY-CYCLE-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "salve",
+                "salvē"
+              ],
+              "feedback": {
+                "correct": "Right: salve works at any hour, and it is the only attested option here.",
+                "incorrect": "Say salve — the everyday greeting carries no time of day."
+              }
             }
           ]
         }

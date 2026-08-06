@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "language": "german",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-23 are authored — they are the seven German chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17 is the one authored chapter that FAILS the 0.5 representativeness floor (4 of 12 introduced atoms, 0.33): it is three word lessons deep with no terminal consolidation lesson, so its payoff can only reach the last of the three. That is recorded here rather than hidden by padding assesses — the fix is a real Kopf/Haupt/Hand practice lesson, not a longer list.",
+  "chapters": [
+    {
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:ge-head-and-hand",
+      "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "GE-C17-hand",
+        "kind": "production",
+        "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand. Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor).",
+        "assesses": [
+          "GE-LEX-HAND-02",
+          "GE-SOUND-HAND-03",
+          "GE-ETYMON-HAND-04",
+          "GE-ETYMON-HAND-MANUS-05"
+        ]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "Yes and No",
+      "label": "ch:ge-yes-and-no",
+      "canDo": "I can answer yes or no in German and take nein apart into ni + ein, the same 'not one' English froze into none.",
+      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "payoff": {
+        "lesson": "GE-C18-nein",
+        "kind": "production",
+        "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE *ne chain — nōn, non, nein, nahīṃ. Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja.",
+        "assesses": [
+          "GE-LEX-JA-02",
+          "GE-LEX-NEIN-02",
+          "GE-SOUND-NEIN-03",
+          "GE-ETYMON-NEIN-04",
+          "GE-ETYMON-NEGATION-05"
+        ]
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Please",
+      "label": "ch:ge-please",
+      "canDo": "I can ask politely for something in German by putting bitte after the thing I want — Wasser, bitte.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "GE-C19-bitte-requests",
+        "kind": "task",
+        "summary": "Assemble a complete polite request out of two words already learned — Wasser, bitte — and hear the request still living inside bitte via bitten, English bid and bead. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "GE-LEX-BITTE-PLEASE-02",
+          "GE-PHRASE-WASSER-BITTE-03",
+          "GE-ETYMON-BITTE-04"
+        ]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Sorry",
+      "label": "ch:ge-sorry",
+      "canDo": "I can apologise or excuse myself in German with Entschuldigung, and reach for es tut mir leid when I mean it more.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "GE-C20-entschuldigung",
+        "kind": "production",
+        "summary": "Say Schuld, then Entschuldigung as the 'un-guilting' built on it, and switch to es tut mir leid for real regret rather than a bump in the hallway. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "GE-LEX-ENTSCHULDIGUNG-02",
+          "GE-ETYMON-ENTSCHULDIGUNG-03",
+          "GE-PRAGMATICS-SORRY-04"
+        ]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Weather",
+      "label": "ch:ge-weather",
+      "canDo": "I can talk about the weather in German — das Wetter, es ist heiß, es ist kalt, es regnet.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "GE-C21-das-wetter",
+        "kind": "production",
+        "summary": "Say das Wetter as English weather's own cousin, build hot and cold with sein rather than a Romance 'make', and say es regnet on the same root as English rain. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "GE-LEX-WETTER-02",
+          "GE-ETYMON-WETTER-03",
+          "GE-GRAMMAR-WEATHER-SEIN-04",
+          "GE-LEX-REGNET-05",
+          "GE-ETYMON-REGNET-06"
+        ]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Dog and Cat",
+      "label": "ch:ge-dog-and-cat",
+      "canDo": "I can name a dog and a cat in German and say which of the two words German inherited and which one it borrowed.",
+      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "payoff": {
+        "lesson": "GE-C22-hund-katze",
+        "kind": "production",
+        "summary": "Say Hund beside English hound and the unexplained dog that displaced it, then say Katze and admit it is the borrowed Late Latin cattus — widespread, but not universal: Romanian pisică and Serbian mačka went their own way. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "GE-LEX-HUND-02",
+          "GE-ETYMON-HUND-03",
+          "GE-LEX-KATZE-04",
+          "GE-ETYMON-KATZE-05",
+          "GE-EVIDENCE-CAT-WORDS-06"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Green and Yellow",
+      "label": "ch:ge-green-and-yellow",
+      "canDo": "I can name green and yellow in German, and say why grün is English green's own cousin while gelb's link to French jaune is only probable.",
+      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "payoff": {
+        "lesson": "GE-C23-gruen-gelb",
+        "kind": "production",
+        "summary": "Say grün as the direct cousin of English green from a root unrelated to Latin viridis, say gelb, and state the gelb / jaune cousinhood as probable rather than airtight. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "GE-LEX-GRUEN-02",
+          "GE-ETYMON-GRUEN-03",
+          "GE-LEX-GELB-04",
+          "GE-ETYMON-GELB-05",
+          "GE-EVIDENCE-GELB-JAUNE-06"
+        ]
+      }
+    }
+  ]
+}

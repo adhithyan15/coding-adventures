@@ -30,6 +30,12 @@
     {
       "category": "fs",
       "action": "write",
+      "target": "../../learning/human-languages/core/lesson-modality.json",
+      "justification": "The explicit generate:modality command refreshes the derived per-lesson modality manifest that lets the complete book, the app, and the driving edition be filtered from one source; CI normally uses the read-only check:modality drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
       "target": "../../learning/human-languages/*/narration/*.txt",
       "justification": "The explicit generate:narration command refreshes the HL08 plain-text voice script for each chapter from the canonical lesson AST; CI normally uses the read-only check:narration drift gate."
     },

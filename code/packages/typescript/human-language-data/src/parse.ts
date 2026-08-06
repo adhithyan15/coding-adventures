@@ -51,6 +51,10 @@ function classifyBlock(title: string): LessonBlockType {
   if (normalized.startsWith("you'll want to know")) return "input";
   if (normalized.startsWith("sounds you'll need")) return "pronunciation";
   if (normalized.startsWith("script")) return "script";
+  // "Writing:" opens a hand-formation section — the one detachable block type.
+  // Checked before the looser prefixes below because a writing section's title
+  // normally names the letter it teaches ("Writing: మ — the tick on top").
+  if (normalized.startsWith("writing")) return "writing";
   if (normalized.includes("taken apart")) return "etymology";
   if (normalized.startsWith("why it's said this way")) return "culture-pragmatics";
   if (
