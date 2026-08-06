@@ -1,6 +1,11 @@
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { defaultCurriculumRoot as defaultRoot, loadEverything } from "./loader.js";
+import {
+  defaultCurriculumRoot as defaultRoot,
+  loadChapterPolicy,
+  loadEverything,
+  loadTrackChapters,
+} from "./loader.js";
 import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "./report.js";
 
@@ -43,6 +48,11 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     lessons,
     books,
     modality: { maxLinearisableTableColumns: policyTableWidth(options.root ?? defaultRoot()) },
+    // HL05 gates run here, report-only. The ledgers and the policy are loaded from the
+    // same root as everything else so the published counts and the committed chapter
+    // ledgers can never be measured against different files.
+    trackChapters: loadTrackChapters(options.root),
+    chapterPolicy: loadChapterPolicy(options.root),
   });
   const json = `${JSON.stringify(report, null, 2)}\n`;
   const text = renderCurriculumGapReport(report);

@@ -1,5 +1,6 @@
 import type { ParsedLesson } from "./parse.js";
-import type { BookCorpus, LanguageRegistry } from "./types.js";
+import { runChapterGates, type ChapterGateReport } from "./chapters.js";
+import type { BookCorpus, ChapterPolicy, LanguageRegistry, TrackChapters } from "./types.js";
 import { summarizeModality, type ModalityOptions, type ModalitySummary } from "./modality.js";
 
 export const DURATION_THRESHOLD_SECONDS = 300;
@@ -89,6 +90,13 @@ export interface CurriculumGapReport {
     chaptersWithoutDrivablePrefix: number;
     /** Authored `modality:` overrides that contradict the derivation unexplained. */
     unexplainedModalityOverrides: number;
+    /**
+     * HL05 chapter-gate headline counts. `null` when the caller supplied no chapter
+     * ledgers — distinguishable from 0, which means "measured, and none found".
+     */
+    chaptersWithoutCapability: number | null;
+    chapterPayoffsNotRepresentative: number | null;
+    chapterGateCleanTracks: number | null;
   };
   duration: {
     violations: DurationEstimate[];
@@ -111,6 +119,14 @@ export interface CurriculumGapReport {
    * debt is visible and burnable, and nothing here fails a build. Gates arrive
    * per track once each track's debt clears.
    */
+  /**
+   * HL05 chapter-capability gates (HL-C03), report-only.
+   *
+   * Absent when the caller supplied no chapter ledgers, so an existing consumer that
+   * never passes them keeps its current report shape rather than seeing an empty
+   * section it cannot distinguish from "measured and found nothing".
+   */
+  chapters?: ChapterGateReport;
   modality: ModalitySummary;
 }
 
@@ -120,6 +136,10 @@ export interface CurriculumGapReportInput {
   books: BookCorpus;
   /** HL08 tunables; defaults to no table being speakable until the lineariser lands. */
   modality?: ModalityOptions;
+  /** HL05 chapter ledgers; when omitted the chapter gates do not run. */
+  trackChapters?: TrackChapters[];
+  /** HL05/HL08 thresholds; required for the chapter gates to run. */
+  chapterPolicy?: ChapterPolicy;
 }
 
 const SPOKEN_WORDS_PER_MINUTE = 120;
@@ -403,6 +423,19 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     0,
   );
 
+  // HL05 chapter gates. Only run when the caller supplied both the ledgers and the
+  // policy: the representativeness rule is meaningless without its threshold, and a
+  // silent default would publish a number measured at a floor nobody chose.
+  const chapterGates =
+    input.trackChapters && input.chapterPolicy
+      ? runChapterGates({
+          books,
+          lessons,
+          trackChapters: input.trackChapters,
+          policy: input.chapterPolicy,
+        })
+      : undefined;
+
   return {
     schemaVersion: 1,
     durationModel: {
@@ -427,6 +460,9 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       legacySchemaTracks: schemas.filter((track) => track.status === "legacy").length,
       mixedSchemaTracks: schemas.filter((track) => track.status === "mixed").length,
       version2SchemaTracks: schemas.filter((track) => track.status === "version-2").length,
+      chaptersWithoutCapability: chapterGates?.summary.chaptersWithoutCapability ?? null,
+      chapterPayoffsNotRepresentative: chapterGates?.summary.payoffsNotRepresentative ?? null,
+      chapterGateCleanTracks: chapterGates?.summary.cleanTracks ?? null,
       drivableLessons: modality.coreVoice,
       drivablePercent: modality.drivablePercent,
       chaptersWithoutDrivablePrefix,
@@ -438,6 +474,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     prerequisites: { unknown, roots, laterChapterWithoutPrerequisites },
     books: { tracks: coverage },
     schemas: { tracks: schemas },
+    chapters: chapterGates,
     modality,
   };
 }
@@ -454,6 +491,13 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
     `${summary.tracksWithoutBooks} tracks without books; ${summary.lessonChaptersWithoutBooks} lesson chapters without book chapters`,
     `${summary.legacySchemaTracks} legacy, ${summary.mixedSchemaTracks} mixed, ${summary.version2SchemaTracks} version-2 schema tracks`,
     `${summary.drivableLessons} drivable lessons (${summary.drivablePercent}% of the corpus)`,
+    ...(report.chapters
+      ? [
+          `${report.chapters.summary.chaptersWithoutCapability} of ${report.chapters.summary.bookChapters} book chapters without an HL05 capability; ` +
+            `${report.chapters.summary.payoffsNotRepresentative} payoffs below the ${report.chapters.summary.payoffRepresentativeness} representativeness floor; ` +
+            `${report.chapters.summary.cleanTracks} tracks already clean`,
+        ]
+      : []),
     "",
     "Longest effective lessons:",
   ];

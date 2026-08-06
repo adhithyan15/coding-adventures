@@ -168,6 +168,16 @@ export {
   type CurriculumGapReport,
   type CurriculumGapReportInput,
 } from "./report.js";
+export {
+  CHAPTER_GATE_CODES,
+  runChapterGates,
+  runPatternGates,
+  type ChapterGateCode,
+  type ChapterFinding,
+  type ChapterGateInput,
+  type ChapterGateReport,
+  type TrackChapterCoverage,
+} from "./chapters.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";

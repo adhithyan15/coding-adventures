@@ -1,226 +1,262 @@
-// HL05 chapter capability layer — loader and policy round-trip.
+// HL05 chapter-capability gates (HL-C03).
 //
-// This slice deliberately ships NO gates (those are HL-C03). What it must prove is
-// narrower and more foundational: that the ledger and the policy load off real disk
-// with the shapes the gates will later depend on, and that an unauthored track is
-// distinguishable from an empty one. If that distinction collapses, the gap report
-// silently loses the debt it exists to measure.
+// Each gate gets a fixture that fires it and a control that does not, because a rule
+// asserted only in its failing direction cannot tell "the gate works" from "the gate
+// always fires". The corpus block at the bottom pins the first published snapshot.
 
-import { describe, it, expect } from "vitest";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
-import {
-  loadTrackChapters,
-  loadChapterPolicy,
-  defaultCurriculumRoot,
-  loadLessons,
-} from "../src/loader.js";
-import { handwrittenBookChapters } from "../src/book-cli.js";
-import type { TrackChapters, ChapterPolicy } from "../src/types.js";
+import { describe, expect, it } from "vitest";
+import { loadChapterPolicy, loadEverything, loadTrackChapters } from "../src/loader.js";
+import { CHAPTER_GATE_CODES, runChapterGates } from "../src/chapters.js";
+import { parseLesson } from "../src/parse.js";
+import type { BookCorpus, ChapterPolicy, TrackChapters } from "../src/types.js";
 
-const policy = loadChapterPolicy();
-const ledgers = loadTrackChapters();
+const POLICY: ChapterPolicy = {
+  version: 1,
+  payoffRepresentativeness: 0.5,
+  maxNewAtomsPerLesson: 3,
+  maxNewAtomsPerChapter: 12,
+  maxLinearisableTableColumns: 3,
+};
 
-describe("chapter policy", () => {
-  it("loads with every tunable present", () => {
-    expect(policy.version).toBe(1);
-    expect(typeof policy.payoffRepresentativeness).toBe("number");
-    expect(typeof policy.maxNewAtomsPerLesson).toBe("number");
-    expect(typeof policy.maxNewAtomsPerChapter).toBe("number");
-  });
+/** A lesson that introduces the given atoms via its block directive. */
+function lesson(id: string, chapter: number, introduces: string[] = []) {
+  const directive =
+    introduces.length > 0
+      ? `<!-- hl-knowledge: introduces=[${introduces.join(", ")}]; assesses=[] -->\n\n`
+      : "";
+  return parseLesson(
+    `---\nschema_version: 2\nid: ${id}\nchapter: ${chapter}\ntype: word\n` +
+      `headword: hola\ngloss: hello\nconcept_tag: GREETING-HELLO\n---\n\n` +
+      `# ${id}\n\n## Warm-up\n\n${directive}Say it.\n`,
+    "spanish",
+  );
+}
 
-  it("keeps representativeness a share, not a count", () => {
-    expect(policy.payoffRepresentativeness).toBeGreaterThan(0);
-    expect(policy.payoffRepresentativeness).toBeLessThanOrEqual(1);
-  });
+function books(chapters: Array<{ chapter: number; title: string }>): BookCorpus {
+  return {
+    books: [
+      {
+        language: "spanish",
+        chapters: chapters.map((c) => ({ ...c, label: `ch:${c.chapter}`, tex: "x".repeat(200) })),
+      },
+    ],
+  } as unknown as BookCorpus;
+}
 
-  it("keeps the chapter ramp budget at or above the lesson budget", () => {
-    // A chapter that may introduce less than a single lesson would be incoherent.
-    expect(policy.maxNewAtomsPerChapter).toBeGreaterThanOrEqual(policy.maxNewAtomsPerLesson);
-  });
+function ledger(chapters: TrackChapters["chapters"]): TrackChapters[] {
+  return [{ version: 1, language: "spanish", chapters }];
+}
 
-  it("records the measurement its thresholds were drawn from", () => {
-    // The thresholds are only defensible if the distribution behind them is written
-    // down. Without this, a later reader cannot tell a measured value from a guess.
-    const raw = policy as ChapterPolicy & { provenance?: Record<string, unknown> };
-    expect(raw.provenance).toBeDefined();
-    expect(raw.provenance?.corpus).toBeTruthy();
-    expect(raw.provenance?.rationale).toBeTruthy();
-  });
-});
+const GOOD_CHAPTER = {
+  chapter: 1,
+  title: "Greetings",
+  label: "ch:1",
+  canDo: "I can greet someone.",
+  spineNodes: [],
+  payoff: {
+    lesson: "ES-C01-practice",
+    kind: "dialogue" as const,
+    summary: "A greeting.",
+    assesses: ["ES-LEX-HOLA"],
+  },
+};
 
-describe("chapter capability ledgers", () => {
-  it("loads at least the authored Spanish ledger", () => {
-    expect(ledgers.length).toBeGreaterThanOrEqual(1);
-    expect(ledgers.map((l) => l.language)).toContain("spanish");
-  });
-
-  it("returns ledgers in stable language order", () => {
-    const languages = ledgers.map((l) => l.language);
-    expect(languages).toEqual([...languages].sort());
-  });
-
-  it("gives every authored chapter a capability and a payoff", () => {
-    for (const ledger of ledgers) {
-      for (const chapter of ledger.chapters) {
-        expect(Number.isInteger(chapter.chapter)).toBe(true);
-        expect(chapter.title.trim()).not.toBe("");
-        expect(chapter.label.trim()).not.toBe("");
-        expect(chapter.canDo.trim()).not.toBe("");
-        expect(chapter.payoff.lesson.trim()).not.toBe("");
-        expect(chapter.payoff.summary.trim()).not.toBe("");
-        expect(chapter.payoff.assesses.length).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it("states each canDo in the first person, as the reader's own claim", () => {
-    for (const ledger of ledgers) {
-      for (const chapter of ledger.chapters) {
-        expect(chapter.canDo.startsWith("I can ")).toBe(true);
-      }
-    }
-  });
-
-  it("uses one entry per chapter number per track", () => {
-    for (const ledger of ledgers) {
-      const numbers = ledger.chapters.map((c) => c.chapter);
-      expect(new Set(numbers).size).toBe(numbers.length);
-    }
-  });
-
-  it("points every payoff at a lesson that exists in that same chapter", () => {
-    const lessons = loadLessons();
-    const byId = new Map(lessons.map((l) => [String(l.frontmatter.id), l]));
-    for (const ledger of ledgers) {
-      for (const chapter of ledger.chapters) {
-        const lesson = byId.get(chapter.payoff.lesson);
-        expect(lesson, `${ledger.language} ch${chapter.chapter} payoff`).toBeDefined();
-        expect(lesson?.language).toBe(ledger.language);
-        expect(Number(lesson?.frontmatter.chapter)).toBe(chapter.chapter);
-      }
-    }
-  });
-
-  it("only claims atoms the payoff lesson actually practises", () => {
-    // The payoff's `assesses` is a claim about a real lesson. If it can drift from
-    // that lesson's own declared practice set, the representativeness gate would be
-    // measuring authored optimism rather than taught material.
-    const lessons = loadLessons();
-    const byId = new Map(lessons.map((l) => [String(l.frontmatter.id), l]));
-    for (const ledger of ledgers) {
-      for (const chapter of ledger.chapters) {
-        const lesson = byId.get(chapter.payoff.lesson);
-        const practised = new Set(
-          (lesson?.frontmatter["practises.knowledge"] as string[] | undefined) ?? [],
-        );
-        for (const atom of chapter.payoff.assesses) {
-          expect(practised.has(atom), `${chapter.payoff.lesson} practises ${atom}`).toBe(true);
-        }
-      }
-    }
-  });
-
-  it("matches the titles and labels the book generator still owns", () => {
-    // HL-C04 inverts this dependency so chapters.json becomes canonical. Until then
-    // the two must agree, or the transition would silently rename printed chapters.
-    const config = JSON.parse(
-      readFileSync(join(defaultCurriculumRoot(), "core", "book-generation.json"), "utf8"),
-    ) as { targets: { language: string; chapter: number; title: string; label: string }[] };
-    for (const ledger of ledgers) {
-      for (const chapter of ledger.chapters) {
-        const target = config.targets.find(
-          (t) => t.language === ledger.language && t.chapter === chapter.chapter,
-        );
-        if (!target) continue;
-        expect(chapter.title).toBe(target.title);
-        expect(chapter.label).toBe(target.label);
-      }
-    }
-  });
-
-  it("matches the titles and labels of the hand-written chapters too", () => {
-    // The generator owns only part of each book. Early chapters were written by hand
-    // before the manifest existed, so the check above found no target and skipped them
-    // — which left their ledger titles verified by nothing at all. `handwritten[]`
-    // closes that hole: every chapter a ledger claims is now checked against one of the
-    // two lists, so HL-C04 cannot silently rename a printed chapter on the way through.
-    const handwritten = handwrittenBookChapters();
-    for (const ledger of ledgers) {
-      for (const chapter of ledger.chapters) {
-        const entry = handwritten.find(
-          (h) => h.language === ledger.language && h.chapter === chapter.chapter,
-        );
-        if (!entry) continue;
-        expect(chapter.title, `${ledger.language} ch${chapter.chapter} title`).toBe(entry.title);
-        expect(chapter.label, `${ledger.language} ch${chapter.chapter} label`).toBe(entry.label);
-      }
-    }
-  });
-
-  it("leaves no ledger chapter unchecked by either list", () => {
-    // The guard on the two tests above: without this, deleting an entry from either list
-    // would turn a real assertion into a silent `continue` and nothing would notice.
-    const config = JSON.parse(
-      readFileSync(join(defaultCurriculumRoot(), "core", "book-generation.json"), "utf8"),
-    ) as { targets: { language: string; chapter: number }[] };
-    const handwritten = handwrittenBookChapters();
-    for (const ledger of ledgers) {
-      for (const chapter of ledger.chapters) {
-        const covered =
-          config.targets.some(
-            (t) => t.language === ledger.language && t.chapter === chapter.chapter,
-          ) ||
-          handwritten.some(
-            (h) => h.language === ledger.language && h.chapter === chapter.chapter,
-          );
-        expect(covered, `${ledger.language} ch${chapter.chapter} has no title/label source`).toBe(
-          true,
-        );
-      }
-    }
+describe("the gate catalogue", () => {
+  it("publishes all nine HL05 codes", () => {
+    expect(CHAPTER_GATE_CODES).toHaveLength(9);
+    expect(CHAPTER_GATE_CODES).toContain("chapter-missing-capability");
+    expect(CHAPTER_GATE_CODES).toContain("pattern-multiple-atoms");
   });
 });
 
-describe("loadTrackChapters on a synthetic root", () => {
-  function withRoot(build: (root: string) => void): TrackChapters[] {
-    const root = mkdtempSync(join(tmpdir(), "hl-chapters-"));
-    try {
-      build(root);
-      return loadTrackChapters(root);
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  }
-
-  it("skips tracks with no ledger rather than inventing one", () => {
-    const loaded = withRoot((root) => {
-      mkdirSync(join(root, "klingon"));
-      // no chapters.json written
+describe("the chapter gates", () => {
+  it("CONTROL: a well-formed chapter fires nothing", () => {
+    const report = runChapterGates({
+      books: books([{ chapter: 1, title: "Greetings" }]),
+      lessons: [lesson("ES-C01-hola", 1, ["ES-LEX-HOLA"]), lesson("ES-C01-practice", 1)],
+      trackChapters: ledger([GOOD_CHAPTER]),
+      policy: POLICY,
     });
-    expect(loaded).toEqual([]);
+    expect(report.findings).toEqual([]);
+    expect(report.tracks[0]?.clean).toBe(true);
   });
 
-  it("distinguishes an unauthored track from an authored-but-empty one", () => {
-    // This is the distinction the gap report depends on: "not yet written" and
-    // "written, covering nothing" are different kinds of debt.
-    const loaded = withRoot((root) => {
-      mkdirSync(join(root, "absent"));
-      mkdirSync(join(root, "empty"));
-      writeFileSync(
-        join(root, "empty", "chapters.json"),
-        JSON.stringify({ version: 1, language: "empty", chapters: [] }),
-      );
+  it("chapter-missing-capability: a book chapter with no ledger entry", () => {
+    const report = runChapterGates({
+      books: books([
+        { chapter: 1, title: "Greetings" },
+        { chapter: 2, title: "Farewells" },
+      ]),
+      lessons: [lesson("ES-C01-hola", 1, ["ES-LEX-HOLA"]), lesson("ES-C01-practice", 1)],
+      trackChapters: ledger([GOOD_CHAPTER]),
+      policy: POLICY,
     });
-    expect(loaded.map((l) => l.language)).toEqual(["empty"]);
-    expect(loaded[0]?.chapters).toEqual([]);
+    expect(report.findings.map((f) => f.code)).toEqual(["chapter-missing-capability"]);
+    expect(report.findings[0]?.chapter).toBe(2);
+    expect(report.summary.chaptersWithoutCapability).toBe(1);
   });
 
-  it("ignores stray files that are not directories", () => {
-    const loaded = withRoot((root) => {
-      writeFileSync(join(root, "README.md"), "not a track");
+  it("chapter-unknown-payoff-lesson: the payoff names a lesson that does not exist", () => {
+    const report = runChapterGates({
+      books: books([{ chapter: 1, title: "Greetings" }]),
+      lessons: [lesson("ES-C01-hola", 1, ["ES-LEX-HOLA"])],
+      trackChapters: ledger([GOOD_CHAPTER]),
+      policy: POLICY,
     });
-    expect(loaded).toEqual([]);
+    expect(report.findings.map((f) => f.code)).toContain("chapter-unknown-payoff-lesson");
+  });
+
+  it("chapter-payoff-not-closed: the payoff assesses an atom taught LATER", () => {
+    const report = runChapterGates({
+      books: books([{ chapter: 1, title: "Greetings" }]),
+      lessons: [
+        lesson("ES-C01-practice", 1),
+        // Taught in chapter 2 — the reader does not have it yet at chapter 1.
+        lesson("ES-C02-adios", 2, ["ES-LEX-ADIOS"]),
+      ],
+      trackChapters: ledger([
+        { ...GOOD_CHAPTER, payoff: { ...GOOD_CHAPTER.payoff, assesses: ["ES-LEX-ADIOS"] } },
+      ]),
+      policy: POLICY,
+    });
+    expect(report.findings.map((f) => f.code)).toContain("chapter-payoff-not-closed");
+  });
+
+  it("CONTROL: an atom taught in an EARLIER chapter is closed", () => {
+    const report = runChapterGates({
+      books: books([{ chapter: 2, title: "Farewells" }]),
+      lessons: [lesson("ES-C01-hola", 1, ["ES-LEX-HOLA"]), lesson("ES-C02-practice", 2)],
+      trackChapters: ledger([
+        {
+          ...GOOD_CHAPTER,
+          chapter: 2,
+          title: "Farewells",
+          payoff: { ...GOOD_CHAPTER.payoff, lesson: "ES-C02-practice", assesses: ["ES-LEX-HOLA"] },
+        },
+      ]),
+      policy: POLICY,
+    });
+    expect(report.findings.map((f) => f.code)).not.toContain("chapter-payoff-not-closed");
+  });
+
+  it("chapter-payoff-not-representative: assessing one atom of four is below the floor", () => {
+    const report = runChapterGates({
+      books: books([{ chapter: 1, title: "Greetings" }]),
+      lessons: [
+        lesson("ES-C01-a", 1, ["A1", "A2", "A3", "A4"]),
+        lesson("ES-C01-practice", 1),
+      ],
+      trackChapters: ledger([
+        { ...GOOD_CHAPTER, payoff: { ...GOOD_CHAPTER.payoff, assesses: ["A1"] } },
+      ]),
+      policy: POLICY,
+    });
+    const codes = report.findings.map((f) => f.code);
+    expect(codes).toContain("chapter-payoff-not-representative");
+    // Half of four clears the same floor — the rule is a threshold, not a demand for all.
+    const ok = runChapterGates({
+      books: books([{ chapter: 1, title: "Greetings" }]),
+      lessons: [lesson("ES-C01-a", 1, ["A1", "A2", "A3", "A4"]), lesson("ES-C01-practice", 1)],
+      trackChapters: ledger([
+        { ...GOOD_CHAPTER, payoff: { ...GOOD_CHAPTER.payoff, assesses: ["A1", "A2"] } },
+      ]),
+      policy: POLICY,
+    });
+    expect(ok.findings.map((f) => f.code)).not.toContain("chapter-payoff-not-representative");
+  });
+
+  it("chapter-duplicate: two entries for one chapter number", () => {
+    const report = runChapterGates({
+      books: books([{ chapter: 1, title: "Greetings" }]),
+      lessons: [lesson("ES-C01-hola", 1, ["ES-LEX-HOLA"]), lesson("ES-C01-practice", 1)],
+      trackChapters: ledger([GOOD_CHAPTER, { ...GOOD_CHAPTER }]),
+      policy: POLICY,
+    });
+    expect(report.findings.map((f) => f.code)).toContain("chapter-duplicate");
+  });
+
+  it("chapter-title-drift: the book and the ledger disagree about the name", () => {
+    const report = runChapterGates({
+      books: books([{ chapter: 1, title: "Hello and Good Day" }]),
+      lessons: [lesson("ES-C01-hola", 1, ["ES-LEX-HOLA"]), lesson("ES-C01-practice", 1)],
+      trackChapters: ledger([GOOD_CHAPTER]),
+      policy: POLICY,
+    });
+    expect(report.findings.map((f) => f.code)).toContain("chapter-title-drift");
+  });
+
+  it("collects across every chapter instead of stopping at the first", () => {
+    const report = runChapterGates({
+      books: books([
+        { chapter: 1, title: "Greetings" },
+        { chapter: 2, title: "Farewells" },
+        { chapter: 3, title: "Numbers" },
+      ]),
+      lessons: [lesson("ES-C01-practice", 1)],
+      trackChapters: ledger([GOOD_CHAPTER]),
+      policy: POLICY,
+    });
+    // Chapters 2 and 3 are both missing; the run does not stop after chapter 2.
+    expect(report.findings.filter((f) => f.code === "chapter-missing-capability")).toHaveLength(2);
+  });
+});
+
+describe("corpus snapshot", () => {
+  // The first published measurement (HL-C03). These are DEBT counts, not a pass mark:
+  // the gates are report-only precisely because this debt predates them. Ratchet them
+  // DOWN as tracks are authored; never up.
+  //
+  // The `payoffsNotClosed: 0` line is the one that matters most. It was 279 — every
+  // authored chapter — on the first run, which was a bug in this module rather than the
+  // corpus: `introduces.knowledge` is a FLAT dotted frontmatter key plus a block-level
+  // directive, and reading a nested `introduces.knowledge` object returned undefined for
+  // every lesson, emptying the "taught so far" set. A gate that reports total failure is
+  // reporting on itself.
+  it("pins the first published chapter-gate snapshot", () => {
+    const { books: corpus, lessons } = loadEverything();
+    const report = runChapterGates({
+      books: corpus,
+      lessons,
+      trackChapters: loadTrackChapters(),
+      policy: loadChapterPolicy(),
+    });
+    expect(report.summary.bookChapters).toBe(377);
+    expect(report.summary.declaredChapters).toBe(279);
+    expect(report.summary.chaptersWithoutCapability).toBe(98);
+    expect(report.summary.payoffsNotClosed).toBe(0);
+    expect(report.summary.unknownPayoffLessons).toBe(0);
+    expect(report.summary.titleDrift).toBe(0);
+    expect(report.summary.duplicateChapters).toBe(0);
+    expect(report.summary.payoffsNotRepresentative).toBe(24);
+  });
+
+  it("names the tracks whose chapter debt is already zero", () => {
+    const { books: corpus, lessons } = loadEverything();
+    const report = runChapterGates({
+      books: corpus,
+      lessons,
+      trackChapters: loadTrackChapters(),
+      policy: loadChapterPolicy(),
+    });
+    // These three may flip to hard errors today; the rest flip as their debt clears.
+    expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
+      "chinese",
+      "japanese",
+      "latin",
+    ]);
+  });
+
+  it("finds no pattern lessons yet, because HL-C05 has not landed", () => {
+    const { books: corpus, lessons } = loadEverything();
+    const report = runChapterGates({
+      books: corpus,
+      lessons,
+      trackChapters: loadTrackChapters(),
+      policy: loadChapterPolicy(),
+    });
+    const pattern = report.findings.filter((f) => f.code.startsWith("pattern-"));
+    // Zero is the correct answer, not a stub: the rules are wired so the first authored
+    // pattern lesson is checked the moment it exists.
+    expect(pattern).toEqual([]);
   });
 });
