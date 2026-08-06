@@ -731,10 +731,14 @@ ZipStatus zip_reader_read(ZipReader *r, const ZipEntry *entry,
         return ZIP_OK; /* no data; out/out_len already NULL/0 */
     }
 
-    /* Aggregate decompression-bomb budget, checked against the DECLARED size
-     * before spending any CPU decompressing. Actual output is trimmed to
-     * this size below (never expanded past it), so the declared size is a
-     * valid upper bound for this check. See zip.h "Security". */
+    /* Aggregate decompression-bomb budget: cheap FAST-PATH check against the
+     * DECLARED size, before spending any CPU decompressing. This is only an
+     * optimization for the honest/oversized-on-its-face case -- entry->size
+     * comes from the (untrusted) Central Directory and is NOT trustworthy on
+     * its own, so this is deliberately not the only check; the real,
+     * authoritative check runs after decompression against the bytes
+     * actually produced (see below, right after the switch on method). See
+     * zip.h "Security". */
     {
         uint64_t projected =
             (uint64_t)r->total_uncompressed + (uint64_t)entry->size;
@@ -805,6 +809,33 @@ ZipStatus zip_reader_read(ZipReader *r, const ZipEntry *entry,
             return ZIP_ERR_UNSUPPORTED_METHOD;
     }
 
+    /* Second (REAL) aggregate-budget check, against the ACTUAL bytes just
+     * produced -- not the declared entry->size checked above.
+     *
+     * The pre-decompression check above is only a cheap fast-path: it trusts
+     * entry->size, but entry->size comes straight from the (attacker-
+     * controlled) Central Directory and need not match what the DEFLATE
+     * stream actually inflates to. An entry can declare a tiny
+     * uncompressed_size (with a CRC-32 crafted to match just that many
+     * bytes) while its real stream decompresses to up to c/deflate's own
+     * per-entry cap (DEFLATE_MAX_OUTPUT, 256 MiB) -- so trusting only the
+     * declared size here would let many such entries each do up to 256 MiB
+     * of real decompression work while charging only a handful of bytes
+     * against the aggregate budget, defeating the very guard this budget
+     * exists to provide (caught in security review). Charging the true
+     * pre-trim size closes that gap; the later trim to entry->size is purely
+     * about what's returned to the caller / fed to the CRC check, not about
+     * how much real work was already done. */
+    {
+        uint64_t projected_actual =
+            (uint64_t)r->total_uncompressed + (uint64_t)decompressed_len;
+        if (projected_actual > (uint64_t)r->max_total_uncompressed) {
+            free(decompressed);
+            return ZIP_ERR_TOO_LARGE;
+        }
+    }
+    r->total_uncompressed += decompressed_len;
+
     /* Trim to the declared uncompressed size (guards against a decompressor
      * that produced more bytes than promised); matches the reference Rust
      * implementation's behaviour exactly. */
@@ -820,7 +851,6 @@ ZipStatus zip_reader_read(ZipReader *r, const ZipEntry *entry,
         }
     }
 
-    r->total_uncompressed += decompressed_len;
     *out = decompressed;
     *out_len = decompressed_len;
     return ZIP_OK;

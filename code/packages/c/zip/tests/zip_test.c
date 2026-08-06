@@ -958,6 +958,95 @@ static void test_aggregate_budget_many_small_entries(void) {
     free(archive);
 }
 
+/* Regression test for a security-review finding: the aggregate budget must
+ * be charged against the REAL decompressed size, not the declared
+ * (attacker-controlled) Central Directory `uncompressed_size` field.
+ *
+ * Without the fix, a crafted entry could declare a tiny uncompressed_size
+ * (with a CRC-32 matching just that many trimmed bytes) while its DEFLATE
+ * stream actually inflates to something far larger -- so the budget check
+ * (which only looked at the declared size) would never trip, even though
+ * real, expensive decompression work happened on every such read. This
+ * builds exactly that: a real 50,000-byte compressible payload, written
+ * normally (so it round-trips and compresses for real), then the Central
+ * Directory copy's uncompressed_size and crc32 fields are patched by hand to
+ * describe only the first 4 bytes of that payload -- a "small on paper,
+ * large for real" entry. */
+static void test_aggregate_budget_rejects_declared_size_lie(void) {
+    size_t payload_len;
+    unsigned char *payload =
+        repeat_bytes((const unsigned char *)"0123456789", 10, 5000, &payload_len);
+    ZipFile entry;
+    unsigned char *archive = NULL;
+    size_t archive_len = 0;
+    size_t cd_pos = 0;
+    int found_cd = 0;
+    size_t i;
+    uint32_t lie_size = 4;
+    uint32_t lie_crc;
+    ZipReader *r = NULL;
+    unsigned char *out = NULL;
+    size_t out_len = 0;
+    const ZipEntry *e;
+
+    entry.name = (char *)"lie.bin";
+    entry.data = payload;
+    entry.len = payload_len;
+
+    ISO_CHECK(zip_bytes(&entry, 1, &archive, &archive_len) == ZIP_OK);
+    /* This payload is highly repetitive, so DEFLATE must have compressed it
+     * (method 8) -- if it hadn't, the "declared size lie" below wouldn't
+     * demonstrate anything, since Stored data's on-wire length already
+     * equals the true decompressed length. */
+    ISO_CHECK_MSG(archive_len < payload_len,
+                 "test payload must actually compress for this regression"
+                 " test to be meaningful");
+
+    /* Find the single Central Directory entry by its signature bytes. */
+    for (i = 0; i + 4 <= archive_len; i++) {
+        if (archive[i] == 0x50 && archive[i + 1] == 0x4b &&
+            archive[i + 2] == 0x01 && archive[i + 3] == 0x02) {
+            cd_pos = i;
+            found_cd = 1;
+            break;
+        }
+    }
+    ISO_CHECK_MSG(found_cd, "Central Directory entry signature not found");
+    ISO_CHECK(archive_len > cd_pos + 28);
+
+    /* Patch uncompressed_size (CD offset +24) down to 4 bytes... */
+    archive[cd_pos + 24] = (unsigned char)(lie_size & 0xFFu);
+    archive[cd_pos + 25] = (unsigned char)((lie_size >> 8) & 0xFFu);
+    archive[cd_pos + 26] = (unsigned char)((lie_size >> 16) & 0xFFu);
+    archive[cd_pos + 27] = (unsigned char)((lie_size >> 24) & 0xFFu);
+    /* ...and crc32 (CD offset +16) to match just those first 4 real bytes,
+     * so the post-trim CRC check still passes -- this is what a real
+     * attacker crafting the archive by hand would also do. */
+    lie_crc = zip_crc32(payload, lie_size, 0);
+    archive[cd_pos + 16] = (unsigned char)(lie_crc & 0xFFu);
+    archive[cd_pos + 17] = (unsigned char)((lie_crc >> 8) & 0xFFu);
+    archive[cd_pos + 18] = (unsigned char)((lie_crc >> 16) & 0xFFu);
+    archive[cd_pos + 19] = (unsigned char)((lie_crc >> 24) & 0xFFu);
+
+    /* Budget comfortably above the LIE (4 bytes) but well below the REAL
+     * decompressed size (50,000 bytes): must be rejected. */
+    ISO_CHECK(zip_reader_new_with_budget(archive, archive_len, 1000, &r) ==
+             ZIP_OK);
+    e = zip_reader_entry(r, 0);
+    ISO_CHECK(e != NULL);
+    if (e) {
+        ISO_CHECK_EQ_UINT(e->size, lie_size); /* the lie, as parsed */
+        ISO_CHECK_MSG(
+            zip_reader_read(r, e, &out, &out_len) == ZIP_ERR_TOO_LARGE,
+            "a declared-size lie must not bypass the aggregate budget");
+        ISO_CHECK(out == NULL);
+    }
+
+    zip_reader_free(r);
+    free(archive);
+    free(payload);
+}
+
 /* ---- main ------------------------------------------------------------------- */
 
 int main(void) {
@@ -989,6 +1078,7 @@ int main(void) {
 
     test_aggregate_budget_single_entry();
     test_aggregate_budget_many_small_entries();
+    test_aggregate_budget_rejects_declared_size_lie();
 
     return ISO_TEST_RESULT();
 }
