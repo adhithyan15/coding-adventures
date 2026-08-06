@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c79bbb8df3d255e8",
+  "sourceHash": "fnv1a64:ba7fd3e31221dfe9",
   "summary": {
-    "totalLessons": 1134,
-    "voice": 957,
+    "totalLessons": 1140,
+    "voice": 963,
     "sight": 124,
     "pen": 53,
-    "drivableLessons": 957,
+    "drivableLessons": 963,
     "drivablePercent": 84,
     "trackCount": 22,
-    "chapterCount": 377,
-    "drivablePrefixTotal": 825,
-    "fullyDrivableChapters": 284,
+    "chapterCount": 380,
+    "drivablePrefixTotal": 831,
+    "fullyDrivableChapters": 287,
     "unstartableChapters": 44,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "arabic",
-      "lessonCount": 71,
-      "voice": 50,
+      "lessonCount": 77,
+      "voice": 56,
       "sight": 5,
       "pen": 16,
-      "drivablePercent": 70,
-      "drivablePrefixTotal": 42,
+      "drivablePercent": 73,
+      "drivablePrefixTotal": 48,
       "modalities": [
         "voice",
         "sight",
@@ -489,6 +489,57 @@
           "drivable": true,
           "drivableLessonIds": [
             "AR-C27-tusbih-ala-khayr"
+          ]
+        },
+        {
+          "chapter": 28,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "AR-C28-dhahaba",
+            "AR-C28-jaa"
+          ]
+        },
+        {
+          "chapter": 29,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "AR-C29-qala",
+            "AR-C29-raa"
+          ]
+        },
+        {
+          "chapter": 30,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "AR-C30-arafa",
+            "AR-C30-akala"
           ]
         }
       ]
@@ -7814,6 +7865,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:7f336d22da3abfe2"
+    },
+    {
+      "id": "AR-C28-dhahaba",
+      "language": "arabic",
+      "chapter": 28,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20ee1b4f18263d8d"
+    },
+    {
+      "id": "AR-C28-jaa",
+      "language": "arabic",
+      "chapter": 28,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d60f205ab777646"
+    },
+    {
+      "id": "AR-C29-qala",
+      "language": "arabic",
+      "chapter": 29,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce20844fd21afc59"
+    },
+    {
+      "id": "AR-C29-raa",
+      "language": "arabic",
+      "chapter": 29,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fef39f3ff85a08c5"
+    },
+    {
+      "id": "AR-C30-arafa",
+      "language": "arabic",
+      "chapter": 30,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ce3988b76cd6848"
+    },
+    {
+      "id": "AR-C30-akala",
+      "language": "arabic",
+      "chapter": 30,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7474171579a55797"
     },
     {
       "id": "BN-C01-achchha",

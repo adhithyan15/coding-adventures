@@ -680,23 +680,44 @@ describe("corpus regression", () => {
   // alone. The prefix and chapter rollups move much further than the raw counts because
   // a single unspeakable table near the front of a chapter used to block everything
   // behind it — which is why unstartable chapters fall by nearly two thirds.
+  //
+  // The Arabic core-verb arc then added six lessons — the track's first verbs — across
+  // three new chapters (28 Going and Coming, 29 Saying and Seeing, 30 Knowing and
+  // Eating), one canonical `VERB-*` concept each: dhahaba, jāʾa, qāla, raʾā, ʿarafa,
+  // akala. Every one of the six lands `voice`, and that is a measured result rather than
+  // a target: the Arabic letters each verb needs (ذ, ق, ى, ف) are taught inline in prose
+  // — "dāl plus one dot above", "yāʾ stripped of its dots" — in `input` blocks with no
+  // table, no `script` block and no sight cue, which is exactly how the track's existing
+  // "letters in this word" sections already classify. The split is therefore +6 voice,
+  // +0 sight, +0 pen:
+  //
+  //   totalLessons  1134 -> 1140      voice   957 -> 963  (+6)
+  //   sight          124 ->  124      pen      53 ->  53  (both unchanged)
+  //   drivableLessons 957 ->  963     drivablePercent 84 -> 84 (unchanged; 963/1140)
+  //   chapterCount   377 ->  380      fullyDrivableChapters 284 -> 287  (+3)
+  //   drivablePrefixTotal 825 -> 831  unstartableChapters 44 -> 44 (unchanged)
+  //
+  // The three new chapters are fully drivable end to end, so `fullyDrivableChapters` and
+  // `drivablePrefixTotal` both take the whole +6/+3 rather than a fraction of it: nothing
+  // blocks a prefix anywhere in the arc. `drivablePercent` holds at 84 because the added
+  // lessons are drivable at very close to the corpus's existing share.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1134,
-      voice: 957,
+      totalLessons: 1140,
+      voice: 963,
       sight: 124,
       pen: 53,
-      drivableLessons: 957,
+      drivableLessons: 963,
       drivablePercent: 84,
       trackCount: 22,
-      chapterCount: 377,
-      // Prerequisite order still costs a commuter 132 of the 957 ear-only lessons:
+      chapterCount: 380,
+      // Prerequisite order still costs a commuter 132 of the 963 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 825,
-      fullyDrivableChapters: 284,
+      drivablePrefixTotal: 831,
+      fullyDrivableChapters: 287,
       unstartableChapters: 44,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,

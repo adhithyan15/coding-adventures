@@ -248,6 +248,36 @@
       "tex": "arabic/book/chapters/ch27-good-night.tex"
     },
     {
+      "language": "arabic",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:c7782c0d45492fde",
+      "lessonIds": [
+        "AR-C28-dhahaba",
+        "AR-C28-jaa"
+      ],
+      "tex": "arabic/book/chapters/ch28-going-and-coming.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:3cd401a4e59d594a",
+      "lessonIds": [
+        "AR-C29-qala",
+        "AR-C29-raa"
+      ],
+      "tex": "arabic/book/chapters/ch29-saying-and-seeing.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:bd125585f402d92d",
+      "lessonIds": [
+        "AR-C30-arafa",
+        "AR-C30-akala"
+      ],
+      "tex": "arabic/book/chapters/ch30-knowing-and-eating.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:28baeae54e13a2dc",

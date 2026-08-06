@@ -1348,6 +1348,30 @@
       "scriptSet": "arabic-main"
     },
     {
+      "language": "arabic",
+      "chapter": 28,
+      "title": "Going and Coming",
+      "label": "ch:ar-going-and-coming",
+      "output": "arabic/book/chapters/ch28-going-and-coming.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "title": "Saying and Seeing",
+      "label": "ch:ar-saying-and-seeing",
+      "output": "arabic/book/chapters/ch29-saying-and-seeing.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "title": "Knowing and Eating",
+      "label": "ch:ar-knowing-and-eating",
+      "output": "arabic/book/chapters/ch30-knowing-and-eating.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "title": "Numbers One to Five",

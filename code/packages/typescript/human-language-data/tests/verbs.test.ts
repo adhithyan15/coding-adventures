@@ -66,20 +66,43 @@ describe("coverage", () => {
 });
 
 describe("corpus snapshot", () => {
-  // The honest starting line. Every number here should go UP; none may go down.
-  it("pins the core verb baseline: canonical verbs exist, nothing realizes them yet", () => {
+  // The burn-down. Every number here should move in the direction of MORE coverage;
+  // none may go backwards.
+  //
+  // The starting line was 0 of 40 in all 22 tracks — not because the tracks taught no
+  // verbs (Spanish teaches nineteen) but because every existing verb tag was NAMESPACED
+  // and therefore joined nothing. Adding the canonical concepts was the enabling step.
+  //
+  // Arabic is the first track to actually realize any of them: six core verbs, taught
+  // one word per lesson across three new chapters — dhahaba (VERB-GO), jāʾa (VERB-COME),
+  // qāla (VERB-SAY), raʾā (VERB-SEE), ʿarafa (VERB-KNOW), akala (VERB-EAT). So:
+  //
+  //   tracksWithNoCoreVerb   22 -> 21   (Arabic left the zero column)
+  //   universallyMissing     40 -> 34   (the six Arabic now teaches are no longer
+  //                                      missing EVERYWHERE — they are still missing
+  //                                      from the other 21 tracks)
+  //   meanCoveredPercent      0 ->  1   (one track at 15%, twenty-one at 0, rounded)
+  it("pins core verb coverage: Arabic is the first track off zero", () => {
     const { lessons, taxonomy } = loadEverything();
     const report = verbCoverage(lessons, taxonomy);
 
     expect(report.summary.coreVerbCount).toBe(40);
+    expect(report.summary.tracksWithNoCoreVerb).toBe(21);
+    expect(report.summary.universallyMissing).toHaveLength(34);
+    expect(report.summary.meanCoveredPercent).toBe(1);
 
-    // 0 of 40, in all 22 tracks. Not because the tracks teach no verbs — Spanish teaches
-    // nineteen — but because every existing verb tag is NAMESPACED and therefore joins
-    // nothing. Adding the canonical concepts is the enabling step; realizing them is the
-    // authoring work this number tracks.
-    expect(report.summary.tracksWithNoCoreVerb).toBe(22);
-    expect(report.summary.universallyMissing).toHaveLength(40);
-    expect(report.summary.meanCoveredPercent).toBe(0);
+    // The six, in taxonomy order, so a regression that silently drops one is visible
+    // as a named verb rather than as a count.
+    const arabic = report.tracks.find((track) => track.language === "arabic")!;
+    expect(arabic.covered).toEqual([
+      "VERB-GO",
+      "VERB-COME",
+      "VERB-SAY",
+      "VERB-SEE",
+      "VERB-KNOW",
+      "VERB-EAT",
+    ]);
+    expect(arabic.coveredPercent).toBe(15);
 
     // The existing namespaced verbs are still counted, so the work already done is
     // visible rather than erased.

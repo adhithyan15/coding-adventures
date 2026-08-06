@@ -220,8 +220,12 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
-    expect(report.summary.bookChapters).toBe(377);
-    expect(report.summary.declaredChapters).toBe(279);
+    // 380/282, not 377/279: the Arabic core-verb arc added three chapters (28 Going and
+    // Coming, 29 Saying and Seeing, 30 Knowing and Eating) and a ledger entry for each,
+    // so both counts move by the same +3 and `chaptersWithoutCapability` holds at 98 —
+    // the new chapters carry an authored canDo and payoff, adding no debt.
+    expect(report.summary.bookChapters).toBe(380);
+    expect(report.summary.declaredChapters).toBe(282);
     expect(report.summary.chaptersWithoutCapability).toBe(98);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);

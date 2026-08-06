@@ -198,16 +198,19 @@ describe("exam alignment", () => {
 describe("corpus snapshot", () => {
   // The measured answer to "how far is each track from A1, and from Advanced?"
   //
-  // Ratchet these as content lands. `A2: 0` is the headline: the A2 spine tranche exists
-  // but NO track has realized a single node of it, so the whole corpus sits at or below
-  // A1 and "Advanced" does not exist anywhere yet.
+  // Ratchet these as content lands. `A2` was 0 for the whole life of this snapshot: the
+  // A2 spine tranche existed but NO track had realized a single node of it. The Arabic
+  // core-verb arc is the first to cross that line — six lessons placed on
+  // SPINE-SAY-WHAT-I-DO, so `A2: 0 -> 6` and everything else here holds. The six are new
+  // lessons rather than relocated ones, which is why `pre-A1` and `A1` do not move and
+  // `unmapped`/`mappedPercent` are untouched: all six sit in an authored path segment.
   it("pins where the corpus actually stands on the ladder", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
     expect(summary.byLevel["pre-A1"]).toBe(657);
     expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(0);
+    expect(summary.byLevel.A2).toBe(6);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -219,10 +222,14 @@ describe("corpus snapshot", () => {
     expect(summary.mappedPercent).toBe(85);
   });
 
-  it("shows no track has reached A2, and five have not reached A1", () => {
+  it("shows exactly one track has reached A2, and five have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
-    expect(summary.tracks.every((track) => track.reach !== "A2")).toBe(true);
+    // Arabic alone, and only just: six core verbs on SPINE-SAY-WHAT-I-DO. The rest of
+    // the A2 tranche — negation, wanting, past, future — is still unrealized everywhere,
+    // so this list must stay short until that work lands rather than being widened.
+    expect(summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language))
+      .toEqual(["arabic"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
     ).toEqual(["chinese", "japanese", "persian", "russian", "urdu"]);
