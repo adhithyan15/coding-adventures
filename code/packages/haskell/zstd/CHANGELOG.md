@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.1.2
+
+Audited for the Repeated-Offset (R1/R2/R3) sequence-decoding gap first
+found and fixed in the sibling `c/zstd` port (PR #9941) and documented in
+`lessons.md` Lesson 100, and confirmed present here too via real `zstd` CLI
+interop testing.
+
+### Fixed
+
+- **The decoder treated every Offset_Value as an explicit distance
+  (`Offset_Value - 3`), which is wrong for Offset_Value in {1, 2, 3}.**
+  Per RFC 8878 §3.1.1.3.2.1.1, those three values are "repeat codes": they
+  reference one of three tracked recent offsets (`Repeated_Offset1/2/3`,
+  frame-scoped, defaulting to `1/4/8` "for the first block" and threaded
+  unmodified through Raw/RLE blocks) rather than encoding a literal
+  distance, with a further wrinkle when the current sequence's
+  `Literals_Length` is 0 ("repeated offsets are shifted by 1"). This
+  package's own encoder never emits Offset_Value <= 3 (the minimum
+  possible LZ77 match offset is 1, so `rawOffset = offset + 3 >= 4`
+  always), so no self-round-trip test -- including the FSE-codec interop
+  tests added for Lesson 95 -- ever exercised this decode path. Real
+  `zstd` encoders use repeat offsets constantly (they are one of the
+  format's principal entropy wins, especially for periodic/repetitive
+  data), so this decoder would previously fail or silently misdecode a
+  meaningful fraction of real-world `.zst` files -- for example, a long
+  run of one repeated byte, which real `zstd` compresses as a single
+  Compressed block whose one sequence reuses `Repeated_Offset1` rather
+  than an RLE block or an explicit offset. Fixed in `decodeSequences`,
+  `decompressBlock`, and `decompress` (`Zstd.hs`), which now thread a
+  `RepOffsets` register triple through every block in a frame and resolve
+  Offset_Value against it per the RFC, cross-checked against both the RFC
+  prose and the literal `ZSTD_decodeSequence` reference C source (per the
+  Lesson-96 playbook of not trusting either alone). The encoder is
+  unchanged -- this is a decode-only fix.
+
+### Added
+
+- Two new `ZstdCliInteropSpec` cases proving and pinning the fix: a long
+  run of one byte (the minimal repro that first surfaced this class of gap
+  in `c/zstd`, exercising `Repeated_Offset1` reuse) and a periodic pattern
+  with a low-entropy salted filler (exercising the repeat-offset path
+  across ~19 consecutive sequences in one block). Both are real `zstd` CLI
+  output decoded by this package's `decompress`, confirmed to fail before
+  this fix and pass after it.
+
 ## 0.1.1
 
 Audited against a real RFC 8878 conformance bug found in the sibling

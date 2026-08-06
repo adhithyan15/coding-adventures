@@ -61,6 +61,65 @@ spec = describe "real zstd CLI interoperability (TC-9)" $ do
                 runInteropForward "our compressed output" oursZst
             decodedByCli `shouldBe` original
 
+    -- The next two cases exist to prove and pin the fix for lessons.md
+    -- Lesson 100: this decoder previously treated EVERY Offset_Value as an
+    -- explicit distance (`Offset_Value - 3`), which is wrong for
+    -- Offset_Value in {1, 2, 3} -- those are Repeated-Offset (R1/R2/R3)
+    -- references into a 3-entry offset history (RFC 8878 SS3.1.1.3.2.1.1),
+    -- not literal distances. This package's OWN encoder never emits
+    -- Offset_Value <= 3 (see `sequenceOffset >= 1` in `Zstd.encodeOne`, which
+    -- always forces `rawOffset >= 4`), so no self-round-trip test --
+    -- including the ones above -- ever exercised the repeat-offset decode
+    -- path. Real `zstd` uses repeat offsets constantly (they are one of the
+    -- format's principal entropy wins), so only compressing with the real
+    -- CLI and decoding with `decompress` can catch this: it's a decode-only
+    -- FEATURE GAP, not an encode/decode symmetry bug like Lessons 95-96.
+    it "decodes a long run of one byte compressed by the real zstd CLI (Repeated-Offset R1 decode)" $
+        withZstdCli $ do
+            -- Real `zstd` compresses long constant-byte runs as a single
+            -- Compressed block whose one sequence has Offset_Value=1 --
+            -- "reuse Repeated_Offset1" (which starts at its RFC-mandated
+            -- default of 1) -- rather than an RLE block or an explicit
+            -- offset. This is the exact minimal repro that first surfaced
+            -- the gap in the sibling `c/zstd` port (PR #9941 / Lesson 98):
+            -- 4713 bytes of the same byte.
+            let original = BS.replicate 4713 0x5A
+            theirCompressed <- compressWithCli original
+            case decompress theirCompressed of
+                Left err ->
+                    expectationFailure
+                        ("our decompress() failed to decode real zstd's repeat-offset output: " ++ err)
+                Right decodedByUs -> decodedByUs `shouldBe` original
+
+    it "decodes a periodic pattern with a low-entropy salted filler compressed by the real zstd CLI (repeat-offset across many sequences)" $
+        withZstdCli $ do
+            -- An 8-byte anchor recurs at a FIXED 24-byte distance, separated
+            -- by filler that is almost entirely the constant byte @0x58@
+            -- with ONE distinguishing "salt" byte (the repetition index) --
+            -- unlike the noisier attempt this replaced, low-entropy filler
+            -- keeps the literal section cheap enough that real zstd still
+            -- picks RAW literals and PREDEFINED FSE tables, this decoder's
+            -- only supported modes (see `decodeLiterals` / `decompressBlock`
+            -- in "Zstd"), while the salt byte still stops the LZ77 matcher
+            -- from merging every repetition into one giant match (which
+            -- would need only ONE explicit offset and never touch the
+            -- repeat-offset path at all, as the single-sequence run-length
+            -- case above does). Each anchor occurrence becomes a SEPARATE
+            -- match at the SAME back-distance as the one before it, so real
+            -- zstd's encoder spends most of the block on consecutive
+            -- Repeated_Offset1 references instead of re-spelling the
+            -- distance -- exercised here across (at least) 19 consecutive
+            -- repeat-offset sequences in one block, not just one.
+            let anchor = BSC.pack "ABCDEFGH"
+                chunk index = anchor <> BS.cons (fromIntegral index) (BS.replicate 15 0x58)
+                original = BS.concat (map chunk [0 .. 19 :: Int])
+            theirCompressed <- compressWithCli original
+            case decompress theirCompressed of
+                Left err ->
+                    expectationFailure
+                        ("our decompress() failed to decode real zstd's repeat-offset output: " ++ err)
+                Right decodedByUs -> decodedByUs `shouldBe` original
+
 -- | Direction 1 (compress here, decompress with the CLI) AND direction 2
 -- (compress with the CLI, decompress here) for one input.
 interopBothDirections :: BS.ByteString -> Expectation

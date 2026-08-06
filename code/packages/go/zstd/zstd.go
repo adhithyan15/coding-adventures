@@ -263,7 +263,7 @@ func buildDecodeTable(norm []int16, accLog uint8) []fseDe {
 		// floor(log2(ns)) = 31 - bits.LeadingZeros32(ns)
 		nb := accLog - uint8(31-bits.LeadingZeros32(ns))
 		// base = ns * (1 << nb) - sz
-		base := uint16((ns<<nb) - uint32(sz))
+		base := uint16((ns << nb) - uint32(sz))
 		tbl[i].nb = nb
 		tbl[i].base = base
 	}
@@ -1044,7 +1044,12 @@ func compressBlock(block []byte) []byte {
 //
 // Reads the literals section, sequences section, and applies the sequences
 // to the output buffer to reconstruct the original data.
-func decompressBlock(data []byte, out *[]byte) error {
+//
+// rep1, rep2, rep3 are the frame-scoped Repeated_Offset registers (see the
+// doc comment on decodeSequencesSection) — the caller must thread the same
+// three pointers, unmodified across Raw/RLE blocks, through every
+// Compressed block of one frame.
+func decompressBlock(data []byte, out *[]byte, rep1, rep2, rep3 *uint32) error {
 	// ── Literals section ─────────────────────────────────────────────────
 	litBytes, litConsumed, err := decodeLiteralsSection(data)
 	if err != nil {
@@ -1091,7 +1096,7 @@ func decompressBlock(data []byte, out *[]byte) error {
 
 	// ── FSE bitstream ────────────────────────────────────────────────────
 	bitstream := data[pos:]
-	seqs, err := decodeSequencesSection(bitstream, nSeqs)
+	seqs, err := decodeSequencesSection(bitstream, nSeqs, rep1, rep2, rep3)
 	if err != nil {
 		return err
 	}
@@ -1153,7 +1158,33 @@ func decompressBlock(data []byte, out *[]byte) error {
 //
 // See the "Sequences section encoding" comment above encodeSeqCount for the
 // exact peek/read-extras/update ordering this implements.
-func decodeSequencesSection(bitstream []byte, nSeqs int) ([]seq, error) {
+//
+// rep1, rep2, rep3 are the three Repeated_Offset registers (RFC 8878
+// §3.1.1.3.2.1.1: "Offset_Value" of 1, 2 or 3 does not mean an actual
+// distance of 1, 2 or 3 — it selects one of three recently-used offsets,
+// tracked across the whole frame). They are threaded in and mutated in
+// place by every sequence this function decodes, explicit-offset sequences
+// included (RFC 8878: "each time an offset is decoded, the repeated offsets
+// are updated" — even a fresh explicit offset gets pushed into the
+// history). The caller owns the registers' lifetime: they must be
+// frame-scoped, initialised to the default 1/4/8 "for the first block" and
+// then reused, unmodified across Raw/RLE blocks, for every subsequent
+// Compressed block in the same frame — never reset per block or per call.
+//
+// This port's own ENCODER (encodeSequencesSection) never emits an offset
+// code < 4 (raw_off = offset + 3 >= 4 always, since the minimum LZ77 match
+// offset is 1), so this port's own compress/decompress round trip — and
+// every pre-existing unit test — never exercises the repeat-offset branch
+// below. But the real `zstd` CLI's encoder uses repeat offsets constantly
+// (one of its principal entropy wins, especially on periodic/repetitive
+// data), so a decoder that only understood explicit offset codes would
+// systematically fail to decode a meaningful fraction of real-world `.zst`
+// files. See lessons.md Lesson 99 (found and fixed first in c/zstd, PR
+// #9941) and the "Offset_Value -> actual offset" doc comment inline below
+// for the exact selector algorithm, cross-checked against both RFC 8878
+// prose and the literal reference C source (ZSTD_decodeSequence in
+// zstd_decompress_block.c).
+func decodeSequencesSection(bitstream []byte, nSeqs int, rep1, rep2, rep3 *uint32) ([]seq, error) {
 	br, err := newRevBitReader(bitstream)
 	if err != nil {
 		return nil, err
@@ -1196,16 +1227,75 @@ func decodeSequencesSection(bitstream []byte, nSeqs int) ([]seq, error) {
 		llInfo := llCodes[llCode]
 		mlInfo := mlCodes[mlCode]
 
+		// llIsZero is needed for the repeat-offset interpretation below (RFC
+		// 8878's "when Literals_Length is 0, repeated offsets are shifted by
+		// 1" rule) and is knowable right now, from the PEEKED llCode alone —
+		// LL code 0 is the only code with baseline 0 and 0 extra bits, so
+		// llCode == 0 iff the eventual decoded `ll` value is 0. No extra bits
+		// need to be read yet to know this.
+		llIsZero := llCode == 0
+
 		// Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
 		// §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
 		// required to decode offset. It does the same for Match_Length and
 		// then for Literals_Length.").
-		// Offset: raw = (1 << ofCode) | extra_bits; offset = raw - 3.
+		// The NUMBER of bits read for the offset field is always exactly
+		// ofCode, regardless of the repeat-offset interpretation below (RFC
+		// 8878 / the reference decoder never varies bit-consumption on
+		// llIsZero — only how the resulting value maps to an actual offset
+		// changes).
 		ofRaw := (uint32(1) << ofCode) | uint32(br.readBits(ofCode))
 		ml := mlInfo[0] + uint32(br.readBits(uint8(mlInfo[1])))
 		ll := llInfo[0] + uint32(br.readBits(uint8(llInfo[1])))
-		if ofRaw < 3 {
-			return nil, fmt.Errorf("decoded offset underflow: ofRaw=%d", ofRaw)
+
+		// Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+		// the Repeated_Offset (R1/R2/R3) mechanism.
+		//
+		// ofCode >= 2 guarantees ofRaw = (1<<ofCode)+extra >= 4, i.e.
+		// Offset_Value > 3: an ordinary explicit offset. ofCode <= 1
+		// guarantees ofRaw in {1, 2, 3}: a repeat-offset reference.
+		//
+		// The repeat case collapses to one selector in [0, 3]:
+		//     selector = llIsZero + ofRaw - 1
+		// (derived from, and verified against, the reference decoder's
+		// `ofBase + ll0 + extra_bit`):
+		//   0 -> reuse rep1 unchanged (no rotation)
+		//   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+		//   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+		//   3 -> use rep1-1 (full rotate, same shape as selector 2)
+		var offset uint32
+		if ofCode >= 2 {
+			offset = ofRaw - 3
+			*rep3 = *rep2
+			*rep2 = *rep1
+			*rep1 = offset
+		} else {
+			selector := ofRaw - 1
+			if llIsZero {
+				selector++
+			}
+			switch selector {
+			case 0:
+				offset = *rep1
+			case 1:
+				offset = *rep2
+				*rep2 = *rep1
+				*rep1 = offset
+			case 2:
+				offset = *rep3
+				*rep3 = *rep2
+				*rep2 = *rep1
+				*rep1 = offset
+			default: // 3
+				if *rep1 > 0 {
+					offset = *rep1 - 1
+				} else {
+					offset = 0
+				}
+				*rep3 = *rep2
+				*rep2 = *rep1
+				*rep1 = offset
+			}
 		}
 
 		// Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
@@ -1227,7 +1317,7 @@ func decodeSequencesSection(bitstream []byte, nSeqs int) ([]seq, error) {
 			stateOF = ofEntry.base + uint16(br.readBits(ofEntry.nb))
 		}
 
-		seqs[i] = seq{ll: ll, ml: ml, off: ofRaw - 3}
+		seqs[i] = seq{ll: ll, ml: ml, off: offset}
 	}
 
 	return seqs, nil
@@ -1445,6 +1535,12 @@ func Decompress(data []byte) ([]byte, error) {
 	// Guard against decompression bombs: cap total output at maxOutput (256 MB).
 	out := make([]byte, 0)
 
+	// Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+	// default 1/4/8 "for the first block", then threaded unmodified through
+	// every Compressed block's sequences for the rest of the frame (Raw/RLE
+	// blocks don't touch them). See decodeSequencesSection's doc comment.
+	rep1, rep2, rep3 := uint32(1), uint32(4), uint32(8)
+
 	for {
 		if pos+3 > len(data) {
 			return nil, fmt.Errorf("truncated block header")
@@ -1491,7 +1587,7 @@ func Decompress(data []byte) ([]byte, error) {
 			}
 			blockData := data[pos : pos+bsize]
 			pos += bsize
-			if err := decompressBlock(blockData, &out); err != nil {
+			if err := decompressBlock(blockData, &out, &rep1, &rep2, &rep3); err != nil {
 				return nil, err
 			}
 			if len(out) > maxOutput {
