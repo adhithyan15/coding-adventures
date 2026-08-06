@@ -4,6 +4,28 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed - drag keys may come from an expression
+
+`drag-key` / `drop-key` / `drag-kind` / `drag-label` now accept an **expression**, not
+just a string literal or a slot ref. This is how a key arrives from a loop binding —
+`drop-key: ( col[1] )` per column, `drag-key: ( card[2] )` per card — which is to say:
+it is what a kanban board needs.
+
+The original code rejected anything that wasn't a literal or a slot, on the reasoning
+that an unhandled shape should fail loudly rather than degrade to an empty key. That
+half was right and is kept (an emit ref is still an error). Refusing the *expression*
+was not: it made the drag family unusable from inside a `For`, i.e. unusable for the
+one layout it was designed for. Found by building that board.
+
+### Fixed - hook imports are narrowed to what a component uses
+
+`useEffect` was imported whenever any hook was needed, including for a component whose
+only hook consumer is the drag controller — which uses none. That trips
+`noUnusedLocals` (TS6133) and breaks `tsc -b` under a strict host tsconfig, the same
+trap already documented for unread slots. Now: `useRef` always, `useEffect` only for
+dialogs and indeterminate checkboxes, `useState`/`useId` only for drag.
+
+
 ### Added - host-owned surface composition
 
 `HostSurface ( content: slot: ... )` now mounts the supplied `ReactNode` in a

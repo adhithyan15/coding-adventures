@@ -128,6 +128,7 @@ describe("real curriculum", () => {
       "PA-C06-panj-convergence-borrowing",
       "PT-C02-practice-neutral-question",
       "RU-C02-kak-cross-language-what-language",
+      "RU-C02-practice-informal-question",
       "RU-C02-vy-formality-safe-default",
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",

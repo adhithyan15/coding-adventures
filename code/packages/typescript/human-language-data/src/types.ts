@@ -419,6 +419,22 @@ export interface LetterForms {
   final?: string;
 }
 
+/**
+ * Where a letter's `strokeOrder` came from.
+ *
+ * A stroke order cannot be read out of a font — no font table records which way
+ * the hand moved — so an order that is more than "the parts, roughly in order"
+ * has to trace to a real teaching source. `variation` is not optional politeness:
+ * for scripts with no national standard (every Indic script, Arabic, Hebrew) it
+ * is the honest statement that this is ONE attested order, not THE order.
+ */
+export interface StrokeOrderSource {
+  citation: string;
+  url: string;
+  /** How standardised the order is, and where it varies. */
+  variation?: string;
+}
+
 /** One base letter of the script (a letter, a character, or a radical). */
 export interface Letter {
   glyph: string; // the citation form
@@ -432,9 +448,25 @@ export interface Letter {
   forms?: LetterForms;
   /** The literal "pieces" of the character, for paper practice. */
   components: string[];
-  /** Typical handwriting order — conventional, not canonical. */
+  /**
+   * Typical handwriting order — conventional, not canonical.
+   *
+   * CAREFUL: this is a list of the letter's PARTS in writing order. It is NOT a
+   * count of pen-down runs. Three named parts can be three separate strokes, or
+   * one continuous stroke whose parts merely have names — Tamil ம is the latter.
+   * Never let the wording (or the count) imply a pen lift that no authored pen
+   * path supports; say "without lifting" explicitly where a path proves it.
+   */
   strokeOrder: string[];
   strokeOrderNote: string;
+  /**
+   * How many times the pen leaves the paper, when a verified pen path says so.
+   * Absent means "not verified" — which is not the same as "none", and must not
+   * be inferred from `strokeOrder.length`.
+   */
+  penLifts?: number;
+  /** Provenance of the stroke ORDER, where the order is claimed rather than sketched. */
+  strokeOrderSource?: StrokeOrderSource;
   notes?: string;
 }
 

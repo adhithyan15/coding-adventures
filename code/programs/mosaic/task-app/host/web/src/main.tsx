@@ -80,7 +80,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let newName = "";
   let newDue = "";
   let newProject = "";
-  let showTimeline = false;
+  // Which view is showing. A string rather than a pair of booleans, so the three
+  // states can't contradict each other.
+  let view: "list" | "board" | "timeline" = "list";
   // Which row is expanded, by task id (not index — an index would follow the wrong
   // task the moment the list is re-sorted or something above it is deleted).
   let expanded: string | null = null;
@@ -150,6 +152,42 @@ function makeController(engine: any, init: ControllerInit = {}) {
     for (const id of Object.keys(all)) walk(id);
 
     return { ids, names: ids.map((id) => all[id]?.name || id), depths, activeId };
+  };
+
+  // The board's columns. Status is the engine's own vocabulary; these are the three
+  // states this app exposes today.
+  const BOARD_COLUMNS: Array<{ title: string; key: string }> = [
+    { title: "Up next", key: "next" },
+    { title: "In progress", key: "doing" },
+    { title: "Done", key: "done" },
+  ];
+
+  // Percent-complete per task, read ONCE.
+  //
+  // It comes from `todos()`, not `checklist()` — only todos carries
+  // `percentComplete`. Reading the wrong projection returned `undefined` for every
+  // task, so everything scored 0 and the board put the whole project in "Up next"
+  // with "In progress" permanently empty. Building the map once also keeps this off
+  // the per-card path, which was issuing an engine query per rendered card.
+  const progress = (): Map<string, number> =>
+    new Map(
+      ((engine.todos().data ?? []) as any[]).map((t) => [
+        t.task as string,
+        (t.percentComplete ?? 0) as number,
+      ]),
+    );
+
+  // Which column a task belongs in.
+  //
+  // This reads PROGRESS, not "is it scheduled". Scheduling is not a signal of intent:
+  // the engine schedules every task that has a duration, so keying off a start date
+  // put *everything* in "In progress" and left "Up next" permanently empty — a dead
+  // column whose drop zone did nothing. Percent-complete is what a person actually
+  // means by "I've started this", and it is settable, which is what makes dragging
+  // between those two columns work at all.
+  const columnOf = (id: string, byTask: Map<string, any>, pct: Map<string, number>): string => {
+    if (byTask.get(id)?.value[DONE]?.value === true) return "done";
+    return (pct.get(id) ?? 0) > 0 ? "doing" : "next";
   };
 
   // The timeline: hand the engine's own gantt bars to the geometry module. Every
@@ -287,7 +325,20 @@ function makeController(engine: any, init: ControllerInit = {}) {
         // top-level row stays flush left.
         p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
       ]);
-      const tl = showTimeline ? timeline() : { scale: "", rows: [] };
+      const tl = view === "timeline" ? timeline() : { scale: "", rows: [] };
+      const boardCards: string[][] = (() => {
+        if (view !== "board") return [];
+        const pct = progress();
+        return displayIds().map((id) => {
+          const c = byTask.get(id)!;
+          return [
+            c.display[NAME],
+            columnOf(id, byTask, pct),
+            id,
+            c.value[OVERDUE]?.value === true ? "overdue" : "",
+          ];
+        });
+      })();
       // The engine's verdict on the plan. Overdue work is the one thing worth
       // colouring red in the header; everything else reads as on track.
       const overdue = ids.filter(
@@ -297,7 +348,10 @@ function makeController(engine: any, init: ControllerInit = {}) {
         appTitle: "Tasks — auto-scheduled",
         statusLabel: overdue > 0 ? `${overdue} overdue` : "On track",
         statusWarn: overdue > 0 ? "warn" : "",
-        timelineMode: showTimeline ? "timeline" : "",
+        timelineMode: view === "timeline" ? "timeline" : "",
+        boardMode: view === "board" ? "board" : "",
+        boardColumns: BOARD_COLUMNS.map((c) => [c.title, c.key]),
+        boardCards,
         timelineScale: tl.scale,
         timelineRows: tl.rows,
         newTaskName: newName,
@@ -327,11 +381,59 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         }
         case "showList":
-          showTimeline = false;
+          view = "list";
+          break;
+        case "showBoard":
+          view = "board";
           break;
         case "showTimeline":
-          showTimeline = true;
+          view = "timeline";
           break;
+        case "cardDropped": {
+          // A drop is a PROPOSAL. The engine owns what a status change means; the host
+          // only translates "landed in this column" into the operation expressing it.
+          const { byTask } = rows();
+          // Validate BOTH ends. The key guards a stale id (a card from a project you
+          // have since switched away from); the target guards an unknown column —
+          // without it an unrecognised target fell through to the "leaving done"
+          // branch and silently un-completed the task.
+          if (!byTask.has(event.key)) break;
+          if (!BOARD_COLUMNS.some((c) => c.key === event.targetKey)) break;
+
+          const from = columnOf(event.key, byTask, progress());
+          if (from === event.targetKey) break; // dropped where it already was
+
+          // The ABI's field is `percent`, not `percentComplete` — the latter is what
+          // the *projections* return, and passing it here failed the parse and came
+          // back as an error envelope. Check every result rather than assuming: a
+          // rejected op that nobody reads is a card that silently springs back.
+          const ran = (label: string, res: any): boolean => {
+            if (res?.ok === false) {
+              console.error(`Board move failed (${label}):`, res.error ?? res);
+              return false;
+            }
+            return true;
+          };
+
+          let ok = true;
+          // Leaving Done must clear the completed flag first, or the card springs
+          // straight back — `columnOf` checks completion before progress.
+          if (from === "done" && event.targetKey !== "done") {
+            ok = ran("clear completed", engine.setCompleted({ id: event.key, completed: false }));
+          }
+          if (ok && event.targetKey === "done") {
+            ok = ran("complete", engine.setCompleted({ id: event.key, completed: true }));
+          } else if (ok && event.targetKey === "doing") {
+            // "Started" is any progress at all; the exact figure is the user's to
+            // refine later, so claim the minimum rather than inventing one.
+            ok = ran("start", engine.setPercentComplete({ id: event.key, percent: 1 }));
+          } else if (ok) {
+            ok = ran("un-start", engine.setPercentComplete({ id: event.key, percent: 0 }));
+          }
+          if (!ok) break;
+          persist();
+          break;
+        }
         case "newProjectNameChange":
           newProject = event.value;
           break;

@@ -69,10 +69,28 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C14 | Queued | Derive modality (`voice`/`sight`/`pen`) for every lesson and each chapter's drivable prefix. | The gap report publishes per-track modality counts and the corpus-wide drivable percentage; overrides without a recorded reason are reported. |
 | HL-C15 | Queued | Print modality signs and the drivable prefix at every chapter opening. | The book shows 🚗/👁/✍ beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
 | HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
-| HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
+| HL-C17 | Queued — 308 remaining after HL-C32 | Linearise or reclassify the 308 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
 | HL-C18 | Queued — Spanish slice complete | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
 | HL-C18A | Complete | Split the fifteen over-budget Spanish lessons, including the corpus-worst `ES-C31-numeros-11-20` at seven. | Spanish measures zero over-budget lessons; the fifteen become thirty-three prerequisite-ordered micro-lessons and the corpus figure drops from 52 to 37. |
 | HL-C18B | Queued | Split the remaining 37 over-budget lessons across the other sixteen tracks. | Every track measures zero lessons above `maxNewAtomsPerLesson`; the corpus maximum drops from 6 to 3. |
+| HL-C19 | Queued | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
+| HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
+| HL-C26 | Complete in this PR | Give the hand-written early chapters a checkable title and label without making them generated. | The 105 chapters with a committed `.tex` but no `targets[]` entry are recorded in a new `handwritten[]` list in `core/book-generation.json`, transcribed from what each `\chapter{}`/`\label{}` actually declares. `generatedBookOutputs` never walks that list, so `check:books` still passes byte-for-byte and no authored chapter can be overwritten; `chapter-title-drift` no longer skips them. |
+| HL-C44 | Complete in this PR | Emit the derived modality as a generated, drift-gated manifest so different outputs can be filtered from one source. HL-C14 derived `voice`/`sight`/`pen` per lesson and a drivable prefix per chapter, but only at runtime and only into the human-readable gap report — no book builder, app, or driving-edition renderer had a file to filter on. | `core/lesson-modality.json` carries per-lesson `id`/`language`/`chapter`/`sequence`/`modality`/`derived`/`drivable`/`reasons`/`sourceHash`, per-chapter drivable prefix and ordered `drivableLessonIds`, per-track rollups, and a corpus summary (1,096 lessons; 708 `voice`, 337 `sight`, 51 `pen`; 65% drivable; 375 chapters; 551 lessons reachable in prefix order; 199 fully drivable chapters; 121 unstartable by ear). `modality-cli --write`/`--check` mirrors the `book-cli` contract, `check:modality` runs in CI beside `check:books`, and the schema reserves room for HL-C41's `coreModality` as a purely additive key. |
+| HL-C32 | Complete in this PR | Diagnose and repair the Russian track, worst in the corpus on two independent measurements: 9% drivable with **zero** lessons reachable by ear in either chapter, and payoff representativeness of 0.20. | Russian measures 73% drivable (16 `voice`, 1 `sight`, 5 `pen`) with 15 lessons reachable in chapter-prefix order, and Chapter 2's payoff representativeness is 0.67 against the 0.5 floor. Zero new validation errors, zero duration violations. |
+| HL-C27 | Complete in this PR | Run the book catalog builder's tests in CI. `test_build_human_language_book_catalog.py` existed but was executed by no workflow, so the script that writes the published `index.html` and `catalog.json` shipped with its tests never running. | `human-languages-books.yml` runs the suite in its own named step before the expensive XeLaTeX build, and both the workflow's `paths:` trigger and the `detect` job's `git diff` list include the test file so a change to it re-runs the job. |
+
+The project owner decided on 2026-08-06 that the curriculum ships **two editions from
+one canonical source**: the complete book, which keeps everything including the writing
+instruction, and a later dictation-friendly **driving edition**, which omits what a
+driver cannot do. HL-C44 is the machinery that makes the filter possible and nothing
+more — `core/lesson-modality.json` is the file both editions read. HL-C43 builds the
+driving edition itself. The manifest's `modality` field is the conservative
+whole-lesson answer, so the edition filter is correct today; HL-C41 adds block-level
+modality as a purely additive `coreModality` key, at which point the driving edition
+can skip a lesson's short optional writing segment instead of dropping the whole
+lesson. Today, any pen content costs a commuter the entire lesson — 121 of the 375
+chapters cannot be started by ear at all.
 
 The illustration licensing question HL06 raised is **settled**. The project owner
 decided on 2026-08-06 that the books stay CC BY-SA 4.0 and that generated
@@ -1900,6 +1918,166 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   French (6), Sanskrit (3), Urdu (3) and Italian (3). Bengali, Punjabi and
   Sanskrit each hold a six-atom lesson, all three of them number lessons with
   the same shape as the Spanish one just split.
+
+## Findings from HL-C26
+
+- The gap is larger than the ledger work suggested: **105** chapters have a committed
+  `book/chapters/ch*.tex` but no `targets[]` entry, across 19 tracks. They are not a
+  scattering of stragglers — they are a contiguous hand-written *prefix* of nearly every
+  book, ending where generation was switched on. French and German chapters 1–16, Spanish
+  7–18, and all of Russian were missing from the informal list this work started from.
+- **A `targets[]` entry is not a description; it is an instruction to generate.**
+  `generatedBookOutputs` renders every target and `runBookGeneration --write` writes the
+  result over the file at `output`. Minting targets for these chapters — the obvious
+  reading of the task — would have destroyed them. Confirmed empirically: adding a target
+  for `latin` ch1 made `check:books` report the committed file stale immediately, and the
+  output it wanted to write was a different 235-line document (banner, regenerated prose,
+  `\label{lesson:LA-C01-salve}` in place of `\label{lesson:salve}`) replacing 168 lines of
+  authored text.
+- The fix is therefore a separate `handwritten[]` list rather than a `generated: false`
+  flag on `targets[]`. The two fail in opposite directions: a flag leaves authored prose
+  one forgotten `if` away from being overwritten, whereas a second array cannot be
+  rendered at all, because `generatedBookOutputs` only ever walks `config.targets`. The
+  worst a mistake in `handwritten[]` can do is leave a chapter unchecked — today's
+  behaviour — instead of destroying it.
+- Every generated chapter opens with `% GENERATED FILE.` and no hand-authored chapter
+  does (270/270 and 0/105). That makes the banner a list-independent check on the
+  generator's claim, and it catches the one mistake the lists cannot see themselves: a
+  chapter *promoted* out of `handwritten[]` into `targets[]`, which leaves the
+  hand-written list and so escapes every check keyed on membership.
+- **Chapter labels follow three incompatible conventions, and they are left alone.** Most
+  hand-written chapters use a bare slug (`ch:greetings`), generated chapters use an
+  ISO-code prefix (`ch:fa-`, `ch:la-`, `ch:it-`, `ch:ar-`), and hand-written Persian,
+  Urdu, and Russian chapters use a language-*name* prefix (`ch:persian-name`,
+  `ch:urdu-name`, `ch:russian-greetings`). So Persian ch2 is `ch:persian-name` while its
+  generated ch3 sibling is `ch:fa-ask-and-answer-names`, in one book. Renormalising would
+  break every existing `\hyperref`, so `handwritten[]` records what each `.tex` declares.
+  No label collides with another inside the same track today. Worth a deliberate decision
+  before HL-C04 makes `chapters.json` canonical.
+- The bare-slug convention means `ch:greetings` is reused across 16 tracks. That is safe
+  only because each track compiles its own PDF; any future combined volume would collide.
+
+## Findings from HL-C30
+
+HL-C30 asked whether Arabic's low drivable share (52%, 31 lessons reachable in
+chapter-prefix order) could be recovered cheaply by moving the `AR-W*` writing
+lessons that open Chapters 3 and 4 later in their own chapters. **It cannot.**
+The measured answer is that no legal reordering changes any Arabic number, and
+the premise that "most of the lessons after those openings are `voice`" does not
+survive contact with the corpus. No lesson was moved. The findings below are the
+whole deliverable.
+
+- **Arabic Chapters 3 and 4 are provably immovable, and the writing lessons are
+  not the reason.** A chapter's drivable prefix can only begin with a lesson that
+  has no in-chapter prerequisite. Chapter 3 has exactly two such roots —
+  `AR-W07-hook-family-ha-kha` (`pen`) and `AR-C03-kayfa` (`sight`, two-column
+  table) — so **every** legal ordering starts with a non-`voice` lesson and the
+  prefix is 0 no matter what moves. Chapter 4 has a single root,
+  `AR-W10-ayn`, because `AR-C04-maa-with` declares it as a prerequisite: مع
+  cannot be read without ʿayn. Deleting all six writing lessons outright would
+  still leave both chapters at prefix 0.
+- **The blocker is the table, not the script.** Of Chapter 3's six non-writing
+  lessons only `AR-C03-bi-khayr` is `voice`, and it sits behind
+  kayfa → hal → kayfa-ḥāluka by prerequisite. All five of Chapter 4's
+  non-writing lessons are `sight`. Every one of Arabic's 18 `sight` lessons is
+  `sight` because of a Markdown table — 18 of 18. Arabic's drivable share is an
+  HL-C17 problem end to end.
+- **Pedagogy would have blocked the move independently.** `AR-C03-kayfa`'s
+  "letters in this word" section states that ك has already been written "in the
+  writing set", i.e. it assumes `AR-W08-kaf-and-ra`, which requires `AR-W07`;
+  `AR-W09-khayr-bikhayr` assembles خير so the learner can hand-write the
+  *bi-khayr* reply the chapter ends on. The inline-letters rule in HL00 puts
+  those lessons exactly where they are.
+- **Arabic's other five zero-prefix chapters have nothing to reorder.**
+  Chapters 12, 14, 19 and 20 hold one table-bearing lesson each; Chapter 8's
+  second lesson declares its table-bearing first lesson as a prerequisite.
+- **Corpus-wide, reordering is nearly worthless.** 123 chapters have a drivable
+  prefix of 0. Only **7** contain a `voice` lesson with no in-chapter
+  prerequisite, so only 7 are candidates at all; the other **116 are blocked at
+  the root by a table** and belong to HL-C17. Arabic contributes none of the 7.
+- **Only two of those 7 are genuine**, and both are one-lesson lifts of a
+  table-bearing opener that nothing else in the chapter depends on:
+  `portuguese ch2` (0 → 3, move `PT-C02-de-nada` after `PT-C02-tudo-bem`) and
+  `italian ch2` (0 → 1, move `IT-C02-prego` later). That is the entire
+  reordering burn-down for the corpus: **+4 lessons.**
+- **The other five are a measurement artifact, and so is much of the report.**
+  `orderChapterLessons` sorts by `sequence` with null last, tie-broken by id.
+  In mixed-schema tracks the `W*` writing lessons are schema v2 and carry a
+  sequence while the word lessons are still legacy and carry none, so the pen
+  block sorts to the front of a chapter it does not actually open. **85
+  chapters — 25 of them among the 123 zero-prefix chapters — are ordered by the
+  report in a way that contradicts their own in-chapter prerequisite graph.**
+  `hindi ch1` is reported as opening with `HI-W01-shirorekha-na-ma`, which
+  *declares `HI-C01-namaste` as a prerequisite*; `tamil ch1` reports
+  `TA-W01-curves-va-ka`, which declares `TA-C01-vanakkam-family-register`. Those
+  chapters do not open with a writing lesson at all, and their prefixes are
+  measured against an order no author wrote.
+- **The list of chapters reported as opening with a `writing` or script-block
+  lesson**, i.e. the burn-down order HL-C30 asked for: `arabic ch3`, `arabic ch4`
+  (both real and both immovable, above); `hindi ch1`, `hindi ch2`, `tamil ch1`
+  (all three artifacts of the ordering bug — nothing to move); `telugu ch7`,
+  `telugu ch8` (real, but the openers are table- and script-block-bearing word
+  lessons with no `voice` lesson anywhere in the chapter).
+- **Arabic Chapters 1 and 2 are undercounted by the same artifact.** All 26 of
+  their lessons are legacy and unsequenced, so they sort alphabetically:
+  Chapter 1 reports a prefix of 4 where the authored `curriculum.json` path
+  gives 7, and Chapter 2 reports 6 where the path gives 7. Recovering those +4
+  lessons means giving legacy lessons a `sequence`, which **0 of the corpus's
+  565 legacy lessons currently have** and which `validateCurriculum` does not
+  check for uniqueness outside schema v2 — a schema migration with a silent
+  collision hazard, not a reorder. It is deliberately left undone here. Arabic's
+  sparse numbering has room reserved for it: Chapters 1–2 hold exactly 26
+  lessons and slots 10–260 are free below Chapter 3's first sequence of 270.
+- **Recommended follow-up owners.** The ordering artifact belongs beside HL-C14
+  (either the comparator falls back to a prerequisite-respecting order, or the
+  legacy tracks get sequences); the 116 table-blocked chapters belong to
+  HL-C17. Reordering itself is closed at +4 lessons corpus-wide.
+
+## Findings from HL-C32
+
+The Russian repair is worth reading as a diagnosis, because the diagnosis
+generalises and the fix does not.
+
+- **Russian's 9% was one rule firing fifteen times out of fifteen.** Every
+  `sight` lesson in the track tripped `wide-table`. Not one carried a `script`
+  block. Twelve tripped nothing else. It was never a script-heavy track; it was a
+  table-heavy one.
+- **Two of the three sight cues that did match were false positives.** The cue
+  list is literal substring matching, so `"the course's first look at case"`
+  matched `look at`, and a sentence describing a comparison as `"the most extreme
+  change in the table"` matched `the table` only because the table existed. Only
+  `RU-C02-practice-cases` — *"cover the right column"* — points at anything real.
+- **The tables were carrying prose.** Almost every one was a cross-language
+  word→gloss list: `| Language | "yes" | built from |`. `RU-C01-privet` and
+  `RU-C01-zdravstvuyte` carry exactly that section as sentences, and they were
+  the track's only two `voice` lessons. The same content, set two ways, produced
+  two different modalities — which is the whole finding.
+- **One table was genuinely visual and stayed.** `RU-C02-practice-cases` is a
+  cover-the-column retrieval drill; the table *is* the exercise. It remains
+  `sight`, and Chapter 2's drivable prefix correctly stops there at 8 of 10.
+- **The pattern is corpus-wide, and Russian was only its most extreme case.**
+  Of 337 `sight` lessons remaining, 271 trip `wide-table` and nothing else.
+  Grouped by track, `onlyTable` counts run: spanish 57, german 33, portuguese 32,
+  french 29, italian 29, arabic 14, tamil 14, and so on. Those five European
+  tracks sit at 43–47% drivable for the same reason Russian sat at 9%. HL-C17 is
+  therefore not a Russian problem that leaked; it is the corpus's single largest
+  modality lever, and this pass is a worked example of how to pull it —
+  distinguishing a two- or three-column word→gloss list, which linearises, from a
+  real multi-column paradigm, which does not.
+- **Representativeness was a migration symptom, not an authoring failure.**
+  Chapter 2's payoff pointed at a cross-language etymology lesson because that was
+  the last schema-v2 lesson by sequence; the chapter's actual consolidation
+  lesson was schema v1 and declared no atoms. Migrating that one lesson took
+  representativeness from 0.20 to 0.67 without inventing content. The same
+  substitution is visible in the remaining sub-floor chapters (arabic ch3/ch4 at
+  0.11/0.13, spanish ch3 at 0.25, hindi ch2 at 0.17), and the same one-lesson fix
+  should work wherever the chapter's consolidation lesson is the schema-v1 one.
+- **Two artefacts remain and only a full migration closes them.** Fifteen Russian
+  lessons are still schema v1. Because `sequence` is a schema-v2 field, Chapter 1
+  is still ordered alphabetically rather than pedagogically for modality
+  purposes, and `RU-C02-practice` now sorts ahead of its own schema-v1
+  prerequisite. Neither affects validation or the drivable prefix, and neither is
+  worth a cosmetic patch.
 
 ## Completed foundations
 
