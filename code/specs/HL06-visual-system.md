@@ -161,6 +161,30 @@ fall through. CI gains a log-scanning step after the `latexmk` loop, checking ea
 duplicate destinations, compared against a **recorded per-track baseline** so existing
 debt is measured rather than newly broken.
 
+### As built (HL-C07)
+
+The gate is `code/scripts/scan_latex_log_warnings.py`, run by the books workflow
+immediately after the `latexmk` loop, with its own unit tests run first in the step
+before it — the gate is the thing being trusted, so a silently broken gate is worse
+than no gate. It counts six classes per track: `overfull`, `underfull`,
+`missing_character`, `hyperref_warning`, `duplicate_destination`, and
+`font_substitution`. The sixth is not in the paragraph above but is claimed by every
+track's README, so it is measured too.
+
+Baselines live in `code/learning/human-languages/core/latex-warning-baseline.json`.
+A track fails only when it exceeds its recorded counts. A track recorded as `null` has
+never been measured and is reported but never failed; `null` means *unknown*, not
+*zero*. Because real counts need a real XeLaTeX run over all 20 books, the file ships
+fully unseeded and the scanner prints the counts it actually measured into
+`$GITHUB_STEP_SUMMARY` as a copy-paste-ready `tracks` block — that is the bootstrap
+path, and no number is ever guessed into the repository.
+
+Two further rules keep the gate honest. A track that comes in *under* its baseline is
+reported as `under baseline`, an invitation to tighten the number, never a failure. A
+track that has a baseline but whose `book.log` has vanished *does* fail, because
+otherwise deleting a file would quietly switch that track's gate off. The full scan is
+also published beside the books as `latex-warnings.json`.
+
 ## Acceptance criteria
 
 The visual system is complete when every non-Latin track prints a stroke-order figure
