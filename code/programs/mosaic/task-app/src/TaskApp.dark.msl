@@ -13,14 +13,17 @@ style TaskApp {
   part app-shell {
     background : "#1a1714" ;
     color : "#f1ebe1" ;
-    font-family : "-apple-system, Segoe UI, system-ui, sans-serif" ;
+    font-family : "-apple-system, Segoe UI, system-ui, Helvetica Neue, Arial, sans-serif" ;
     min-height : "100vh" ;
   }
   part rail {
     width : 236 ;
     flex-shrink : 0 ;
-    padding : 20 ;
-    gap : 18 ;
+    padding-top : 20 ;
+    padding-right : 14 ;
+    padding-bottom : 20 ;
+    padding-left : 14 ;
+    gap : 22 ;
     border-right-width : 1 ;
     border-right-color : "#352e25" ;
     border-right-style : "solid" ;
@@ -28,11 +31,14 @@ style TaskApp {
   part main {
     flex-grow : 1 ;
     min-width : 0 ;
-    padding : 20 ;
     gap : 14 ;
   }
   part content {
     gap : 14 ;
+    padding-top : 8 ;
+    padding-right : 30 ;
+    padding-bottom : 60 ;
+    padding-left : 30 ;
   }
 
   // ── brand ───────────────────────────────────────────────────────────────
@@ -46,7 +52,7 @@ style TaskApp {
     height : 28 ;
     border-radius : 8 ;
     background : "#eaa63f" ;
-    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
   }
   part brand-name {
     font-size : 15 ;
@@ -56,12 +62,15 @@ style TaskApp {
 
   // ── rail: projects ──────────────────────────────────────────────────────
   part rail-label {
-    font-size : 10 ;
+    font-size : 10.5 ;
     font-weight : bold ;
     color : "#867c70" ;
     letter-spacing : "0.08em" ;
     text-transform : "uppercase" ;
-    padding : 4 ;
+    padding-top : 0 ;
+    padding-right : 8 ;
+    padding-bottom : 6 ;
+    padding-left : 8 ;
   }
   part rail-projects {
     gap : 2 ;
@@ -74,19 +83,20 @@ style TaskApp {
     color : "#867c70" ;
     font-size : 13 ;
   }
-  // The project you are looking at. Honey fill, so "where am I" is answerable at a
-  // glance; the rest stay quiet until hovered.
+  // The project you are looking at. A quiet raised card — same "on" treatment the
+  // segmented switch uses — so "where am I" reads as a subtle lift, not a loud fill.
+  // (The honey accent is spent on the primary action / focus / *now*, not on this.)
   part project-on {
     width : 100% ;
-    background : "#eaa63f" ;
-    color : "#1a1714" ;
+    background : "#252019" ;
+    color : "#f1ebe1" ;
     font-size : 13 ;
     font-weight : bold ;
     text-align : "left" ;
     padding : 8 ;
     border-radius : 8 ;
     border-width : 0 ;
-    box-shadow : "0 1px 2px rgba(0,0,0,.35)" ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
   }
   part project-off {
     width : 100% ;
@@ -98,7 +108,7 @@ style TaskApp {
     border-radius : 8 ;
     border-width : 0 ;
     state hover {
-      background : "#332c23" ;
+      background : "#2c2620" ;
       color : "#f1ebe1" ;
     }
   }
@@ -148,9 +158,12 @@ style TaskApp {
 
   // ── topbar ──────────────────────────────────────────────────────────────
   part topbar {
-    gap : 16 ;
+    gap : 18 ;
     align : center-vertical ;
-    padding : 4 ;
+    padding-top : 20 ;
+    padding-right : 30 ;
+    padding-bottom : 14 ;
+    padding-left : 30 ;
   }
   part title-block {
     width : 100% ;
@@ -176,7 +189,10 @@ style TaskApp {
     color : "#6fb489" ;
     font-size : 12 ;
     font-weight : bold ;
-    padding : 3 ;
+    padding-top : 2 ;
+    padding-right : 9 ;
+    padding-bottom : 2 ;
+    padding-left : 9 ;
     border-radius : 20 ;
   }
   part pill-warn {
@@ -184,7 +200,10 @@ style TaskApp {
     color : "#e26a52" ;
     font-size : 12 ;
     font-weight : bold ;
-    padding : 3 ;
+    padding-top : 2 ;
+    padding-right : 9 ;
+    padding-bottom : 2 ;
+    padding-left : 9 ;
     border-radius : 20 ;
   }
 
@@ -203,30 +222,39 @@ style TaskApp {
     color : "#f1ebe1" ;
     font-size : 13 ;
     font-weight : bold ;
-    padding : 6 ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
     border-width : 0 ;
     border-radius : 7 ;
-    box-shadow : "0 1px 2px rgba(0,0,0,.4)" ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
   }
   part seg-tl-on {
     background : "#252019" ;
     color : "#f1ebe1" ;
     font-size : 13 ;
     font-weight : bold ;
-    padding : 6 ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
     border-width : 0 ;
     border-radius : 7 ;
-    box-shadow : "0 1px 2px rgba(0,0,0,.4)" ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
   }
   part seg-board-on {
     background : "#252019" ;
     color : "#f1ebe1" ;
     font-size : 13 ;
     font-weight : bold ;
-    padding : 6 ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
     border-width : 0 ;
     border-radius : 7 ;
-    box-shadow : "0 1px 2px rgba(0,0,0,.4)" ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
   }
   part seg-board-off {
     background : "transparent" ;
@@ -266,10 +294,13 @@ style TaskApp {
     color : "#f1ebe1" ;
     font-size : 13 ;
     font-weight : bold ;
-    padding : 6 ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
     border-width : 0 ;
     border-radius : 7 ;
-    box-shadow : "0 1px 2px rgba(0,0,0,.4)" ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
   }
   part seg-sheet-off {
     background : "transparent" ;
@@ -466,7 +497,10 @@ style TaskApp {
     color : "#1a1714" ;
     font-size : 13 ;
     font-weight : bold ;
-    padding : 8 ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
     border-width : 0 ;
     border-radius : 8 ;
     state hover {
@@ -499,7 +533,10 @@ style TaskApp {
   part task-row {
     gap : 10 ;
     align : center-vertical ;
-    padding : 12 ;
+    padding-top : 12 ;
+    padding-right : 14 ;
+    padding-bottom : 12 ;
+    padding-left : 14 ;
   }
   // The completion toggle — a round control whose label is the engine's glyph.
   part toggle {
@@ -508,7 +545,7 @@ style TaskApp {
     font-size : 14 ;
     padding : 3 ;
     border-width : 2 ;
-    border-color : "#4a4136" ;
+    border-color : "#867c70" ;
     border-radius : 20 ;
     state hover {
       border-color : "#eaa63f" ;
@@ -571,7 +608,12 @@ style TaskApp {
     border-top-width : 1 ;
     border-top-color : "#2c2620" ;
     border-top-style : "solid" ;
-    padding : 14 ;
+    // The 47px left indent lines the detail up under the task name (past the
+    // checkbox), matching the mock rather than sitting flush with the row edge.
+    padding-top : 15 ;
+    padding-right : 16 ;
+    padding-bottom : 16 ;
+    padding-left : 47 ;
     gap : 5 ;
   }
   part detail-sched {
