@@ -77,7 +77,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/german/book/book.log",
@@ -110,8 +110,8 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 0,
-        "underfull": 0
+        "overfull": 1,
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/hindi/book/book.log",
@@ -127,7 +127,7 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 0,
+        "overfull": 1,
         "underfull": 0
       },
       "improvements": [],
@@ -162,7 +162,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 2
       },
       "improvements": [],
       "log": "code/learning/human-languages/kannada/book/book.log",
@@ -179,7 +179,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/latin/book/book.log",
@@ -196,7 +196,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/malayalam/book/book.log",
@@ -246,7 +246,7 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 0,
+        "overfull": 2,
         "underfull": 0
       },
       "improvements": [],
@@ -315,7 +315,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 1
+        "underfull": 0
       },
       "improvements": [],
       "log": "code/learning/human-languages/spanish/book/book.log",
