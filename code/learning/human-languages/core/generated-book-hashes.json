@@ -1239,10 +1239,11 @@
     {
       "language": "latin",
       "chapter": 19,
-      "sourceHash": "fnv1a64:3fd9f154ff079ca9",
+      "sourceHash": "fnv1a64:b6d1686c248ae1e9",
       "lessonIds": [
         "LA-C19-quid-agis",
-        "LA-C19-valeo-family"
+        "LA-C19-valeo-family",
+        "LA-C19-practice"
       ],
       "tex": "latin/book/chapters/ch19-how-are-you.tex"
     },
@@ -1259,10 +1260,11 @@
     {
       "language": "latin",
       "chapter": 21,
-      "sourceHash": "fnv1a64:51a83aba61a2bb64",
+      "sourceHash": "fnv1a64:0f93e9300f86bb34",
       "lessonIds": [
         "LA-C21-volup-est-convenisse",
-        "LA-C21-meeting-phrase-context"
+        "LA-C21-meeting-phrase-context",
+        "LA-C21-practice"
       ],
       "tex": "latin/book/chapters/ch21-nice-to-meet-you.tex"
     },
@@ -1368,10 +1370,11 @@
     {
       "language": "latin",
       "chapter": 33,
-      "sourceHash": "fnv1a64:3ae7f1218b5dcee0",
+      "sourceHash": "fnv1a64:7df24e4c500c2166",
       "lessonIds": [
         "LA-C33-vesper",
-        "LA-C33-vesper-afterlives"
+        "LA-C33-vesper-afterlives",
+        "LA-C33-practice"
       ],
       "tex": "latin/book/chapters/ch33-evening.tex"
     },
@@ -1396,10 +1399,11 @@
     {
       "language": "latin",
       "chapter": 36,
-      "sourceHash": "fnv1a64:f53ba68fee383655",
+      "sourceHash": "fnv1a64:467e8562c765f453",
       "lessonIds": [
         "LA-C36-salve-post-meridiem",
-        "LA-C36-timeless-salve"
+        "LA-C36-timeless-salve",
+        "LA-C36-practice"
       ],
       "tex": "latin/book/chapters/ch36-good-afternoon.tex"
     },

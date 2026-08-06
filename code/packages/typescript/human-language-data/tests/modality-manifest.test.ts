@@ -586,27 +586,62 @@ describe("corpus regression", () => {
   // every lesson look clean) moves them and fails here rather than shipping a
   // curriculum falsely advertised as drivable.
   //
-  // The lesson-level counts mirror the pins already in `modality.test.ts` and must
-  // agree with them: 1,096 lessons, 51 `pen`, 708 `voice`, 337 `sight`, 65% drivable
-  // after the HL-C32 Russian table remediation. The manifest adds the rollups that only
-  // it computes.
+  // This is now the ONLY place the corpus totals are pinned absolutely. `modality.test.ts`
+  // used to carry a mirror of them and no longer does — it was rewritten to assert
+  // size-independent invariants precisely because every content branch had to edit the
+  // same three lines and collided there. Drift protection lives here and in the generated
+  // `core/lesson-modality.json`, which `check:modality` compares byte for byte.
+  //
+  // The post-HL-C32 baseline was 1,096 lessons: 51 `pen`, 708 `voice`, 337 `sight`, 65%
+  // drivable, 551 reachable in prerequisite order. HL-C24 then added four Latin
+  // chapter-payoff lessons (ch19, ch21, ch33, ch36). All four are terminal consolidation
+  // lessons built only from already-taught material — no table, no sight cue, no pen — so
+  // they land as `voice` and move exactly four counters by exactly four:
+  //
+  //   totalLessons  1096 -> 1100      sight   337 -> 337  (unchanged)
+  //   voice          708 ->  712      pen      51 ->  51  (unchanged)
+  //   drivableLessons 708 -> 712      chapters 375 -> 375 (unchanged — no new chapters)
+  //   drivablePrefixTotal 551 -> 555
+  //
+  // `drivablePrefixTotal` moves with them because each payoff is appended to a chapter
+  // whose prefix already ran to its end, so each extends by one. `fullyDrivableChapters`
+  // holds at 199 for the same reason: appending a `voice` lesson cannot make a chapter
+  // stop being fully drivable, nor make a blocked one start.
+  //
+  // HL-C18A then split the fifteen over-budget Spanish lessons into thirty-three
+  // prerequisite-ordered micro-lessons, a net +18 (two of them `writing`):
+  //
+  //   totalLessons  1100 -> 1118      voice   712 -> 719  (+7)
+  //   sight          337 ->  346      pen      51 ->  53  (+2, the two `writing` splits)
+  //   drivablePercent 65 ->   64      drivablePrefixTotal 555 -> 557
+  //   fullyDrivableChapters 199 -> 195
+  //
+  // TWO COUNTERS MOVE THE WRONG WAY, AND THAT IS THE HONEST RESULT, NOT A REGRESSION TO
+  // PAPER OVER. Splitting a table-bearing lesson does not delete its table — it copies the
+  // relevant rows into several of the micro-lessons, so one `sight` lesson becomes several.
+  // That is why `sight` takes +9 of the +18 while `voice` takes only +7, why the drivable
+  // share rounds down from 65% to 64%, and why four chapters that were fully drivable no
+  // longer are. The gentle-ramp goal (zero over-budget Spanish lessons) is met; the tables
+  // those splits inherited belong to HL-C17, which linearises or honestly reclassifies
+  // them. Tuning the splits to protect this percentage would mean writing steeper lessons
+  // to flatter a metric, which is the exact trade the ramp budget exists to refuse.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1096,
-      voice: 708,
-      sight: 337,
-      pen: 51,
-      drivableLessons: 708,
-      drivablePercent: 65,
+      totalLessons: 1118,
+      voice: 719,
+      sight: 346,
+      pen: 53,
+      drivableLessons: 719,
+      drivablePercent: 64,
       trackCount: 20,
       chapterCount: 375,
-      // Prerequisite order costs a commuter 157 of the 708 ear-only lessons: they sit
+      // Prerequisite order costs a commuter 162 of the 719 ear-only lessons: they sit
       // behind a blocker in their own chapter and are unreachable in the car until
       // HL-C17 linearises the tables or HL-C41 splits the pen segments out.
-      drivablePrefixTotal: 551,
-      fullyDrivableChapters: 199,
+      drivablePrefixTotal: 557,
+      fullyDrivableChapters: 195,
       unstartableChapters: 121,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
