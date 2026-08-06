@@ -46,6 +46,29 @@ See [`roadmap.md`](./roadmap.md) for the plan toward B1 and
 [`session-map.md`](./session-map.md) for how the lessons compose into commute
 sessions.
 
+## What each chapter lets you do
+
+[`chapters.json`](./chapters.json) is the HL05 capability ledger: per chapter, one
+first-person can-do sentence and the lesson that pays it off.
+
+- **Chapter 2** — *"I can give my name in Russian, ask for someone else's, and
+  pick ты or вы to match how well I know them."* Payoff:
+  [`RU-C02-kak-cross-language`](./lessons/RU-C02-kak-cross-language.md), a task —
+  ask *Как вас зовут?* and account for its shape.
+
+  Two honest caveats. Russian has no `core/book-generation.json` targets, so the
+  chapter title and label come from
+  [`book/chapters/ch02-introducing-yourself.tex`](./book/chapters/ch02-introducing-yourself.tex).
+  And the payoff is not the chapter's `practice-mix` consolidation, because those
+  three lessons are still schema v1 and declare no knowledge atoms; the last
+  schema-v2 lesson by sequence stands in. Representativeness is therefore 3/15
+  (0.20), well under the 0.5 floor — recorded rather than padded, and it closes
+  when the practice lessons migrate.
+
+**Chapter 1 is not in the ledger**, and that gap is deliberate: all twelve of its
+lessons are schema v1, so it has no assessable payoff to point at. A placeholder
+would hide debt the HL05 gap report is meant to surface.
+
 ## Read and practise
 
 - [`book/book.tex`](./book/book.tex) builds the free two-chapter starter edition
