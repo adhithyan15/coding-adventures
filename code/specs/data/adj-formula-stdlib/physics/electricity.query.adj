@@ -17,11 +17,20 @@
 
 import "electricity.adj"
 
-% A 2 A current through a 3 Ω resistor: voltage = 2 * 3.
+% Ohm's law, SOLVED FOR RESISTANCE (rung-0 of the CAS-wiring rung,
+% ADJ-FORMULA-LIBRARIES FL-10): given a 6 V / 2 A pairing, recover the
+% resistance directly — the engine rearranges the SAME cited law, it does not
+% look resistance up in a second, separately-written formula. The target of a
+% `symbolic` solve may not already be observed (it is the unknown being solved
+% for), so this runs BEFORE `resistance` is ever `observe`d below.
+observe voltage(6)
 observe current(2)
+? resistance_from_ohms_law(voltage, current)   % expect 3   (R = V / I = 6 / 2)
+
+% Ohm's law, the FORWARD direction: that same 2 A current through the 3 Ω
+% resistor just recovered gives back the 6 V we started from — a round trip.
 observe resistance(3)
 ? voltage(current, resistance)     % expect 6   (Ohm's law: V = I·R)
 
-% That 6 V across the resistor, carrying 2 A: power = 6 * 2.
-observe voltage(6)
+% Electric power at that same current: power = 6 * 2.
 ? power(voltage, current)          % expect 12  (electric power: P = V·I)

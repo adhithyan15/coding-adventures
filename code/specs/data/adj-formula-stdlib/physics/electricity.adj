@@ -31,6 +31,16 @@
 % university .edu physics reference — the same primary source `energy-work.adj`
 % cites for kinetic energy), so each `formula` carries the provenance envelope
 % every shipped grounded clause carries; the linter rejects an unsourced one.
+%
+% This library also carries Ohm's law's rung-0 CAS-wiring counterpart
+% (ADJ-FORMULA-LIBRARIES FL-10, §3D): a circuits question just as often gives
+% the voltage and current and asks for the RESISTANCE, rather than the other
+% way around. `resistance_from_ohms_law` is the SAME cited law, `V = I·R`, but
+% solved for `resistance` instead of computed forward for `voltage` — the
+% engine reaches that answer through `cas-solve`'s real linear-equation solver,
+% not a second hand-written formula:
+%
+%     resistance_from_ohms_law(voltage, current) = solve[ voltage = current · resistance ] for resistance
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -71,5 +81,16 @@ formulabook electricity_laws {
     formula power(voltage, current) = voltage * current
         source "The electric power in watts associated with a complete electric circuit or a circuit component represents the rate at which energy is converted from the electrical energy of the moving charges to some other form"
         locator "https://hyperphysics.gsu.edu/hbase/electric/elepow.html"
+        trust authoritative
+
+    % Ohm's law again, SOLVED FOR RESISTANCE instead of computed forward for
+    % voltage — the same cited proportionality, the same equation, only which
+    % quantity is bound and which is unknown differs. Rung-0 of the CAS-wiring
+    % rung (ADJ-FORMULA-LIBRARIES FL-10): `voltage` and `current` are the
+    % caller-supplied knowns; `resistance` is solved for by the engine's real
+    % linear-equation solver, never a second hand-written `formula`.
+    symbolic resistance_from_ohms_law(voltage, current) { voltage == current * resistance } for resistance
+        source "For many conductors of electricity, the electric current which will flow through them is directly proportional to the voltage applied to them."
+        locator "https://hyperphysics.gsu.edu/hbase/electric/ohmlaw.html"
         trust authoritative
 }
