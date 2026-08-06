@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased — continuous deployment to GitHub Pages
+
+### Added — the app is published for the first time
+
+- Add `.github/workflows/deploy-language-ladder.yml`. Until now the app had
+  481 passing tests and no way for anyone to actually use it: no workflow
+  referenced it, so it had never been published. It now builds on every push
+  to `main` that touches its inputs and deploys to the `gh-pages` branch at
+  <https://adhithyan15.github.io/coding-adventures/human-languages/language-ladder/>.
+- Publish under `human-languages/language-ladder` rather than a flat top-level
+  directory, joining the book catalog already at `human-languages/books`, and
+  set `keep_files: true` so other published apps on `gh-pages` survive.
+- Trigger on `code/learning/human-languages/**` as well as this app and the
+  `human-language-data` package. `src/` imports the curriculum content
+  directly, so lessons, `spine.json`, script data, and fonts are bundled at
+  build time — without that trigger the published app would freeze at the
+  curriculum's state on its last deploy.
+- Install `human-language-data` before this app in CI, mirroring the `BUILD`
+  file, because the package resolves to TypeScript source and needs its own
+  `node_modules` on a clean runner.
+
+### Notes
+
+- No `VITE_BASE` handling was added. `vite.config.ts` already sets
+  `base: "./"`, so built asset URLs are relative and work from the Pages
+  sub-path as-is; an absolute base like `engram-app`'s would be redundant.
+
 ## Unreleased — schema-v2 lesson compatibility
 
 ### Changed — Persian and Urdu Chapter 5 frontiers

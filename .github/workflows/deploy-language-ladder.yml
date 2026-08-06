@@ -1,0 +1,111 @@
+# ================================================================
+# Deploy Language Ladder to GitHub Pages
+# ================================================================
+#
+# Builds the language-ladder Vite SPA (the HL03 unified curriculum app)
+# and deploys it to the gh-pages branch under human-languages/language-ladder/,
+# preserving everything else already published there (human-languages/books/,
+# engram/, logic-gates/, ...) via keep_files.
+#
+# Pages serves from the gh-pages branch (legacy mode), so the app lands at:
+#   https://adhithyan15.github.io/coding-adventures/human-languages/language-ladder/
+#
+# Why nested under human-languages/ rather than a flat top-level directory:
+# the Human Languages track already owns that namespace on gh-pages —
+# human-languages-books.yml publishes the book catalog to
+# human-languages/books/. The ladder is the interactive companion to those
+# books, drawn from the same curriculum, so it belongs beside them rather
+# than scattered among the unrelated visualizers at the root.
+#
+# NOTE — no VITE_BASE here, unlike deploy-engram.yml. That workflow has to
+# inject an absolute base because engram-app reads `process.env.VITE_BASE`.
+# language-ladder's vite.config.ts instead hardcodes `base: "./"`, so every
+# asset URL in the built index.html is already relative and resolves correctly
+# from any sub-path. Setting VITE_BASE here would do nothing — the app never
+# reads it — so the relative base is what we rely on.
+#
+# ---------------------------------------------------------------
+# Trigger paths: why they are broader than "just the app"
+# ---------------------------------------------------------------
+# The build inlines content from OUTSIDE the app directory:
+#
+#   code/packages/typescript/human-language-data  ← the one runtime `file:` dep
+#   code/learning/human-languages/**              ← imported directly by src/:
+#                                                   core/languages.json,
+#                                                   core/spine.json,
+#                                                   core/generated-book-hashes.json,
+#                                                   */curriculum.json (glob),
+#                                                   */lessons/*.md (glob),
+#                                                   data/scripts/*.json,
+#                                                   _fonts/*.ttf
+#
+# Because that curriculum content is bundled at build time, a new lesson or a
+# corrected glyph table only reaches readers when this workflow re-runs. Leaving
+# code/learning/human-languages out of the path filter would silently freeze the
+# published app at whatever the curriculum looked like on its last deploy.
+
+name: Deploy Language Ladder
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/language-ladder/**"
+      - "code/packages/typescript/human-language-data/**"
+      - "code/learning/human-languages/**"
+      - ".github/workflows/deploy-language-ladder.yml"
+  workflow_dispatch:
+
+# The workflow only needs to push the built assets onto the gh-pages branch.
+# `contents: write` is the whole of it — no packages, no id-token, no pull
+# requests. Same minimum deploy-engram.yml uses.
+permissions:
+  contents: write
+
+# Two overlapping runs would both try to push to gh-pages and the loser fails
+# on a non-fast-forward. Serialize instead; only the newest content matters.
+concurrency:
+  group: deploy-language-ladder
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Per lessons.md ("Clean Vite deploys with source-level `file:`
+      # dependencies must install every local source package in dependency
+      # order"): human-language-data declares `main: src/index.ts`, so Vite
+      # follows the `file:` symlink back into the package's TypeScript SOURCE
+      # and compiles it as part of this app. Source needs the package's own
+      # node_modules present; a fresh runner has none until we install here.
+      # This mirrors the app's own BUILD file, which installs the dep first
+      # for exactly this reason. Do not collapse it into the app's install
+      # with --install-links.
+      - name: Install package dependencies
+        run: cd code/packages/typescript/human-language-data && npm install
+
+      - name: Install app dependencies
+        run: cd code/programs/typescript/language-ladder && npm install
+
+      - name: Build for GitHub Pages
+        run: cd code/programs/typescript/language-ladder && npm run build
+
+      # Fail loudly here rather than silently publishing an empty directory.
+      - name: Verify build output
+        run: test -s code/programs/typescript/language-ladder/dist/index.html
+
+      - name: Deploy to GitHub Pages (human-languages/language-ladder/)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/language-ladder/dist
+          destination_dir: human-languages/language-ladder
+          keep_files: true

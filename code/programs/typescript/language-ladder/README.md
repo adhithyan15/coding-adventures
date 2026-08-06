@@ -233,6 +233,32 @@ npm run build      # production build to dist/
 npm run preview    # serve the production build
 ```
 
+## Deployed
+
+**Live:** <https://adhithyan15.github.io/coding-adventures/human-languages/language-ladder/>
+
+`.github/workflows/deploy-language-ladder.yml` builds the app and pushes
+`dist/` to the `gh-pages` branch under `human-languages/language-ladder/`,
+beside the book catalog at `human-languages/books/` that the same curriculum
+feeds. `keep_files: true`, so publishing the ladder never disturbs the other
+apps already on that branch.
+
+No deploy-specific base path is needed: `vite.config.ts` sets `base: "./"`, so
+every asset URL in the built `index.html` is relative and the bundle works
+unchanged from a Pages sub-path, a local `file://` open, or `npm run preview`.
+
+The workflow re-runs on pushes to `main` that touch this app, the
+`human-language-data` package, or **`code/learning/human-languages/**`**. That
+last path matters: `src/` imports the curriculum itself — `languages.json`,
+`spine.json`, every `*/curriculum.json`, every `*/lessons/*.md`, the script
+tables, and the Arabic font — so lesson content is *baked into the bundle at
+build time*. A new lesson only reaches readers once this workflow runs again.
+
+Build order is load-bearing, and CI mirrors this app's `BUILD` file: install
+`code/packages/typescript/human-language-data` **first**, then this app. That
+package ships TypeScript source (`main: src/index.ts`), so Vite compiles it in
+place and it needs its own `node_modules` on a clean runner.
+
 ## Practice mode (recall drill)
 
 Toggle **Practice** to drill *recall*: the app shows a **sound** and you pick the
