@@ -51,6 +51,14 @@ function classifyBlock(title: string): LessonBlockType {
   if (normalized.startsWith("you'll want to know")) return "input";
   if (normalized.startsWith("sounds you'll need")) return "pronunciation";
   if (normalized.startsWith("script")) return "script";
+  // "The letters in this word" is HL00's inline-letters section: the place a word lesson
+  // teaches the glyphs that word needs. It is a `script` block in everything but name —
+  // 240 lessons across 12 tracks use this exact heading — and it mapped to `unknown`,
+  // which schema v2 rejects. That single gap blocked the v2 migration for every Indic
+  // track at once. Classifying it honestly costs drivability (a letter shape cannot be
+  // read aloud) and buys a migration path; the driving edition is a filter over the
+  // modality flag, not a quality bar, so the honest label is the right one.
+  if (normalized.includes("letters in this word")) return "script";
   // "Writing:" opens a hand-formation section — the one detachable block type.
   // Checked before the looser prefixes below because a writing section's title
   // normally names the letter it teaches ("Writing: మ — the tick on top").
