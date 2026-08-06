@@ -2456,6 +2456,16 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
             false,
             "display: flex; flex-direction: column;",
         ),
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a plain vertical container: the content still renders, it
+        // just isn't draggable here. Erroring instead would mean a layout using drag
+        // cannot be emitted to this backend AT ALL. See UI35-host-drag-drop.md.
+        "HostDraggable" | "HostDropTarget" => mk(
+            "<div>",
+            "</div>",
+            false,
+            "display: flex; flex-direction: column;",
+        ),
         "Text" => mk("<span>", "</span>", false, ""),
         "Image" => {
             // Image is a void element. Future PRs can wire in `src` /

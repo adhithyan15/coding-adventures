@@ -1,8 +1,12 @@
 //! Complex-app acceptance gate for native MSL hover activation.
 //!
 //! Task App deliberately authors all interaction styling in Mosaic. Its light
-//! theme exercises nine independently named HostButton hover surfaces,
-//! including controls inside repeated project and task DataTemplates.
+//! theme exercises thirteen independently named HostButton hover surfaces,
+//! including controls inside repeated project and task DataTemplates. (The
+//! board view's HostDraggable card hover is authored in Mosaic too, but the
+//! XAML backend doesn't lower HostDraggable pointer states yet — native
+//! shells for the board are a later roadmap phase — so it isn't counted
+//! here.)
 
 use std::fs;
 use std::path::PathBuf;
@@ -45,7 +49,7 @@ fn task_app_hover_states_lower_to_native_row_local_xaml() {
 
     assert_eq!(
         output.matches("Binding IsPointerOver").count(),
-        12,
+        16,
         "each property-scoped hover state must use native pointer state:\n{output}"
     );
     for target in [
@@ -53,7 +57,11 @@ fn task_app_hover_states_lower_to_native_row_local_xaml() {
         "ProjectAdd",
         "ProjectSub",
         "SegListOff",
+        "SegListOff2",
+        "SegBoardOff",
+        "SegBoardOff2",
         "SegTlOff",
+        "SegTlOff2",
         "AddBtn",
         "Toggle",
         "TaskName",

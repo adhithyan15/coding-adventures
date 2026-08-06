@@ -2032,6 +2032,17 @@ fn emit_xaml_node(
         // attached property on the wrapped child. HostNumberInput
         // uses `<NumberBox>` (WinUI 3 numeric input with built-in Â±
         // stepper).
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a vertical StackPanel: the card and the column still render,
+        // they just aren't draggable here.
+        //
+        // Erroring instead would mean a layout using drag cannot be emitted to this
+        // backend at all, which took down the task-app cross-backend tests the moment
+        // the app grew a board. Degrading to the content is what UI35 asks for.
+        "HostDraggable" | "HostDropTarget" => {
+            emit_stack_panel(node, indent, part_styles, "Vertical", ctx)
+        }
+
         "HostLink" => emit_host_link(node, indent, part_styles, ctx),
         "HostTooltip" => emit_host_tooltip(node, indent, part_styles, ctx),
         "HostNumberInput" => emit_host_number_input(node, indent, part_styles, ctx),

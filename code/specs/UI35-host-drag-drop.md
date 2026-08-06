@@ -219,3 +219,24 @@ Each step: tests → `/security-review` → PR → `/babysit-pr`.
   worth its own primitive later; the calendar ships drag-to-*move* first.
 - Any engine change. This spec is purely the UI kernel; the task-side operations it feeds
   (`move_task`, `set_status`, `reparent`) already exist.
+
+## A backend that hasn't implemented drag must still render the content
+
+Adding a board to `task-app` broke the SwiftUI and XAML builds outright:
+`UnknownPrimitive("HostDropTarget")`. Those backends hadn't implemented the family, so
+a layout that merely *contained* a draggable could not be emitted to them **at all** —
+the app became un-buildable everywhere the moment one view used drag.
+
+That is the wrong failure mode. A primitive the kernel defines is part of the shared
+vocabulary, and an app author cannot be expected to maintain a different layout per
+host. Every backend therefore lowers `HostDraggable` / `HostDropTarget` to its plain
+vertical container until it implements the real thing: the card and the column still
+render and are still readable, they simply aren't draggable there.
+
+> **Requirement.** A backend must never fail to emit because it lacks drag support.
+> Lower the two primitives to a plain container and carry on. Implementing the real
+> interaction is then a strict upgrade, not a prerequisite for the app to build.
+
+Status: **react** and **html** implement the interaction; **swiftui**, **xaml**, **qt**,
+**compose**, **flutter** and **webcomponent** degrade to a container.
+
