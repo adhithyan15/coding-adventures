@@ -2100,7 +2100,7 @@ declarations, and maps when `noEmitOnError` is not enabled. After reproducing a
 compiler-path failure, inspect the source tree for generated artifacts and
 remove only the exact verified outputs before continuing.
 
-## Lesson 97 — `dart/deflate`'s wire format is not RFC 1951; `dart/zip` (and every sibling `zip` port) must not depend on the language's `deflate` package
+## Lesson 98 — `dart/deflate`'s wire format is not RFC 1951; `dart/zip` (and every sibling `zip` port) must not depend on the language's `deflate` package
 
 **Date:** 2026-08-05
 
@@ -2114,3 +2114,50 @@ Checking every other language's existing `zip` package (`code/packages/{python,r
 - A DEFLATE (or any RFC-wire-format) package's decoder used inside a container format (ZIP, gzip, PNG) needs full spec-range decode capability, not just enough to read its own encoder's output — e.g. RFC 1951's length symbol 285 (length 258, 0 extra bits) is outside the 257–284 range that a writer capped at 255-byte matches ever produces, but a real-world encoder (`zip`(1) itself, immediately, in the very first CLI-interop test run) emits it freely. A hand-copied length/distance table sized to your own writer's output range will silently index-out-of-bounds the first time it reads someone else's real stream — caught here only because TC-10 shells out to the actual `zip`/`unzip` CLI rather than only round-tripping through the package's own encoder.
 
 Implemented in `code/packages/dart/zip/lib/coding_adventures_zip.dart` (self-contained CRC-32, RFC 1951 bit I/O, canonical Huffman decoder, fixed-Huffman writer, full stored/fixed/dynamic reader, ZipWriter/ZipReader). Verified against a real Python-`zipfile` dynamic-Huffman fixture and against the system `zip`/`unzip` CLI in both directions (TC-10, via `dart:io Process`, skips gracefully when Info-ZIP isn't on `PATH` — same pattern as `dart/zstd`'s TC-9).
+
+---
+
+## `cpp/zstd` (CMP07): std::span isn't C++17, and the Rust reference itself skips a spec-required check
+
+**Date:** 2026-08-05
+
+**What happened:** Implementing the first C++ port of `zstd` (CMP07), two
+small but worth-recording gotchas surfaced while translating the corrected
+`code/packages/rust/zstd` reference into pure ISO C++17:
+
+1. The task brief's suggested public API signature used
+   `std::span<const std::uint8_t>` as the parameter type. `std::span` is a
+   **C++20** addition — this repo's `iso-harness` compiles everything with
+   `-std=c++17 -pedantic-errors`, so `std::span` doesn't exist under that
+   standard and would fail to compile (not just warn). Used
+   `const std::vector<std::uint8_t>&` instead, matching `cpp/lzss`'s
+   existing convention. When a task description's example code and a repo's
+   actual pinned language standard disagree, the pinned standard wins —
+   check `ISO_CXXSTD`/the harness's `-std=` flag before assuming a
+   "reasonable-sounding" modern-C++ type is actually available.
+2. `code/specs/CMP07-zstd.md`'s Security Considerations and `lessons.md`
+   Lesson 94 both require a ZStd decoder to reject trailing bytes after the
+   frame's end (past an optional content checksum) rather than silently
+   ignoring them. The `code/packages/rust/zstd` reference this port was
+   translated from — despite being the corrected, post-audit reference for
+   the FSE codec bugs (Lessons 95-97) — does **not** actually implement this
+   check (its `decompress()` just returns after optionally skipping the
+   checksum bytes, with no `pos == data.len()` assertion). The C++ port
+   implements the check anyway, since both the spec and Lesson 94
+   explicitly require it and it doesn't affect interop with the real `zstd`
+   CLI's own output (a single CLI invocation always produces exactly one
+   frame with nothing trailing). **Rule:** a reference implementation
+   flagged as "already corrected" for one specific bug class is not
+   automatically correct against every requirement in the spec/lessons.md —
+   cross-check the actual requirements text, not just the reference's
+   current behavior, especially for checks that are cheap to add and
+   explicitly called out as security-relevant.
+
+**Verification that the FSE bug class itself (Lessons 95-97) was avoided:**
+implemented directly against the corrected reference rather than
+re-deriving the algorithm from the RFC text or memory, then verified via
+real `zstd` CLI interop (TC-9, both directions) plus a high-sequence-count
+regression test at the `Number_of_Sequences` 1-byte/2-byte wire-encoding
+boundary — 115 checks passed under both g++ and clang++ with no `zstd` CLI
+skip (the binary was available in the dev environment), confirming actual
+RFC 8878 wire-format conformance rather than just internal self-consistency.
