@@ -629,11 +629,20 @@ static void pmlist_free(PMList *l) {
 }
 
 /* Verify code lengths satisfy Kraft's inequality (Sum 2^(max_len-len) <=
- * 2^max_len) and respect the cap. Integer arithmetic throughout — no float
- * rounding error possible. A `compress`-side invariant: if this ever fails
- * (it shouldn't, given our bounded alphabets), the caller discards the plan
- * and falls back to a fixed block rather than ever emitting an invalid
- * stream. */
+ * 2^max_len) and respect the cap — i.e. the code is not "over-subscribed".
+ * Integer arithmetic throughout — no float rounding error possible.
+ *
+ * Used on both sides: on encode, this is an invariant on our OWN
+ * package-merge output (if it ever failed — it shouldn't, given our bounded
+ * alphabets — the caller discards the plan and falls back to a fixed block
+ * rather than ever emitting an invalid stream). On decode, it validates
+ * attacker-controlled code-length arrays (the CL table, and the LL/distance
+ * tables decoded through it) before they are trusted to build a decode
+ * table — matching zlib/puff.c's stricter RFC 1951 conformance, which
+ * rejects a stream describing an impossible code rather than silently
+ * decoding it to unspecified output. (An under-subscribed / incomplete code
+ * is left permitted, matching common decoder practice — RFC 1951 doesn't
+ * require every leaf be used, e.g. a single-symbol alphabet.) */
 static int kraft_sum_ok(const unsigned char *lengths, size_t n, unsigned max_len) {
     uint64_t total = 0;
     uint64_t limit = (uint64_t)1 << max_len;
@@ -1533,6 +1542,17 @@ DeflateStatus deflate_decompress(const unsigned char *data, size_t len,
                 }
                 cl_lengths[CL_PERMUTATION[i]] = (unsigned char)v;
             }
+            /* Reject an over-subscribed CL code (Kraft sum > 1) up front,
+             * matching zlib/puff.c's stricter conformance: without this, a
+             * hostile stream could describe a CL "code" no bit sequence
+             * actually satisfies, which is harmless memory-safety-wise (every
+             * lookup below is still bounds-checked) but is not a valid RFC
+             * 1951 stream and should be rejected rather than silently decoded
+             * to unspecified output. */
+            if (!kraft_sum_ok(cl_lengths, 19, 7)) {
+                free(output.data);
+                return DEFLATE_ERR_MALFORMED;
+            }
             if (!huff_build_decode_table(cl_lengths, 19, &clt)) {
                 free(output.data);
                 return DEFLATE_ERR_ALLOC;
@@ -1549,6 +1569,15 @@ DeflateStatus deflate_decompress(const unsigned char *data, size_t len,
             ok = decode_code_lengths(&clt, &r, hlit + hdist, all_lengths);
             huff_free_decode_table(&clt);
             if (!ok) {
+                free(all_lengths);
+                free(output.data);
+                return DEFLATE_ERR_MALFORMED;
+            }
+            /* Same over-subscription check for the decoded LL and distance
+             * code-length arrays before trusting them to build decode
+             * tables. */
+            if (!kraft_sum_ok(all_lengths, hlit, DEFLATE_MAX_BITS) ||
+                !kraft_sum_ok(all_lengths + hlit, hdist, DEFLATE_MAX_BITS)) {
                 free(all_lengths);
                 free(output.data);
                 return DEFLATE_ERR_MALFORMED;
