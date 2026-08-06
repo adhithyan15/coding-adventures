@@ -5,6 +5,11 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  MODALITY_MANIFEST_PATH,
+  type ModalityManifest,
+  type ModalityManifestLesson,
+} from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import type {
   BookChapter,
@@ -156,6 +161,44 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
     }
   }
   return out;
+}
+
+/**
+ * Read the generated modality manifest (HL08 / HL-C44).
+ *
+ * The consumer-side counterpart of `modality-cli --write`. An app, a book builder, or
+ * the future driving edition reads this instead of importing the derivation and
+ * re-parsing 1,096 Markdown files — which is the point of emitting it at all.
+ *
+ * Required, not optional, and deliberately so. A missing manifest throws rather than
+ * returning an empty one: "no modality data" and "no lesson needs eyes" are opposite
+ * facts, and a loader that quietly returns the second when it means the first would
+ * hand a driver the handwriting drills. CI's `--check` guarantees the file is present
+ * and current, so the throw is unreachable in a healthy checkout.
+ */
+export function loadModalityManifest(root = defaultCurriculumRoot()): ModalityManifest {
+  return JSON.parse(readFileSync(join(root, MODALITY_MANIFEST_PATH), "utf8")) as ModalityManifest;
+}
+
+/**
+ * Index a manifest's lessons by id.
+ *
+ * A `Map`, never a plain object, and this is the one place in the package where that
+ * choice is load-bearing rather than stylistic. The keys come straight out of parsed
+ * JSON, so `obj[lesson.id] = lesson` with an id of `__proto__` writes the object's
+ * prototype instead of a property — every later lookup then inherits attacker-chosen
+ * fields, and `manifest["anything"]` starts answering with a modality nobody authored.
+ * `Map` keys are plain data with no prototype chain behind them, so the same input is
+ * simply a key named `__proto__`.
+ *
+ * Providing this here means no consumer has to rediscover that.
+ */
+export function modalityManifestById(
+  manifest: ModalityManifest,
+): Map<string, ModalityManifestLesson> {
+  const index = new Map<string, ModalityManifestLesson>();
+  for (const lesson of manifest.lessons) index.set(lesson.id, lesson);
+  return index;
 }
 
 /** Read data/scripts/*.json (may be empty while scripts are still being authored). */
