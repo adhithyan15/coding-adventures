@@ -56,6 +56,34 @@ shown, LaTeX book.
   dependency-ordered schema-v2 companions embedded inside Chapter 1 rather than
   a gated alphabet course.
 
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's
+[`HL05`](../../../specs/HL05-chapter-capability-and-step-by-step-shape.md)
+capability ledger: for each chapter, one first-person `canDo`, the shared spine
+nodes it realises, and a `payoff` naming the lesson that proves the claim, its
+kind (`dialogue` / `task` / `production`), a one-line summary, and the knowledge
+atoms it exercises. It is **authored intent, not a derived cache** — no
+validator may rewrite it.
+
+Two things about this track's ledger are worth knowing before reading it:
+
+- **Chapters 2–5 have no entry, on purpose.** Their lessons are still schema v1
+  with no `practises.knowledge`, so a payoff there could not name a single real
+  atom. The gap is left visible rather than stubbed, because the HL05 gap
+  report's whole job is to measure exactly this kind of debt.
+- **Every payoff is a chapter's last lesson by `sequence`,** because no Tamil
+  chapter yet ends on a schema-v2 `practice` or `practice-mix`. Where that last
+  lesson is one of the eight inline `writing` lessons, or an etymology lesson
+  whose closing work is weighing evidence, `payoff.kind` is `task` and the
+  summary describes that work plainly instead of dressing it up as an exchange.
+
+The `canDo` statements are pitched at this track's real reader — fluent and
+literate in Tamil, but never formally taught its grammar — so they claim
+grammatical and etymological precision (which register a moment calls for, why
+*I know Tamil* takes a dative experiencer, where a dictionary hedges) rather
+than the ability to read the letters.
+
 ## Book / fonts
 
 The 31-chapter book compiles with XeLaTeX using **vendored** Noto fonts
@@ -65,7 +93,8 @@ against Language Ladder source hashes. `latexmk -xelatex book.tex`.
 
 ## Files
 
-- [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
+- [`lessons/`](./lessons/) · [`chapters.json`](./chapters.json)
+  · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 
