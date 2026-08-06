@@ -52,6 +52,21 @@ data Sequence = Sequence
     }
     deriving (Eq, Show)
 
+-- | The three Repeated_Offset registers threaded through sequence decoding
+-- (RFC 8878 SS3.1.1.3.2.1.1): @(Repeated_Offset1, Repeated_Offset2,
+-- Repeated_Offset3)@. They are FRAME-scoped, not block-scoped -- "For the
+-- first block, the starting offset history is populated with
+-- Repeated_Offset1=1, Repeated_Offset2=4, Repeated_Offset3=8", and every
+-- later Compressed block in the same frame continues from wherever the
+-- previous one's sequences left them (Raw and RLE blocks pass them through
+-- unmodified). See 'decodeSequences' for how an Offset_Value of 1, 2, or 3
+-- is interpreted against these registers instead of as a literal distance.
+type RepOffsets = (Int, Int, Int)
+
+-- | The starting offset history for the first block of a frame.
+initialRepOffsets :: RepOffsets
+initialRepOffsets = (1, 4, 8)
+
 data DecodeEntry = DecodeEntry
     { decodeEntrySymbol :: Int
     , decodeEntryBits :: Int
@@ -245,13 +260,19 @@ decompress input = do
                 2 -> 4
                 _ -> 8
     requireAvailable input afterDictionary contentSizeBytes "frame content size"
-    (afterBlocks, output) <- decodeBlocks (afterDictionary + contentSizeBytes) Seq.empty
+    (afterBlocks, output) <-
+        decodeBlocks (afterDictionary + contentSizeBytes) Seq.empty initialRepOffsets
     let afterChecksum = afterBlocks + if checksum then 4 else 0
     when checksum (requireAvailable input afterBlocks 4 "content checksum")
     unless (afterChecksum == BS.length input) (Left "trailing bytes after Zstandard frame")
     Right (BS.pack (toList output))
   where
-    decodeBlocks position output = do
+    -- `repOffsets` (see 'RepOffsets') is threaded through every block in the
+    -- frame: Raw and RLE blocks pass it through unchanged (they carry no
+    -- sequences), and each Compressed block both consults it (to resolve
+    -- Repeated-Offset sequences) and returns the version its own sequences
+    -- left it in, for the next block to continue from.
+    decodeBlocks position output repOffsets = do
         requireAvailable input position 3 "block header"
         let header =
                 byteAt input position
@@ -262,13 +283,13 @@ decompress input = do
             blockSize = header `shiftR` 3
             payloadPosition = position + 3
         when (blockSize > maxBlockSize) (Left "block exceeds the 128 KiB limit")
-        (nextPosition, nextOutput) <-
+        (nextPosition, nextOutput, nextRepOffsets) <-
             case blockType of
                 0 -> do
                     requireAvailable input payloadPosition blockSize "raw block"
                     ensureOutputLimit (Seq.length output) blockSize
                     let payload = BS.take blockSize (BS.drop payloadPosition input)
-                    Right (payloadPosition + blockSize, appendBytes output payload)
+                    Right (payloadPosition + blockSize, appendBytes output payload, repOffsets)
                 1 -> do
                     requireAvailable input payloadPosition 1 "RLE block"
                     ensureOutputLimit (Seq.length output) blockSize
@@ -276,16 +297,17 @@ decompress input = do
                     Right
                         ( payloadPosition + 1
                         , foldl' (\current _ -> current |> value) output [1 .. blockSize]
+                        , repOffsets
                         )
                 2 -> do
                     requireAvailable input payloadPosition blockSize "compressed block"
                     let payload = BS.take blockSize (BS.drop payloadPosition input)
-                    decoded <- decompressBlock payload output
-                    Right (payloadPosition + blockSize, decoded)
+                    (decoded, updatedRepOffsets) <- decompressBlock payload output repOffsets
+                    Right (payloadPosition + blockSize, decoded, updatedRepOffsets)
                 _ -> Left "reserved block type 3"
         if isLast
             then Right (nextPosition, nextOutput)
-            else decodeBlocks nextPosition nextOutput
+            else decodeBlocks nextPosition nextOutput nextRepOffsets
 
 compressBlock :: BS.ByteString -> Either String (Maybe BS.ByteString)
 compressBlock block = do
@@ -322,16 +344,16 @@ collectTokens tokens = (reverse literals, reverse sequences)
                 , 0
                 )
 
-decompressBlock :: BS.ByteString -> Seq Word8 -> Either String (Seq Word8)
-decompressBlock input initialOutput = do
+decompressBlock :: BS.ByteString -> Seq Word8 -> RepOffsets -> Either String (Seq Word8, RepOffsets)
+decompressBlock input initialOutput repOffsets0 = do
     (literals, literalBytes) <- decodeLiterals input
     if literalBytes >= BS.length input
-        then appendRemainingLiterals literals 0 initialOutput
+        then (\decoded -> (decoded, repOffsets0)) <$> appendRemainingLiterals literals 0 initialOutput
         else do
             (sequenceCount, countBytes) <- decodeSequenceCount (BS.drop literalBytes input)
             let modesPosition = literalBytes + countBytes
             if sequenceCount == 0
-                then appendRemainingLiterals literals 0 initialOutput
+                then (\decoded -> (decoded, repOffsets0)) <$> appendRemainingLiterals literals 0 initialOutput
                 else do
                     requireAvailable input modesPosition 1 "symbol compression modes"
                     let modes = BS.index input modesPosition
@@ -349,7 +371,7 @@ decompressBlock input initialOutput = do
                     (literalState, reader1) <- readBits literalLengthAccuracyLog reader0
                     (offsetState, reader2) <- readBits offsetAccuracyLog reader1
                     (matchState, reader3) <- readBits matchLengthAccuracyLog reader2
-                    (output, literalPosition, _) <-
+                    (output, literalPosition, _, repOffsets1) <-
                         decodeSequences
                             sequenceCount
                             literals
@@ -362,7 +384,9 @@ decompressBlock input initialOutput = do
                             initialOutput
                             0
                             reader3
-                    appendRemainingLiterals literals literalPosition output
+                            repOffsets0
+                    decoded <- appendRemainingLiterals literals literalPosition output
+                    Right (decoded, repOffsets1)
 
 decodeSequences ::
     Int ->
@@ -376,10 +400,11 @@ decodeSequences ::
     Seq Word8 ->
     Int ->
     BitReader ->
-    Either String (Seq Word8, Int, BitReader)
-decodeSequences 0 _ _ _ _ _ _ _ output literalPosition reader =
-    Right (output, literalPosition, reader)
-decodeSequences remaining literals literalTable matchTable offsetTable literalState matchState offsetState output literalPosition reader0 = do
+    RepOffsets ->
+    Either String (Seq Word8, Int, BitReader, RepOffsets)
+decodeSequences 0 _ _ _ _ _ _ _ output literalPosition reader repOffsets =
+    Right (output, literalPosition, reader, repOffsets)
+decodeSequences remaining literals literalTable matchTable offsetTable literalState matchState offsetState output literalPosition reader0 (rep1, rep2, rep3) = do
     -- Step 1 -- PEEK all three symbols from the current states. This is a
     -- bare table lookup (table ! state) and consumes NO bits: the FSE
     -- state itself already IS the decode-table index. Only the state
@@ -405,8 +430,56 @@ decodeSequences remaining literals literalTable matchTable offsetTable literalSt
     (literalExtra, reader3) <- readBits (codeExtraBits literalRange) reader2
     let literalLength = codeBaseline literalRange + literalExtra
         matchLength = codeBaseline matchRange + matchExtra
+        -- Offset_Value -> actual match offset (RFC 8878 SS3.1.1.3.2.1.1).
+        -- `offsetCode` is read directly as a bit count (unlike the LL/ML
+        -- symbols, the offset FSE symbol IS the number of extra bits), so
+        -- `rawOffset` is exactly the wire's Offset_Value. `offsetCode >= 2`
+        -- guarantees rawOffset = (1 `shiftL` offsetCode) + extra >= 4, i.e.
+        -- Offset_Value > 3: an ordinary explicit offset, computed as
+        -- `rawOffset - 3` same as before this fix. `offsetCode <= 1`
+        -- guarantees rawOffset in {1, 2, 3}: a Repeated-Offset reference
+        -- into (rep1, rep2, rep3) instead of a literal distance.
+        --
+        -- An earlier revision of this decoder treated EVERY offset code as
+        -- the explicit case (`rawOffset - 3` unconditionally), which is
+        -- wrong for codes 0 and 1: real `zstd` encoders emit these
+        -- constantly (they're one of the format's principal entropy wins,
+        -- especially for periodic/repetitive data), but this port's own
+        -- encoder never emits them (`sequenceOffset >= 1` always forces
+        -- `rawOffset = sequenceOffset + 3 >= 4` in `encodeOne`), so no
+        -- self-round-trip test ever exercised this path. See lessons.md
+        -- Lesson 100 and PR #9941 (the `c/zstd` port where this class of gap
+        -- was first found and cross-checked against both the RFC prose and
+        -- the literal `ZSTD_decodeSequence` reference C source).
         rawOffset = (1 `shiftL` offsetCode) .|. offsetExtra
-        matchOffset = rawOffset - 3
+        -- RFC 8878: "when the current sequence's literals_length is 0,
+        -- repeated offsets are shifted by 1" -- LL code 0 is the only
+        -- literal-length code with baseline 0 and 0 extra bits (see
+        -- `literalLengthCodes`), so `literalCode == 0` iff the decoded `ll`
+        -- value is 0; no extra bits need to be read to know this.
+        literalLengthIsZero = literalCode == 0
+        (matchOffset, nextRep1, nextRep2, nextRep3)
+            | offsetCode >= 2 =
+                -- Explicit offset: full rotate, newest offset becomes rep1.
+                let explicitOffset = rawOffset - 3
+                 in (explicitOffset, explicitOffset, rep1, rep2)
+            | otherwise =
+                -- Repeated-Offset reference. The four (ll-is-zero, rawOffset)
+                -- combinations collapse to one selector in [0, 3]:
+                --   selector = (if literalLengthIsZero then 1 else 0) + rawOffset - 1
+                -- and each selector both resolves the offset AND rotates the
+                -- history the same way the reference decoder does:
+                --   0 -> reuse rep1 unchanged (no rotation)
+                --   1 -> use rep2 (rep1<->rep2 swap; rep3 untouched)
+                --   2 -> use rep3 (full rotate: new, old rep1, old rep2)
+                --   3 -> use rep1-1 (full rotate, same shape as selector 2)
+                case (if literalLengthIsZero then 1 else 0) + rawOffset - 1 of
+                    0 -> (rep1, rep1, rep2, rep3)
+                    1 -> (rep2, rep2, rep1, rep3)
+                    2 -> (rep3, rep3, rep1, rep2)
+                    _ ->
+                        let repeatedMinusOne = if rep1 > 0 then rep1 - 1 else 0
+                         in (repeatedMinusOne, repeatedMinusOne, rep1, rep2)
     when
         (literalLength < 0 || literalPosition > BS.length literals - literalLength)
         (Left "literal run exceeds the literals section")
@@ -453,6 +526,7 @@ decodeSequences remaining literals literalTable matchTable offsetTable literalSt
         afterMatch
         (literalPosition + literalLength)
         reader6
+        (nextRep1, nextRep2, nextRep3)
 
 appendRemainingLiterals :: BS.ByteString -> Int -> Seq Word8 -> Either String (Seq Word8)
 appendRemainingLiterals literals literalPosition output = do

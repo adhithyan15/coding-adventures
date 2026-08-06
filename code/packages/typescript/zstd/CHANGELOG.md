@@ -3,6 +3,66 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.3] — 2026-08-05
+
+### Fixed
+
+- **Decoder never implemented Repeated-Offset (R1/R2/R3) sequence decoding**
+  (RFC 8878 §3.1.1.3.2.1.1) — every offset code was treated as an explicit
+  offset (`actual_offset = raw_offset - 3`), which underflows for offset
+  codes 0–2 and produces a decode error (or, worse, silently wrong output)
+  for code 3. This package's own `compress()` never emits repeat-offset
+  codes by design (`encodeSequencesSection` always writes an explicit code,
+  since the minimum LZ77 match offset of 1 guarantees `raw_offset >= 4`), so
+  its own compress/decompress round trip — and every pre-existing test —
+  never exercised the decode path. The real `zstd` CLI's encoder uses
+  repeat offsets constantly (one of its main entropy wins, especially for
+  periodic/repetitive data), so any real-world `.zst` file using them
+  failed to decode. Found via a sibling audit of `code/packages/c/zstd`
+  (PR #9941, first `c/zstd` port) that surfaced the same gap across every
+  language port in the repo; see lessons.md Lesson 98 for the full writeup
+  and cross-check methodology.
+
+  Fixed in `decompressBlock` / `decompress`: implemented full
+  Repeated-Offset (R1/R2/R3) decode support, cross-checked against RFC 8878
+  prose, the reference C source (`ZSTD_decodeSequence` in
+  `zstd_decompress_block.c`, fetched directly from
+  `github.com/facebook/zstd` rather than recalled from memory — including
+  the actual predefined `OF_base`/`OF_bits` tables in
+  `zstd_decompress_internal.h`, since a naive `1 << offset_code` assumption
+  for the offset FSE table's baseline gives the wrong repeat-offset slot for
+  offset code 1), and the already-merged `c/zstd` fix (PR #9941). The three
+  registers (`RepOffsets`: `r1`/`r2`/`r3`) are frame-scoped — default
+  `1/4/8` "for the first block" (RFC 8878), threaded unmodified through
+  Raw/RLE blocks, updated after every Compressed block's sequences whether
+  explicit-offset or repeat-offset — not block-scoped or reset per
+  Compressed block. `compress()` is intentionally left unchanged (still
+  never emits repeat-offset codes; this is a decode-only fix).
+
+  Verified via: (1) the real `zstd` CLI decoding the exact 4713-byte
+  constant-byte repro from Lesson 98; (2) an ad hoc 300-trial then
+  1500-trial fuzz harness (random/periodic/constant/ramp byte patterns,
+  sizes up to 12000 bytes) against the real `zstd` CLI in both directions,
+  0 failures; (3) a new deterministic unit test suite that hand-crafts
+  `Seq[]` sequences (via `encodeLiteralsSection`/`encodeSeqCount`/
+  `encodeSequencesSection`, now exported for white-box testing only — not
+  re-exported from `index.ts`) to exercise all four repeat-offset selector
+  branches, and their register-threading across a single block, exactly
+  and reproducibly — something no real-CLI-generated input can guarantee,
+  since which branch a given input hits is up to `zstd`'s own match-finder
+  heuristics; (4) all pre-existing tests, unaffected (this package's own
+  round trip never touches the new code path).
+
+### Added
+
+- Two new TC-9 interop tests: decoding real `zstd`-compressed constant-byte
+  data (the Lesson 98 repro) and periodic data, both of which the real CLI
+  encodes using repeat-offset sequences.
+- `encodeLiteralsSection`, `encodeSeqCount`, `encodeSequencesSection`, and
+  the `Seq` interface are now exported from `src/zstd.ts` for white-box
+  testing (not re-exported from `index.ts` — no change to the published
+  package API).
+
 ## [0.1.2] — 2026-08-03
 
 ### Fixed

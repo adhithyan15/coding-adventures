@@ -157,13 +157,17 @@ defmodule CodingAdventures.ZstdTest do
   # rust/zstd ports of this same test.
   #
   # Repeat-offset inputs (where the SAME 8-byte pattern recurs at a FIXED
-  # distance) are deliberately avoided here: per code/specs/CMP07-zstd.md's
-  # "Educational Simplification" note, this implementation's decoder does
-  # not resolve the real zstd Repeat_Offset_1/2/3 mechanism, so a frame the
-  # real `zstd` CLI compresses USING repeat-offset shortcuts cannot be
-  # decoded by `Zstd.decompress/1` — that is a pre-existing, spec-documented
-  # limitation shared by every language port in this repo, not part of the
-  # FSE-codec bug this test targets.
+  # distance, or a long constant-byte run) are now INCLUDED below — see the
+  # dedicated "repeat-offset" test group further down. They used to be
+  # deliberately avoided here on the theory that this codec's decoder
+  # couldn't resolve the real zstd Repeated_Offset (R1/R2/R3) mechanism
+  # (RFC 8878 §3.1.1.3.2.1.1). That theory was correct as a description of
+  # a real, independent gap — but it was NOT documented in
+  # code/specs/CMP07-zstd.md's "Educational Simplification" table (which
+  # lists no repeat-offset carve-out), and the decoder now implements the
+  # mechanism in full. See lessons.md Lesson 98 for how this class of gap
+  # was found (in `code/packages/c/zstd`, via PR #9941) and audited into
+  # every other language port, including this one.
 
   defp zstd_cli_available? do
     case System.cmd("zstd", ["--version"], stderr_to_stdout: true) do
@@ -247,6 +251,92 @@ defmodule CodingAdventures.ZstdTest do
       end
     else
       IO.puts(:stderr, "zstd CLI not found on PATH — skipping TC-9 interop test")
+    end
+  end
+
+  # ── Repeat-Offset (R1/R2/R3) interoperability (lessons.md Lesson 98) ───────
+  #
+  # RFC 8878 §3.1.1.3.2.1.1 defines a Repeated-Offset mechanism: Offset_Value
+  # <= 3 is not a literal distance but a reference into a 3-slot history of
+  # recently-used offsets (R1/R2/R3, default 1/4/8), letting the real `zstd`
+  # encoder spend ~2 bits instead of a full offset code whenever a match
+  # reuses a recent distance. Real `zstd` encoders use this CONSTANTLY —
+  # it's one of their principal entropy wins, especially for periodic or
+  # highly repetitive data (exactly what a compression test suite tends to
+  # contain).
+  #
+  # This package's OWN encoder never emits repeat-offset codes (an
+  # intentional educational simplification — see encode_sequences_section's
+  # module doc), so this codec's own compress()/decompress() round trip
+  # (`rt/1`, and TC-1..TC-8 above) NEVER exercises the decode-side
+  # Repeated-Offset path — nor did TC-9's original fixed corpus, which
+  # apparently never produced a real-`zstd`-encoded sequence with
+  # Offset_Value <= 3. That gap was invisible to every test in this suite
+  # until audited in via lessons.md Lesson 98 (the same audit that first
+  # found and fixed it in `code/packages/c/zstd`, PR #9941): a decoder that
+  # only understood the explicit-offset path would either crash (an
+  # out-of-bounds binary access from a negative `offset = of_raw - 3` when
+  # of_raw is 1..3) or emit wrong bytes, on any real-world `.zst` frame that
+  # happens to use repeat offsets.
+  #
+  # These inputs deliberately target that path: a fixed pattern recurring at
+  # a CONSTANT distance (spec CMP07-zstd.md's own TC-8 shape) and a long
+  # constant-byte run (the Lesson-98 minimal repro: real `zstd` compresses
+  # 4713 bytes of `'Z'` as a Compressed block with one sequence whose
+  # Offset_Value is 1 — "reuse Repeated_Offset1" — rather than the RLE block
+  # type this port's own encoder would choose for the same input).
+  @tag :cli_interop
+  test "repeat-offset: real `zstd`-compressed repeat-offset frames decode correctly" do
+    if zstd_cli_available?() do
+      pattern = "ABCDEFGH"
+      fixed_distance_repeat = pattern <> String.duplicate(String.duplicate("X", 128) <> pattern, 10)
+
+      for {name, input} <- [
+            {"constant-byte run (Lesson 98 minimal repro)", String.duplicate("Z", 4713)},
+            {"pattern at fixed distance (spec TC-8 shape)", fixed_distance_repeat},
+            {"short constant run", String.duplicate("q", 50)},
+            {"periodic 3-byte cycle", String.duplicate("xyz", 4000)}
+          ] do
+        unique = unique_tmp_name("ex-zstd-repoff")
+        tmp_txt = Path.join(System.tmp_dir!(), "#{unique}.txt")
+        tmp_zst = Path.join(System.tmp_dir!(), "#{unique}.zst")
+        File.write!(tmp_txt, input)
+
+        try do
+          {_output, exit_code} = System.cmd("zstd", ["-q", "-f", "-o", tmp_zst, tmp_txt], stderr_to_stdout: true)
+          assert exit_code == 0, "real `zstd` CLI failed to compress #{name}"
+
+          cli_compressed = File.read!(tmp_zst)
+          assert {:ok, ^input} = Zstd.decompress(cli_compressed),
+            "our decompress/1 failed to decode real `zstd`'s repeat-offset output for #{name} (#{byte_size(input)} bytes)"
+        after
+          File.rm(tmp_txt)
+          File.rm(tmp_zst)
+        end
+      end
+    else
+      IO.puts(:stderr, "zstd CLI not found on PATH — skipping repeat-offset interop test")
+    end
+  end
+
+  # Same set of inputs, but round-tripped purely through THIS package's own
+  # compress/1 followed by decompress/1. This package's encoder never emits
+  # repeat-offset codes, so this direction alone would never have caught
+  # Lesson 98 — it's included for completeness/regression coverage of the
+  # ordinary explicit-offset path on the same inputs, not as evidence the
+  # repeat-offset decode path works (the CLI-interop test above is the one
+  # that actually proves that).
+  test "repeat-offset-shaped inputs still round-trip through our own encoder" do
+    pattern = "ABCDEFGH"
+    fixed_distance_repeat = pattern <> String.duplicate(String.duplicate("X", 128) <> pattern, 10)
+
+    for input <- [
+          String.duplicate("Z", 4713),
+          fixed_distance_repeat,
+          String.duplicate("q", 50),
+          String.duplicate("xyz", 4000)
+        ] do
+      assert rt(input) == input
     end
   end
 

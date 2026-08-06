@@ -1178,7 +1178,63 @@ def _compress_block(block: bytes) -> bytes | None:
     return compressed
 
 
-def _decompress_block(data: bytes, out: bytearray) -> None:
+# =============================================================================
+# Repeated-Offset (R1/R2/R3) Decoding — RFC 8878 §3.1.1.3.2.1.1
+# =============================================================================
+#
+# An Offset_Value of 1, 2, or 3 does not encode an explicit back-reference
+# distance — it is a "repeat code" that reuses one of three offsets tracked
+# across the whole frame: Repeated_Offset1/2/3 (informally R1/R2/R3),
+# seeded to 1/4/8 at the start of every frame. Only Offset_Value >= 4 (i.e.
+# ``of_code >= 2``, since ``of_raw = (1 << of_code) | extra_bits`` and
+# ``of_code <= 1`` can only produce raw values in {1, 2, 3}) is an explicit
+# offset.
+#
+# THIS PORT'S ENCODER (``_encode_sequences_section`` above) never emits a
+# repeat code: every LZSS match offset is coded explicitly via
+# ``raw_off = seq.off + 3 >= 4``. That is a legitimate (if suboptimal)
+# encoder-side simplification — but it means this package's own
+# compress()/decompress() round trip, and any test built only from that
+# round trip, NEVER exercises the repeat-offset decode path. The real
+# `zstd` CLI's encoder uses repeat offsets constantly (one of its main
+# entropy wins, especially on periodic/repetitive data), so a decoder that
+# only understands explicit offsets will fail on a large fraction of
+# real-world `.zst` files — exactly the gap this section closes. See
+# lessons.md Lesson 98 (found first in `code/packages/c/zstd`, PR #9941).
+#
+# Selector derivation (cross-checked against RFC 8878 prose AND the literal
+# reference C source, `ZSTD_decodeSequence` in `zstd_decompress_block.c`
+# from github.com/facebook/zstd — not re-derived from memory):
+#
+#   of_code >= 2  → explicit offset. offset = of_raw - 3; the offset
+#                   history rotates unconditionally: R3=R2; R2=R1; R1=offset.
+#
+#   of_code <= 1  → repeat reference. Collapse to one selector in [0, 3]:
+#                       selector = ll_is_zero + of_raw - 1
+#                   where ``ll_is_zero`` is whether THIS sequence's literal
+#                   length is 0 — knowable from the peeked LL code alone
+#                   (code 0 is the only LL code with baseline 0 and 0 extra
+#                   bits) before any extra bits are read. RFC 8878: "when
+#                   the current sequence's Literals_Length is 0, repeated
+#                   offsets are shifted by 1" (so raw Offset_Value 1 means
+#                   "use R2", not "use R1", in that case).
+#
+#     selector 0 → offset = R1                          (no rotation)
+#     selector 1 → offset = R2;  R2 = R1;  R1 = offset   (R3 untouched)
+#     selector 2 → offset = R3;  R3 = R2;  R2 = R1;  R1 = offset  (full rotate)
+#     selector 3 → offset = R1 - 1 (or 0 if R1 == 0);  same full rotate as 2
+#
+# selector 3's "R1 - 1" case exists because Offset_Value 3 with
+# Literals_Length == 0 has no direct repeat-offset meaning (R1/R2/R3 only
+# cover 3 slots, and selectors 0/1/2 already claim of_raw in {1,2,3} for the
+# ll_is_zero=0 case) — the reference decoder repurposes it as "R1 minus
+# one", a real (if unusual) pattern real encoders emit. An R1 of 0 here
+# would be a malformed frame; producing 0 instead of underflowing lets the
+# existing ``offset == 0`` bounds check below reject it cleanly rather than
+# wrapping to a huge unsigned value.
+
+
+def _decompress_block(data: bytes, out: bytearray, rep: list[int]) -> None:
     """Decompress one ZStd compressed block, appending to ``out``.
 
     Parses the literals section, sequences section, and applies sequences
@@ -1187,6 +1243,14 @@ def _decompress_block(data: bytes, out: bytearray) -> None:
     Args:
         data: Compressed block data (without the 3-byte block header).
         out: Output buffer to append decompressed bytes to.
+        rep: The three Repeated_Offset registers ``[R1, R2, R3]`` (RFC 8878
+            §3.1.1.3.2.1.1), mutated in place. These are FRAME-scoped, not
+            block-scoped: the caller creates ``[1, 4, 8]`` once per frame
+            and threads the same list through every Compressed block, so a
+            later block's sequences can reuse offsets an earlier block's
+            sequences established. See the module comment above this
+            function for why this port's DECODER needs repeat-offset
+            support even though its own ENCODER never emits it.
 
     Raises:
         ValueError: On malformed data, unsupported modes, or bad back-references.
@@ -1270,30 +1334,57 @@ def _decompress_block(data: bytes, out: bytearray) -> None:
         ll_base, ll_extra_bits = LL_CODES[ll_code]
         ml_base, ml_extra_bits = ML_CODES[ml_code]
 
+        # ll_is_zero feeds the Repeat_Offset selector below (RFC 8878's
+        # "when Literals_Length is 0, repeated offsets are shifted by 1"
+        # rule) and is knowable right now, from the PEEKED ll_code alone —
+        # LL code 0 is the only code with baseline 0 and 0 extra bits, so
+        # ll_code == 0 iff the eventual decoded `ll` value is 0. No extra
+        # bits need to be read yet to know this.
+        ll_is_zero = ll_code == 0
+
         # ── Step 2: read extra bits, order OF, ML, LL ───────────────────────────
         # RFC 8878 §3.1.1.3.2.1.2: "Decoding starts by reading the
         # Number_of_Bits required to decode offset. It does the same for
         # Match_Length and then for Literals_Length."
-        # Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3
-        # (inverse of the +3 applied during encoding).
+        # Offset: raw = (1 << of_code) | extra_bits. The number of bits read
+        # is always exactly `of_code`, regardless of whether the result
+        # turns out to be an explicit offset or a Repeat_Offset reference
+        # (RFC 8878 / the reference decoder never varies bit-consumption on
+        # ll_is_zero — only how the resulting value maps to an actual
+        # offset changes, immediately below).
         of_extra = br.read_bits(of_code)
         of_raw = (1 << of_code) | of_extra
-        # of_raw in {1, 2, 3} designates a Repeat_Offset (R1/R2/R3) shortcut
-        # rather than an explicit offset (RFC 8878 §3.1.1.3.2.1). This
-        # simplified codec's encoder never emits those codes (every offset
-        # is coded explicitly, raw = offset + 3 >= 4), so a frame that uses
-        # them came from another encoder (e.g. the real `zstd` CLI, which
-        # uses repeat offsets by default for compression efficiency) and
-        # exercises a feature outside our supported subset. Reject it with
-        # a clear error rather than computing a negative/zero "offset" that
-        # would silently read out of bounds or wrap to an unrelated slot.
-        if of_raw < 3:
-            raise ValueError(
-                f"decoded offset underflow: of_raw={of_raw} (Repeat_Offset "
-                "R1/R2/R3 shortcuts are not supported by this simplified "
-                "codec — every offset must be coded explicitly)"
-            )
-        offset = of_raw - 3
+
+        # Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        # the Repeated_Offset (R1/R2/R3) mechanism — see the module comment
+        # above this function for the full derivation and cross-checks
+        # (RFC prose + literal ZSTD_decodeSequence reference source).
+        # of_code >= 2 guarantees of_raw >= 4: an ordinary explicit offset.
+        # of_code <= 1 guarantees of_raw in {1, 2, 3}: a repeat reference.
+        if of_code >= 2:
+            offset = of_raw - 3
+            rep[2] = rep[1]
+            rep[1] = rep[0]
+            rep[0] = offset
+        else:
+            selector = ll_is_zero + of_raw - 1
+            if selector == 0:
+                offset = rep[0]
+            elif selector == 1:
+                offset = rep[1]
+                rep[1] = rep[0]
+                rep[0] = offset
+            elif selector == 2:
+                offset = rep[2]
+                rep[2] = rep[1]
+                rep[1] = rep[0]
+                rep[0] = offset
+            else:  # selector == 3
+                offset = rep[0] - 1 if rep[0] > 0 else 0
+                rep[2] = rep[1]
+                rep[1] = rep[0]
+                rep[0] = offset
+
         ml = ml_base + br.read_bits(ml_extra_bits)
         ll = ll_base + br.read_bits(ll_extra_bits)
 
@@ -1545,6 +1636,16 @@ def decompress(data: bytes) -> bytes:
     # ── Decode Blocks ─────────────────────────────────────────────────────────
     out = bytearray()
 
+    # Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): FRAME-scoped, not
+    # block-scoped. Seeded to [1, 4, 8] "for the first block", then threaded
+    # unmodified (as the SAME list object, mutated in place by
+    # _decompress_block) through every Compressed block for the rest of the
+    # frame. Raw and RLE blocks don't touch these registers — they simply
+    # don't advance them, which is correct: the next Compressed block picks
+    # up wherever the previous Compressed block's sequences left off. See
+    # lessons.md Lesson 98.
+    rep = [1, 4, 8]
+
     while True:
         # Each block has a 3-byte little-endian header.
         if pos + 3 > len(data):
@@ -1590,7 +1691,7 @@ def decompress(data: bytes) -> bytes:
                 )
             block_data = data[pos:pos + bsize]
             pos += bsize
-            _decompress_block(block_data, out)
+            _decompress_block(block_data, out, rep)
 
         else:
             # btype == 3: Reserved — must not appear in valid frames.

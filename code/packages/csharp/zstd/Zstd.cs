@@ -276,6 +276,18 @@ public static class Zstd
         position += contentSizeBytes;
 
         var output = new List<byte>();
+
+        // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): FRAME-scoped,
+        // not block-scoped. "For the first block, the starting offset
+        // history is populated with Repeated_Offset1=1, Repeated_Offset2=4,
+        // Repeated_Offset3=8" (RFC 8878), and every later Compressed block in
+        // the same frame continues from wherever the previous Compressed
+        // block's sequences left them (Raw/RLE blocks don't touch them). See
+        // DecompressBlock's doc comment and lessons.md Lesson 98.
+        var repeatOffset1 = 1;
+        var repeatOffset2 = 4;
+        var repeatOffset3 = 8;
+
         var last = false;
         while (!last)
         {
@@ -310,7 +322,7 @@ public static class Zstd
                     break;
                 case 2:
                     RequireAvailable(data, position, blockSize, "compressed block");
-                    DecompressBlock(data.AsSpan(position, blockSize), output);
+                    DecompressBlock(data.AsSpan(position, blockSize), output, ref repeatOffset1, ref repeatOffset2, ref repeatOffset3);
                     position += blockSize;
                     break;
                 default:
@@ -367,7 +379,41 @@ public static class Zstd
         return result.Length < block.Length ? result : null;
     }
 
-    private static void DecompressBlock(ReadOnlySpan<byte> data, List<byte> output)
+    /// <summary>
+    /// Decodes one Compressed block's payload, appending decoded bytes to
+    /// <paramref name="output"/>.
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="repeatOffset1"/>/<paramref name="repeatOffset2"/>/
+    /// <paramref name="repeatOffset3"/> are the three Repeated_Offset
+    /// registers (RFC 8878 §3.1.1.3.2.1.1) — passed by <c>ref</c> because
+    /// they are FRAME-scoped, not block-scoped: the caller
+    /// (<see cref="Decompress"/>) owns them and threads them, unmodified
+    /// across Raw/RLE blocks, through every Compressed block in a frame.
+    ///
+    /// <para>
+    /// WHY THIS DECODER NEEDS REPEAT-OFFSET SUPPORT EVEN THOUGH THIS
+    /// PACKAGE'S OWN ENCODER NEVER EMITS IT: <see cref="EncodeSequences"/>
+    /// always writes an explicit offset code (offset code &gt;= 2, since the
+    /// minimum possible LZSS match offset is 1, giving raw offset
+    /// = offset + 3 &gt;= 4), so this package's own Compress()/Decompress()
+    /// round trip never touches the repeat-offset path — the "no
+    /// repeat-offset shortcuts" simplification is entirely an ENCODER-side
+    /// choice (see the module doc comment on <see cref="EncodeSequences"/>).
+    /// But the real <c>zstd</c> CLI's encoder uses repeat offsets
+    /// constantly — they are one of its principal entropy wins, especially
+    /// for periodic or highly repetitive data — so a decoder that only
+    /// understands explicit offset codes systematically fails to decode a
+    /// meaningful fraction of real-world <c>.zst</c> files. Confirmed with
+    /// the real CLI: 4713 bytes of a single repeated byte compress (via a
+    /// Compressed, not RLE, block) to one sequence with Offset_Value=1 —
+    /// "reuse Repeated_Offset1", which starts at its default value of 1, an
+    /// unmistakable RLE-via-repeat-offset pattern. See lessons.md Lesson 98
+    /// (ported from <c>c/zstd</c>, PR #9941, which found and fixed the same
+    /// gap first) and the <c>RepeatOffsetCliInterop</c> test.
+    /// </para>
+    /// </remarks>
+    private static void DecompressBlock(ReadOnlySpan<byte> data, List<byte> output, ref int repeatOffset1, ref int repeatOffset2, ref int repeatOffset3)
     {
         var (literals, literalBytes) = DecodeLiterals(data);
         var position = literalBytes;
@@ -432,13 +478,79 @@ public static class Zstd
                 throw new InvalidDataException("invalid sequence code");
             }
 
-            // Step 2 — read extra value bits, in order OF, ML, LL.
+            // literalIsZero is needed for the repeat-offset interpretation
+            // below (RFC 8878's "when Literals_Length is 0, repeated offsets
+            // are shifted by 1" rule) and is knowable right now, from the
+            // PEEKED literalCode alone — LL code 0 is the only code with
+            // baseline 0 and 0 extra bits, so literalCode == 0 iff the
+            // eventual decoded literalLength is 0. No extra bits need to be
+            // read yet to know this.
+            var literalIsZero = literalCode == 0;
+
+            // Step 2 — read extra value bits, in order OF, ML, LL. The
+            // NUMBER of bits read for the offset field is always exactly
+            // offsetCode regardless of the repeat-offset interpretation
+            // below (a real decoder never varies bit-consumption on
+            // literalIsZero — only how the resulting value maps to an
+            // actual offset changes).
             var rawOffset = (1 << offsetCode) | reader.ReadBits(offsetCode);
             var matchLength = MatchLengthCodes[matchCode].Baseline
                 + reader.ReadBits(MatchLengthCodes[matchCode].ExtraBits);
             var literalLength = LiteralLengthCodes[literalCode].Baseline
                 + reader.ReadBits(LiteralLengthCodes[literalCode].ExtraBits);
-            var matchOffset = rawOffset - 3;
+
+            // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1),
+            // including the Repeated_Offset (R1/R2/R3) mechanism — see the
+            // doc comment on DecompressBlock.
+            //
+            // offsetCode >= 2 guarantees rawOffset = (1<<offsetCode)+extra
+            // >= 4, i.e. Offset_Value > 3: an ordinary explicit offset.
+            // offsetCode <= 1 guarantees rawOffset in {1, 2, 3}: a
+            // repeat-offset reference.
+            //
+            // The repeat case collapses to one selector in [0, 3]:
+            //     selector = literalIsZero + rawOffset - 1
+            // (derived from, and verified against, the reference decoder's
+            // ofBase + ll0 + extra_bit — see DecompressBlock's doc comment):
+            //   0 -> reuse repeatOffset1 unchanged (no rotation)
+            //   1 -> use repeatOffset2 (repeatOffset1/2 swap; 3 untouched)
+            //   2 -> use repeatOffset3 (full rotate: 1,2,3 <- new,old1,old2)
+            //   3 -> use repeatOffset1-1 (full rotate, same shape as 2)
+            int matchOffset;
+            if (offsetCode >= 2)
+            {
+                matchOffset = rawOffset - 3;
+                repeatOffset3 = repeatOffset2;
+                repeatOffset2 = repeatOffset1;
+                repeatOffset1 = matchOffset;
+            }
+            else
+            {
+                var selector = (literalIsZero ? 1 : 0) + rawOffset - 1;
+                switch (selector)
+                {
+                    case 0:
+                        matchOffset = repeatOffset1;
+                        break;
+                    case 1:
+                        matchOffset = repeatOffset2;
+                        repeatOffset2 = repeatOffset1;
+                        repeatOffset1 = matchOffset;
+                        break;
+                    case 2:
+                        matchOffset = repeatOffset3;
+                        repeatOffset3 = repeatOffset2;
+                        repeatOffset2 = repeatOffset1;
+                        repeatOffset1 = matchOffset;
+                        break;
+                    default: // 3
+                        matchOffset = repeatOffset1 > 0 ? repeatOffset1 - 1 : 0;
+                        repeatOffset3 = repeatOffset2;
+                        repeatOffset2 = repeatOffset1;
+                        repeatOffset1 = matchOffset;
+                        break;
+                }
+            }
 
             // Step 3 — update FSE states (consumes bits), in order LL, ML,
             // OF, preparing the states the NEXT sequence's peek will use —

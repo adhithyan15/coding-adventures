@@ -17,7 +17,18 @@ FFI bindings.
 
 The decoder also consumes the standard dictionary-id/content-size header forms
 and optional checksums. Dictionary contents, compressed literal Huffman tables,
-and custom/repeat FSE tables are deliberately outside this educational subset.
+and custom/repeat FSE *table* modes are deliberately outside this educational
+subset.
+
+The decoder fully supports Repeated-Offset (R1/R2/R3) *sequences* (RFC 8878
+§3.1.1.3.2.1.1) -- an Offset_Value of 1, 2, or 3 references one of three
+recent offsets (frame-scoped, threaded through every block) rather than
+encoding a literal distance, including the "Literals_Length == 0 shifts the
+repeat-offset interpretation by one" special case. The ENCODER intentionally
+never emits repeat-offset shortcuts -- every offset it writes is explicit --
+but real `zstd`'s encoder uses them constantly, so the decoder must
+understand them to interoperate with real-world `.zst` data. See
+`lessons.md` Lesson 100.
 
 The sequences-section FSE codec (table construction, per-sequence field order,
 and the last-sequence state-initialisation special case) is cross-checked

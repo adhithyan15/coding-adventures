@@ -2116,7 +2116,7 @@ declarations, and maps when `noEmitOnError` is not enabled. After reproducing a
 compiler-path failure, inspect the source tree for generated artifacts and
 remove only the exact verified outputs before continuing.
 
-## Lesson 98 — `dart/deflate`'s wire format is not RFC 1951; `dart/zip` (and every sibling `zip` port) must not depend on the language's `deflate` package
+## Lesson 101 — `dart/deflate`'s wire format is not RFC 1951; `dart/zip` (and every sibling `zip` port) must not depend on the language's `deflate` package
 
 **Date:** 2026-08-05
 
@@ -2177,3 +2177,182 @@ regression test at the `Number_of_Sequences` 1-byte/2-byte wire-encoding
 boundary — 115 checks passed under both g++ and clang++ with no `zstd` CLI
 skip (the binary was available in the dev environment), confirming actual
 RFC 8878 wire-format conformance rather than just internal self-consistency.
+
+---
+
+## Lesson 102 — `code/packages/perl/zstd` inherited the same Repeated-Offset (R1/R2/R3) decode gap discovered in `c/zstd` (Lesson 98), confirmed via real `zstd` CLI interop
+
+**Date:** 2026-08-05
+
+**What happened:** While implementing the new `c/zstd` port (CMP07, PR
+#9941), fuzzing against the real `zstd` CLI found that its decoder never
+implemented Repeated-Offset (R1/R2/R3) sequence decoding (RFC 8878
+§3.1.1.3.2.1.1) — RFC 8878 reserves sequence `Offset_Value` 1..3 for
+"repeat offsets" (a reference into a three-entry offset history, default
+`1/4/8`, frame-scoped), not a literal `Offset_Value - 3` computation. That
+PR's Lesson 98 flagged this as likely repo-wide, since every port in this
+repo shares the same "encoder never emits repeat-offset codes" educational
+simplification (`raw_offset = offset + 3` always, so `of_code >= 2`
+always), meaning no port's own compress()/decompress() round trip — nor
+TC-9's one fixed prose corpus — ever exercises the decoder's repeat-offset
+path.
+
+Auditing `code/packages/perl/zstd/lib/CodingAdventures/Zstd.pm` confirmed
+the same gap: `_decompress_block` computed `offset = of_raw - 3`
+unconditionally and `die`d with `"offset underflow (of_raw=$of_raw)"` for
+any `of_raw < 3` — i.e. every repeat-offset sequence. Reproduced with the
+exact same minimal repro as the C port (4713 bytes of a single repeated
+byte — real `zstd` picks a Compressed block with one sequence,
+`Offset_Value=1`, reusing `Repeated_Offset1` which starts at its default
+value of 1): `decompress_block: offset underflow (of_raw=1)`.
+
+**Fix:** `_decompress_block` and `decompress` now thread a frame-scoped
+`[rep1, rep2, rep3]` offset-history array (default `[1, 4, 8]`) through
+every Compressed block in a frame, mutated in place. For offset code `>= 2`
+(explicit offset), `offset = of_raw - 3`, then the history rotates in the
+new offset (`rep3 <- rep2 <- rep1 <- offset`). For offset code `<= 1`
+(`of_raw` in `{1, 2, 3}`, a repeat-offset reference), the actual register
+used depends on both `of_raw` and whether `Literals_Length == 0` for this
+sequence (`selector = ll_is_zero + of_raw - 1`, RFC 8878's "when
+Literals_Length is 0, repeated offsets are shifted by 1" rule):
+`selector 0` reuses `rep1` unchanged (no rotation), `selector 1` swaps in
+`rep2`, `selector 2` rotates in `rep3`, and `selector 3` rotates in
+`rep1 - 1`. `ll_is_zero` is knowable from the PEEKED LL code alone (LL code
+0 is the only code with baseline 0 and 0 extra bits), before any extra bits
+are read — matching the reference decoder's evaluation order. Algorithm
+cross-checked against both the RFC 8878 prose and the reference C source
+(`ZSTD_decodeSequence` in `zstd_decompress_block.c`, per the Lesson-96
+playbook of not trusting either alone), mirroring the `c/zstd` fix exactly.
+The encoder is unchanged (decode-only fix).
+
+**Verification:** the original constant-byte repro now decodes correctly;
+a 60-trial fuzz sweep (periodic/constant/ramp/low-entropy-random byte
+patterns, real `zstd` CLI → `decompress()`, sizes 500–4500 bytes) passed
+with zero failures; all 28 pre-existing tests in `t/zstd.t` still pass
+unaffected, since this port's own round trip never touches the new code
+path. New `RT-12` regression test added covering both the constant-byte
+repro and a cyclic-pattern case that forces back-to-back repeat-offset
+sequences within one block.
+
+**Rule:** when a sibling language port documents a decode-only feature gap
+that stems from a *shared, repo-wide* encoder-side simplification (as
+opposed to a port-specific translation mistake), audit every other port
+implementing the same spec for the identical gap — the shared design
+choice that hid the bug from that port's own tests hides it identically
+everywhere else the same choice was made.
+
+---
+
+## Lesson 100 — `code/packages/go/zstd` had the same missing Repeated-Offset (R1/R2/R3) decode support found in `c/zstd` (PR #9941); confirmed independently, fixed, with a deterministic low-level regression test added
+
+**Date:** 2026-08-05
+
+**What happened:** While `c/zstd` (PR #9941, still open as of this writing) was being implemented, ad hoc fuzzing against the real `zstd` CLI turned up a decode-only feature gap independent of the FSE-codec bug class in Lessons 95-97: this repo's `zstd` decoders never implemented RFC 8878 §3.1.1.3.2.1.1's Repeated-Offset (R1/R2/R3) mechanism, where a sequence's `Offset_Value` of 1, 2, or 3 means "reuse one of the three most-recently-used match offsets" rather than "the literal distance is `Offset_Value - 3`". This repo's own `zstd` encoders (by design, across every language port — an explicit "no repeat-offset shortcuts" educational simplification) never emit an offset code below 4, so no port's self-consistency round trip, and not even a fixed single-corpus CLI-interop test (TC-9/TC-11), ever exercised the decode path. But real `zstd`'s encoder uses repeat offsets constantly, so any decoder that only understood explicit offsets systematically fails on a meaningful slice of real-world `.zst` files.
+
+Auditing `code/packages/go/zstd/zstd.go` for the same gap (task explicitly scoped to Go, cross-checking against both PR #9941's diff and RFC 8878 directly rather than re-deriving the algorithm from memory — per the Lesson 96 playbook) confirmed it independently: `decodeSequencesSection` computed `off: ofRaw - 3` unconditionally and rejected `ofRaw < 3` as "decoded offset underflow" — exactly the failure mode PR #9941 documented, reproduced here byte-for-byte with the same minimal repro (4713 repeated `'Z'` bytes; real `zstd` picks a **Compressed** block over RLE for this size, containing one sequence with `Offset_Value = 1`).
+
+**Rule:**
+- A gap found and fixed in one language port of a shared-design package (here, `zstd`) should be checked against every sibling port explicitly — "the reference implementation was already corrected for X" does not mean every OTHER port that copied the same original design also received that fix. This is the same shape as Lesson 97 (haskell/zstd inheriting java/rust's FSE bugs), just for a decode-only feature gap instead of a symmetric codec bug.
+- Fixed in `code/packages/go/zstd/zstd.go`: `decodeSequencesSection` and `decompressBlock` now take `rep1, rep2, rep3 *uint32` — the three Repeated_Offset registers — which `Decompress` initializes once per frame to the RFC-mandated default `1, 4, 8` and threads unmodified across every Compressed block in that frame. The selector algorithm (including the "`Literals_Length == 0` shifts the interpretation by one slot" special case) was cross-checked against both RFC 8878 prose and the literal reference C source (`ZSTD_decodeSequence`), matching PR #9941's already-verified fix.
+- Verified via: (a) the exact CLI repro reproduced and re-checked (fails pre-fix with `decoded offset underflow: ofRaw=1`, passes post-fix); (b) new `TestTC12CliInteropRepeatOffset`/`TestTC12CliInteropRepeatOffsetFuzz` — real `zstd` CLI compresses, this package decodes, byte-exact — covering long constant runs and multi-cycle periodic patterns; (c) all pre-existing TC-1..TC-11 tests unaffected, since this port's own encoder never emits repeat-offset codes.
+- **Because this port's own encoder can never produce a bitstream that exercises the repeat-offset decode branches**, the real-CLI interop tests alone left `decodeSequencesSection`'s new code at only ~70% statement coverage (some selector branches — particularly "reuse rep1 unchanged" and "use rep2", which real `zstd` happens not to select for the tested input shapes — were never hit). Added `TestRepeatOffsetSelectors` and `TestRepeatOffsetExplicitOffsetUpdatesRegisters`, which hand-construct FSE bitstreams via a small test-only helper (`encodeSingleSeqForTest`, bypassing the production encoder's "always explicit offset" restriction) to deterministically exercise all four selector branches plus the "explicit offsets also update the register history" rule — raising coverage to 93% for that function without depending on real `zstd` happening to produce a specific selector on a specific input. **When a decoder-only branch is structurally unreachable through your own encoder AND unreliable to reach via an external reference tool's input-dependent choices, a hand-constructed low-level bitstream test is the only way to get deterministic coverage of it — don't settle for "the CLI interop test passes" as proof all branches work.**
+
+See `gh pr diff 9941` for the `c/zstd` reference fix this was cross-checked against, and Lesson 98 above for that original finding.
+
+---
+
+## Lesson 99 — `fsharp/zstd` inherited the same Repeated-Offset (R1/R2/R3) decode gap as `c/zstd` (Lesson 98), confirmed via real `zstd` CLI interop
+
+**Date:** 2026-08-05
+
+**What happened:** While implementing `c/zstd` (CMP07, PR #9941), an ad hoc
+fuzz sweep against the real `zstd` CLI found that its decoder never
+implemented Repeated-Offset (R1/R2/R3) sequence decoding (RFC 8878
+§3.1.1.3.2.1.1) — an `Offset_Value` of 1, 2, or 3 is a reference into a
+three-entry offset history, not a literal `Offset_Value - 3` computation.
+That PR flagged every other language's `zstd` port as "suspect of the same
+gap until specifically checked against varied real-world `zstd`-CLI-encoded
+input" (documented as that PR's own Lesson 98). Auditing
+`code/packages/fsharp/zstd/Zstd.fs`'s `DecompressBlock` confirmed it: the
+line `let matchOffset = rawOffset - 3` computed the actual match offset
+unconditionally, with no repeat-offset interpretation for `rawOffset` values
+1-3, and no offset-history registers threaded through the frame at all.
+
+A regression test (added to `ZstdTests.fs` BEFORE the fix, to prove the gap
+rather than assume it): compressing 4713 bytes of a single repeated byte
+`'Z'` with the real `zstd` CLI (no `--no-check`, exercising the checksum
+trailer too) and decompressing with this package's `Zstd.Decompress`
+raised `System.IO.InvalidDataException: match offset exceeds decoded
+output` — real `zstd` chose a Compressed block whose one sequence is 2
+literal bytes ("ZZ") + a match with `Offset_Value=1` (i.e. "reuse
+`Repeated_Offset1`", which starts at its RFC-mandated default of 1, an
+unmistakable RLE-via-repeat-offset pattern); the pre-fix decoder computed
+`rawOffset - 3 = 1 - 3` which underflows a `let` binding typed as `int` to a
+large negative-then-implicitly-huge value once used as an array/offset
+computation, correctly rejected by the existing offset-bounds check as
+malformed — even though the frame was perfectly valid.
+
+**Why it went unnoticed:** Identical shape to the `c/zstd` finding. This
+package's own `EncodeSequences` is, by design, incapable of emitting
+`Offset_Value <= 3` (the minimum LZSS match offset is 1, so
+`rawOffset = offset + 3 >= 4` always), so a self round-trip — and every
+pre-existing TC-9 CLI-interop test in this package (added in 0.1.1 for the
+Lesson 96 FSE-codec bugs), whose fixed prose corpus never happened to
+produce a real-`zstd`-encoded sequence with `Offset_Value <= 3` — never
+exercised this decode path.
+
+**Rule (same as Lesson 98, reconfirmed cross-language):**
+- Decode-side feature scope and encode-side feature scope are separate
+  decisions. An "educational subset" simplification stated as "we don't
+  emit repeat-offset sequences" must not be silently read as "we don't need
+  to decode them," when the decoder's job is to accept output from the real,
+  independent `zstd` CLI ecosystem — which uses repeat offsets constantly,
+  as one of its principal entropy wins.
+- A single fixed TC-9 corpus is necessary but not sufficient evidence of
+  decoder conformance. Before trusting "TC-9 passes," fuzz the same
+  interop check across varied inputs (constant-byte runs are the cheapest,
+  most reliable way to force real zstd into a repeat-offset-heavy encoding).
+- Fixed in `code/packages/fsharp/zstd/Zstd.fs`: `DecompressBlock` now takes
+  `rep1`/`rep2`/`rep3` as `byref<int>` (frame-scoped, threaded from
+  `Decompress` through every Compressed block, default 1/4/8 for the first
+  block per RFC 8878), and implements the full peek-then-select-then-rotate
+  mechanism for `Offset_Value` 1-3 — including the "when `Literals_Length`
+  is 0, repeated offsets are shifted by 1" special case, using the peeked
+  (not-yet-extra-bit-read) literal-length code to know whether the eventual
+  literal length is zero. Ported from, and cross-checked against, both the
+  literal reference C source (`ZSTD_decodeSequence` in
+  `zstd_decompress_block.c`, github.com/facebook/zstd) transcribed in
+  `c/zstd`'s fix (`gh pr diff 9941`) and an independent RFC 8878 §3.1.1.3.2.1.1
+  fetch — not re-derived from memory. The encoder is unchanged (still never
+  emits repeat-offset codes; decode-only fix). semantic package version
+  bumped 0.1.1 -> 0.1.2.
+- Verified via two new TC-9 regression tests (the 4713-byte constant-run
+  repro above, plus an independent periodic-6-byte-cycle repro not
+  dependent on the constant-byte-specific heuristic) — all 26 existing +
+  new tests pass, line coverage 91.16% (threshold 80%) — plus an ad hoc
+  42-case fuzz sweep against the real `zstd` CLI (constant, periodic at
+  several cycle lengths, ramp, random, and prose patterns, 16 bytes to
+  20 KB), all byte-exact.
+- Every other language's `zstd` port in this repo remains suspect of the
+  same gap until specifically audited — this PR only covers `fsharp/zstd`.
+
+See also `gh pr diff 9941` (`c/zstd`, Lesson 98) for the original finding
+and reference fix this port's fix was cross-checked against.
+
+---
+
+## Lesson 103 — `haskell/zstd` had the same Repeated-Offset (R1/R2/R3) decode-only gap PR #9941 found in `c/zstd`; every `zstd` port needs an independent audit, not just the one that found the bug class
+
+**Date:** 2026-08-05
+
+**What happened:** PR #9941 (implementing the first `c/zstd` port) found, while fuzzing against the real `zstd` CLI, that its decoder — despite being transcribed from the already-corrected `rust/zstd` reference (Lessons 95-97) — only understood *explicit* offset codes (`Offset_Value - 3`), not the Repeated-Offset (R1/R2/R3) mechanism RFC 8878 §3.1.1.3.2.1.1 uses for `Offset_Value` in `{1, 2, 3}`. That PR's own note flagged "other language ports may share the same gap." Auditing `code/packages/haskell/zstd/src/Zstd.hs` confirmed it: `decodeSequences` computed `matchOffset = rawOffset - 3` unconditionally, for every offset code, with no offset-history state at all. This is the exact same decode-only feature gap, independently present, in a codebase that was NOT copy-derived from `c/zstd` (Haskell's `zstd` predates it and has its own from-scratch FSE implementation, corrected separately for Lessons 95-97).
+
+**Proof before fixing:** compressed 4713 bytes of a single repeated byte with the real `zstd` CLI (the same minimal repro from PR #9941 — real `zstd` picks a single Compressed block whose one sequence has `Offset_Value=1`, i.e. "reuse `Repeated_Offset1`", not an RLE block or explicit offset) and fed it to the pre-fix `decompress`: failed with `match offset exceeds decoded output` (the `rawOffset - 3` underflow, correctly rejected by the existing bounds check, but for a stream that was actually valid).
+
+**Fix:** threaded a frame-scoped `RepOffsets` register triple `(Repeated_Offset1, Repeated_Offset2, Repeated_Offset3)`, defaulting to `(1, 4, 8)`, through `decompress` → `decodeBlocks` → `decompressBlock` → `decodeSequences`. Raw and RLE blocks pass it through unmodified (RFC 8878: the registers are frame-scoped, not block-scoped); each Compressed block's sequences both consult and update it. `decodeSequences` now maps `Offset_Value` (`offsetCode <= 1` ⟺ `rawOffset ∈ {1,2,3}`) to a selector `(if literals_length==0 then 1 else 0) + rawOffset - 1 ∈ [0,3]`, each of which both resolves the actual offset and rotates the three-entry history — cross-checked against BOTH the RFC 8878 prose (fetched directly) AND the literal `ZSTD_decodeSequence` reference C source in `zstd_decompress_block.c` (fetched directly, per the Lesson-96 "don't trust either alone" playbook), which independently confirmed the same selector shape (`ll0 + repCode` collapsing to the same four cases). This package's own encoder is unchanged — it never emits `Offset_Value <= 3` (`sequenceOffset >= 1` always forces `rawOffset >= 4` in `encodeOne`), so this remains, like `c/zstd`, a decode-only fix with no encode-side symmetry to break.
+
+**Why it went unnoticed:** identical shape to the `c/zstd` finding — this package's own `compress()`/`decompress()` round trip, and every existing test including the Lesson-95/96/97 `ZstdCliInteropSpec` (TC-9) cases, never produces or needs an `Offset_Value <= 3`, so the gap was invisible to 18 passing tests (16 unit + 2 CLI-interop) until real `zstd`-compressed data using repeat-offsets was fed to `decompress` directly.
+
+**A note on constructing a regression test:** the *first* attempt at a "multi-sequence" repeat-offset test (an 8-byte anchor + differently-seeded pseudo-random filler per repetition, repeated 80×) accidentally proved nothing — it passed even against the deliberately-reintroduced bug, because real `zstd`'s optimal parser collapsed the whole repeating unit into a single giant match needing only one (explicit) offset. A second attempt reusing the *same* filler every time failed for an unrelated reason (real `zstd` chose Huffman-compressed literals for that block, which this educational decoder doesn't support at all — a different, pre-existing, intentional scope limit, not this bug). The version that actually worked: an anchor recurring at a fixed distance with an almost-constant filler carrying only a one-byte "salt" (the repetition index) — low-entropy enough to keep real `zstd` on raw literals + predefined FSE tables (this decoder's only supported modes), while the salt still stops the LZ77 matcher from merging repetitions into one match. **Rule:** a regression test for a real-CLI-only decode gap must be verified to actually fail against the bug (temporarily reintroduce it and confirm red, exactly as for any other regression test) — a plausible-looking "multi-sequence repeat-offset" input can pass for reasons that have nothing to do with the fix, because the real encoder's optimal parsing and mode-selection heuristics are opaque and easy to guess wrong about.
+
+Fixed in `code/packages/haskell/zstd/src/Zstd.hs` (`RepOffsets`, `decodeBlocks`, `decompressBlock`, `decodeSequences`). Verified via two new `ZstdCliInteropSpec` cases (a long single-byte run, and the salted-filler periodic pattern above, both real `zstd`-CLI-compressed, both confirmed to fail before this fix and pass after it) plus the full existing 18-case suite, all genuinely executed against the real `zstd` CLI (not skipped — the binary was on `PATH`). See PR #9941 for the `c/zstd` port where this class of gap was first found. `swift/zstd` (PR #9944) and `fsharp/zstd` (Lesson 99, above) were independently fixed for the same gap in parallel, merged into `origin/main` while this audit was in progress — confirms the "other ports may share this gap" prediction was correct at least twice already; the rest of the repo-wide `zstd` set (java, rust, go, python, ruby, typescript, kotlin, perl, elixir, lua, dart, csharp) has not all been individually re-audited for this specific gap and should be treated as suspect until checked.

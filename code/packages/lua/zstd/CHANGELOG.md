@@ -1,5 +1,61 @@
 # Changelog
 
+## [0.1.3] - 2026-08-05
+
+### Fixed
+
+- **`decompress` now implements Repeated-Offset (R1/R2/R3) sequence decoding**
+  (RFC 8878 §3.1.1.3.2.1.1). Previously every decoded `Offset_Value` was
+  treated as an explicit offset (`offset = of_raw - 3` unconditionally), which
+  underflows for `of_raw` in `{1, 2, 3}` — the reserved range that instead
+  means "reuse one of the three most-recently-used match offsets" (default
+  `1/4/8`, threaded frame-scoped through every Compressed block). The old code
+  rejected these as `"decoded offset underflow"`, even though the frame was
+  perfectly valid. This package's own `compress()` never emits offset codes
+  below 2 (an intentional encoder-side simplification — the minimum LZ77
+  match offset here is 1, so `raw_off = offset + 3 >= 4` always), so no
+  internal round-trip test, and not even the existing pangram-x25 Spec TC-9
+  corpus, ever exercised this decode path. But the real `zstd` CLI's encoder
+  uses repeat offsets constantly — they're one of its principal entropy wins,
+  especially for periodic or highly repetitive input — so any decoder that
+  only understood explicit offsets would systematically fail to decode a
+  meaningful fraction of real-world `.zst` files. Confirmed with a direct
+  repro: 4713 bytes of a single repeated byte, compressed with the real
+  `zstd` CLI, produces one Compressed block with a single sequence at
+  `Offset_Value = 1` ("reuse Repeated_Offset1"), which the old decoder
+  rejected outright.
+
+  Found via an independent audit after the sibling `c/zstd` port (PR #9941)
+  hit and fixed the identical gap while fuzzing itself against the real
+  `zstd` CLI — see lessons.md Lesson 98. The fix here was cross-checked
+  against both that PR's verified reference implementation and the RFC 8878
+  prose directly (fetched live), including the "when `Literals_Length == 0`,
+  the repeat-offset codes shift by one, and `Offset_Value == 3` means
+  `Repeated_Offset1 - 1`" special case, and the exact history-rotation rule
+  (no rotation on R1 reuse; swap-to-front on R2; full rotate on R3 / the
+  `LL==0` "R1-1" case). The three offset registers are now frame-scoped (not
+  block-scoped): `M.decompress` owns a `{rep1, rep2, rep3}` table, initialized
+  to `{1, 4, 8}` per RFC 8878, and threads it (mutated in place) through every
+  Compressed block's `decompress_block` call for the rest of the frame;
+  Raw/RLE blocks don't touch it. `compress()` is intentionally unchanged —
+  this is a decode-only fix, since the encoder-side "no repeat-offset
+  shortcuts" simplification remains valid and doesn't affect interop with
+  real `zstd -d`.
+
+### Added
+
+- Two new Spec TC-9 tests: decoding real `zstd`-CLI-produced output that uses
+  a Repeated-Offset R1 sequence (a long constant-byte run — the exact input
+  that surfaced the bug), and output that rotates through all three offset
+  registers (several distinct repeated-content regions at different
+  distances back to back). Both skip gracefully when `zstd` isn't on `PATH`.
+  Also verified ad hoc (outside the committed suite) with a 180-trial fuzz
+  sweep — random, periodic, constant-run, and ramp byte patterns across nine
+  sizes from 1 byte to 5000 bytes — compressed by the real `zstd` CLI and
+  decoded by this package, all byte-exact; and against the existing fixed
+  TC-1..TC-11 and Spec TC-9 suite (all 21 checks, unaffected, since this
+  package's own round trip never touches the new code path).
+
 ## [0.1.2] - 2026-08-03
 
 ### Fixed

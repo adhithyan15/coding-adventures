@@ -4,6 +4,84 @@ All notable changes to `coding-adventures-zstd` will be documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.2] — 2026-08-05
+
+### Fixed
+
+- **Repeated-Offset (R1/R2/R3) sequence decoding** (RFC 8878
+  §3.1.1.3.2.1.1): `decompress()` previously treated every Offset_Value as
+  an explicit back-reference distance (`offset = of_raw - 3`) and raised
+  `ValueError` whenever `of_raw < 3` — i.e. whenever an offset code
+  designated a repeat-offset reference rather than an explicit distance.
+  This package's own `compress()` never emits repeat-offset codes (every
+  LZSS match offset is coded explicitly), so its own round trip never
+  exercised this path — but the real `zstd` CLI's encoder uses repeat
+  offsets constantly (one of its main entropy wins, especially on
+  periodic/repetitive data), so a meaningful fraction of real-world `.zst`
+  files failed to decode. Found while auditing this package against
+  `c/zstd` (PR #9941), which independently discovered the same decode-only
+  gap in its own (freshly-transcribed, otherwise-conformant) FSE codec via
+  a 200-trial fuzz sweep against the real CLI. See lessons.md Lesson 98.
+
+  `_decompress_block` now maintains three Repeated_Offset registers
+  (`rep = [R1, R2, R3]`, seeded to `[1, 4, 8]` at the start of every frame
+  per RFC 8878, threaded — as the same list object — through every
+  Compressed block in `decompress()`'s block loop; Raw/RLE blocks don't
+  touch them). For `of_code >= 2` (Offset_Value >= 4), decoding is
+  unchanged: an explicit offset that rotates into R1, shifting R1->R2->R3.
+  For `of_code <= 1` (Offset_Value in {1, 2, 3}), the offset is resolved
+  via a selector `ll_is_zero + Offset_Value - 1` (the "when this
+  sequence's Literals_Length is 0, repeated offsets are shifted by 1" rule
+  from the RFC) into one of four cases: reuse R1 unchanged, swap in R2,
+  rotate in R3, or rotate in "R1 - 1" (a real pattern real encoders emit,
+  not degenerate). Algorithm cross-checked against both the RFC 8878 prose
+  and the literal `ZSTD_decodeSequence` reference C source (fetched
+  directly from `github.com/facebook/zstd`, not recalled from memory),
+  matching the already-verified fix transcribed into `c/zstd`.
+
+  This package's encoder is intentionally unchanged — it still never emits
+  repeat-offset codes; this is a decode-only conformance fix.
+
+### Added
+
+- `TestRepeatOffsetDecode` (`tests/test_zstd.py`): low-level unit tests
+  exercising all four repeat-offset selector cases and cross-block
+  register persistence directly against `_decompress_block`, independent
+  of the real `zstd` CLI. Since this package's own encoder can't produce a
+  repeat-offset code from a real match offset, these tests drive
+  `_Seq.off` values of `0`, `-1`, and `-2` — not real offsets, but a
+  documented trick exploiting the encoder's own `raw_off = seq.off + 3`
+  formula to land on a chosen Offset_Value — to reach the decoder's new
+  branches deterministically. Expected output bytes are computed via an
+  independent trivial LZ-apply helper (`_apply_seq_offsets`) fed
+  hand-derived, RFC/reference-cross-checked `(ll, ml, offset)` triples,
+  rather than re-deriving byte content by hand.
+- `TestCliInterop::test_real_compress_our_decompress_repeat_offset_rle`:
+  regression test compressing `b"A" * 500` with the real `zstd` CLI (which
+  reaches for a Repeat_Offset shortcut on this input rather than this
+  package's own RLE block type) and decompressing with `decompress()`,
+  asserting byte-exact output. This is the same input shape that, before
+  this fix, either raised `ValueError` (the explicit reject added in
+  0.1.1) or, before that guard existed, corrupted output.
+- `TestCliInterop::test_real_compress_our_decompress_repeat_offset_periodic`:
+  regression test using a 53-byte-period payload compressed by the real
+  `zstd` CLI, sized to make repeated back-to-back matches at the same
+  distance (the textbook repeat-offset-reuse case) very likely.
+- `TestCliInterop::test_real_compress_our_decompress_still_rejects_huffman_literals`:
+  confirms the unrelated, still-unsupported Huffman-literals limitation
+  (`code/specs/CMP07-zstd.md`'s "Educational Simplification" table) is
+  unaffected by this decode-only sequences-section fix — either a clean
+  `ValueError` or byte-exact output, never silent corruption.
+
+### Changed
+
+- `_decompress_block`'s signature gained a third parameter, `rep: list[int]`
+  (the frame-scoped Repeated_Offset registers), mutated in place. Its sole
+  caller, `decompress()`, now owns and threads this list across its block
+  loop. `_decompress_block` is a private (underscore-prefixed) helper, so
+  this is not a public API change — `compress()`/`decompress()` signatures
+  are unchanged.
+
 ## [0.1.1] — 2026-08-03
 
 ### Fixed

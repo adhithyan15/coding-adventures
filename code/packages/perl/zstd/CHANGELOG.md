@@ -3,6 +3,61 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.3] — 2026-08-05
+
+### Fixed
+
+- **Decoder never implemented Repeated-Offset (R1/R2/R3) sequence decoding
+  (RFC 8878 §3.1.1.3.2.1.1).** RFC 8878 reserves sequence Offset_Value 1..3
+  for "repeat offsets": a reference to one of three tracked recent match
+  offsets (an offset history, default `1/4/8`, frame-scoped), not a literal
+  `Offset_Value - 3` computation. `_decompress_block` treated every offset
+  code as an explicit offset unconditionally
+  (`die "offset underflow" if $of_raw < 3`), so any real-world `.zst` frame
+  containing a repeat-offset sequence failed to decode. This port's OWN
+  encoder never emits repeat-offset codes by design
+  (`_encode_sequences_section` always produces `raw_offset = offset + 3 >=
+  4`), so the existing compress()/decompress() round trip — and TC-9's one
+  fixed prose corpus — never exercised this decode path. But real `zstd`
+  encoders use repeat offsets constantly (one of their principal entropy
+  wins, especially for periodic/repetitive data), so this was a genuine gap
+  against arbitrary real-world input, not caught by any pre-existing test.
+
+  Found via the sibling `code/packages/c/zstd` port (PR #9941), which
+  independently discovered and fixed the identical gap while fuzzing against
+  the real `zstd` CLI, and flagged that other language ports likely share
+  it. Confirmed present here with the exact same minimal repro (4713 bytes
+  of a single repeated byte; real `zstd` picks a Compressed block with one
+  sequence, `Offset_Value=1`). See `lessons.md` Lesson 98.
+
+  `_decompress_block` and `decompress` now thread a frame-scoped
+  `[rep1, rep2, rep3]` offset-history array (default `[1, 4, 8]`) through
+  every Compressed block in a frame. For offset code `>= 2` (explicit
+  offset), `offset = of_raw - 3` and the history rotates in the new offset.
+  For offset code `<= 1` (`of_raw` in `{1, 2, 3}`, a repeat-offset
+  reference), the actual register selected depends on both `of_raw` and
+  whether `Literals_Length == 0` for this sequence (`selector = ll_is_zero +
+  of_raw - 1`, RFC 8878's "when Literals_Length is 0, repeated offsets are
+  shifted by 1" rule), with `selector == 3` reusing `rep1 - 1`. Algorithm
+  cross-checked against both the RFC 8878 prose and the reference C source
+  (`ZSTD_decodeSequence` in `zstd_decompress_block.c`), mirroring the
+  `c/zstd` fix exactly. The encoder is unchanged — this is a decode-only fix.
+
+  Verified against the real `zstd` CLI: the original constant-byte repro now
+  decodes correctly, plus a 60-trial fuzz sweep (periodic/constant/ramp/
+  low-entropy-random byte patterns, sizes 500–4500 bytes) with zero
+  failures. All 28 pre-existing tests still pass unaffected (this port's own
+  round trip never touches the new code path).
+
+### Added
+
+- **New `RT-12: CLI interop, Repeated-Offset (R1/R2/R3) sequences` test**
+  (`t/zstd.t`) — two real-`zstd`-CLI-produced inputs (the exact 4713-byte
+  constant-byte repro, and a cyclic 5-byte-unit pattern that forces
+  back-to-back repeat-offset sequences) decoded with `decompress()`,
+  byte-exact against the original input. Skips (does not fail) when `zstd`
+  is not on `PATH`, matching the existing TC-9 / RT-11 interop tests.
+
 ## [0.1.2] — 2026-08-03
 
 ### Fixed

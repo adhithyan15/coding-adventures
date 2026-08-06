@@ -5,8 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-04. Current baseline after the Persian and Urdu
-Chapter 5 shared-spine tranche:
+Last prioritized: 2026-08-06, when the Step-by-Step capability program (HL05–HL07)
+was specified and placed ahead of the remaining roadmap and migration work. Current
+baseline after the Persian and Urdu Chapter 5 shared-spine tranche:
 20 registered tracks, 1,096 Markdown lessons, 20 downloadable LaTeX books, zero
 duration violations, and 20 validated realization maps containing 350 ordered
 path segments, 277 typed extension nodes, and 926 prerequisite-closed mapped
@@ -24,6 +25,69 @@ discarding deep content.
 2. Prefer work that makes later corpus growth measurable or generated.
 3. Finish a small vertical slice before starting the same migration everywhere.
 4. Keep the application, book, and canonical lesson content aligned.
+
+## P0 — Step-by-Step capability program (HL05–HL08)
+
+Specified in [HL05](../../specs/HL05-chapter-capability-and-step-by-step-shape.md),
+[HL06](../../specs/HL06-visual-system.md),
+[HL07](../../specs/HL07-spine-expansion-to-b1.md), and
+[HL08](../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md). This program
+adds a chapter-level capability layer above the existing lessons, gives the books a
+visual system including inline script-writing instruction, grows the spine far enough
+to carry a complete book, and makes the corpus teachable aloud by a voice assistant
+while the learner drives. It rewrites no authored lesson content.
+
+The measured starting point: 379 chapters, **zero** of which declare a goal or a
+payoff; 11 spine nodes with **zero** at A2 or B1; **zero** images in any of the 20
+books; and a complete, font-validated stroke-path model in `strokes.ts` that holds one
+letter and is rendered nowhere.
+
+On modality and ramp, measured across all 1,096 lessons: 51 need a pen and 7 carry a
+script block, but of the remaining 1,038, some 322 contain a Markdown table and 56 a
+sight cue — so **695 lessons, about 63% of the corpus, are drivable exactly as
+authored**, and the table, not the script, is the main obstacle to the rest. The ramp
+is already gentle in aggregate (mean 2.31 new atoms per lesson, median 2, p90 3) but
+undefended: 52 lessons exceed a budget of 3 and the steepest teaches ten numbers at
+once. Length is explicitly not a cost — splitting for gentleness is the intended
+direction, and no gate may penalise page, lesson, or chapter count.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C01 | Complete in this PR | Specify the chapter capability layer, the visual system, and spine expansion to B1. | HL05, HL06 and HL07 are committed before any implementation, per repo policy. |
+| HL-C02 | Queued | Add the `chapters.json` schema, loader, and `core/chapter-policy.json`. | Types, loader beside `loadLanguageCurricula`, and the representativeness threshold load and round-trip; no gates yet. |
+| HL-C03 | Queued | Land the nine HL05 gates as report-only output and publish the first chapter snapshot. | The gap report measures all 379 chapters for missing capability, payoff closure, and representativeness without failing CI on recorded debt. |
+| HL-C04 | Queued | Derive book chapter titles and labels from `chapters.json`. | `core/book-generation.json` stops owning `title`/`label`; `chapter-title-drift` proves the two agree through the transition. |
+| HL-C05 | Queued | Add the `pattern` lesson type with slot-closure and production gates. | A `pattern` lesson introduces one `*-PATTERN-*` atom, declares only in-closure slot fillers, and instantiates at least three in a `guided-production` block. |
+| HL-C06 | Queued | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
+| HL-C07 | Queued | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, and duplicate destinations are machine-checked; today only prose asserts this. |
+| HL-C08 | Queued | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive an SVG stroke build-up in the app; book and app teach handwriting from one source. |
+| HL-C09 | Queued | Expand `DUCTUS` to cover the nine scripts with cited prose stroke order. | ~190 letters authored, each passing the on-ink, join-tolerance, and coverage invariants with citation and URL. |
+| HL-C10 | Queued | Complete A1 and add the A2 and B1 spine tranches with all 20 realization ledgers. | Every declared stage carries nodes; every track has a non-drifting ledger entry for every node. |
+| HL-C11 | Queued | Author chapter capabilities and payoffs across all 20 tracks. | All 379 chapters declare a `canDo` and a closed, representative payoff; gates flip to errors per track as debt clears. |
+| HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |
+| HL-C13 | Queued | Deploy Language Ladder to GitHub Pages. | The app is reachable at `/coding-adventures/language-ladder/`; it is currently referenced by no workflow and has never been published. |
+| HL-C14 | Queued | Derive modality (`voice`/`sight`/`pen`) for every lesson and each chapter's drivable prefix. | The gap report publishes per-track modality counts and the corpus-wide drivable percentage; overrides without a recorded reason are reported. |
+| HL-C15 | Queued | Print modality signs and the drivable prefix at every chapter opening. | The book shows 🚗/👁/✍ beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
+| HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
+| HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
+| HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
+
+The illustration licensing question HL06 raised is **settled**. The project owner
+decided on 2026-08-06 that the books stay CC BY-SA 4.0 and that generated
+illustrations are marked `CC0-1.0` with `rightsAsserted: false`, each carrying a
+provenance sidecar — because a CC licence grants copyright permissions that purely
+AI-generated output likely cannot support, and CC0 is safe whichever way the law
+settles. The decision, its reasoning, the required sidecar fields, and the two
+operational constraints on prompting and generator terms are recorded in
+[`_assets/LICENSE.md`](./_assets/LICENSE.md), following the `_fonts/OFL.txt`
+precedent. HL-C12 is therefore unblocked: CI still gates every Class C asset on having
+a sidecar and a recorded licence, but the licence to record is now known.
+
+HL05 also reserves, and deliberately does not implement, a `presents.knowledge` tier
+that would let a payoff use a glossed-but-never-assessed word. Strict closure is kept,
+so early chapters ramp slightly more slowly than a trade step-by-step grammar does.
+Reserving the key now makes enabling it later a flag flip rather than a corpus
+migration.
 
 ## P0 — current publication and validation gaps
 

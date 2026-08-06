@@ -101,12 +101,13 @@ Each block has a 3-byte header encoding the block type:
 PERL5LIB=../lzss/lib prove -l -v t/
 ```
 
-28 subtests covering empty input, single byte, all 256 byte values,
+29 subtests covering empty input, single byte, all 256 byte values,
 RLE detection, prose compression ratio, random data round-trips,
 multi-block (200 KB+, 300 KB), bad magic error detection, internal
 FSE/bit-stream unit tests, and real cross-implementation interop against
-the `zstd` CLI (TC-9 and a high-sequence-count regression test — skipped,
-not failed, when `zstd` isn't on `PATH`).
+the `zstd` CLI (TC-9, a high-sequence-count regression test, and a
+Repeated-Offset R1/R2/R3 regression test — skipped, not failed, when
+`zstd` isn't on `PATH`).
 
 ## License
 

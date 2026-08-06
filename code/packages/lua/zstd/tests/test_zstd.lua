@@ -513,15 +513,15 @@ describe("CodingAdventures.Zstd", function()
 
             -- The pangram repeated 25 times — deliberately the same corpus
             -- code/specs/CMP07-zstd.md's TC-9 example uses, and what the
-            -- sibling java/zstd port's tc9CliInterop test uses. Avoid inputs
-            -- with a long run at a single fixed offset (e.g. many repeated
-            -- identical characters back to back): the real zstd CLI's
-            -- encoder will use RFC 8878's Repeat_Offset (R1/R2/R3) shortcut
-            -- codes for those, which this educational codec deliberately
-            -- doesn't implement on either the encode or the decode side
-            -- (matching java/zstd's documented "no repeat-offset shortcuts"
-            -- scope) — decoding one raises a clear "decoded offset
-            -- underflow" error rather than silently misinterpreting it.
+            -- sibling java/zstd port's tc9CliInterop test uses.
+            --
+            -- NOTE: this codec's ENCODER still never emits RFC 8878's
+            -- Repeat_Offset (R1/R2/R3) shortcut codes (matching the
+            -- documented "no repeat-offset shortcuts" scope) — but the
+            -- DECODER now fully understands them (see lessons.md Lesson 98
+            -- and the dedicated "Repeated-Offset (R1/R2/R3) decode" describe
+            -- block below), so inputs that make the real zstd CLI's encoder
+            -- choose repeat-offset sequences are no longer a problem here.
             local text = ("the quick brown fox jumps over the lazy dog "):rep(25)
 
             -- ours -> CLI
@@ -550,6 +550,97 @@ describe("CodingAdventures.Zstd", function()
             os.remove(cli_zst)
             assert.is_true(ok2, "real zstd CLI failed to compress the input")
             assert.are.equal(text, zstd.decompress(cli_bytes))
+        end)
+
+        -- =====================================================================
+        -- Repeated-Offset (R1/R2/R3) decode — lessons.md Lesson 98
+        -- =====================================================================
+        --
+        -- This codec's encoder never emits RFC 8878's Offset_Value <= 3
+        -- repeat-offset shortcut codes (every offset it writes is explicit),
+        -- so a round trip through ONLY this codec's own compress()/
+        -- decompress() pair — and even the fixed prose corpus used by the
+        -- interop tests above — can never exercise the decoder's
+        -- repeat-offset path. But the real `zstd` CLI's encoder uses repeat
+        -- offsets constantly (one of its principal entropy wins), so any
+        -- decoder that only understands explicit offset codes will
+        -- systematically fail to decode a meaningful fraction of real-world
+        -- `.zst` files.
+        --
+        -- These tests feed the real zstd CLI's compressor inputs specifically
+        -- shaped to trigger repeat-offset sequences (long constant-byte runs
+        -- and content with several distinct repeating distances), then
+        -- decode the CLI's actual output with our decoder — proving the gap
+        -- described in lessons.md Lesson 98 (and originally found while
+        -- building `c/zstd`, PR #9941) is fixed here too.
+        it("decodes real zstd CLI output using a Repeated-Offset (R1) sequence "
+            .. "(long constant-byte run)", function()
+            if not zstd_available then
+                pending("zstd CLI not found on PATH; skipping interop test")
+                return
+            end
+
+            -- 4713 bytes of a single repeated byte: empirically (see
+            -- lessons.md Lesson 98) the real zstd CLI encodes this as a
+            -- single Compressed block containing one sequence with
+            -- Offset_Value=1 ("reuse Repeated_Offset1", default value 1) —
+            -- NOT the RLE block type this port's own encoder would choose
+            -- for constant data. This is exactly the input that first
+            -- surfaced the gap.
+            local text = ("Z"):rep(4713)
+
+            local plain_path = os.tmpname()
+            local cli_zst    = os.tmpname()
+            write_file(plain_path, text)
+            local ok = shell_ok(string.format(
+                "zstd -f -q -o %s %s 2>/dev/null",
+                shell_quote(cli_zst), shell_quote(plain_path)))
+            local cli_bytes = ok and read_file(cli_zst) or nil
+            os.remove(plain_path)
+            os.remove(cli_zst)
+
+            assert.is_true(ok, "real zstd CLI failed to compress the input")
+            assert.is_string(cli_bytes)
+
+            local decompressed = zstd.decompress(cli_bytes)
+            assert.are.equal(text, decompressed,
+                "our decompress() failed on real zstd's Repeat-Offset (R1) output "
+                .. "(RFC 8878 §3.1.1.3.2.1.1 non-conformance — see lessons.md Lesson 98)")
+        end)
+
+        it("decodes real zstd CLI output using multiple distinct Repeated-Offset "
+            .. "registers (R1/R2/R3 rotation across several match distances)", function()
+            if not zstd_available then
+                pending("zstd CLI not found on PATH; skipping interop test")
+                return
+            end
+
+            -- Several distinct repeated-content regions at different
+            -- distances, back to back, so the real zstd CLI's encoder has
+            -- reason to populate and rotate through all three offset-history
+            -- registers (not just R1) as it moves between them.
+            local text = ("AAAA"):rep(50)
+                .. ("the quick brown fox "):rep(80)
+                .. ("BBBBBBBB"):rep(40)
+                .. ("abcdefgh"):rep(60)
+                .. ("AAAA"):rep(30)
+
+            local plain_path = os.tmpname()
+            local cli_zst    = os.tmpname()
+            write_file(plain_path, text)
+            local ok = shell_ok(string.format(
+                "zstd -f -q -o %s %s 2>/dev/null",
+                shell_quote(cli_zst), shell_quote(plain_path)))
+            local cli_bytes = ok and read_file(cli_zst) or nil
+            os.remove(plain_path)
+            os.remove(cli_zst)
+
+            assert.is_true(ok, "real zstd CLI failed to compress the input")
+            assert.is_string(cli_bytes)
+
+            local decompressed = zstd.decompress(cli_bytes)
+            assert.are.equal(text, decompressed,
+                "our decompress() failed on real zstd's multi-offset Repeat-Offset output")
         end)
     end)
 
