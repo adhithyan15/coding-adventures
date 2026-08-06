@@ -73,6 +73,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
 | HL-C19 | Queued | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
 | HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
+| HL-C24 | Complete in this PR | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |
+| HL-C25 | Queued | Scale the HL-C24 payoff pattern across the remaining 32 Latin chapters and the other 19 tracks. | Every chapter's payoff is a lesson written to be a payoff, not the chapter's last teaching lesson pressed into service. |
 | HL-C26 | Complete in this PR | Give the hand-written early chapters a checkable title and label without making them generated. | The 105 chapters with a committed `.tex` but no `targets[]` entry are recorded in a new `handwritten[]` list in `core/book-generation.json`, transcribed from what each `\chapter{}`/`\label{}` actually declares. `generatedBookOutputs` never walks that list, so `check:books` still passes byte-for-byte and no authored chapter can be overwritten; `chapter-title-drift` no longer skips them. |
 | HL-C44 | Complete in this PR | Emit the derived modality as a generated, drift-gated manifest so different outputs can be filtered from one source. HL-C14 derived `voice`/`sight`/`pen` per lesson and a drivable prefix per chapter, but only at runtime and only into the human-readable gap report — no book builder, app, or driving-edition renderer had a file to filter on. | `core/lesson-modality.json` carries per-lesson `id`/`language`/`chapter`/`sequence`/`modality`/`derived`/`drivable`/`reasons`/`sourceHash`, per-chapter drivable prefix and ordered `drivableLessonIds`, per-track rollups, and a corpus summary (1,096 lessons; 708 `voice`, 337 `sight`, 51 `pen`; 65% drivable; 375 chapters; 551 lessons reachable in prefix order; 199 fully drivable chapters; 121 unstartable by ear). `modality-cli --write`/`--check` mirrors the `book-cli` contract, `check:modality` runs in CI beside `check:books`, and the schema reserves room for HL-C41's `coreModality` as a purely additive key. |
 | HL-C32 | Complete in this PR | Diagnose and repair the Russian track, worst in the corpus on two independent measurements: 9% drivable with **zero** lessons reachable by ear in either chapter, and payoff representativeness of 0.20. | Russian measures 73% drivable (16 `voice`, 1 `sight`, 5 `pen`) with 15 lessons reachable in chapter-prefix order, and Chapter 2's payoff representativeness is 0.67 against the 0.5 floor. Zero new validation errors, zero duration violations. |
@@ -1880,6 +1882,44 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The audit found 117 authored links across the wider lesson corpus. The 62 not
   yet represented in generated targets remain canonical app content and will
   become live automatically when those chapters migrate to book generation.
+
+## Findings from HL-C24
+
+- Four Latin chapters now end on a lesson written to be a payoff:
+  `LA-C19-practice`, `LA-C21-practice`, `LA-C33-practice`, and
+  `LA-C36-practice`. Latin had exactly one `practice` lesson across 36
+  chapters before this tranche; it now has five, and the corpus reaches 1,100
+  lessons with zero duration violations and zero prerequisite errors.
+- **The representativeness gate cannot see this gap.** All 36 Latin chapters
+  already measured 100% before the change, and all 36 still measure 100% after
+  it, because a chapter's last teaching lesson cumulatively practises every atom
+  the chapter introduced. Representativeness answers "does the payoff touch the
+  chapter's material" — it cannot answer "is the payoff something the reader can
+  *do*." HL-C03's gate set needs a distinct signal for that: the honest one
+  available today is whether the chapter's terminal lesson is of a consolidation
+  type (`practice`, `practice-mix`, `pattern`) at all. On that measure Latin was
+  1 of 36 and is now 5 of 36.
+- Three of the four payoffs are genuine `dialogue`s built only from taught
+  words. Chapter 33 is deliberately **not**: it teaches *vesper* and its
+  afterlives, with no greeting or exchange anywhere in it, so its payoff is a
+  `task` — sort any European evening word into the *vesper* family or the
+  *sērus* family, then produce *vespere*. Forcing a conversation there would have
+  misrepresented what a taproot track is for.
+- The constraint that actually bites is **strict knowledge closure combined with
+  a single-word-per-lesson corpus**. A payoff may only recombine what the
+  transitive prerequisite chain introduced, and Latin's chain is a thin line
+  (each lesson names one or two prerequisites), so useful material taught in a
+  *sibling* branch is invisible unless the payoff names it as an extra
+  prerequisite. Chapter 19 could reach *grātiās tibi agō* only because
+  `LA-C19-quid-agis` happens to depend on `LA-C01-ita-non`; chapter 36 had to
+  name `LA-C34-bonum-vesperum` and `LA-C19-practice` explicitly to see the
+  *bonus*-phrase and wellbeing atoms at all. Any track-wide scale-up should
+  expect to author prerequisite edges, not just lessons.
+- Chapters whose material is purely etymological or purely metalinguistic resist
+  a usable payoff on principle, not on effort. Latin chapter 33 is the clean
+  example; chapters 2 (numbers), 5 (weekday names), and 11 (months) are the same
+  shape. `task` and `production` payoffs are the right answer there, and the
+  ledger should say so rather than labelling them `dialogue`.
 
 ## Findings from HL-C26
 

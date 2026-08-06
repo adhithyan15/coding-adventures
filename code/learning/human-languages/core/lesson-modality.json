@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 0
   },
-  "sourceHash": "fnv1a64:077b94b3c2e86144",
+  "sourceHash": "fnv1a64:c4a2152cfff553ef",
   "summary": {
-    "totalLessons": 1096,
-    "voice": 708,
+    "totalLessons": 1100,
+    "voice": 712,
     "sight": 337,
     "pen": 51,
-    "drivableLessons": 708,
+    "drivableLessons": 712,
     "drivablePercent": 65,
     "trackCount": 20,
     "chapterCount": 375,
-    "drivablePrefixTotal": 551,
+    "drivablePrefixTotal": 555,
     "fullyDrivableChapters": 199,
     "unstartableChapters": 121,
     "overriddenLessons": 0,
@@ -2855,12 +2855,12 @@
     },
     {
       "language": "latin",
-      "lessonCount": 53,
-      "voice": 43,
+      "lessonCount": 57,
+      "voice": 47,
       "sight": 10,
       "pen": 0,
-      "drivablePercent": 81,
-      "drivablePrefixTotal": 41,
+      "drivablePercent": 82,
+      "drivablePrefixTotal": 45,
       "modalities": [
         "voice",
         "sight"
@@ -3150,19 +3150,20 @@
         },
         {
           "chapter": 19,
-          "lessonCount": 2,
-          "voice": 2,
+          "lessonCount": 3,
+          "voice": 3,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 2,
+          "drivablePrefix": 3,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "LA-C19-quid-agis",
-            "LA-C19-valeo-family"
+            "LA-C19-valeo-family",
+            "LA-C19-practice"
           ]
         },
         {
@@ -3184,19 +3185,20 @@
         },
         {
           "chapter": 21,
-          "lessonCount": 2,
-          "voice": 2,
+          "lessonCount": 3,
+          "voice": 3,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 2,
+          "drivablePrefix": 3,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "LA-C21-volup-est-convenisse",
-            "LA-C21-meeting-phrase-context"
+            "LA-C21-meeting-phrase-context",
+            "LA-C21-practice"
           ]
         },
         {
@@ -3377,19 +3379,20 @@
         },
         {
           "chapter": 33,
-          "lessonCount": 2,
-          "voice": 2,
+          "lessonCount": 3,
+          "voice": 3,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 2,
+          "drivablePrefix": 3,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "LA-C33-vesper",
-            "LA-C33-vesper-afterlives"
+            "LA-C33-vesper-afterlives",
+            "LA-C33-practice"
           ]
         },
         {
@@ -3426,19 +3429,20 @@
         },
         {
           "chapter": 36,
-          "lessonCount": 2,
-          "voice": 2,
+          "lessonCount": 3,
+          "voice": 3,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 2,
+          "drivablePrefix": 3,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "LA-C36-salve-post-meridiem",
-            "LA-C36-timeless-salve"
+            "LA-C36-timeless-salve",
+            "LA-C36-practice"
           ]
         }
       ]
@@ -13268,6 +13272,19 @@
       "sourceHash": "fnv1a64:9f0465f604011809"
     },
     {
+      "id": "LA-C19-practice",
+      "language": "latin",
+      "chapter": 19,
+      "sequence": 415,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81aeafc0622aef52"
+    },
+    {
       "id": "LA-C20-quid-tibi-nomen",
       "language": "latin",
       "chapter": 20,
@@ -13318,6 +13335,19 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:11d5e61c195c5fb4"
+    },
+    {
+      "id": "LA-C21-practice",
+      "language": "latin",
+      "chapter": 21,
+      "sequence": 455,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ecece80fdd47b3c"
     },
     {
       "id": "LA-C22-tu-vos",
@@ -13489,6 +13519,19 @@
       "sourceHash": "fnv1a64:00242fd2dcaeda95"
     },
     {
+      "id": "LA-C33-practice",
+      "language": "latin",
+      "chapter": 33,
+      "sequence": 585,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6d7a6121f9b4bbc"
+    },
+    {
       "id": "LA-C34-bonum-vesperum",
       "language": "latin",
       "chapter": 34,
@@ -13539,6 +13582,19 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:3738faa18f82389e"
+    },
+    {
+      "id": "LA-C36-practice",
+      "language": "latin",
+      "chapter": 36,
+      "sequence": 630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b953d8c26b573452"
     },
     {
       "id": "ML-C01-athe",
