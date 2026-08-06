@@ -52,12 +52,12 @@ const TASK_VIEW = (projectStart: number) => ({
   projectStart,
 });
 // The sheet's column catalogue: one entry per column the sheet can show, in
-// display order. `sortable` controls whether the column appears as a Select
-// option in the sort toolbar. `editable`/`write` describe what SHOULD gate
-// edit-mode and turn a committed edit into an engine op — prepared for when
-// cell editing is fixed (see Sheet.mil's "Known limitation" note: Grid's
-// Cell can't carry a click payload through the current react emitter, so
-// v1 is read-only and neither field has a live consumer yet).
+// display order. `editable` gates whether clicking a cell in that column
+// enters edit mode at all (a computed column like Overdue never does — see
+// the "sheetNavigate" case below). `write` turns a committed cell edit into
+// the ONE engine op that expresses it; absent for non-editable columns.
+// `sortable` controls whether the column appears as a Select option in the
+// sort toolbar.
 //
 // This is a SECOND consumer of table(view) — same engine call the list view
 // already makes, just with a broader visibleFields and a different
@@ -216,16 +216,13 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let sheetSortField = ""; // a SHEET_FIELDS label, or "" for unsorted
   let sheetSortAscending = true;
   let sheetSortOpen = false;
-  // Grid's edit-cursor slots. -1/"" ("none", matching Grid's own contract — see
-  // Grid.mil) permanently: v1 is read-only, since Grid's Cell can't carry a click
-  // payload through the current react emitter (see Sheet.mil's "Known limitation"
-  // note). Kept as real props rather than deleted — Grid requires them wired to
-  // something — and as `const` since nothing ever drives them yet.
-  const sheetSelectedRow = -1;
-  const sheetSelectedCol = -1;
-  const sheetEditRow = -1;
-  const sheetEditCol = -1;
-  const sheetEditContent = "";
+  // Grid's edit-cursor slots. -1/"" means "none", matching Grid's own contract
+  // (see Grid.mil).
+  let sheetSelectedRow = -1;
+  let sheetSelectedCol = -1;
+  let sheetEditRow = -1;
+  let sheetEditCol = -1;
+  let sheetEditContent = "";
   // Which row is expanded, by task id (not index — an index would follow the wrong
   // task the moment the list is re-sorted or something above it is deleted).
   let expanded: string | null = null;
@@ -618,20 +615,50 @@ function makeController(engine: any, init: ControllerInit = {}) {
           persist();
           break;
         }
-        // v1 sheet is READ-ONLY. Grid's Cell is a Box (a generic container), and
-        // mosaic-emit-react's connects-wiring only synthesizes an index/value payload
-        // for a small set of "dedicated" primitives (HostButton, HostInput, HostLink) —
-        // a generic Box's onClick always dispatches void, no matter what the target
-        // emit declares. That means Grid's row/col selection and edit round-trip can't
-        // actually carry data through the current emitter, in any app — not something
-        // fixable from this package/UI layer. These handlers stay as documented no-ops
-        // (rather than deleting the wiring, which the package resolver requires — see
-        // Sheet.mil's "Known limitation" note) until that's fixed at the emitter level.
-        case "sheetNavigate":
-        case "sheetFormulaChange":
-        case "sheetEditCancel":
-        case "sheetEditCommit":
+        case "sheetNavigate": {
+          sheetSelectedRow = event.row;
+          sheetSelectedCol = event.col;
+          const col = SHEET_FIELDS[event.col];
+          // Only an editable column enters edit mode at all — a computed column
+          // (Overdue, Start, Finish) just gets selected/highlighted, matching the
+          // Cell.mil doc's note that Grid/Cell don't enforce this policy themselves.
+          if (col?.editable) {
+            const { cells } = sheetRows();
+            sheetEditRow = event.row;
+            sheetEditCol = event.col;
+            sheetEditContent = cells[event.row]?.[event.col] ?? "";
+          } else {
+            sheetEditRow = -1;
+            sheetEditCol = -1;
+          }
           break;
+        }
+        case "sheetFormulaChange":
+          sheetEditContent = event.value;
+          break;
+        case "sheetEditCancel":
+          sheetEditRow = -1;
+          sheetEditCol = -1;
+          sheetEditContent = "";
+          break;
+        case "sheetEditCommit": {
+          const { ids } = sheetRows();
+          const id = ids[sheetEditRow];
+          const col = SHEET_FIELDS[sheetEditCol];
+          sheetEditRow = -1;
+          sheetEditCol = -1;
+          sheetEditContent = "";
+          if (!id || !col?.write) break;
+          const change = col.write(id, event.value);
+          if (!change) break; // the column rejected the value (e.g. an unknown priority)
+          const res = (engine as any)[change.op](change.args);
+          if (res?.ok === false) {
+            console.error(`Sheet edit failed (${col.label}):`, res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
         case "sheetFilterChange":
           sheetFilterText = event.value;
           break;

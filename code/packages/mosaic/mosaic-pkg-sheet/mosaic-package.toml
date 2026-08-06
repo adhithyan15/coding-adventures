@@ -18,7 +18,7 @@
 
 [package]
 name = "mosaic-pkg-sheet"
-version = "0.1.0"
+version = "0.1.1"
 description = "Filterable, sortable, editable spreadsheet view wired to task-core's table(view) projection"
 license = "MIT OR Apache-2.0"
 
@@ -26,7 +26,7 @@ license = "MIT OR Apache-2.0"
 exports = ["Sheet"]
 
 [dependencies]
-mosaic-pkg-grid = "0.2.2"
+mosaic-pkg-grid = "0.2.3"
 mosaic-pkg-toolkit = "0.11.0"
 
 [kernel]

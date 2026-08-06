@@ -92,7 +92,7 @@ fn manifest_declares_expected_exports() {
         .and_then(|p| p.get("version"))
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
-    assert_eq!(version, "0.2.2", "[package].version must be 0.2.2 for the Cell onClick-wiring fix");
+    assert_eq!(version, "0.2.3", "[package].version must be 0.2.3 for the Cell onClick row/col payload (UI37)");
 
     // [components].exports
     let exports = value
@@ -275,6 +275,48 @@ fn ui28_1_cell_wires_its_own_onclick_emit() {
     let mil_out = mosmodel_compiler::compile(&mil_src).expect("Cell.mil compiles");
     moslayout_compiler::compile(&src, Some(&mil_out.descriptor_json))
         .expect("Cell.mll must validate against Cell.mil");
+}
+
+/// v0.2.3 / UI37 regression guard. onClick firing (v0.2.2) is necessary but
+/// not sufficient — Grid's documented `onNavigate(row, col)` contract needs
+/// Cell to actually carry a coordinate. Pins: Cell.mil declares onClick with
+/// a (row, col) payload and matching row/col slots; Cell.mll threads them
+/// onto the Box; Grid.mll supplies them at the call site via the same
+/// expression-in-slot-binding shape as is-editing/is-selected.
+#[test]
+fn ui37_cell_onclick_carries_row_and_col() {
+    let cell_mil_src = read_source("Cell.mil");
+    assert!(
+        cell_mil_src.contains("slot row") && cell_mil_src.contains("slot col"),
+        "Cell.mil must declare row/col slots:\n{cell_mil_src}"
+    );
+    let mil_out = mosmodel_compiler::compile(&cell_mil_src).expect("Cell.mil compiles");
+    let on_click = mil_out
+        .component
+        .emits
+        .iter()
+        .find(|e| e.name == "onClick")
+        .expect("Cell.mil must declare onClick");
+    let param_names: Vec<&str> = on_click.params.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(
+        param_names,
+        vec!["row", "col"],
+        "onClick must declare (row, col) in that order, got: {param_names:?}"
+    );
+
+    let cell_mll_src = read_source("Cell.mll");
+    let collapsed_cell: String = cell_mll_src.split_whitespace().collect::<Vec<_>>().join(" ");
+    assert!(
+        collapsed_cell.contains("row: slot: row") && collapsed_cell.contains("col: slot: col"),
+        "Cell.mll's Box must thread row/col onto itself:\n{cell_mll_src}"
+    );
+
+    let grid_mll_src = read_source("Grid.mll");
+    let collapsed_grid: String = grid_mll_src.split_whitespace().collect::<Vec<_>>().join(" ");
+    assert!(
+        collapsed_grid.contains("row: ( r )") && collapsed_grid.contains("col: ( c )"),
+        "Grid.mll must supply row/col at the Cell call site from its own loop bindings:\n{grid_mll_src}"
+    );
 }
 
 #[test]

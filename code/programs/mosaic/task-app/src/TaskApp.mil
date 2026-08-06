@@ -118,16 +118,9 @@ component TaskApp {
   emit onCardDropped ( key : text , kind : text , targetKey : text , position : text ) ;
 
   // Sheet emits — straight pass-through to/from pkg::mosaic-pkg-sheet::Sheet.
-  // onNavigate/onFormulaChange/onEditCommit/onEditCancel are void, matching
-  // Sheet.mil (v1 is read-only — see Sheet.mil's "Known limitation" note:
-  // Grid's Cell is a Box, and mosaic-emit-react's connects-wiring can't
-  // synthesize an index/value payload for a generic container the way it
-  // does for HostButton/HostInput, so nothing meaningful would flow through
-  // a declared payload here anyway).
-  emit onSheetNavigate ;
-  // Reliable, unlike the others here — see Sheet.mil's matching onFormulaChange note.
+  emit onSheetNavigate ( row : number , col : number ) ;
   emit onSheetFormulaChange ( value : text ) ;
-  emit onSheetEditCommit ;
+  emit onSheetEditCommit ( value : text ) ;
   emit onSheetEditCancel ;
   emit onSheetFilterChange        ( value : text ) ;
   emit onSheetSortFieldChange     ( value : text ) ;

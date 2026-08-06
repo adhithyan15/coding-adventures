@@ -32,6 +32,13 @@
 // ---------------
 //   value         the text currently displayed (and the seed for the
 //                 editor's initial value when editing begins)
+//   row, col      (v0.2.3, UI37) the cell's coordinate, opaque to Cell
+//                 itself — it never branches on these — but threaded onto
+//                 the root Box so onClick can carry them. Grid supplies
+//                 them via expression-in-slot-binding at the Cell call
+//                 site, the same mechanism it already uses for
+//                 is-editing/is-selected. See "Why row/col ride along on
+//                 click" below.
 //   editable      whether this cell may transition into edit mode at all
 //                 (advisory; the Grid host enforces the policy by setting
 //                 is-editing or not)
@@ -47,13 +54,35 @@
 //
 // Emit vocabulary
 // ---------------
-//   onClick       fired when the cell is activated (host promotes to edit)
+//   onClick       fired when the cell is activated (host promotes to edit).
+//                 Carries (row, col) — see below.
 //   onCommit      fired when an in-progress edit confirms; carries the
 //                 final string value the host should persist
 //   onCancel      fired when an in-progress edit is abandoned
+//
+// Why row/col ride along on click (v0.2.3, UI37)
+// ------------------------------------------------
+//
+//   Cell's root is a Box (a generic container, deliberately — a table
+//   cell is not semantically a button). Through v0.2.2, mosaic-emit-
+//   react's generic connects-wiring could only dispatch a Box's onClick
+//   void, no matter what the target emit declared — so a click FIRED
+//   (once 0.2.2 wired Box's onClick to Cell's own emit at all) but never
+//   carried anything, and Grid's documented onNavigate(row, col)
+//   contract could not actually be fulfilled by any consumer.
+//
+//   UI37 fixes the emitter: a payload-carrying target emit's declared
+//   params are now resolved from NAMED PROPS on the same node (literal /
+//   slot-ref / expression), the same mechanism UI35's drag-key already
+//   uses. Cell.mil declaring `row`/`col` slots and Cell.mll threading
+//   them onto the Box as `row: slot: row, col: slot: col` is what gives
+//   the emitter something to find. See
+//   code/specs/UI37-generic-payload-dispatch.md.
 
 component Cell {
   slot value        : text ;
+  slot row : number ;
+  slot col : number ;
   // edit-content — the host's live edit buffer (UI28-1 v0.3.0).  When
   // the cell is promoted to editing, the HostInput's `value=` is
   // wired to this slot rather than the underlying `value` so the
@@ -70,7 +99,7 @@ component Cell {
   slot alignment    : text ;
   slot cell-type    : text ;
 
-  emit onClick ;
+  emit onClick ( row : number , col : number ) ;
   // onChange fires every keystroke while editing.  Carries the new
   // input value so the host's reducer can update `edit-content`.
   // Paired with the `edit-content` slot to complete the
