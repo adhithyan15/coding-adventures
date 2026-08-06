@@ -3,6 +3,87 @@
 All notable changes to this package will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.2] — 2026-08-05
+
+### Fixed
+- **Decoder never implemented Repeated-Offset (R1/R2/R3) sequence decoding**
+  (RFC 8878 §3.1.1.3.2.1.1). `decompressBlock`'s sequence loop treated every
+  decoded offset code as an explicit `Offset_Value - 3` computation and
+  outright rejected `Offset_Value < 3` as a "decoded offset underflow" —
+  but per the RFC, `Offset_Value` in `{1, 2, 3}` is a **repeat-offset
+  reference**: reuse one of the three most-recently-used match offsets
+  (frame-scoped registers R1/R2/R3, defaulting to `1/4/8`), not a literal
+  offset computation. Real `zstd` encoders use repeat offsets constantly —
+  they're one of the format's principal entropy wins, especially for
+  periodic/repetitive data — so this decoder systematically failed (or, for
+  some inputs, silently produced garbage past a bounds check) on a
+  meaningful fraction of real-world `.zst` files, even though this
+  package's own `compress()`/`decompress()` round trip never exercised the
+  path (this package's encoder never emits offset codes < 2, since its
+  minimum LZ77 match offset is 1, giving `rawOff = offset + 3 >= 4`
+  always).
+
+  This is the same gap independently identified and documented as
+  lessons.md **Lesson 98** while implementing the first `c/zstd` port
+  (PR #9941), which found it via real-CLI fuzzing (4713 bytes of a single
+  repeated byte compresses, via the real `zstd` CLI, to a *Compressed*
+  block — not RLE — whose one sequence has `Offset_Value=1`, i.e. "reuse
+  Repeated_Offset1"). This port had the identical bug for the identical
+  reason (no port's self-consistency round trip, and no prior automated
+  CLI-interop test for this package, ever exercised real-`zstd`-encoded
+  repeat-offset sequences). Verified independently reproducible in this
+  environment before fixing: TC30 (added below) failed with `"decoded
+  offset underflow: of_raw=1"` prior to this fix.
+
+  Fixed in `Zstd.kt`'s `decompressBlock`/`decompress`: implemented full
+  Repeated-Offset (R1/R2/R3) decode support per RFC 8878 §3.1.1.3.2.1.1,
+  cross-checked against both the RFC prose and the literal reference C
+  source (`ZSTD_decodeSequence` in `zstd_decompress_block.c`) via PR
+  #9941's already-verified `c/zstd` fix, per the Lesson-96 playbook of not
+  trusting either source alone — including the "when `Literals_Length` is
+  0, repeated offsets are shifted by 1" special case. The three registers
+  (`rep: LongArray` of size 3) are **frame-scoped** — default `1/4/8` for
+  the first block, threaded unmodified by `Zstd.decompress` through every
+  Compressed block's sequences for the rest of the frame (Raw/RLE blocks
+  don't touch them) — not block-scoped or reset per Compressed block. This
+  package's own encoder (`encodeSequencesSection`) is intentionally left
+  unchanged; this is a decode-only fix.
+
+### Added
+- TC29: automated real `zstd` CLI interop test (both directions — our
+  `compress()` decoded by real `zstd -d`, and real `zstd`'s output decoded
+  by our `decompress()`) using an English-prose corpus. Unlike the 0.1.1
+  changelog's TC-9 note ("manual verification... since none of [the other
+  language ports] automate a CLI subprocess test either"), this is now a
+  real, automated JUnit test (`ProcessBuilder` + temp files), skipping
+  gracefully via `Assumptions.assumeTrue` when `zstd` isn't on `PATH`.
+- TC30: automated real `zstd` CLI interop regression test proving the
+  Repeated-Offset decode fix — 4713 bytes of a single repeated byte,
+  compressed by the *real* `zstd` CLI (verified in this environment to
+  produce a Compressed block with an `Offset_Value=1` repeat-offset
+  sequence, not an RLE block), decompressed byte-exact by our decoder.
+  Fails against the pre-fix decoder with the underflow error quoted above.
+- Ad hoc, non-committed confidence pass beyond the two committed tests
+  (mirroring PR #9941's fuzz harness): 24 of 25 real-`zstd`-CLI-produced
+  inputs (constant-byte runs from 100 B to 300 KB spanning a block
+  boundary, periodic patterns at several periods, repeated prose, random
+  data, and a multi-run alternating pattern) round-tripped byte-exact
+  through this decoder. The one failure (`"unsupported literals type 2"`)
+  is an unrelated, pre-existing, explicitly-documented limitation of this
+  port — Huffman-coded literals sections aren't supported, only
+  `Raw_Literals` — orthogonal to sequence/offset decoding and out of scope
+  for this fix.
+
+### Verified
+- Full existing test suite (28 tests as of 0.1.1) still passes unchanged —
+  this package's own round trip never touches the repeat-offset path, so
+  none of it was affected by the fix.
+- 30 tests total (28 existing + TC29 + TC30), all passing.
+- Line coverage: 92.9% (`jacocoTestCoverageVerification`, ≥ 80% gate),
+  comfortably clear of the 0.1.1 baseline of 94% given the two added tests
+  exercise mostly-already-covered code paths plus the new repeat-offset
+  branches.
+
 ## [0.1.1] — 2026-08-03
 
 Rescued from an orphaned branch (`worktree-feat+zstd-and-catchups`) that was
