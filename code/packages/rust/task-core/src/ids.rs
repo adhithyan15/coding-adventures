@@ -107,3 +107,8 @@ id_type!(
     /// Identifies a status within a workflow.
     StatusId
 );
+id_type!(
+    /// Identifies a note. A note may be standalone (belongs to the project
+    /// itself) or attached to a task — see `Note::attached_task`.
+    NoteId
+);

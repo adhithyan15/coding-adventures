@@ -320,4 +320,37 @@ mod tests {
         let back: ProjectState = serde_json::from_str(&json).unwrap();
         assert_eq!(back, project);
     }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn a_pre_notes_project_snapshot_still_deserialises() {
+        // Backward compatibility: JSON written before `notes` existed must still
+        // load (serde default), so every already-persisted workspace keeps working.
+        let json = serde_json::to_string(&ProjectState::empty(ProjectId::from_raw("p1")))
+            .unwrap()
+            .replace(",\"notes\":{}", ""); // simulate the older shape
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert!(back.notes.is_empty());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn note_json_round_trips_with_camelcase_and_attached_task() {
+        let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
+        let note = Note {
+            id: NoteId::from_raw("n1"),
+            title: "Kickoff".into(),
+            body: "Agenda: scope, owners, dates.".into(),
+            attached_task: Some(TaskId::from_raw("t1")),
+        };
+        project.notes.insert(note.id.clone(), note);
+
+        let json = serde_json::to_string(&project).unwrap();
+        // Wire contract: camelCase field names, bare-string ids (serde transparent).
+        assert!(json.contains("\"attachedTask\":\"t1\""));
+        assert!(json.contains("\"n1\":{"));
+
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, project);
+    }
 }

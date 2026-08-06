@@ -82,6 +82,12 @@ export function createTaskEngine(wasmBytes, options = {}) {
     setDuration: op("set_duration"),
     setConstraint: op("set_constraint"),
     setDeadline: op("set_deadline"),
+    // `set_notes` (a task's plain-text description field, distinct from the
+    // Note entity below) has had a working WASM export since it was added,
+    // but was never wired into this binding until now — found while adding
+    // the notes-entity bindings and fixed alongside them so the same "engine
+    // supports it, JS silently doesn't" gap isn't repeated.
+    setNotes: op("set_notes"),
     linkDependency: op("link_dependency"),
     unlinkDependency: op("unlink_dependency"),
     addLink: op("add_link"),
@@ -120,6 +126,13 @@ export function createTaskEngine(wasmBytes, options = {}) {
     deleteLabel: op("delete_label"),
     setTaskLabels: op("set_task_labels"),
     setPriority: op("set_priority"),
+
+    // ── notes (active project) ──
+    // A Note is a first-class entity (its own id, standalone or attached to a
+    // task) — distinct from `setNotes` above, a task's plain-text description
+    // field. See task-app-notes-entity-v1.md.
+    upsertNote: op("upsert_note"),
+    deleteNote: op("delete_note"),
 
     // ── view projections (active project) ──
     // Each takes { view, projectStart } (calendar also { start, end }) and returns

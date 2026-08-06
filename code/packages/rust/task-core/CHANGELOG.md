@@ -6,6 +6,28 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **`Note` — a first-class note entity** (task-app Phase 8, engine half —
+  see `code/specs/task-app-notes-entity-v1.md`). `Note { id, title, body,
+  attached_task }`, registered per project (`ProjectState::notes`).
+  `attached_task: None` means standalone (belongs to the project itself);
+  `Some(task_id)` attaches it to that task. Distinct from the existing
+  `Task::notes: String` field (a task's own plain-text description) — a
+  `Note` has its own identity and can exist without any task at all.
+  - Ops: `upsert_note` (create-or-replace, keyed by id — the same
+    whole-entity-upsert shape `upsert_resource` already uses) and
+    `delete_note`.
+  - `delete_task` **orphans** a task's attached notes back to standalone
+    (`attached_task = None`) rather than deleting them — a note is a
+    first-class entity in its own right; losing the task it happened to be
+    attached to shouldn't silently destroy content the user wrote.
+  - `notes: BTreeMap<NoteId, Note>` is serde-defaulted, so every
+    already-persisted workspace (with no `notes` key at all) still
+    deserializes unchanged — the same backward-compatibility discipline
+    `ProjectState.labels` and `ProjectState.parent` already established.
+  - The UI component (`mosaic-pkg-notes`, adapted from
+    `mosaic-pkg-note-editor`) is a deliberate follow-up PR, not part of
+    this change — see the spec for why the split.
+
 - **`overdue` built-in column** (Phase 3 PR-6) — `Bool`: the task has a deadline, its
   computed finish falls after it, and it isn't done. Derived in the engine rather than in
   each host, so "show me what's slipping" is a single filter and every UI agrees on the
