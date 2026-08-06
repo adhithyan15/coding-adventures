@@ -3,8 +3,10 @@
 // The corpus block at the bottom is the one that answers the project owner's question —
 // "how far is each track from A1, and from Advanced?" — with a number rather than a guess.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadEverything } from "../src/loader.js";
+import { defaultCurriculumRoot, loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import {
   CEFR_LEVELS,
@@ -150,6 +152,46 @@ describe("rolling up", () => {
     // ES-c is above the ceiling; ES-orphan is unplaced. A book promising a gentle ramp
     // must not carry a surprise, so the honest failure is a shorter book.
     expect(ramp).toEqual(["ES-a", "ES-b"]);
+  });
+});
+
+describe("exam alignment", () => {
+  // The owner's instruction: do not leave things unmapped. A track with no mapping
+  // silently drops out of every level report, and a learner asking "what is A1 in Tamil?"
+  // deserves an answer. This test is the guard — registering a track now requires
+  // answering the question.
+  it("maps every registered track, with the KIND of answer recorded", () => {
+    const exams = JSON.parse(
+      readFileSync(join(defaultCurriculumRoot(), "core", "exam-levels.json"), "utf8"),
+    ) as {
+      tracks: Record<string, { basis: string; mapping: unknown; exam: string }>;
+    };
+    const { registry } = loadEverything();
+
+    for (const language of registry.languages) {
+      const entry = exams.tracks[language.id];
+      expect(entry, `${language.id} has no exam-level mapping`).toBeDefined();
+      expect(entry!.mapping, `${language.id} mapping is empty`).toBeTruthy();
+      // `published` = the awarding body states it. `research` = a widely-cited third-party
+      // correspondence. `editorial` = this project's judgement, a working default to be
+      // corrected — never a claim about what a certificate is worth. Being explicit about
+      // which is what makes mapping-everything honest rather than sloppy.
+      expect(["published", "research", "editorial"]).toContain(entry!.basis);
+    }
+  });
+
+  it("keeps a caveat on every mapping that is not the awarding body's own", () => {
+    const exams = JSON.parse(
+      readFileSync(join(defaultCurriculumRoot(), "core", "exam-levels.json"), "utf8"),
+    ) as { tracks: Record<string, { basis: string; caveat?: string; mapping: unknown }> };
+    for (const [language, entry] of Object.entries(exams.tracks)) {
+      // A plain "cefr" editorial mapping for a track with no exam at all needs no essay;
+      // anything that names a specific foreign ladder does, or a reader will take the
+      // correspondence for an official one.
+      if (entry.basis !== "published" && typeof entry.mapping === "object") {
+        expect(entry.caveat, `${language} names a ladder without a caveat`).toBeTruthy();
+      }
+    }
   });
 });
 

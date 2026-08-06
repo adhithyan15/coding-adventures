@@ -30,12 +30,24 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - `core/spine.json` `stages` extends to `B2`, `C1`, `C2` so later tranches can declare
   their own stage. The project owner's direction is that the content reaches the most
   advanced level, gently, with page count explicitly not a cost.
-- `core/exam-levels.json` maps CEFR onto the exams a learner would actually sit. Spanish,
-  French, German, Italian, Portuguese and Russian certify against CEFR directly. **JLPT**
-  and **HSK** do not and are recorded as *approximate* with the caveat attached — the
-  Japan Foundation publishes no official alignment. Tracks with no widely-sat exam follow
-  CEFR per the owner's instruction; the Arabic, Persian and Indian-language ladders are
-  deliberately left unmapped rather than mapped on a guess.
+- `core/exam-levels.json` maps CEFR onto the exams a learner would actually sit, and
+  **every one of the 22 tracks is mapped — no gaps.** An unmapped track silently drops out
+  of every level report, and a learner asking "what is A1 in Tamil?" deserves an answer.
+- **What is recorded instead of a gap is the KIND of answer.** `basis: published` means the
+  awarding body states the alignment (DELE, DELF/DALF, Goethe, CILS, CAPLE, TORFL, HSK);
+  `research` means a widely-cited third-party correspondence (JLPT, Arabic ILR/ACTFL);
+  `editorial` means this project's judgement — a working default to be corrected, never a
+  claim about what a certificate is worth. A test enforces that every registered track has
+  a mapping and a valid basis, so registering a track now requires answering the question.
+- Judgement calls worth knowing: **Hindi** is anchored to the Dakshina Bharat Hindi Prachar
+  Sabha ladder (Prathmic → Praveen), which is real and widely sat but built to spread Hindi
+  within India rather than against CEFR descriptors. **Tamil** is mapped straight to CEFR
+  because its diglossia makes any mapping unclean — this curriculum teaches the spoken
+  register first, so A1 means the CEFR descriptor, not a claim about a Tamil examination.
+  **Latin** takes CEFR too, with the honest note that CEFR is communicative and Latin is
+  read; a reading-only ladder would fit it better. A second test requires a caveat on any
+  mapping that names a specific foreign ladder without the awarding body's backing — it
+  caught a bare Persian/AMFA correspondence during this change.
 
 ### Added — HL-C10: the shared spine reaches above A1
 
