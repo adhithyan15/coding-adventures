@@ -68,13 +68,14 @@ layout TaskApp {
         // clicking the view you are already on is a no-op instead of a swap.
         Row [ seg ] {
           // Part names are unique layout-wide, even across mutually-exclusive
-          // branches, so each of the five buttons gets its own name in each of
-          // the five branches (one "on" + four "off" variants per button).
+          // branches, so each of the six buttons gets its own name in each of
+          // the six branches (one "on" + five "off" variants per button).
           If ( when: slot: timeline-mode ) {
             HostButton [ seg-list-off ] ( label : "List" , onClick : emit: onShowList )
             HostButton [ seg-board-off ] ( label : "Board" , onClick : emit: onShowBoard )
             HostButton [ seg-sheet-off ] ( label : "Sheet" , onClick : emit: onShowSheet )
             HostButton [ seg-cal-off ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+            HostButton [ seg-notes-off ] ( label : "Notes" , onClick : emit: onShowNotes )
             HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
           }
           Else {
@@ -83,6 +84,7 @@ layout TaskApp {
               HostButton [ seg-board-on ] ( label : "Board" , onClick : emit: onShowBoard )
               HostButton [ seg-sheet-off2 ] ( label : "Sheet" , onClick : emit: onShowSheet )
               HostButton [ seg-cal-off2 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+              HostButton [ seg-notes-off2 ] ( label : "Notes" , onClick : emit: onShowNotes )
               HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
             }
             Else {
@@ -91,6 +93,7 @@ layout TaskApp {
                 HostButton [ seg-board-off3 ] ( label : "Board" , onClick : emit: onShowBoard )
                 HostButton [ seg-sheet-on ] ( label : "Sheet" , onClick : emit: onShowSheet )
                 HostButton [ seg-cal-off3 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                HostButton [ seg-notes-off3 ] ( label : "Notes" , onClick : emit: onShowNotes )
                 HostButton [ seg-tl-off3 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
               }
               Else {
@@ -99,14 +102,26 @@ layout TaskApp {
                   HostButton [ seg-board-off5 ] ( label : "Board" , onClick : emit: onShowBoard )
                   HostButton [ seg-sheet-off4 ] ( label : "Sheet" , onClick : emit: onShowSheet )
                   HostButton [ seg-cal-on ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                  HostButton [ seg-notes-off4 ] ( label : "Notes" , onClick : emit: onShowNotes )
                   HostButton [ seg-tl-off4 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
                 }
                 Else {
-                  HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
-                  HostButton [ seg-board-off4 ] ( label : "Board" , onClick : emit: onShowBoard )
-                  HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
-                  HostButton [ seg-cal-off4 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
-                  HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                  If ( when: slot: notes-mode ) {
+                    HostButton [ seg-list-off5 ] ( label : "List" , onClick : emit: onShowList )
+                    HostButton [ seg-board-off6 ] ( label : "Board" , onClick : emit: onShowBoard )
+                    HostButton [ seg-sheet-off5 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                    HostButton [ seg-cal-off5 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                    HostButton [ seg-notes-on ] ( label : "Notes" , onClick : emit: onShowNotes )
+                    HostButton [ seg-tl-off5 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                  }
+                  Else {
+                    HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
+                    HostButton [ seg-board-off4 ] ( label : "Board" , onClick : emit: onShowBoard )
+                    HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
+                    HostButton [ seg-cal-off4 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
+                    HostButton [ seg-notes-off5 ] ( label : "Notes" , onClick : emit: onShowNotes )
+                    HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                  }
                 }
               }
             }
@@ -217,6 +232,26 @@ layout TaskApp {
           )
         }
         Else {
+        If ( when: slot: notes-mode ) {
+          // Every notes-* slot/emit is a straight pass-through to the
+          // package — TaskApp adds no shaping of its own, see Notes.mil
+          // for the contract and task-app-notes-ui-v1.md for the scope.
+          pkg::mosaic-pkg-notes::Notes (
+            notes-title : slot: notes-title ,
+            note-rows : slot: note-rows ,
+            selected-note-id : slot: selected-note-id ,
+            title-value : slot: note-title-value ,
+            body-value : slot: note-body-value ,
+            onSelectNote : emit: onSelectNote ,
+            onNewNote : emit: onNewNote ,
+            onTitleChange : emit: onNoteTitleChange ,
+            onBodyChange : emit: onNoteBodyChange ,
+            onSave : emit: onSaveNote ,
+            onDelete : emit: onDeleteNote ,
+            onCancel : emit: onCancelNote
+          )
+        }
+        Else {
           Column [ list-wrap ] {
             Row [ composer ] {
               HostInput [ name-input ] (
@@ -275,6 +310,7 @@ layout TaskApp {
               }
             }
           }
+        }
         }
         }
         }

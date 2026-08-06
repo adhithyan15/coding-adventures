@@ -34,19 +34,7 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
-3. **Phase 8 — `mosaic-pkg-notes` UI component.** The engine half shipped (see Resolved
-   below): `Note { id, title, body, attached_task }`, `upsert_note`/`delete_note`, wired
-   through to `task-engine.mjs`. What's left is the UI — adapted from
-   `mosaic-pkg-note-editor`, which was built for a different domain (Anki notes: note
-   types, decks, focused-field editing) and needs re-pointing at a plain title+body note.
-   Per `code/specs/task-app-notes-entity-v1.md`'s research, roughly a third of
-   `NoteEditor`'s 25 slots are Anki-specific dead weight and the focused-field-editing
-   cluster (6 slots) collapses to a single body textarea — this is closer to "a new
-   component inspired by NoteEditor's shell" than a mechanical port. Then wire it into
-   `TaskApp` as a 6th tab (List/Board/Sheet/Calendar/Timeline/Notes) the same way Sheet
-   and Calendar were.
-
-4. **Phase 9 — App-shell assembly + progressive disclosure.** Partially done already via ad hoc
+3. **Phase 9 — App-shell assembly + progressive disclosure.** Partially done already via ad hoc
    UI-design passes ([#8970](https://github.com/adhithyan15/coding-adventures/pull/8970), [#8983](https://github.com/adhithyan15/coding-adventures/pull/8983), [#9112](https://github.com/adhithyan15/coding-adventures/pull/9112), [#8994](https://github.com/adhithyan15/coding-adventures/pull/8994), [#9110](https://github.com/adhithyan15/coding-adventures/pull/9110), [#9127](https://github.com/adhithyan15/coding-adventures/pull/9127), [#9136](https://github.com/adhithyan15/coding-adventures/pull/9136))
    — theming, project switching, nested-project hierarchy, shell/groups/status/cards all landed.
    Remaining: package it as a reusable `mosaic-pkg-project-nav` (nested-project tree + view
@@ -73,6 +61,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   a 4-way branch duplicating the whole drop-target + event-loop wasn't judged worth it for a
   colour difference. Today's badge shipped (it only needed a small conditional child, the
   same trick Board's `card-crit` chip already uses).
+- **Notes: attachment picker, tags, rich text, search.** Deferred from the Phase 8 UI
+  ship — see `code/specs/task-app-notes-ui-v1.md`. v1's notes are always standalone (no
+  UI to set `attached_task`); tags are generic and reusable in `mosaic-pkg-notes` but
+  nothing drives them; `Note.body` is plain text, matching every other free-text field
+  in the engine; no search box (mirrors Sheet's own v1 scope cut).
 - Recurring tasks / reminders UX.
 - Automation rules (Butler-style).
 - Resource-leveling UI (the engine's `constraint-*` leveling exists; no UI surfaces it).
@@ -82,7 +75,7 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
-- **Phase 8 — Notes entity (engine half).** `task-core` gained `Note { id, title,
+- **Phase 8 — Notes, both halves.** Engine: `task-core` gained `Note { id, title,
   body, attached_task }`, stored per-project (`ProjectState.notes`, serde-defaulted
   so already-persisted workspaces keep loading), `upsert_note`/`delete_note` ops,
   `delete_task` orphans (not deletes) a task's attached notes, and both ops are
@@ -93,9 +86,21 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   the delete-orphans-not-deletes behavior through the actual ABI, not just the pure
   Rust layer. Found and fixed a pre-existing gap while here: `set_notes` (a task's
   plain-text field, unrelated to this new entity) had a working WASM export but was
-  never wired into `task-engine.mjs` — fixed alongside the new bindings. The UI
-  (`mosaic-pkg-notes`) is the remaining "Next up" item above — deliberately split
-  into its own PR, see `code/specs/task-app-notes-entity-v1.md` for why.
+  never wired into `task-engine.mjs` — fixed alongside the new bindings.
+  UI: `mosaic-pkg-notes` (adapted from `mosaic-pkg-note-editor` — roughly a third of
+  its 25 slots were Anki-domain-specific dead weight, and the focused-field-editing
+  cluster collapsed to a single multiline body field), wired into `TaskApp` as a
+  sixth tab. Found and fixed one real bug live-testing it, before first ship: a slot
+  referenced by its kebab-case name inside an expression (`selected-note-id` instead
+  of the correct camelCase `selectedNoteId`) compiled cleanly at every static layer
+  but silently miscompiled to JS (`selected - note - id`, subtraction of undefined
+  identifiers) — clicking Save threw and blanked the page. Verified live end-to-end
+  after the fix: create → type (single-line title + multiline body) → Save → appears
+  in the list → persists across view navigation → Delete removes it → Cancel
+  discards an unsaved draft without touching the engine; both themes; zero console
+  errors. Deliberately split into two PRs — see `code/specs/task-app-notes-ui-v1.md`
+  for why — with the UI's own deferred scope (attachment picker, tags, rich text,
+  search) tracked above.
 - **Phase 7 — Calendar component.** `mosaic-pkg-calendar` — month grid + drag-to-move,
   see `code/specs/task-app-calendar-v1.md` for the full scope. The engine's
   `calendar(range, view)` projection needed zero new work (shipped in #8726); this PR was

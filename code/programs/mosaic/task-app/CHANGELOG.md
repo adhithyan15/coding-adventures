@@ -4,6 +4,26 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - notes (list + editor) view
+
+Phase 8's UI half: a new `mosaic-pkg-notes` package (adapted from
+`mosaic-pkg-note-editor`), wired into `TaskApp` as a sixth view
+(List/Board/Sheet/Calendar/Notes/Timeline). The engine half — `task-core`'s
+`Note` entity and `upsertNote`/`deleteNote` — shipped separately; see
+`code/specs/task-app-notes-ui-v1.md` for why the two were split.
+
+- A list of every note (title, standalone or task-attached — v1 shows
+  them in one flat list, no separate browse split) with "+ New note", and
+  an editor for whichever one is open (title, multiline body, Save/
+  Delete/Cancel).
+- Save always calls `upsertNote` — a new note's id is minted the moment
+  "+ New note" is clicked (the same host-mints-ids-upfront pattern
+  `addTask`/`addProject` already use), not deferred to first Save, so the
+  editor stays open the whole time regardless of whether the note has
+  been persisted yet.
+- Deferred: an attachment picker (v1's notes are always standalone),
+  tags, rich text, search — see `BACKLOG.md`.
+
 ### Added - calendar (month grid) view
 
 Phase 7 of the roadmap: a new `mosaic-pkg-calendar` package, wired to

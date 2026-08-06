@@ -1,0 +1,174 @@
+// Notes.light.msl — default light theme style for the Notes component.
+//
+// No design-mock reference exists for this component (design/ui-prototype.html
+// predates the notes entity — see task-app-notes-ui-v1.md), so the palette
+// matches the tokens the rest of TaskApp already uses (light theme:
+// --surface:#fffdfa --surface-2:#f7f2ea --ink:#2b2723 --ink-soft:#6a625a
+// --ink-faint:#9b9289 --line:#e6ded3 --line-soft:#efe8dd --honey:#e0942a
+// --red:#cf4b34 --red-tint:#f8e4df).
+
+style Notes {
+  part notes-root {
+    gap : 12 ;
+  }
+
+  part notes-heading {
+    font-size   : 16 ;
+    font-weight : bold ;
+    color       : "#2b2723" ;
+  }
+
+  part notes-body {
+    gap : 16 ;
+  }
+
+  part notes-list {
+    width          : 220 ;
+    flex-shrink    : 0 ;
+    gap            : 4 ;
+    padding-right  : 12 ;
+    border-right-width : 1 ;
+    border-right-color : "#e6ded3" ;
+    border-right-style : "solid" ;
+  }
+
+  part notes-new {
+    width         : 100% ;
+    padding-top    : 8 ;
+    padding-right  : 12 ;
+    padding-bottom : 8 ;
+    padding-left   : 12 ;
+    border-radius : 8 ;
+    border-width  : 0 ;
+    background    : "#e0942a" ;
+    color         : "#ffffff" ;
+    font-size     : 13 ;
+    font-weight   : bold ;
+    state hover {
+      background: "#c67f1e" ;
+    }
+  }
+
+  part notes-row-on {
+    width          : 100% ;
+    text-align     : "left" ;
+    padding-top    : 8 ;
+    padding-right  : 12 ;
+    padding-bottom : 8 ;
+    padding-left   : 12 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "#fffdfa" ;
+    color          : "#2b2723" ;
+    font-size      : 13 ;
+    font-weight    : bold ;
+    box-shadow     : "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)" ;
+  }
+
+  part notes-row-off {
+    width          : 100% ;
+    text-align     : "left" ;
+    padding-top    : 8 ;
+    padding-right  : 12 ;
+    padding-bottom : 8 ;
+    padding-left   : 12 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "transparent" ;
+    color          : "#6a625a" ;
+    font-size      : 13 ;
+    state hover {
+      background: "#efe8dd" ;
+      color: "#2b2723" ;
+    }
+  }
+
+  part notes-editor {
+    flex-grow : 1 ;
+    gap       : 10 ;
+  }
+
+  part notes-title-input {
+    padding       : 10 ;
+    border-radius : 6 ;
+    background    : "#ffffff" ;
+    color         : "#2b2723" ;
+    border-width  : 1 ;
+    border-color  : "#e6ded3" ;
+    font-size     : 14 ;
+    font-weight   : bold ;
+  }
+
+  part notes-body-input {
+    width         : 100% ;
+    min-height    : 200 ;
+    padding       : 10 ;
+    border-radius : 6 ;
+    background    : "#ffffff" ;
+    color         : "#2b2723" ;
+    border-width  : 1 ;
+    border-color  : "#e6ded3" ;
+    font-size     : 13 ;
+  }
+
+  part notes-actions {
+    gap : 8 ;
+  }
+
+  part notes-save {
+    padding-top    : 8 ;
+    padding-right  : 16 ;
+    padding-bottom : 8 ;
+    padding-left   : 16 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "#e0942a" ;
+    color          : "#ffffff" ;
+    font-size      : 13 ;
+    font-weight    : bold ;
+    state hover {
+      background: "#c67f1e" ;
+    }
+  }
+
+  part notes-delete {
+    padding-top    : 8 ;
+    padding-right  : 16 ;
+    padding-bottom : 8 ;
+    padding-left   : 16 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "#f8e4df" ;
+    color          : "#cf4b34" ;
+    font-size      : 13 ;
+    font-weight    : bold ;
+    state hover {
+      background: "#f3d3ca" ;
+    }
+  }
+
+  part notes-cancel {
+    padding-top    : 8 ;
+    padding-right  : 16 ;
+    padding-bottom : 8 ;
+    padding-left   : 16 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "transparent" ;
+    color          : "#6a625a" ;
+    font-size      : 13 ;
+    state hover {
+      color: "#2b2723" ;
+    }
+  }
+
+  part notes-empty {
+    flex-grow  : 1 ;
+    align      : center ;
+  }
+
+  part notes-empty-hint {
+    font-size : 13 ;
+    color     : "#9b9289" ;
+  }
+}
