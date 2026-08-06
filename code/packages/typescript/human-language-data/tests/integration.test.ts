@@ -85,17 +85,18 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     expect(report.schemaVersion).toBe(1);
     expect(report.durationModel.version).toBe(2);
-    // 20 -> 21 in HL-C39: Mandarin Chinese joined the registry with its own
-    // authored book, so the track, schema, and book-coverage counts all move
-    // together. Duration violations stay at zero — the new track's seven Chapter 1
-    // lessons are each under 300 effective seconds.
-    expect(report.summary.registeredTracks).toBe(21);
+    // 20 -> 21 in HL-C39 (Mandarin Chinese) -> 22 in HL-C40 (Japanese). Each joined
+    // the registry with its own authored book, so the track, schema, and
+    // book-coverage counts all move together and stay equal to the registry.
+    // Duration violations stay at zero: Chinese's seven and Japanese's eight
+    // Chapter 1 lessons are each under 300 effective seconds.
+    expect(report.summary.registeredTracks).toBe(22);
     expect(report.summary.totalLessons).toBe(lessons.length);
-    expect(report.summary.authoredBooks).toBe(21);
+    expect(report.summary.authoredBooks).toBe(22);
     expect(report.summary.durationViolations).toBe(0);
     expect(report.summary.unknownPrerequisites).toBe(0);
-    expect(report.schemas.tracks).toHaveLength(21);
-    expect(report.books.tracks).toHaveLength(21);
+    expect(report.schemas.tracks).toHaveLength(22);
+    expect(report.books.tracks).toHaveLength(22);
   });
 
   it("compiles the cross-language objective activities from canonical blocks", () => {
@@ -125,6 +126,14 @@ describe("real curriculum", () => {
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
       "IT-C03-practice-drop-io",
+      "JA-C01-arigatou-dakuten",
+      "JA-C01-gozaimasu-level",
+      "JA-C01-hai-beats",
+      "JA-C01-iie-length",
+      "JA-C01-konnichiwa-particle",
+      "JA-C01-koohii-bar",
+      "JA-C01-nihongo-readings",
+      "JA-C01-practice-final-line",
       "KA-C06-dative-stacking-agglutinative",
       "LA-C01-practice-vale-root",
       "LA-C19-practice-answer-line",
@@ -267,6 +276,41 @@ describe("real curriculum", () => {
     )!;
     expect(persianFarewell.frontmatter.headword).toBe("خداحافظ");
     expect(urduFarewell.frontmatter.headword).toBe("خدا حافظ");
+  });
+
+  it("keeps the Japanese Chapter 1 mixed-script chain closed and under five minutes", () => {
+    // Japanese is the corpus's first track that needs more than one writing system
+    // at a time, so this asserts the property rather than only the counts: the same
+    // chapter must actually carry hiragana, katakana, and kanji headwords, and the
+    // closing exchange must still be reachable without an untaught atom.
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    const chapter = lessons.filter(
+      (lesson) => lesson.language === "japanese" && lesson.realization.chapter === 1,
+    );
+    expect(chapter).toHaveLength(8);
+    expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+    expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+    expect(
+      report.duration.violations.filter((lesson) => lesson.language === "japanese"),
+    ).toEqual([]);
+    expect(
+      report.prerequisites.laterChapterWithoutPrerequisites.filter(
+        (lesson) => lesson.language === "japanese",
+      ),
+    ).toEqual([]);
+
+    const headwords = new Map(
+      chapter.map((lesson) => [lesson.realization.lessonId, lesson.realization.headword]),
+    );
+    expect(headwords.get("JA-C01-konnichiwa")).toBe("こんにちは"); // hiragana
+    expect(headwords.get("JA-C01-nihongo")).toBe("日本語"); // kanji
+    expect(headwords.get("JA-C01-koohii")).toBe("コーヒー"); // katakana
+    // The register field carries two genuinely different grammatical levels here,
+    // not two synonyms, so the plain and polite thanks must not collapse into one.
+    const plain = lessons.find((lesson) => lesson.realization.lessonId === "JA-C01-arigatou")!;
+    const polite = lessons.find((lesson) => lesson.realization.lessonId === "JA-C01-gozaimasu")!;
+    expect(plain.frontmatter.register).toBe("plain-casual");
+    expect(polite.frontmatter.register).toBe("teineigo-polite");
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {

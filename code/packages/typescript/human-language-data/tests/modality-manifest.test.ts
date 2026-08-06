@@ -637,24 +637,39 @@ describe("corpus regression", () => {
   // lesson needs a pen and none carries a table, so `pen` holds and the drivable share
   // stays at 64%. `drivablePrefixTotal` gains only 1 because Chinese ch1 opens with one
   // `voice` lesson before its first character-composition lesson blocks the prefix.
+  // HL-C40 then added Japanese as the 22nd track, +8 Chapter 1 lessons — and its shape
+  // is the inverse of Chinese's, which is the finding worth keeping:
+  //
+  //   totalLessons  1125 -> 1133      voice   724 -> 725  (+1 only)
+  //   sight          348 ->  355      pen      53 ->  53  (unchanged)
+  //   trackCount      21 ->   22      chapterCount 376 -> 377  (+1)
+  //   drivablePrefixTotal 558 -> 558  unstartableChapters 121 -> 122  (+1)
+  //
+  // Seven of the eight Japanese lessons carry a `script` block and therefore derive as
+  // `sight`: a kana or kanji shape cannot be read aloud. Only the practice lesson is
+  // `voice`. Because the very first lesson of Japanese ch1 is one of the seven, the
+  // chapter's drivable prefix is 0 — which is why `drivablePrefixTotal` does not move at
+  // all and `unstartableChapters` gains one. Routing that content through `input` blocks
+  // would have held the drivable share flat by mislabelling it; the honest classification
+  // is the one that costs the metric.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1125,
-      voice: 724,
-      sight: 348,
+      totalLessons: 1133,
+      voice: 725,
+      sight: 355,
       pen: 53,
-      drivableLessons: 724,
+      drivableLessons: 725,
       drivablePercent: 64,
-      trackCount: 21,
-      chapterCount: 376,
-      // Prerequisite order costs a commuter 166 of the 724 ear-only lessons: they sit
+      trackCount: 22,
+      chapterCount: 377,
+      // Prerequisite order costs a commuter 167 of the 725 ear-only lessons: they sit
       // behind a blocker in their own chapter and are unreachable in the car until
       // HL-C17 linearises the tables or HL-C41 splits the pen segments out.
       drivablePrefixTotal: 558,
       fullyDrivableChapters: 195,
-      unstartableChapters: 121,
+      unstartableChapters: 122,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

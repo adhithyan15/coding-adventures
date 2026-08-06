@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 0
   },
-  "sourceHash": "fnv1a64:623d3c50be4d6958",
+  "sourceHash": "fnv1a64:ec285ffdf2590cc0",
   "summary": {
-    "totalLessons": 1125,
-    "voice": 724,
-    "sight": 348,
+    "totalLessons": 1133,
+    "voice": 725,
+    "sight": 355,
     "pen": 53,
-    "drivableLessons": 724,
+    "drivableLessons": 725,
     "drivablePercent": 64,
-    "trackCount": 21,
-    "chapterCount": 376,
+    "trackCount": 22,
+    "chapterCount": 377,
     "drivablePrefixTotal": 558,
     "fullyDrivableChapters": 195,
-    "unstartableChapters": 121,
+    "unstartableChapters": 122,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -2362,6 +2362,36 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "IT-C17-testa",
+          "drivable": false,
+          "drivableLessonIds": []
+        }
+      ]
+    },
+    {
+      "language": "japanese",
+      "lessonCount": 8,
+      "voice": 1,
+      "sight": 7,
+      "pen": 0,
+      "drivablePercent": 13,
+      "drivablePrefixTotal": 0,
+      "modalities": [
+        "voice",
+        "sight"
+      ],
+      "chapters": [
+        {
+          "chapter": 1,
+          "lessonCount": 8,
+          "voice": 1,
+          "sight": 7,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "JA-C01-hai",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -12200,6 +12230,110 @@
         "wide-table"
       ],
       "sourceHash": "fnv1a64:a462acace3a0153a"
+    },
+    {
+      "id": "JA-C01-hai",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 10,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9e35a70226961635"
+    },
+    {
+      "id": "JA-C01-iie",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 20,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:48f5d1d0cb381ae2"
+    },
+    {
+      "id": "JA-C01-konnichiwa",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a5f03af3d9b83495"
+    },
+    {
+      "id": "JA-C01-nihongo",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 40,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:405ea26c254381c6"
+    },
+    {
+      "id": "JA-C01-koohii",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9d562bfdb6016d62"
+    },
+    {
+      "id": "JA-C01-arigatou",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1ff00726c195b8ce"
+    },
+    {
+      "id": "JA-C01-gozaimasu",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 70,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a6d37ece38604436"
+    },
+    {
+      "id": "JA-C01-practice",
+      "language": "japanese",
+      "chapter": 1,
+      "sequence": 80,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd0c2e1120a75440"
     },
     {
       "id": "KA-C01-dhanyavada",
