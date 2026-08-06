@@ -69,6 +69,25 @@ tree** back to the cited facts, so a reviewer can audit the arithmetic — the
 model never evaluates it. **Space your operators** (`a - 5`, not `a-5`): a `-`
 glued to a digit lexes as a negative literal.
 
+A **formula's** final expression may additionally end in a single comparison
+(`a relop b`, `relop ∈ { >= <= > < == != }`) — the one place the value
+answered is a truth value rather than a magnitude:
+
+```adj
+formula greater_than(a, b) = a > b
+    source "A quantity a is said to be greater than b if a is larger than b, written a>b."
+    locator "https://mathworld.wolfram.com/Greater.html"
+    trust authoritative
+```
+
+`? greater_than(5, 3)` returns a dimensionless `1` (true) / `0` (false), exact
+whenever both operands are, carrying the same provenance envelope as any other
+formula. Dimensionally it combines like addition (`5 kg > 3 usd` is the same
+category error as `5 kg + 3 usd`), but the *result* collapses to a
+dimensionless scalar rather than the operands' shared dimension. This is
+additive — every formula's body already parsed as plain `<expr>` still parses
+unchanged; only a *trailing* comparison is new.
+
 LaTeX math is native input, not a caller-side normalization step. Use
 `latex "<math>"` anywhere an arithmetic expression is expected:
 

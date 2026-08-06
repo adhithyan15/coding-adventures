@@ -2140,6 +2140,14 @@ fn lower_expr(
             Box::new(lower_expr(a, formulas)?),
             Box::new(lower_expr(b, formulas)?),
         ),
+        // A comparison formula's final `a relop b` (FL-8) — reuses the exact
+        // `ComputeExpr::Bin` shape every arithmetic op already lowers to; only
+        // the operator differs (`lower_rel_op` instead of `lower_arith_op`).
+        ExprAst::Compare(op, a, b) => ComputeExpr::Bin(
+            lower_rel_op(*op),
+            Box::new(lower_expr(a, formulas)?),
+            Box::new(lower_expr(b, formulas)?),
+        ),
         ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a, formulas)?)),
         ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a, formulas)?)),
         ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a, formulas)?)),
@@ -2262,6 +2270,20 @@ fn lower_arith_op(op: ArithOp) -> ComputeOp {
         ArithOp::Div => ComputeOp::Div,
         ArithOp::Pow => ComputeOp::Pow,
         ArithOp::Mod => ComputeOp::Mod,
+    }
+}
+
+/// The [`ExprAst::Compare`] counterpart of [`lower_arith_op`] — the same
+/// [`RelOp`] `constrain`/`sm_guard` already lower, here feeding a formula's
+/// `ComputeExpr::Bin` instead of a `Statement::Constrain`.
+fn lower_rel_op(op: RelOp) -> ComputeOp {
+    match op {
+        RelOp::Ge => ComputeOp::CmpGe,
+        RelOp::Le => ComputeOp::CmpLe,
+        RelOp::Gt => ComputeOp::CmpGt,
+        RelOp::Lt => ComputeOp::CmpLt,
+        RelOp::Eq => ComputeOp::CmpEq,
+        RelOp::Ne => ComputeOp::CmpNe,
     }
 }
 
@@ -2629,7 +2651,9 @@ fn contains_formula_application(expr: &ExprAst) -> bool {
     while let Some(node) = pending.pop() {
         match node {
             ExprAst::Apply(_, _) => return true,
-            ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+            ExprAst::Bin(_, left, right)
+            | ExprAst::Call2(_, left, right)
+            | ExprAst::Compare(_, left, right) => {
                 pending.push(right);
                 pending.push(left);
             }
@@ -2660,7 +2684,7 @@ fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
             ExprAst::Ref(name) => out.push(name.clone()),
             ExprAst::Agg(_, slot) => out.push(slot.clone()),
             ExprAst::Lit(_) | ExprAst::ExactLit(_) => {}
-            ExprAst::Bin(_, a, b) | ExprAst::Call2(_, a, b) => {
+            ExprAst::Bin(_, a, b) | ExprAst::Call2(_, a, b) | ExprAst::Compare(_, a, b) => {
                 pending.push(b);
                 pending.push(a);
             }
@@ -2695,6 +2719,7 @@ fn validate_formula_expr_depth(expr: &ExprAst) -> Result<(), LowerError> {
         let child_depth = match node {
             ExprAst::Bin(_, _, _)
             | ExprAst::Call2(_, _, _)
+            | ExprAst::Compare(_, _, _)
             | ExprAst::Abs(_)
             | ExprAst::Floor(_)
             | ExprAst::Ceil(_)
@@ -2713,7 +2738,9 @@ fn validate_formula_expr_depth(expr: &ExprAst) -> Result<(), LowerError> {
             continue;
         };
         match node {
-            ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+            ExprAst::Bin(_, left, right)
+            | ExprAst::Call2(_, left, right)
+            | ExprAst::Compare(_, left, right) => {
                 pending.push((right, child_depth));
                 pending.push((left, child_depth));
             }
@@ -2900,6 +2927,11 @@ fn charged_clone(
             expr.clone()
         }
         ExprAst::Bin(op, a, b) => ExprAst::Bin(
+            *op,
+            Box::new(charged_clone(a, budget, d)?),
+            Box::new(charged_clone(b, budget, d)?),
+        ),
+        ExprAst::Compare(op, a, b) => ExprAst::Compare(
             *op,
             Box::new(charged_clone(a, budget, d)?),
             Box::new(charged_clone(b, budget, d)?),
@@ -3270,6 +3302,11 @@ fn expand_rec(
         }
         // Binary nodes: expand both operands at the same depth.
         ExprAst::Bin(op, a, b) => Ok(ExprAst::Bin(
+            *op,
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            Box::new(expand_rec(b, context, depth, state, d)?),
+        )),
+        ExprAst::Compare(op, a, b) => Ok(ExprAst::Compare(
             *op,
             Box::new(expand_rec(a, context, depth, state, d)?),
             Box::new(expand_rec(b, context, depth, state, d)?),
@@ -3763,6 +3800,11 @@ fn substitute_expr(
             Box::new(substitute_expr(a, subst, budget, d)?),
             Box::new(substitute_expr(b, subst, budget, d)?),
         ),
+        ExprAst::Compare(op, a, b) => ExprAst::Compare(
+            *op,
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            Box::new(substitute_expr(b, subst, budget, d)?),
+        ),
         ExprAst::Call2(f, a, b) => ExprAst::Call2(
             *f,
             Box::new(substitute_expr(a, subst, budget, d)?),
@@ -4068,6 +4110,76 @@ mod tests {
             prov.source
         );
         assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+    }
+
+    #[test]
+    fn comparison_formula_end_to_end_true_and_false() {
+        // FL-8: a formula whose body is a comparison, not arithmetic — the
+        // full parse → lower → compute pipeline, exactly like an arithmetic
+        // formula, just with a `formula_relation` that has a trailing relop.
+        let src = r#"
+            formulabook comparisons {
+                formula greater_than(a, b) = a > b
+                    source "A quantity a is said to be greater than b if a is larger than b, written a>b."
+                    locator "https://mathworld.wolfram.com/Greater.html"
+                    trust authoritative
+            }
+            observe a(5)
+            observe b(3)
+            ? greater_than(a, b)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered
+            .kb
+            .derived_for("greater_than")
+            .expect("applied comparison formula");
+        assert_eq!(d.value, 1.0, "5 > 3 is true");
+        let prov = d.provenance.as_ref().expect("carries the library citation");
+        assert!(prov.source.contains("greater than"));
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+
+        let src_false = r#"
+            formulabook comparisons {
+                formula greater_than(a, b) = a > b
+                    source "A quantity a is said to be greater than b if a is larger than b, written a>b."
+                    locator "https://mathworld.wolfram.com/Greater.html"
+                    trust authoritative
+            }
+            observe a(3)
+            observe b(5)
+            ? greater_than(a, b)
+        "#;
+        let lowered_false = compile(src_false).unwrap();
+        let d_false = lowered_false
+            .kb
+            .derived_for("greater_than")
+            .expect("applied comparison formula");
+        assert_eq!(d_false.value, 0.0, "3 > 5 is false");
+    }
+
+    #[test]
+    fn comparison_formula_rejects_mismatched_dimensions() {
+        // The dimension check is enforced at APPLY time, same as arithmetic —
+        // comparing a plain count to a dollar amount is the same category
+        // error `+`/`-` already reject: a clean, loud compile error, never a
+        // silently-wrong true/false.
+        let src = r#"
+            formulabook comparisons {
+                formula greater_than(a, b) = a > b
+                    source "A quantity a is said to be greater than b if a is larger than b, written a>b."
+                    locator "https://mathworld.wolfram.com/Greater.html"
+                    trust authoritative
+            }
+            observe a(quantity(5, usd))
+            observe b(3)
+            ? greater_than(a, b)
+        "#;
+        let err = compile(src).unwrap_err();
+        let message = format!("{err:?}");
+        assert!(
+            message.contains("DimensionMismatch"),
+            "expected a DimensionMismatch, got {message}"
+        );
     }
 
     // ---- REL-2: relational recall (relate edges + binding queries) ----

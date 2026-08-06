@@ -182,9 +182,64 @@ The formula (and its source) live in the library; the numbers (and their spans) 
 ### 3.4 Non-goals for rung-0
 
 No recursion, no higher-order formulas, no user-defined control flow. A `formula` is a pure,
-total, parameterized arithmetic expression over the already-supported op set. Piecewise/threshold
-behavior stays in the existing `contributes … from <pred>`/`constrain` machinery, composed *around*
-formulas, not baked into them.
+total, parameterized expression over the already-supported op set — plain arithmetic, or (FL-8,
+§3B) a single trailing comparison. Piecewise/threshold behavior stays in the existing
+`contributes … from <pred>`/`constrain` machinery, composed *around* formulas, not baked into them.
+
+---
+
+## 3B. FL-8 — comparison formulas (`a relop b`)
+
+**Status: shipped.** The K-2 curriculum's `compare` family (§4's K/early MATH-track row) needs a
+citable, importable, `?`-queryable "is A greater than B" — and rung-0 as originally specified
+couldn't express it: `formula`'s body was arithmetic-only (`+ - * /` and friends), while the
+language's *only* comparison surface, `constrain`/`check`, has no provenance tail (a `constrain`
+statement cannot carry `source`/`locator`/`trust`) and isn't reachable via `?` — it is a scratch-pad
+solver for one program's own numbers, not a library format. Enumerating every valid pair as `table`
+rows was the fallback, but it doesn't generalize (a bounded 1-10 comparison is 45 rows; nothing
+about "greater than" is actually enumerable knowledge).
+
+**The fix, additive, no new construct:** `formula_body`'s final expression — `formula_relation` —
+is now `expr [ relop expr ]` (`code/grammars/adj_lang/adj_lang.grammar`), reusing the exact `relop`
+`constrain`/`sm_guard` already parse. Every formula shipped before this rung still parses unchanged
+(the trailing comparison is optional). A comparison formula carries the **identical**
+`source`/`locator`/`trust`/`quote` provenance envelope as an arithmetic one, and is applied and
+queried through the **same** path:
+
+```adj
+% code/…/stdlib/mathematics/comparison.adj
+formulabook comparisons {
+    formula greater_than(a, b) = a > b
+        source "A quantity a is said to be greater than b if a is larger than b, written a>b."
+        locator "https://mathworld.wolfram.com/Greater.html"
+        trust authoritative
+}
+```
+
+```adj
+import "comparison.adj"
+observe a(5)
+observe b(3)
+? greater_than(a, b)          % engine → 1 (true), carrying the cited definition
+```
+
+**Semantics:** the result is a dimensionless **1** (true) / **0** (false), always **exact** when
+both operands carry an exact-rational sidecar — a comparison is exactly decidable whenever the
+value it compares is, so it is never approximated through `f64` first. Dimensionally a comparison
+combines like addition (both operands must share a dimension — `5 kg > 3 usd` is the same category
+error as `5 kg + 3 usd`, a clean `DimensionMismatch`, never a silently-wrong answer) but the
+**result** collapses to `Scalar` rather than carrying that shared dimension, mirroring how
+`ComputeOp::Sign` already collapses a dimensioned unary operand to a dimensionless magnitude. A
+comparison formula composes into further arithmetic like any other formula application (its `1`/`0`
+is an ordinary `Ref`-able value), and into the existing `contributes … from <app> <op> <thr>`
+branch-on-formula machinery — comparisons and piecewise thresholds remain two different tools, not
+merged.
+
+**What did NOT change:** `ExprAst`, `ComputeExpr`, and every existing operator/variant are
+byte-identical; the change is purely additive (`ExprAst::Compare`, six new `ComputeOp::Cmp*`
+variants). No CAS-provenance/byte-pinning code was touched — a comparison formula ships at
+`status.provenance: source_labeled` exactly like every other freshly-authored formula; flipping it
+to `fully_verified` is ordinary Wave 1 migration work, unblocked but not done by this rung.
 
 ---
 

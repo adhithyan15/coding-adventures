@@ -1,7 +1,17 @@
 # Changelog
 
-## Unreleased - derived computation identities
+## [0.56.0] - 2026-08-06 - comparison operators and derived computation identities
 
+- Six new `ComputeOp` variants — `CmpGe`/`CmpLe`/`CmpGt`/`CmpLt`/`CmpEq`/`CmpNe` — the only family
+  of ops that answers a truth value instead of a magnitude. Dimensionally they combine like
+  addition (both operands must share a dimension — `5 kg > 3 usd` is the same category error as
+  `5 kg + 3 usd`, a clean `DimensionMismatch`), but the result collapses to a dimensionless
+  `Scalar` rather than carrying that shared dimension (a truth value has no unit), mirroring how
+  `ComputeOp::Sign` already collapses a dimensioned unary operand. The result is `1.0` (true) or
+  `0.0` (false), and is exact whenever both operands carry an exact-rational sidecar — a
+  comparison is exactly decidable whenever the value it compares is, so it is never approximated
+  through `f64` first. Carried in the ordinary `ComputeExpr::Bin`/`DerivationNode::Op` shape every
+  other binary op already uses — no new `Value` type, no new derivation-tree variant.
 - `KnowledgeBase::computation_id_for` exposes the stable compiler-owned identity of an exact
   stored derived artifact while rejecting clones and similarly named values. Audit consumers can
   now bind a derived predicate operand to the same immutable plan that `verify_derived` replays.

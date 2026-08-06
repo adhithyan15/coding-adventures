@@ -372,11 +372,28 @@ formula_params   = IDENT { COMMA IDENT } ;
 # later step and the final expression may reference an earlier step's name in
 # addition to the formula parameters. The `let`-literal that opens a step and
 # the `factor` that opens the final expression have DISJOINT first-sets (no
-# expression begins with the `let` literal), so `{ formula_step } expr` is
-# unambiguous. The lowerer desugars the steps into the final expression by
+# expression begins with the `let` literal), so `{ formula_step } formula_relation`
+# is unambiguous. The lowerer desugars the steps into the final expression by
 # in-order substitution, so a multi-step body reuses the RS-1 apply/expand
 # pipeline verbatim (worked example: `cockcroft_gault` with named steps).
-formula_body     = EQUALS expr | LBRACE { formula_step } expr RBRACE ;
+formula_body     = EQUALS formula_relation | LBRACE { formula_step } formula_relation RBRACE ;
+
+# A formula's final expression is EITHER plain arithmetic (every formula
+# shipped before this rung) OR a single trailing comparison (`expr relop
+# expr`, reusing the SAME `relop` already used by `constrain`/`predicate` —
+# ADJ-FORMULA-LIBRARIES FL-8). This is additive: `formula_relation` falls
+# through to bare `expr` for every existing formula, so no shipped library's
+# parse changes. A comparison formula answers a citable, queryable "is A
+# greater than B" the same way an arithmetic formula answers "what is A plus
+# B" — the result is dimensionless (1 = true, 0 = false, always exact),
+# carries the ordinary `source`/`locator`/`trust` provenance tail, and
+# composes into a further arithmetic expression like any other formula
+# application. Named `formula_relation`, not `relation`, to stay unambiguous
+# with the unrelated `"relation"` keyword literal `define_kind` already uses
+# (a dictionary term's `relation from X to Y` kind, line 307) — a Name-token
+# text match, not a rule reference, so the two don't actually collide, but
+# distinct names keep it that way by construction rather than by care.
+formula_relation = expr [ relop expr ] ;
 
 formula_step     = "let" IDENT EQUALS expr ;
 

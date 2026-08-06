@@ -1,7 +1,20 @@
 # Changelog
 
-## Unreleased - replayable formula guard traces
+## [0.72.0] - 2026-08-06 - comparison formulas (FL-8) and replayable formula guard traces
 
+- `formula`'s final body expression (`formula_relation`) may now end in a single trailing
+  comparison (`a relop b`), reusing the same `relop` `constrain`/`sm_guard` already parse.
+  Every formula shipped before this rung still parses unchanged — the comparison is optional
+  and additive. A comparison formula carries the identical `source`/`locator`/`trust`/`quote`
+  provenance envelope as an arithmetic one and is applied/queried through the same `? name(args)`
+  path (`ExprAst::Compare`, lowered via `lower_rel_op` to the same `ComputeExpr::Bin` shape every
+  arithmetic op already uses — see the `logic-engine` changelog for the new `ComputeOp::Cmp*`
+  variants). Unblocks a citable, importable "is A greater than B" for the K-2 curriculum's
+  `compare` family (ADJ-FORMULA-LIBRARIES §3B) without a per-pair enumerated-table workaround.
+- `formula_source_map`'s per-formula body span now reads from `formula_relation` instead of the
+  old direct `expr` child, correctly covering a comparison's full `a > b` (not just `a`) — the
+  one call site (`adj-formula-inventory`'s byte-span inventory) that assumed the pre-FL-8 grammar
+  shape.
 - A table used as a `range`/`interpolated`/`nearest` lookup may no longer contain two rows
   sharing a breakpoint in the key column (`LowerError::LookupDuplicateKey`, carrying both
   row indices). `range` selects the greatest key `<= q`; with the key tied, that was

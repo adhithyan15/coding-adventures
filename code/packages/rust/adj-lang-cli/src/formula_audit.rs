@@ -1382,7 +1382,9 @@ fn collect_applied_names(expr: &ExprAst, into: &mut Vec<String>) {
                 collect_applied_names(argument, into);
             }
         }
-        ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+        ExprAst::Bin(_, left, right)
+        | ExprAst::Call2(_, left, right)
+        | ExprAst::Compare(_, left, right) => {
             collect_applied_names(left, into);
             collect_applied_names(right, into);
         }
@@ -1566,7 +1568,9 @@ fn replay_source_expression(
                 ExprAst::Apply(name.clone(), expanded)
             }
         }
-        ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+        ExprAst::Bin(_, left, right)
+        | ExprAst::Call2(_, left, right)
+        | ExprAst::Compare(_, left, right) => {
             let left = replay_source_expression(left, exports, replay, active)?;
             let right = replay_source_expression(right, exports, replay, active)?;
             match expression {
@@ -1575,6 +1579,9 @@ fn replay_source_expression(
                 }
                 ExprAst::Call2(function, _, _) => {
                     ExprAst::Call2(*function, Box::new(left), Box::new(right))
+                }
+                ExprAst::Compare(operator, _, _) => {
+                    ExprAst::Compare(*operator, Box::new(left), Box::new(right))
                 }
                 _ => unreachable!(),
             }

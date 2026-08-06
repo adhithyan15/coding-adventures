@@ -336,6 +336,21 @@ pub enum ExprAst {
     /// `sum(slot)` aggregation untouched (the aggregation keywords are matched
     /// *before* an application in the grammar).
     Apply(String, Vec<ExprAst>),
+    /// A **comparison** — `lhs relop rhs` (ADJ-FORMULA-LIBRARIES FL-8), the
+    /// *only* place a `formula` body may yield something other than a plain
+    /// arithmetic result. Reuses the SAME [`RelOp`] `constrain`/`sm_guard`
+    /// already carry (`>=`/`<=`/`>`/`<`/`==`/`!=`); only expressible as the
+    /// **top-level** node of a `formula_relation` (`code/grammars/adj_lang/
+    /// adj_lang.grammar` FL-8), never nested inside an arithmetic expression —
+    /// there is no boolean arithmetic in this language, only a boolean-shaped
+    /// *answer*. Lowers to a dimensionless 1 (true) / 0 (false), always exact
+    /// (`ComputeOp::CmpGe`/`CmpLe`/`CmpGt`/`CmpLt`/`CmpEq`/`CmpNe`, mirroring
+    /// how [`ExprAst::Sign`] already collapses a dimensioned operand to a
+    /// dimensionless `Scalar`), so a comparison formula carries the identical
+    /// `source`/`locator`/`trust` provenance envelope and `?`-query path as an
+    /// arithmetic one — `? greater_than(5, 3)` is exactly as citable and
+    /// auditable as `? sum(5, 3)`.
+    Compare(RelOp, Box<ExprAst>, Box<ExprAst>),
 }
 
 /// One source line in an Adj-Lang program.
