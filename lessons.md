@@ -2237,8 +2237,6 @@ failed identically before the fix and passed after it.
   frame-scoped `[R1, R2, R3]` list threaded through every Compressed block,
   resolve Offset_Value 1/2/3 against it per the selector table above, leave
   the encoder unchanged, and add a real-CLI-interop regression test — an
-  in-process round trip can never catch this class of bug on its own.
-  (Referenced here as "Lesson 98" on the `c/zstd` PR #9941 branch, before
-  that branch's lessons.md had merged with this one's independently-added
-  Lesson 98 — renumber on merge rather than treating either number as
-  authoritative.)
+  in-process round trip can never catch this class of bug on its own. See
+  Lesson 98 above (`code/packages/c/zstd`'s original fix) for the
+  cross-checked selector formula this entry's Dart fix reused verbatim.
