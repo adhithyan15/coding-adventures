@@ -1,0 +1,94 @@
+% Preamble for "Japanese, Step by Step, Sign by Sign" (HL00 book format).
+% XeLaTeX only. Uses the vendored subset of Noto Sans JP (see _fonts/), loaded
+% by relative path so local and CI builds are identical.
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\setlength{\tabcolsep}{5pt}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+
+% One vendored font covers all three Japanese writing systems, because all three
+% appear inside the same sentence. No `Script=` option is given: kana and kanji
+% need no complex shaping, and naming a script fontspec cannot resolve would
+% fail the build for no benefit. Every requested shape is mapped to the same
+% complete file so a bold or italic teaching context cannot silently fall back
+% to a system font.
+\newfontfamily\japanesefont[
+  Path=../../_fonts/,
+  BoldFont=NotoSansJP-Subset.ttf,
+  ItalicFont=NotoSansJP-Subset.ttf,
+  BoldItalicFont=NotoSansJP-Subset.ttf
+]{NotoSansJP-Subset.ttf}
+
+% Inline Japanese snippet within English text. The generated chapters emit one
+% \ja{...} per run of hiragana, katakana, or Han characters.
+\newcommand{\ja}[1]{{\japanesefont #1}}
+
+\pdfstringdefDisableCommands{%
+  \def\ja#1{#1}% Keep the Japanese text while dropping font-only presentation.
+  \def\japanesefont{}%
+}
+
+% Japanese has no interword spaces, so a long kana run is one unbreakable box to
+% TeX. Keep the reserve generous rather than chasing every measure by hand.
+\raggedbottom
+\emergencystretch=3em
+\hbadness=2000
+
+% Keep book.cls's open-right blank verso, but remove its running head.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
+
+\hypersetup{
+  pdftitle={Japanese, Step by Step, Sign by Sign},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven Japanese curriculum},
+  pdfkeywords={Japanese, hiragana, katakana, kanji, keigo, language learning}
+}
+
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart}
+}
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+\newtcolorbox{grammarlens}[1][]{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}, #1
+}
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The signs in this word}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}

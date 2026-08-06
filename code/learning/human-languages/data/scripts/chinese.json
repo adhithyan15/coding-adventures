@@ -7,7 +7,18 @@
   "signature": "Each character is a dense, evenly-sized square block of strokes — not an alphabet of letters at all.",
   "complete": false,
   "combination": "Not an alphabet: each CHARACTER (hànzì) writes a whole syllable/morpheme, and words are one or more characters (你好 = 'you' + 'good' = hello). Characters are built from recurring COMPONENTS called radicals — often one hinting at meaning and one at sound (a phono-semantic compound: 请 qǐng = 讠 'speech' + 青 qīng 'sound'). Stroke order is a real, taught system (top→bottom, left→right, horizontal before vertical, outside before inside), so — unlike the Indic scripts here — the strokeOrder below is authoritative, not merely conventional.",
-  "notes": "Simplified characters. An initial inventory of greeting/self-introduction characters plus the radicals they decompose into — it grows as the Mandarin track adds vocabulary. `sound` is tone-marked pinyin; `tone` holds the number (1–4 or neutral). The font is a fonttools subset of NotoSansSC covering exactly these characters (see _fonts/README.md); re-subset when characters are added.",
+  "notes": "Simplified characters. An initial inventory of greeting/self-introduction characters plus the radicals they decompose into — it grows as the Mandarin track adds vocabulary. `sound` is tone-marked pinyin; `tone` holds the number (1–4 or neutral) and indexes into `tones` below. The font is a fonttools subset of NotoSansSC covering exactly these characters (see _fonts/README.md); re-subset when characters are added.",
+  "tones": [
+    { "id": "tone-1", "tone": "1", "name": "first (high level)", "mark": "◌̄", "contour": "55", "description": "Held high and flat, like humming one steady note. English has no equivalent: the pitch does not rise or fall at all.", "exampleSyllable": "mā", "exampleGloss": "mother" },
+    { "id": "tone-2", "tone": "2", "name": "second (rising)", "mark": "◌́", "contour": "35", "description": "Rises from mid to high, the way an English speaker's pitch rises on a surprised \"huh?\".", "exampleSyllable": "má", "exampleGloss": "hemp" },
+    { "id": "tone-3", "tone": "3", "name": "third (dipping / low)", "mark": "◌̌", "contour": "214", "description": "Dips low and creaky, then rises a little if the syllable is said alone. In running speech it usually stays low and never climbs back up.", "exampleSyllable": "mǎ", "exampleGloss": "horse" },
+    { "id": "tone-4", "tone": "4", "name": "fourth (falling)", "mark": "◌̀", "contour": "51", "description": "Drops sharply from high to low, like a clipped English \"No!\".", "exampleSyllable": "mà", "exampleGloss": "to scold" },
+    { "id": "tone-neutral", "tone": "neutral", "name": "neutral (unstressed)", "mark": "", "contour": "0", "description": "Short, light, and pitched by whatever came before it. Written with no mark at all.", "exampleSyllable": "ma", "exampleGloss": "a question particle" }
+  ],
+  "toneSandhi": [
+    { "id": "tone-sandhi-third", "description": "When two third tones meet, the first is said as a second (rising) tone. The spelling and the dictionary pinyin never change, so the written form and the spoken form differ on purpose.", "citation": "nǐ hǎo", "spoken": "ní hǎo" },
+    { "id": "tone-sandhi-bu", "description": "不 bù drops to bú before a fourth-tone syllable.", "citation": "bù shì", "spoken": "bú shì" }
+  ],
   "letters": [
     { "glyph": "人", "sound": "rén", "role": "radical", "tone": "2", "components": ["a left-falling stroke", "a right-falling stroke (a walking figure)"], "strokeOrder": ["left-falling (piě)", "right-falling (nà)"], "strokeOrderNote": "authoritative", "notes": "Means 'person'. As a left-side radical it squashes to 亻." },
     { "glyph": "亻", "sound": "rén (radical)", "role": "radical", "components": ["a vertical", "a short left-falling stroke at the top"], "strokeOrder": ["left-falling", "vertical"], "strokeOrderNote": "authoritative", "notes": "The 'person' radical; appears on the left of 你, 什, 们." },

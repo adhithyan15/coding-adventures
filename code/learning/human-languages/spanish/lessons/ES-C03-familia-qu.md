@@ -7,7 +7,7 @@ chapter: 3
 type: etymology
 headword: qu-
 gloss: the Latin question family inside Spanish
-prerequisites: [ES-C03-como]
+prerequisites: [ES-C03-como, ES-C03-como-acento]
 sounds: []
 roots: [quomodo, quid, quem, qualis, quando, quantus]
 duration:
@@ -23,7 +23,7 @@ modes: [interpretive]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C03-como]
+reviews_of: [ES-C03-como, ES-C03-como-acento]
 ---
 
 # The *qu-* question family — one ancient pattern, many clues

@@ -40,6 +40,7 @@ The machine-readable layer alongside the tracks is:
 core/languages.json             complete active-language registry and default mix order
 core/spine.json                 ordered, language-independent can-do spine
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
+core/lesson-modality.json       generated: per-lesson voice/sight/pen and per-chapter drivable prefix
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
@@ -48,7 +49,7 @@ Every registered track has one `curriculum.json`. Its ordered path can revisit a
 shared spine node, attaches required/supporting/reference extensions before,
 inline with, or after a local segment, and explicitly records canonical concepts
 that the track omits or deliberately teaches elsewhere. The data-package gate
-proves that all 20 maps cover their schema-v2 and canonical lessons without
+proves that all 21 maps cover their schema-v2 and canonical lessons without
 jumping over a prerequisite. Books and the app still read the lesson Markdown;
 the map is the shared scheduling contract, not a second copy of the content.
 
@@ -65,6 +66,19 @@ against `core/latex-warning-baseline.json`; a track fails only when it exceeds i
 recorded numbers, and a track recorded as `null` has not been measured yet, so it is
 reported and never failed. Until this gate existed, every track's "builds with zero
 warnings" claim was prose that nothing checked.
+
+`core/lesson-modality.json` is generated, never authored. It records for every lesson
+whether it needs `voice`, `sight`, or a `pen`, and for every chapter how many of its
+lessons a commuter can do in the car before hitting the first that needs eyes. This is
+what lets **two editions build from one source**: the complete book keeps everything,
+including the handwriting instruction, while the planned dictation-friendly driving
+edition filters on `drivable` and keeps only what a driver can actually do. The same
+job that builds the books runs `check:modality`, so the manifest cannot drift away from
+the lessons it describes — a lesson that silently gained a paradigm table would
+otherwise still advertise itself as safe to learn at 70mph. Modality stays derived
+rather than written into 1,096 frontmatter files, which would be 1,096 places for it to
+go stale; the authored `modality:` override with a `modality_reason:` remains available
+for the genuinely exceptional lesson.
 
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
 losslessly and checks that each authored book chapter maps to its short Markdown
@@ -107,6 +121,8 @@ edition is authored.
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1-2 authored (lessons + book) |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | Five authored shared-spine chapters; 20 canonical lessons |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |
+| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese (vendored font subset) | Chapter 1 authored; 7 canonical lessons, book chapter generated. **Scale test** — see that README for what the method does and does not carry outside Indo-European |
+| [Japanese](./japanese/README.md) | Japonic / hiragana + katakana + kanji (vendored font) | Chapter 1 authored; 8 canonical lessons, chapter generated for app + book |
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already
@@ -115,6 +131,15 @@ inside the word that first needs them, never as a gated reading course — using
 vendored static Noto fonts (see [`_fonts/`](./_fonts/)) so local and CI builds
 render identically.
 
+**Mandarin is the scale test.** The first twenty tracks are Indo-European or
+Dravidian, and the method's engine — anchoring each new word to English words the
+reader already owns through a shared ancestor — depends on that shared ancestry.
+Chinese has none, is logographic rather than alphabetic, and is tonal. Its track
+was added to find out which parts of the framework describe language in general
+and which quietly described Indo-European, and
+[`chinese/README.md`](./chinese/README.md) states the answers plainly, including
+the one place the signature device does not transfer at all.
+
 **Latin and Sanskrit are taproot tracks.** Rather than being learned for
 conversation, they are the classical sources the other tracks keep pointing back
 to: Latin is the parent of the Spanish/French/Italian/Portuguese greetings (and
@@ -122,3 +147,15 @@ half of English's vocabulary), and Sanskrit is the parent of the
 Hindi/Marathi/Punjabi/Bengali greetings — while both, as Indo-European sisters,
 also reach into English (*na* ↔ *no* ↔ *nōn*, *su-* ↔ Greek *eu-*, √gam ↔ *come*).
 They tie the two halves of the curriculum together.
+
+**Japanese is the first track with no taproot the reader already owns.** Every
+other track here is Indo-European or Semitic and can ground a new word in Latin,
+Sanskrit, or a Semitic root the reader meets through English. Japanese cannot,
+and no connection is invented for it. The method is redirected instead, onto
+three things that are real: the **Sino-Japanese** layer (日本語 has checkable
+relatives in Mandarin and Korean), **internal** etymology (ありがとう ← 有り難し,
+"hard to exist"), and genuine **shared borrowings** (コーヒー and English *coffee*
+both from Arabic *qahwa*, by different roads). Where no honest connection exists,
+the lesson says so. Japanese is also the first track that needs three writing
+systems at once; see [`japanese/README.md`](./japanese/README.md) for what that
+cost the schema.

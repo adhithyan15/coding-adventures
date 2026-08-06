@@ -433,6 +433,22 @@ export interface LetterForms {
   final?: string;
 }
 
+/**
+ * Where a letter's `strokeOrder` came from.
+ *
+ * A stroke order cannot be read out of a font — no font table records which way
+ * the hand moved — so an order that is more than "the parts, roughly in order"
+ * has to trace to a real teaching source. `variation` is not optional politeness:
+ * for scripts with no national standard (every Indic script, Arabic, Hebrew) it
+ * is the honest statement that this is ONE attested order, not THE order.
+ */
+export interface StrokeOrderSource {
+  citation: string;
+  url: string;
+  /** How standardised the order is, and where it varies. */
+  variation?: string;
+}
+
 /** One base letter of the script (a letter, a character, or a radical). */
 export interface Letter {
   glyph: string; // the citation form
@@ -446,9 +462,25 @@ export interface Letter {
   forms?: LetterForms;
   /** The literal "pieces" of the character, for paper practice. */
   components: string[];
-  /** Typical handwriting order — conventional, not canonical. */
+  /**
+   * Typical handwriting order — conventional, not canonical.
+   *
+   * CAREFUL: this is a list of the letter's PARTS in writing order. It is NOT a
+   * count of pen-down runs. Three named parts can be three separate strokes, or
+   * one continuous stroke whose parts merely have names — Tamil ம is the latter.
+   * Never let the wording (or the count) imply a pen lift that no authored pen
+   * path supports; say "without lifting" explicitly where a path proves it.
+   */
   strokeOrder: string[];
   strokeOrderNote: string;
+  /**
+   * How many times the pen leaves the paper, when a verified pen path says so.
+   * Absent means "not verified" — which is not the same as "none", and must not
+   * be inferred from `strokeOrder.length`.
+   */
+  penLifts?: number;
+  /** Provenance of the stroke ORDER, where the order is claimed rather than sketched. */
+  strokeOrderSource?: StrokeOrderSource;
   notes?: string;
 }
 
@@ -464,6 +496,57 @@ export interface Mark {
   example?: { base: string; combined: string; sound: string };
 }
 
+/**
+ * One tone of a tonal language's inventory.
+ *
+ * `Letter.tone` above records which tone a *character* carries. That is enough to
+ * label a glyph and nothing else: it cannot say what tone 3 sounds like, and it
+ * cannot say that tone is lexical at all. Those are properties of the sound system,
+ * not of any one character, so they live here beside `letters` rather than inside
+ * them.
+ *
+ * This is the one place the model genuinely had to grow for Mandarin. Every
+ * previously taught script encodes its pronunciation facts *segmentally* — a letter,
+ * a vowel sign, a diacritic — and a segment is always attached to a glyph. Tone is
+ * suprasegmental: it rides on a whole syllable, it is phonemic (`mā` "mother" and
+ * `mà` "scold" are different words), and it can be changed by the neighbouring
+ * syllable without changing the spelling at all. None of that fits in `Letter`.
+ */
+export interface Tone {
+  /** Stable id, referenced from a lesson's `sounds:` list. */
+  id: string;
+  /** Conventional number: "1".."4" for Mandarin, plus "neutral". */
+  tone: string;
+  name: string;
+  /** The pinyin diacritic, or "" for the unmarked neutral tone. */
+  mark: string;
+  /** Chao pitch letters, e.g. "55", "35", "214", "51". */
+  contour: string;
+  description: string;
+  /** A romanized syllable a learner can hear the tone on, without needing a glyph. */
+  exampleSyllable?: string;
+  exampleGloss?: string;
+}
+
+/**
+ * A rule that changes a tone in context without changing the writing.
+ *
+ * Segmental scripts have nothing structurally like this. The closest analogue in
+ * this corpus — Arabic's sun-letter assimilation — still surfaces in the spoken
+ * form of a *written* sequence; third-tone sandhi changes the pitch of a syllable
+ * purely because of what follows it, and the pinyin a dictionary prints is the
+ * unchanged citation tone. A learner told only the citation tones will say the
+ * commonest greeting in the language wrong, so the rule has to be data, not prose.
+ */
+export interface ToneSandhiRule {
+  id: string;
+  description: string;
+  /** Citation form, as a dictionary prints it. */
+  citation: string;
+  /** What a speaker actually says. */
+  spoken: string;
+}
+
 export interface ScriptData {
   script: Script; // the id, matches the filename
   name: string; // human name, e.g. "Devanagari"
@@ -472,6 +555,10 @@ export interface ScriptData {
   system: WritingSystem;
   letters: Letter[];
   marks?: Mark[];
+  /** Tonal languages only: the tone inventory the `Letter.tone` numbers index into. */
+  tones?: Tone[];
+  /** Tonal languages only: context rules that change a tone without changing spelling. */
+  toneSandhi?: ToneSandhiRule[];
   /** How letters combine: abugida conjuncts, Arabic joining, ligatures, etc. */
   combination?: string;
   /** Set true when the inventory is complete enough to enforce glyph coverage. */

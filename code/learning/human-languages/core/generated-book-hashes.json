@@ -257,6 +257,21 @@
       "tex": "bengali/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:b740a5126cc6bad6",
+      "lessonIds": [
+        "ZH-C01-tones",
+        "ZH-C01-ni",
+        "ZH-C01-hao",
+        "ZH-C01-nihao",
+        "ZH-C01-tone-sandhi",
+        "ZH-C01-hao-fond",
+        "ZH-C01-practice"
+      ],
+      "tex": "chinese/book/chapters/ch01-nihao.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:bb8682839ab17ed4",
@@ -839,6 +854,22 @@
       "tex": "italian/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "japanese",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:edad54370036a969",
+      "lessonIds": [
+        "JA-C01-hai",
+        "JA-C01-iie",
+        "JA-C01-konnichiwa",
+        "JA-C01-nihongo",
+        "JA-C01-koohii",
+        "JA-C01-arigatou",
+        "JA-C01-gozaimasu",
+        "JA-C01-practice"
+      ],
+      "tex": "japanese/book/chapters/ch01-three-scripts.tex"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "sourceHash": "fnv1a64:ef1c91cef85816a7",
@@ -1239,10 +1270,11 @@
     {
       "language": "latin",
       "chapter": 19,
-      "sourceHash": "fnv1a64:3fd9f154ff079ca9",
+      "sourceHash": "fnv1a64:b6d1686c248ae1e9",
       "lessonIds": [
         "LA-C19-quid-agis",
-        "LA-C19-valeo-family"
+        "LA-C19-valeo-family",
+        "LA-C19-practice"
       ],
       "tex": "latin/book/chapters/ch19-how-are-you.tex"
     },
@@ -1259,10 +1291,11 @@
     {
       "language": "latin",
       "chapter": 21,
-      "sourceHash": "fnv1a64:51a83aba61a2bb64",
+      "sourceHash": "fnv1a64:0f93e9300f86bb34",
       "lessonIds": [
         "LA-C21-volup-est-convenisse",
-        "LA-C21-meeting-phrase-context"
+        "LA-C21-meeting-phrase-context",
+        "LA-C21-practice"
       ],
       "tex": "latin/book/chapters/ch21-nice-to-meet-you.tex"
     },
@@ -1368,10 +1401,11 @@
     {
       "language": "latin",
       "chapter": 33,
-      "sourceHash": "fnv1a64:3ae7f1218b5dcee0",
+      "sourceHash": "fnv1a64:7df24e4c500c2166",
       "lessonIds": [
         "LA-C33-vesper",
-        "LA-C33-vesper-afterlives"
+        "LA-C33-vesper-afterlives",
+        "LA-C33-practice"
       ],
       "tex": "latin/book/chapters/ch33-evening.tex"
     },
@@ -1396,10 +1430,11 @@
     {
       "language": "latin",
       "chapter": 36,
-      "sourceHash": "fnv1a64:f53ba68fee383655",
+      "sourceHash": "fnv1a64:467e8562c765f453",
       "lessonIds": [
         "LA-C36-salve-post-meridiem",
-        "LA-C36-timeless-salve"
+        "LA-C36-timeless-salve",
+        "LA-C36-practice"
       ],
       "tex": "latin/book/chapters/ch36-good-afternoon.tex"
     },
@@ -1923,14 +1958,16 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:11a05b47aeca6e6d",
+      "sourceHash": "fnv1a64:42fbffb8f2c9ee65",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
         "ES-C03-me-llamo",
         "ES-C03-tu-usted",
+        "ES-C03-tu-usted-register",
         "ES-C03-usted-origin",
         "ES-C03-como",
+        "ES-C03-como-acento",
         "ES-C03-familia-qu",
         "ES-C03-se-llama",
         "ES-C03-como-se-llama",
@@ -1943,11 +1980,12 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:c113ab52f6dfbba9",
+      "sourceHash": "fnv1a64:5410c6a8b2635804",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
         "ES-C04-estar",
+        "ES-C04-estar-estado",
         "ES-C04-como-esta",
         "ES-C04-como-estas-register",
         "ES-C04-regular",
@@ -1955,6 +1993,7 @@
         "ES-W01-acento",
         "ES-W01-tilde-diacritica",
         "ES-W02-enye",
+        "ES-W02-enye-formas",
         "ES-W03-inverted",
         "ES-W03-question-span",
         "ES-C04-practice"
@@ -1964,7 +2003,7 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:6b08d82baacfa774",
+      "sourceHash": "fnv1a64:9914574b6e231c0f",
       "lessonIds": [
         "ES-C05-adios",
         "ES-C05-hasta",
@@ -1979,14 +2018,16 @@
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:57e2a578e9dbb2a1",
+      "sourceHash": "fnv1a64:eac6f9bff395c7b3",
       "lessonIds": [
         "ES-C06-cafe",
         "ES-C06-por-favor",
         "ES-C06-hablar",
+        "ES-C06-ar-presente",
         "ES-C06-trabajar",
         "ES-C06-estudiar",
         "ES-C06-espanol",
+        "ES-C06-hablo-espanol",
         "ES-C06-practice"
       ],
       "tex": "spanish/book/chapters/ch06-first-verbs.tex"
@@ -2004,9 +2045,10 @@
     {
       "language": "spanish",
       "chapter": 20,
-      "sourceHash": "fnv1a64:4aa44d79b283395f",
+      "sourceHash": "fnv1a64:ff8b8576d2795748",
       "lessonIds": [
-        "ES-C20-lo-siento"
+        "ES-C20-lo-siento",
+        "ES-C20-perdon"
       ],
       "tex": "spanish/book/chapters/ch20-lo-siento.tex"
     },
@@ -2023,27 +2065,30 @@
     {
       "language": "spanish",
       "chapter": 22,
-      "sourceHash": "fnv1a64:2d63daa51e93ecdf",
+      "sourceHash": "fnv1a64:8bfd3dca44e35355",
       "lessonIds": [
         "ES-C22-negro-blanco",
-        "ES-C22-rojo-azul"
+        "ES-C22-blanco-germanico",
+        "ES-C22-rojo",
+        "ES-C22-azul"
       ],
       "tex": "spanish/book/chapters/ch22-black-white-red-blue.tex"
     },
     {
       "language": "spanish",
       "chapter": 23,
-      "sourceHash": "fnv1a64:c2679458c2100cb6",
+      "sourceHash": "fnv1a64:65f7e89fb2452174",
       "lessonIds": [
         "ES-C23-padre-madre",
-        "ES-C23-hermano-hermana"
+        "ES-C23-hermano-hermana",
+        "ES-C23-hermano-hache"
       ],
       "tex": "spanish/book/chapters/ch23-family.tex"
     },
     {
       "language": "spanish",
       "chapter": 24,
-      "sourceHash": "fnv1a64:bcdb0fd59edf434d",
+      "sourceHash": "fnv1a64:cb85e3f2de32dd93",
       "lessonIds": [
         "ES-C24-cabeza",
         "ES-C24-mano"
@@ -2062,9 +2107,10 @@
     {
       "language": "spanish",
       "chapter": 26,
-      "sourceHash": "fnv1a64:0643114246dbca23",
+      "sourceHash": "fnv1a64:7d92244aefd55f9c",
       "lessonIds": [
-        "ES-C26-agua-vino",
+        "ES-C26-agua",
+        "ES-C26-vino",
         "ES-C26-pan"
       ],
       "tex": "spanish/book/chapters/ch26-water-wine-bread.tex"
@@ -2099,36 +2145,43 @@
     {
       "language": "spanish",
       "chapter": 30,
-      "sourceHash": "fnv1a64:063f578621dab785",
+      "sourceHash": "fnv1a64:87388bb3aea1cfc8",
       "lessonIds": [
-        "ES-C30-el-tiempo"
+        "ES-C30-el-tiempo",
+        "ES-C30-hace-calor",
+        "ES-C30-llueve"
       ],
       "tex": "spanish/book/chapters/ch30-weather.tex"
     },
     {
       "language": "spanish",
       "chapter": 31,
-      "sourceHash": "fnv1a64:f2267035c33491e1",
+      "sourceHash": "fnv1a64:b65e81d19628893e",
       "lessonIds": [
-        "ES-C31-numeros-11-20"
+        "ES-C31-once-quince",
+        "ES-C31-dieciseis-diecinueve",
+        "ES-C31-teens-latinos",
+        "ES-C31-veinte"
       ],
       "tex": "spanish/book/chapters/ch31-numbers-11-20.tex"
     },
     {
       "language": "spanish",
       "chapter": 32,
-      "sourceHash": "fnv1a64:2a0d1e66cf7f557a",
+      "sourceHash": "fnv1a64:e38a946a84daf051",
       "lessonIds": [
-        "ES-C32-perro-gato"
+        "ES-C32-gato",
+        "ES-C32-perro"
       ],
       "tex": "spanish/book/chapters/ch32-dog-and-cat.tex"
     },
     {
       "language": "spanish",
       "chapter": 33,
-      "sourceHash": "fnv1a64:d7715072b975cbc3",
+      "sourceHash": "fnv1a64:9997a29a09400b47",
       "lessonIds": [
-        "ES-C33-verde-amarillo"
+        "ES-C33-verde",
+        "ES-C33-amarillo"
       ],
       "tex": "spanish/book/chapters/ch33-green-and-yellow.tex"
     },

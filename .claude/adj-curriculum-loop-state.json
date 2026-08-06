@@ -17,49 +17,49 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": null,
+  "active_pr": 9992,
   "last_manifest_check": {
-    "objectives": 10,
+    "objectives": 63,
     "coverage_roots": 6,
     "valid": true,
-    "checked_at": "2026-08-04"
+    "checked_at": "2026-08-06"
   },
   "items": [
     {
       "id": "wave0-backfill-physics",
-      "title": "Manifest objectives for the 11 physics formula libraries",
-      "status": "in_progress",
+      "title": "Manifest objectives for the 13 physics formula libraries",
+      "status": "done",
       "depends_on": [],
-      "branch": "feat/adj-curriculum-k12-to-medical",
-      "pr_number": null,
-      "notes": "Content-only: add band/domain/competency/prerequisites manifest entries for the already-shipped, already-tested physics/*.adj libraries (density, electric-charge, electricity, energy-work, frequency-period, gravitation, hookes-law, kinematics, mechanics-laws, momentum, power, pressure, wave-speed). No new .adj content."
+      "branch": null,
+      "pr_number": 9918,
+      "notes": "Landed together with wave0-backfill-mathematics in the same PR. State file was not updated after merge (loop was idle/unresumed); reconciled 2026-08-06."
     },
     {
       "id": "wave0-backfill-mathematics",
       "title": "Manifest objective for mathematics/geometry-formulas.adj",
-      "status": "pending",
+      "status": "done",
       "depends_on": [],
       "branch": null,
-      "pr_number": null,
-      "notes": "Single-file domain, cheap batch."
+      "pr_number": 9918,
+      "notes": "Confirmed via manifest.json: adj.math.geometry.basic_shapes objective present, libraries=[mathematics/geometry-formulas.adj]. Landed in PR #9918 alongside the physics backfill."
     },
     {
       "id": "wave0-backfill-reference",
-      "title": "Manifest objectives for the ~35 reference unit-conversion libraries",
-      "status": "pending",
+      "title": "Manifest objectives for the 39 reference unit-conversion libraries",
+      "status": "done",
       "depends_on": [],
       "branch": null,
-      "pr_number": null,
-      "notes": "Large but mechanical/uniform. Likely split across 2-3 PRs by unit family."
+      "pr_number": 9992,
+      "notes": "All 39/39 reference libraries now mapped, split across 3 PRs: #9990 (13: length/area/mass CCSS math + mass-density/linear-mass-density/acceleration/density-of-heat/dynamic-viscosity/energy/force/heat-flux-density/kinematic-viscosity/moment-of-force NGSS science), #9991 (7 electrical: capacitance/charge/conductance/current/inductance/potential/resistance, NGSS science; current/potential/resistance also prerequisite adj.science.physics.ohms_law), and this PR (19: si-prefixes CCSS math 3-5 + time/volume CCSS math 6-8 + 16 remaining NGSS science 9-12 - absorbed-dose/dose-equivalent/exposure/radioactivity/illuminance/luminance/magnetic-flux/magnetic-flux-density/power/pressure/specific-energy/specific-heat-capacity/speed/temperature-interval/thermal-conductivity/wave-number). Manifest now at 63 objectives (up from 24 at loop start)."
     },
     {
       "id": "wave2-k2-math-cardinality-comparison",
       "title": "K-2 math: cardinality/sets, comparison, number lines",
       "status": "pending",
-      "depends_on": ["wave0-backfill-physics", "wave0-backfill-mathematics", "wave0-backfill-reference"],
+      "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "New content per ADJ-STDLIB-COVERAGE.md 5.1. Check adj-ladder rung0 for harvestable material first."
+      "notes": "New content per ADJ-STDLIB-COVERAGE.md 5.1. Check adj-ladder rung0 for harvestable material first. All Wave 0 remainder dependencies now satisfied - unblocked 2026-08-06. This is new .adj content (not manifest-only bookkeeping like the Wave 0 items), so it needs its own scoping pass before implementation: what specific K-2 objectives (cardinality/sets, comparison, number lines) get their own formula/fact library vs. table, what CCSS standard IDs to cite, and whether adj-ladder's rung0 items have any directly harvestable material per ADJ-FORMULA-LIBRARIES.md section 6's harvest plan."
     }
   ]
 }

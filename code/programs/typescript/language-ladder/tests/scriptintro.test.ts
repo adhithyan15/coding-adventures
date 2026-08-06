@@ -6,6 +6,7 @@ import {
   scriptIntroFor,
   LANGUAGE_SCRIPT,
 } from "../src/scriptintro";
+import { LANGUAGE_CHAIN } from "../src/sequence";
 import type { ScriptData } from "../src/types";
 
 function scriptData(script: string, name: string, signature?: string): ScriptData {
@@ -36,7 +37,10 @@ describe("scriptOf / LANGUAGE_SCRIPT", () => {
   });
 
   it("every chain language has a mapping", () => {
-    expect(Object.keys(LANGUAGE_SCRIPT).length).toBe(20);
+    // Derived: every chain language needs a mapping, whatever the chain length.
+    for (const language of LANGUAGE_CHAIN) {
+      expect(Object.keys(LANGUAGE_SCRIPT)).toContain(language);
+    }
   });
 });
 

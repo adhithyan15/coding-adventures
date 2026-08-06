@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Fixed - expression drag keys are no longer silently dropped
+
+`append_drag_value` matched only a string literal or a slot ref, so once a layout used
+an expression key (`drop-key: ( col[1] )`, as a board must) this backend emitted the
+`<div>`s with **no** `data-mosaic-drop-key` / `data-mosaic-drag-key` at all. The runtime
+then found no targets and nothing was draggable — an inert board with no diagnostic.
+
+An expression is now rendered as a mustache over the same binding, with index access
+lowered to the dotted path the template engine resolves (`col[1]` → `{{col.1}}`).
+Deliberately narrow: anything with an operator in it is not a path, and is passed
+through to fail visibly rather than resolve to something wrong.
+
+
 ### Fixed - project-shell node-slot hydration
 
 The generated `main.js` runtime now evaluates triple-mustache node markers

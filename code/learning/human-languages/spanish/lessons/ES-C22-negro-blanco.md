@@ -6,93 +6,72 @@ sequence: 690
 chapter: 22
 type: word
 headword: negro, blanco
-gloss: black and white — one inherited from Latin, one a Germanic loan traditionally linked to the Visigothic era
+gloss: black and white — the two words, and the straight-line Latin history of the first one
 concept_tag: ES-COLOUR-BLACK-WHITE
 prerequisites: [ES-C21-sabado-domingo]
 sounds: [r-tap, nasal-n]
-roots: [latin-niger, germanic-blank]
-etymology_hook: "negro ← Latin niger, but blanco is NOT from Latin albus — it's Germanic *blank 'shining', traditionally linked to Visigothic-era contact, the same word French borrowed (more firmly attested) via the Franks"
+roots: [latin-niger]
+etymology_hook: "negro ← Latin niger, the same root as English denigrate and as French noir and Italian nero — the plainest possible inheritance, which is exactly what makes blanco's history worth a lesson of its own"
 duration:
-  max_seconds: 240
+  max_seconds: 200
 requires:
   knowledge: []
 introduces:
-  knowledge: [ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03, ES-ETYMON-BLANCO-04, ES-ETYMON-ALBUS-05]
+  knowledge: [ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03]
 practises:
-  knowledge: [ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03, ES-ETYMON-BLANCO-04, ES-ETYMON-ALBUS-05]
+  knowledge: [ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03]
 skills: [listening, speaking, reading]
-modes: [interpretive, interpersonal, presentational, mediation]
+modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
 reviews_of: [ES-C21-sabado-domingo, ES-C21-lunes-viernes]
 ---
 
-# negro, blanco — one inherited, one borrowed
+# negro, blanco — two colours, and one of their histories
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Two colors, two very different histories. One is straight-line
-Latin. The other arrived with **Germanic settlers** — and Spanish isn't even
-alone in borrowing it that way.
+[PAUSE 2s] Two colours you can put to work immediately. One of them has the
+most ordinary history imaginable. The other does not — which is why it gets
+its own lesson next.
 
 ## The words, taken apart: negro
 <!-- hl-knowledge: introduces=[ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02]; assesses=[] -->
 
-**negro** ("black") ← Latin **niger**. Nothing surprising here: the same
-Latin root that gives English **denigrate** ("to blacken someone's name")
-and the Romance family's other words for black (French *noir*, Italian
-*nero*).
+**negro** ("black") ← Latin **niger**. Nothing surprising: the same Latin
+root gives English **denigrate** ("to blacken someone's name") and the rest
+of the Romance family's words for black — French *noir*, Italian *nero*,
+Portuguese *negro*. Latin's word for black stayed put, in every daughter
+language.
 
-## The words, taken apart: blanco
-<!-- hl-knowledge: introduces=[ES-LEX-BLANCO-03, ES-ETYMON-BLANCO-04]; assesses=[] -->
+Hold that in mind as the baseline. It is what a colour word normally does.
 
-You'd expect Latin **albus** ("white"). Spanish doesn't use it. Instead it
-says **blanco**, from **Germanic *blank*** — "**shining, gleaming**" — a loan
-traditionally attributed to contact with the **Visigoths**, the Germanic
-people who ruled Spain for centuries after Rome's collapse (though, unlike
-French's case below, no surviving Gothic text actually preserves this exact
-word, so the precise route in is a plausible traditional account rather than
-a directly documented one). French, meanwhile, took the very **same**
-Germanic word (*blanc*) — this time **well-attested** as a borrowing from a
-**different** Germanic people, the **Franks**. Either way, two Romance
-sister languages ended up with the same borrowed word for white.
+## The two words in use
+<!-- hl-knowledge: introduces=[ES-LEX-BLANCO-03]; assesses=[] -->
 
-Why would a "shining" word beat Latin's own "white"? Color words often lose
-out to something more **vivid** — *blank* didn't just mean pale, it meant
-**bright, gleaming** — a flashier idea than plain *albus*.
+**blanco** ("white") is the pair to it: *el gato negro*, *el gato blanco*.
+Both behave like any Spanish adjective — they follow the noun and agree with
+it (*la casa blanca*).
 
-## Why it's said this way: where albus went
-<!-- hl-knowledge: introduces=[ES-ETYMON-ALBUS-05]; assesses=[] -->
-
-Latin's own white didn't vanish — it just stopped being the everyday color
-word:
-
-| word | meaning | the white inside |
-|---|---|---|
-| **alba** | dawn | the sky going *white* |
-| *albo* (rare, poetic) | white, pale | a fossil use, mostly literary now |
-| *álbum* (Eng. *album*) | album | a *blank white* tablet |
-| *albino* (Eng./Sp.) | albino | white-skinned |
-
-So Latin's white is still around — tucked into *alba* and *álbum*, just not
-where a learner would first look.
+But hear what you would have expected and did not get. Latin's word for
+white was **albus**, and by the *negro* pattern Spanish "white" should be
+something like *albo*. It is not. Where **blanco** actually came from — and
+what became of *albus* — is the next lesson.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03, ES-ETYMON-BLANCO-04, ES-ETYMON-ALBUS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "negro, blanco"]
-- [YOU SAY: the pairing — "negro from Latin, blanco from the Visigoths"]
-- [YOU SAY: "el alba" — dawn — and hear the old Latin white inside it]
+- [YOU SAY: with a noun — "el gato negro, la casa blanca"]
+- [YOU SAY: "negro" then English "denigrate" — the *niger* root]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03, ES-ETYMON-BLANCO-04, ES-ETYMON-ALBUS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NEGRO-01, ES-ETYMON-NEGRO-02, ES-LEX-BLANCO-03] -->
 
-[PAUSE 3s] Which of the two is inherited from Latin? (**Negro** ← *niger*.)
-Where does **blanco** come from? (**Germanic *blank***, "shining" — brought
-by the **Visigoths**.) Which other language borrowed the very same Germanic
-word, from a different tribe? (**French** *blanc*, via the **Franks**.) Where
-did Latin's *albus* end up? (**Alba**, "dawn" — no longer the everyday color
-word.)
+[PAUSE 3s] Say black and white. (*Negro, blanco*.) Where does *negro* come
+from, and what English word shares it? (Latin **niger** — *denigrate*.)
+What would you have expected Spanish's "white" to be, given Latin *albus*?
+(Something like *albo* — and it isn't. That is next lesson's puzzle.)

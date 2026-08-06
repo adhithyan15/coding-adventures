@@ -8,7 +8,7 @@ type: word
 headword: trabajar
 gloss: to work (a second -ar verb — same pattern)
 concept_tag: ES-VERB-TRABAJAR
-prerequisites: [ES-C06-hablar]
+prerequisites: [ES-C06-hablar, ES-C06-ar-presente]
 sounds: [r-tap, j-jota, b-soft]
 roots: [tripalium-latin]
 etymology_hook: "trabajar ← Latin tripaliāre 'to torture' (← tripalium, a 3-stake device) → English travail, travel"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C06-hablar]
+reviews_of: [ES-C06-hablar, ES-C06-ar-presente]
 ---
 
 # trabajar — "to work," and it once meant *torture*
