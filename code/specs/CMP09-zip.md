@@ -355,6 +355,7 @@ unzip(data: bytes) → {name: str → data: bytes}
 | F#         | `CodingAdventures.Zip.FSharp`| `CodingAdventures.Zip.FSharp`  |
 | Kotlin     | `com.codingadventures:zip`   | `com.codingadventures.zip`     |
 | Dart       | `coding_adventures_zip`      | `coding_adventures_zip`        |
+| C          | `c/zip`                      | `zip.h` (`Zip*` / `zip_*`)     |
 
 **Dependencies:** in practice, every ZIP package in this repository depends only on the
 corresponding language's `lzss` (CMP02) package for LZ77 match-finding, and implements
@@ -377,6 +378,19 @@ rejects BTYPE=10), which is sufficient for producing and reading valid ZIP entri
 not a byte-for-byte match with the `deflate` package's output. Documented here rather than
 changed, since the implementation is otherwise complete, tested, and correct for the
 DEFLATE subset it emits.
+
+**Divergence (C):** the C package depends directly on `deflate` (CMP05, `c/deflate`)
+rather than `lzss` (CMP02), and does not touch `lzss` at all. This is the opposite of the
+general rule above, and is safe specifically because `c/deflate` is a genuine RFC 1951
+codec — built and verified (including against a real `zlib`-produced dynamic-Huffman
+stream) after the general "don't depend on `deflate`" guidance above was written to codify
+the `dart/deflate` failure mode. `zip_writer_add_file` calls `deflate_compress` (which
+picks fixed or dynamic Huffman, whichever is smaller); `zip_reader_read` calls
+`deflate_decompress`, which decodes all three RFC 1951 block types, verified against the
+same real-world Python-`zipfile` dynamic-Huffman fixture the Rust reference implementation
+uses. Any other language port considering this same divergence must first read its
+sibling `deflate` package's source and confirm it emits/accepts standard RFC 1951 — the
+general rule remains correct for every `deflate` package that does not clear that bar.
 
 ## Test Cases
 
