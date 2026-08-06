@@ -64,7 +64,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C09 | Queued | Expand `DUCTUS` to cover the nine scripts with cited prose stroke order. | ~190 letters authored, each passing the on-ink, join-tolerance, and coverage invariants with citation and URL. |
 | HL-C10 | Queued | Complete A1 and add the A2 and B1 spine tranches with all 20 realization ledgers. | Every declared stage carries nodes; every track has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued | Author chapter capabilities and payoffs across all 20 tracks. | All 379 chapters declare a `canDo` and a closed, representative payoff; gates flip to errors per track as debt clears. |
-| HL-C12 | Queued | Add the Class C illustration pipeline with provenance sidecars and a size budget. | Every asset carries generator, model, prompt, date, and licence; CI fails any asset without a recorded licence in `_assets/LICENSE.md`. |
+| HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |
 | HL-C13 | Queued | Deploy Language Ladder to GitHub Pages. | The app is reachable at `/coding-adventures/language-ladder/`; it is currently referenced by no workflow and has never been published. |
 | HL-C14 | Queued | Derive modality (`voice`/`sight`/`pen`) for every lesson and each chapter's drivable prefix. | The gap report publishes per-track modality counts and the corpus-wide drivable percentage; overrides without a recorded reason are reported. |
 | HL-C15 | Queued | Print modality signs and the drivable prefix at every chapter opening. | The book shows 🚗/👁/✍ beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
@@ -72,11 +72,16 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
 | HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
 
-Open decision for the project owner, recorded rather than assumed: the books are
-CC BY-SA 4.0, and the licence and attribution stance for generated illustrations is
-not yet set. HL06 proposes matching the book's licence with full per-asset provenance,
-following the `_fonts/OFL.txt` precedent, and requires CI to reject Class C assets
-until the decision is written into `_assets/LICENSE.md`.
+The illustration licensing question HL06 raised is **settled**. The project owner
+decided on 2026-08-06 that the books stay CC BY-SA 4.0 and that generated
+illustrations are marked `CC0-1.0` with `rightsAsserted: false`, each carrying a
+provenance sidecar — because a CC licence grants copyright permissions that purely
+AI-generated output likely cannot support, and CC0 is safe whichever way the law
+settles. The decision, its reasoning, the required sidecar fields, and the two
+operational constraints on prompting and generator terms are recorded in
+[`_assets/LICENSE.md`](./_assets/LICENSE.md), following the `_fonts/OFL.txt`
+precedent. HL-C12 is therefore unblocked: CI still gates every Class C asset on having
+a sidecar and a recorded licence, but the licence to record is now known.
 
 HL05 also reserves, and deliberately does not implement, a `presents.knowledge` tier
 that would let a payoff use a glossed-but-never-assessed word. Strict closure is kept,
