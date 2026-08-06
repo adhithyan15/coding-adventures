@@ -290,6 +290,102 @@ public sealed class ZstdTests
         }
     }
 
+    /// <summary>
+    /// Real `zstd` CLI interop proving Repeated-Offset (R1/R2/R3) sequence
+    /// decoding (RFC 8878 §3.1.1.3.2.1.1, lessons.md Lesson 98).
+    /// </summary>
+    /// <remarks>
+    /// This package's OWN encoder never emits an offset code below 2 (the
+    /// minimum LZSS match offset is 1, so raw offset = offset + 3 is always
+    /// &gt;= 4) — the "no repeat-offset shortcuts" simplification documented
+    /// in the module doc comment on <c>EncodeSequences</c>/<c>DecompressBlock</c>
+    /// is entirely an encoder-side choice. So neither this package's own
+    /// Compress()/Decompress() round trip, nor <see cref="Tc9CliInterop"/>'s
+    /// prose corpus, nor <see cref="RepeatingPatternCliInterop"/>'s single
+    /// long repeat (which the real CLI encodes as one giant match, never
+    /// needing to reuse a distance across sequences), ever exercises the
+    /// repeat-offset DECODE path — a self-consistency gap this test closes
+    /// by compressing with the real CLI, whose encoder uses repeat offsets
+    /// constantly.
+    ///
+    /// <para>
+    /// The input alternates a fixed 8-byte literal run with a long run of a
+    /// single repeated byte, over and over — "repeated back-to-back matches
+    /// at the same distance" in the literal sense: each `X` run is a match
+    /// against the immediately preceding byte (distance 1), and the real
+    /// `zstd` CLI's encoder represents a run like that as a sequence whose
+    /// Offset_Value is a repeat-offset code (reusing distance 1 across
+    /// repeats) rather than re-encoding the explicit offset every time. On
+    /// the pre-fix decoder (this exact scenario, minus the register
+    /// plumbing) this reliably threw
+    /// <c>InvalidDataException: match offset exceeds decoded output</c>,
+    /// because `rawOffset - 3` underflows for any Offset_Value &lt;= 3 —
+    /// confirmed against the pre-fix code in this session (and independently
+    /// in `c/zstd`, PR #9941, whose fuzz harness found the same gap first
+    /// with a simpler single-repeated-byte input).
+    /// </para>
+    /// </remarks>
+    [Fact]
+    public void RepeatOffsetCliInterop()
+    {
+        if (!IsZstdCliAvailable())
+        {
+            return;
+        }
+
+        var bytes = new List<byte>(Encoding.ASCII.GetBytes("ABCDEFGH"));
+        for (var index = 0; index < 20; index++)
+        {
+            bytes.AddRange(Enumerable.Repeat((byte)'X', 128));
+            bytes.AddRange(Encoding.ASCII.GetBytes("ABCDEFGH"));
+        }
+
+        var original = bytes.ToArray();
+        var theirsInput = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(theirsInput, original);
+            var theirCompressed = RunZstd(["-q", "-c", theirsInput]);
+            var decodedByUs = Zstd.Decompress(theirCompressed);
+            Assert.Equal(original, decodedByUs);
+        }
+        finally
+        {
+            File.Delete(theirsInput);
+        }
+    }
+
+    /// <summary>
+    /// Same proof as <see cref="RepeatOffsetCliInterop"/>, using a single
+    /// long run of one repeated byte — the exact minimal repro that
+    /// surfaced this gap in `c/zstd` (PR #9941, lessons.md Lesson 98): the
+    /// real CLI encodes 4713+ bytes of one repeated byte as a Compressed
+    /// (not RLE) block containing one sequence with Offset_Value=1 — "reuse
+    /// Repeated_Offset1", which starts at its default value of 1.
+    /// </summary>
+    [Fact]
+    public void SingleByteRunCliInterop()
+    {
+        if (!IsZstdCliAvailable())
+        {
+            return;
+        }
+
+        var original = Enumerable.Repeat((byte)'Z', 4713).ToArray();
+        var theirsInput = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(theirsInput, original);
+            var theirCompressed = RunZstd(["-q", "-c", theirsInput]);
+            var decodedByUs = Zstd.Decompress(theirCompressed);
+            Assert.Equal(original, decodedByUs);
+        }
+        finally
+        {
+            File.Delete(theirsInput);
+        }
+    }
+
     private static bool IsZstdCliAvailable()
     {
         try

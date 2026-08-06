@@ -33,15 +33,20 @@
  *          at end-of-frame (sequence-level decompression bomb)
  *   TC27 — security: bad magic number is rejected
  *   TC28 — security: unsupported (non-Predefined) FSE mode is rejected
+ *   TC29 — real `zstd` CLI interop (both directions), prose corpus
+ *   TC30 — real `zstd` CLI interop: Repeated-Offset (R1/R2/R3) sequence
+ *          decode, per RFC 8878 §3.1.1.3.2.1.1 / lessons.md Lesson 98
  */
 package com.codingadventures.zstd
 
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertContentEquals
 import java.io.IOException
 import org.junit.jupiter.api.assertThrows
+import java.nio.file.Files
 
 class ZstdTest {
 
@@ -517,5 +522,108 @@ class ZstdTest {
             ex.message?.contains("unsupported FSE modes") == true,
             "expected an unsupported-FSE-mode error, got: ${ex.message}",
         )
+    }
+
+    // ── Real `zstd` CLI interop helpers ─────────────────────────────────────────
+    //
+    // Every test above only proves this codec is SELF-consistent: compress()
+    // and decompress() were written by the same author from the same mental
+    // model of the format, so they can agree with each other while both
+    // disagreeing with real RFC 8878. The only test that actually proves the
+    // wire format is genuine ZStd — not just an internally-consistent private
+    // format — is round-tripping against the real `zstd` CLI in both
+    // directions. This is exactly the gap lessons.md Lesson 98 documents: the
+    // c/zstd port's own encoder/decoder round trip (and every other port's)
+    // never exercises Repeated-Offset (R1/R2/R3) decoding, because this
+    // repo's own encoders never emit offset codes < 2 by design. Only real
+    // `zstd`-compressed input can surface it.
+    //
+    // Skips gracefully (does not fail) when `zstd` isn't on PATH, mirroring
+    // the pattern noted for `dart/zstd`'s TC-9 in lessons.md.
+
+    private fun zstdCliAvailable(): Boolean {
+        return try {
+            val p = ProcessBuilder("zstd", "--version").redirectErrorStream(true).start()
+            p.inputStream.readBytes()
+            p.waitFor() == 0
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /**
+     * Round-trip [original] against the real `zstd` CLI in both directions:
+     *   1. compress with ours, decompress with `zstd -d` — proves our
+     *      *encoder* emits a conforming frame.
+     *   2. compress with `zstd`, decompress with ours — proves our
+     *      *decoder* understands whatever the real encoder actually emits
+     *      (including features, like repeat-offsets, our own encoder never
+     *      produces).
+     */
+    private fun assertCliInterop(original: ByteArray) {
+        val dir = Files.createTempDirectory("zstd-kotlin-interop")
+        try {
+            // Direction 1: our compress() -> real `zstd -d`.
+            val oursPath = dir.resolve("ours.zst")
+            Files.write(oursPath, Zstd.compress(original))
+            val decodedPath = dir.resolve("decoded.bin")
+            val p1 = ProcessBuilder(
+                "zstd", "-d", "-q", "-f", "-o", decodedPath.toString(), oursPath.toString(),
+            ).redirectErrorStream(true).start()
+            val p1Out = p1.inputStream.readBytes()
+            val rc1 = p1.waitFor()
+            assertEquals(0, rc1, "real `zstd -d` failed to decode our output: ${String(p1Out)}")
+            val decoded = Files.readAllBytes(decodedPath)
+            assertContentEquals(original, decoded, "direction 1 (ours -> real zstd) mismatch")
+
+            // Direction 2: real `zstd` -> our decompress().
+            val inputPath = dir.resolve("input.bin")
+            Files.write(inputPath, original)
+            val theirsPath = dir.resolve("theirs.zst")
+            val p2 = ProcessBuilder(
+                "zstd", "-q", "-f", "-o", theirsPath.toString(), inputPath.toString(),
+            ).redirectErrorStream(true).start()
+            val p2Out = p2.inputStream.readBytes()
+            val rc2 = p2.waitFor()
+            assertEquals(0, rc2, "real `zstd` CLI failed to compress our input: ${String(p2Out)}")
+            val theirComp = Files.readAllBytes(theirsPath)
+            val oursDecoded = Zstd.decompress(theirComp)
+            assertContentEquals(original, oursDecoded, "direction 2 (real zstd -> ours) mismatch")
+        } finally {
+            dir.toFile().deleteRecursively()
+        }
+    }
+
+    // ── TC29: real `zstd` CLI interop — prose corpus ───────────────────────────
+
+    @Test
+    fun tc29_cliInteropProse() {
+        assumeTrue(zstdCliAvailable(), "zstd CLI not found on PATH -- skipping TC29")
+        val phrase = "the quick brown fox jumps over the lazy dog "
+        val original = phrase.repeat(25).encodeToByteArray()
+        assertCliInterop(original)
+    }
+
+    // ── TC30: real `zstd` CLI interop — Repeated-Offset (R1/R2/R3) decode ──────
+
+    @Test
+    fun tc30_cliInteropRepeatedOffset() {
+        // Proves the gap from lessons.md Lesson 98 (originally found in
+        // c/zstd, PR #9941): 4713 bytes of a single repeated byte, compressed
+        // by the REAL `zstd` CLI, chooses a Compressed block (not RLE) whose
+        // one sequence has Offset_Value = 1 -- "reuse Repeated_Offset1",
+        // which starts at its default value of 1 (RFC 8878 §3.1.1.3.2.1.1).
+        // Verified empirically in this environment: `zstd -q -f` on 4713
+        // 'Z' bytes produces a 23-byte frame with a Compressed block
+        // (Block_Type=10), not an RLE block.
+        //
+        // A decoder that treats every Offset_Value as an explicit
+        // `Offset_Value - 3` computation underflows on Offset_Value=1 (or
+        // silently reads a bogus offset for Offset_Value in {2,3}), so this
+        // input fails direction 2 (real zstd -> ours) until Repeated-Offset
+        // decoding is implemented.
+        assumeTrue(zstdCliAvailable(), "zstd CLI not found on PATH -- skipping TC30")
+        val original = ByteArray(4713) { 'Z'.code.toByte() }
+        assertCliInterop(original)
     }
 }
