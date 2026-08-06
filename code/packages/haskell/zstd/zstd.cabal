@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          zstd
-version:       0.1.1
+version:       0.1.2
 synopsis:      Educational RFC 8878 Zstandard frame codec
 description:   Pure Haskell raw, RLE, and predefined-FSE Zstandard blocks.
 category:      Compression
