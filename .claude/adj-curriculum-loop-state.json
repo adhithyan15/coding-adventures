@@ -99,12 +99,21 @@
     },
     {
       "id": "wave2-k8-measurement-data",
-      "title": "K-8 math: measurement (units, conversion, perimeter/area/volume composed from existing formulas) and data displays (mean/median/mode/range interpretation)",
-      "status": "pending",
+      "title": "K-8 math: geometric measurement (square perimeter + solid volume) composed from existing formulas",
+      "status": "shipped_pending_ci",
       "depends_on": [],
+      "branch": "feat/adj-wave2-k8-measurement",
+      "pr_number": 10019,
+      "notes": "Checked before implementing (per this item's own note): unit conversion is ALREADY covered by wave0-backfill-reference's adj.math.units.* objectives (length/area/mass/time/volume, band 6-8), and arithmetic/average.adj already provides mean_two/mean_three (fixed small-arity, composing sum+quotient) -- so 'data displays' (median/mode/range over an arbitrary-size dataset) is NOT achievable by simple composition today: it needs sorting/counting the engine doesn't have, and even a fixed-arity 'range' (max-min) needs DYADIC min/max wired into the plain-arithmetic surface grammar first (BinFn::Min/Max only reach the engine via the `latex \"...\"` escape today, same gap floor/mod had before FL-9) -- see the new wave2-k8-data-displays-min-max item this discovered. Scoped THIS item down to what geometry-formulas.adj (wave0-backfill-mathematics) was actually missing: square_perimeter(side) (the library's own header already cited MathWorld's 'square | 4a' row but had no clause for it) and a new volume-formulas.adj (cube_volume, rectangular_prism_volume) -- the measurement track's third dimension, distinct from reference/volume-conversions.adj (unit conversion, not computation from edge lengths). Both citations WebFetch-verified live (Cube.html V=a^3, Cuboid.html V=abc, Perimeter.html square row) before writing. New manifest objective adj.math.geometry.solid_volume (band 3-5, CCSS 5.MD.C). New e2e test formula_measurement_e2e.rs (3 tests). Full validation green, security review clean."
+    },
+    {
+      "id": "wave2-k8-data-displays-min-max",
+      "title": "Wire dyadic min/max into the plain-arithmetic surface grammar to unblock K-8 data-display formulas (e.g. range = max - min)",
+      "status": "pending",
+      "depends_on": ["wave2-k8-measurement-data"],
       "branch": null,
       "pr_number": null,
-      "notes": "Per ADJ-STDLIB-COVERAGE.md 5.1's elementary row, 'measurement, data displays' are still named Major Gaps -- not shipped by any prior item (wave2-k2-math-cardinality-comparison covered cardinality/comparison/number-sequence; wave2-elementary-place-value + wave2-place-value-decompose covered base-ten only). `average.adj` (mean) already exists per arithmetic/ -- check what it composes before adding median/mode/range, and check mathematics/geometry-formulas.adj (wave0-backfill-mathematics) before adding perimeter/area/volume so this doesn't duplicate an existing library. Reselected as the next item per policy.selection_rule (Wave 0 -> 2 -> CAS-wiring -> 3 -> 4): CAS-wiring rung-0 is done, so priority returns to the Wave 2 K-8 gaps that were already in progress before the CAS-wiring detour."
+      "notes": "Discovered while scoping wave2-k8-measurement-data: `min(a,b)`/`max(a,b)` as a TWO-argument dyadic operation only reaches the engine via the `latex \"...\"` escape (adapter.rs's MathExpr::Bin(BinOp::Mul,...) special-casing for `operator_name_is(lhs,\"min\"/\"max\")`) -- the plain surface grammar's bare `min(x)`/`max(x)` is a DIFFERENT thing, a single-argument AGGREGATION over a slot's multiple observations (`agg` production), not 'the smaller/larger of two named values'. This is the EXACT same shape of gap FL-9 (floor/mod) closed: the ComputeOp/BinFn already exists (BinFn::Min/Max -> ComputeOp::Min2/Max2, used today only via the latex path) and needs zero new AST/engine work -- just add 'min'/'max' (2-arg form) to RUNTIME_BUILTIN_FORMULAS in lower.rs's expand_rec, mapping onto the pre-existing ExprAst::Call2(BinFn::Min/Max,...) node. Unblocks a citable `range_two(a,b) = max(a,b) - min(a,b)` (and range_three via the same associative-fold trick average.adj's mean_three already uses) as a genuine K-8 'measures of spread' data-display formula, composed entirely from existing primitives. Spec as ADJ-FORMULA-LIBRARIES FL-11 before implementing, per repo's specs-first standard."
     },
     {
       "id": "wave2-k8-word-problem-schemas",
