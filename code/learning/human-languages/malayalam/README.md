@@ -69,9 +69,33 @@ The book compiles with XeLaTeX using the **vendored** Noto Sans Malayalam font
 (`../../_fonts/`), loaded by relative path — so it builds identically locally
 and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
 
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's
+[`HL05`](../../../specs/HL05-chapter-capability-and-step-by-step-shape.md)
+capability ledger. Each entry says, in the reader's own first-person words, what
+finishing that chapter lets them do, and names the lesson that proves it:
+
+```json
+{
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "canDo": "I can ask how old someone is in Malayalam and answer with a dative subject.",
+  "payoff": { "lesson": "ML-C19-vayassu", "kind": "dialogue", "assesses": ["…"] }
+}
+```
+
+The file is **authored intent**, not a derived cache — no validator may rewrite
+it, and it is derived from the lessons themselves rather than from `roadmap.md`,
+which still lags Chapters 6–31. Chapters 6–31 are covered. Chapters 1–5 are
+deliberately left out: their recap lessons are still schema v1 with no declared
+knowledge atoms, so a payoff there could only be invented. That absence is
+honest, measurable debt and is reported as such.
+
 ## Files
 
-- [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
+- [`lessons/`](./lessons/) · [`chapters.json`](./chapters.json)
+  · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 
