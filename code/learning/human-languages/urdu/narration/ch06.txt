@@ -1,0 +1,178 @@
+Urdu, chapter 6: Five Verbs at the Core.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+ہونا (honā) — “to be,” and the ending every Urdu verb wears.
+
+Warm-up.
+[pause 2 seconds]
+You can already close an Urdu sentence with ہوں hūṅ — “am.” That small word is a fragment of something larger. Here is the whole verb it was broken off.
+
+You'll want to know first — one word.
+ہونا — honā — to be.
+Read from the right edge: ہ h, then و carrying o, then ن n, then ا long ā. Every one of those four shapes has already turned up in a word you have met. There is nothing new to decode here, which is rare, and worth enjoying.
+
+Grammar Lens: the ending that names every verb.
+honā ends in -نا -nā. So does every Urdu verb when you name it. English marks a verb's plain name by putting a word in front — to be, to go, to come. Urdu marks it by putting -nā on the end, and never uses a separate word for it.
+That ending is also a tool. Strip -nā off and what remains is the stem, the piece everything else in the verb is built on. honā minus -nā leaves ho-. Learn the ending once, and every new verb hands you its own stem for free.
+
+The word, taken apart — the root English wore down to “be”.
+honā comes from Sanskrit bhavati, “becomes,” built on the root bhū-. The middle stage of Indo-Aryan softened that bh- to h-, so bhavati thinned to hoi and then to honā.
+The root is Indo-European: bʰuH-, “grow, become.” English kept it in be and been, and — by way of “the place where one dwells” — in build, booth, and bower. Latin held it as fuī “I was” and futūrus, which English borrowed as future. Greek held it as phúsis “nature,” which English borrowed as physics.
+
+Guided Practice.
+[your turn — say: honā — to be]
+[pause 8 seconds for the answer]
+[your turn — strip: honā minus -nā leaves the stem ho-]
+[pause 8 seconds for the answer]
+[your turn — read: ہونا (honā) from the right edge]
+[pause 8 seconds for the answer]
+[your turn — connect: honā from Sanskrit bhavati becomes English be]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending names an Urdu verb? (-nā.) What is left of honā once you take that ending off? (Ho-.) Which English verb grew from the same ancient root? (Be.)
+Sources: Basic Urdu: Personal Pronouns with “To Be”; Wiktionary: ہونا (honā).
+
+
+Lesson 2 of 5.
+جانا (jānā) — “to go,” and two agreements in one sentence.
+
+Warm-up.
+[pause 2 seconds]
+Take the ending off honā and say the stem aloud. The next verb gives that same ending a second workout.
+
+You'll want to know first — one word.
+جانا — jānā — to go.
+From the right edge: ج j, then ا long ā, then ن n, then ا long ā. The ج is the one from جی jī. Strip the -nā and the stem is jā-.
+
+Grammar Lens: the present tense agrees twice.
+“I go” in Urdu is two words after the pronoun, not one:
+میں جاتا ہوں — maiṅ jātā hūṅ — I go (man speaking) میں جاتی ہوں — maiṅ jātī hūṅ — I go (woman speaking).
+The first word is the stem jā- plus -tā. It says going, and it agrees with the gender and number of the person doing it: -tā for one man, -tī for one woman, -te for more than one man or for a respectful singular. The second word is hūṅ, which you already own, and it agrees with person — who is speaking.
+Two agreements, split across two words, in one short clause. English makes one agreement at most, and usually none. Say both Urdu lines and let the difference sit in the ear rather than on paper.
+
+The word, taken apart — a sound-law you can reuse.
+jānā continues Sanskrit yāti, “goes,” from the root yā-, “travel.” The change from y- to j- is not a quirk of this word: initial y- regularly hardened to j- on the road from Sanskrit into the middle stage of Indo-Aryan that Urdu descends from. Meet the law once and it decodes other words later.
+English gives nothing here. The yā- root travelled north and west into Lithuanian and Slavic rather than into Germanic, so this is a word where Sanskrit is the whole hook and English cannot help.
+
+Guided Practice.
+[your turn — say: jānā — to go]
+[pause 8 seconds for the answer]
+[your turn — strip: jānā minus -nā leaves jā-]
+[pause 8 seconds for the answer]
+[your turn — say: maiṅ jātā hūṅ, then maiṅ jātī hūṅ]
+[pause 8 seconds for the answer]
+[your turn — choose: the ending that fits you — -tā or -tī]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which word in maiṅ jātā hūṅ carries gender? (Jātā — the one built on the stem.) Which one carries person? (Hūṅ.) And which Sanskrit verb stands behind jānā? (Yā-, “travel.”)
+Source: Wiktionary: جانا (jānā).
+
+
+Lesson 3 of 5.
+آنا (ānā) — “to come,” which is “go” pointed back at you.
+
+Warm-up.
+[pause 2 seconds]
+Say jānā, then its stem jā-. The opposite direction is the same verb wearing a prefix.
+
+You'll want to know first — one word.
+آنا — ānā — to come.
+From the right edge: آ, then ن n, then ا long ā. That first shape is alif madd — alif wearing a small wave — and it is how Urdu writes a long ā at the start of a word. It opens آپ āp too. Strip the -nā and the stem is ā-.
+
+The word, taken apart — a prefix welded to a verb you know.
+ānā continues Sanskrit āyāti, and that word is two pieces: ā-, “toward,” plus yā-, “go.” So the Urdu verb for coming is, underneath, the verb for going aimed back at the speaker. “Go toward me” is “come.”
+You already have the second piece: yā- is the same root that hardened into the j- of jānā. One Sanskrit verb, two Urdu words, and the difference between them is a direction marker.
+English does the identical trick with a Latin verb: venīre “to come” plus a prefix gives advent, convene, intervene, prevent, and revenue. Urdu welds its prefix on the front and lets the seam disappear; English keeps the seam visible.
+
+Guided Practice.
+[your turn — say: ānā — to come]
+[pause 8 seconds for the answer]
+[your turn — pair: jānā away, ānā toward]
+[pause 8 seconds for the answer]
+[your turn — split: ā- “toward” + yā- “go”]
+[pause 8 seconds for the answer]
+[your turn — read: آنا (ānā), starting from alif madd]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two pieces are hiding inside ānā? (Ā- “toward” and yā- “go.”) Which Urdu verb shares the second piece? (Jānā.) And what does the stem become once -nā comes off? (Ā-.)
+Source: Wiktionary: آنا (ānā).
+
+
+Lesson 4 of 5.
+بولنا (bolnā) — “to speak,” and the two layers of Urdu.
+
+Warm-up.
+[pause 2 seconds]
+Three verbs so far, three stems pulled off the same ending. Here is a fourth, and it brings one new letter with it.
+
+You'll want to know first — one word.
+بولنا — bolnā — to speak.
+From the right edge: ب b, then و carrying o, then ل l, then ن n, then ا long ā. Strip the -nā and the stem is bol-.
+ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. You have already read پ p in آپ āp, and پ is that identical scoop with three dots below. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail.
+
+Grammar Lens: put it in the frame.
+The stem takes the same two-agreement frame as before:
+میں بولتا ہوں — maiṅ boltā hūṅ — I speak (man speaking) میں بولتی ہوں — maiṅ boltī hūṅ — I speak (woman speaking).
+Nothing new is being learned there. That is the point of a stem: the machine is already built, and each verb just walks into it.
+
+The word, taken apart — where the trail goes cold.
+bolnā goes back to Prakrit bollaï, “speaks” — and then the trail stops. A link onward to Sanskrit brūte “speaks” has been proposed, but it is not settled, so treat it as a maybe rather than a fact.
+That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived گفتگو guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance.
+
+Guided Practice.
+[your turn — say: bolnā — to speak]
+[pause 8 seconds for the answer]
+[your turn — count: ب one dot below, پ three dots below]
+[pause 8 seconds for the answer]
+[your turn — say: maiṅ boltā hūṅ, then maiṅ boltī hūṅ]
+[pause 8 seconds for the answer]
+[your turn — sort: bolnā inherited, guftagū borrowed]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many dots does ب carry, and where? (One, below.) How far back can bolnā be traced with confidence? (To Prakrit bollaï, and no further.) Which layer of Urdu does guftagū belong to? (The Persian one.)
+Sources: Zero Zabar: The Urdu alphabet; Wiktionary: بولنا (bolnā).
+
+
+Lesson 5 of 5.
+جاننا (jānnā) — “to know,” a word English has been carrying all along.
+
+Warm-up.
+[pause 2 seconds]
+Run the four verbs you have — honā, jānā, ānā, bolnā — and pull the stem off each one. The fifth is the closest of them to English.
+
+You'll want to know first — one word.
+جاننا — jānnā — to know.
+From the right edge: ج j, ا long ā, then ن, then ن a second time, then ا long ā. Two separate nūns, written out one after the other, and both are pronounced: hold the n long, jān-nā, the way English does across the seam of thin, ness. Strip the final -nā and the stem is jān-.
+That doubling is what keeps jānnā “to know” apart from jānā “to go.” One letter, and the whole meaning turns.
+
+The word, taken apart — the widest family in the chapter.
+jānnā continues Sanskrit jānāti, from the root jñā-, “know.” That root is Indo-European ǵneh₃-, and English is stuffed with it.
+Straight down the Germanic line: know, knowledge, can (once “to know how”), cunning, ken, and uncouth — literally “un-known.” Borrowed from Latin (g)nōscere: notice, note, notion, cognition, recognize, acquaint, and ignore, which is “not to know.” Borrowed from Greek gnōsis: diagnosis, prognosis, and agnostic.
+So the Urdu verb is not a stranger. It is a first cousin of the plainest word English has for the same idea, and every one of those borrowings is another place to hang it.
+
+Guided Practice.
+[your turn — say: jānnā — to know, holding the long n]
+[pause 8 seconds for the answer]
+[your turn — contrast: jānā to go, jānnā to know]
+[pause 8 seconds for the answer]
+[your turn — say: maiṅ jāntā hūṅ, then maiṅ jāntī hūṅ]
+[pause 8 seconds for the answer]
+[your turn — run: all five — honā, jānā, ānā, bolnā, jānnā — stripping each stem]
+[pause 8 seconds for the answer]
+[your turn — connect: jānnā from jñā- becomes English know, notice, diagnosis]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What single written difference separates jānā from jānnā? (A second ن, held long in speech.) Which two words in maiṅ jāntī hūṅ agree, and with what? (Jāntī with gender, hūṅ with person.) And which English verb is the same word as jānnā? (Know.)
+Source: Wiktionary: جاننا (jānnā).

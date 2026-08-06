@@ -6159,6 +6159,24 @@
       "json": "urdu/narration/ch05.json",
       "textHash": "fnv1a64:4e356459da7e4b30",
       "jsonHash": "fnv1a64:e1ace1efd29cf4ec"
+    },
+    {
+      "language": "urdu",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:a64f60f1bf438db1",
+      "lessonIds": [
+        "UR-C06-hona",
+        "UR-C06-jana",
+        "UR-C06-ana",
+        "UR-C06-bolna",
+        "UR-C06-janna"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "urdu/narration/ch06.txt",
+      "json": "urdu/narration/ch06.json",
+      "textHash": "fnv1a64:ddde1e5f5fcb8c9f",
+      "jsonHash": "fnv1a64:d392cba52a248c15"
     }
   ],
   "findings": []

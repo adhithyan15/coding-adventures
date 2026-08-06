@@ -8,7 +8,9 @@
       "title": "Give your name",
       "label": "ch:urdu-name",
       "canDo": "I can say my name in Urdu in one sentence, keeping hai at the end where Urdu puts it.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "UR-C02-mera-naam",
         "kind": "production",
@@ -25,7 +27,9 @@
       "title": "Ask and Answer Names",
       "label": "ch:ur-ask-and-answer-names",
       "canDo": "I can ask someone's name with respectful āp, answer with my own, and close the introduction politely.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "UR-C03-practice",
         "kind": "dialogue",
@@ -49,7 +53,9 @@
       "title": "How Are You?",
       "label": "ch:ur-how-are-you",
       "canDo": "I can ask how someone is with respectful āp, choose kaise or kaisī for the person I am addressing, and reply that I am fine, thank you.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "UR-C04-practice",
         "kind": "dialogue",
@@ -69,7 +75,9 @@
       "title": "Take Leave",
       "label": "ch:ur-take-leave",
       "canDo": "I can open a short Urdu conversation, ask how the other person is, and close it with khudā hāfiz.",
-      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
       "payoff": {
         "lesson": "UR-C05-practice",
         "kind": "dialogue",
@@ -80,6 +88,31 @@
           "UR-SCRIPT-KHUDA-HAFIZ-SPACED",
           "UR-PRAGMATICS-STANDARD-FAREWELL",
           "UR-DIALOGUE-TAKE-LEAVE"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Five Verbs at the Core",
+      "label": "ch:ur-core-verbs",
+      "canDo": "I can name five everyday Urdu verbs by their shared -nā ending, take that ending off to reach the stem, and say what I do in the present with the participle agreeing for gender and the copula agreeing for person.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "UR-C06-janna",
+        "kind": "production",
+        "summary": "The fifth verb runs the whole machine at once: strip -nā from all five infinitives, hold the doubled nūn that keeps jānnā apart from jānā, and put the stem into maiṅ jāntā/jāntī hūṅ.",
+        "assesses": [
+          "UR-GRAMMAR-NA-INFINITIVE",
+          "UR-GRAMMAR-PRESENT-TWO-AGREEMENTS",
+          "UR-LEX-HONA",
+          "UR-LEX-JANA",
+          "UR-LEX-ANA",
+          "UR-LEX-BOLNA",
+          "UR-LEX-JANNA",
+          "UR-SCRIPT-JANNA-DOUBLE-NUN",
+          "UR-ETYMON-JANNA-KNOW"
         ]
       }
     }

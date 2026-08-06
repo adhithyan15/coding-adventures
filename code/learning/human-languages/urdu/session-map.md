@@ -1,6 +1,6 @@
-# Urdu Session Map — Authored Chapters 1–5
+# Urdu Session Map — Authored Chapters 1–6
 
-This is the authoritative order for the twenty authored Urdu lessons. Each new
+This is the authoritative order for the twenty-five authored Urdu lessons. Each new
 lesson is a self-contained, prerequisite-safe step of three or four minutes.
 A longer study session may combine the new step with its due reviews while the
 book and app keep every lesson independently completable.
@@ -64,6 +64,11 @@ Time-of-day farewells remain later spine work.
 | **S18** | [`UR-C05-hafiz`](./lessons/UR-C05-hafiz.md): **حافظ** *hāfiz* | *jī hā̃* *(N+15)*; *kaise / kaisī* *(N+7)*; the reply *(N+3)*; *khudā* *(N+1)* | read the Arabic-rooted protector word |
 | **S19** | [`UR-C05-khuda-hafiz`](./lessons/UR-C05-khuda-hafiz.md): **خدا حافظ** | *nahī̃* *(N+15)*; the wellbeing question *(N+7)*; Chapter 4 practice *(N+3)*; *hāfiz* *(N+1)* | keep the Urdu space and end an interaction |
 | **S20** | [`UR-C05-practice`](./lessons/UR-C05-practice.md): open and close | *merā nām ... hai* *(N+15)*; *maiṅ ... hūṅ* *(N+7)*; *khudā* *(N+3)*; *khudā hāfiz* *(N+1)* | choose **salām** at the start and **khudā hāfiz** at the end |
+| **S21** | [`UR-C06-hona`](./lessons/UR-C06-hona.md): **ہونا** *honā* | the three “you” forms *(N+15)*; *ṭhīk* *(N+7)*; *hāfiz* *(N+3)*; Chapter 5 practice *(N+1)* | strip **-nā** and say the stem **ho-** |
+| **S22** | [`UR-C06-jana`](./lessons/UR-C06-jana.md): **جانا** *jānā* | *kyā* *(N+15)*; the reply *(N+7)*; *khudā hāfiz* *(N+3)*; *honā* *(N+1)* | say **maiṅ jātā hūṅ** and **maiṅ jātī hūṅ** |
+| **S23** | [`UR-C06-ana`](./lessons/UR-C06-ana.md): **آنا** *ānā* | the name question *(N+15)*; Chapter 4 practice *(N+7)*; Chapter 5 practice *(N+3)*; *jānā* *(N+1)* | pair **jānā** away against **ānā** toward |
+| **S24** | [`UR-C06-bolna`](./lessons/UR-C06-bolna.md): **بولنا** *bolnā* | the meeting response *(N+15)*; *khudā* *(N+7)*; *honā* *(N+3)*; *ānā* *(N+1)* | count the dots: **ب** one below, **پ** three below |
+| **S25** | [`UR-C06-janna`](./lessons/UR-C06-janna.md): **جاننا** *jānnā* | Chapter 3 practice *(N+15)*; *hāfiz* *(N+7)*; *jānā* *(N+3)*; *bolnā* *(N+1)* | run all five infinitives and pull each stem |
 
 ## Carry-forward review ledger
 
@@ -73,21 +78,21 @@ with already learned material.
 
 | Session | Fixed review due |
 |---|---|
-| **S21** | the three “you” forms *(N+15)*; *ṭhīk* *(N+7)*; *hāfiz* *(N+3)*; Chapter 5 practice *(N+1)* |
-| **S22** | *kyā* *(N+15)*; the reply *(N+7)*; *khudā hāfiz* *(N+3)* |
-| **S23** | the name question *(N+15)*; Chapter 4 practice *(N+7)*; Chapter 5 practice *(N+3)* |
-| **S24** | the meeting response *(N+15)*; *khudā* *(N+7)* |
-| **S25** | Chapter 3 practice *(N+15)*; *hāfiz* *(N+7)* |
-| **S26** | *kaise / kaisī* *(N+15)*; *khudā hāfiz* *(N+7)* |
-| **S27** | the wellbeing question *(N+15)*; Chapter 5 practice *(N+7)* |
-| **S28** | *maiṅ ... hūṅ* *(N+15)* |
-| **S29** | *ṭhīk* *(N+15)* |
-| **S30** | the reply *(N+15)* |
-| **S31** | Chapter 4 practice *(N+15)* |
-| **S32** | *khudā* *(N+15)* |
+| **S26** | *kaise / kaisī* *(N+15)*; *khudā hāfiz* *(N+7)*; *ānā* *(N+3)*; *jānnā* *(N+1)* |
+| **S27** | the wellbeing question *(N+15)*; Chapter 5 practice *(N+7)*; *bolnā* *(N+3)* |
+| **S28** | *maiṅ ... hūṅ* *(N+15)*; *honā* *(N+7)*; *jānnā* *(N+3)* |
+| **S29** | *ṭhīk* *(N+15)*; *jānā* *(N+7)* |
+| **S30** | the reply *(N+15)*; *ānā* *(N+7)* |
+| **S31** | Chapter 4 practice *(N+15)*; *bolnā* *(N+7)* |
+| **S32** | *khudā* *(N+15)*; *jānnā* *(N+7)* |
 | **S33** | *hāfiz* *(N+15)* |
 | **S34** | *khudā hāfiz* *(N+15)* |
 | **S35** | Chapter 5 practice *(N+15)* |
+| **S36** | *honā* *(N+15)* |
+| **S37** | *jānā* *(N+15)* |
+| **S38** | *ānā* *(N+15)* |
+| **S39** | *bolnā* *(N+15)* |
+| **S40** | *jānnā* *(N+15)* |
 
 Sessions not listed in the ledger have no fixed starter item due; use their
 bonus queue for adaptive or cumulative retrieval.
@@ -98,7 +103,7 @@ review; the fixed ledger remains the book's no-tracking fallback.
 
 ## Schedule check
 
-Every Chapter 1–5 lesson now has all four fixed resurfacing sessions through
-S35. The app may pull a missed item forward, but it cannot skip the local
-prerequisites. A future Chapter 6 can begin in S21 while this ledger continues
+Every Chapter 1–6 lesson now has all four fixed resurfacing sessions through
+S40. The app may pull a missed item forward, but it cannot skip the local
+prerequisites. A future Chapter 7 can begin in S26 while this ledger continues
 in the review portion of each session.

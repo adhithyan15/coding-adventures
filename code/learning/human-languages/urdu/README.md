@@ -4,13 +4,23 @@ This track teaches contemporary standard Urdu, one small expression at a time.
 Lessons run under five minutes and introduce script features only where a word
 on the page needs them.
 
-The first twenty lessons now form a complete miniature meeting: greeting,
+The first twenty lessons form a complete miniature meeting: greeting,
 answers, exchanging names, acknowledging the introduction, asking about
 wellbeing, replying politely, and taking leave with **خدا حافظ**. Urdu-specific
 extensions introduce
 **āp/tum/tū** register, **kyā**, fixed **āp kā nām**, question punctuation,
 **kaise/kaisī** agreement, honorific **haiṅ**, first-person **hūṅ**, and the
 Persian-plus-Arabic farewell layers exactly where each exchange needs them.
+
+Chapter 6 turns the track from social formulas toward saying what you do. Five
+verbs — **ہونا** *honā*, **جانا** *jānā*, **آنا** *ānā*, **بولنا** *bolnā*, and
+**جاننا** *jānnā* — teach the one machine the rest of the verb system runs on:
+every infinitive ends in **-نا** *-nā*, and stripping that ending leaves the
+stem everything else is built from. The present tense then makes two agreements
+at once, which English never does — the participle agrees with gender and
+number, the copula with person, so *maiṅ jātā hūṅ* and *maiṅ jātī hūṅ* differ
+by who is speaking. All five lessons are fully drivable.
+
 Later chapters will add wider agreement, postpositions, oblique forms, compound
 verbs, and more Nastaliq-aware shapes.
 
@@ -26,6 +36,6 @@ Persian-Arabic vocabulary bridges are drawn out as you go. Script conventions ar
   sitting, and when to come back to each one.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) gathers Urdu
   script and sound facts on demand and labels the current Naskh fallback.
-- [`lessons/`](./lessons/) contains the twenty canonical short practice
+- [`lessons/`](./lessons/) contains the twenty-five canonical short practice
   lessons.
 
