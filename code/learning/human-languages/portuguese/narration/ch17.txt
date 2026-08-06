@@ -1,0 +1,114 @@
+Portuguese, chapter 17: Chapter 17.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+a cabeça — “the head”.
+
+Warm-up.
+[pause 2 seconds]
+Learn one body word and one reading rule together.
+a cabeça — the head, feminine.
+
+Sounds you'll need: Read the cedilla.
+The ç is a cedilla. It marks a c pronounced s before a, o, or u, where plain c would normally be hard k. So cabeça ends roughly “-essa,” not “-eka.”
+The mark began as a tiny z under the letter: medieval scribes used ç as shorthand for cz. Treat that as a recognition hook; this track has not yet asked you to write the mark by hand.
+
+The word, taken apart: The inherited word.
+Cabeça comes from Late Latin capitia, built from caput, “head.” Portuguese wore the word down in ordinary speech but kept the old root.
+A useful sentence is:
+Dói-me a cabeça. — “My head hurts.” (European Portuguese).
+In Brazilian Portuguese you may hear Minha cabeça está doendo. Both begin with the same feminine noun a cabeça.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “a cabeça” — make ç an s]
+[pause 8 seconds for the answer]
+[your turn — say: “Dói-me a cabeça.”]
+[pause 8 seconds for the answer]
+[your turn — say: “cabeça from caput”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“A cabeça — feminine; ç sounds s.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say “the head.” (A cabeça.) What does the cedilla do? (Marks c as s before a/o/u.) What is the Latin root? (Caput.) Next: compare the head-words and find that root a second time in learned vocabulary.
+
+
+Lesson 2 of 3.
+cabeça / capital — one root, two arrivals.
+
+Warm-up.
+[pause 2 seconds]
+Cabeça kept Latin caput, “head.” Other languages used container words instead. That contrast makes the Portuguese survival visible.
+[a table of 5 rows, read aloud]
+language: Portuguese. “head”: cabeça. older picture: Latin caput, head.
+language: Spanish. “head”: cabeza. older picture: Latin caput, head.
+language: French. “head”: tête. older picture: Latin testa, pot.
+language: Italian. “head”: testa. older picture: Latin testa, pot.
+language: German. “head”: Kopf. older picture: Germanic “cup” word.
+French/Italian and German independently replaced “head” with a vessel. Iberian Romance kept caput. Portuguese still has testa, but narrowed it to “forehead” instead of the whole head.
+
+The word, taken apart: The root returned in books.
+The same caput later entered learned vocabulary again:
+capital — the head city or head sum;
+capítulo — a “little head” of a text;
+capitão — the head of a company.
+Portuguese therefore holds a doublet: one word inherited through generations of speech (cabeça), another branch borrowed back from written Latin (capital, capítulo, capitão). One root can arrive twice and look different because each route changes it differently.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “cabeça — inherited”]
+[pause 8 seconds for the answer]
+[your turn — say: “capital — re-borrowed”]
+[pause 8 seconds for the answer]
+[your turn — say: “tête/testa: pot; Kopf: cup”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Cabeça and capital — two routes from caput.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two languages kept caput as their everyday head-word? (Portuguese and Spanish.) What did French, Italian, and German use instead? (Container words.) Why do cabeça and capital look different? (One is inherited; one is re-borrowed.) Next: the hand and the disappearing n.
+
+
+Lesson 3 of 3.
+a mão — "the hand".
+
+Warm-up.
+[pause 2 seconds]
+Two things in one short word: a sound change that shaped half of Portuguese, and a gender that is two thousand years old.
+
+You'll want to know: The word.
+a mão — the hand. Feminine. Plural: as mãos.
+
+The word, taken apart: Where did the n go?
+Latin manus becomes Portuguese mão. The -n- vanished.
+That is not a one-off. Portuguese systematically dropped n between vowels, nasalising the vowel in front of it. What happened next depends on the word: the nasality stayed where the result was a nasal diphthong, and faded again where it left a plain vowel. The til () marks the ones that kept it.
+[a table of 4 rows, read aloud]
+Latin: manus. Portuguese: mão, hand — nasality kept.
+Latin: lūna. Portuguese: lua, moon — nasality faded.
+Latin: bona. Portuguese: boa, good (f.) — nasality faded.
+Latin: pānis. Portuguese: pão, bread — kept; Chapter 11 told this one.
+Compare Spanish, which kept the n in all of them: mano, luna, buena, pan. This single change is a large part of why written Portuguese and Spanish look so similar and sound so different.
+Say the pair aloud: mano … mão. You can hear the n becoming the nasal.
+
+Grammar Lens: Feminine, like Italian's.
+A mão is feminine — and so is Italian la mano, for the same reason. Latin manus belonged to the fourth declension, a class whose nouns ended in -us but could be feminine. The declension is long gone; the gender outlived it.
+Portuguese is less startling about it than Italian, because mão doesn't end in a giveaway -o. But it is the same two-thousand-year-old fact underneath.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "a mão, as mãos"]
+[pause 8 seconds for the answer]
+[your turn — say: the change — "manus … mão"]
+[pause 8 seconds for the answer]
+[your turn — say: the family — "lua, boa, pão — all lost an n"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "Spanish mano, Portuguese mão"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "the hand" and "the hands." (A mão / as mãos.) What happened to the n of manus? (It dissolved between vowels, leaving a nasal vowel — which the til marks.) Name two other words that did the same. (Lua from lūna, boa from bona, pão — Ch. 11.) Did they all keep the nasality? (No — mão and pão did; lua and boa lost it again.) What did Spanish do? (Kept the n in all — mano, luna, pan.) Why is mão feminine? (Latin manus was fourth-declension feminine — the same reason Italian says la mano.) Next: the rest of the body.

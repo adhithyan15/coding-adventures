@@ -88,29 +88,39 @@ describe("the derivation itself", () => {
   });
 
   it("rule 2c: a table wider than the configured width needs eyes", () => {
-    const table = "## Warm-up\n\n| yo | tú | él |\n| --- | --- | --- |\n| soy | eres | es |";
+    const table =
+      "## Warm-up\n\n| yo | tú | él | ella |\n| --- | --- | --- | --- |\n| soy | eres | es | es |";
     const entry = deriveLessonModality(lesson({ id: "ES-C03", body: table }));
     expect(entry.derived).toBe("sight");
     expect(entry.reasons).toContain("wide-table");
-    expect(entry.widestTableColumns).toBe(3);
+    expect(entry.widestTableColumns).toBe(4);
   });
 
-  it("rule 2c is configurable: a two-column table is drivable once it can be linearised", () => {
+  it("rule 2c is configurable: a narrow table is drivable once it can be linearised", () => {
     const table = "## Warm-up\n\n| día | day |\n| --- | --- |\n| noche | night |";
     const lessonWithTable = lesson({ id: "ES-C04", body: table });
-    expect(deriveLessonModality(lessonWithTable).derived).toBe("sight");
+    // The shipped default (3) reads this aloud; tightening the knob back to the
+    // pre-lineariser 0 puts it back behind the learner's eyes.
+    expect(deriveLessonModality(lessonWithTable).derived).toBe("voice");
     expect(
-      deriveLessonModality(lessonWithTable, { maxLinearisableTableColumns: 2 }).derived,
-    ).toBe("voice");
-    // A wider paradigm is still sight at the same setting — the width is a limit,
+      deriveLessonModality(lessonWithTable, { maxLinearisableTableColumns: 0 }).derived,
+    ).toBe("sight");
+    // A wider paradigm is still sight at the shipped setting — the width is a limit,
     // not an amnesty for every table.
     const paradigm = lesson({
       id: "ES-C05",
-      body: "## Warm-up\n\n| a | b | c |\n| - | - | - |",
+      body: "## Warm-up\n\n| a | b | c | d |\n| - | - | - | - |\n| 1 | 2 | 3 | 4 |",
     });
-    expect(deriveLessonModality(paradigm, { maxLinearisableTableColumns: 2 }).derived).toBe(
-      "sight",
-    );
+    expect(deriveLessonModality(paradigm).derived).toBe("sight");
+  });
+
+  it("rule 2c is about speakability, not only width: a ragged narrow table needs eyes", () => {
+    // Two columns, inside the limit, and still unreadable aloud: the second row has a
+    // cell the header has no name for, so nothing can label it in speech.
+    const ragged = "## Warm-up\n\n| día | day |\n| --- | --- |\n| noche | night | extra |";
+    const entry = deriveLessonModality(lesson({ id: "ES-C4b", body: ragged }));
+    expect(entry.derived).toBe("sight");
+    expect(entry.reasons).toContain("wide-table");
   });
 
   it("rule 3: everything else plays in the car", () => {
@@ -387,7 +397,7 @@ describe("text scanning helpers", () => {
 
   it("includes the preamble, so a table above the first heading still counts", () => {
     const parsed = parseLesson(
-      "---\nid: ES-C21\nchapter: 1\ntype: word\n---\n\n# title\n\n| a | b | c |\n\n## Warm-up\n\nSay it.\n",
+      "---\nid: ES-C21\nchapter: 1\ntype: word\n---\n\n# title\n\n| a | b | c | d |\n\n## Warm-up\n\nSay it.\n",
       "spanish",
     );
     expect(deriveLessonModality(parsed).derived).toBe("sight");
@@ -456,16 +466,22 @@ describe("the gap report", () => {
   });
 
   it("threads the linearisable width through to the derivation", () => {
-    const tabled = [lesson({ id: "ES-C02", chapter: 2, body: "## Warm-up\n\n| a | b |\n| - | - |" })];
-    const strict = buildCurriculumGapReport({ registry, lessons: tabled, books: { books: [] } });
-    expect(strict.modality.voice).toBe(0);
-    const relaxed = buildCurriculumGapReport({
+    const tabled = [
+      lesson({
+        id: "ES-C02",
+        chapter: 2,
+        body: "## Warm-up\n\n| a | b |\n| - | - |\n| uno | one |",
+      }),
+    ];
+    const relaxed = buildCurriculumGapReport({ registry, lessons: tabled, books: { books: [] } });
+    expect(relaxed.modality.voice).toBe(1);
+    const strict = buildCurriculumGapReport({
       registry,
       lessons: tabled,
       books: { books: [] },
-      modality: { maxLinearisableTableColumns: 2 },
+      modality: { maxLinearisableTableColumns: 0 },
     });
-    expect(relaxed.modality.voice).toBe(1);
+    expect(strict.modality.voice).toBe(0);
   });
 
   it("counts blocked chapters and unexplained overrides in the summary", () => {
@@ -521,17 +537,50 @@ describe("corpus regression", () => {
   //
   // Reproduces the HL08 baseline: 51 `pen`, 7 script-block lessons, and 322
   // table-bearing lessons among the remaining 1,038. HL08 records 695 drivable from
-  // 56 cue-bearing lessons; this implementation's published cue list matches 61 and
-  // therefore lands on 694. The spec's exact cue list was never recorded, and the
-  // detector is deliberately NOT tuned to close a one-lesson gap.
-  it("pins the corpus-wide drivable count", () => {
+  // 56 cue-bearing lessons; this implementation's published cue list matches 61.
+  //
+  // At the pre-lineariser width of 0 — every table means eyes — that lands on 694,
+  // pinned below. The shipped default is now 3, because HL-C16 built the lineariser
+  // HL08's migration step 3 promised, and the same corpus then measures 925 drivable.
+  // BOTH numbers are pinned on purpose: the second is the claim the product makes,
+  // and the first is the control that proves the jump came from the lineariser and
+  // not from a detector that quietly stopped detecting.
+  it("pins the corpus-wide drivable count at the shipped table width", () => {
     const { lessons } = loadEverything();
     const summary = summarizeModality(lessons);
+    expect(summary.maxLinearisableTableColumns).toBe(3);
     expect(summary.totalLessons).toBe(1096);
+    expect(summary.pen).toBe(51);
+    expect(summary.voice).toBe(925);
+    expect(summary.sight).toBe(120);
+    expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
+    expect(summary.drivablePercent).toBe(84);
+  });
+
+  // The 120 that still need eyes, by cause. `wide-table` is the burn-down list HL08's
+  // migration step 4 names: 65 lessons still carry at least one table of four columns
+  // or more, and 52 of those have no other reason to need eyes, so reshaping just
+  // those tables would move 52 more lessons into the car.
+  it("pins why the remaining sight lessons still need eyes", () => {
+    const { lessons } = loadEverything();
+    const sight = lessonModalities(lessons).filter((entry) => entry.modality === "sight");
+    expect(sight).toHaveLength(120);
+    const withReason = (reason: string): number =>
+      sight.filter((entry) => (entry.reasons as string[]).includes(reason)).length;
+    expect(withReason("script-block")).toBe(7);
+    expect(withReason("sight-cue")).toBe(61);
+    expect(withReason("wide-table")).toBe(65);
+    expect(
+      sight.filter((entry) => entry.reasons.length === 1 && entry.reasons[0] === "wide-table"),
+    ).toHaveLength(52);
+  });
+
+  it("pins the pre-lineariser baseline, so the gain is attributable", () => {
+    const { lessons } = loadEverything();
+    const summary = summarizeModality(lessons, { maxLinearisableTableColumns: 0 });
     expect(summary.pen).toBe(51);
     expect(summary.voice).toBe(694);
     expect(summary.sight).toBe(351);
-    expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
     expect(summary.drivablePercent).toBe(63);
   });
 

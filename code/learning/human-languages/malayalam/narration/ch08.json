@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 8,
+  "title": "Chapter 8",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:beb32b8b66098647",
+  "lessons": [
+    {
+      "id": "ML-C08-dayavayi",
+      "sequence": 360,
+      "title": "ദയവായി (dayavāyi) — please (as a compassion)",
+      "headword": "ദയവായി",
+      "romanization": "",
+      "gloss": "please (dayavāyi — \"as a compassion,\" from ദയ daya \"compassion\")",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4520f33cdb069b52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam's \"please\" turns compassion into an adverb: do this thing as a kindness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദയവായി = please, literally \"kindly / as a compassion.\" Two pieces:"
+            },
+            {
+              "kind": "speech",
+              "text": "ദയ (daya) = compassion, kindness, grace — from Sanskrit daya."
+            },
+            {
+              "kind": "speech",
+              "text": "‑വായി (-vāyi) = \"having become / as,\" turning the noun into \"in the manner of compassion\" — i.e. kindly. (The true historical seam is dayavu \"kindness\" + ‑ആയി -āyi, the adverb of ആകുക ākuka \"to become\"; we split it -vāyi here just to keep the daya root visible.)"
+            },
+            {
+              "kind": "speech",
+              "text": "So dayavāyi asks you to act kindly, as a kindness. Where Tamil and Telugu say \"do the kindness\" and Kannada \"having placed it,\" Malayalam makes kindness the manner of the whole request."
+            },
+            {
+              "kind": "speech",
+              "text": "The family resemblance is unmistakable, and it reaches beyond Dravidian: Arabic min faḍlik (\"from your grace\") and Hindi kṛpayā (from kṛpā, \"compassion\") ask by the same grace-naming instinct."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "daya + a light verb, four ways:"
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam ദയവായി dayavāyi — compassion + as / having become."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil தயவுசெய்து tayavu seytu — kindness + do."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada ದಯವಿಟ್ಟು dayaviṭṭu — compassion + having placed."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu దయచేసి dayacēsi — compassion + having done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Honestly: as elsewhere in the family, the standalone word is a touch formal / emphatic. Everyday Malayalam politeness leans on the respectful request form of the verb — endings like ‑ൂ (-ū) or ‑ണം (-aṇaṁ): ഇരിക്കൂ (irikkū) \"please sit,\" പറയൂ (paṟayū) \"please tell me.\" Add ദയവായി in front when you want the courtesy spoken aloud."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The heart of the word is വാ — va stretched by the long‑ā sign ാ (-ā) — then യി, ya + the i sign (ി). Malayalam's rounded letters hang their vowel-signs to the right; the long ാ is simply a tall stroke after the consonant, the same ā you would meet across the Dravidian scripts."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"daya\" — compassion — then \"-vāyi,\" as / kindly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"daya\" — compassion — then \"-vāyi,\" as / kindly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole word — \"dayavāyi\" = please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole word — \"dayavāyi\" = please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday way — the verb ending: \"irikkū\" = please sit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday way — the verb ending: \"irikkū\" = please sit]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the Malayalam word for please? (ദയവായി dayavāyi.) What do its pieces mean? (\"Compassion\" daya + \"as / having become\" -vāyi — kindly.) Which cousins ask the same way? (Tamil, Kannada, Telugu with daya — plus Arabic faḍl, Hindi kṛpā.) What carries \"please\" in ordinary speech? (The respectful verb form, endings like ‑ൂ -ū / ‑ണം -aṇaṁ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

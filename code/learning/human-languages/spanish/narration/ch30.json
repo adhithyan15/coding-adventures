@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 30,
+  "title": "Chapter 30",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:063f578621dab785",
+  "lessons": [
+    {
+      "id": "ES-C30-el-tiempo",
+      "sequence": 810,
+      "title": "el tiempo — weather, and a word that means two things at once",
+      "headword": "el tiempo, llueve",
+      "romanization": "el tiempo, llueve",
+      "gloss": "weather — el tiempo means BOTH \"time\" and \"weather\"; hace calor/frío/sol reuse hacer, but llueve is its OWN dedicated verb, and a callback to the cl-/pl- becomes ll- sound change",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e59b49ff233936c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a Spanish speaker \"¿qué tiempo hace?\" and you're literally asking \"what time does it make?\" — because tiempo doesn't distinguish \"time\" from \"weather\" the way English does."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: el tiempo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tiempo = both \"time\" and \"weather\" — from Latin tempus, which already covered this same double sense (English kept only the \"time\" half: temporal, contemporary, tempo). So ¿qué tiempo hace? (\"what's the weather like?\") is literally \"what time does it make?\" — context alone tells a Spanish speaker which sense is meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart: calor, frío, and sol",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "calor from Latin calor, \"heat, warmth\" becomes English calorie, caloric."
+            },
+            {
+              "kind": "speech",
+              "text": "frío from Latin frigidus, \"cold\" (with the middle syncopated away over time) becomes English frigid, refrigerate."
+            },
+            {
+              "kind": "speech",
+              "text": "sol from Latin sol, \"sun,\" unchanged becomes English solar, solstice, parasol."
+            },
+            {
+              "kind": "speech",
+              "text": "You've already met hace calor and hace frío (\"it's hot/cold,\" literally \"it makes heat/cold\") back when you learned hacer — the same hacer (\"to make\") that reports weather this way also covers \"sunny\": hace sol (\"it's sunny,\" literally \"it makes sun\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: llueve uses its own verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rain breaks the hacer pattern entirely: llueve (\"it's raining\") comes from its own verb, llover from Latin pluere, \"to rain.\" Recognize that pl- becomes ll- shift? It's the same regular sound change you met with llamar ( from clamāre), llave ( from clāvem), and llama ( from flamma) — Latin cl-, fl-, and pl- clusters all regularly became Spanish ll-. So while calor/frío/sol just need hacer in front of them, rain gets its own dedicated, impersonal verb — much like English's own dedicated \"it rains\" versus \"it is hot.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el tiempo\" — time, or weather, depending on context",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el tiempo\" — time, or weather, depending on context]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hace calor. hace frío. hace sol.\" — it's hot/cold/sunny",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hace calor. hace frío. hace sol.\" — it's hot/cold/sunny]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"llueve\" — it's raining, its own verb, not hacer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"llueve\" — it's raining, its own verb, not hacer]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two things does el tiempo mean, and what Latin word covers both? (\"Time\" and \"weather\" — Latin tempus.) Which weather word does NOT use hacer? (Llueve — \"it's raining,\" its own verb llover.) What Latin cluster did llover's ll- come from, and what other word taught you this same sound change? (pl-, the same shift as llamar from clamāre.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

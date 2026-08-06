@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 13,
+  "title": "Chapter 13",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8d847e5cf2b99e2d",
+  "lessons": [
+    {
+      "id": "ML-C13-shareera-bhaagangal",
+      "sequence": 410,
+      "title": "തല, കൈ — head and hand, matching Tamil closely",
+      "headword": "തല കൈ",
+      "romanization": "",
+      "gloss": "head and hand — matching Tamil's native pair almost exactly",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:188461a9e7b4408b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam's family words (achan, cēṭṭan...) went their own way from Tamil's. Body parts snap right back to the close match you saw in colors and days."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തല (thala) = \"head\" — matches Tamil talai closely."
+            },
+            {
+              "kind": "speech",
+              "text": "കൈ (kai) = \"hand\" — matches Tamil kai almost exactly."
+            },
+            {
+              "kind": "speech",
+              "text": "Both native Dravidian, both close cousins of Tamil's own words — a reminder that Malayalam and Tamil's vocabulary agreement varies concept by concept, not uniformly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"thala\" — head",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"thala\" — head]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kai\" — hand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kai\" — hand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the match — nearly identical to Tamil's talai/kai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the match — nearly identical to Tamil's talai/kai]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are Malayalam's words for head and hand, and how closely do they match Tamil? (തല thala, കൈ kai — very closely, both native Dravidian.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

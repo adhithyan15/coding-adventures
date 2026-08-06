@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 22,
+  "title": "Chapter 22",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:2d63daa51e93ecdf",
+  "lessons": [
+    {
+      "id": "ES-C22-negro-blanco",
+      "sequence": 690,
+      "title": "negro, blanco — one inherited, one borrowed",
+      "headword": "negro, blanco",
+      "romanization": "negro, blanco",
+      "gloss": "black and white — one inherited from Latin, one a Germanic loan traditionally linked to the Visigothic era",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f846737ba8b68f6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two colors, two very different histories. One is straight-line Latin. The other arrived with Germanic settlers — and Spanish isn't even alone in borrowing it that way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart: negro",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "negro (\"black\") from Latin niger. Nothing surprising here: the same Latin root that gives English denigrate (\"to blacken someone's name\") and the Romance family's other words for black (French noir, Italian nero)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart: blanco",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You'd expect Latin albus (\"white\"). Spanish doesn't use it. Instead it says blanco, from Germanic blank — \"shining, gleaming\" — a loan traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome's collapse (though, unlike French's case below, no surviving Gothic text actually preserves this exact word, so the precise route in is a plausible traditional account rather than a directly documented one). French, meanwhile, took the very same Germanic word (blanc) — this time well-attested as a borrowing from a different Germanic people, the Franks. Either way, two Romance sister languages ended up with the same borrowed word for white."
+            },
+            {
+              "kind": "speech",
+              "text": "Why would a \"shining\" word beat Latin's own \"white\"? Color words often lose out to something more vivid — blank didn't just mean pale, it meant bright, gleaming — a flashier idea than plain albus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: where albus went",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's own white didn't vanish — it just stopped being the everyday color word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "meaning",
+                "the white inside"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "word: alba. meaning: dawn. the white inside: the sky going white.",
+                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil use, mostly literary now.",
+                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
+                "word: albino (Eng./Sp.) meaning: albino. the white inside: white-skinned."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So Latin's white is still around — tucked into alba and álbum, just not where a learner would first look."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"negro, blanco\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"negro, blanco\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pairing — \"negro from Latin, blanco from the Visigoths\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from the Visigoths\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two is inherited from Latin? (Negro from niger.) Where does blanco come from? (Germanic blank, \"shining\" — brought by the Visigoths.) Which other language borrowed the very same Germanic word, from a different tribe? (French blanc, via the Franks.) Where did Latin's albus end up? (Alba, \"dawn\" — no longer the everyday color word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C22-rojo-azul",
+      "sequence": 700,
+      "title": "rojo, azul — an old word (taken a different path) and a borrowed one",
+      "headword": "rojo, azul",
+      "romanization": "rojo, azul",
+      "gloss": "red and blue — an ancient inherited root (via a different Latin word than French's), and an Arabic loan",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21322db7fd889fa1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last lesson: one inherited color, one borrowed. This lesson repeats the shape — but red takes a subtly different road than you might expect from French, and blue flips which word is \"the everyday one.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart: rojo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rojo (\"red\") from Latin russus — a more everyday, expressive Latin color-word for red. That's a different specific Latin word from the one behind French rouge ( from rubeus). Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — the root behind English red, rust, ruddy, and Latin ruber itself. So rojo and rouge (and English red) are all cousins — just via two different branches of the same very old family, not one borrowed from the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart: azul",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the same ultimate source as the English word azure. Spanish picked this up during centuries of Arabic-speaking rule in Iberia (al-Andalus)."
+            },
+            {
+              "kind": "speech",
+              "text": "Here's the honest contrast worth knowing: in French, azur exists too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur), while the everyday French blue is the Germanic loan bleu. In Spanish, it's the reverse: azul is the plain, everyday word for blue — there's no separate Germanic blue-word competing with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rojo, azul\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rojo, azul\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — \"rojo, rouge, red,\" three descendants of one PIE root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — \"rojo · rouge · red,\" three descendants of one PIE root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"azul is Spanish's everyday blue; French's azur is only poetic\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"azul is Spanish's everyday blue; French's azur is only poetic\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is rojo the same Latin word as French's rouge? (No — rojo from russus, rouge from rubeus — different Latin words, but true cousins via the shared PIE root h₁rewdʰ-.) Where does azul come from? (Arabic lāzaward, \"lapis lazuli\" — the same root as English azure.) How does azul's role in Spanish differ from azur's role in French? (Azul is Spanish's everyday blue; French's azur is only a secondary, poetic word, with bleu as the everyday one.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

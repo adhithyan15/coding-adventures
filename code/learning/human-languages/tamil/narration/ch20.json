@@ -1,0 +1,262 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 20,
+  "title": "Chapter 20",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:fa1b550899c021f3",
+  "lessons": [
+    {
+      "id": "TA-C20-pathinondru-irupathu",
+      "sequence": 430,
+      "title": "பதினொன்று–இருபது — shared Dravidian patterns",
+      "headword": "பதினொன்று — இருபது",
+      "romanization": "",
+      "gloss": "11-20 — additive \"ten-echo\" compounds for the teens, then இருபது (20), transparently \"two-tens\" — closing out the arc: all four Dravidian languages build twenty compositionally, unlike Sanskrit, Latin, or Arabic's opaque special words",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7262158bd8ed0238",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here's how this arc closes: four completely different approaches to \"twenty\" across Sanskrit, Latin, Arabic — and then all four Dravidian languages quietly agreeing on the exact same compositional idea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பதினொன்று–பத்தொன்பது — \"ten\" + digit",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil's teens echo பத்து (pathu, \"ten\") plus each digit — பதினொன்று (patiṉoṉḏṟu, 11), பன்னிரண்டு (paṉṉiraṇḍu, 12), and onward through பத்தொன்பது (pattoṉbatu, 19) — the same digit-plus- ten-echo compounding you've now seen across Kannada, Telugu, and Malayalam."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: இருபது — transparently \"two-tens\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இருபது (irupathu, \"twenty\") = இரு (iru, an older word for \"two,\" alongside the everyday இரண்டு iraṇḍu) + பத்து (pathu, \"ten\") — fully transparent as \"two-tens,\" matching Malayalam's own irupathu almost letter-for-letter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Be honest: one shared Dravidian idea, four different other-family answers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This closes the numbers arc with a genuinely clean pattern. Every Dravidian language in this course builds \"twenty\" the same compositional way — some (Tamil, Malayalam) keeping it fully transparent on the surface today, some (Kannada) with the same compositional origin but no longer visibly matching the modern standalone words for \"two\" and \"ten,\" some (Telugu) worn down further but most likely from the same root. Compare that to the other three families you've met: Sanskrit's विंशति (vimshati), Latin's vīgintī, and Arabic's عشرون (ʿishrūn) are each their own special, non-compositional word for twenty — none built transparently from \"two\" and \"ten\" the way every single Dravidian language in this course does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"patiṉoṉḏṟu, paṉṉiraṇḍu\" — 11, 12",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"patiṉoṉḏṟu, paṉṉiraṇḍu\" — 11, 12]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"iru\" — an older word for two, \"pathu\" — ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"iru\" — an older word for two, \"pathu\" — ten]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"irupathu\" — twenty, \"two-tens,\" transparent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"irupathu\" — twenty, \"two-tens,\" transparent]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two pieces build இருபது (twenty)? (இரு \"two\" + பத்து \"ten\" — \"two-tens.\") Do all four Dravidian languages in this course build \"twenty\" the same compositional way? (Yes — Tamil and Malayalam keep it fully transparent today; Kannada shares the same compositional origin but its modern \"two\"/\"ten\" words no longer visibly match; Telugu's is worn down further but most likely the same root.) Do Sanskrit, Latin, or Arabic build their word for twenty this way? (No — each has its own special, non-compositional standalone word instead.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C20-vaanilai",
+      "sequence": 440,
+      "title": "வானிலை — \"the standing of the sky,\" most likely all native",
+      "headword": "வானிலை",
+      "romanization": "",
+      "gloss": "weather — most likely a NATIVE Dravidian compound, unlike Kannada/Telugu/Malayalam's Sanskrit compounds: vaanam (\"sky\") + nilai (\"state, standing\")",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7b6f1dddb46cfde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've now seen a Persian+Sanskrit hybrid (Kannada), a pure Sanskrit compound (Telugu), and a Sanskrit compound echoing \"time\" (Malayalam). Tamil most likely breaks the pattern one more time — with a word built entirely from native pieces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வானிலை — vaanam + nilai",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வானிலை (vāṉilai) = \"weather\" — built from:"
+            },
+            {
+              "kind": "speech",
+              "text": "வானம் (vāṉam, \"sky\") — most likely a native Dravidian word, with confirmed cognates in Kannada ಬಾನು (bānu, \"sky\") and Telugu వాన (vāna, \"rain,\" from the same sky/rain-cloud root) — distinct from the Sanskrit sky word ākāśa that those same two languages use elsewhere."
+            },
+            {
+              "kind": "speech",
+              "text": "நிலை (nilai, \"state, standing, condition\") — from நில் (nil, \"to stand\"), one of Tamil's most basic native verb roots."
+            },
+            {
+              "kind": "speech",
+              "text": "So vāṉilai literally means \"the standing of the sky\" or \"the sky's state\" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat \"native\" as the best current account rather than a fully settled fact, the same hedge you've seen elsewhere in this course — but both pieces are independently well-attested as old, native Dravidian vocabulary.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: மழை பெய்கிறது — \"rain is falling\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மழை பெய்கிறது. — \"It's raining.\" — literally \"rain is falling.\" (mazhai peykiRathu — from பெய் pey, \"to fall/pour,\" specifically used for rain.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vāṉilai\" — weather, \"the standing of the sky\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vāṉilai\" — weather, \"the standing of the sky\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vāṉam\" — sky, \"nilai\" — state, from \"nil,\" to stand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vāṉam\" — sky, \"nilai\" — state, from \"nil,\" to stand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mazhai peykiRathu\" — it's raining, \"rain is falling\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mazhai peykiRathu\" — it's raining, \"rain is falling\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of வானிலை, and what does the whole word literally mean? (வானம், \"sky,\" + நிலை, \"state/standing\" — \"the standing of the sky.\") Is either piece a Sanskrit or Persian/Arabic loan, unlike Kannada, Telugu, or Malayalam's weather words? (Most likely not — both pieces are native Dravidian.) What Tamil word does Malayalam's mazha match for \"rain\"? (மழை, mazhai.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

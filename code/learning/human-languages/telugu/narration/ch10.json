@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 10,
+  "title": "Days of the Week",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:10ee7dfe843f7b1a",
+  "lessons": [
+    {
+      "id": "TE-C10-vaaram",
+      "sequence": 370,
+      "title": "సోమవారం to ఆదివారం — Telugu's week, with a twist on Sunday",
+      "headword": "సోమవారం మంగళవారం బుధవారం గురువారం శుక్రవారం శనివారం ఆదివారం",
+      "romanization": "",
+      "gloss": "the seven weekdays — Sanskritic like Hindi, but Sunday means \"the FIRST day,\" not \"Sun's day\"",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fca7ffd433cc3894",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Like Kannada, Telugu's week runs on Sanskrit deity-names — but its Sunday breaks the \"planet\" pattern entirely, in a way even Kannada's doesn't."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - The pattern: [deity] + వారం, \"day\"",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Telugu",
+                "deity/planet",
+                "day"
+              ],
+              "columns": 3,
+              "rowCount": 7,
+              "utterances": [
+                "Telugu: సోమవారం (Somavāram). deity/planet: Moon (Soma). day: Monday.",
+                "Telugu: మంగళవారం (Maṅgaḷavāram). deity/planet: Mars (Maṅgala). day: Tuesday.",
+                "Telugu: బుధవారం (Budhavāram). deity/planet: Mercury (Budha). day: Wednesday.",
+                "Telugu: గురువారం (Guruvāram). deity/planet: Jupiter (Guru/Bṛhaspati). day: Thursday.",
+                "Telugu: శుక్రవారం (Śukravāram). deity/planet: Venus (Śukra). day: Friday.",
+                "Telugu: శనివారం (Śanivāram). deity/planet: Saturn (Śani). day: Saturday.",
+                "Telugu: ఆదివారం (Ādivāram). deity/planet: — not a planet at all. day: Sunday."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Be honest: Sunday isn't a planet-name here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five days match the familiar planet-deity pattern — but ఆదివారం (Ādivāram) doesn't name the Sun at all. ఆది (ādi) is Sanskrit for \"the beginning, the first.\" So Telugu's Sunday literally means \"the first day\" — a positional name, like Arabic's numbered weekdays, sitting right next to six planet-names that don't work that way. Even within one single week, a language can mix completely different naming strategies."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Somavāram, Maṅgaḷavāram, Budhavāram, Guruvāram, Śukravāram, Śanivāram\" — Monday through Saturday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Somavāram, Maṅgaḷavāram, Budhavāram, Guruvāram, Śukravāram, Śanivāram\" — Monday through Saturday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the odd one — \"Ādivāram\" — not a planet, \"the first day\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the odd one — \"Ādivāram\" — not a planet, \"the first day\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the parallel — like Arabic's numbered days, one Telugu day is positional too",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the parallel — like Arabic's numbered days, one Telugu day is positional too]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆదివారం literally mean, and is it a planet-name? (\"The first day\" — ādi \"beginning\" — not a planet-name, unlike the other six.) What ending do the other six Telugu weekdays share? (‑వారం -vāram, Sanskrit \"day,\" each paired with a planet-deity.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

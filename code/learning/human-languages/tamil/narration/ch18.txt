@@ -1,0 +1,51 @@
+Tamil, chapter 18: Chapter 18.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+மணி — Tamil's native "bell," and a real homophone trap.
+
+Warm-up.
+[pause 2 seconds]
+You've just watched Kannada and Telugu both borrow Sanskrit's "bell" word for "hour," matching Hindi exactly. Tamil goes its own way again here — with a genuinely tricky twist along the way.
+
+The word, taken apart - மணி — native "bell," independently landing on "hour".
+மணி (maṇi) = "hour, o'clock" — and it also means "bell, gong," the same double duty you've now seen several times. Wiktionary's Tamil entry gives this maṇi its own etymology, separate from a Sanskrit-loan entry of the same spelling — most likely a native Dravidian word, not the Sanskrit घण्टा (ghaṇṭā) behind Kannada's gaṇṭe, Telugu's ganṭa, and Hindi's ghanṭā. On this account, Tamil underwent the same "a bell announces the hour, so the bell-word becomes the hour-word" shift on its own, from a different starting point — though even the comparative Dravidian dictionary (DEDR) flags a possible Sanskrit connection for this whole word-family as unresolved, so hold "native" as the best current account rather than a settled fact.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "maṇi" — hour, also "bell" — native, NOT from Sanskrit ghaṇṭā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is Tamil's மணி ("hour") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian "bell" word that independently reached "hour" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: distinguish the likely Sanskrit gem homophone and tell the time.
+
+
+Lesson 2 of 2.
+மணி — hour or jewel? Context decides.
+
+Warm-up.
+[pause 2 seconds]
+The likely native bell/hour word shares its spelling and sound with a clear Sanskrit loan meaning something entirely different.
+
+The word, taken apart - The homophone trap.
+Tamil dictionaries list a second மணி from Sanskrit मणि (maṇi), "gem, jewel." On that analysis, bell/hour and gem are homophones: one likely native, one borrowed, identical on the page. Context separates clock time from a jewel or personal name.
+Malayalam dictionaries analyze their cognate differently, treating bell/hour and gem as one Sanskrit-derived word. Closely related languages do not always settle the same etymological question in the same way.
+
+Grammar Lens: Tell the time.
+ஒரு மணி. — one o'clock, literally "one hour/bell" இரண்டு மணி. — two o'clock.
+The number comes first; maṇi supplies the clock unit.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "oru maṇi" — one o'clock]
+[pause 8 seconds for the answer]
+[your turn — say: "iraṇṭu maṇi" — two o'clock]
+[pause 8 seconds for the answer]
+[your turn — choose by context: clock becomes hour, jewelry/name becomes gem]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the homophone trap? (A likely separate Sanskrit-borrowed மணி means gem.) Does Malayalam analyze the same forms identically? (No.) How do you say two o'clock? (இரண்டு மணி, iraṇṭu maṇi.)

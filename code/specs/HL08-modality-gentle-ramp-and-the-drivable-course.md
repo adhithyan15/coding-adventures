@@ -165,6 +165,42 @@ Rules:
 The export is a **script for a voice agent, not a recording**. Producing audio,
 selecting voices, and provenance-labelling recordings remain out of scope, as in HL04.
 
+### What shipped, and where it diverged (HL-C16)
+
+Migration step 3 is complete. `speech.ts`, `narration.ts` and `narration-cli.ts` write
+`<track>/narration/chNN.txt` and `.json` for all 375 chapters, hash-gated by
+`core/generated-narration-hashes.json` and checked byte-for-byte in CI. Three points
+where the implementation went further than, or differently from, the text above:
+
+1. **The width is 3, not 2.** This spec's worked example is a two-column table, but
+   the corpus's own distribution argues for three: of 340 table-bearing lesson files,
+   99 are 2 columns wide and 173 are 3. A three-column row reads aloud as labelled
+   facts — *"Language: Telugu. Hello: namaskāram. Source: Sanskrit."* — which a
+   listener holds without effort. Four is where the meaning moves into the comparison
+   *across* rows, and the corpus's four-column tables prove it: `| | numeral | word |
+   said |` has an unlabelled first column that means something only because of where
+   it sits on the page. At 3 the lineariser reads 371 of 442 tables, and the corpus
+   goes from **63% drivable to 84%** (694 → 925 of 1,096 lessons).
+
+2. **Modality asks the lineariser, rather than counting columns.** This spec says "a
+   table wider than the configured linearisable width → `sight`". The implementation
+   asks the exporter itself whether it can speak the table, which is strictly larger:
+   a three-column table inside the width is still unspeakable when its rows are ragged
+   or its heading row has nothing under it. Counting columns would have let `voice`
+   mean something the export could not deliver.
+
+3. **`narration-block-unrenderable` is a narration finding, not yet a
+   `validateCurriculum()` gate.** It is emitted per lesson and collected into the
+   export manifest, alongside a new `narration-activity-invalid` for a contract that
+   will not compile. Folding both into the validator's finding list is the remaining
+   piece of the gates table below.
+
+**Remaining table debt** (HL08 migration step 4, tracked as HL-C17): 71 tables across
+68 lesson files are four columns or wider. 52 lessons need eyes for a wide table and
+nothing else, so reshaping just those tables moves 52 more lessons into the car.
+Raising the width to 4 would reach the same number without earning it, and is
+explicitly not the fix.
+
 ## The gentle-ramp budget
 
 A new configured limit in `core/chapter-policy.json`:

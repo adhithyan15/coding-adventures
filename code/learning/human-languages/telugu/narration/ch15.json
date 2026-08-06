@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 15,
+  "title": "Water and Rice",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:54bde29911714c6e",
+  "lessons": [
+    {
+      "id": "TE-C15-neellu-biyyam",
+      "sequence": 420,
+      "title": "నీళ్ళు, బియ్యం, అన్నం — water and rice",
+      "headword": "నీళ్ళు బియ్యం అన్నం",
+      "romanization": "",
+      "gloss": "water (matching Tamil/Kannada's neer/niiru), and rice raw/cooked — completing the family's water and rice pattern",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39c73acb4c328246",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Water closes out 3-against-1 against Malayalam. Rice, though, turns out to have its own twist here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - నీళ్ళు — matching the majority",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నీళ్ళు (nīḷḷu) = \"water\" — matching Tamil's nīr and Kannada's nīru. Malayalam's veḷḷam is the odd one out among all four Dravidian languages for water, not Telugu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - బియ్యం, అన్నం — rice, with a twist",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బియ్యం (biyyam) = \"rice\" (raw grain) — Telugu's own word, unlike the shared ari/arisi/akki found in Malayalam, Tamil, and Kannada."
+            },
+            {
+              "kind": "speech",
+              "text": "అన్నం (annam) = \"cooked rice\" (the meal) — matching Kannada's anna closely, both likely Sanskrit-influenced."
+            },
+            {
+              "kind": "speech",
+              "text": "So the pattern flips between water and rice: for water, Telugu joins the majority (Tamil/Kannada) against Malayalam; for raw rice, Telugu is itself the odd one out against the other three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nīḷḷu\" — water, matching Tamil/Kannada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nīḷḷu\" — water, matching Tamil/Kannada]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"biyyam\" — raw rice, Telugu's own word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"biyyam\" — raw rice, Telugu's own word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"annam\" — cooked rice, matching Kannada's anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"annam\" — cooked rice, matching Kannada's anna]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language is the odd one out for water, and which for raw rice? (Malayalam is the odd one out for water (veḷḷam); Telugu is the odd one out for raw rice (biyyam, unlike the shared ari/arisi/akki elsewhere).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,552 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 6,
+  "title": "Chapter 6",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:f39b57f3b08140c4",
+  "lessons": [
+    {
+      "id": "TA-C06-dative-ukku",
+      "sequence": 180,
+      "title": "-உக்கு (-ukku) — \"to, for\"",
+      "headword": "-உக்கு",
+      "romanization": "-ukku",
+      "gloss": "the dative suffix -ukku, 'to / for,' including its two surface forms and irregular enakku",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80d96e6884624d7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first case ending. English says \"to me\" with a separate word in front. Tamil says it with a piece stuck on the back — and that small difference is the biggest structural fact about the language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: Adding it on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take a noun you know and add -உக்கு (-ukku):"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "+ the dative",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: பெயர் peyar — name. + the dative: பெயருக்கு peyarukku. meaning: to/for the name.",
+                "word: வேலை vēlai — work. + the dative: வேலைக்கு vēlaikku. meaning: for work."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The suffix has two shapes — -உக்கு -ukku and -க்கு -kku — chosen by the sound the noun ends in. One case, two forms; the seam still shows."
+            },
+            {
+              "kind": "speech",
+              "text": "And with \"I\" — this one is irregular and worth memorising, because you'll use it constantly:"
+            },
+            {
+              "kind": "speech",
+              "text": "நான் nāṉ (\"I\") becomes எனக்கு enakku (\"to me\")."
+            },
+            {
+              "kind": "speech",
+              "text": "The pronoun changes its body (nāṉ becomes en-) before the suffix lands. Nouns don't — they just take the ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"peyar … peyarukku\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"*peyar* … *peyarukku*\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāṉ … enakku\" — \"I\" … \"to me\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"*nāṉ* … *enakku*\" — \"I\" … \"to me\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vēlaikku\" — \"for work,\" from Ch. 5's வேலை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"*vēlaikku*\" — \"for work,\" from Ch. 5's வேலை]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does -உக்கு mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is \"to me\"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: compare that visible one-purpose suffix with a fused Latin ending."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C06-dative-stacking",
+      "sequence": 190,
+      "title": "-உக்கு (-ukku) — one carriage in a suffix train",
+      "headword": "பெயர் + உக்கு",
+      "romanization": "peyar + ukku",
+      "gloss": "Tamil stacks a visible one-purpose dative suffix where Latin fuses several meanings",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4284bfb529666b68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can point to peyar and -ukku separately. That visible seam is the structural lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: Stacking versus fusion",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "Tamil -ukku",
+                "Latin -īs"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "fixes the case? Tamil -ukku: dative, always. Latin -īs: dative or ablative.",
+                "carries number? Tamil -ukku: no; another suffix can. Latin -īs: plural is baked in.",
+                "carries declension? Tamil -ukku: no. Latin -īs: first/second class is baked in.",
+                "visible seam? Tamil -ukku: peyar + ukku. Latin -īs: one fused ending."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil stacks. Each suffix contributes one meaning in a fixed order, like a train carriage. Latin fuses case, number, and class into an indivisible ending, and -īs does not even identify one case by itself."
+            },
+            {
+              "kind": "speech",
+              "text": "This is agglutinative structure: long words remain buildable because their pieces stay legible. The comparison is not about simplicity; it is about where the grammatical information lives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SEGMENT",
+              "instruction": "peyar + ukku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SEGMENT: *peyar + ukku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"one suffix, one meaning, visible seam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"one suffix, one meaning, visible seam\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "Tamil stacks, Latin fuses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: Tamil stacks · Latin fuses]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does -ukku contribute? (Dative to/for, one meaning.) What does Latin -īs fuse? (Case, plural number, and declension class.) Which system leaves the seam visible? (Tamil's agglutinative stack.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C06-dative-subject",
+      "sequence": 200,
+      "title": "எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) — \"I know Tamil\"",
+      "headword": "எனக்குத் தமிழ் தெரியும்",
+      "romanization": "enakkut tamiḻ teriyum",
+      "gloss": "'I know Tamil' — built with no subject, because knowing happens TO you",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ac4c3bda06796be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In Chapter 5 you said நான் தமிழ் பேசுகிறேன் — \"I speak Tamil,\" with nāṉ as the subject. Now say \"I know Tamil.\" Tamil will not let you use nāṉ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum). enakku tamiḻ teriyum. literally: \"to-me Tamil is-known.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word by word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "piece: எனக்கு(த்) enakku(t), \"to me\" — the dative from the last lesson.",
+                "piece: தமிழ் tamiḻ, Tamil (Ch. 5).",
+                "piece: தெரியும் teriyum, \"is known / is apparent\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That extra த் on enakku is sandhi — a joining consonant Tamil inserts between certain words to smooth the seam. It belongs to neither word on its own; it exists only because they are next to each other. Nothing to learn yet, but worth noticing, because you will see it constantly."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not the subject. Nāṉ is gone — the person has been moved into the dative. What's left in the plain, unmarked form is tamiḻ: the sentence is now about the language, and you are merely the one it is known to."
+            },
+            {
+              "kind": "speech",
+              "text": "(Grammarians call enakku the dative subject, because it behaves like the subject even though it isn't in the subject case. The odd feeling of the sentence is exactly that split.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Why: things that happen to you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil sorts verbs by whether you do something or something happens to you. Speaking is something you do — so Ch. 5 used nāṉ. But knowing, liking, wanting, being hungry, being cold: these arrive at you. Tamil marks that by putting the person in the dative."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English frames it as",
+                "Tamil frames it as"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "English frames it as: I know Tamil. Tamil frames it as: Tamil is known to me.",
+                "English frames it as: I like it. Tamil frames it as: it is pleasing to me.",
+                "English frames it as: I am cold. Tamil frames it as: cold is to me."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English does this occasionally and archaically — \"methinks\" is exactly it (me is dative: \"it seems to me\"). Tamil made it a rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"enakku tamiḻ teriyum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"*enakku tamiḻ teriyum*\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"nāṉ tamiḻ pēsugiṟēṉ\" (I speak) … \"enakku tamiḻ teriyum\" (known to me)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"*nāṉ tamiḻ pēsugiṟēṉ*\" (I speak) … \"*enakku tamiḻ teriyum*\" (known to me)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the literal — \"to-me Tamil is-known\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the literal — \"to-me Tamil is-known\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) literally say? (\"To-me Tamil is-known.\") Which word has English got that Tamil hasn't? (A nominative \"I\" — nāṉ is replaced by the dative enakku.) Why does Tamil use the dative here? (Because knowing happens to you; you don't do it.) Which English word preserves the same idea? (Methinks — \"it seems to me\".) Next: watch all four Dravidian sisters use the same experiencer shape."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C06-dative-subject-family",
+      "sequence": 210,
+      "title": "-ukku, -ku, -ge, -ikku — the family shows its bones",
+      "headword": "எனக்கு / నాకు / ನನಗೆ / എനിക്ക്",
+      "romanization": "",
+      "gloss": "all four Dravidian sisters put the experiencer in visibly related dative forms",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2918677f2a6352d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil says knowing happens to you. Its three closest sisters make the same grammatical choice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: Four sentences, one construction",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "\"I know [the language]\"",
+                "dative"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "language: Tamil. \"I know [the language]\": enakku tamiḻ teriyum. dative: -ukku.",
+                "language: Telugu. \"I know [the language]\": nāku telugu vaccu. dative: -ku.",
+                "language: Kannada. \"I know [the language]\": nanage kannaḍa gottu. dative: -ge.",
+                "language: Malayalam. \"I know [the language]\": enikku malayāḷam aṟiyām. dative: -ikku."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The verbs differ, but the experiencer sits in a dative whose forms visibly belong together: -ukku / -ku / -ge / -ikku. This is family evidence, just as blanc/bianco/branco exposes Romance kinship."
+            },
+            {
+              "kind": "speech",
+              "text": "The comparison also makes cross-language practice useful: once you recognize \"to me,\" you can search for the known or apparent thing rather than forcing an English subject onto the sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"-ukku, -ku, -ge, -ikku\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"-ukku · -ku · -ge · -ikku\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the experiencer in each sentence",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the experiencer in each sentence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "PARAPHRASE",
+              "instruction": "\"the language is known to me\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU PARAPHRASE: \"the language is known to me\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Do the four sisters agree on dative experiencers? (Yes.) Which four suffix shapes reveal the relationship? (-ukku, -ku, -ge, -ikku.) What stays plain in the sentence? (The thing known or experienced.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

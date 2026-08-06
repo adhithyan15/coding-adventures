@@ -1,0 +1,94 @@
+Malayalam, chapter 6: Chapter 6.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 2.
+-ിക്ക് (-ikku) — "to, for".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Your first case ending. English puts "to" in front as its own word. Malayalam sticks it on the back — and that is the biggest structural fact about the language.
+
+You'll want to know.
+[a table of 2 rows, read aloud]
+word: പേര് pēru — name. + dative: പേരിന് pērinu. meaning: to/for the name.
+word: ജോലി jōli — work. + dative: ജോലിക്ക് jōlikku. meaning: for work.
+Malayalam's dative has two shapes — -ിക്ക് -ikku and -ിന് -inu — chosen by the sound the noun ends in. Same case, same job; the seam is still visible.
+And with "I", which reshapes first:
+ഞാൻ ñān ("I") becomes എനിക്ക് enikku ("to me").
+Learn enikku cold — it opens a great many everyday Malayalam sentences, as the next lesson shows.
+
+Why it's said this way.
+[a table of 4 rows, read aloud]
+pins down the case? Malayalam -ikku: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.
+carries number? Malayalam -ikku: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.
+carries declension class? Malayalam -ikku: no. a Latin ending like -īs: yes — 1st/2nd only.
+can you see the seam? Malayalam -ikku: yes: jōli + kku. a Latin ending like -īs: no — one fused lump.
+Malayalam stacks: each suffix means one thing and sits in a fixed order — so a long word can be read piece by piece. Latin fuses: -īs is case and plural and declension at once, indivisible, and it doesn't even settle which case. Malayalam's dative is never ambiguous.
+That's what "agglutinative" means, and why Malayalam words grow long without growing hard: they are built, not memorised.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pēru … pērinu"]
+[pause 8 seconds for the answer]
+[your turn — say: "ñān … enikku" — "I" … "to me"]
+[pause 8 seconds for the answer]
+[your turn — say: "jōlikku" — "for work," from Ch. 5's ജോലി]
+[pause 8 seconds for the answer]
+[your turn — say: the principle — "one suffix, one meaning, visible seam"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -ിക്ക് mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (എനിക്ക് enikku.) Why does the suffix have two shapes? (-ikku and -inu are chosen by the noun's ending — one case, two forms.) How is that unlike a Latin ending? (Latin fuses case+number+declension — and -īs doesn't even fix which case; Malayalam's carries one meaning, unambiguously, seam visible.) Next: the sentence where the person isn't the subject.
+
+
+Lesson 2 of 2.
+എനിക്ക് മലയാളം അറിയാം (enikku malayāḷam aṟiyām) — "I know Malayalam".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 5 gave you ഞാൻ മലയാളം സംസാരിക്കുന്നു — "I speak Malayalam." Now say "I know Malayalam." Malayalam will not let you use ñān.
+
+You'll want to know.
+എനിക്ക് മലയാളം അറിയാം. enikku malayāḷam aṟiyām. literally: "to-me Malayalam is-knowable."
+[a table of 3 rows, read aloud]
+piece: എനിക്ക് enikku, "to me" — the dative from the last lesson.
+piece: മലയാളം malayāḷam, Malayalam (Ch. 5).
+piece: അറിയാം aṟiyām, "can be known" — aṟiy- "know" + -ām, the able-to ending.
+You are not the subject. Ñān is gone; the person has been moved into the dative, and the sentence is now about the language. Malayalam isn't saying you perform an act of knowing — it's saying the language is knowable to you.
+
+The word, taken apart.
+Malayalam separates what you do from what happens to you. Speaking is an action, so Ch. 5 used ñān. But knowing, liking, wanting, being hungry — these arrive at you. Malayalam marks that by putting the person in the dative.
+[a table of 3 rows, read aloud]
+English frames it as: I know Malayalam. Malayalam frames it as: Malayalam is known to me.
+English frames it as: I like it. Malayalam frames it as: it is pleasing to me.
+English frames it as: I am cold. Malayalam frames it as: cold is to me.
+English preserves one fossil of exactly this: "methinks" — me is a dative, "it seems to me." Malayalam made it the rule.
+
+The word, taken apart.
+[a table of 4 rows, read aloud]
+language: Malayalam. "I know [the language]": enikku malayāḷam aṟiyām. the dative: -ikku.
+language: Tamil. "I know [the language]": enakku tamiḻ teriyum. the dative: -ukku.
+language: Telugu. "I know [the language]": nāku telugu vaccu. the dative: -ku.
+language: Kannada. "I know [the language]": nanage kannaḍa gottu. the dative: -ge.
+Look at the first column: Malayalam's enikku and Tamil's enakku are nearly the same word — the two languages separated most recently of the four, and it shows. One construction, four languages, four visibly related suffixes: the Dravidian family showing its bones, as blanc/bianco/branco did for Romance.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "enikku malayāḷam aṟiyām"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "ñān malayāḷam saṁsārikkunnu" (I speak) … "enikku malayāḷam aṟiyām" (known to me)]
+[pause 8 seconds for the answer]
+[your turn — say: the near-twins — "enikku … enakku"]
+[pause 8 seconds for the answer]
+[your turn — say: the four cousins — "-ikku, -ukku, -ku, -ge"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does എനിക്ക് മലയാളം അറിയാം (enikku malayāḷam aṟiyām) literally say? ("To-me Malayalam is-knowable.") What has English got that Malayalam hasn't? (A nominative "I" — ñān is replaced by the dative enikku.) Why the dative? (Knowing happens to you.) Which Tamil word is enikku almost identical to, and why? (Enakku — Tamil and Malayalam split most recently of the four.) Which English word keeps the same idea? (Methinks.)

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 33,
+  "title": "Chapter 33",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d7715072b975cbc3",
+  "lessons": [
+    {
+      "id": "ES-C33-verde-amarillo",
+      "sequence": 840,
+      "title": "verde, amarillo — the expected inheritance, and a real surprise",
+      "headword": "verde, amarillo",
+      "romanization": "verde, amarillo",
+      "gloss": "green and yellow — a straightforward Latin inheritance, and a genuinely surprising one that doesn't come from any Latin \"yellow\" word at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aec5ba4a653cb4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One of these colors is exactly what you'd expect from Latin. The other one will genuinely surprise you — it has nothing to do with any Latin word for \"yellow\" at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart: verde",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "verde (\"green\") from Latin viridis (worn down via virdis), from the verb virēre, \"to be green, to flourish, to be vigorous.\" This is a cousin of English verdant and verdure — though not of English green itself, which comes from a completely separate Germanic root. A clean, expected Latin inheritance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart: amarillo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the honest surprise: amarillo (\"yellow\") does not trace to any of Latin's actual words for yellow (flāvus, gilvus, lūteus). Instead, it comes from Late Latin amarellus, \"a little bitter\" — a diminutive of amarus, \"bitter.\" The connection runs through an old association between the color yellow and bitterness — bile, jaundice, and many bitter-tasting plants all share a yellowish cast. Over centuries, \"a little bitter\" softened into simply \"yellowish,\" and by Spanish's Golden Age the word had shed its bitter meaning entirely, leaving just the color. Amarillo is a genuine cousin of Spanish's own amargo (\"bitter\") — both descend from the same amarus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"verde\" — green, from \"to flourish\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"verde\" — green, from \"to flourish\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"amarillo\" — yellow, literally \"a little bitter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"amarillo\" — yellow, literally \"a little bitter\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — \"amarillo, amargo\" — yellow and bitter, same Latin root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — \"amarillo, amargo\" — yellow and bitter, same Latin root]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green/flourish\" — cousin of English verdant, verdure, not of English green itself.) Does amarillo come from a Latin \"yellow\" word? (No — from amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\") What everyday Spanish word is amarillo's cousin? (Amargo, \"bitter.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 12,
+  "title": "Chapter 12",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:37498296b121ed1e",
+  "lessons": [
+    {
+      "id": "TA-C12-kudumbam",
+      "sequence": 320,
+      "title": "அப்பா, அம்மா, and four sibling words",
+      "headword": "அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை",
+      "romanization": "",
+      "gloss": "father, mother, and FOUR sibling words — Tamil splits \"brother\"/\"sister\" by age, where Spanish/French use just one word each",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d83e9a64372df884",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've learned Spanish hermano and hermana, plus French frère and sœur — one word each for \"brother\" and \"sister.\" Tamil asks a question those languages never do: is this sibling older or younger than you?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - Parents — simple and native",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அப்பா (appā) = \"father\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அம்மா (ammā) = \"mother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are native Dravidian words, of the same simple, worldwide \"baby-talk\" shape (a repeated consonant plus a vowel) found across unrelated language families everywhere — not borrowed from Sanskrit, not a coincidence with any one language in particular, just how small children's mouths tend to form their first words for parents."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: Siblings — split by age, not just gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the real lesson: Tamil doesn't have one word for \"brother\" and one for \"sister.\" It has four:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Tamil",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "அண்ணன் (aṇṇaṉ) means older brother.",
+                "தம்பி (tambi) means younger brother.",
+                "அக்கா (akkā) means older sister.",
+                "தங்கை (tangai) means younger sister."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "There is no single Tamil word that just means \"brother\" the way Spanish hermano does — you're expected to know, and say, whether they're older or younger than you every time you refer to a sibling. This isn't a small detail: it reflects how central relative age and seniority are in South Asian family structure and address — the same instinct that makes \"older sibling\" versus \"younger sibling\" a live, spoken distinction, not just something you could mention if you wanted to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"appā, ammā\" — father, mother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"appā, ammā\" — father, mother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four siblings — \"aṇṇaṉ, tambi\" (older/younger brother), \"akkā, tangai\" (older/younger sister)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four siblings — \"aṇṇaṉ, tambi\" (older/younger brother), \"akkā, tangai\" (older/younger sister)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the key question — \"older, or younger?\" — before you can even say \"brother\" or \"sister\" in Tamil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the key question — \"older, or younger?\" — before you can even say \"brother\" or \"sister\" in Tamil]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many Tamil words mean \"brother\" or \"sister,\" and why? (Four — அண்ணன்/தம்பி for older/younger brother, அக்கா/தங்கை for older/younger sister — Tamil requires knowing the sibling's age relative to you.) Are அப்பா and அம்மா borrowed from Sanskrit? (No — native Dravidian baby-talk-type words, of a shape found across unrelated languages worldwide.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

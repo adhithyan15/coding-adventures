@@ -1,0 +1,279 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 26,
+  "title": "Chapter 26",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:0643114246dbca23",
+  "lessons": [
+    {
+      "id": "ES-C26-agua-vino",
+      "sequence": 760,
+      "title": "el agua, el vino — water and wine",
+      "headword": "el agua, el vino",
+      "romanization": "el agua, el vino",
+      "gloss": "water and wine — agua kept its Latin shape almost whole, unlike French's worn-down eau",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45b3fc0a83dedf99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two drinks, two very different journeys from Latin. One barely changed at all. And the \"masculine-looking\" article on a feminine word isn't a mistake — it's a real, well-documented rule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart: agua",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "agua (\"water\") from Latin aqua — almost unchanged. Compare French, where the very same word was worn all the way down to a bare \"eau,\" just the sound \"oh.\" Spanish kept nearly the whole thing."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the original, whole Latin word too, just as a learned borrowing rather than an everyday one: aquatic, aquarium, aqueduct, aqualung all come straight from aqua."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: el agua's article and gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice: el agua, not la agua — but agua is genuinely feminine (you'll see it in el agua fría, \"the cold water,\" where fría keeps its feminine ending). This isn't an exception to gender; it's a pronunciation rule: Spanish swaps la for el right before any singular feminine noun that starts with a stressed a-sound (to avoid running two identical vowel sounds together, la agua) — the plural goes right back to las: las aguas, never los aguas. You'll meet the singular swap again with words like el águila (\"the eagle,\" still feminine) and el hacha (\"the axe,\" still feminine). It's only the article that changes, never the noun's actual gender."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart: vino",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vino (\"wine\") from Latin vīnum — held its shape, the way French vin did too. English shares the very same root, by more than one road: wine itself is vīnum borrowed directly into old Germanic; vine and vinegar arrived centuries later, secondhand, via French (vin + aigre, \"sour wine,\" for vinegar); and vineyard isn't a borrowing at all — English built it at home, from the already-borrowed \"wine\" plus native \"yard.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el agua\" — water, feminine, but takes el",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el agua\" — water, feminine, but takes el]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el vino\" — wine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el vino\" — wine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"agua barely changed from aqua; French's eau wore all the way down\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"agua barely changed from aqua; French's eau wore all the way down\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el águila, el hacha\" — the same el-before-stressed-a pattern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el águila, el hacha\" — the same el-before-stressed-a pattern]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is agua masculine or feminine, and why does it take el? (Feminine — el replaces la only because agua starts with a stressed a, a pronunciation rule, not a gender change.) How does agua's erosion from Latin aqua compare to French's eau? (Much less — Spanish kept nearly the whole word; French wore it down to a bare \"oh.\") Give an English cousin of vino. (Wine, vine, vinegar, vintage.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C26-pan",
+      "sequence": 770,
+      "title": "el pan — bread, and the friend who shares it",
+      "headword": "el pan",
+      "romanization": "el pan",
+      "gloss": "bread — and the compañero who shares it with you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2728f90db1eb1ec4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: pan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan (\"bread\") from Latin pānis. Masculine: el pan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: bread and friendship",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Latin root pān- (\"bread\") gives Spanish its own word for a close friend:"
+            },
+            {
+              "kind": "speech",
+              "text": "compañero / compañera (\"companion, friend, partner\") from com- (\"with\")."
+            },
+            {
+              "kind": "speech",
+              "text": "pānis — literally \"one you share bread with.\" Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too."
+            },
+            {
+              "kind": "speech",
+              "text": "panadería (\"bakery\") and panadero (\"baker\") — both transparently built on pan."
+            },
+            {
+              "kind": "speech",
+              "text": "So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el pan\" — bread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el pan\" — bread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"compañero\" — literally, one you share bread with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"compañero\" — literally, one you share bread with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"panadería, panadero\" — bakery, baker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"panadería, panadero\" — bakery, baker]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"bread\" with its article. (El pan.) What does compañero literally mean, and what's it built from? (\"One you share bread with\" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

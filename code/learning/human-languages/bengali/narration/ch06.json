@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 6,
+  "title": "Chapter 6",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:28baeae54e13a2dc",
+  "lessons": [
+    {
+      "id": "BN-C06-numbers-1-5",
+      "sequence": 340,
+      "title": "এক, দুই, তিন, চার, পাঁচ — one to five",
+      "headword": "এক দুই তিন চার পাঁচ",
+      "romanization": "ek dui tin chār pā̃ch",
+      "gloss": "one to five — and the \"two\" that kept its Sanskrit vowel",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b90d02828e8f4352",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali writes in its own script, but the words underneath are the same family you'd hear in Delhi or Mumbai — with one number that preserves something both of them lost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the five",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "Bengali",
+                "said"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "1. Bengali: এক. said: ek.",
+                "2. Bengali: দুই. said: dui.",
+                "3. Bengali: তিন. said: tin.",
+                "4. Bengali: চার. said: chār.",
+                "5. Bengali: পাঁচ. said: pā̃ch."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ঁ on pā̃ch is the chandrabindu, the same moon-dot Hindi uses, nasalising the vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — দুই and the conservative two",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "2"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "language: Sanskrit. 2: stem dvá- (masc. dváu, fem./neut. dvé).",
+                "language: Prakrit. 2: do / duve.",
+                "language: Hindi. 2: do.",
+                "language: Marathi. 2: don.",
+                "language: Bengali. 2: dui."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi and Marathi flattened the old form into a single o. Bengali kept a trace of the following -i, which is why it has two syllables where its neighbours have one."
+            },
+            {
+              "kind": "speech",
+              "text": "The dv- cluster itself is gone from the numeral in all of them. (Not from the languages — dv- is alive in words borrowed straight back out of Sanskrit, like Bengali দ্বার dvār \"door.\" It's the everyday inherited word that simplified.)"
+            },
+            {
+              "kind": "speech",
+              "text": "And Bengali isn't unique in keeping that vowel: Assamese, Odia and Nepali have dui too. Among the four languages in this chapter it stands alone; across the eastern Indo-Aryan languages it has plenty of company."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: where Bengali's inherent ô does not appear",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bengali's inherent vowel leans toward o, not a — which is why the greeting from Chapter 1 is nomoshkar where Hindi says namaskār."
+            },
+            {
+              "kind": "speech",
+              "text": "You won't hear that in these five numbers, as it happens: এক opens with the independent vowel এ, and none of the others has a bare inherent-vowel syllable either. Mentioned so you don't go looking for it here — but keep it in mind the moment a word does have one."
+            },
+            {
+              "kind": "speech",
+              "text": "Don't let a neighbouring language's spelling tell you how Bengali sounds."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ek, dui, tin, chār, pā̃ch\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ek, dui, tin, chār, pā̃ch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the twos — \"dvá- … do … don … dui\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the twos — \"dvá- … do … don … **dui**\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Ch. 1 echo — \"nomoshkar, not namaskār\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Ch. 1 echo — \"**no**moshkar, not **na**maskār\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five in Bengali. (Ek, dui, tin, chār, pā̃ch.) What does দুই keep that Hindi and Marathi flattened away? (The following -i, which is why it has two syllables.) Is Bengali alone in that? (No — Assamese, Odia and Nepali have dui too; it's alone only among the four here.) Did the dv- cluster survive anywhere in the everyday numeral? (No — though dv- is alive in words re-borrowed from Sanskrit, like dvār \"door\".) What is the ঁ? (The chandrabindu, nasalising the vowel.) Next: six to ten."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

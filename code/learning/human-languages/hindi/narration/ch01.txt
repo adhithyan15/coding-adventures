@@ -1,0 +1,367 @@
+Hindi, chapter 1: Greetings.
+10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 10.
+The line on top — Devanagari's head-line.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Look at any line of Hindi:
+नमस्ते.
+Before any individual letter, notice the thing you cannot miss: a horizontal line running across the top of the whole word. Latin letters sit on a line. Devanagari letters hang from one.
+
+You'll want to know — The shirorekhā.
+That line is the शिरोरेखा (shirorekhā) — literally the "head-line": śiras "head" + rekhā "line."
+Śiras is worth a moment. It descends from Proto-Indo-European ḱerh₂-, "head, horn" — the root behind Latin cornu ("horn"), Latin cerebrum ("brain"), Greek kara ("head"), and English horn. The line across the top of Hindi writing is, by ancestry, its horn.
+Two habits about it, and they are the opposite of what you'd guess:
+You draw it last. Write the letter's body first, then cap it.
+Across a word it is one line. Rather than capping each letter separately, write the letters and then draw a single bar over the whole word. That is why Hindi words look like they're strung on a wire: they are.
+A caveat you should have from the first lesson: this is the common convention, not a rule. Plenty of writers cap each letter as they go, and some draw the bar first. Stroke orders in this track are how it is usually taught, not a standard you can be wrong about.
+And one note about the word shirorekhā itself, written शिरोरेखा: it contains a letter — ख — that this curriculum can't yet give you stroke data for. Read the word; don't try to draw it. This track only asks you to hand-write letters whose stroke data actually exists, and it will say so every time that gap shows up.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — trace: the bar across नमस्ते, from left edge to right edge]
+[once you have stopped driving — gesture: write letter bodies first, then cap the whole word]
+[your turn — say: "शिरोरेखा (shirorekhā) — the head-line"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the line across the top called, and what does the word literally mean? (Shirorekhā — "head-line".) When is it usually drawn? (Last — and as one line across the whole word. Usually: it is the common convention, not a rule.) What ancient root sits inside śiras, "head"? (PIE ḱerh₂-, also behind horn.) Next: hang your first two letters from it.
+[question — say your answer, then pause 8 seconds]
+When is the shirorekha usually drawn?
+
+
+Lesson 2 of 10.
+न and म — two bodies under one head-line.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You know the bar is usually drawn last. Now give it two letter bodies to cap.
+
+You'll want to know — न — "na".
+Three pieces:
+a left bowl — a rounded scoop on the left.
+a right spine — a vertical downstroke on the right.
+the top bar — capping both. Last.
+
+You'll want to know — म — "ma".
+Four pieces — the same spine, with two loops instead of a bowl:
+a lower loop.
+an upper loop, sitting above it.
+the right spine.
+the top bar — last, again.
+
+You'll want to know — The shared frame.
+Both letters have a vertical spine on the right, with the distinguishing shape hanging to its left. This is Devanagari's commonest skeleton: spine on the right, character on the left, bar across the top. Learn the frame once and many new letters are only a new left-hand part.
+"Commonest," not "only" — a minority of letters (द and र among them) have no right-hand spine at all. You will meet them as they come.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: न — "bowl, spine, bar last"]
+[once you have stopped driving — write: म — "lower loop, upper loop, spine, bar last"]
+[once you have stopped driving — write: न and म side by side, then one single bar across both]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Draw न — its three pieces? (Bowl, spine, bar.) Draw म — what makes it different? (Two loops where न has one bowl.) Where does the spine sit in both? (On the right — though a minority of letters have none.) Next: the vowel already hiding inside each consonant.
+
+
+Lesson 3 of 10.
+The vowel that is already there — the abugida.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Here is the thing that trips up every English speaker, and it is better to meet it now than to be confused for a month.
+क is not "k". क is "ka".
+
+You'll want to know — Consonants come with a vowel attached.
+In the Latin alphabet, k is a bare consonant and you must add a vowel to say anything. In Devanagari, every consonant already contains the vowel "a":
+[a table of 4 rows, read aloud]
+letter: क. says: ka. not: k.
+letter: न. says: na. not: n.
+letter: म. says: ma. not: m.
+letter: त. says: ta. not: t.
+That built-in "a" is the inherent vowel. You get it free, whether you want it or not — and the next two lessons are entirely about what to do when you don't want it.
+So the two letters you learned last lesson were never "n" and "m." They were na and ma — and if you write them together you have already written a real syllable pair: नम, nama, the first half of namaste.
+
+You'll want to know — What this kind of script is called.
+A script that works this way — consonants carrying a default vowel — is an abugida.
+The word comes from Ge'ez, the old liturgical language of Ethiopia, whose script works the same way — and it is built more cleverly than "alphabet" is.
+ʾä — bu — gi — da names two things at once:
+the consonants ʾ, b, g, d — the first four of the old Semitic letter order (the same order that gives Greek alpha, beta, gamma, delta);
+the vowels ä, u, i, a — the first four of Ge'ez's vowel series.
+So the word doesn't just recite the start of a list, the way alphabet recites alpha-beta. It demonstrates the system it names: consonant plus vowel, consonant plus vowel, four times over. A term that performs its own definition.
+(Ge'ez's own traditional recitation order is different — hä-lä-ḥä-mä… — so abugida is a scholar's coinage drawing on the inherited Semitic order, not the Ethiopian schoolroom one.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "क is ka, not k"]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: नम — two letters, one bar across both — "nama"]
+[your turn — say: "abugida — a consonant plus its built-in vowel"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does क say on its own? ("ka" — the vowel is built in.) What is that vowel called? (The inherent vowel.) What kind of script is this, and where does the word come from? (An abugida — ʾä-bu-gi-da, from Ge'ez, naming four consonants of the old Semitic order and four vowel series at once, so the word performs its own definition.) Write नम — what does it say? (Nama.) Next: two more letters, and the sound-map that orders them.
+
+
+Lesson 4 of 10.
+क and त — two letters on a map of the mouth.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The built-in vowel means these are ka and ta, not bare k and t. Their shapes share the frame you already know.
+
+You'll want to know — क — "ka".
+a left loop.
+a vertical spine on the right.
+the top bar — last.
+
+You'll want to know — त — "ta".
+a small left curl.
+a tall spine.
+the top bar — last.
+Same frame as before: spine right, shape left, bar on top. Only the left-hand part changes.
+
+You'll want to know — Why the letters are in this order.
+The heart of the Devanagari consonant order is not a historical accident like A-B-C. Its five stop families (vargas) are sorted by where in your mouth the closure happens, starting at the soft palate and walking forward to the lips:
+क (soft palate) becomes च (hard palate) becomes ट (roof, tongue curled back) becomes त (teeth) becomes प (lips).
+Say those five and feel the closure travel forward. Indian phoneticians organised sounds this way well over two thousand years ago — Pāṇini's work is roughly fourth century BCE — producing a phonetics chart memorised as an alphabet long before Europe attempted the same analysis.
+Two honest footnotes: this walk describes the five stop families, not the whole list; and ट is not yet in this curriculum's stroke data. Read it here and draw it only after its entry is authored.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: क — "loop, spine, bar last"]
+[once you have stopped driving — write: त — "curl, spine, bar last"]
+[your turn — say: "ka … ca … ṭa … ta … pa", back to front]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do क and त say alone? (Ka, ta — each has an inherent vowel.) What orders the five stop families? (Place of articulation, from the soft palate forward to the lips.) Next: replace that built-in vowel.
+
+
+Lesson 5 of 10.
+अलविदा (alvidā) — "farewell," and the Arabic al- again.
+
+Warm-up.
+[pause 2 seconds]
+A goodbye — and another Perso-Arabic word, carrying a piece of Arabic grammar you may have met from the other side.
+
+You'll want to know first.
+शुक्रिया — Hindi's Persian/Arabic layer; here's another word from it.
+
+The letters in this word.
+New: the independent vowel अ = "a" (used when a word starts with a vowel — consonants have their built-in a, but a standalone one needs its own letter), and ल = "la." Reusing व द and the ि/ा signs:
+अल = "al", वि = "vi" (with the ि sign), दा = "dā."
+Left to right: अ, ल, वि, दा = a-l-vi-dā, which gives:
+अलविदा = alvidā.
+
+The word, taken apart.
+अलविदा comes through Persian/Urdu from Arabic الوداع (al-widāʿ, "the farewell"), from the Arabic root w-d-ʿ, "to leave, to bid farewell." And there at the front is अल — the Arabic article al-, "the," the very same "the" that rode into English on algebra and alcohol. So alvidā is literally "the farewell."
+
+Why it's said this way.
+alvidā carries a note of finality — it's the goodbye for a long or final parting, more weighted than an everyday "see you." For casual "bye," Hindi speakers more often use namaste again, or the English "bye," or phir milenge ("we'll meet again"). But alvidā is the word when the parting matters — and, like shukriyā, it quietly carries centuries of Persian in it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: read "अलविदा" — a, l, vi, dā]
+[pause 8 seconds for the answer]
+[your turn — say: the al- at the front — the Arabic "the," as in "the farewell"]
+[pause 8 seconds for the answer]
+[your turn — say: when would you use alvidā vs a casual bye? (a weighty/final parting)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+alvidā literally means what, and what's the little al- doing there? ("The farewell" — al- is the Arabic "the.") Sanskrit or Perso-Arabic? (Perso-Arabic.)
+
+
+Lesson 6 of 10.
+धन्यवाद (dhanyavād) — "thank you," the Sanskrit way.
+
+Warm-up.
+[pause 2 seconds]
+"Thank you" — and the first hint of a big fact about Hindi: it has two vocabularies for many everyday things, one Sanskrit, one Persian. This is the Sanskrit one.
+
+You'll want to know first.
+नमस्कार — you know the halant/conjunct idea and the ा ("ā") sign.
+
+The letters in this word.
+New consonants: ध = "dha", य = "ya", व = "va", द = "da." And a new conjunct:
+न् + य becomes न्य = "nya" (the halant kills न's vowel, so it joins य).
+Left to right: ध, न्, य, वा, द = dha-n-ya-vā-d, which gives:
+धन्यवाद = dhanyavād.
+(You've now met two conjuncts — स्त in namaste, न्य here. A vowel-less consonant always leans onto the next; that's the whole trick.)
+
+The word, taken apart.
+धन्यवाद = धन्य (dhanya, "worthy, blessed, fortunate") + वाद (vāda, "a saying, an utterance," from the Sanskrit root वद् vad, "to speak"). So dhanyavād literally offers "an utterance of [you are] worthy/blessed" — a formal, almost literary way to say thanks. (dhanya comes from धन dhana, "wealth" — to call someone dhanya is to call them enriched, fortunate.)
+
+Why it's said this way.
+dhanyavād is the formal, Sanskritic "thank you" — the one you'd write, or say in respectful or official settings. It can even feel a little heavy for small everyday thanks, where Hindi speakers often reach for a lighter, Persian- derived word instead — शुक्रिया (shukriyā), your next lesson. Holding those two side by side is the single best window into how Hindi works.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: read "धन्यवाद" — dha, n, ya, vā, d]
+[pause 8 seconds for the answer]
+[your turn — say: the two pieces — dhanya ("worthy") + vāda ("saying")]
+[pause 8 seconds for the answer]
+[your turn — say: the new conjunct न्य ("nya") — halant on न, joined to य]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read धन्यवाद. What are its two parts? (dhanya "worthy" + vāda "saying.") Is it the formal or casual "thanks"? (Formal, Sanskritic — the casual one is Persian-derived, next.)
+
+
+Lesson 7 of 10.
+नमस्कार (namaskār) — the more formal bow.
+
+Warm-up.
+[pause 2 seconds]
+The dressier sibling of namaste — same root, one new piece, and two new letters.
+
+You'll want to know first.
+नमस्ते — you already know न म स, the halant, and how consonants carry "a."
+
+The letters in this word.
+Two new consonants, and one new vowel sign:
+क = "ka", र = "ra."
+ा is the mātrā for long "ā": क + ा becomes का = "kā."
+So the tail of the word, कार, reads kā-r (the final र here has its inherent a softened) — kār. And नमस् you can already read (namas, with the halant on स). Left to right: न, म (na, ma), स्, का, र, which gives:
+नमस्कार = namaskār.
+
+The word, taken apart.
+नमस्कार = नमः (namaḥ, "a bow," from root नम् nam, as in namaste) + कार (kāra, "the making or doing of" — from the Sanskrit root कृ kṛ, "to do, make"). So namaskār is literally "the making of a bow," "the act of homage." Where namaste says "bow to you," namaskār names the bow itself — a touch more formal and ceremonial.
+That piece कार (-kāra, "the making/doing of") is a Sanskrit building block you'll see again — e.g. in ahaṃkāra ("the making of 'I'" becomes ego). Learn it once as "the act of ___."
+
+Why it's said this way.
+namaskār is a notch more formal than namaste — common in respectful, official, or ceremonial settings, and as a courteous greeting to elders or in writing. Both are "hello"; namaskār wears a tie.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: read "नमस्कार" — na, ma, s, kā, r]
+[pause 8 seconds for the answer]
+[your turn — say: the shared root — nam ("bow") in both namaste and namaskār]
+[pause 8 seconds for the answer]
+[your turn — say: which is more formal? (namaskār)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the piece कार (-kāra) mean? ("The making/doing of.") So namaskār literally names what? ("The making of a bow.")
+
+
+Lesson 8 of 10.
+नमस्ते (namaste) — "I bow to you".
+
+Warm-up.
+[pause 2 seconds]
+The first Hindi word, and the most important — a greeting that is literally a small act of reverence. You'll learn to read it and to understand it in the same breath.
+
+The letters in this word.
+(If you already read Devanagari, skim this — it's here so the book needs no prior knowledge.) Hindi is written left to right, and every consonant carries a built-in "a" unless something removes it.
+न = "na", म = "ma", स = "sa", त = "ta" — four consonants, each with its built-in a.
+े is a vowel sign (a mātrā) that changes the built-in a to "e": त + े becomes ते = "te."
+स् — the little stroke under स (called a halant) kills the vowel, leaving a bare "s." A vowel-less consonant then leans onto the next one, forming a conjunct: स् + ते becomes स्ते = "ste."
+Put them in order, left to right: न, म (na, ma), स्, ते = na-ma-s-te, which gives:
+नमस्ते = namaste.
+You just read Hindi. Three facts did it: consonants carry a, a mātrā changes the vowel, a halant removes it. That's most of how Devanagari works.
+
+The word, taken apart.
+नमस्ते = नमः (namaḥ, "a bow, reverence, homage") + ते (te, "to you") = literally "reverence to you," "I bow to you." The root is Sanskrit नम् (nam), "to bow, bend, pay homage" — the same root behind namaskār (next lesson) and borrowed whole into English as namaste and namaskar.
+
+Why it's said this way.
+namaste is a genuine gesture, not a neutral "hi": it's said with the palms pressed together (the añjali gesture), acknowledging the other person with respect. It works as both hello and goodbye, at any time of day, and it's polite/respectful without being stiff — safe with almost anyone. (Hindi also has warmer and more casual options you'll meet, and a whole second, Persian- flavored set of words — coming in a few lessons.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: read it left to right — na, ma, s, te becomes "namaste"]
+[pause 8 seconds for the answer]
+[your turn — say: what the halant under स does (kills its vowel: sa becomes s)]
+[pause 8 seconds for the answer]
+[your turn — say: "namaste," and mean it — "I bow to you"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read नमस्ते. What does it literally mean? ("I bow to you" — namaḥ + te.) What does a halant do to a consonant? (Removes its built-in a.)
+
+
+Lesson 9 of 10.
+Practice — the Hindi greetings, read and understood.
+
+Warm-up.
+[pause 2 seconds]
+No new words or letters. Read each aloud, then recall its meaning and which of Hindi's two heritages it comes from.
+
+What you've built.
+नमस्ते namaste — "I bow to you" (Sanskrit nam, "bow"); hello & bye.
+नमस्कार namaskār — "the making of a bow" (Sanskrit); more formal.
+धन्यवाद dhanyavād — "thanks" (Sanskrit dhanya "worthy" + vāda "saying"); formal.
+शुक्रिया shukriyā — "thanks" (Persian, from Arabic shukr); everyday.
+अलविदा alvidā — "the farewell" (Persian, from Arabic al-widāʿ); weighty.
+Two big ideas from one small chapter: how Devanagari reads (consonants carry a; a mātrā changes the vowel; a halant removes it and makes a conjunct), and Hindi's double heritage — a Sanskrit layer (namaste, dhanyavād) and a Perso-Arabic layer (shukriyā, alvidā), often the formal vs. the everyday word for the same thing.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: read all five aloud, left to right]
+[pause 8 seconds for the answer]
+[your turn — say: greet someone (namaste), thank them formally (dhanyavād) then casually (shukriyā), and take a weighty leave (alvidā)]
+[pause 8 seconds for the answer]
+[your turn — say: for each of the five, Sanskrit or Perso-Arabic?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which "thanks" is Sanskrit and which is Persian? (dhanyavād / shukriyā.) What three facts let you read Devanagari? (Consonants carry a; a mātrā changes the vowel; a halant removes it.) Next chapter: āp and tum — Hindi's formal and informal "you" — and introducing yourself.
+
+
+Lesson 10 of 10.
+शुक्रिया (shukriyā) — "thanks," Hindi's other heritage.
+
+Warm-up.
+[pause 2 seconds]
+The everyday "thanks" — and it is not a Sanskrit word at all. It came into Hindi from Persian and, before that, Arabic. This lesson is where you meet Hindi's second bloodstream.
+
+You'll want to know first.
+धन्यवाद — the formal, Sanskrit "thanks"; this is its casual counterpart.
+
+The letters in this word.
+New: श = "sha," and the vowel sign ि for "i" (note: ि is written before the consonant but read after it). Reusing क र य ा:
+क् + र becomes क्र = "kra" (halant on क, joined to र — another conjunct).
+रि = "ri" (with the ि sign), या = "yā."
+Left to right: शु, क्, रि, या = shu-k-ri-yā, which gives:
+शुक्रिया = shukriyā.
+
+The word, taken apart.
+शुक्रिया comes, through Persian (شکریه), from Arabic شكر (shukr, "gratitude, thanks") — root sh-k-r. It is the same word as the Arabic shukran ("thank you"): Hindi and Arabic, two utterly different languages and scripts, saying thanks with one Semitic root. No Sanskrit here at all.
+Why does Hindi have an Arabic word for "thanks"? Centuries of Persian as the language of courts and administration in South Asia poured thousands of Persian (and, through Persian, Arabic) words into everyday Hindi/Urdu. So Hindi carries two vocabularies: a Sanskrit layer (dhanyavād, namaste) and a Perso-Arabic layer (shukriyā, and alvidā next). Often the Sanskrit word feels formal/literary and the Persian one feels everyday — though both are fully Hindi.
+
+Why it's said this way.
+shukriyā is the casual, everyday "thanks" — what you'd say to a friend, a shopkeeper, a waiter. dhanyavād is its formal twin. Choosing between them is choosing a register — and, quietly, a heritage.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: read "शुक्रिया" — shu, k, ri, yā]
+[pause 8 seconds for the answer]
+[your turn — say: "shukriyā" — and note it shares a root with Arabic shukran]
+[pause 8 seconds for the answer]
+[your turn — say: formal vs casual "thanks" — dhanyavād / shukriyā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does shukriyā come from — Sanskrit or Persian/Arabic? (Persian, from Arabic shukr — same root as Arabic shukran.) What are Hindi's two vocabulary layers? (Sanskrit and Perso-Arabic.)

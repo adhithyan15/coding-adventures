@@ -1,0 +1,103 @@
+Italian, chapter 15: Chapter 15.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+ho parlato — the past built from "have".
+
+Warm-up.
+[pause 2 seconds]
+Italy's everyday past tense, and you already own both halves: avere from last chapter, and Chapter 5's verbs.
+
+Grammar Lens: the compound-past recipe.
+avere (conjugated) + past participle.
+[a table of 4 rows, read aloud]
+infinitive: parlare. ends in: -are. participle: parlato.
+infinitive: lavorare. ends in: -are. participle: lavorato.
+infinitive: credere. ends in: -ere. participle: creduto.
+infinitive: dormire. ends in: -ire. participle: dormito.
+[a table of 5 rows, read aloud]
+ho parlato, I spoke / I have spoken.
+hai parlato, you spoke.
+ha parlato, he/she spoke.
+abbiamo parlato, we spoke.
+hanno parlato, they spoke.
+The silent h from last chapter is doing its job again: ho parlato on the page can't be misread as o parlato ("or spoken").
+Note parlato keeps the -t- that French wore away: Italian parlato, French parlé, both from Latin -ātum. Italian is the more conservative sister — the same pattern as Chapter 11's acqua against French eau.
+
+The word, taken apart: the buried possessive.
+Latin could say:
+habeō litterās scriptās — "I have letters written."
+Not a past tense: avere in its plain sense of possessing, with scriptās as an adjective agreeing with litterās. Over centuries "I possess a written thing" slid into simply "I wrote" — a possessive construction hardened into a tense.
+The fossil survives. When the object comes before the verb, the participle still agrees with it, exactly as an adjective would:
+Le ho viste. — "I saw them [f. pl.]."
+That -e is a Latin adjective ending, still agreeing after two thousand years.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ho parlato, hai parlato, ha parlato, abbiamo parlato, hanno parlato"]
+[pause 8 seconds for the answer]
+[your turn — say: the conservative -t- — "parlato, French parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: "Ho lavorato" ("I worked") — Ch. 5's verb]
+[pause 8 seconds for the answer]
+[your turn — say: the old meaning — "I have a thing spoken"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two pieces make the passato prossimo? (Avere + the past participle.) What is parlare's participle? (Parlato from -ātum.) What did ho parlato originally mean? ("I have [a thing] spoken" — a possessive.) Why can the participle agree? (It was an adjective describing the object.) Next: the other Italian past, and where it still lives.
+
+
+Lesson 2 of 2.
+parlò — the past that depends where you are.
+
+Warm-up.
+[pause 2 seconds]
+Italian's other past tense. Whether it sounds normal or bookish depends on which part of Italy you are standing in — the clearest case of geography deciding grammar in this course.
+
+You'll want to know: the remote past.
+[a table of 3 rows, read aloud]
+he spoke. passato remoto: parlò. passato prossimo: ha parlato.
+they spoke. passato remoto: parlarono. passato prossimo: hanno parlato.
+I spoke. passato remoto: parlai. passato prossimo: ho parlato.
+Note the final stress: parlò, with the accent written. Compare Chapter 12's numbers — Italian marks a stressed final vowel the same way.
+
+The word, taken apart: the inherited past.
+parlò from Vulgar Latin parabolāvit, the plain Latin perfect, handed straight down. Which makes it the same tense as:
+[a table of 4 rows, read aloud]
+language: Italian. "he spoke": parlò.
+language: Spanish. "he spoke": habló.
+language: Portuguese. "he spoke": falou.
+language: French. "he spoke": il parla.
+One Latin ancestor, four descendants — and four different fates in daily life.
+
+Why it's said this way: geography.
+This is what makes Italian interesting here:
+[a table of 3 rows, read aloud]
+region: Sicily, much of the south. everyday past: passato remoto — parlò is normal speech.
+region: Tuscany. everyday past: both, with a distinction of distance in time.
+region: North. everyday past: passato prossimo almost always; parlò feels literary.
+So the "correct" answer changes as you travel. In the north the passato remoto has retreated to books, exactly as French's passé simple and German's Präteritum did. In the south it never left.
+
+What you've built: three retreats and two holdouts.
+[a table of 5 rows, read aloud]
+language: French. simple past: passé simple. status in speech: gone — books only.
+language: German. simple past: Präteritum. status in speech: retreating, especially in the south.
+language: Italian. simple past: passato remoto. status in speech: split by region.
+language: Spanish. simple past: habló. status in speech: alive (though Spain is drifting toward he hablado).
+language: Portuguese. simple past: falou. status in speech: alive.
+Three languages let a "have" compound push the inherited past out of conversation; Italian is the one caught mid-process, with the old tense still holding half the country.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "parlò … ha parlato"]
+[pause 8 seconds for the answer]
+[your turn — say: the sisters — "parlò, habló, falou, il parla"]
+[pause 8 seconds for the answer]
+[your turn — say: the geography — "in Palermo ordinary; in Milano literary"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the ancestor of parlò? (parabolāvit.) What decides whether it sounds normal or bookish? (Where in Italy you are — everyday in the south, literary in the north.) Which languages kept this tense fully alive? (Spanish and Portuguese.) Which lost it entirely from speech? (French.) Next chapter: the verbs that take essere instead of avere.

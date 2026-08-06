@@ -1,0 +1,38 @@
+Persian, chapter 2: Chapter 2.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+اسم من... است — my name is...
+
+Warm-up.
+[pause 2 seconds]
+Greet once, then answer yes and no. The next line gives you one careful sentence for your own name.
+
+The exchange.
+Read the phrase from right to left, but say its words in this order:
+اسمِ من... است — esm-e man... ast.
+اسم esm = name. You already recognize ا, س, and م.
+The small spoken -e after esm links “name” to its owner. This linker is called ezafe. It is often not written in ordinary text.
+من man = I / me; after the linker it means “my.”
+است ast = is.
+
+The word, taken apart.
+esm is an Arabic loan related to Arabic ism, while man and ast belong to Persian's inherited Iranian core. One tiny sentence can therefore show two major layers of Persian vocabulary.
+
+Grammar Lens: one spoken link.
+Only one grammar idea is new: noun + -e + owner. The spoken -e links “name” to its owner, so esm-e man is literally “name-of me.” Do not turn that one pattern into a full grammar table yet.
+
+Guided Practice.
+Replace the dots with your name:
+اسم من سارا است. — esm-e man Sârâ ast. — My name is Sara.
+[your turn — say: esm-e man Sârâ ast]
+[pause 8 seconds for the answer]
+[your turn — say: replace Sârâ with your own name]
+[pause 8 seconds for the answer]
+In everyday speech, the ending is often shortened. Keep the careful full form for now; it makes every part visible.
+
+Wrap-up Recall.
+What links esm to man? The spoken -e, or ezafe. Say “My name is …” once with your own name.
+[question — say your answer, then pause 10 seconds]
+Type the careful Persian sentence 'My name is Sara.'

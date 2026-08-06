@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 31,
+  "title": "Chapter 31",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f2267035c33491e1",
+  "lessons": [
+    {
+      "id": "ES-C31-numeros-11-20",
+      "sequence": 820,
+      "title": "once, veinte — five fused Latins, then Spanish fixes Latin's own quirk",
+      "headword": "once — veinte",
+      "romanization": "once — veinte",
+      "gloss": "11-20 — five fused Latin irregulars (once-quince), then Spanish REGULARIZES away from Latin's own quirky teens",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a21adbd02326b30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eleven through twenty splits into two very different stories: five numbers worn down almost past recognition, and five that Spanish built fresh — fixing a genuine oddity in Latin's own counting system along the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart: once through quince",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "from Latin"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "Spanish: once. from Latin: undecim (\"one-ten\").",
+                "Spanish: doce. from Latin: duodecim (\"two-ten\").",
+                "Spanish: trece. from Latin: tredecim (\"three-ten\").",
+                "Spanish: catorce. from Latin: quattuordecim (\"four-ten\").",
+                "Spanish: quince. from Latin: quindecim (\"five-ten\")."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each of these was originally a compound — number + -decim (\"ten,\" the same root as diez) — but centuries of everyday use fused them into single, opaque words. You can still faintly hear -ce as the worn-down echo of -decim in all five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart: dieciséis through diecinueve",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "literally"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "Spanish: dieciséis. literally: diez y seis, \"ten and six\".",
+                "Spanish: diecisiete. literally: diez y siete, \"ten and seven\".",
+                "Spanish: dieciocho. literally: diez y ocho, \"ten and eight\".",
+                "Spanish: diecinueve. literally: diez y nueve, \"ten and nine\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "No fusion here — these are fully transparent \"ten-and-X\" compounds, and you can hear diez plainly in every one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Spanish regularized the Latin teens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the genuinely interesting part. You might expect dieciocho and diecinueve to simply continue whatever Latin did for 18 and 19 — but Latin's own words for those two numbers were subtractive, not additive: duodēvīgintī (\"two from twenty\") for 18, and ūndēvīgintī (\"one from twenty\") for 19. Spanish didn't inherit that pattern at all — it built dieciocho and diecinueve fresh, on the same simple \"ten-and-X\" template as 16 and 17, quietly regularizing away a genuine irregularity that existed in Latin itself."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "input",
+          "title": "You'll want to know: veinte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "veinte (\"twenty\") from Latin vīgintī — worn down by ordinary sound change, but never fused from two separate words the way once-quince were."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"once, doce, trece, catorce, quince\" — the five fused Latins",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"once, doce, trece, catorce, quince\" — the five fused Latins]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dieciséis, diecisiete, dieciocho, diecinueve\" — transparent \"ten-and-X\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dieciséis, diecisiete, dieciocho, diecinueve\" — transparent \"ten-and-X\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"veinte\" — twenty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"veinte\" — twenty]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are once through quince, structurally? (Fused Latin compounds — number + -decim, \"ten,\" worn down to -ce.) Are dieciséis through diecinueve fused or transparent? (Transparent — plain \"ten and X.\") Did Spanish inherit Latin's own words for 18 and 19? (No — Latin's duodēvīgintī/ūndēvīgintī were subtractive [\"two/one FROM twenty\"]; Spanish replaced that with straightforward addition instead.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

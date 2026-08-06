@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 7,
+  "title": "Chapter 7",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:86b461ccf2e61aa9",
+  "lessons": [
+    {
+      "id": "ML-C07-numbers-1-5",
+      "sequence": 340,
+      "title": "ഒന്ന്, രണ്ട്, മൂന്ന്, നാല്, അഞ്ച് — one to five",
+      "headword": "ഒന്ന് രണ്ട് മൂന്ന് നാല് അഞ്ച്",
+      "romanization": "",
+      "gloss": "one to five — Tamil's closest sister, its numbers almost unchanged",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:2a9ed4236164b68a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Of all the Dravidian cousins, Malayalam is Tamil's closest — they were one language a thousand years ago — and its numbers show it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "numeral",
+                "word",
+                "said"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "The symbols ൧ ൨ ൩ ൪ ൫ are Malayalam's own digits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where Telugu breaks the family with okaṭi, Malayalam stays loyal: its one is onnu, the direct cousin of Tamil oṉṟu (both from the old oṉ-). Laid beside Tamil, the whole row is barely changed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "Tamil",
+                "Malayalam"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "1. Tamil: oṉṟu. Malayalam: onnu.",
+                "2. Tamil: iraṇṭu. Malayalam: raṇṭu.",
+                "3. Tamil: mūṉṟu. Malayalam: mūnnu.",
+                "4. Tamil: nāṉku. Malayalam: nālu."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The one that moved most is five: Tamil aintu softened its nt to a palatal, giving Malayalam añcu — the same shift English feels between nature said stiffly and said naturally."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every word here ends in chandrakkala — the little hook ് on the last letter (ഒന്ന്, നാല്) — which trims the final vowel down to a half-heard ŭ. It's why these read onn', nāl' rather than a full onnu, nālu. And the doubled letters (onnu, mūnnu) are real held consonants — linger on the nn."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"onnu, raṇṭu, mūnnu, nālu, añcu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"onnu, raṇṭu, mūnnu, nālu, añcu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the near-identity — \"oṉṟu corresponds to onnu\", \"iraṇṭu corresponds to raṇṭu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the near-identity — \"oṉṟu ↔ onnu\", \"iraṇṭu ↔ raṇṭu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that shifted — \"aintu becomes añcu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that shifted — \"aintu → añcu\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five in Malayalam. (Onnu, raṇṭu, mūnnu, nālu, añcu.) Does Malayalam's one follow Tamil or break away like Telugu? (Follows Tamil — onnu corresponds to oṉṟu.) Which number changed most from Tamil, and how? (Five — aintu's nt palatalised to añcu.) What does the chandrakkala ് do to a word's last sound? (Trims its vowel to a half-heard ŭ.) Next: six to ten."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C07-numbers-6-10",
+      "sequence": 350,
+      "title": "ആറ്, ഏഴ്, എട്ട്, ഒമ്പത്, പത്ത് — six to ten",
+      "headword": "ആറ് ഏഴ് എട്ട് ഒമ്പത് പത്ത്",
+      "romanization": "",
+      "gloss": "six to ten — Malayalam keeps Tamil's rare ḻ where the others lost it",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue",
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:fdd67cc65bed0e4b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down",
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam holds onto a Tamil sound the other cousins let go — and you'll hear it in seven."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "numeral",
+                "word",
+                "said"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Watch seven travel across the three sister scripts:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "word",
+                "its 7-letter"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Tamil. word: ēḻu. its 7-letter: ழ (ḻ).",
+                "Malayalam. word: ēḻu. its 7-letter: ഴ (ḻ) — kept.",
+                "Kannada. word: ēḷu. its 7-letter: ḷ — hardened.",
+                "Telugu. word: ēḍu. its 7-letter: ḍ — hardened further."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam, alone with Tamil, keeps the ḻ — the rare retroflex sound that sits in the name Tamiḻ itself. (The name Malayāḷam, by contrast, carries the hardened cousin ḷ — ള — the very sound Kannada's ēḷu shows; the two letters ഴ ḻ and ള ḷ are worth keeping apart.) Six (āṟu), eight (eṭṭu) and ten (pattu) are likewise almost letter-for-letter Tamil: this is the closest of all the cousin-columns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nine comes, exactly as in Tamil, from the old oṉ (\"one\") + patu (\"ten\") — one short of ten. But before the p, the n shifts to an m: so the underlying oṉpatu is both written ഒമ്പത് and said ompatu (say \"onpatu\" fast and you'll do it yourself). Kannada does the same in ombattu."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āṟu, ēḻu, eṭṭu, onpatu, pattu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āṟu, ēḻu, eṭṭu, onpatu, pattu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seven's kept sound — \"ēḻu\", the ḻ of Tamiḻ (not the ḷ of Malayāḷam)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: seven's kept sound — \"ēḻu\", the ḻ of *Tamiḻ* (not the ḷ of *Malayāḷam*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nine taken apart — \"oṉ + patu becomes ompatu\", one short of ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nine taken apart — \"oṉ + patu → ompatu\", one short of ten]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count six to ten in Malayalam. (Āṟu, ēḻu, eṭṭu, onpatu, pattu.) Which sister languages keep Tamil's rare ḻ in seven, and which hardened it? (Malayalam keeps it; Kannada becomes ḷ, Telugu becomes ḍ.) How is ompatu built, and why the m? (oṉ \"one\" + patu \"ten\"; the n becomes m before p.) Which of these numbers is furthest from Tamil? (None much — this is the closest cousin-set.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

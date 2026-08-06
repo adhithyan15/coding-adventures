@@ -1,0 +1,591 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 16,
+  "title": "Chapter 16",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:afadfe166aa49a8a",
+  "lessons": [
+    {
+      "id": "ES-C16-imperfecto",
+      "sequence": null,
+      "title": "hablaba, comía — the past that kept going",
+      "headword": "hablaba, comía",
+      "romanization": "hablaba, comía",
+      "gloss": "the imperfect — the past that kept going, and the most regular tense in Spanish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b01d70df596dd3f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The preterite told you a past thing finished. The imperfect tells you a past thing was going on — \"I was speaking,\" \"I used to speak.\" And after Chapter 15's strong verbs, here is the good news: this is the most regular tense in the language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Two sets, and you can guess the second",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop the ending, add:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "-ar (hablar)",
+                "-er / -ir (comer, vivir)"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo. -ar (hablar): hablaba. -er / -ir (comer, vivir): comía / vivía.",
+                "tú. -ar (hablar): hablabas. -er / -ir (comer, vivir): comías.",
+                "él/ella/usted. -ar (hablar): hablaba. -er / -ir (comer, vivir): comía.",
+                "nosotros. -ar (hablar): hablábamos. -er / -ir (comer, vivir): comíamos.",
+                "ellos/ustedes. -ar (hablar): hablaban. -er / -ir (comer, vivir): comían."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "-er and -ir share one set again — the third time now (preterite, and here). Two conjugations, one pattern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The accents, and why",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two different jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablábamos — the stress falls three syllables back, so it must be written. Only this one form in the -ar set takes an accent."
+            },
+            {
+              "kind": "speech",
+              "text": "comía — the accent splits the vowels. Without it, ia would be one syllable (like piano); with it, co-mí-a is three. Every form in the -er/-ir set needs it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Where they come from",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "from Latin"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Spanish: hablaba. from Latin: -ābam.",
+                "Spanish: comía. from Latin: -ēbam."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same Latin ending, two fates: the b survived whole in -aba, but wore away in the other set (-ēbam becomes -ea becomes -ía). One sound, two outcomes, in the same language."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "One trap, and a broken rule",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yo hablaba and él hablaba are identical. So Spanish, which normally drops its pronouns (Chapter 6), often puts yo back in the imperfect — the ending stopped doing its job, so the pronoun steps in."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hablaba, hablabas, hablaba, hablábamos, hablaban\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hablaba, hablabas, hablaba, hablábamos, hablaban\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"comía, comías, comía, comíamos, comían\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"comía, comías, comía, comíamos, comían\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"co-mí-a\" — three syllables, not two",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"co-mí-a\" — three syllables, not two]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Cuando era niño, hablaba español en casa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Cuando era niño, hablaba español en casa\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the imperfect express? (A past action going on or habitual — \"was doing,\" \"used to do.\") Which two conjugations share a set? (-er and -ir, again.) Why does comía need an accent? (To break the diphthong — co-mí-a, three syllables.) Which -ar form takes one, and why? (Hablábamos — the stress is three syllables back.) Why does Spanish put yo back here? (Yo and él forms are identical.) Next: the only three irregular verbs in the whole tense."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C16-practice",
+      "sequence": null,
+      "title": "Practice — two pasts, one choice",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "preterite vs imperfect — the distinction English doesn't grammatically make",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2d5ad9eb96e32c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You now have both past tenses. English never marks this whole distinction with an ending, so it is a new contrast to think in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The split",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "preterite",
+                "imperfect"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "what it does. preterite: a completed event. imperfect: an ongoing or habitual state.",
+                "shape of time. preterite: a point. imperfect: a line.",
+                "English. preterite: \"I ate\". imperfect: \"I was eating\" / \"I used to eat\".",
+                "typical clues. preterite: ayer, una vez, de repente. imperfect: siempre, todos los días, mientras."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Comí = the meal happened and ended. Comía = I was in the middle of it, or I did it regularly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Background and interruption",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The classic pairing — the imperfect sets the scene, the preterite breaks it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaba con María cuando llegó Juan. (I was talking to María when Juan arrived.)"
+            },
+            {
+              "kind": "speech",
+              "text": "The talking is the line; the arriving is the point that lands on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Verbs that change meaning",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With a few verbs the choice doesn't just shift the shape of time — it changes what the word means:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "imperfect (state)",
+                "preterite (the moment it started)"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "verb: saber. imperfect (state): sabía — I knew. preterite (the moment it started): supe — I found out.",
+                "verb: conocer. imperfect (state): conocía — I knew (a person). preterite (the moment it started): conocí — I met.",
+                "verb: tener. imperfect (state): tenía — I had. preterite (the moment it started): tuve — I got, received.",
+                "verb: querer. imperfect (state): quería — I wanted. preterite (the moment it started): quise — I tried; no quise — I refused."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The logic is consistent: the imperfect gives you the state; the preterite gives you the instant the state began. Knowing becomes the moment of finding out."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Drill — which tense?",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Decide before reading the answer."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "tense"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "sentence: \"Every summer we went to Spain.\" tense: imperfect (íbamos) — habitual.",
+                "sentence: \"Yesterday we went to Spain.\" tense: preterite (fuimos) — one event.",
+                "sentence: \"She was tall.\" tense: imperfect (era) — a lasting state.",
+                "sentence: \"The concert was yesterday.\" tense: preterite (fue) — a bounded event."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Comía cuando llamaste\" (\"I was eating when you called\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Comía cuando llamaste\" (\"I was eating when you called\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"sabía I knew … supe I found out\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"*sabía* I knew … *supe* I found out\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Cuando era niño, iba a la playa todos los veranos\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Cuando era niño, iba a la playa todos los veranos\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the test aloud — \"line becomes imperfect; point becomes preterite\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the test aloud — \"**line** → imperfect; **point** → preterite\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Preterite or imperfect for a habit? (Imperfect.) Which tense sets the background, and which interrupts it? (Imperfect sets, preterite interrupts.) What's the difference between conocía and conocí? (\"I knew someone\" vs \"I met them.\") How many irregular imperfects were there? (Three.) Give the one-word test. (\"Line or point?\") Next chapter: talking about what will happen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C16-tres-irregulares",
+      "sequence": null,
+      "title": "era, iba, veía — all three of them",
+      "headword": "era, iba, veía",
+      "romanization": "era, iba, veía",
+      "gloss": "the only three irregular imperfects in the entire language",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:02ca95b17070bfad",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The complete list"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The complete list until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 15 handed you a pile of strong preterites to memorise. Here is the compensation: the imperfect has three irregular verbs. Not three families — three verbs, in the whole language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The complete list",
+          "segments": [
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "ser becomes era",
+                "ir becomes iba",
+                "ver becomes veía"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, ser becomes era, ir becomes iba, ver becomes veía. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the entire irregular inventory. Every other verb in Spanish — thousands of them — takes the regular endings from the last lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Ver barely counts: it just keeps an extra -e- from its older form veer, then conjugates normally (ve- + -ía)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "ir's third Latin verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the best thing in the chapter. Track where ir's tenses come from:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "tense",
+                "form",
+                "from Latin verb"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "tense: present. form: voy, vas, va. from Latin verb: vādere \"to advance\" (Ch. 10).",
+                "tense: preterite. form: fui, fuiste, fue. from Latin verb: fuī, from esse (Ch. 14).",
+                "tense: imperfect. form: iba, ibas, iba. from Latin verb: īre — its own infinitive."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish ir is stitched together from three different Latin verbs, and the imperfect is the one place the original īre survives conjugated. The infinitive ir and the imperfect iba are the last two pieces of the real verb; everything else was borrowed from elsewhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "era",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "era from Latin eram, from the same es- root as ser, soy, es — and as English is and are (Chapter 9). So ser uses that ancient root in the present and the imperfect, but jumps to fuī in the preterite: era vs fue."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the accents: éramos, íbamos — stress three syllables back, exactly like hablábamos."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"era, eras, era, éramos, eran\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"era, eras, era, éramos, eran\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"iba, ibas, iba, íbamos, iban\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"iba, ibas, iba, íbamos, iban\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Cuando era niño, iba a la escuela\" (\"When I was a child, I used to go to school\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Cuando era niño, iba a la escuela\" (\"When I was a child, I used to go to school\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three sources — \"voy from vādere, fui from fuī, iba from īre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three sources — \"voy ← *vādere* · fui ← *fuī* · iba ← *īre*\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many irregular imperfects are there? (Three — ser, ir, ver.) Which one hardly counts, and why? (Ver — it just keeps an extra -e- from veer.) Where does iba come from? (Latin īre — ir's own verb, and the only tense that kept it.) So how many Latin verbs is ir built from? (Three — vādere, fuī, īre.) Which two forms take a written accent? (Éramos, íbamos — stress three back.) Next: choosing between the two pasts."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

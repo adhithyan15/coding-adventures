@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 32,
+  "title": "Chapter 32",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:2a0d1e66cf7f557a",
+  "lessons": [
+    {
+      "id": "ES-C32-perro-gato",
+      "sequence": 830,
+      "title": "perro, gato — one sourced etymology, one genuine mystery",
+      "headword": "perro, gato",
+      "romanization": "perro, gato",
+      "gloss": "dog and cat — gato has a real, sourced etymology all the way back to Egypt; perro is a genuine, unsolved etymological mystery that replaced Latin's own word for \"dog\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7876220a3ad2155",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two everyday animal words, two completely different kinds of history: one traces all the way back to ancient Egypt. The other is a real, unsolved puzzle that linguists still argue about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart: gato",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gato (\"cat\") from Latin cattus — but cattus itself wasn't the original Latin word for cat at all. Classical Latin's word was fēlēs (still surviving in the scientific name Felis catus). Cattus only entered Latin later, as domestic cats spread out along Roman trade routes from their point of domestication — Egypt, around 2000 BCE. Cattus is most likely ultimately an Afro-Asiatic word (compare Nubian kadis, \"cat\") — so the word, like the animal, traveled into Europe from Africa, eventually pushing out fēlēs almost everywhere (the same cattus gives Italian gatto, French chat, even Old Irish cat and Welsh cath)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart: perro",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perro (\"dog\") is honestly different: nobody knows for certain where it comes from. The word Spanish \"should\" have inherited from Latin is canis — the same root as English canine, French chien, Italian cane — and that word did survive into Spanish, as the now-archaic can. But at some point, perro pushed can almost entirely out of everyday use, and perro itself has no agreed etymology. Serious proposals include: an onomatopoeic imitation of a dog's growl or a shepherd's calling-sound (\"perr perr\"); a pre-Roman, pre-Latin word from the Iberian substrate (the -rro ending is itself a marker of likely pre-Latin origin in Spanish); and even a possible link to Persian persus, a hunting-dog breed that became popular in the late Roman Empire. None of these is confirmed — perro remains one of Spanish's genuinely open etymological puzzles."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"gato\" — cat, traced all the way back to Egypt via Latin cattus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"gato\" — cat, traced all the way back to Egypt via Latin cattus]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"perro\" — dog, a real unsolved mystery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"perro\" — dog, a real unsolved mystery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"can\" — the archaic Spanish word perro replaced, from Latin canis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"can\" — the archaic Spanish word perro replaced, from Latin canis]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was Classical Latin's actual word for \"cat,\" and where did cattus most likely come from instead? (Fēlēs; cattus is probably Afro-Asiatic, traveling with the domesticated cat out of Egypt.) Does perro have a confirmed etymology? (No — it's a genuine, unsolved mystery, with competing onomatopoeic, pre-Latin substrate, and Persian theories.) What archaic Spanish word did perro replace, and what's its Latin source? (can, from Latin canis — the same root as English canine.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

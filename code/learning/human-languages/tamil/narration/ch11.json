@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 11,
+  "title": "Chapter 11",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:bbcb6ccf4fd05171",
+  "lessons": [
+    {
+      "id": "TA-C11-nirangal",
+      "sequence": 310,
+      "title": "கருப்பு, வெள்ளை, சிவப்பு, நீலம் — three of Tamil's own, one borrowed",
+      "headword": "கருப்பு வெள்ளை சிவப்பு நீலம்",
+      "romanization": "",
+      "gloss": "black, white, red, blue — three native Tamil colors, and one Sanskrit loan",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:57cc7e3f10c4a1d8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've already seen Tamil mix native and Sanskrit words in its day-names. Colors tell a cleaner version of the same story: three colors are Tamil's own, and the fourth is the one color that keeps showing up borrowed, in language after language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - Three native colors",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கருப்பு (karuppu) = \"black\" — native Tamil/Dravidian."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளை (veḷḷai) = \"white\" — native Tamil/Dravidian, and built on the very same வெள் (veḷ-, \"bright, silvery\") root you already met in வெள்ளி (veḷḷi), \"Venus/silver,\" from the days-of-the-week lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "சிவப்பு (sivappu) = \"red\" — native Tamil/Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - One borrowed color",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீலம் (nīlam) = \"blue\" — from Sanskrit நீல (nīla), \"dark blue,\" the very same root behind Hindi's नीला (nīlā). This nīla is also the name of the indigo plant and its dye — part of why blue dye is so historically linked to India — but be careful: the English word indigo itself is a separate, Greek-derived word (describing where the dye was imported from, not descended from nīla by sound change; see the Hindi color lesson for that careful distinction)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Be honest about why blue is the odd one out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This isn't random. You may remember from Latin's color lesson that \"blue\" is, across many of the world's languages, one of the last basic colors to settle into its own fixed word — often arriving late, or borrowed, compared to black, white, and red. Tamil's colors look like exactly this pattern in miniature: three old, native words, and one — blue — reaching outside the language for a Sanskrit loan."
+            },
+            {
+              "kind": "speech",
+              "text": "(Note for the Tamil-speaking reviewer: please confirm karuppu, veḷḷai, sivappu, nīlam are the forms you'd teach first — regional/colloquial Tamil may prefer different everyday variants, and this lesson would benefit from your check the way the day-names lesson did.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three native ones — \"karuppu, veḷḷai, sivappu\" — black, white, red",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three native ones — \"karuppu, veḷḷai, sivappu\" — black, white, red]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the borrowed one — \"nīlam\" — blue, from Sanskrit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the borrowed one — \"nīlam\" — blue, from Sanskrit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the echo — \"veḷḷai\" and \"veḷḷi\" share the same veḷ- root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the echo — \"veḷḷai\" and \"veḷḷi\" share the same veḷ- root]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which three Tamil colors are native, and which one is borrowed? (Karuppu, veḷḷai, sivappu (black/white/red) are native; nīlam (blue) is a Sanskrit loan.) What root does veḷḷai share with a word you already know? (Veḷ- \"bright/silvery\" — the same root as veḷḷi, \"Venus/silver.\") Why might blue be the one borrowed color? (Blue is often one of the last basic colors to settle into a fixed word across many languages — the same pattern Latin's caeruleus showed.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

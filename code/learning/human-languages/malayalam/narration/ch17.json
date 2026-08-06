@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 17,
+  "title": "Chapter 17",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:288f60854351ad94",
+  "lessons": [
+    {
+      "id": "ML-C17-ucha-paathira",
+      "sequence": 450,
+      "title": "ഉച്ച — a different Sanskrit metaphor, not a Sanskrit-free one",
+      "headword": "ഉച്ച",
+      "romanization": "",
+      "gloss": "noon, most likely from a different Sanskrit metaphor than Kannada and Telugu — height rather than middle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6da9faf1334b3f22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada and Telugu both reached for Sanskrit's madhya, \"middle,\" to name noon. Malayalam looks different at first glance — but be careful before you call it \"native.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉച്ച (ucha) = \"noon, midday\" — and unlike Kannada's madhyāhna or Telugu's madhyāhnam, this is not a madhya (\"middle\") compound at all. It most likely shares its root with Tamil உச்சி (ucci, \"crown of the head, peak, summit, zenith\") and Kannada's own ಉಚ್ಚಿ (ucci). Here's the honest twist: per Wiktionary, that whole ucci family across Tamil and Kannada is itself documented as a Sanskrit borrowing, from उच्च (ucca, \"high\"). Malayalam's own ucha has no fully documented etymology yet, so treat the connection as likely rather than settled — but if it holds, this isn't a case of Malayalam avoiding Sanskrit at all. It's Malayalam reaching for a different Sanskrit root than its neighbors: ucca (\"high\") instead of madhya (\"middle\"). Noon becomes \"the sun at its peak\" rather than \"the middle of the day\" — the same zenith-based idea you already saw in Arabic's aẓ-ẓuhr (from a root meaning \"to appear, become visible/apex\"), just arrived at from Sanskrit rather than Arabic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Don't walk away thinking Malayalam dodged Sanskrit here while Kannada and Telugu didn't. The more likely picture: ഉച്ച may be just as Sanskrit-rooted as madhyāhna — it's simply a different Sanskrit root (ucca, \"high,\" rather than madhya, \"middle\"). What's genuinely different is the metaphor, not necessarily the language of origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ucha\" — noon, \"the peak\" — compare Tamil's \"ucci\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ucha\" — noon, \"the peak\" — compare Tamil's \"ucci\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the honest contrast — Kannada/Telugu's noon word means \"middle\"; Malayalam's most likely means \"peak\" — both probably still Sanskrit, just different Sanskrit roots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the honest contrast — Kannada/Telugu's noon word means \"middle\"; Malayalam's most likely means \"peak\" — both probably still Sanskrit, just different Sanskrit roots]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is ഉച്ച a Sanskrit \"middle\" word like Kannada's madhyāhna? (No — it most likely comes from a different Sanskrit root, ucca, \"high/peak,\" not madhya, \"middle.\") Does that make ഉച്ച a native Dravidian word? (Not necessarily — its likely relatives, Tamil ucci and Kannada ucci, are themselves documented Sanskrit borrowings.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C17-paathira",
+      "sequence": 460,
+      "title": "പാതിരാ — midnight as “half-night”",
+      "headword": "പാതിരാ",
+      "romanization": "",
+      "gloss": "midnight, built on Malayalam paathi \"half\" rather than Sanskrit ardha",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e5d3423d223860c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ഉച്ച named noon by the sun’s height. Malayalam builds midnight with a different spatial idea: cut the night in half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാതിരാ (paathira) means “midnight.” It is built on പാതി (paathi), the everyday Malayalam word for “half”—as in paathi vila, “half price”—fused with a shortened form of “night.”"
+            },
+            {
+              "kind": "speech",
+              "text": "The result has the same “half-night” shape as Telugu అర్ధరాత్రి (ardharātri) and Hindi ādhī rāt. The pieces are not all cousins, though. Malayalam പാതി is a genuinely different word from Sanskrit ardha, the root behind Telugu ardharātri and, farther back, Hindi ādhī."
+            },
+            {
+              "kind": "speech",
+              "text": "So two languages can independently choose the same transparent construction while filling it with unrelated words for “half.” The metaphor matches; the vocabulary does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paathira — midnight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paathira* — midnight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paathi — half",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paathi* — half]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Malayalam paathi versus Sanskrit ardha — same job, different roots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Malayalam *paathi* versus Sanskrit *ardha* — same job, different roots]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പാതിരാ build on? (പാതി, “half,” plus a shortened night-word.) Is paathi the same root as Telugu ardha? (No. The two languages share the “half-night” logic but use unrelated half-words.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

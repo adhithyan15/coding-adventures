@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 25,
+  "title": "Chapter 25",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d95cb3daafa21b66",
+  "lessons": [
+    {
+      "id": "TA-C25-iniya-iravu",
+      "sequence": 510,
+      "title": "இனிய இரவு (iṉiya iravu) — \"good night,\" and Tamil breaking the pattern one more time",
+      "headword": "இனிய இரவு",
+      "romanization": "",
+      "gloss": "\"good night\" — fully native Dravidian, \"sweet/pleasant night,\" unlike Hindi, Kannada, Telugu, and Malayalam's shared Sanskrit-descended śubha rātri phrase; Tamil breaks the pattern this arc found in every other language",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1ba720045827d42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four languages in this arc all reached for the same Sanskrit phrase to say \"good night.\" This lesson closes the arc with the one that didn't — and it's a pattern you've actually seen from Tamil before, all the way back in Chapter 1."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - இனிய இரவு — \"sweet night,\" fully native",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இனிய இரவு (iṉiya iravu) — \"good night\" — literally \"sweet, pleasant night.\" இனிய (iṉiya, \"sweet, pleasant, dear\") is native Dravidian, from Proto-Dravidian in- (\"sweet\") — the same root behind இனிப்பு (iṉippu, \"sweet, dessert\"). Paired with இரவு (iravu, \"night,\" already met last lesson), the whole phrase is built from Tamil's own word-stock, start to finish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: The pattern this breaks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every other language in this arc's GREETING-GOODNIGHT lesson reached for the same Sanskrit phrase: Hindi's शुभ रात्रि, Kannada's ಶುಭ ರಾತ್ರಿ, Telugu's శుభ రాత్రి, Malayalam's ശുഭ രാത്രി — all four built from the identical tatsama pair, śubh (\"to be beautiful\") + rātri (\"night\"). Tamil's standard phrase reaches for none of that — no śubha-descended \"good night\" turned up as a commonly used Tamil form in the phrasebook sources checked for this lesson. Instead, Tamil built its own phrase from its own vocabulary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"iṉiya iravu\" — \"good night,\" literally \"sweet night,\" fully native",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"iṉiya iravu\" — \"good night,\" literally \"sweet night,\" fully native]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pattern it breaks — every other language this arc shares one Sanskrit śubh(a) rātri phrase; Tamil doesn't",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pattern it breaks — every other language this arc shares one Sanskrit śubh(a) rātri phrase; Tamil doesn't]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இனிய இரவு literally mean, and what root does இனிய come from? (\"Sweet/pleasant night\" — Proto-Dravidian in-, \"sweet.\") Does Tamil's \"good night\" share the same Sanskrit śubha rātri phrase as Hindi, Kannada, Telugu, and Malayalam? (No — no such form turned up in the sources checked for this lesson; Tamil's standard phrase is fully native, breaking the pattern shared by all four other languages.) Next: connect that choice back to Chapter 1 and build two native alternatives."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C25-goodnight-alternatives",
+      "sequence": 520,
+      "title": "நல்ல இரவு and இரவு வணக்கம் — old roots recombined",
+      "headword": "நல்ல இரவு / இரவு வணக்கம்",
+      "romanization": "",
+      "gloss": "Tamil repeats its native greeting loyalty with good-night alternatives built from known roots",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f4e1927b3bee8aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil's native \"sweet night\" repeats the lexical choice that opened the course: build greetings from its own roots rather than the shared Sanskrit formula."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The Chapter 1 echo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வணக்கம் comes from native vaṇaṅku, \"bow,\" while neighboring greetings use Sanskrit namas-. At the other end of the day, இனிய இரவு is native while the same neighbors share Sanskrit śubha rātri."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil also keeps two transparent alternatives:"
+            },
+            {
+              "kind": "speech",
+              "text": "நல்ல இரவு — \"good night,\" using nalla, from the nal- \"good\" root already inside nalam and naṉṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "இரவு வணக்கம் — \"night greetings,\" especially for close friends/family, recombining two fully known words."
+            },
+            {
+              "kind": "speech",
+              "text": "The learner does not memorize isolated formulas; known roots generate options."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nalla iravu\" — good night",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nalla iravu\" — good night]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"iravu vaṇakkam\" — night greetings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"iravu vaṇakkam\" — night greetings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "nal- becomes nalam / naṉṟi / nalla",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: *nal-* → *nalam / naṉṟi / nalla*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which root builds நல்ல? (Nal-, good.) What two known words make இரவு வணக்கம்? (Night + greetings.) What lexical pattern connects Chapter 1 and this chapter? (Tamil keeps native greeting roots where neighbors share Sanskrit formulas.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 30,
+  "title": "Chapter 30",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f5c2a578b5b6df4d",
+  "lessons": [
+    {
+      "id": "TA-C30-maalai-vanakkam",
+      "sequence": 580,
+      "title": "மாலை வணக்கம் — \"evening greetings\"",
+      "headword": "மாலை வணக்கம்",
+      "romanization": "",
+      "gloss": "good evening (mālai vaṇakkam), literally \"evening greetings\" — the SAME compositional pattern as TA-C29's kālai vaṇakkam: மாலை (already met, TA-C27, \"evening\") + வணக்கம் (already met, TA-C01); confirmed via TWO independently-fetched sources (talkpal.ai, preply.com — same practical-content tier as TA-C29's sources) as real and used from afternoon/late-afternoon through nightfall, one labeling it formal; no śubha-equivalent word here either, consistent with TA-C29's finding, not just assumed to carry over automatically",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e605d22d0c8038e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last chapter's morning greeting followed its own pattern. This lesson checks whether the evening greeting follows the same one — rather than assuming it automatically does."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாலை வணக்கம் — the same compositional pattern, independently confirmed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாலை வணக்கம் (mālai vaṇakkam) — \"good evening\" — is confirmed, by two independently-fetched sources, as a real, standard Tamil evening greeting, used roughly from afternoon through nightfall (the two sources give slightly different exact windows — \"after noon through evening\" versus \"late afternoon until nightfall\" — a small, unsurprising looseness, matching the noon/afternoon boundary-blur already seen in TA-C28). It's built exactly the same way as TA-C29's morning greeting: மாலை (already met, Chapter 27, \"evening\") plus வணக்கம் (already met, Chapter 1, Tamil's general greeting). Literally: \"evening salutations.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Be honest: this pattern was re-checked, not assumed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the honest methodological point: just because TA-C29's morning greeting followed the \"time-word + vaṇakkam\" pattern doesn't mean this evening greeting was assumed to follow it automatically. This arc has repeatedly found that greeting formation doesn't reliably generalize, even within the very same language — Malayalam's own morning greeting broke from the śubha+time-word pattern its afternoon and evening greetings both share, so \"the pattern probably repeats\" was never a safe assumption on its own. So this greeting was independently verified via direct fetch before confirming the pattern really does repeat here — and it does, cleanly: no śubha-equivalent word appears in Tamil's evening greeting either, same as the morning one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mālai vaṇakkam\" — \"good evening,\" literally \"evening greetings\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mālai vaṇakkam\" — \"good evening,\" literally \"evening greetings\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces you already know — mālai (Chapter 27) + vaṇakkam (Chapter 1)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces you already know — mālai (Chapter 27) + vaṇakkam (Chapter 1)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the honest methodological point — this pattern was re-verified, not assumed to carry over automatically",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the honest methodological point — this pattern was re-verified, not assumed to carry over automatically]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two already-known words does மாலை வணக்கம் build from? (மாலை, \"evening\" + வணக்கம், \"greetings.\") Was it assumed that the evening greeting would follow the same pattern as the morning one, or was it independently checked? (Independently checked — via direct fetch, not assumed, since this arc has learned that greeting patterns don't reliably generalize.) Does மாலை வணக்கம் use a śubha-equivalent word, like Hindi/Kannada/Telugu/Malayalam's evening greetings do? (No — same as Tamil's morning greeting, no śubha-equivalent word appears here either.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

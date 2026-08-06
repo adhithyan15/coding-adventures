@@ -1,0 +1,265 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 10,
+  "title": "Days of the Week",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:74d9dfe51926b5a9",
+  "lessons": [
+    {
+      "id": "HI-C10-somavaar-shukravaar",
+      "sequence": 280,
+      "title": "सोमवार to शुक्रवार — Hindi's own planet-week",
+      "headword": "सोमवार मंगलवार बुधवार गुरुवार शुक्रवार",
+      "romanization": "",
+      "gloss": "Monday–Friday — Hindi's own planet-week, independent of Rome's",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:f7cc8ce278f973ce",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know — The pattern: [deity] + वार, \"day\""
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know — The pattern: [deity] + वार, \"day\" until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've seen Spanish, Latin, and French name their weekdays for planet-gods. Here's the surprise: Hindi does too — with its own, independent set of gods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — The pattern: [deity] + वार, \"day\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Hindi weekday is a deity's name plus वार (vār), \"day\" (Sanskrit vāra):"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "Hindi",
+                "literally",
+                "deity/planet",
+                "day"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Hindi, literally, deity/planet, day. Come back and look at it when you have stopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know — Be honest about where this system came from",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the same seven-body idea as Rome's planetary week — Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn — and it is not an isolated Indian invention: historians trace it, ultimately, to a shared source in Babylonian astronomy, and most accounts hold that it reached both Rome and India through the same Hellenistic-Greek channel of transmission (India's own horoscopic-astrology texts, like the Yavanajātaka, are explicitly adapted from Greek originals). The exact path and timing into India are still debated among historians of astronomy, but the system isn't a case of Rome and India copying each other directly — both are more like cousins, downstream of one much older shared idea of the sky."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"somavār\" — Soma/Moon's day — then \"maṅgalvār,\" Mangala/Mars's day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"somavār\" — Soma/Moon's day — then \"maṅgalvār,\" Mangala/Mars's day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pattern — \"[deity] + vār\" = [deity]'s day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pattern — \"[deity] + vār\" = [deity]'s day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"guruvār\" — Thursday — Bṛhaspati, called \"Guru\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"guruvār\" — Thursday — Bṛhaspati, called \"Guru\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does every Hindi weekday end in, and what does it mean? (वार vār, \"day.\") Which planet is गुरुवार, and what title does its deity carry? (Jupiter — the deity Bṛhaspati, called \"Guru,\" teacher of the gods — an ancient title Bṛhaspati bears, not the source of the word itself.) Did Hindi borrow its planet-week from Rome? (No — both likely trace back through Hellenistic Greece to a shared Babylonian astronomical source, though the exact route into India is still debated.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C10-shanivaar-ravivaar",
+      "sequence": 290,
+      "title": "शनिवार and रविवार — Saturday and Sunday, no rewrite needed",
+      "headword": "शनिवार रविवार",
+      "romanization": "",
+      "gloss": "Saturday and Sunday — completing Hindi's planet-week",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1cc093e07662b42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've met five Hindi weekdays, each a deity's name plus वार (vār), \"day.\" The last two complete the set — and here, unlike Spanish or French, nothing ever got renamed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — The last two days",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शनिवार (śanivār) = \"Śani's day\" — Saturn."
+            },
+            {
+              "kind": "speech",
+              "text": "रविवार (ravivār) = \"Ravi's day\" — the Sun (Ravi, one of the Sun's many Sanskrit names)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know — Be honest about the contrast with Spanish and French",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Remember: Spanish's sábado/domingo and French's samedi/dimanche are not simple planet-names — Christianity renamed both (Saturn's day became the Sabbath; the Sun's day became \"the Lord's day\"). Hindi's weekend went through no such rewrite: शनिवार and रविवार are still, today, plainly \"Saturn's day\" and \"Sun's day\" — the full planet-week, all seven days, standing untouched by any later religious relabeling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"śanivār\" — Saturn's day — then \"ravivār,\" Sun's day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"śanivār\" — Saturn's day — then \"ravivār,\" Sun's day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole week — \"somavār, maṅgalvār, budhvār, guruvār, śukravār, śanivār, ravivār\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole week — \"somavār, maṅgalvār, budhvār, guruvār, śukravār, śanivār, ravivār\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — Spanish/French renamed their weekend; Hindi never did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — Spanish/French renamed their weekend; Hindi never did]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do शनिवार and रविवार literally mean? (\"Saturn's day\" and \"Sun's day.\") How is Hindi's weekend different from Spanish's or French's? (No religious rewrite ever happened — Hindi kept the plain planet-names for all seven days, while Spanish/French swapped in Sabbath / Lord's day for the weekend.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

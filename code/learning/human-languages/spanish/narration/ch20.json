@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 20,
+  "title": "Chapter 20",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:4aa44d79b283395f",
+  "lessons": [
+    {
+      "id": "ES-C20-lo-siento",
+      "sequence": 660,
+      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
+      "headword": "lo siento",
+      "romanization": "lo siento",
+      "gloss": "I'm sorry (literally \"I feel it\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c96a1e626c21b926",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already know por favor, \"please\" — the fourth courtesy word is lo siento, \"I'm sorry.\" Spanish doesn't say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lo = \"it\" — a neuter pronoun pointing at the situation itself, not a specific noun."
+            },
+            {
+              "kind": "speech",
+              "text": "siento = \"I feel,\" from the verb sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), and resent (\"feel again/against\")."
+            },
+            {
+              "kind": "speech",
+              "text": "So lo siento is literally \"I feel it\" — you're naming the feeling (regret, sympathy) rather than declaring a state. It's the Spanish you reach for both to apologize (\"lo siento, I stepped on your foot\") and to console (\"lo siento mucho,\" I'm so sorry, on hearing sad news)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: lo siento and perdón",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish keeps a second word for a different job. Perdón (\"pardon\"), from perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give,\" the same root as English donate and condone) — literally \"to give completely,\" i.e. to forgive. Perdón is what you say to:"
+            },
+            {
+              "kind": "speech",
+              "text": "get someone's attention or squeeze past them (like English \"excuse me\"),"
+            },
+            {
+              "kind": "speech",
+              "text": "ask forgiveness for something you did wrong (a real apology, often stronger than lo siento)."
+            },
+            {
+              "kind": "speech",
+              "text": "Lo siento leans toward regret/sympathy (\"I'm sorry that happened\"), while perdón leans toward fault and forgiveness (\"excuse me / forgive me\"). Native speakers reach for whichever fits — the boundary is soft, and mixing them up is not a real mistake, just a shade off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousin word — \"perdón,\" pardon / excuse me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousin word — \"perdón,\" pardon / excuse me]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both together in your head: regret vs. forgiveness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both together in your head: regret vs. forgiveness]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lo siento literally mean? (\"I feel it\" — siento \"I feel,\" from Latin sentīre, like English sentiment.) What's the other Spanish word for sorry/excuse-me, and how is it different? (Perdón, \"pardon\" — leans toward fault and forgiveness, or getting someone's attention, while lo siento leans toward regret and sympathy.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

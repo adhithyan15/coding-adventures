@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 11,
+  "title": "Chapter 11",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:fbbc1ab28dbc377d",
+  "lessons": [
+    {
+      "id": "ML-C11-nirangal",
+      "sequence": 390,
+      "title": "കറുപ്പ്, വെള്ള, ചുവപ്പ്, നീല — the same split as Tamil",
+      "headword": "കറുപ്പ് വെള്ള ചുവപ്പ് നീല",
+      "romanization": "",
+      "gloss": "black, white, red, blue — Malayalam shares Tamil's native colors, and its Sanskrit blue too",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62c26eca8d419caa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've seen Malayalam and Tamil share day-names almost word-for-word. Their colors follow the exact same family pattern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കറുപ്പ് (karuppŭ) = \"black\" — matches Tamil karuppu almost exactly."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ള (veḷḷa) = \"white\" — the same veḷ- \"bright/silvery\" root as Tamil veḷḷai."
+            },
+            {
+              "kind": "speech",
+              "text": "ചുവപ്പ് (cuvappŭ) = \"red\" — a related word from the same Dravidian root family as Tamil sivappu, though the two differ in both their opening consonant's sound and their vowel — a looser cousin than karuppŭ/karuppu or veḷḷa/veḷḷai, which match almost exactly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീല (nīla) = \"blue\" — the same Sanskrit loan Tamil uses (nīlam), and the same one Hindi uses (nīlā). Blue is where Malayalam, Tamil, and Hindi all converge on one shared Sanskrit word, even though Malayalam and Tamil otherwise built their own native words for black, white, and red."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"karuppŭ, veḷḷa, cuvappŭ\" — black, white, red",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"karuppŭ, veḷḷa, cuvappŭ\" — black, white, red]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nīla\" — blue, shared with Tamil and Hindi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nīla\" — blue, shared with Tamil and Hindi]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family match — \"karuppŭ/karuppu, veḷḷa/veḷḷai, cuvappŭ/sivappu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family match — \"karuppŭ/karuppu, veḷḷa/veḷḷai, cuvappŭ/sivappu\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which three Malayalam colors closely match Tamil's own words? (Karuppŭ, veḷḷa, cuvappŭ — black, white, red.) Which color is a shared Sanskrit loan across Malayalam, Tamil, and Hindi? (Blue — நீല nīla / நீலம் nīlam / नीला nīlā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

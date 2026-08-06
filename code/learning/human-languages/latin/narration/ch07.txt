@@ -1,0 +1,66 @@
+Latin, chapter 7: Family.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+pater, mater — the oldest words, kept close to the source.
+
+Warm-up.
+[pause 2 seconds]
+"Father" and "mother" are among the oldest reconstructible words in human language. Latin kept them almost exactly as they were; English took the very same ancestor down a different road.
+
+Taken apart.
+pater ("father") from PIE ph₂tḗr.
+māter ("mother") from PIE méh₂tēr.
+
+The word, taken apart: Cousins, not parent and child.
+Here's the point worth getting exactly right: pater and English father are not one derived from the other. Both descend independently, in parallel, from the same PIE word. Latin simply kept the ancestral p and t close to unchanged; the Germanic branch that produced English took a separate route through Grimm's Law, which shifted that same inherited p becomes f and t becomes th:
+[a table of 2 rows, read aloud]
+PIE ancestor: ph₂tḗr. Latin: pater. Germanic becomes English: father.
+PIE ancestor: méh₂tēr. Latin: māter. Germanic becomes English: mother.
+So pater and father are siblings, sharing one parent-word thousands of years back — not a case of English borrowing or descending from Latin. Pater also gives Latin (and later English, through Latin) the whole "of-a-parent" family: paternus ("fatherly," becomes English paternal) and māternus ( becomes maternal).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pater, māter" — father, mother]
+[pause 8 seconds for the answer]
+[your turn — say: the relationship — "cousins, not ancestor and descendant"]
+[pause 8 seconds for the answer]
+[your turn — say: "pater becomes paternus becomes paternal; māter becomes māternus becomes maternal"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does English father come from Latin pater? (No — both descend independently from the same PIE word, ph₂tḗr.) What sound-law explains the difference between them? (Grimm's Law — the Germanic branch shifted the inherited p becomes f, t becomes th; Latin kept them.) What Latin adjectives give English paternal and maternal? (Paternus, māternus.)
+
+
+Lesson 2 of 2.
+frater, soror — Latin's original siblings, before Spanish moved on.
+
+Warm-up.
+[pause 2 seconds]
+Two more ancient words — and a preview of a twist: these are the very words that later got pushed aside in everyday Latin, on the road to Spanish.
+
+Taken apart.
+frāter ("brother") from PIE bʰréh₂tēr.
+soror ("sister") from PIE swésōr.
+
+The word, taken apart: Cousins with English, not ancestors of it.
+Same rule as pater/māter: frāter is not the source of English "brother" — they're cousins, both from bʰréh₂tēr, with Grimm's Law shifting the Germanic branch's bʰ becomes b while Latin developed its own f (from an earlier bʰ becomes f shift already inside Latin itself).
+Soror is the more surprising one. English sister looks nothing like soror — and that's because Latin dropped the w from the PIE cluster sw- (giving plain s-), while the Germanic branch kept the w far longer (Old English had sweostor). So soror and sister are, once again, cousins from the same PIE word, swésōr — neither one turned into the other; each branch just handled that opening sw- differently.
+
+Why it's said this way: Be honest about what happened next: germanus took over.
+Here's the twist: classical Latin could say frāter germānus, "a brother of the same blood," to mark a full sibling. Over time, in everyday (Vulgar) Latin, that adjective germānus took over the whole job, and frāter itself faded out of common use — which is exactly why Spanish says hermano, not a descendant of frāter at all. (French frère took the opposite path and kept frāter as its everyday word — different Latin regions, different survivors.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "frāter, soror" — brother, sister]
+[pause 8 seconds for the answer]
+[your turn — say: the cousin relationship — "frāter/brother and soror/sister are BOTH parallel descendants, not one from the other"]
+[pause 8 seconds for the answer]
+[your turn — say: the twist — "frāter germānus" becomes just "germānus" becomes Spanish "hermano"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is English "sister" descended from Latin soror? (No — both are cousins from PIE swésōr; Latin dropped the w, Germanic kept it longer.) What Latin phrase eventually replaced frāter in everyday speech, and where does it show up today? (Frāter germānus becomes just germānus becomes Spanish hermano.) Did every Romance language make that same swap? (No — French kept frāter as frère; Spanish moved on to germānus.)

@@ -1,0 +1,152 @@
+Portuguese, chapter 16: Chapter 16.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+ser — “to be”.
+
+Warm-up.
+[pause 2 seconds]
+Portuguese has two verbs for “to be.” Begin with ser, used for identity and what something is; the choice against estar comes later.
+
+You'll want to know: Present.
+[a table of 3 rows, read aloud]
+eu sou, nós somos.
+tu és, vós sois.
+ele/ela/você é, eles/elas/vocês são.
+Tu és is live in European Portuguese. Vós survives mainly in northern dialect and church language; everyday “you all” is vocês, with são.
+
+You'll want to know: Two past rows.
+Preterite, the completed past from Chapter 15:
+fui, foste, foi, fomos, foram.
+Imperfect, for background or ongoing past:
+era, eras, era, éramos, eram.
+The three anchors sou — fui — era look unrelated. That is a clue that several historical pieces have been welded together, which the next lesson will unpack. For now, retrieve each row as a usable pattern.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “sou, és, é, somos, são”]
+[pause 8 seconds for the answer]
+[your turn — say: “Eu sou português. Ela é médica.”]
+[pause 8 seconds for the answer]
+[your turn — say: “fui, foste, foi, fomos, foram”]
+[pause 8 seconds for the answer]
+[your turn — say: “era, éramos, eram”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the present of ser. (Sou, és, é, somos, são.) Which form goes with vocês? (São.) Give the preterite row. (Fui, foste, foi, fomos, foram.) Which imperfect form means “I was”? (Era.) Next: why those rows look so different.
+
+
+Lesson 2 of 4.
+ser — two verbs, three stems.
+
+Warm-up.
+[pause 2 seconds]
+Sou, era, fui, ser do not resemble one another because the modern verb preserves several older roots.
+[a table of 4 rows, read aloud]
+Portuguese: sou, és, é, somos, são. source: Latin esse, “to be”.
+Portuguese: era, éramos, eram. source: esse’s imperfect.
+Portuguese: fui, foi, foram. source: esse’s ancient perfect fuī.
+Portuguese: infinitive ser. source: Latin sedēre, “to sit”.
+That is two Latin verbs but three stems: esse was already suppletive, using both its ordinary root and the older fuī perfect. Sedēre also gave English sedentary and session.
+
+The word, taken apart: fui means “was” and “went”.
+The entire preterite is shared with ir, “to go”:
+[a table of 5 rows, read aloud]
+person: eu. ser: fui. ir: fui.
+person: tu. ser: foste. ir: foste.
+person: ele. ser: foi. ir: foi.
+person: nós. ser: fomos. ir: fomos.
+person: eles. ser: foram. ir: foram.
+Fui professor means “I was a teacher”; fui ao Brasil means “I went to Brazil.” What follows disambiguates them. Fuī already belonged to ser’s ancestor; ir borrowed the row after Latin īre’s own perfect wore away. Spanish made the same Iberian choice.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “ser from sedēre, to sit”]
+[pause 8 seconds for the answer]
+[your turn — say: “sou / era from esse”]
+[pause 8 seconds for the answer]
+[your turn — say: “fui professor; fui ao Brasil”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Two verbs, three stems; fui has two meanings.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which Latin verb gives the infinitive? (Sedēre, “sit.”) Which gives sou and era? (Esse.) What two verbs share fui? (Ser and ir.) Which borrowed it? (Ir.) Next: put ser beside estar.
+
+
+Lesson 3 of 4.
+ser vs. estar — the core choice.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 2 used Como está? Now learn estar’s forms and make the basic choice between Portuguese’s two verbs for “to be.”
+[a table of 3 rows, read aloud]
+eu estou, nós estamos.
+tu estás, vós estais.
+ele/ela/você está, eles/elas/vocês estão.
+Say vocês estão in ordinary speech. You may hear shortened tou and tá; recognise them, but write the full forms.
+
+Grammar Lens: What something is; how it is.
+ser = what something is estar = its location or the condition it is in.
+[a table of 3 rows, read aloud]
+ser: Ele é médico. — He is a doctor. estar: Ele está doente. — He is ill.
+ser: Sou português. — I’m Portuguese. estar: Estou em Lisboa. — I’m in Lisbon.
+ser: A neve é branca. — Snow is white. estar: O café está frio. — The coffee is cold.
+Identity, origin, profession, and defining qualities use ser. Location, health, mood, weather, and resulting conditions use estar.
+Do not reduce this to “permanent versus temporary”: ele está morto, “he is dead,” uses estar. Death is not temporary; it is a condition someone has ended up in.
+
+What you've built: A mnemonic, not the cause.
+Ser contains forms from Latin sedēre, “sit”; estar continues stāre, “stand.” Picture ser as seated in identity and estar as standing in a condition. The history is a memory aid, not the cause: esse supplied ser’s identity meaning, while stāre pulled toward place and resulting state.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “estou, estás, está, estamos, estão”]
+[pause 8 seconds for the answer]
+[your turn — say: “Sou português; estou em Lisboa.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Ele é médico; ele está doente.”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which verb names identity? (Ser.) Which marks location or a resulting condition? (Estar.) How do you say “I’m in Lisbon”? (Estou em Lisboa.) Why does “he is dead” use estar? (It is a resulting condition, so permanence is not the real test.) Next: use the choice to change meaning.
+
+
+Lesson 4 of 4.
+é bonita / está bonita — a choice you can use.
+
+Warm-up.
+[pause 2 seconds]
+Ser and estar are not competing answers where one is always a mistake. With many adjectives, swapping the verb deliberately changes meaning.
+[a table of 2 rows, read aloud]
+with ser: Ela é bonita. — She is beautiful. with estar: Ela está bonita. — She looks beautiful now.
+with ser: A sopa é boa. — It is a good soup. with estar: A sopa está boa. — This bowl tastes good.
+Ser presents the quality as part of what the subject is. Estar presents the quality as the current condition or impression. Context, not a mechanical “permanent” rule, decides what you mean.
+
+The word, taken apart: The wider family.
+Portuguese and Spanish maintain this full two-verb choice. Italian keeps essere and stare but lets them overlap differently; French has one être that absorbed old stāre pieces. German sein is a separate Germanic cousin.
+[a table of 4 rows, read aloud]
+language: Portuguese / Spanish. broad result: two verbs, chosen by meaning.
+language: Italian. broad result: two verbs with overlap.
+language: French. broad result: one fused verb.
+language: German. broad result: one verb built from Germanic roots.
+The Romance rows started with the same Latin material and reorganised it in three ways. That is why the Portuguese choice is systematic but not universal.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “Ela é bonita” — a quality]
+[pause 8 seconds for the answer]
+[your turn — say: “Ela está bonita” — right now]
+[pause 8 seconds for the answer]
+[your turn — say: “A sopa é boa; a sopa está boa.”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Ser: what it is. Estar: the condition it is in.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+What changes between ela é bonita and ela está bonita? (A defining quality versus a current impression.) Is estar automatically a mistake with bonita? (No; it says something different.) Which Romance languages keep the full two-verb choice? (Portuguese and Spanish.)

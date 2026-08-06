@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 12,
+  "title": "Family",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1cfe2ba34766cd85",
+  "lessons": [
+    {
+      "id": "KA-C12-kutumba",
+      "sequence": 400,
+      "title": "ಅಪ್ಪ, ಅಮ್ಮ, and four sibling words — the same system as Tamil",
+      "headword": "ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತಂಗಿ",
+      "romanization": "",
+      "gloss": "father, mother, and four age-graded sibling words — nearly identical to Tamil's own set",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84a6e74134b1665c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada asks the same question Tamil does about any sibling: older, or younger? — and the words for answering it are almost identical."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: Parents — native, and matching Tamil",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪ್ಪ (appa) = \"father\" — matches Tamil appā closely."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಮ್ಮ (amma) = \"mother\" — matches Tamil ammā closely."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: Four sibling words, age before gender",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Kannada",
+                "meaning",
+                "compare Tamil"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Kannada: ಅಣ್ಣ (aṇṇa). meaning: older brother. compare Tamil: aṇṇaṉ — near match.",
+                "Kannada: ತಮ್ಮ (tamma). meaning: younger brother. compare Tamil: tambi — near match.",
+                "Kannada: ಅಕ್ಕ (akka). meaning: older sister. compare Tamil: akkā — near match.",
+                "Kannada: ತಂಗಿ (tangi). meaning: younger sister. compare Tamil: tangai — near match."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Just like Tamil, Kannada has no single word that simply means \"brother\" or \"sister\" — you name the sibling's relative age every time, not just their gender. This age-first system runs across the whole Dravidian family, not just one language."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"appa, amma\" — father, mother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"appa, amma\" — father, mother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aṇṇa, tamma\" — older/younger brother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aṇṇa, tamma\" — older/younger brother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"akka, tangi\" — older/younger sister",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"akka, tangi\" — older/younger sister]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many Kannada sibling words are there, and what do they split on? (Four — ಅಣ್ಣ/ತಮ್ಮ, ಅಕ್ಕ/ತಂಗಿ — split by relative age, not just gender.) How closely do Kannada's words match Tamil's? (Very closely — nearly the same forms across the whole set.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 13,
+  "title": "Chapter 13",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1dbbb29d47b23eee",
+  "lessons": [
+    {
+      "id": "TA-C13-udal-uruppugal",
+      "sequence": 330,
+      "title": "தலை, கை — head and hand, both Tamil's own",
+      "headword": "தலை கை",
+      "romanization": "",
+      "gloss": "head and hand — both native Dravidian words, unlike Hindi's Sanskrit-descended pair",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29bbeb31bbfd6439",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've seen Hindi's sir and hāth trace all the way back to Sanskrit. Tamil's words for the same two body parts tell a simpler story: both are native."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தலை (talai) = \"head\" — native Dravidian."
+            },
+            {
+              "kind": "speech",
+              "text": "கை (kai) = \"hand\" — native Dravidian."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is borrowed from Sanskrit, unlike Hindi's sir (< Sanskrit śiras) or hāth (< Sanskrit hasta). Tamil simply kept its own words for two of the most basic parts of the body."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"talai\" — head",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"talai\" — head]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kai\" — hand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kai\" — hand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — Hindi borrowed these from Sanskrit; Tamil didn't",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — Hindi borrowed these from Sanskrit; Tamil didn't]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are Tamil's words for head and hand? (தலை talai, கை kai.) Are either of these Sanskrit loans? (No — both native Dravidian, unlike Hindi's Sanskrit-descended sir and hāth.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

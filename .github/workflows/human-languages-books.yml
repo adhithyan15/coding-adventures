@@ -122,6 +122,13 @@ jobs:
           npm ci
           npm run build
           npm run check:books
+          # The narration export is committed like the generated .tex, and drifts the
+          # same way: someone edits a lesson and forgets to re-run the exporter. The
+          # consequence is worse here, though — a stale .tex looks wrong to whoever
+          # opens the book, while a stale script has a voice assistant confidently
+          # teaching a lesson that no longer exists, to someone driving who cannot
+          # check. Byte-for-byte, before anything expensive runs.
+          npm run check:narration
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"

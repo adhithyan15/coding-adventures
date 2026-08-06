@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 8,
+  "title": "Please",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0dd42921ebc1ff57",
+  "lessons": [
+    {
+      "id": "KA-C08-dayavittu",
+      "sequence": 360,
+      "title": "ದಯವಿಟ್ಟು (dayaviṭṭu) — please (having placed compassion)",
+      "headword": "ದಯವಿಟ್ಟು",
+      "romanization": "",
+      "gloss": "please (dayaviṭṭu — \"having placed compassion,\" from ದಯ daya \"compassion\")",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a93811ff1388aa1d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada's everyday \"please\" is, once you open it up, a small act of generosity: \"having placed compassion\" between us."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಯವಿಟ್ಟು = please, literally \"having placed compassion / kindness.\" Two pieces:"
+            },
+            {
+              "kind": "speech",
+              "text": "ದಯ (daya) = compassion, kindness, grace — from Sanskrit daya."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಟ್ಟು (iṭṭu) = \"having placed / set down,\" from the verb ಇಡು (iḍu) \"to place, to put.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So dayaviṭṭu means, at heart, setting kindness down (before you) — asking the listener to act from compassion."
+            },
+            {
+              "kind": "speech",
+              "text": "That is exactly how Tamil builds it (tayavu seytu, \"do the kindness\"), and the same instinct as Arabic min faḍlik (\"from your grace\") and Hindi kṛpayā (from kṛpā, \"compassion\"). A wide arc of Asia says please by naming the kindness it hopes for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: The Dravidian family, side by side",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "daya + a light verb, four times over:"
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada ದಯವಿಟ್ಟು dayaviṭṭu — compassion + having placed."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil தயவுசெய்து tayavu seytu — kindness + do."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu దయచేసి dayacēsi — compassion + having done."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam ദയവായി dayavāyi — compassion + as / having become."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: about how it's used",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The honest note: a standalone please-word is a little formal / emphatic. Everyday Kannada politeness leans on the respectful command — the verb ending ‑ಿ (-i): ಕುಳಿತುಕೊಳ್ಳಿ (kuḷitukoḷḷi) \"please sit,\" ಹೇಳಿ (hēḷi) \"please tell me.\" That ending already means \"please\" do this. Add ದಯವಿಟ್ಟು in front when you want to underline the courtesy."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: Sound and structure",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ಟ್ಟು — a doubled ṭ. The first ಟ್ is ṭa silenced by the virama (its vowel cut), and it tucks under the next letter as an ottu (a subscript form) before ಟು ṭu. Kannada writes a double consonant by stacking, not repeating side by side — a neat contrast with how the Roman alphabet just writes \"tt.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"daya\" — compassion — then \"iṭṭu,\" having placed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"daya\" — compassion — then \"iṭṭu,\" having placed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole word — \"dayaviṭṭu\" = please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole word — \"dayaviṭṭu\" = please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday way — the verb ending: \"kuḷitukoḷḷi\" = please sit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday way — the verb ending: \"kuḷitukoḷḷi\" = please sit]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the Kannada word for please? (ದಯವಿಟ್ಟು dayaviṭṭu.) What do its pieces mean? (\"Compassion\" daya + \"having placed\" iṭṭu.) Which cousins ask the same way? (Tamil, Telugu, Malayalam with daya — plus Arabic faḍl, Hindi kṛpā.) What carries \"please\" in ordinary speech? (The respectful verb ending ‑ಿ -i.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

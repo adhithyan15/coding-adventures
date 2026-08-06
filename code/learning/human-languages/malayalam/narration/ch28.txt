@@ -1,0 +1,29 @@
+Malayalam, chapter 28: Chapter 28.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) — "noon, having passed".
+
+Warm-up.
+[pause 2 seconds]
+Telugu let its noon-word quietly widen to also mean "afternoon." Malayalam solves the same problem with a completely different strategy: it builds a new phrase instead.
+
+You'll want to know.
+ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) — "afternoon" — is a transparent two-word phrase, not a single dictionary headword (no Wiktionary entry exists for the compound as a whole). It's built from ഉച്ച (already met, Chapter 17, "noon") plus കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka), itself Wiktionary-confirmed Proto-Dravidian kaẓi ("to be over, spent, finished"). Be honest about the citation: Wiktionary's own conjugation line shows only the finite past tense, കഴിഞ്ഞു (kaḻiññu) — not this converb form directly. The converb is the grammatically correct choice for chaining into a compound like this one, but treat the exact written form as a reasonable grammatical inference, not a directly Wiktionary-sourced citation. Put together: "noon having passed" — afternoon is, quite literally, the time after noon is done.
+
+Why it's said this way.
+Here's the honest structural contrast: Telugu's own afternoon word (TE-C28, మధ్యాహ్నం) is the exact same word as its "noon," simply widened to also cover "afternoon" — one word, stretched. Malayalam does something structurally different: ഉച്ച itself stays put, meaning only "noon," and a second word — കഴിഞ്ഞ്, "passed" — gets bolted on to build a new phrase for "afternoon." Same problem (naming the stretch of time after noon), two genuinely different solutions: semantic widening in Telugu, compositional phrase-building in Malayalam.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "uchakaḻiññ" — "afternoon," literally "noon having passed"]
+[pause 8 seconds for the answer]
+[your turn — say: the verb behind it — kaḻiyuka, "to be over, spent" — Proto-Dravidian kaẓi]
+[pause 8 seconds for the answer]
+[your turn — say: the honest contrast — Telugu widens the same noon-word; Malayalam builds a new phrase on top of it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ഉച്ചകഴിഞ്ഞ് literally mean? ("Noon having passed" — ഉച്ച, "noon," plus the past tense of കഴിയുക, "to be over, spent.") Is ഉച്ചകഴിഞ്ഞ് a single dictionary word, like ഉച്ച itself? (No — it's a transparent two-word phrase; no Wiktionary entry exists for the compound as a whole.) How does Malayalam's strategy for naming "afternoon" differ from Telugu's? (Telugu widens its existing noon-word's meaning; Malayalam instead builds a new phrase, keeping the noon-word unchanged.)

@@ -1,0 +1,67 @@
+Spanish, chapter 23: Chapter 23.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+el padre, la madre — among the oldest words there are.
+
+Warm-up.
+[pause 2 seconds]
+"Father" and "mother" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother.
+
+The words, taken apart: padre and madre.
+el padre ("father") from Latin pater from PIE ph₂tḗr.
+la madre ("mother") from Latin māter from PIE méh₂tēr.
+
+Why it's said this way: the English sound-law.
+Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:
+[a table of 2 rows, read aloud]
+PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.
+PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother.
+So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their "of a parent" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, "the stuff a tree-mother produces," gives Spanish materia and, separately, matriz — "womb" — via Latin mātrix.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el padre, la madre"]
+[pause 8 seconds for the answer]
+[your turn — say: the sound-law — "padre keeps p; father shifts to f — same word"]
+[pause 8 seconds for the answer]
+[your turn — say: "padre becomes paternal; madre becomes maternal"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give "father" and "mother" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)
+
+
+Lesson 2 of 2.
+el hermano, la hermana — brother and sister, from a different word entirely.
+
+Warm-up.
+[pause 2 seconds]
+You might expect Spanish "brother" to come from Latin frāter, the way French's frère does. It doesn't. Spanish's siblings took a completely different word — one about seeds.
+
+The words, taken apart: hermano and hermana.
+Classical Latin could say frāter germānus, literally "a brother of the same stock/blood" — distinguishing a full brother from a half-brother or a "brother" in a looser sense. Over time, in everyday Latin, the adjective germānus took over the whole job and the noun frāter quietly dropped out. That adjective is where Spanish's words come from:
+el hermano ("brother") from Latin germānus.
+la hermana ("sister") from Latin germāna.
+
+Why it's said this way: where germanus comes from.
+Germānus traces back to germen, "sprout, bud, seed" — the same root that gives English germ, germinate, and germane (originally "closely related," from the same "seed," before it loosened to just "relevant"). So calling someone your hermano is, at the etymological root, calling them "sprung from the same seed."
+
+Why it's said this way: the silent h.
+You may already know that Spanish sometimes turns a Latin initial f into a silent h — filius becomes hijo ("son"), facere becomes hacer ("to do"). Hermano is NOT that. Its story is different, and worth getting right:
+Germānus is stressed on its third syllable (ger‑MĀ‑nus), which leaves the opening ger‑ unstressed. Latin's g before a front vowel (e, here) had already softened toward a y-like sound in everyday speech — and in this unstressed position, that soft opening simply fell away entirely, giving Old Spanish ermano (no h at all — this is the form actually recorded centuries ago). The h you see in today's hermano was added later, in spelling only, to visually mark the word's old connection to Latin g‑ — unlike hijo and hacer, where the h really was pronounced for a long stretch of Spanish's history before falling silent. Same letter today, two completely different backstories.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hermano, hermana" — brother, sister]
+[pause 8 seconds for the answer]
+[your turn — say: the root — "germen, seed" becomes "germanus, of the same seed" becomes "hermano"]
+[pause 8 seconds for the answer]
+[your turn — say: the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does Spanish "hermano" come from Latin frāter? (No — from germānus, "of the same stock/seed," which replaced frāter over time.) What English words share germānus's root, and what does that root mean? (Germ, germinate, germane — from germen, "seed/sprout.") Is hermano's h the same kind of sound-change as hijo's or hacer's? (No — hijo/hacer's h was once genuinely pronounced; germānus's opening sound simply dropped in an unstressed syllable, and hermano's h is a later, purely written addition that was never spoken.)

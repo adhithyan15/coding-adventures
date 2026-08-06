@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 23,
+  "title": "Chapter 23",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:cbbbe0dcc581dbf8",
+  "lessons": [
+    {
+      "id": "TA-C23-naal",
+      "sequence": 470,
+      "title": "நாள் (nāḷ) — \"day,\" the one this arc's Dravidian languages didn't lose",
+      "headword": "நாள்",
+      "romanization": "",
+      "gloss": "\"day\" — Tamil's everyday, native Dravidian word, already met inside \"tomorrow\"; unlike Kannada's dina, Telugu's rōju, and Malayalam's divasam, Tamil's plain day-word is NOT a loanword at all — நாள் just is the everyday word, no Sanskrit or Persian substitute doing that job",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77b519193dd4561d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've now seen three Dravidian languages reach for a loanword — Sanskrit, twice, and Persian once — to name their everyday word for \"day.\" Tamil doesn't. This lesson is about the one that didn't."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - நாள் — genuinely native, genuinely everyday",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாள் (nāḷ) — \"day\" — is native Dravidian, from Proto-Dravidian nāḷ. You've already met it, hiding inside நாளை (nāḷai, \"tomorrow,\" Chapter 4). But here's the honest headline of this lesson: நாள் isn't a survivor clinging to one narrow sense the way some native words elsewhere in this arc have been — it is simply Tamil's plain, everyday, unmarked word for counting a day, as ordinary as மூன்று நாள் (mūnṟu nāḷ, \"three days\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāḷ\" — \"day,\" native Dravidian, already met inside \"tomorrow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāḷ\" — \"day,\" native Dravidian, already met inside \"tomorrow\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mūnṟu nāḷ\" — three days",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mūnṟu nāḷ\" — three days]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where did you already meet நாள் before this lesson? (Inside நாளை, nāḷai, \"tomorrow,\" Chapter 4.) Is Tamil's everyday day-word a loanword? (No — நாள் is native Dravidian.) Is it marginal or literary? (No — it is the plain everyday counting word.) Next: compare the other sisters' borrowed day-words and Tamil's formal tiṉam."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C23-day-family-register",
+      "sequence": 480,
+      "title": "நாள் and தினம் — everyday native, formal borrowed",
+      "headword": "நாள் / தினம்",
+      "romanization": "",
+      "gloss": "Tamil alone keeps a native everyday day-word while Sanskrit tiṉam occupies formal compounds",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be8dbaeab3323246",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nāḷ is plainly native and everyday. Put that lexical choice beside the other Dravidian tracks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Four everyday day-words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kannada dina — Sanskrit tatsama."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu rōju — Persian loan."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam divasam — Sanskrit tatsama."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil nāḷ — native Dravidian."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil is the only one here whose unmarked everyday counting word remains native."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: Tamil still has தினம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தினம் (tiṉam) is the same Sanskrit dina as Kannada/Malayalam, ultimately from PIE dyew-, \"shine,\" also behind Latin diēs. Tamil assigns it formal and compound work: சுதந்திர தினம், \"Independence Day,\" and தினசரி, \"daily.\" Casual counting remains nāḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "The language did not reject the loan; it gave native and borrowed forms different jobs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mūnṟu nāḷ\" — three days",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mūnṟu nāḷ\" — three days]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sutantira tiṉam\" — Independence Day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sutantira tiṉam\" — Independence Day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CLASSIFY",
+              "instruction": "everyday native, formal/compound Sanskrit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CLASSIFY: everyday native · formal/compound Sanskrit]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which track alone keeps a native everyday day-word? (Tamil.) Where does tiṉam appear? (Formal compounds.) Is it unrelated to Kannada dina? (No — it is the same Sanskrit tatsama.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

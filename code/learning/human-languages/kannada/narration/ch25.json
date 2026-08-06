@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 25,
+  "title": "Good Night",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d84a11ad7e7cac19",
+  "lessons": [
+    {
+      "id": "KA-C25-shubha-ratri",
+      "sequence": 540,
+      "title": "ಶುಭ ರಾತ್ರಿ (śubha rātri) — \"good night,\" auspicious to the end",
+      "headword": "ಶುಭ ರಾತ್ರಿ",
+      "romanization": "",
+      "gloss": "good night\" — literally \"auspicious night,\" pairing rātri (already met) with shubha, a word that started life meaning \"to be beautiful",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3df191ed7cba0c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already have rātri. Pair it with one more Sanskrit word, and you have Kannada's everyday \"good night\" — the same phrase, word for word, as Hindi's."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: ಶುಭ ರಾತ್ರಿ — \"auspicious night\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶುಭ ರಾತ್ರಿ (śubha rātri) — \"good night\" — literally \"auspicious night.\" Both pieces are Sanskrit tatsama: ರಾತ್ರಿ (rātri, \"night,\" already met last lesson) plus ಶುಭ (śubha, \"auspicious, good\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: ಶುಭ — from a root meaning \"to be beautiful\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶುಭ (śubha) comes from the Sanskrit verbal root śubh, whose core sense is \"to be beautiful, splendid\" — traceable to a well-sourced Proto-Indo-European root, ḱewbʰ- (\"to be beautiful\"). A further, more speculative connection to a root meaning \"to shine\" has also been proposed — but either way, the underlying idea is a familiar one: auspiciousness imagined as a kind of radiance or beauty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: A phrase shared across two different language families",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the honest cross-language note: ಶುಭ ರಾತ್ರಿ and Hindi's own शुभ रात्रि are, word for word, the exact same phrase — a Dravidian language and an Indo-Aryan language landing on an identical \"good night.\" The most likely explanation is shared Sanskrit vocabulary, not one language directly copying the phrase from the other — but be honest about the limits of that claim: \"good night\" as a farewell greeting is itself a modern convention across Indian languages, not an ancient one, so some degree of cross-language reinforcement (Hindi's wide reach as a pan-Indian media language, for instance) can't be ruled out either. Unlike Hindi, where rātri is the formal member of a live doublet against everyday raat, Kannada's rātri is simply the ordinary word (Chapter 24) — so this phrase draws on shared Sanskrit vocabulary, not a shared \"formal-versus-everyday\" register split the way it does in Hindi."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"śubha rātri\" — \"good night,\" literally \"auspicious night\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"śubha rātri\" — \"good night,\" literally \"auspicious night\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śubha's own root — śubh, \"to be beautiful\" becomes \"auspicious\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: śubha's own root — śubh, \"to be beautiful\" → \"auspicious\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the honest cross-language note — identical to Hindi's shubh rātri, most likely via shared Sanskrit vocabulary, though direct reinforcement can't be fully ruled out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the honest cross-language note — identical to Hindi's shubh rātri, most likely via shared Sanskrit vocabulary, though direct reinforcement can't be fully ruled out]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶುಭ ರಾತ್ರಿ literally mean? (\"Auspicious night.\") What does ಶುಭ literally trace back to? (A root meaning \"to be beautiful, splendid.\") Is Kannada's śubha rātri definitely borrowed directly from Hindi? (Most likely not — shared Sanskrit vocabulary is the more parsimonious explanation, though since \"good night\" as a farewell is itself a modern convention, some cross-language reinforcement can't be fully ruled out.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

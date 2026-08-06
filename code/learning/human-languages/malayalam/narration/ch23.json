@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 23,
+  "title": "Chapter 23",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:e9c420c4e46128da",
+  "lessons": [
+    {
+      "id": "ML-C23-divasam",
+      "sequence": 530,
+      "title": "ദിവസം (divasam) — the everyday Sanskrit day-word",
+      "headword": "ദിവസം",
+      "romanization": "",
+      "gloss": "\"day\" — everyday Sanskrit divasam beside the more literary Sanskrit dinam",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8a896f44b16eafa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already met Malayalam's native word for \"day\" back in Chapter 4 — hiding inside \"tomorrow.\" This lesson gives it, and its Sanskrit rival, their own honest reckoning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദിവസം (divasam) — \"day\" — is Malayalam's common, everyday word for counting a day (as in മൂന്ന് ദിവസം, mūnnu divasam, \"three days\"). It's a Sanskrit tatsama, borrowed whole from दिवस (divasa), which itself traces to Proto-Indo-European dyew- (\"to shine\"), via the Sanskrit root दिव् (div). That's the same ultimate PIE root behind Hindi/Kannada's दिन/ದಿನ (dina) and Latin's own diēs — but be careful here: divasa and dina are two different Sanskrit formations off that shared root (one built with an -asa suffix, one with Sanskrit's own -nó- formation), not the same word wearing two scripts. Same root, different branch — the din/diēs pattern, replaying itself one level deeper, inside Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Malayalam also has ദിനം (dinam) — the exact same Sanskrit tatsama word as Kannada's plain, everyday dina. But in Malayalam, dinam is the more literary, formal alternate (think ജന്മദിനം, janmadinam, \"birthday,\" the modern calque-style term) — divasam does the everyday counting work instead."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"divasam\" — \"day,\" the everyday counting word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"divasam\" — \"day,\" the everyday counting word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dinam\" — the same Sanskrit word as Kannada's dina, but formal here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dinam\" — the same Sanskrit word as Kannada's dina, but formal here]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What PIE root does ദിവസം ultimately share with Hindi/Kannada's dina and Latin's diēs? (dyew-, \"to shine\" — though divasa and dina are different Sanskrit formations off it, not the same word.) Which is the everyday counting word? (divasam.) Which is more literary or formal? (dinam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C23-naal",
+      "sequence": 540,
+      "title": "നാൾ — the native day-word that narrowed its job",
+      "headword": "നാൾ",
+      "romanization": "",
+      "gloss": "the native day-word, narrowed into narrative use and living compounds rather than erased",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c52f31160d246a7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ദിവസം counts ordinary days and ദിനം writes formally. But Malayalam’s native day-word never disappeared—you met it long ago inside “tomorrow.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാൾ (nāḷ) means “day” and descends from Proto-Dravidian nāḷ, cognate with Tamil நாள் and Kannada ನಾಳು. Chapter 4 already gave you നാളെ (nāḷe, “tomorrow”), with the native day-word still visible inside."
+            },
+            {
+              "kind": "speech",
+              "text": "The Sanskrit loan ദിവസം took over ordinary counting, but നാൾ narrowed rather than vanished. ഒരു നാൾ (oru nāḷ, “one day”) remains natural in storytelling, and the word stays productive in പിറന്നാൾ (piṟannāḷ), “birthday,” literally “day of birth.” That traditional compound stands beside the newer Sanskrit-style ജന്മദിനം (janmadinam)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words therefore carry three honest jobs: divasam counts, dinam is formal, and native nāḷ tells stories and marks birthdays. This echoes Kannada’s native hagalu: borrowing narrowed a native word’s domain without erasing it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷe — tomorrow, with nāḷ inside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷe* — tomorrow, with *nāḷ* inside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru nāḷ — one day, narrative register",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru nāḷ* — one day, narrative register]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṟannāḷ — birthday, day of birth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṟannāḷ* — birthday, day of birth]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Has Sanskrit divasam erased native നാൾ? (No.) Where does nāḷ live now? (Inside tomorrow, in narrative “one day,” and in the living compound for birthday.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ML-C23-naal-survival",
+              "prompt": "Has Sanskrit divasam erased native naal?",
+              "assesses": [
+                "ML-CONCEPT-C23-NAAL-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no",
+                "no it has not",
+                "nāḷ still survives",
+                "naal still survives"
+              ],
+              "feedback": {
+                "correct": "Right: nāḷ still lives in tomorrow, narrative one day, and birthday.",
+                "incorrect": "No. Native nāḷ survives in several everyday and narrative compounds."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

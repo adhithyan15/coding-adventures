@@ -1,0 +1,29 @@
+Kannada, chapter 22: Green and Yellow.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+ಹಸಿರು, ಹಳದಿ — a real Dravidian family, and a borrowed cousin of gelb.
+
+Warm-up.
+[pause 2 seconds]
+Kannada's green word belongs to a real Dravidian family you'll meet again soon. Its yellow word isn't native at all — and it turns out to be hiding the very same ancient root this whole arc keeps circling back to.
+
+The word, taken apart: ಹಸಿರು — a genuine pan-Dravidian word.
+ಹಸಿರು (hasiru, "green") comes from Old Kannada ಪಸಿರ್ (pasir), from Proto-Dravidian pac-, "green" — the exact same root behind Tamil's பச்சை (paccai) and Telugu's పచ్చ (pacca). Kannada even keeps a doublet of its own, ಪಚ್ಚೆ (pacce), sitting right alongside hasiru. So unlike Kannada's blue (ನೀಲಿ, borrowed from Sanskrit), green here is the real, deep, native Dravidian word — and this particular root will keep resurfacing as Telugu, Malayalam, and Tamil's own green words come up later in this same arc.
+
+The word, taken apart: ಹಳದಿ — a turmeric-word loan, and a secret cousin of gelb.
+ಹಳದಿ (haḷadi, "yellow") is not Kannada's native turmeric word — that's ಅರಿಶಿನ (ariśina). Instead, haḷadi appears to be shaped by Sanskrit/Hindi हरिद्रा/हल्दी (haridrā/haldi, "turmeric"), the same word that gives "turmeric" across a huge swath of Indo-Aryan languages (Hindi/Urdu/Punjabi haldi, Bengali holud, Odia haladi) — and in some of these, like Bengali and Odia, that turmeric-word doubles as the everyday word for the color yellow itself, exactly as haḷadi does in Kannada (Hindi keeps the two separate: haldi stays "turmeric," while "yellow" is the unrelated word pīlā). Here's the part that closes a loop running through this whole arc: haridrā itself traces back to हरि (hari, "yellow, tawny"), from Proto-Indo- European ǵʰelh₃- — the same ancient root already behind Hindi's own हरा (harā, "green") and German's gelb ("yellow"). So Kannada picked up its yellow word from a completely different language family, Indo-Aryan rather than Dravidian — and that borrowed word still lands on the exact same PIE root this arc has been tracing all along.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ಹಸಿರು" — green, a real Dravidian cousin of Tamil paccai and Telugu pacca]
+[pause 8 seconds for the answer]
+[your turn — say: "ಹಳದಿ" — yellow, borrowed, and secretly a cousin of gelb]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — hasiru is native Dravidian; haladi is a Sanskrit/ Hindi loan built on the turmeric word]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Proto-Dravidian root gives ಹಸಿರು (hasiru), and which two other Dravidian languages share it? (pac-, "green" — shared with Tamil's paccai and Telugu's pacca.) Is ಹಳದಿ (haḷadi) Kannada's native word for turmeric? (No — that's ariśina; haḷadi is a Sanskrit/Hindi loan.) What ancient PIE root connects haḷadi, through Sanskrit hari, to Hindi's harā and German's gelb? (ǵʰelh₃-, "to shine.")

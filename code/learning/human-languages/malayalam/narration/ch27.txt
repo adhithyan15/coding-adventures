@@ -1,0 +1,29 @@
+Malayalam, chapter 27: Chapter 27.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+വൈകുന്നേരം (vaikunnēraṁ) — "evening," built from a verb meaning "to get late".
+
+Warm-up.
+[pause 2 seconds]
+Telugu reached for Sanskrit to name the evening. Malayalam's most common word takes a completely different route — an everyday verb, not a borrowed noun.
+
+You'll want to know.
+വൈകുന്നേരം (vaikunnēraṁ) — "evening" — is, per Wiktionary, a compound: വൈക് (vaikŭ) + -ഉം (-uṁ) + നേരം (nēraṁ, "time"), literally "latening time." നേരം is itself confirmed native Proto-Dravidian (cognate Tamil நேரம்), not a Sanskrit borrowing — so unlike Telugu's Sanskrit సాయంత్రం, this whole compound is native Dravidian, start to finish. The വൈക് root plausibly connects to an everyday Malayalam verb, വൈകുക (vaikuka), confirmed "to get late" — though be honest that this specific link is the author's own reasonable inference, not something Wiktionary's compound entry states outright.
+
+Why it's said this way.
+Here's a real tension, not smoothed over: Wiktionary's own entry lists both "afternoon" and "evening" as senses of this single word. But two independently-fetched phrasebook sources (ling-app.com, talkpal.ai) draw a cleaner line — evening is വൈകുന്നേരം, while afternoon gets its own, separate compound built on ഉച്ച (already met, Chapter 17, "noon") plus കഴിഞ്ഞ് (kazhinju, "passed, gone by"). This project's discipline is to flag genuine disagreement rather than quietly pick whichever source is more convenient — so treat the afternoon/evening boundary here as genuinely blurry in the dictionary sense, even though the two everyday phrasebook sources agree on a cleaner practical split.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "vaikunnēraṁ" — "evening," literally "latening time"]
+[pause 8 seconds for the answer]
+[your turn — say: the everyday verb root — vaikuka, "to get late"]
+[pause 8 seconds for the answer]
+[your turn — say: the honest tension — Wiktionary blurs afternoon/evening; phrasebooks split them cleanly]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does വൈകുന്നേരം literally mean, and what verb is it plausibly built from? ("Latening time" — from വൈകുക, "to get late.") Do all sources agree on where "afternoon" ends and "evening" begins for this word? (No — Wiktionary lists it as covering both senses; phrasebook sources instead draw a clean line, treating afternoon as a separate compound.) Is വൈകുന്നേരം a Sanskrit borrowing, like Telugu's సాయంత్రం? (No — it's a native Dravidian compound, built from an everyday verb and a native "time" word, നേരം.)
