@@ -239,7 +239,72 @@ style TaskApp {
       color : "#2b2723" ;
     }
   }
-  part seg-board-off2 {
+  part seg-board-off3 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-board-off4 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-sheet-on {
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(60,45,25,.07)" ;
+  }
+  part seg-sheet-off {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-sheet-off2 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-sheet-off3 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-tl-off3 {
     background : "transparent" ;
     color : "#6a625a" ;
     font-size : 13 ;
@@ -251,6 +316,17 @@ style TaskApp {
     }
   }
   part seg-list-off2 {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#2b2723" ;
+    }
+  }
+  part seg-list-off3 {
     background : "transparent" ;
     color : "#6a625a" ;
     font-size : 13 ;

@@ -51,6 +51,134 @@ const TASK_VIEW = (projectStart: number) => ({
   },
   projectStart,
 });
+// The sheet's column catalogue: one entry per column the sheet can show, in
+// display order. `sortable` controls whether the column appears as a Select
+// option in the sort toolbar. `editable`/`write` describe what SHOULD gate
+// edit-mode and turn a committed edit into an engine op — prepared for when
+// cell editing is fixed (see Sheet.mil's "Known limitation" note: Grid's
+// Cell can't carry a click payload through the current react emitter, so
+// v1 is read-only and neither field has a live consumer yet).
+//
+// This is a SECOND consumer of table(view) — same engine call the list view
+// already makes, just with a broader visibleFields and a different
+// filter/sort built from the sheet's own toolbar state. Fat engine, dumb
+// UI: nothing here recomputes what the engine already returned formatted.
+interface SheetField {
+  field: { builtin: string };
+  label: string;
+  width: number;
+  editable: boolean;
+  sortable: boolean;
+  write?: (id: string, value: string) => any;
+}
+const PRIORITY_VALUES = ["low", "normal", "high", "urgent"];
+const SHEET_FIELDS: SheetField[] = [
+  {
+    field: { builtin: "completed" },
+    label: "Done",
+    width: 60,
+    editable: true,
+    sortable: false,
+    write: (id, value) => ({
+      op: "setCompleted",
+      args: { id, completed: value.trim().toLowerCase() === "true" || value.trim() === "✓" },
+    }),
+  },
+  {
+    field: { builtin: "name" },
+    label: "Name",
+    width: 240,
+    editable: true,
+    sortable: true,
+    write: (id, value) => (value.trim() ? { op: "renameTask", args: { id, name: value.trim() } } : null),
+  },
+  {
+    field: { builtin: "deadline" },
+    label: "Deadline",
+    width: 110,
+    editable: true,
+    sortable: true,
+    write: (id, value) => {
+      const trimmed = value.trim();
+      if (!trimmed) return { op: "setDeadline", args: { id, deadline: null } };
+      const days = isoToDays(trimmed);
+      return days == null ? null : { op: "setDeadline", args: { id, deadline: days } };
+    },
+  },
+  {
+    field: { builtin: "percentComplete" },
+    label: "% Complete",
+    width: 90,
+    editable: true,
+    sortable: true,
+    write: (id, value) => {
+      const n = Number(value.trim().replace(/%$/, ""));
+      if (!Number.isFinite(n)) return null;
+      return { op: "setPercentComplete", args: { id, percent: Math.max(0, Math.min(100, n)) } };
+    },
+  },
+  {
+    field: { builtin: "priority" },
+    label: "Priority",
+    width: 90,
+    editable: true,
+    sortable: true,
+    write: (id, value) => {
+      const trimmed = value.trim().toLowerCase();
+      if (!trimmed) return { op: "setPriority", args: { id, priority: null } };
+      // Reject an unrecognised value rather than sending it through — the wire type is
+      // a fixed Rust enum, and a typo would otherwise fail the ABI parse silently.
+      return PRIORITY_VALUES.includes(trimmed)
+        ? { op: "setPriority", args: { id, priority: trimmed } }
+        : null;
+    },
+  },
+  {
+    field: { builtin: "status" },
+    label: "Status",
+    width: 110,
+    editable: true,
+    sortable: true,
+    // Status is a free-form workflow id (not a fixed enum), so any non-empty text is
+    // accepted verbatim; empty clears it back to unset.
+    write: (id, value) => ({ op: "setStatus", args: { id, status: value.trim() || null } }),
+  },
+  {
+    field: { builtin: "notes" },
+    label: "Notes",
+    width: 240,
+    editable: true,
+    sortable: false,
+    write: (id, value) => ({ op: "setNotes", args: { id, notes: value } }),
+  },
+  { field: { builtin: "overdue" }, label: "Overdue", width: 90, editable: false, sortable: false },
+  { field: { builtin: "start" }, label: "Start", width: 100, editable: false, sortable: false },
+  { field: { builtin: "finish" }, label: "Finish", width: 100, editable: false, sortable: false },
+];
+
+// Sheet toolbar/state → the View the engine actually evaluates. Rebuilt every
+// render from the host's own filter/sort state, exactly like TASK_VIEW.
+const SHEET_VIEW = (
+  projectStart: number,
+  filterText: string,
+  sortField: string,
+  sortAscending: boolean,
+) => {
+  const sortEntry = SHEET_FIELDS.find((f) => f.label === sortField && f.sortable);
+  return {
+    view: {
+      id: "sheet",
+      name: "Sheet",
+      shape: "table",
+      filter: { statuses: [], completed: null, search: filterText.trim() || null },
+      groupBy: null,
+      sort: sortEntry ? [{ field: sortEntry.field, ascending: sortAscending }] : [],
+      visibleFields: SHEET_FIELDS.map((f) => f.field),
+    },
+    projectStart,
+  };
+};
+
 const isoToDays = (iso: string): number | null => {
   const m = /^\s*(\d{4})-(\d{2})-(\d{2})\s*$/.exec(iso);
   return m ? Math.floor(Date.UTC(+m[1], +m[2] - 1, +m[3]) / DAY_MS) : null;
@@ -80,9 +208,24 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let newName = "";
   let newDue = "";
   let newProject = "";
-  // Which view is showing. A string rather than a pair of booleans, so the three
+  // Which view is showing. A string rather than a set of booleans, so the four
   // states can't contradict each other.
-  let view: "list" | "board" | "timeline" = "list";
+  let view: "list" | "board" | "timeline" | "sheet" = "list";
+  // Sheet toolbar state.
+  let sheetFilterText = "";
+  let sheetSortField = ""; // a SHEET_FIELDS label, or "" for unsorted
+  let sheetSortAscending = true;
+  let sheetSortOpen = false;
+  // Grid's edit-cursor slots. -1/"" ("none", matching Grid's own contract — see
+  // Grid.mil) permanently: v1 is read-only, since Grid's Cell can't carry a click
+  // payload through the current react emitter (see Sheet.mil's "Known limitation"
+  // note). Kept as real props rather than deleted — Grid requires them wired to
+  // something — and as `const` since nothing ever drives them yet.
+  const sheetSelectedRow = -1;
+  const sheetSelectedCol = -1;
+  const sheetEditRow = -1;
+  const sheetEditCol = -1;
+  const sheetEditContent = "";
   // Which row is expanded, by task id (not index — an index would follow the wrong
   // task the moment the list is re-sorted or something above it is deleted).
   let expanded: string | null = null;
@@ -239,6 +382,21 @@ function makeController(engine: any, init: ControllerInit = {}) {
     return [...ids].sort((a, b) => groupRank(a) - groupRank(b));
   };
 
+  // The sheet's own row selection — same shape as `rows()`, but keyed to the
+  // sheet's own filter/sort state rather than TASK_VIEW's fixed one. Ordered
+  // task-id list is what turns a clicked (row, col) back into a task id.
+  const sheetRows = (): { ids: string[]; cells: any[][] } => {
+    const groups = engine.table(
+      SHEET_VIEW(today, sheetFilterText, sheetSortField, sheetSortAscending),
+    ).data.groups;
+    // groupBy is always null here, so there is exactly one group.
+    const rowsOut: any[] = (groups[0]?.rows ?? []) as any[];
+    return {
+      ids: rowsOut.map((r) => r.task as string),
+      cells: rowsOut.map((r) => r.cells.map((c: any) => c.display as string)),
+    };
+  };
+
   return {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
@@ -326,6 +484,10 @@ function makeController(engine: any, init: ControllerInit = {}) {
         p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
       ]);
       const tl = view === "timeline" ? timeline() : { scale: "", rows: [] };
+      // Computed only while the sheet is showing — same reasoning as `boardCards`
+      // below: an engine query the current view doesn't need shouldn't run on every
+      // keystroke elsewhere in the app.
+      const sheet = view === "sheet" ? sheetRows() : { ids: [], cells: [] };
       const boardCards: string[][] = (() => {
         if (view !== "board") return [];
         const pct = progress();
@@ -352,6 +514,25 @@ function makeController(engine: any, init: ControllerInit = {}) {
         boardMode: view === "board" ? "board" : "",
         boardColumns: BOARD_COLUMNS.map((c) => [c.title, c.key]),
         boardCards,
+        sheetMode: view === "sheet" ? "sheet" : "",
+        sheetViewportRows: sheet.cells,
+        sheetColumnHeaders: SHEET_FIELDS.map((f) => f.label),
+        sheetColumnWidths: SHEET_FIELDS.map((f) => f.width),
+        sheetSelectedRow,
+        sheetSelectedCol,
+        sheetEditRow,
+        sheetEditCol,
+        sheetEditContent,
+        sheetFilterText,
+        // Select shows whatever `value` it's given verbatim — placeholder
+        // substitution when unset is the HOST's job (Select.mll deliberately
+        // doesn't branch on value-truthiness itself; see its own doc-comment).
+        // The underlying `sheetSortField` state (used by SHEET_VIEW above) stays
+        // "" for unsorted; this is only what's shown on the toggle.
+        sheetSortField: sheetSortField || "Sort by…",
+        sheetSortOptions: SHEET_FIELDS.filter((f) => f.sortable).map((f) => f.label),
+        sheetSortOpen,
+        sheetSortAscending,
         timelineScale: tl.scale,
         timelineRows: tl.rows,
         newTaskName: newName,
@@ -388,6 +569,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         case "showTimeline":
           view = "timeline";
+          break;
+        case "showSheet":
+          view = "sheet";
           break;
         case "cardDropped": {
           // A drop is a PROPOSAL. The engine owns what a status change means; the host
@@ -434,6 +618,33 @@ function makeController(engine: any, init: ControllerInit = {}) {
           persist();
           break;
         }
+        // v1 sheet is READ-ONLY. Grid's Cell is a Box (a generic container), and
+        // mosaic-emit-react's connects-wiring only synthesizes an index/value payload
+        // for a small set of "dedicated" primitives (HostButton, HostInput, HostLink) —
+        // a generic Box's onClick always dispatches void, no matter what the target
+        // emit declares. That means Grid's row/col selection and edit round-trip can't
+        // actually carry data through the current emitter, in any app — not something
+        // fixable from this package/UI layer. These handlers stay as documented no-ops
+        // (rather than deleting the wiring, which the package resolver requires — see
+        // Sheet.mil's "Known limitation" note) until that's fixed at the emitter level.
+        case "sheetNavigate":
+        case "sheetFormulaChange":
+        case "sheetEditCancel":
+        case "sheetEditCommit":
+          break;
+        case "sheetFilterChange":
+          sheetFilterText = event.value;
+          break;
+        case "sheetSortFieldChange":
+          sheetSortField = event.value;
+          sheetSortOpen = false;
+          break;
+        case "sheetToggleSortOpen":
+          sheetSortOpen = !sheetSortOpen;
+          break;
+        case "sheetToggleSortDirection":
+          sheetSortAscending = !sheetSortAscending;
+          break;
         case "newProjectNameChange":
           newProject = event.value;
           break;

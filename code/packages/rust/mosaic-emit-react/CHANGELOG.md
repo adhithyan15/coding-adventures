@@ -4,6 +4,23 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - a payload-carrying `HostInput` `onCommit` now actually carries the payload
+
+`onCommit`'s merged `onKeyDown` handler always dispatched `{ type: "..." }` with no
+payload, regardless of what the target emit declared — a payload-less dispatch against
+a payload-carrying emit type (e.g. `mosaic-pkg-grid`'s `Cell`/`Grid`, which declare
+`onEditCommit(value: text)`) meant the generated component **failed to typecheck**.
+Found building the task-app sheet view — the first `HostInput` `onCommit` consumer in
+the repo with a declared payload.
+
+Now: if the target emit's declared params are non-empty, the Enter branch dispatches
+`{ type: "...", value: e.currentTarget.value }` (`currentTarget`, not `target` —
+`KeyboardEvent<T>.target` is the loose `EventTarget`, unlike `ChangeEvent<T>.target`,
+which the existing `onChange` handler already relies on being narrowed). A void
+`onCommit` (no declared params) stays exactly as before — adding an unrequested `value`
+field there would trip TypeScript's excess-property check on the object literal
+instead of fixing anything.
+
 ### Changed - drag keys may come from an expression
 
 `drag-key` / `drop-key` / `drag-kind` / `drag-label` now accept an **expression**, not

@@ -9,11 +9,20 @@ use std::path::PathBuf;
 #[cfg(target_os = "macos")]
 use std::process::Command;
 
-fn task_app_src_root() -> PathBuf {
+fn code_packages_root() -> PathBuf {
+    // CARGO_MANIFEST_DIR is .../code/packages/rust/mosaic-emit-swiftui — two
+    // parents up is .../code/packages, the same default search root
+    // mosaic-compile's CLI uses.
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
         .and_then(|path| path.parent())
-        .and_then(|path| path.parent())
+        .map(PathBuf::from)
+        .expect("derive code/packages root from CARGO_MANIFEST_DIR")
+}
+
+fn task_app_src_root() -> PathBuf {
+    code_packages_root()
+        .parent()
         .map(|path| {
             path.join("programs")
                 .join("mosaic")
@@ -23,14 +32,25 @@ fn task_app_src_root() -> PathBuf {
         .expect("derive Task App source root from CARGO_MANIFEST_DIR")
 }
 
+/// Resolve every `pkg::P::C` reference in `layout` in place — see the
+/// identical helper's doc-comment in `task_app_focus_compiles_to_swiftui.rs`.
+fn resolve_packages(layout: &mut moslayout_compiler::LayoutDef) {
+    let packages_root = code_packages_root();
+    let search_paths = vec![packages_root.clone(), packages_root.join("mosaic")];
+    mosaic_package_resolver::LayoutPackageResolver::new(search_paths)
+        .resolve(layout)
+        .expect("resolve pkg:: references in TaskApp.mll");
+}
+
 #[test]
 fn task_app_pressed_state_lowers_to_native_swiftui_press_state() {
     let root = task_app_src_root();
     let mil = fs::read_to_string(root.join("TaskApp.mil")).expect("read TaskApp.mil");
     let mll = fs::read_to_string(root.join("TaskApp.mll")).expect("read TaskApp.mll");
     let interface = mosmodel_compiler::compile(&mil).expect("compile Task App interface");
-    let layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
+    let mut layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
         .expect("compile Task App layout");
+    resolve_packages(&mut layout.def);
 
     for theme in ["TaskApp.light.msl", "TaskApp.dark.msl"] {
         let msl = fs::read_to_string(root.join(theme)).expect("read Task App style");

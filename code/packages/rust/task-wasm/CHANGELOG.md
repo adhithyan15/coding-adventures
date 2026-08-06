@@ -4,6 +4,13 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - `set_notes`
+
+- **`set_notes`** — replace a task's free-text notes. `ops.rs::set_notes` already
+  existed; this wraps it in the same `export_op!` shape as `rename_task` right above
+  it. Needed so the sheet view's Notes column can actually persist an edit once cell
+  editing lands (see task-app's Sheet PR for the current read-only scope).
+
 ### Added - project switching (`set_active_project` / `active_project`)
 
 - **`set_active_project`** — choose which project the per-project ops and queries act

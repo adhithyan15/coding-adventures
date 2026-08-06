@@ -95,6 +95,25 @@ The host pushes only the plain coordinate slots (`edit-row`,
 coordinates → per-cell booleans. Cell receives booleans, never
 coordinates.
 
+## v0.2.2 — Cell's click actually fires now
+
+`Cell.mil` always declared `emit onClick`, and every call site (including
+Grid.mll's own `Cell(onClick: emit: onNavigate, ...)`) supplied a handler —
+but `Cell.mll`'s `Box[cell]` never referenced `emit: onClick` in its own
+body, so the wiring went nowhere. A click on a cell did nothing, in any
+consuming app, from v0.1.0 through v0.2.1. Found and fixed while building
+`mosaic-pkg-sheet` — the first real application to drive this package
+through an actual emitter pipeline. See CHANGELOG.md for the fix.
+
+**Known follow-on limitation, not fixed here:** the payload Grid.mil
+declares for `onNavigate` (`row: number, col: number`) still can't
+actually reach a consumer. `Cell`'s root is a `Box` (a generic container),
+and `mosaic-emit-react`'s connects-wiring only synthesizes an index/value
+payload for a small set of "dedicated" primitives (`HostButton`,
+`HostInput`, `HostLink`) — a generic `Box`'s `onClick` always dispatches
+void. So a click now correctly *fires*, but without row/col. Consumers
+that need to know which cell was clicked have no way to find out yet.
+
 ## What's still out of scope (deferred to UI28-2 / v0.3.0)
 
 * **Sticky header.** Authors compose `HostScroll { Grid { ... } }`

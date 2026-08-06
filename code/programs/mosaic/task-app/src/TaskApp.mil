@@ -58,6 +58,26 @@ component TaskApp {
   slot timeline-scale    : text ;
   slot timeline-rows     : list<list<text>> ;
 
+  // Sheet (spreadsheet). `sheet-mode` is non-empty when the sheet is showing. Every
+  // `sheet-*` slot is a straight pass-through to `pkg::mosaic-pkg-sheet::Sheet` — see
+  // Sheet.mil for the full contract. TaskApp adds no shaping of its own here; the host
+  // builds the sheet's rows from the SAME `table(view)` projection call it already uses
+  // for the list view, just with a broader `visibleFields` and the current filter/sort.
+  slot sheet-mode           : text ;
+  slot sheet-viewport-rows  : list<list<text>> ;
+  slot sheet-column-headers : list<text> ;
+  slot sheet-column-widths  : list<number> ;
+  slot sheet-selected-row   : number ;
+  slot sheet-selected-col   : number ;
+  slot sheet-edit-row       : number ;
+  slot sheet-edit-col       : number ;
+  slot sheet-edit-content   : text ;
+  slot sheet-filter-text    : text ;
+  slot sheet-sort-field      : text ;
+  slot sheet-sort-options    : list<text> ;
+  slot sheet-sort-open        : bool ;
+  slot sheet-sort-ascending   : bool ;
+
   // One row per task, in schedule order. Each row is a list of pre-formatted cells:
   //
   //   [ 0 ] done-glyph      [ 5 ] expanded-marker  — non-empty for the ONE open row
@@ -90,11 +110,29 @@ component TaskApp {
   emit onShowList ;
   emit onShowBoard ;
   emit onShowTimeline ;
+  emit onShowSheet ;
 
   // A drop is a PROPOSAL: the engine decides whether the move is legal and performs
   // it. The payload is the UI35 contract — what moved, of what kind, onto which
   // target, and where within it.
   emit onCardDropped ( key : text , kind : text , targetKey : text , position : text ) ;
+
+  // Sheet emits — straight pass-through to/from pkg::mosaic-pkg-sheet::Sheet.
+  // onNavigate/onFormulaChange/onEditCommit/onEditCancel are void, matching
+  // Sheet.mil (v1 is read-only — see Sheet.mil's "Known limitation" note:
+  // Grid's Cell is a Box, and mosaic-emit-react's connects-wiring can't
+  // synthesize an index/value payload for a generic container the way it
+  // does for HostButton/HostInput, so nothing meaningful would flow through
+  // a declared payload here anyway).
+  emit onSheetNavigate ;
+  // Reliable, unlike the others here — see Sheet.mil's matching onFormulaChange note.
+  emit onSheetFormulaChange ( value : text ) ;
+  emit onSheetEditCommit ;
+  emit onSheetEditCancel ;
+  emit onSheetFilterChange        ( value : text ) ;
+  emit onSheetSortFieldChange     ( value : text ) ;
+  emit onSheetToggleSortOpen ;
+  emit onSheetToggleSortDirection ;
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;

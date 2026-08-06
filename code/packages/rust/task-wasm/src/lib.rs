@@ -378,6 +378,19 @@ export_op!(
 );
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct IdNotesArgs {
+    id: String,
+    notes: String,
+}
+export_op!(
+    /// Replace a task's free-text notes.
+    set_notes,
+    IdNotesArgs,
+    |s, a| s.set_notes(&TaskId::from_raw(a.id), a.notes)
+);
+
+#[derive(Deserialize)]
 struct IdArg {
     id: String,
 }
@@ -1061,6 +1074,20 @@ mod tests {
         let list = take(checklist());
         assert!(list.contains(r#""ok":true"#), "{list}");
         assert!(list.contains(r#""name":"Write spec""#), "{list}");
+    }
+
+    #[test]
+    fn set_notes_persists_through_snapshot() {
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Write spec"}"#);
+        let set = call1(set_notes, r#"{"id":"a","notes":"needs a diagram"}"#);
+        assert!(set.contains(r#""ok":true"#), "{set}");
+        let snap = take(snapshot());
+        assert!(snap.contains(r#""notes":"needs a diagram""#), "{snap}");
+
+        // Missing task → NotFound, not a panic.
+        let missing = call1(set_notes, r#"{"id":"missing","notes":"x"}"#);
+        assert!(missing.contains(r#""ok":false"#), "{missing}");
     }
 
     #[test]

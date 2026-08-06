@@ -10,3 +10,9 @@ readme = "README.md"
 mosmodel-compiler = { path = "../mosmodel-compiler" }
 moslayout-compiler = { path = "../moslayout-compiler" }
 mosstyle-compiler = { path = "../mosstyle-compiler" }
+
+[dev-dependencies]
+# Used only by the task-app acceptance tests, to resolve `pkg::P::C`
+# references the same way mosaic-compile's CLI does before handing a
+# layout to any backend emitter (UI34 §5).
+mosaic-package-resolver = { path = "../mosaic-package-resolver" }

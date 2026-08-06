@@ -1,0 +1,53 @@
+// Sheet.light.msl — default light theme style for the Sheet component.
+//
+// Styles only Sheet's own toolbar parts — see Sheet.dark.msl for why
+// the wrapped Grid/Select are untouched. Palette mirrors
+// mosaic-pkg-toolkit's own light theme (Input.light.msl).
+
+style Sheet {
+  part sheet-root {
+    gap: 8 ;
+  }
+
+  part sheet-toolbar {
+    gap: 8 ;
+  }
+
+  part sheet-filter {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+  }
+
+  part sheet-sort-dir-asc {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+
+    state hover {
+      background: "#f1f3f5" ;
+    }
+  }
+
+  part sheet-sort-dir-desc {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+
+    state hover {
+      background: "#f1f3f5" ;
+    }
+  }
+}

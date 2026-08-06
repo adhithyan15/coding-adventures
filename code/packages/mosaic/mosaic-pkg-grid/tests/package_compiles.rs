@@ -92,7 +92,7 @@ fn manifest_declares_expected_exports() {
         .and_then(|p| p.get("version"))
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
-    assert_eq!(version, "0.2.0", "[package].version must be 0.2.0 for the UI28-1 cell-and-column composition release");
+    assert_eq!(version, "0.2.2", "[package].version must be 0.2.2 for the Cell onClick-wiring fix");
 
     // [components].exports
     let exports = value
@@ -248,6 +248,33 @@ fn ui28_1_cell_declares_is_selected_slot() {
         "Cell mosmodel descriptor must expose `is-selected`, got: {:?}",
         names
     );
+}
+
+/// v0.2.1 regression guard. Cell.mil declares `emit onClick`, and every call
+/// site (Grid.mll's own `Cell(onClick: emit: onNavigate, ...)`) supplies a
+/// handler for it — but v0.2.0's Cell.mll never referenced `emit: onClick`
+/// anywhere in its own body, so a real click did nothing. The bug shipped
+/// silently because no application had driven Grid through a real emitter
+/// pipeline until the task-app sheet view did. This pins the fix: Cell's
+/// root Box must wire onClick to its own declared emit, so the package
+/// resolver's rewrite_bindings has something to substitute the call site's
+/// binding into.
+#[test]
+fn ui28_1_cell_wires_its_own_onclick_emit() {
+    let src = read_source("Cell.mll");
+    let collapsed: String = src.split_whitespace().collect::<Vec<_>>().join(" ");
+    assert!(
+        collapsed.contains("onClick: emit: onClick"),
+        "Cell.mll's Box must fire its own declared onClick emit — a click on \
+         a cell otherwise does nothing, regardless of what the call site wires:\n{src}"
+    );
+
+    // And it must actually compile against Cell.mil's interface, proving
+    // `onClick` really is a declared emit the resolver can bind to.
+    let mil_src = read_source("Cell.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).expect("Cell.mil compiles");
+    moslayout_compiler::compile(&src, Some(&mil_out.descriptor_json))
+        .expect("Cell.mll must validate against Cell.mil");
 }
 
 #[test]

@@ -4,6 +4,36 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - sheet (spreadsheet) view — read-only
+
+- **A fourth view: a sheet**, a filterable/sortable spreadsheet over 10 columns (Done,
+  Name, Deadline, % Complete, Priority, Status, Notes, Overdue, Start, Finish), wired to
+  the engine's `table(view)` projection — the same query the list view already uses,
+  with a broader `visibleFields` and its own filter/sort toolbar state. Built on the new
+  `mosaic-pkg-sheet` package (`mosaic-pkg-grid` + `mosaic-pkg-toolkit`'s `Select`).
+- **v1 is READ-ONLY.** Cell editing is declared in the interface but not functional:
+  `mosaic-pkg-grid`'s `Cell` is a `Box` (a generic container), and
+  `mosaic-emit-react`'s connects-wiring can't synthesize an index/value payload for a
+  generic container the way it can for `HostButton`/`HostInput` — so a click can't
+  actually identify *which* cell was clicked, in any app built on Grid, not just this
+  one. Clicking a cell is a documented no-op rather than something that looks like it
+  works and silently doesn't. Tracked in `BACKLOG.md`; see `mosaic-pkg-sheet`'s and
+  `mosaic-pkg-grid`'s own CHANGELOGs for the full explanation and the two ways to fix it
+  properly at the emitter level.
+
+Two bugs found building this, in packages nothing had driven through a real app before:
+
+- **`mosaic-pkg-grid` v0.2.0/0.2.1: a click on any cell did nothing.** `Cell.mil`
+  declares `emit onClick` and every call site wires a handler for it, but `Cell.mll`'s
+  own `Box[cell]` never referenced `emit: onClick` — nothing for the resolver to
+  substitute into. Fixed in `mosaic-pkg-grid` 0.2.2.
+- **`mosaic-emit-react`: `HostInput`'s `onCommit` dispatched no payload, ever**, even
+  when the target emit declared one — so a component using `Grid`'s `onEditCommit`
+  failed to typecheck. Fixed: the Enter-key dispatch now includes `value` when (and
+  only when) the target emit's params are non-empty.
+- Also added `task-wasm`'s `set_notes` export (`ops.rs::set_notes` existed; wasn't
+  wired to the ABI) — needed for the Notes column once editing lands.
+
 ### Added - board (kanban) view
 
 - **A third view: a board**, with Up next / In progress / Done columns. Cards drag
