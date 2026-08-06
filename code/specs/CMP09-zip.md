@@ -354,9 +354,18 @@ unzip(data: bytes) → {name: str → data: bytes}
 | Haskell    | `zip`                        | `Zip`                          |
 | F#         | `CodingAdventures.Zip.FSharp`| `CodingAdventures.Zip.FSharp`  |
 | Kotlin     | `com.codingadventures:zip`   | `com.codingadventures.zip`     |
+| Dart       | `coding_adventures_zip`      | `coding_adventures_zip`        |
 
-**Dependencies:** each ZIP package depends on the corresponding language's `deflate`
-(CMP05) package for the DEFLATE codec. The CRC-32 implementation is inlined (no separate
+**Dependencies:** in practice, every ZIP package in this repository depends only on the
+corresponding language's `lzss` (CMP02) package for LZ77 match-finding, and implements
+RFC 1951 DEFLATE framing (bit I/O, fixed/dynamic Huffman tables, block structure)
+directly inside the `zip` package itself — rather than depending on the language's
+`deflate` (CMP05) package as an earlier revision of this spec described. Where a
+language's `deflate` package uses a private, self-designed wire format for its own
+internal round-tripping instead of the standard RFC 1951 bit-stream a ZIP entry must
+carry (as `dart/deflate` does — see `code/packages/dart/zip/README.md`), depending on
+it would produce archives no real `unzip` could open and would be unable to read
+archives from other real-world tools. The CRC-32 implementation is inlined (no separate
 package — it's a trivial table-driven function).
 
 **Divergence (Haskell):** the Haskell package depends on `lzss` (CMP02) rather than
