@@ -519,18 +519,35 @@ describe("corpus regression", () => {
   // dangerously, a block field rename that makes every lesson look clean — moves it
   // and fails here instead of shipping a curriculum falsely advertised as drivable.
   //
-  // Reproduces the HL08 baseline: 51 `pen`, 7 script-block lessons, and 322
-  // table-bearing lessons among the remaining 1,038. HL08 records 695 drivable from
-  // 56 cue-bearing lessons; this implementation's published cue list matches 61 and
-  // therefore lands on 694. The spec's exact cue list was never recorded, and the
-  // detector is deliberately NOT tuned to close a one-lesson gap.
+  // The HL08 baseline was 1,096 lessons: 51 `pen`, 7 script-block lessons, and 322
+  // table-bearing lessons among the remaining 1,038, for 694 drivable. HL08 itself
+  // records 695 from 56 cue-bearing lessons; this implementation's published cue
+  // list matches 61 and therefore landed on 694. The spec's exact cue list was
+  // never recorded, and the detector is deliberately NOT tuned to close that
+  // one-lesson gap.
+  //
+  // HL-C40 (the Japanese track) raised every total by its eight lessons. The move is
+  // deliberate and the shape of it is the finding, not noise:
+  //
+  //   totalLessons  1096 -> 1104   (+8 Japanese lessons)
+  //   script blocks    7 ->   14   (+7 — every Japanese word lesson teaches a sign)
+  //   remaining     1038 -> 1039   (+1 — only the Japanese practice lesson has none)
+  //   voice          694 ->  695   (+1 — that same practice lesson)
+  //   sight          351 ->  358   (+7)
+  //   pen             51 ->   51   (unchanged; Japanese has no `writing` lesson yet)
+  //   tables         322 ->  322   (unchanged; the Japanese lessons use no tables)
+  //
+  // Seven of eight Japanese lessons are `sight` because a kana or kanji shape cannot
+  // be read aloud. Routing them through `input` blocks instead would have kept the
+  // drivable percentage flat by mislabelling them — exactly the failure this pin
+  // exists to catch. The corpus-wide percentage happens to stay at 63.
   it("pins the corpus-wide drivable count", () => {
     const { lessons } = loadEverything();
     const summary = summarizeModality(lessons);
-    expect(summary.totalLessons).toBe(1096);
+    expect(summary.totalLessons).toBe(1104);
     expect(summary.pen).toBe(51);
-    expect(summary.voice).toBe(694);
-    expect(summary.sight).toBe(351);
+    expect(summary.voice).toBe(695);
+    expect(summary.sight).toBe(358);
     expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
     expect(summary.drivablePercent).toBe(63);
   });
@@ -539,13 +556,14 @@ describe("corpus regression", () => {
     const { lessons } = loadEverything();
     expect(lessons.filter((entry) => entry.realization.type === "writing")).toHaveLength(51);
     const nonWriting = lessons.filter((entry) => entry.realization.type !== "writing");
+    // 7 pre-HL-C40 script-block lessons + 7 Japanese word lessons.
     expect(
       nonWriting.filter((entry) => entry.blocks.some((block) => block.type === "script")),
-    ).toHaveLength(7);
+    ).toHaveLength(14);
     const remaining = nonWriting.filter(
       (entry) => !entry.blocks.some((block) => block.type === "script"),
     );
-    expect(remaining).toHaveLength(1038);
+    expect(remaining).toHaveLength(1039);
     expect(
       remaining.filter((entry) => widestTableColumns(lessonText(entry)) > 0),
     ).toHaveLength(322);

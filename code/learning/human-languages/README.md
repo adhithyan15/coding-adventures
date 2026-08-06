@@ -48,7 +48,7 @@ Every registered track has one `curriculum.json`. Its ordered path can revisit a
 shared spine node, attaches required/supporting/reference extensions before,
 inline with, or after a local segment, and explicitly records canonical concepts
 that the track omits or deliberately teaches elsewhere. The data-package gate
-proves that all 20 maps cover their schema-v2 and canonical lessons without
+proves that all 21 maps cover their schema-v2 and canonical lessons without
 jumping over a prerequisite. Books and the app still read the lesson Markdown;
 the map is the shared scheduling contract, not a second copy of the content.
 
@@ -107,6 +107,7 @@ edition is authored.
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1-2 authored (lessons + book) |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | Five authored shared-spine chapters; 20 canonical lessons |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |
+| [Japanese](./japanese/README.md) | Japonic / hiragana + katakana + kanji (vendored font) | Chapter 1 authored; 8 canonical lessons, chapter generated for app + book |
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already
@@ -122,3 +123,15 @@ half of English's vocabulary), and Sanskrit is the parent of the
 Hindi/Marathi/Punjabi/Bengali greetings — while both, as Indo-European sisters,
 also reach into English (*na* ↔ *no* ↔ *nōn*, *su-* ↔ Greek *eu-*, √gam ↔ *come*).
 They tie the two halves of the curriculum together.
+
+**Japanese is the first track with no taproot the reader already owns.** Every
+other track here is Indo-European or Semitic and can ground a new word in Latin,
+Sanskrit, or a Semitic root the reader meets through English. Japanese cannot,
+and no connection is invented for it. The method is redirected instead, onto
+three things that are real: the **Sino-Japanese** layer (日本語 has checkable
+relatives in Mandarin and Korean), **internal** etymology (ありがとう ← 有り難し,
+"hard to exist"), and genuine **shared borrowings** (コーヒー and English *coffee*
+both from Arabic *qahwa*, by different roads). Where no honest connection exists,
+the lesson says so. Japanese is also the first track that needs three writing
+systems at once; see [`japanese/README.md`](./japanese/README.md) for what that
+cost the schema.

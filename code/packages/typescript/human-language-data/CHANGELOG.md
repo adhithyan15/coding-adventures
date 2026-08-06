@@ -4,6 +4,31 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Changed — corpus pins moved by the Japanese track (HL-C40)
+
+No source change: the Japanese track is content, and the package loaded it without
+a code edit because `japanese/track.json` declares the script (the built-in
+`LANGUAGE_SCRIPT` map was deliberately left alone, proving that path works). Five
+pinned corpus measurements moved, and each pin now records why:
+
+- `registeredTracks`, `authoredBooks`, `schemas.tracks`, `books.tracks`: 20 → **21**.
+- `summarizeModality`: `totalLessons` 1096 → **1104**, `voice` 694 → **695**,
+  `sight` 351 → **358**; `pen` stays 51 and the drivable share stays **63%**.
+- Structural counts: `script`-block lessons 7 → **14**, remaining non-writing
+  lessons 1038 → **1039**; table-bearing lessons stay **322**.
+- The compiled-activity id list gains the eight `JA-C01-*` activities.
+
+Seven of the eight Japanese lessons carry a `script` block and therefore derive as
+`sight`. That is the honest classification — a kana or kanji shape cannot be read
+aloud — and it was chosen over routing the same content through `input` blocks,
+which would have held the drivable percentage flat by mislabelling it.
+
+Added one integration test, `keeps the Japanese Chapter 1 mixed-script chain closed
+and under five minutes`, which asserts the property rather than only the counts:
+the same chapter carries a hiragana, a katakana, and a kanji headword; every lesson
+is schema-v2 with exactly one compiled activity; nothing exceeds the duration
+budget; and the plain and polite thanks keep distinct `register` values.
+
 ### Added — HL08 modality and the drivable prefix (report only, no gates)
 
 - Add `src/modality.ts`: a pure module deriving each lesson's required channel

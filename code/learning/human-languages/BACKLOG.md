@@ -7,10 +7,10 @@ session, remains the source of truth.
 
 Last prioritized: 2026-08-06, when the Step-by-Step capability program (HL05–HL07)
 was specified and placed ahead of the remaining roadmap and migration work. Current
-baseline after the Persian and Urdu Chapter 5 shared-spine tranche:
-20 registered tracks, 1,096 Markdown lessons, 20 downloadable LaTeX books, zero
-duration violations, and 20 validated realization maps containing 350 ordered
-path segments, 277 typed extension nodes, and 926 prerequisite-closed mapped
+baseline after the Japanese Chapter 1 tranche (HL-C40):
+21 registered tracks, 1,104 Markdown lessons, 21 downloadable LaTeX books, zero
+duration violations, and 21 validated realization maps containing 353 ordered
+path segments, 284 typed extension nodes, and 934 prerequisite-closed mapped
 lessons. Twenty-five mapped non-lexical lessons across 18 tracks now carry
 compiled objective activities; 94 mapped non-lexical lessons remain explicit
 activity-coverage debt, including 16 legacy lessons that first need schema-v2
@@ -71,7 +71,54 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
 | HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
 | HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
+| HL-C40 | Complete in this PR | Add **Japanese** as a track, Chapter 1 only, as the corpus's hardest scale test: three writing systems at once, kanji with multiple readings, grammatical politeness, and no shared ancestry with English. | 21st registered track; 8 schema-v2 lessons; a ledger entry for all 11 spine nodes; `data/scripts/japanese.json` covering hiragana, katakana, and kanji in one inventory; `_fonts/NotoSansJP-Subset.ttf` with `subset-jp.sh`; generated Chapter 1 compiling under XeLaTeX with zero overfull boxes and zero missing glyphs. Findings recorded below. |
+| HL-C41 | Queued | Structure the `register` field, which Japanese has outgrown. Today it is an open string, adequate for a *tú*/*usted* word choice and inadequate for a system where politeness is verb morphology on every predicate and keigo swaps the verb outright (言う → おっしゃる / 申す). | `register` becomes a small record — speech level, addressee honorification, referent honorification — that the 20 existing tracks map onto losslessly and that Japanese Chapter 3's honorific prefix **お-** can express without a free-text convention. |
+| HL-C42 | Queued | Let a track declare more than one script. HL01 gives a track exactly one `script` id and validates headword glyphs against exactly one inventory, so Japanese's hiragana, katakana, and kanji share one file with a per-sign `role` doing the separating. | A track declares `scripts: [...]`, `uncoveredGlyphs` resolves a character against any declared inventory, and a lesson can say which system a word is written in without a naming convention inside `role`. |
 | HL-C27 | Complete in this PR | Run the book catalog builder's tests in CI. `test_build_human_language_book_catalog.py` existed but was executed by no workflow, so the script that writes the published `index.html` and `catalog.json` shipped with its tests never running. | `human-languages-books.yml` runs the suite in its own named step before the expensive XeLaTeX build, and both the workflow's `paths:` trigger and the `detect` job's `git diff` list include the test file so a change to it re-runs the job. |
+
+### What HL-C40 found, stated plainly
+
+Japanese was chosen because it was the case most likely to break the model. Four
+things were tested; three held with strain, one did not.
+
+1. **One script per track does not hold.** HL00's rule — "if a word needs four
+   letters, introduce those four letters in that word's lesson" — survives intact
+   at the *lesson* level once "letters" is read as "the writing this word needs":
+   こんにちは brings five kana, 日本語 brings three kanji, コーヒー brings katakana
+   and the length bar, and each arrives on the word that forces it. What does not
+   survive is the **data layer**. `Script` is one string per track and
+   `uncoveredGlyphs` checks a headword against one inventory, so all three systems
+   were merged into `data/scripts/japanese.json` with a per-sign `role`. That works
+   and validates, but it encodes a three-way distinction in a naming convention.
+   HL-C42 is the fix.
+2. **A kanji has no sound, and the schema never claimed it did.** `Letter.sound`
+   is a free string, so 日's entry reads `nichi / jitsu / hi / bi / ka` without a
+   schema change. The pedagogy needed the change instead: no lesson teaches "the
+   sound of a character," only the reading a **word** selects, with the on/kun split
+   given as the reason there are several. This is the one place the corpus's
+   letter-first habit had to be abandoned outright.
+3. **`register` as an open string is not enough.** It was sized for a word choice.
+   Japanese politeness is verb morphology, obligatory on every predicate, with no
+   neutral setting; at the far end it replaces the verb. `plain-casual` and
+   `teineigo-polite` are used here as a stopgap, and HL-C41 records the real fix.
+4. **The etymology method does not transfer, and the honest answer is that it
+   partially redirects.** Japanese has no taproot the reader owns through English.
+   Nothing was invented. Three real substitutes carried the chapter: the
+   Sino-Japanese layer (日本語 ↔ Mandarin *Rìběnyǔ* ↔ Korean *ilbon-eo*), internal
+   etymology (ありがとう ← 有り難し "hard to exist" → rare → precious → thanks;
+   こんにちは as an abandoned 今日は… sentence), and shared borrowings (コーヒー and
+   English *coffee*, both from Arabic *qahwa*). Exactly one of eight lessons
+   produced an English cousin, and it did so through a shared loan rather than
+   shared descent. `JA-C01-hai` states outright that its own etymology is unsettled
+   and that no English cousin exists. **The signature method is weaker here than
+   anywhere else in the corpus, and pretending otherwise would be the failure.**
+
+One measured side effect worth keeping visible: seven of the eight lessons carry a
+`script` block and derive as `sight` under HL08, so the Japanese chapter's drivable
+prefix is 0 and only its closing exchange is drivable. That is honest — a sign's
+shape cannot be read aloud — and it moved the corpus counts (1,104 lessons, 695
+voice, 358 sight, 51 pen, still 63% drivable). Routing the same content through
+`input` blocks would have held the percentage flat by mislabelling it.
 
 The illustration licensing question HL06 raised is **settled**. The project owner
 decided on 2026-08-06 that the books stay CC BY-SA 4.0 and that generated

@@ -42,6 +42,11 @@
       { "unicodeScript": "Devanagari", "scriptCommand": "hi" },
       { "unicodeScript": "Arabic", "scriptCommand": "ar" },
       { "unicodeScript": "Cyrillic", "scriptCommand": "ru" }
+    ],
+    "japanese-main": [
+      { "unicodeScript": "Katakana", "scriptCommand": "ja" },
+      { "unicodeScript": "Hiragana", "scriptCommand": "ja" },
+      { "unicodeScript": "Han", "scriptCommand": "ja" }
     ]
   },
   "targets": [
@@ -2117,6 +2122,14 @@
       "output": "urdu/book/chapters/ch05-take-leave.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
+    },
+    {
+      "language": "japanese",
+      "chapter": 1,
+      "title": "Three Writing Systems in One Doorway",
+      "label": "ch:ja-three-scripts",
+      "output": "japanese/book/chapters/ch01-three-scripts.tex",
+      "scriptSet": "japanese-main"
     }
   ]
 }

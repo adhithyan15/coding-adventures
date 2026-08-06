@@ -18,6 +18,7 @@ be installed.
 - `NotoSansCyrillic-Static.ttf` — Russian (Cyrillic); a `fontTools.subset` of NotoSans (latin-greek-cyrillic) to Basic Latin + Cyrillic
 - `NotoSansHebrew-Static.ttf` — Hebrew (upstream static Regular)
 - `NotoSansSC-Subset.ttf` — Chinese (Simplified); a **subset** of the ~17 MB NotoSansSC covering exactly the characters in `../data/scripts/chinese.json`. Regenerate with [`subset-cjk.sh`](./subset-cjk.sh) when Mandarin content adds characters.
+- `NotoSansJP-Subset.ttf` — Japanese; a **subset** of the ~9.6 MB NotoSansJP covering **all** of U+3000–U+30FF (CJK punctuation, hiragana, katakana, the length bar, dakuten and handakuten) plus exactly the kanji the Japanese track uses. Regenerate with [`subset-jp.sh`](./subset-jp.sh) when the track adds kanji. One file covers all three of Japan's writing systems, because one Japanese sentence uses all three — the split is asymmetric on purpose: kana are a closed set worth taking whole, kanji are open-ended and only pulled in when written down.
 
 (The Gurmukhi, Bengali, and Gujarati files are the upstream static `-Regular.ttf`
 from the `notofonts.github.io` repo — already single-weight, so no instancing
@@ -38,6 +39,9 @@ Each non-Latin book's `preamble.tex` loads the font by relative path, e.g.:
 ```latex
 \newfontfamily\arabicfont[Path=../../_fonts/, Script=Arabic]{NotoNaskhArabic-Static.ttf}
 ```
+
+(The Japanese book omits `Script=` — kana and kanji need no complex shaping, and
+naming a script fontspec cannot resolve fails the build for no benefit.)
 
 (`../../_fonts/` because books live at `<lang>/book/`.)
 
