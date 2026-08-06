@@ -1,5 +1,24 @@
 # Changelog — Russian track
 
+## 0.6.0 — 2026-08-06
+
+- Added `chapters.json`, the HL05 chapter capability ledger, covering Chapter 2:
+  the reader can give a name, ask for one, and choose *ты* or *вы* to match the
+  relationship.
+- Pointed the Chapter 2 payoff at `RU-C02-kak-cross-language`, the chapter's
+  last schema-v2 lesson by sequence. The chapter's own `practice-mix` lessons
+  are still schema v1, so they declare no `practises.knowledge` and cannot carry
+  an honest `assesses` list yet.
+- Took the chapter title and label from `book/chapters/ch02-introducing-yourself.tex`.
+  Russian has no `core/book-generation.json` targets, so the LaTeX source is the
+  only other place the printed name is written down.
+- Omitted Chapter 1 rather than stubbing it: all twelve of its lessons are
+  schema v1, so it has no assessable payoff. Its absence is the debt the HL05
+  gap report exists to measure.
+- Measured payoff representativeness for Chapter 2 at 3/15 introduced atoms
+  (0.20), below the 0.5 policy floor. Recorded, not padded — the shortfall is
+  the schema-v1 practice lessons, and it closes when they migrate.
+
 ## 0.5.0 — 2026-08-03
 
 - Migrated the closed Chapter 2 chain from *я* through the cross-language

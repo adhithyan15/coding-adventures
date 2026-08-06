@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "language": "russian",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapter 2 is authorable today. Chapter 1 is entirely schema-v1 (no introduces/practises knowledge atoms), so it has no assessable payoff to point at and is deliberately absent rather than stubbed — its absence is real, measurable debt. Chapter 2 has no core/book-generation.json target either; its title and label are taken from russian/book/chapters/ch02-introducing-yourself.tex, the only other place they are written down.",
+  "chapters": [
+    {
+      "chapter": 2,
+      "title": "Introducing yourself",
+      "label": "ch:russian-introductions",
+      "canDo": "I can give my name in Russian, ask for someone else's, and pick ты or вы to match how well I know them.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "RU-C02-kak-cross-language",
+        "kind": "task",
+        "summary": "Ask Как вас зовут? and account for its shape: Russian, like French and Spanish, asks how people call you, where English asks what your name is.",
+        "assesses": [
+          "RU-LEX-KAK-VAS-ZOVUT",
+          "RU-GRAMMAR-NAMING-HOW-FRAME",
+          "RU-COMPARISON-NAMING-QUESTION-FRAMES"
+        ]
+      }
+    }
+  ]
+}
