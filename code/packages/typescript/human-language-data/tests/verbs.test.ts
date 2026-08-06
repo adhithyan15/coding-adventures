@@ -73,29 +73,33 @@ describe("corpus snapshot", () => {
   // NAMESPACED and therefore joined nothing. Adding the canonical concepts was the
   // enabling step; realizing them is the authoring work these numbers track.
   //
-  // Latin then became the first track to realize any of them. Chapter 37 authors eight
-  // core-verb lessons — sum, habeō, eō, veniō, dīcō, videō, sciō, dō — one canonical
-  // concept each:
+  // Three tracks then realized core verbs at once, authored in parallel: Latin chapter 37
+  // (8 — sum, habeō, eō, veniō, dīcō, videō, sciō, dō), Arabic chapters 28-30 (6) and
+  // Russian chapter 3 (6).
   //
-  //   tracksWithNoCoreVerb  22 -> 21      universallyMissing  40 -> 32
-  //   meanCoveredPercent     0 ->  1      latin coveredPercent 0 -> 20
+  //   tracksWithNoCoreVerb  22 -> 19      universallyMissing  40 -> 29
+  //   meanCoveredPercent     0 ->  2
   //
-  // `universallyMissing` drops by exactly the eight Latin realized, because no other
-  // track covers any of them: the eight leave the "nobody teaches this" list and the
-  // remaining thirty-two stay. `meanCoveredPercent` is 1 rather than 0 because one track
-  // in twenty-two at 20% averages to 0.9%, which rounds to 1 — the first non-zero this
-  // number has ever had.
-  it("pins the core verb baseline: Latin realizes eight, the other 21 tracks none", () => {
+  // `universallyMissing` drops by ELEVEN, not twenty, because the three tracks overlap:
+  // VERB-GO, VERB-SEE and VERB-KNOW are each covered by more than one of them, and a verb
+  // leaves the "nobody teaches this" list the first time any track teaches it. That
+  // overlap is the point — those three are now genuinely cross-language concepts, which
+  // is what the canonical ids were added for and what 85 namespaced tags could never do.
+  //
+  // Each agent measured this alone and each wrote "the first track off zero". All three
+  // were right in isolation and wrong together; the numbers here are re-measured against
+  // the merged corpus.
+  it("pins the core verb baseline: three tracks realize twenty between them", () => {
     const { lessons, taxonomy } = loadEverything();
     const report = verbCoverage(lessons, taxonomy);
 
     expect(report.summary.coreVerbCount).toBe(40);
 
-    expect(report.summary.tracksWithNoCoreVerb).toBe(21);
-    expect(report.summary.universallyMissing).toHaveLength(32);
-    expect(report.summary.meanCoveredPercent).toBe(1);
+    expect(report.summary.tracksWithNoCoreVerb).toBe(19);
+    expect(report.summary.universallyMissing).toHaveLength(29);
+    expect(report.summary.meanCoveredPercent).toBe(2);
 
-    // The one track that has joined the cross-language corpus, named explicitly so a
+    // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
     const latin = report.tracks.find((track) => track.language === "latin")!;
     expect(latin.covered).toEqual([
@@ -109,6 +113,28 @@ describe("corpus snapshot", () => {
       "VERB-GIVE",
     ]);
     expect(latin.coveredPercent).toBe(20);
+    expect(report.tracks.find((track) => track.language === "arabic")!.covered).toEqual([
+      "VERB-GO",
+      "VERB-COME",
+      "VERB-SAY",
+      "VERB-SEE",
+      "VERB-KNOW",
+      "VERB-EAT",
+    ]);
+    expect(report.tracks.find((track) => track.language === "russian")!.covered).toEqual([
+      "VERB-BE",
+      "VERB-GO",
+      "VERB-SPEAK",
+      "VERB-SEE",
+      "VERB-KNOW",
+      "VERB-LIVE",
+    ]);
+    // The overlap that makes these CROSS-LANGUAGE concepts rather than 22 private
+    // vocabularies: three verbs are now taught by more than one track, joined on one id.
+    for (const shared of ["VERB-GO", "VERB-SEE", "VERB-KNOW"]) {
+      const teaching = report.tracks.filter((track) => track.covered.includes(shared));
+      expect(teaching.length).toBeGreaterThan(1);
+    }
     // None of the eight is in the universally-missing list any more, and every other
     // canonical verb still is.
     for (const verb of latin.covered) {

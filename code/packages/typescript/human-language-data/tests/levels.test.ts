@@ -201,22 +201,25 @@ describe("corpus snapshot", () => {
   // Ratchet these as content lands. `A2: 0` was the headline for a long time: the A2
   // spine tranche existed but NO track had realized a single node of it.
   //
-  // That changed with Latin chapter 37, the eight core verbs (sum, habeō, eō, veniō,
-  // dīcō, videō, sciō, dō). They attach to SPINE-SAY-WHAT-I-DO, which the shared spine
-  // declares at stage A2, so the level is DERIVED rather than claimed — the eight are the
-  // corpus's first A2 lessons anywhere:
+  // That changed when three tracks authored core verbs at once — Latin chapter 37 (8),
+  // Arabic chapters 28-30 (6) and Russian chapter 3 (6). All twenty attach to
+  // SPINE-SAY-WHAT-I-DO, which the shared spine declares at stage A2, so the level is
+  // DERIVED rather than claimed:
   //
-  //   A2  0 -> 8      pre-A1 657 (unchanged)   A1 307 (unchanged)
+  //   A2  0 -> 20     pre-A1 657 (unchanged)   A1 307 (unchanged)
   //
-  // `unmapped` and `mappedPercent` do not move: the eight are in a realization-path
-  // segment (LA-PATH-025), so every one of them has a derivable level.
+  // `unmapped` and `mappedPercent` do not move: all twenty sit in realization-path
+  // segments, so every one of them has a derivable level. The three tracks were authored
+  // in parallel and each measured this number alone — 8, 6 and 6 — so each was correct
+  // and all three were wrong about the total. It is re-measured here against the merged
+  // corpus, which is the only place the real number exists.
   it("pins where the corpus actually stands on the ladder", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
     expect(summary.byLevel["pre-A1"]).toBe(657);
     expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(8);
+    expect(summary.byLevel.A2).toBe(20);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -228,22 +231,22 @@ describe("corpus snapshot", () => {
     expect(summary.mappedPercent).toBe(85);
   });
 
-  it("shows exactly one track has reached A2, and five have not reached A1", () => {
+  it("shows three tracks have reached A2, and four have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
-    // rather than counting them: "no track is at A2" has become "latin and only latin
-    // is", and listing it keeps the assertion as tight as the original. Nothing has
-    // reached B1 or beyond, which is still the honest ceiling for the whole corpus.
+    // rather than counting them — "no track is at A2" has become a list, and listing it
+    // keeps the assertion as tight as the original. Nothing has reached B1 or beyond,
+    // which is still the honest ceiling for the whole corpus.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
-    ).toEqual(["latin"]);
+    ).toEqual(["arabic", "latin", "russian"]);
     expect(
       summary.tracks.every((track) => track.reach === null || levelRank(track.reach) <= levelRank("A2")),
     ).toBe(true);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
-    ).toEqual(["chinese", "japanese", "persian", "russian", "urdu"]);
+    ).toEqual(["chinese", "japanese", "persian", "urdu"]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {

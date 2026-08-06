@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7d917d77f58ee189",
+  "sourceHash": "fnv1a64:e1f5b54f9094e40b",
   "summary": {
-    "totalLessons": 1142,
-    "voice": 965,
+    "totalLessons": 1154,
+    "voice": 977,
     "sight": 124,
     "pen": 53,
-    "drivableLessons": 965,
+    "drivableLessons": 977,
     "drivablePercent": 85,
     "trackCount": 22,
-    "chapterCount": 378,
-    "drivablePrefixTotal": 833,
-    "fullyDrivableChapters": 285,
+    "chapterCount": 382,
+    "drivablePrefixTotal": 845,
+    "fullyDrivableChapters": 289,
     "unstartableChapters": 44,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "arabic",
-      "lessonCount": 71,
-      "voice": 50,
+      "lessonCount": 77,
+      "voice": 56,
       "sight": 5,
       "pen": 16,
-      "drivablePercent": 70,
-      "drivablePrefixTotal": 42,
+      "drivablePercent": 73,
+      "drivablePrefixTotal": 48,
       "modalities": [
         "voice",
         "sight",
@@ -489,6 +489,57 @@
           "drivable": true,
           "drivableLessonIds": [
             "AR-C27-tusbih-ala-khayr"
+          ]
+        },
+        {
+          "chapter": 28,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "AR-C28-dhahaba",
+            "AR-C28-jaa"
+          ]
+        },
+        {
+          "chapter": 29,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "AR-C29-qala",
+            "AR-C29-raa"
+          ]
+        },
+        {
+          "chapter": 30,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "AR-C30-arafa",
+            "AR-C30-akala"
           ]
         }
       ]
@@ -4924,12 +4975,12 @@
     },
     {
       "language": "russian",
-      "lessonCount": 22,
-      "voice": 16,
+      "lessonCount": 28,
+      "voice": 22,
       "sight": 1,
       "pen": 5,
-      "drivablePercent": 73,
-      "drivablePrefixTotal": 15,
+      "drivablePercent": 79,
+      "drivablePrefixTotal": 21,
       "modalities": [
         "voice",
         "sight",
@@ -4982,6 +5033,27 @@
             "RU-C02-kak-cross-language",
             "RU-C02-practice",
             "RU-C02-ochen-priyatno"
+          ]
+        },
+        {
+          "chapter": 3,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "RU-C03-byt",
+            "RU-C03-zhit",
+            "RU-C03-znat",
+            "RU-C03-govorit",
+            "RU-C03-videt",
+            "RU-C03-idti"
           ]
         }
       ]
@@ -7837,6 +7909,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:7f336d22da3abfe2"
+    },
+    {
+      "id": "AR-C28-dhahaba",
+      "language": "arabic",
+      "chapter": 28,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20ee1b4f18263d8d"
+    },
+    {
+      "id": "AR-C28-jaa",
+      "language": "arabic",
+      "chapter": 28,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d60f205ab777646"
+    },
+    {
+      "id": "AR-C29-qala",
+      "language": "arabic",
+      "chapter": 29,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce20844fd21afc59"
+    },
+    {
+      "id": "AR-C29-raa",
+      "language": "arabic",
+      "chapter": 29,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fef39f3ff85a08c5"
+    },
+    {
+      "id": "AR-C30-arafa",
+      "language": "arabic",
+      "chapter": 30,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ce3988b76cd6848"
+    },
+    {
+      "id": "AR-C30-akala",
+      "language": "arabic",
+      "chapter": 30,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7474171579a55797"
     },
     {
       "id": "BN-C01-achchha",
@@ -17327,6 +17477,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:97d645e1b389a3a3"
+    },
+    {
+      "id": "RU-C03-byt",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14888e9ea4e76480"
+    },
+    {
+      "id": "RU-C03-zhit",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50c788897a116d01"
+    },
+    {
+      "id": "RU-C03-znat",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:053dfd24401ef0cc"
+    },
+    {
+      "id": "RU-C03-govorit",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e041f674887b95cc"
+    },
+    {
+      "id": "RU-C03-videt",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6012735dbd137abe"
+    },
+    {
+      "id": "RU-C03-idti",
+      "language": "russian",
+      "chapter": 3,
+      "sequence": 190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6894e3657dbb8585"
     },
     {
       "id": "SA-C01-am-na",
