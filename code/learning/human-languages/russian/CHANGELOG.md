@@ -1,5 +1,57 @@
 # Changelog — Russian track
 
+## 0.7.0 — 2026-08-06
+
+HL-C32. Russian was the worst-performing track in the corpus on two independent
+measurements — 9% drivable (2 `voice`, 15 `sight`, 5 `pen`, and **zero** lessons
+reachable by ear in either chapter) and payoff representativeness of 0.20. Both
+are now fixed, and the diagnosis matters more than the fix.
+
+**The root cause was formatting, not content.** All fifteen `sight` lessons
+tripped the same rule: `wide-table`. Not one carried a `script` block. Twelve
+tripped nothing else at all; the three that also matched a sight cue matched
+phrases like "the course's first **look at** case", which point at nothing on the
+page. And the tables themselves were almost entirely cross-language
+word→gloss lists — *"Language | 'yes' | built from"* — the exact material
+`RU-C01-privet` and `RU-C01-zdravstvuyte` already carry as prose, which is why
+those two were the track's only `voice` lessons. The same section, set two
+different ways, produced two different modalities.
+
+- Rewrote fourteen table-driven lessons so their word→gloss and letter→sound
+  lists are speakable prose or bullets. No content was dropped, no comparison
+  was shortened, and every lesson stayed under the duration budget.
+- Left `RU-C02-practice-cases` as `sight`, deliberately. Its table is a
+  cover-the-column retrieval drill: the table *is* the exercise, and linearising
+  it would delete the lesson. An immovable `sight` lesson is a correct finding,
+  not a failure.
+- Left `RU-W02-false-friends-s-n`'s four-column table alone. It is a `writing`
+  lesson, so it is `pen` regardless, and reformatting would buy nothing.
+- Result: 16 `voice`, 1 `sight`, 5 `pen` — **9% → 73% drivable**, and **0 → 15
+  lessons reachable in chapter-prefix order**. Chapter 1's first seven lessons
+  and Chapter 2's first eight are now doable in the car. Corpus-wide drivable
+  lessons rose from 694 (63%) to 708 (65%); Russian alone accounts for all of it.
+- Migrated `RU-C02-practice` — one lesson, not the remaining fifteen — to schema
+  v2 so the chapter payoff can point at the chapter's actual consolidation
+  lesson instead of `RU-C02-kak-cross-language`, a cross-language etymology
+  lesson that was standing in only because it was the last schema-v2 lesson by
+  sequence. The migrated lesson runs the full introduction formally, switches it
+  informally, and assesses ten of Chapter 2's fifteen introduced atoms:
+  **representativeness 0.20 → 0.67**, above the 0.5 policy floor. Closure is
+  strict — every line uses only already-taught material, and the lesson
+  introduces nothing new.
+- Added `RU-EXT-006-CONSOLIDATION` to `curriculum.json` and placed
+  `RU-C02-practice` in `RU-PATH-006`, because every schema-v2 lesson naming a
+  spine node must appear in the local realization map.
+
+**Still open, and honestly so.** Fifteen Russian lessons remain schema v1 — all
+twelve of Chapter 1, plus `RU-C02-ochen-priyatno`, `RU-C02-practice-cases` and
+`RU-C02-practice-zero-copula`. That is why Chapter 1 still has no `chapters.json`
+entry: it introduces no knowledge atoms, so no payoff can assess anything. And
+because `sequence` is a schema-v2 field, Chapter 1's modality ordering is still
+alphabetical rather than pedagogical, and `RU-C02-practice` now sorts ahead of
+its own prerequisite `RU-C02-ochen-priyatno` in that ordering. Neither affects
+validation or the drivable prefix; both close only with the full migration.
+
 ## 0.6.0 — 2026-08-06
 
 - Added `chapters.json`, the HL05 chapter capability ledger, covering Chapter 2:

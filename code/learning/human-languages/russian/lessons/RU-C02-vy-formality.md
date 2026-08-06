@@ -45,12 +45,10 @@ does the same job with second-person plural **vous**. Chapter 1's
 
 Other languages reached respect differently:
 
-| Language | respectful form | route |
-|---|---|---|
-| Russian | *вы* | second-person plural |
-| French | *vous* | second-person plural |
-| German | *Sie* | third-person plural, not ordinary *ihr* |
-| Spanish | *usted* | title *vuestra merced*, "your grace" |
+- Russian **вы** — the second-person plural.
+- French **vous** — the second-person plural, the very same route.
+- German **Sie** — the *third*-person plural, not the ordinary *ihr*.
+- Spanish **usted** — a worn-down title, *vuestra merced*, "your grace."
 
 Russian's polite *вы* is generally treated as an eighteenth-century import
 from French and German social usage, not a pattern Russian invented alone.

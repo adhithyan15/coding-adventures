@@ -24,6 +24,11 @@ inside the words that need it; grammar introduced only when a word needs it.
   for a favour and doubles as "you're welcome."
 - **Grammar inline**: the formal/informal split and *politeness = plural* rule
   arrive at *здравствуйте* (its polite *-те*).
+- **Drivable by ear.** 16 of the track's 22 lessons need only your ears; the
+  other 6 are the five handwriting lessons and one cover-the-column retrieval
+  drill. Russian used to be the least drivable track here, entirely because its
+  cross-language comparisons were set as tables rather than said as sentences.
+  They are sentences now.
 
 ## Progress
 
@@ -57,17 +62,14 @@ first-person can-do sentence and the lesson that pays it off.
 
 - **Chapter 2** — *"I can give my name in Russian, ask for someone else's, and
   pick ты or вы to match how well I know them."* Payoff:
-  [`RU-C02-kak-cross-language`](./lessons/RU-C02-kak-cross-language.md), a task —
-  ask *Как вас зовут?* and account for its shape.
+  [`RU-C02-practice`](./lessons/RU-C02-practice.md), a dialogue — run the whole
+  introduction with a stranger, then switch it for one friend by changing only
+  the greeting and *вас → тебя*. It assesses ten of the chapter's fifteen
+  introduced atoms, for a representativeness of **0.67** against the 0.5 floor.
 
-  Two honest caveats. Russian has no `core/book-generation.json` targets, so the
-  chapter title and label come from
+  One honest caveat remains: Russian has no `core/book-generation.json` targets,
+  so the chapter title and label come from
   [`book/chapters/ch02-introducing-yourself.tex`](./book/chapters/ch02-introducing-yourself.tex).
-  And the payoff is not the chapter's `practice-mix` consolidation, because those
-  three lessons are still schema v1 and declare no knowledge atoms; the last
-  schema-v2 lesson by sequence stands in. Representativeness is therefore 3/15
-  (0.20), well under the 0.5 floor — recorded rather than padded, and it closes
-  when the practice lessons migrate.
 
 **Chapter 1 is not in the ledger**, and that gap is deliberate: all twelve of its
 lessons are schema v1, so it has no assessable payoff to point at. A placeholder
