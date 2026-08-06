@@ -8,8 +8,13 @@ in [`HL00`](../../specs/HL00-human-language-curriculum-framework.md) — read
 that first. The migration to an ordered shared spine, strict sub-five-minute
 lessons, Persian and Urdu extensions, and a single book/app/practice content
 pipeline is specified in
-[`HL04`](../../specs/HL04-shared-spine-and-content-pipeline.md). This page is
-just an index.
+[`HL04`](../../specs/HL04-shared-spine-and-content-pipeline.md). The move to
+chapter-sized deployable capability — every chapter promising something the reader can
+use immediately — is specified in
+[`HL05`](../../specs/HL05-chapter-capability-and-step-by-step-shape.md), with the
+book's visual system and inline script-writing figures in
+[`HL06`](../../specs/HL06-visual-system.md) and the spine's growth through B1 in
+[`HL07`](../../specs/HL07-spine-expansion-to-b1.md). This page is just an index.
 
 Every track shares the same shape:
 

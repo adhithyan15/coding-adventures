@@ -5,8 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-04. Current baseline after the Persian and Urdu
-Chapter 5 shared-spine tranche:
+Last prioritized: 2026-08-06, when the Step-by-Step capability program (HL05–HL07)
+was specified and placed ahead of the remaining roadmap and migration work. Current
+baseline after the Persian and Urdu Chapter 5 shared-spine tranche:
 20 registered tracks, 1,096 Markdown lessons, 20 downloadable LaTeX books, zero
 duration violations, and 20 validated realization maps containing 350 ordered
 path segments, 277 typed extension nodes, and 926 prerequisite-closed mapped
@@ -24,6 +25,48 @@ discarding deep content.
 2. Prefer work that makes later corpus growth measurable or generated.
 3. Finish a small vertical slice before starting the same migration everywhere.
 4. Keep the application, book, and canonical lesson content aligned.
+
+## P0 — Step-by-Step capability program (HL05–HL07)
+
+Specified in [HL05](../../specs/HL05-chapter-capability-and-step-by-step-shape.md),
+[HL06](../../specs/HL06-visual-system.md), and
+[HL07](../../specs/HL07-spine-expansion-to-b1.md). This program adds a chapter-level
+capability layer above the existing lessons, gives the books a visual system including
+inline script-writing instruction, and grows the spine far enough to carry a complete
+book. It rewrites no authored lesson content.
+
+The measured starting point: 379 chapters, **zero** of which declare a goal or a
+payoff; 11 spine nodes with **zero** at A2 or B1; **zero** images in any of the 20
+books; and a complete, font-validated stroke-path model in `strokes.ts` that holds one
+letter and is rendered nowhere.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C01 | Complete in this PR | Specify the chapter capability layer, the visual system, and spine expansion to B1. | HL05, HL06 and HL07 are committed before any implementation, per repo policy. |
+| HL-C02 | Queued | Add the `chapters.json` schema, loader, and `core/chapter-policy.json`. | Types, loader beside `loadLanguageCurricula`, and the representativeness threshold load and round-trip; no gates yet. |
+| HL-C03 | Queued | Land the nine HL05 gates as report-only output and publish the first chapter snapshot. | The gap report measures all 379 chapters for missing capability, payoff closure, and representativeness without failing CI on recorded debt. |
+| HL-C04 | Queued | Derive book chapter titles and labels from `chapters.json`. | `core/book-generation.json` stops owning `title`/`label`; `chapter-title-drift` proves the two agree through the transition. |
+| HL-C05 | Queued | Add the `pattern` lesson type with slot-closure and production gates. | A `pattern` lesson introduces one `*-PATTERN-*` atom, declares only in-closure slot fillers, and instantiates at least three in a `guided-production` block. |
+| HL-C06 | Queued | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
+| HL-C07 | Queued | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, and duplicate destinations are machine-checked; today only prose asserts this. |
+| HL-C08 | Queued | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive an SVG stroke build-up in the app; book and app teach handwriting from one source. |
+| HL-C09 | Queued | Expand `DUCTUS` to cover the nine scripts with cited prose stroke order. | ~190 letters authored, each passing the on-ink, join-tolerance, and coverage invariants with citation and URL. |
+| HL-C10 | Queued | Complete A1 and add the A2 and B1 spine tranches with all 20 realization ledgers. | Every declared stage carries nodes; every track has a non-drifting ledger entry for every node. |
+| HL-C11 | Queued | Author chapter capabilities and payoffs across all 20 tracks. | All 379 chapters declare a `canDo` and a closed, representative payoff; gates flip to errors per track as debt clears. |
+| HL-C12 | Queued | Add the Class C illustration pipeline with provenance sidecars and a size budget. | Every asset carries generator, model, prompt, date, and licence; CI fails any asset without a recorded licence in `_assets/LICENSE.md`. |
+| HL-C13 | Queued | Deploy Language Ladder to GitHub Pages. | The app is reachable at `/coding-adventures/language-ladder/`; it is currently referenced by no workflow and has never been published. |
+
+Open decision for the project owner, recorded rather than assumed: the books are
+CC BY-SA 4.0, and the licence and attribution stance for generated illustrations is
+not yet set. HL06 proposes matching the book's licence with full per-asset provenance,
+following the `_fonts/OFL.txt` precedent, and requires CI to reject Class C assets
+until the decision is written into `_assets/LICENSE.md`.
+
+HL05 also reserves, and deliberately does not implement, a `presents.knowledge` tier
+that would let a payoff use a glossed-but-never-assessed word. Strict closure is kept,
+so early chapters ramp slightly more slowly than a trade step-by-step grammar does.
+Reserving the key now makes enabling it later a flag flip rather than a corpus
+migration.
 
 ## P0 — current publication and validation gaps
 
