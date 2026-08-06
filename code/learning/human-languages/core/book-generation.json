@@ -2128,6 +2128,15 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 6,
+      "title": "Name a Verb, Find Its Stem",
+      "label": "ch:fa-core-verbs",
+      "output": "persian/book/chapters/ch06-core-verbs.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "title": "Ask and Answer Names",

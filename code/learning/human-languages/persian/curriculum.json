@@ -95,6 +95,20 @@
         "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "FA-PATH-007",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FA-C06-budan",
+        "FA-C06-raftan",
+        "FA-C06-amadan",
+        "FA-C06-goftan",
+        "FA-C06-danestan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -210,20 +224,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "FA-PATH-007"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
-        "VERB-SAY",
         "VERB-SPEAK",
         "VERB-SEE",
         "VERB-HEAR",
-        "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",

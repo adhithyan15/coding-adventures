@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.8.0 — 2026-08-06
+
+- Added five schema-v2 Chapter 6 micro-lessons, the track's first verbs:
+  `FA-C06-budan` (**بودن**, `VERB-BE`), `FA-C06-raftan` (**رفتن**, `VERB-GO`),
+  `FA-C06-amadan` (**آمدن**, `VERB-COME`), `FA-C06-goftan` (**گفتن**,
+  `VERB-SAY`), and `FA-C06-danestan` (**دانستن**, `VERB-KNOW`). Persian moves
+  off zero core-verb coverage and realises its first `SPINE-SAY-WHAT-I-DO`
+  segment, `FA-PATH-007`.
+- The chapter's hook is the pairing, not the paradigm. `budan` establishes that
+  every Persian infinitive ends in **-tan/-dan**; `raftan` introduces the
+  present stem as the one unpredictable fact a verb carries, and each later
+  lesson stores its verb as a single item — *raftan, rav-*; *âmadan, â-*;
+  *goftan, gu-*; *dânestan, dân-*. No personal endings and no present tense are
+  taught here; they are deliberately left to a later chapter that will find its
+  stems already learned.
+- Cousin webs are traced only where they are secure. *budan* is anchored to
+  \**bheu-* (English **be**, Latin *fuī* → **future**), *âmadan* to \**gwem-*
+  (**come**, *venīre* → **advent**, **event**), and *dânestan* to \**gnō-*
+  (**know**, **can**, **cunning**, *gnosis* → **diagnosis**). *raftan* and
+  *goftan* state plainly that no English cousin is established, and *goftan*
+  flags *gab*/*gossip* as false friends; `budan` opens the chapter by flagging
+  Persian **بد** *bad* against English *bad*. The **d** of *dânestan* is marked
+  as a genuinely disputed sound change rather than smoothed over.
+- Two letters arrive inline, inside the only words that need them: **آ**
+  (alef with *madde*, in **آمدن**) and **گ** *gâf* (in **گفتن**, named as the
+  second of Persian's four additions **پ چ ژ گ** after **چ** in Chapter 3). The
+  other three verbs need no new letters at all. New sound ids `alef-madde` and
+  `persian-gaf` are recorded in the pronunciation reference.
+- Extended the exact N+1/N+3/N+7/N+15 ledger through S40 and added the S21–S25
+  new-lesson rows; regenerated the six-chapter book and the modality manifest.
+  All five lessons derive `voice` with `no-visual-dependency` — the chapter is
+  fully drivable, and its widest structure is a two-item pair spoken aloud.
+- Chapter 6 capability ledger added to `chapters.json`. Its payoff,
+  `FA-C06-danestan`, assesses 12 of the 15 atoms the chapter introduces
+  (0.80, against the 0.5 policy floor) because the closing lesson genuinely
+  runs all five pairs back; the three it leaves are the etymon and script atoms
+  belonging to the individual words.
+- Measured durations (computed, threshold 300s): budan 281s, raftan 285s,
+  âmadan 265s, goftan 274s, dânestan 270s. XeLaTeX compiles the six-chapter
+  book with zero `Missing character` warnings and zero overfull boxes.
+
 ## 0.7.0 — 2026-08-06
 
 - Added `chapters.json`, the HL05 chapter capability ledger, for Chapters 2–5:

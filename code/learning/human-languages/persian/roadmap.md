@@ -46,7 +46,22 @@ word is readable, then teaches Persian's joined spelling as one reliable,
 broadly polite close. Casual, time-of-day, and “see you” farewells stay later
 rather than hiding untaught time language in the first parting lesson.
 
-## Chapter 6 — People and simple identity *(planned)*
+## Chapter 6 — Name a verb, find its stem *(authored)*
+
+**بودن** *budan* → **رفتن** *raftan* → **آمدن** *âmadan* → **گفتن** *goftan* →
+**دانستن** *dânestan*. The chapter teaches the two facts a Persian verb asks
+for and nothing more: the infinitive, which always ends in **-tan/-dan**, and
+the present stem that cannot be predicted from it. The stems **رو** *rav-*,
+**آ** *â-*, **گو** *gu-*, and **دان** *dân-* are learned as one item with their
+infinitives, so the present tense — deliberately held back to a later chapter —
+arrives with its raw material already in place. Persian's inherited
+Indo-European cousins carry the memory load where they are secure (*budan* /
+**be**, *âmadan* / **come**, *dânestan* / **know**, **can**, *gnosis*), and
+*raftan* and *goftan* say plainly that no English cousin is claimed for them.
+Two letters arrive inside the words that need them: **آ** with its *madde*, and
+**گ** *gâf*, the second of Persian's four additions to the Arabic set.
+
+## Chapter 7 — People and simple identity *(planned)*
 
 - **man hastam** and the next present-copula forms one at a time;
 - careful written forms versus colloquial Iranian Persian;
@@ -56,7 +71,8 @@ rather than hiding untaught time language in the first parting lesson.
 ## Part II onward *(sketch)*
 
 Build through everyday location, possession, food, time, family, and routine.
-Introduce present stems and past stems through high-frequency verbs, then add
+Put the Chapter 6 present stems to work with **می‌** *mi-* and the personal
+endings, add the past stem and the remaining core verbs, then add
 object marking with **râ**, comparatives, modals, and subordinate clauses toward
 B1. Dari and Tajik remain future related varieties with explicit labels rather
 than silent synonyms for Iranian Persian.

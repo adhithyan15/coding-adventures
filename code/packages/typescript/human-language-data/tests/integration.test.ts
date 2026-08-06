@@ -98,7 +98,7 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "persian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3, 4, 5]);
+    ).toEqual([1, 2, 3, 4, 5, 6]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -153,6 +153,11 @@ describe("real curriculum", () => {
       "FA-C05-khoda-meaning",
       "FA-C05-khodahafez-goodbye",
       "FA-C05-practice-final-line",
+      "FA-C06-amadan-verb",
+      "FA-C06-budan-infinitive",
+      "FA-C06-danestan-pair",
+      "FA-C06-goftan-stem",
+      "FA-C06-raftan-stem",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
