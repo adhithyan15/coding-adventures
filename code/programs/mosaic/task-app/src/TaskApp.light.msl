@@ -829,6 +829,20 @@ style TaskApp {
     padding : 4 ;
     border-radius : 20 ;
   }
+  part chip-priority {
+    background : "#f7f2ea" ;
+    color : "#6a625a" ;
+    font-size : 11 ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part chip-labels {
+    background : "#f7f2ea" ;
+    color : "#6a625a" ;
+    font-size : 11 ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
   part del-btn {
     background : "transparent" ;
     color : "#9b9289" ;

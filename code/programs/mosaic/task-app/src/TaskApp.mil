@@ -104,18 +104,21 @@ component TaskApp {
 
   // One row per task, in schedule order. Each row is a list of pre-formatted cells:
   //
-  //   [ 0 ] done-glyph      [ 5 ] expanded-marker  — non-empty for the ONE open row
-  //   [ 1 ] name            [ 6 ] detail: scheduled / earliest / latest
-  //   [ 2 ] due             [ 7 ] detail: slack, or "on the critical path"
-  //   [ 3 ] schedule        [ 8 ] detail: free slack (only when it differs)
-  //   [ 4 ] overdue         [ 9 ] group heading — present ONLY on the row that
-  //                               opens a group, so the list reads as sections
+  //   [ 0 ] done-glyph      [ 5  ] expanded-marker  — non-empty for the ONE open row
+  //   [ 1 ] name            [ 6  ] detail: scheduled / earliest / latest
+  //   [ 2 ] due             [ 7  ] detail: slack, or "on the critical path"
+  //   [ 3 ] schedule        [ 8  ] detail: free slack (only when it differs)
+  //   [ 4 ] overdue         [ 9  ] group heading — present ONLY on the row that
+  //                                opens a group, so the list reads as sections
+  //                         [ 10 ] priority display name (e.g. "High"), or empty
+  //                         [ 11 ] labels, comma-joined display names, or empty
   //
   // Every cell is optional: an empty one (no due date, not overdue, nothing to add)
   // is the empty string and the layout hides it. Cells 6-8 are the
   // progressive-disclosure payload, filled ONLY for the expanded row — so a collapsed
   // list stays a plain to-do list, and the host skips the CPM recompute entirely when
-  // nothing is open.
+  // nothing is open. 10-11 are appended rather than inserted between 9 and the old
+  // end, so no existing row[n] reference anywhere shifts meaning.
   slot task-rows : list<list<text>> ;
 
   // Typing in the inputs.
