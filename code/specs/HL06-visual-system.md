@@ -27,16 +27,22 @@ The design requirements are:
 | Graphics packages loaded in any preamble | **0** |
 | Renderer support for `![alt](src)` | none — silently degrades to `!\href{src}{alt}` |
 | Authored geometric stroke paths (`DUCTUS`) | **1 letter** (Tamil ம) |
-| UI or book consumers of that stroke data | **0** |
+| UI or book consumers of that stroke data | **1 app** (HL-C08), 0 books |
 | Scripts with cited prose stroke order | 9 scripts, 190 letters, rendered as a plain `<ol>` |
 
 The most striking of these is the fourth. `strokes.ts` contains a complete, carefully
 reasoned pen-path model — strokes as pen-down runs, segments as labelled parts that
 must meet head-to-tail, `penPathD()` emitting SVG path data, `penTip()` emitting an
 animated pen position — validated against real glyph outlines extracted from the
-vendored fonts by `truetype.ts` to a sub-2-font-unit join tolerance. It is imported by
-nothing but its own test. The machinery for teaching handwriting properly is built,
+vendored fonts by `truetype.ts` to a sub-2-font-unit join tolerance. It was imported by
+nothing but its own test: the machinery for teaching handwriting properly was built,
 tested, and dark.
+
+**HL-C08 has since lit the app half of it** — `language-ladder`'s Browse detail panel
+renders the build-up for any letter with an authored pen path, falling back to the
+prose `<ol>` for the rest. The books remain dark, and the data remains one letter, so
+the row above still reads 1. Widening `DUCTUS` is HL-C09; it is a per-letter
+provenance problem, not a rendering one.
 
 ## Three classes of figure
 
@@ -50,8 +56,14 @@ pen path, the segment labels, the lift points.
 
 - **Source of truth:** `DUCTUS` in `strokes.ts` for the pen path; the vendored font
   outline via `truetype.ts` for the glyph shape.
-- **Renderer:** `penPathD()` / `penTip()` composed into SVG through
-  `renderToSvgString()` from the existing `@coding-adventures/paint-vm-svg` package.
+- **Renderer:** `penPathD()` / `penTip()` composed into SVG. In the **app** this is
+  `language-ladder`'s `src/ductusview.ts` (shipped in HL-C08), which emits an
+  `SvgNode` tree plus a serialiser and takes no runtime dependency — the app is a
+  browser bundle, and `paint-vm-svg` would be dead weight in it. The **book**
+  pipeline may compose the same `penPathD()`/`penTip()` output through
+  `renderToSvgString()` from `@coding-adventures/paint-vm-svg` where that fits the
+  build. Both read the same `DUCTUS` and the same font outline, which is what
+  makes them the same figure.
 - **Verification:** the existing `strokes.test.ts` invariants continue to gate the
   data — every pen point on real ink, every intra-stroke join under tolerance, the
   path covering the whole letter — plus provenance (`citation`, `url`) on every entry.
