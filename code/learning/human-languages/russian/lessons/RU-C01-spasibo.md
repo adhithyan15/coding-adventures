@@ -60,13 +60,11 @@ prayer wore invisible.
 
 ## Across the family — thanks, and where it comes from
 
-| Language | "thank you" | its root idea |
-|---|---|---|
-| **Russian** | *spasíbo* (спасибо) | **"God save you"** |
-| Spanish | *gracias* | Latin *gratia*, "grace" |
-| French | *merci* | Latin *merces*, "reward, mercy" |
-| German | *danke* | "think of / be mindful" |
-| English | *thank you* | "think" — I'll hold you in thought |
+- Russian **спасибо** — **"God save you."**
+- Spanish **gracias** — Latin *gratia*, "grace."
+- French **merci** — Latin *merces*, "reward, mercy."
+- German **danke** — "think of, be mindful."
+- English **thank you** — "think": I'll hold you in thought.
 
 Every culture built "thanks" from a different metaphor — grace, reward, mindful
 thought — and Russian built it from a **blessing**.

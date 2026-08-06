@@ -23,6 +23,10 @@ materials. Romanization is a learning aid, not a substitute for reading Persian.
   exact session-count review ledger through S35.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) collects the
   script and sound facts for lookup; it is never a prerequisite chapter.
+- [`chapters.json`](./chapters.json) is the HL05 capability ledger: for each
+  authored chapter, one first-person "I can …" promise and the payoff lesson
+  that proves it. Chapters 2–5 are authored; Chapter 1 is not, because its
+  lessons are still schema v1 and declare no knowledge atoms to assess.
 - [`lessons/`](./lessons/) contains the twenty canonical short practice lessons.
 - [`book/book.tex`](./book/book.tex) builds the free five-chapter starter edition
   with XeLaTeX; merged editions appear in the public human-languages book catalog.

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "spanish",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 4 onward are authored in HL-C11; their absence here is real, measurable debt and must not be papered over with placeholders.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 1-6 and 19-33 are authored here — every Spanish chapter that owns a core/book-generation.json target. Chapters 7-18 are deliberately absent: their lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for them honestly. That absence is real, measurable debt and must not be papered over with placeholders. Chapters 1-6 end in a terminal practice-mix; chapters 19-33 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live.",
   "chapters": [
     {
       "chapter": 1,
@@ -65,6 +65,353 @@
           "ES-LEX-COMO-SE-LLAMA",
           "ES-LEX-TE-LLAMAS",
           "ES-LEX-MUCHO-GUSTO"
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "How Are You?",
+      "label": "ch:how-are-you",
+      "canDo": "I can ask how someone is in Spanish, formally or informally, answer for myself, and hand the question back.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK",
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-practice",
+        "kind": "dialogue",
+        "summary": "The whole how-are-you exchange run twice — ¿Cómo está usted? for a stranger, ¿Cómo estás? for a friend — answered with bien, regular or más o menos and closed with gracias / de nada.",
+        "assesses": [
+          "ES-LEX-GRACIAS",
+          "ES-LEX-DE-NADA",
+          "ES-LEX-ESTAR",
+          "ES-GRAMMAR-STATE-LOCATION-ESTAR",
+          "ES-GRAMMAR-ESTAR-REGISTER-CONTRAST",
+          "ES-LEX-COMO-ESTA-USTED",
+          "ES-LEX-COMO-ESTAS",
+          "ES-LEX-BIEN",
+          "ES-LEX-REGULAR",
+          "ES-LEX-MAS-O-MENOS",
+          "ES-PRAGMATICS-AND-YOU",
+          "ES-LEX-ME-LLAMO"
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "canDo": "I can close a Spanish conversation and pick the goodbye that fits how soon I will see the person again.",
+      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "payoff": {
+        "lesson": "ES-C05-practice",
+        "kind": "dialogue",
+        "summary": "One conversation from hola to its ending, choosing hasta luego, hasta mañana, hasta pronto or the final adiós to match when the two of you will next meet.",
+        "assesses": [
+          "ES-LEX-ADIOS",
+          "ES-LEX-HASTA",
+          "ES-LEX-HASTA-LUEGO",
+          "ES-LEX-HASTA-MANANA",
+          "ES-LEX-HASTA-PRONTO",
+          "ES-LEX-HOLA",
+          "ES-LEX-COMO-ESTA-USTED"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "canDo": "I can build my own Spanish sentences with -ar verbs and ask politely for a coffee.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "ES-C06-practice",
+        "kind": "production",
+        "summary": "Conjugate hablar, trabajar and estudiar across yo, tú and usted with no pronoun spoken, answer ¿Hablas español? about yourself, then order café, por favor and run the gracias / de nada loop.",
+        "assesses": [
+          "ES-LEX-CAFE",
+          "ES-LEX-POR-FAVOR",
+          "ES-LEX-HABLAR",
+          "ES-LEX-TRABAJAR",
+          "ES-LEX-ESTUDIAR",
+          "ES-LEX-ESPANOL",
+          "ES-LEX-HABLO-ESPANOL",
+          "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+          "ES-GRAMMAR-PRO-DROP",
+          "ES-LEX-GRACIAS",
+          "ES-LEX-DE-NADA"
+        ]
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Yes and No",
+      "label": "ch:spanish-basic-responses",
+      "canDo": "I can answer yes or no in Spanish and negate a sentence by putting no in front of the verb.",
+      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "payoff": {
+        "lesson": "ES-C19-no",
+        "kind": "task",
+        "summary": "Answer ¿Hablas inglés? with a bare no, then negate the sentence itself — No hablo inglés — with the same one word doing both jobs.",
+        "assesses": [
+          "ES-LEX-NO-01",
+          "ES-GRAMMAR-NO-02"
+        ]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Lo Siento",
+      "label": "ch:spanish-sorry",
+      "canDo": "I can apologise in Spanish and choose between lo siento and perdón.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "ES-C20-lo-siento",
+        "kind": "task",
+        "summary": "Say lo siento for regret and perdón for fault or for catching someone's attention, hearing sentir — I feel it — inside the first.",
+        "assesses": [
+          "ES-LEX-POR-FAVOR",
+          "ES-LEX-LO-SIENTO-01",
+          "ES-ETYMON-SENTIR-02",
+          "ES-PRAGMATICS-SORRY-03",
+          "ES-ETYMON-PERDON-04"
+        ]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Days of the Week",
+      "label": "ch:spanish-days-of-the-week",
+      "canDo": "I can name all seven days of the week in Spanish and say why the last two broke away from the planet names.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "ES-C21-sabado-domingo",
+        "kind": "task",
+        "summary": "Run lunes to domingo straight through, then pair each weekend day against its English twin — sábado against Saturn's day, domingo against the Sun's.",
+        "assesses": [
+          "ES-LEX-WEEKDAYS-01",
+          "ES-ETYMON-WEEKDAYS-02",
+          "ES-LEX-WEEKEND-01",
+          "ES-ETYMON-WEEKEND-02"
+        ]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Black, White, Red, and Blue",
+      "label": "ch:spanish-black-white-red-blue",
+      "canDo": "I can name black, white, red and blue in Spanish and say which of them Spanish borrowed rather than inherited.",
+      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "payoff": {
+        "lesson": "ES-C22-rojo-azul",
+        "kind": "task",
+        "summary": "Say negro, blanco, rojo and azul, then sort them by origin: two inherited from Latin, one traditionally linked to the Germanic Visigoths, and azul carried in from Arabic lāzaward.",
+        "assesses": [
+          "ES-ETYMON-NEGRO-02",
+          "ES-ETYMON-BLANCO-04",
+          "ES-LEX-ROJO-01",
+          "ES-ETYMON-ROJO-02",
+          "ES-LEX-AZUL-03",
+          "ES-ETYMON-AZUL-04"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Parents and Siblings",
+      "label": "ch:spanish-family",
+      "canDo": "I can name my parents and my siblings in Spanish and explain why hermano is not built on Latin's word for brother.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "ES-C23-hermano-hermana",
+        "kind": "task",
+        "summary": "Give el padre, la madre, el hermano and la hermana, then trace hermano back through germānus to germen, the seed, rather than to frāter.",
+        "assesses": [
+          "ES-LEX-SIBLINGS-01",
+          "ES-ETYMON-GERMANUS-02",
+          "ES-ETYMON-GERMEN-03",
+          "ES-SOUND-HERMANO-04"
+        ]
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Head and Hand",
+      "label": "ch:spanish-head-and-hand",
+      "canDo": "I can name the head and the hand in Spanish and get la mano's gender right despite its -o ending.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "ES-C24-mano",
+        "kind": "task",
+        "summary": "Say la cabeza and la mano, use me duele la mano, and explain the feminine article on a word that ends in -o by way of Latin's fourth declension.",
+        "assesses": [
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-LEX-MANO-01",
+          "ES-GRAMMAR-MANO-GENDER-02",
+          "ES-ETYMON-MANUS-03"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "The Seasons",
+      "label": "ch:spanish-seasons",
+      "canDo": "I can name the four seasons in Spanish and explain how verano moved from spring to summer.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "ES-C25-las-estaciones",
+        "kind": "task",
+        "summary": "Run primavera, verano, otoño, invierno, unpack primavera as prīma vēra, and show verano growing out of that same vēr before its meaning slid across to summer.",
+        "assesses": [
+          "ES-LEX-SEASONS-01",
+          "ES-ETYMON-SEASONS-02",
+          "ES-ETYMON-VERANO-03"
+        ]
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "Water, Wine, and Bread",
+      "label": "ch:spanish-water-wine-bread",
+      "canDo": "I can name water, wine and bread in Spanish and say why a compañero is someone who shares bread with me.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "ES-C26-pan",
+        "kind": "task",
+        "summary": "Say el agua, el vino and el pan, then open compañero into com- plus pānis and follow the root out to panadería and panadero.",
+        "assesses": [
+          "ES-LEX-PAN-01",
+          "ES-ETYMON-PAN-02",
+          "ES-ETYMON-COMPANION-03"
+        ]
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "The Months",
+      "label": "ch:spanish-months",
+      "canDo": "I can name the twelve months in Spanish and explain why diciembre carries the Latin word for ten.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "ES-C27-los-meses",
+        "kind": "task",
+        "summary": "Recite enero through diciembre, tie marzo back to martes through Mars, and place septiembre and diciembre against the Roman year that started in March.",
+        "assesses": [
+          "ES-LEX-WEEKDAYS-01",
+          "ES-ETYMON-WEEKDAYS-02",
+          "ES-LEX-MONTHS-01",
+          "ES-ETYMON-MONTHS-02"
+        ]
+      }
+    },
+    {
+      "chapter": 28,
+      "title": "Noon and Midnight",
+      "label": "ch:spanish-noon-midnight",
+      "canDo": "I can say that it is noon or midnight in Spanish and break both words into their two living halves.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "ES-C28-mediodia-medianoche",
+        "kind": "task",
+        "summary": "Say es mediodía and es medianoche, split each into medio/media plus día/noche, and set them against French's worn-down midi and minuit.",
+        "assesses": [
+          "ES-LEX-NOON-MIDNIGHT-01",
+          "ES-ETYMON-NOON-MIDNIGHT-02"
+        ]
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Telling Time",
+      "label": "ch:spanish-telling-time",
+      "canDo": "I can tell the time in Spanish and choose correctly between es la una and son las dos.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "ES-C29-la-hora",
+        "kind": "task",
+        "summary": "Say es la una, son las dos, son las diez, and explain why one o'clock takes a singular verb while every other hour takes a plural one.",
+        "assesses": [
+          "ES-LEX-HORA-01",
+          "ES-ETYMON-HORA-02",
+          "ES-GRAMMAR-TELLING-TIME-03"
+        ]
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "The Weather",
+      "label": "ch:spanish-weather",
+      "canDo": "I can talk about the weather in Spanish and know why llueve refuses to join hace.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "ES-C30-el-tiempo",
+        "kind": "task",
+        "summary": "Ask about el tiempo, answer hace calor, hace frío, hace sol, then switch to llueve — a verb of its own, whose ll- is the same sound change that gave llamar.",
+        "assesses": [
+          "ES-LEX-LLAMO",
+          "ES-LEX-TIEMPO-01",
+          "ES-ETYMON-TIEMPO-02",
+          "ES-LEX-WEATHER-03",
+          "ES-ETYMON-WEATHER-04",
+          "ES-GRAMMAR-WEATHER-05",
+          "ES-ETYMON-LLOVER-06"
+        ]
+      }
+    },
+    {
+      "chapter": 31,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:spanish-numbers-eleven-to-twenty",
+      "canDo": "I can count from eleven to twenty in Spanish and say where the fused Latin teens stop and the ten-and-X ones begin.",
+      "spineNodes": ["SPINE-COUNT-ONE-TO-FIVE"],
+      "payoff": {
+        "lesson": "ES-C31-numeros-11-20",
+        "kind": "task",
+        "summary": "Run once to quince as fused Latin compounds, then dieciséis to diecinueve as transparent ten-and-X, closing on veinte.",
+        "assesses": [
+          "ES-LEX-NUMBERS-11-15-01",
+          "ES-ETYMON-NUMBERS-11-15-02",
+          "ES-LEX-NUMBERS-16-19-03",
+          "ES-GRAMMAR-NUMBER-FORMATION-04",
+          "ES-ETYMON-LATIN-TEENS-05",
+          "ES-LEX-VEINTE-06",
+          "ES-ETYMON-VEINTE-07"
+        ]
+      }
+    },
+    {
+      "chapter": 32,
+      "title": "Dog and Cat",
+      "label": "ch:spanish-dog-and-cat",
+      "canDo": "I can name a dog and a cat in Spanish and say which of the two words still has no agreed origin.",
+      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "payoff": {
+        "lesson": "ES-C32-perro-gato",
+        "kind": "task",
+        "summary": "Say gato and perro, trace cattus back toward Egypt, then admit that perro — which pushed out the older can — has no settled etymology at all.",
+        "assesses": [
+          "ES-LEX-GATO-01",
+          "ES-ETYMON-GATO-02",
+          "ES-LEX-PERRO-03",
+          "ES-EVIDENCE-PERRO-04"
+        ]
+      }
+    },
+    {
+      "chapter": 33,
+      "title": "Green and Yellow",
+      "label": "ch:spanish-green-and-yellow",
+      "canDo": "I can name green and yellow in Spanish and explain why amarillo is built on the word for bitter.",
+      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "payoff": {
+        "lesson": "ES-C33-verde-amarillo",
+        "kind": "task",
+        "summary": "Say verde and amarillo, tie verde to virēre, to flourish, and amarillo to amarellus, a little bitter — the same root as everyday amargo.",
+        "assesses": [
+          "ES-LEX-VERDE-01",
+          "ES-ETYMON-VERDE-02",
+          "ES-LEX-AMARILLO-03",
+          "ES-ETYMON-AMARILLO-04"
         ]
       }
     }

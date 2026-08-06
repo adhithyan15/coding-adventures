@@ -59,17 +59,11 @@ for six thousand years.
 
 ## Across the family — one ancient "no"
 
-| Language | "no" | from PIE **\*ne** |
-|---|---|---|
-| **Russian** | *nyet* (нет) | ✓ (не = "not") |
-| English | *no / not* | ✓ |
-| Latin | *nōn* | ✓ |
-| French | *non* | ✓ |
-| Sanskrit | *na* | ✓ |
-
 Unlike "yes" — where every language improvised — the world's "no" is
-astonishingly **one word**, stretched across the whole family. *нет* is Russia's
-share of it.
+astonishingly **one word**, stretched across the whole family. Russian **нет**
+carries *не*; English says **no** and **not**; Latin said *nōn*, French says
+*non*, Sanskrit said *na*. All of them are the same ancient \**ne*, and *нет* is
+Russia's share of it.
 
 ## Guided Practice
 

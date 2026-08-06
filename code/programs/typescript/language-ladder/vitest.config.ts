@@ -29,6 +29,7 @@ export default defineConfig({
         "src/concepts.ts",
         "src/lessons.ts",
         "src/progress.ts",
+        "src/ductusview.ts",
       ],
     },
   },

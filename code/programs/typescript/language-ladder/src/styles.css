@@ -658,3 +658,38 @@ body {
 }
 .sibling__glyph { font-size: 2rem; line-height: 1.1; }
 .sibling__label { font-size: 0.7rem; color: var(--muted); }
+
+/* --- the stroke-order filmstrip (HL-C08) -------------------------------- */
+/* One panel per movement of the pen, read left to right like a comic strip.
+   The SVG carries its own colours, so the very same markup also works in the
+   books; these rules only handle layout and the framing around each panel. */
+.ductus__film {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+/* The SVG carries width/height attributes matching its viewBox, so `height:
+   auto` keeps each panel in its true proportions however wide the column is. */
+.ductus__frame {
+  width: 118px;
+  height: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px;
+}
+.ductus__summary {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.ductus__source {
+  margin: 0 0 8px;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.ductus__source a { color: var(--accent); }
+.ductus__variation { font-style: italic; }

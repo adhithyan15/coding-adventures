@@ -45,6 +45,26 @@ Chapters 1–6 are in the book. Chapter 6 is generated from the same canonical
 schema-v2 lesson AST and source hashes that Language Ladder loads, while the
 first five chapters retain their authored long-form narrative during migration.
 
+## What each chapter lets you do
+
+[`chapters.json`](./chapters.json) is the HL05 capability ledger: per chapter, one
+first-person can-do sentence and the lesson that pays it off.
+
+- **Chapter 6** — *"I can say the Sanskrit numerals एक to पञ्च with their dual and
+  gendered forms, and follow पञ्च outward into Punjab, pentagon, and the disputed
+  history of punch."* Payoff:
+  [`SA-C06-pancha-travels`](./lessons/SA-C06-pancha-travels.md), a task.
+
+  Its representativeness is 7/15 introduced atoms (0.47), just under the 0.5
+  policy floor. This chapter is the widest of the Indic six, and its terminal
+  lesson follows the *pañca* thread rather than the dual, the gendered paradigm,
+  or the Grimm's-law material. The shortfall is recorded rather than padded away.
+
+Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
+still schema v1, so their lessons declare no knowledge atoms and no payoff there
+could honestly claim to assess anything. A placeholder would hide debt the HL05
+gap report is meant to surface; the entries land as those chapters migrate.
+
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font

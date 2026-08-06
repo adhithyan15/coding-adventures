@@ -43,12 +43,10 @@ Russian asks **how** people call you, treating naming as something people do.
 
 English is the odd one out in this small comparison:
 
-| Language | question frame |
-|---|---|
-| Russian | *Как вас зовут?* — **how** |
-| French | *Comment vous appelez-vous ?* — **how** |
-| Spanish | *¿Cómo se llama?* — **how** |
-| English | ***What*** is your name? — **what** |
+- Russian asks *Как вас зовут?* — **how**.
+- French asks *Comment vous appelez-vous ?* — **how**.
+- Spanish asks *¿Cómo se llama?* — **how**.
+- English asks ***What*** is your name? — **what**.
 
 Three languages organize the question around an **action**; English organizes
 it around a **possession**. The answer is the same social fact, but the route to
