@@ -1602,6 +1602,16 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
             is_text: false,
             is_image: false,
         },
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a ColumnLayout: the content still renders, it just isn't
+        // draggable here. Erroring instead would mean a layout using drag cannot be
+        // emitted to this backend AT ALL. See UI35-host-drag-drop.md.
+        "HostDraggable" | "HostDropTarget" => QmlElement {
+            element_name: "ColumnLayout",
+            builtin_lines: vec![],
+            is_text: false,
+            is_image: false,
+        },
         "Text" => QmlElement {
             element_name: "Text",
             builtin_lines: vec![],

@@ -85,15 +85,18 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     expect(report.schemaVersion).toBe(1);
     expect(report.durationModel.version).toBe(2);
-    // 21 tracks and 21 books since HL-C40 added Japanese; 20 of each before it.
-    // Every track keeps a book, so these two counts stay equal to the registry.
-    expect(report.summary.registeredTracks).toBe(21);
+    // 20 -> 21 in HL-C39 (Mandarin Chinese) -> 22 in HL-C40 (Japanese). Each joined
+    // the registry with its own authored book, so the track, schema, and
+    // book-coverage counts all move together and stay equal to the registry.
+    // Duration violations stay at zero: Chinese's seven and Japanese's eight
+    // Chapter 1 lessons are each under 300 effective seconds.
+    expect(report.summary.registeredTracks).toBe(22);
     expect(report.summary.totalLessons).toBe(lessons.length);
-    expect(report.summary.authoredBooks).toBe(21);
+    expect(report.summary.authoredBooks).toBe(22);
     expect(report.summary.durationViolations).toBe(0);
     expect(report.summary.unknownPrerequisites).toBe(0);
-    expect(report.schemas.tracks).toHaveLength(21);
-    expect(report.books.tracks).toHaveLength(21);
+    expect(report.schemas.tracks).toHaveLength(22);
+    expect(report.books.tracks).toHaveLength(22);
   });
 
   it("compiles the cross-language objective activities from canonical blocks", () => {
@@ -133,11 +136,16 @@ describe("real curriculum", () => {
       "JA-C01-practice-final-line",
       "KA-C06-dative-stacking-agglutinative",
       "LA-C01-practice-vale-root",
+      "LA-C19-practice-answer-line",
+      "LA-C21-practice-name-reply",
+      "LA-C33-practice-soir-family",
+      "LA-C36-practice-afternoon-line",
       "ML-C23-naal-survival",
       "MR-C06-number-differences-don-ending",
       "PA-C06-panj-convergence-borrowing",
       "PT-C02-practice-neutral-question",
       "RU-C02-kak-cross-language-what-language",
+      "RU-C02-practice-informal-question",
       "RU-C02-vy-formality-safe-default",
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",
@@ -158,6 +166,15 @@ describe("real curriculum", () => {
       "UR-C05-khuda-hafiz-goodbye",
       "UR-C05-khuda-meaning",
       "UR-C05-practice-final-line",
+      // HL-C39 added Mandarin Chinese: one activity per Chapter 1 lesson, so the
+      // corpus total moves from 51 to 57.
+      "ZH-C01-hao-components",
+      "ZH-C01-hao-fond-tone",
+      "ZH-C01-ni-meaning",
+      "ZH-C01-nihao-greeting",
+      "ZH-C01-practice-greet",
+      "ZH-C01-tone-sandhi-spoken",
+      "ZH-C01-tones-count",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
@@ -171,7 +188,8 @@ describe("real curriculum", () => {
         lesson.realization.chapter >= 1 &&
         lesson.realization.chapter <= 3,
     );
-    expect(pilot).toHaveLength(24);
+    // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
+    expect(pilot).toHaveLength(26);
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(

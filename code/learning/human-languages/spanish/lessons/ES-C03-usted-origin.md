@@ -7,7 +7,7 @@ chapter: 3
 type: etymology
 headword: vuestra merced → usted
 gloss: the respectful title inside usted
-prerequisites: [ES-C03-tu-usted]
+prerequisites: [ES-C03-tu-usted, ES-C03-tu-usted-register]
 sounds: []
 roots: [vestra, merces]
 duration:
@@ -23,7 +23,7 @@ modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
 register: formal
 variety: general
-reviews_of: [ES-C03-tu-usted]
+reviews_of: [ES-C03-tu-usted, ES-C03-tu-usted-register]
 ---
 
 # *vuestra merced* → *usted* — respect compressed into one word

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "russian",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapter 2 is authorable today. Chapter 1 is entirely schema-v1 (no introduces/practises knowledge atoms), so it has no assessable payoff to point at and is deliberately absent rather than stubbed — its absence is real, measurable debt. Chapter 2 has no core/book-generation.json target either; its title and label are taken from russian/book/chapters/ch02-introducing-yourself.tex, the only other place they are written down.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapter 2 is authorable today. Chapter 1 is entirely schema-v1 (no introduces/practises knowledge atoms), so it has no assessable payoff to point at and is deliberately absent rather than stubbed — its absence is real, measurable debt. Chapter 2 has no core/book-generation.json target either; its title and label are taken from russian/book/chapters/ch02-introducing-yourself.tex, the only other place they are written down. The payoff points at RU-C02-practice, the chapter's consolidation lesson, which HL-C32 migrated to schema v2 for exactly this reason; before that migration the only schema-v2 candidate was the cross-language etymology lesson RU-C02-kak-cross-language, whose three atoms gave a representativeness of 0.20 against a 0.50 floor.",
   "chapters": [
     {
       "chapter": 2,
@@ -10,13 +10,20 @@
       "canDo": "I can give my name in Russian, ask for someone else's, and pick ты or вы to match how well I know them.",
       "spineNodes": ["SPINE-EXCHANGE-NAMES"],
       "payoff": {
-        "lesson": "RU-C02-kak-cross-language",
-        "kind": "task",
-        "summary": "Ask Как вас зовут? and account for its shape: Russian, like French and Spanish, asks how people call you, where English asks what your name is.",
+        "lesson": "RU-C02-practice",
+        "kind": "dialogue",
+        "summary": "Run the whole introduction with a stranger — greet, ask Как вас зовут?, answer Меня зовут…, close with Очень приятно — then switch it for one friend by changing only the greeting and вас → тебя.",
         "assesses": [
+          "RU-LEX-YA",
+          "RU-LEX-TY-VY",
+          "RU-GRAMMAR-TY-VY-REGISTER",
+          "RU-PRAGMATICS-VY-POLITENESS",
+          "RU-LEX-MENYA-ZOVUT",
+          "RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL",
+          "RU-GRAMMAR-MENYA-OBJECT-CASE",
           "RU-LEX-KAK-VAS-ZOVUT",
-          "RU-GRAMMAR-NAMING-HOW-FRAME",
-          "RU-COMPARISON-NAMING-QUESTION-FRAMES"
+          "RU-GRAMMAR-OBJECT-PRONOUNS",
+          "RU-GRAMMAR-NAMING-HOW-FRAME"
         ]
       }
     }

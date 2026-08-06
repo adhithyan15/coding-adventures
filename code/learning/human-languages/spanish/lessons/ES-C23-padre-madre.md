@@ -8,7 +8,7 @@ type: word
 headword: el padre, la madre
 gloss: father and mother — among the oldest reconstructible words in the whole family
 concept_tag: ES-FAMILY-PARENTS
-prerequisites: [ES-C22-rojo-azul]
+prerequisites: [ES-C22-azul]
 sounds: [r-tap, d-soft]
 roots: [pater-latin, mater-latin]
 etymology_hook: "padre ← pater, madre ← mater — the same PIE *ph2ter/*meh2ter that gave English father/mother via Grimm's law (p→f, t→th)"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C22-rojo-azul, ES-C22-negro-blanco]
+reviews_of: [ES-C22-azul, ES-C22-rojo, ES-C22-negro-blanco]
 ---
 
 # el padre, la madre — among the oldest words there are

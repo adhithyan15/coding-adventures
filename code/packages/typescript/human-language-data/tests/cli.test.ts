@@ -22,8 +22,9 @@ describe("runCurriculumGapReport", () => {
     try {
       expect(runCurriculumGapReport(["--format", "json"])).toBe(0);
       const json = out.mock.calls.map((call) => String(call[0])).join("");
-      // 21 since HL-C40 registered the Japanese track; 20 before it.
-      expect(JSON.parse(json).summary.registeredTracks).toBe(21);
+      // 22 since HL-C40 registered Japanese, following HL-C39's Mandarin Chinese —
+      // the first two tracks outside the Indo-European and Dravidian families.
+      expect(JSON.parse(json).summary.registeredTracks).toBe(22);
       out.mockClear();
       expect(runCurriculumGapReport(["--format", "text"])).toBe(0);
       expect(out.mock.calls.map((call) => String(call[0])).join("")).toContain(

@@ -41,10 +41,8 @@ Russian has **two words for "you."**
 ## The two words
 <!-- hl-knowledge: introduces=[RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER]; assesses=[] -->
 
-| | | |
-|---|---|---|
-| **ты** | *ty* | you — one person you're familiar with |
-| **вы** | *vy* | you — formal, **or** more than one person |
+> **ты** — *ty* — you, one person you're familiar with.
+> **вы** — *vy* — you, formal, **or** more than one person.
 
 Both turn on **ы**, which is the hardest vowel in Russian for an English speaker:
 not the *ee* of *ты*'s look-alike, but a tighter, further-back sound made with
@@ -57,13 +55,11 @@ your tongue drawn back. The writing track hasn't reached **ы** either.
 Pronouns are the **least borrowable** part of a language. Nouns come and go;
 *I* and *you* stay. So the first two line up almost too neatly:
 
-| Russian | Latin | English | German |
-|---|---|---|---|
-| **я** (last lesson) | *ego* | **I** | *ich* |
-| **ты** | *tū* | **thou** | *du* |
-| **вы** | *vōs* | — | — |
+- **я** (last lesson) — Latin *ego*, English **I**, German *ich*.
+- **ты** — Latin *tū*, English **thou**, German *du*.
+- **вы** — Latin *vōs*, with no English or German survivor to set beside it.
 
-The first two rows are the same word four times over. **The third row is only
+The first two lines are the same word four times over. **The third is only
 half a set**: *вы* and *vōs* both continue PIE \**wos*, but English *you* and
 German *ihr* come from the **other** stem in that paradigm, \**yūs*. Cousins,
 not twins — worth marking rather than smoothing over.

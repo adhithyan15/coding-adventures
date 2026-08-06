@@ -40,6 +40,7 @@ The machine-readable layer alongside the tracks is:
 core/languages.json             complete active-language registry and default mix order
 core/spine.json                 ordered, language-independent can-do spine
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
+core/lesson-modality.json       generated: per-lesson voice/sight/pen and per-chapter drivable prefix
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
@@ -65,6 +66,19 @@ against `core/latex-warning-baseline.json`; a track fails only when it exceeds i
 recorded numbers, and a track recorded as `null` has not been measured yet, so it is
 reported and never failed. Until this gate existed, every track's "builds with zero
 warnings" claim was prose that nothing checked.
+
+`core/lesson-modality.json` is generated, never authored. It records for every lesson
+whether it needs `voice`, `sight`, or a `pen`, and for every chapter how many of its
+lessons a commuter can do in the car before hitting the first that needs eyes. This is
+what lets **two editions build from one source**: the complete book keeps everything,
+including the handwriting instruction, while the planned dictation-friendly driving
+edition filters on `drivable` and keeps only what a driver can actually do. The same
+job that builds the books runs `check:modality`, so the manifest cannot drift away from
+the lessons it describes — a lesson that silently gained a paradigm table would
+otherwise still advertise itself as safe to learn at 70mph. Modality stays derived
+rather than written into 1,096 frontmatter files, which would be 1,096 places for it to
+go stale; the authored `modality:` override with a `modality_reason:` remains available
+for the genuinely exceptional lesson.
 
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
 losslessly and checks that each authored book chapter maps to its short Markdown
@@ -107,6 +121,7 @@ edition is authored.
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1-2 authored (lessons + book) |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | Five authored shared-spine chapters; 20 canonical lessons |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |
+| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese (vendored font subset) | Chapter 1 authored; 7 canonical lessons, book chapter generated. **Scale test** — see that README for what the method does and does not carry outside Indo-European |
 | [Japanese](./japanese/README.md) | Japonic / hiragana + katakana + kanji (vendored font) | Chapter 1 authored; 8 canonical lessons, chapter generated for app + book |
 
 Spanish is the pilot that proved the format; every other track replicates it,
@@ -115,6 +130,15 @@ knows (see `HL00`). Non-Latin scripts are taught **inline** — letters introduc
 inside the word that first needs them, never as a gated reading course — using
 vendored static Noto fonts (see [`_fonts/`](./_fonts/)) so local and CI builds
 render identically.
+
+**Mandarin is the scale test.** The first twenty tracks are Indo-European or
+Dravidian, and the method's engine — anchoring each new word to English words the
+reader already owns through a shared ancestor — depends on that shared ancestry.
+Chinese has none, is logographic rather than alphabetic, and is tonal. Its track
+was added to find out which parts of the framework describe language in general
+and which quietly described Indo-European, and
+[`chinese/README.md`](./chinese/README.md) states the answers plainly, including
+the one place the signature device does not transfer at all.
 
 **Latin and Sanskrit are taproot tracks.** Rather than being learned for
 conversation, they are the classical sources the other tracks keep pointing back

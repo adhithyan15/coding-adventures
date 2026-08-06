@@ -20,11 +20,12 @@ words that are genuinely absent; do not erase a verb that is really there.
 
 ## Three phrases, three English expansions
 
-| Russian | literal reading | English adds |
-|---|---|---|
-| **Меня зовут Анна** | "they call me Anna" | *my*, *name* |
-| **Очень приятно** | "very pleasant" | *it is*, *to meet you* |
-| **Как вас зовут?** | "how do they call you?" | *what*, *your* |
+- **Меня зовут Анна** reads literally "they call me Anna"; English adds *my*
+  and *name*.
+- **Очень приятно** reads literally "very pleasant"; English adds *it is* and
+  *to meet you*.
+- **Как вас зовут?** reads literally "how do they call you?"; English adds
+  *what* and *your*.
 
 Only the middle sentence has **no verb at all**. In present-tense descriptions,
 Russian normally drops the linking verb: *Очень приятно* needs no spoken "is."

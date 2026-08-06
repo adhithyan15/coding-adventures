@@ -11,7 +11,7 @@ use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
     ChildControl, ChildEvent, OrchestratorControl, OrchestratorEvent,
 };
-use chief_of_staff_host_runtime::{verify_agent_package, PackageKeyring};
+use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
 use chief_of_staff_secure_host_channel::{
     BootstrapOffer, ChildBootstrap, ClientHello, HostId, OrchestratorBootstrap, SessionId,
 };
@@ -33,6 +33,7 @@ const MAX_RECORD_BYTES: usize = 1024 * 1024;
 const MAX_FIXED_ARGUMENTS: usize = 128;
 const MAX_PENDING_RECORDS: usize = 64;
 const STOP_POLL_INTERVAL: Duration = Duration::from_millis(10);
+const PACKAGE_RUNTIME_ARGUMENT: &str = "--package-runtime";
 
 /// Stable, input-independent process-supervision failure.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -413,6 +414,8 @@ impl ProcessHostSupervisor {
         let mut command = Command::new(self.config.program.executable());
         command
             .args(self.config.program.arguments())
+            .arg(PACKAGE_RUNTIME_ARGUMENT)
+            .arg(package_runtime_label(package.runtime()))
             .current_dir(package.path())
             .env_clear()
             .stdin(Stdio::piped())
@@ -507,6 +510,13 @@ impl ProcessHostSupervisor {
                 Err(error)
             }
         }
+    }
+}
+
+fn package_runtime_label(runtime: AgentPackageRuntime) -> &'static str {
+    match runtime {
+        AgentPackageRuntime::Deno => "deno",
+        AgentPackageRuntime::Skill => "skill",
     }
 }
 
