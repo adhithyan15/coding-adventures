@@ -11,43 +11,17 @@
 // two plain inputs the host collects and folds into the `View` it
 // passes to task-core's `table(view)` projection on the next render —
 // the returned rows are already filtered, sorted, and formatted.
+// Editing follows the same shape as Grid: the host owns edit-row /
+// edit-col / edit-content and decides what an `onEditCommit` means.
 //
-// v1 scope: READ-ONLY. Editing is deferred — see the note on the Grid
-// pass-through emits below.
-//
-// Known limitation: cell click carries no payload today
-// ------------------------------------------------------
-//
-// Grid's `Cell` is a `Box` (a generic container), not a `HostButton`.
-// mosaic-emit-react's connects-wiring only synthesizes an index/value
-// payload for a small set of "dedicated" primitives (HostButton,
-// HostInput, HostLink); a generic `Box`'s `onClick` always dispatches
-// void, no matter what the target emit declares. Grid's own row/col
-// selection (`onNavigate`) and its edit round-trip
-// (`onFormulaChange`/`onEditCommit`) all rely on Box carrying a
-// payload — so none of them can actually fire with useful data through
-// the current react emitter, in ANY app, not just this one. This was
-// invisible until now because no application had driven `Grid` through
-// a real emitter pipeline before the sheet view did.
-//
-// Two ways to fix it, neither attempted here (out of scope for a
-// package/UI PR): (a) give `Cell` explicit `row`/`col` props read via
-// expression, the same mechanism the UI35 drag family already uses for
-// `drag-key`, so the payload comes from an authored expression rather
-// than synthesized loop context; or (b) generalize the react emitter's
-// loop-scope tracking from a single `Option<ForPayloadScope>` to a
-// real stack, so index-payload synthesis works for `Box` at arbitrary
-// nesting depth the way it already (sort of) does for `HostButton`.
-// Tracked in the task-app backlog.
-//
-// Until then: `onNavigate`/`onFormulaChange`/`onEditCommit` are
-// declared VOID here (matching what the pipeline actually dispatches)
-// rather than with the payload Grid.mil itself still declares —
-// declaring a payload the wiring can never deliver would be a type a
-// host can never honestly satisfy. `selected-row`/`selected-col`/
-// `edit-row`/`edit-col`/`edit-content` stay in the interface (Grid
-// requires them to be wired to something) but the host has nothing
-// meaningful to drive them with in v1, so it just holds them at -1/"".
+// v1 shipped read-only: Grid's Cell is a Box (a generic container), and
+// mosaic-emit-react's connects-wiring could only dispatch a Box's onClick
+// void, no matter what the target emit declared — so onNavigate couldn't
+// actually carry (row, col) to any consumer. Fixed by
+// code/specs/UI37-generic-payload-dispatch.md (mosaic-emit-react resolves
+// a payload-carrying target emit's declared params from named props on the
+// same node) + mosaic-pkg-grid 0.2.3 (Cell.mil gains row/col slots,
+// Grid.mll supplies them at the call site). Editing is now real.
 //
 // Slot vocabulary
 // ---------------
@@ -77,9 +51,8 @@
 // Emit vocabulary
 // ---------------
 //
-//   Grid pass-through — fired verbatim from the wrapped Grid, but VOID
-//   here (see "Known limitation" above — this is not what Grid.mil
-//   itself declares):
+//   Grid pass-through — fired verbatim from the wrapped Grid, payload
+//   shapes unchanged:
 //
 //     onNavigate, onFormulaChange, onEditCommit, onEditCancel
 //
@@ -112,14 +85,9 @@ component Sheet {
   slot sort-open        : bool ;
   slot sort-ascending   : bool ;
 
-  emit onNavigate ;
-  // Unlike onNavigate/onEditCommit, this one IS reliable: it's wired via
-  // HostInput's onChange, which mosaic-emit-react always dispatches with a
-  // value payload unconditionally (not synthesized from loop/index context —
-  // see the "Known limitation" note above, which is specifically about Box's
-  // onClick and HostInput's onCommit, not onChange).
+  emit onNavigate ( row : number , col : number ) ;
   emit onFormulaChange ( value : text ) ;
-  emit onEditCommit ;
+  emit onEditCommit ( value : text ) ;
   emit onEditCancel ;
 
   emit onFilterChange        ( value : text ) ;

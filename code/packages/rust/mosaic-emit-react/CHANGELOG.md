@@ -4,6 +4,22 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - UI37: generic-container payload dispatch
+
+`build_emit_handlers` (the generic connects-wiring path used by `Box`/`Row`/`Column`/
+`Stack` — everything that isn't a "dedicated" primitive like `HostButton`/`HostInput`/
+`HostLink`) previously always dispatched a void action, regardless of what the target
+emit declared. A payload-carrying target emit's declared params now resolve from
+**named props on the same node** — literal / slot-ref / expression, resolved via
+`drag_value_expr` (UI35's `drag-key` resolver; not drag-specific despite the name,
+this is its second caller). A declared param with no matching prop is a hard compile
+error, not a silent `undefined` — the same "accepted-but-ignored is the worst outcome"
+principle UI36 established for size props.
+
+This is what lets `mosaic-pkg-grid`'s `Cell` (a `Box`) actually deliver `Grid`'s
+`onNavigate(row, col)` — declared since that package's v0.1.0, never deliverable by
+any consumer until now. See `code/specs/UI37-generic-payload-dispatch.md`.
+
 ### Fixed - a payload-carrying `HostInput` `onCommit` now actually carries the payload
 
 `onCommit`'s merged `onKeyDown` handler always dispatched `{ type: "..." }` with no

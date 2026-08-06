@@ -43,27 +43,15 @@ into the `View` it passes to task-core's `table(view)` projection on the
 next render. The rows Sheet receives back are already filtered, sorted,
 and formatted; Sheet only places them.
 
-## v1 scope: READ-ONLY
+## Editing (0.1.1+)
 
-Editing is declared in the interface (Grid requires its edit-cursor slots
-to be wired to something) but not functional yet. `onNavigate` /
-`onFormulaChange` / `onEditCommit` are declared **void** here, not with
-the payload `Grid.mil` itself declares — see `Sheet.mil`'s "Known
-limitation" doc-comment for the full explanation: `Grid`'s `Cell` is a
-`Box` (a generic container), and `mosaic-emit-react`'s connects-wiring
-only synthesizes an index/value payload for a small set of "dedicated"
-primitives (`HostButton`, `HostInput`, `HostLink`) — a generic `Box`'s
-`onClick` always dispatches void, in any consuming app, not just this
-one. Clicking a cell is a safe no-op today rather than silently wrong.
-
-Two ways to fix this properly, neither attempted in this package/UI-layer
-PR: (a) give `Cell` explicit `row`/`col` props read via expression — the
-same mechanism the UI35 drag family already uses for `drag-key` — so the
-payload comes from an authored expression rather than synthesized loop
-context; or (b) generalize the react emitter's loop-scope tracking from a
-single `Option<ForPayloadScope>` to a real stack, so index-payload
-synthesis works for `Box` at arbitrary nesting depth the way it already
-does for `HostButton`. Tracked in the task-app backlog.
+`onNavigate(row, col)` / `onFormulaChange(value)` / `onEditCommit(value)`
+carry their full payload — a click identifies the cell, and edits reach
+the host. This depends on `mosaic-pkg-grid` 0.2.3 +
+[UI37](../../../specs/UI37-generic-payload-dispatch.md); 0.1.0 shipped
+these void because `Grid`'s `Cell` (a `Box`, a generic container) couldn't
+carry a click payload through `mosaic-emit-react` at all yet. See
+CHANGELOG.md.
 
 ## Usage
 

@@ -4,6 +4,23 @@ All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
+## 0.2.3 — 2026-08-06 — Cell's click now carries its coordinate
+
+### Fixed
+
+- **`onClick` fired (0.2.2) but never carried anything.** `Grid.mil` has always
+  declared `onNavigate(row: number, col: number)`, but `Cell`'s root is a `Box` — a
+  generic container — and `mosaic-emit-react`'s connects-wiring could only dispatch
+  a `Box`'s click void, no matter what the target emit declared. Fixed at the
+  emitter level: [UI37](../../../specs/UI37-generic-payload-dispatch.md) teaches the
+  React backend to resolve a payload-carrying target emit's declared params from
+  named props on the same node (the same mechanism UI35's `drag-key` already uses).
+  `Cell.mil` gains `row`/`col` slots and `onClick`'s declared payload; `Cell.mll`
+  threads them onto the `Box`; `Grid.mll` supplies them at the call site from its own
+  loop bindings (`row: ( r ), col: ( c )` — the same expression-in-slot-binding shape
+  already used for `is-editing`/`is-selected` two lines above). `onNavigate(row, col)`
+  now actually reaches a consumer for the first time since the emit was declared.
+
 ## 0.2.2 — 2026-08-06 — Cell's click was never wired to its own emit
 
 ### Fixed

@@ -8,7 +8,7 @@
 
 [package]
 name = "mosaic-pkg-grid"
-version = "0.2.2"
+version = "0.2.3"
 description = "Spreadsheet-style data grid built on UI29 kernel primitives (UI28-1 §3 composition)"
 license = "MIT OR Apache-2.0"
 

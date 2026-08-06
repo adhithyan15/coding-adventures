@@ -4,6 +4,23 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - sheet cell editing
+
+The sheet view's cells are editable now. The fast-follow the read-only ship below
+promised: [UI37](../../../specs/UI37-generic-payload-dispatch.md) fixed the
+underlying gap at the `mosaic-emit-react` level (a payload-carrying target emit on
+a generic container now resolves its params from named props on the node, the same
+mechanism UI35's `drag-key` already uses), and `mosaic-pkg-grid` 0.2.3 threads
+`row`/`col` through `Cell` to use it. `Grid`'s `onNavigate(row, col)` contract —
+declared since v0.1.0 of that package — reaches a consumer for the first time.
+
+Click an editable cell (Done, Name, Deadline, % Complete, Priority, Status, Notes)
+to edit it in place; Overdue/Start/Finish stay read-only (they're computed). Enter
+commits through the matching engine op (`renameTask`, `setDeadline`,
+`setPercentComplete`, `setPriority`, `setStatus`, `setCompleted`, `setNotes`);
+Escape cancels. Verified live: edit → commit → persists across reload → consistent
+with the list view, zero console errors.
+
 ### Added - sheet (spreadsheet) view — read-only
 
 - **A fourth view: a sheet**, a filterable/sortable spreadsheet over 10 columns (Done,

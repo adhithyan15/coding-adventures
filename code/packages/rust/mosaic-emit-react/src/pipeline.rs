@@ -1216,7 +1216,7 @@ fn emit_jsx_tree(
     // Append connects-wiring event handlers (UI24): for every prop on this
     // node whose value is an `EmitRef`, emit a JSX event handler attribute
     // that dispatches the corresponding event union variant.
-    open.push_str(&build_emit_handlers(node)?);
+    open.push_str(&build_emit_handlers(node, emits)?);
 
     if self_close {
         return Ok(format!("{pad}{open} />\n"));
@@ -4501,15 +4501,19 @@ fn escape_for_js_string_literal(s: &str) -> String {
 /// is derived from the emit name with the same UI24 §5 rule used for the
 /// union variants: strip a leading `on`, camelCase the rest.
 ///
-/// Only **void** emits are wired in this first cut. Payload-carrying emits
-/// require the moslayout `connects` syntax to declare how a JSX event's
-/// payload maps to the emit's parameters, which is grammar work tracked
-/// separately. For now, payload-carrying emit refs still produce a void
-/// dispatch (no payload fields), which is wrong for the host but at least
-/// fires the right event type — and the union shape still tells the
-/// TypeScript compiler that fields are missing, so the host sees a clear
-/// type error rather than a silent miscompilation.
-fn build_emit_handlers(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+/// A **void** target emit (no declared params) dispatches exactly that —
+/// `{ type: "..." }`, nothing else.
+///
+/// A **payload-carrying** target emit (UI37) looks, for each declared
+/// param, for a prop **on the same node** named after that param —
+/// literal / slot-ref / expression, resolved the same way UI35's
+/// `drag-key` already is (`drag_value_expr` — not drag-specific despite
+/// the name; this is its second caller). A declared param with no
+/// matching prop is a hard compile error, not a silent `undefined`: an
+/// accepted-but-ignored payload is the exact failure mode UI36 rejected
+/// for size props, for the same reason — it teaches the author a feature
+/// works when it doesn't. See `code/specs/UI37-generic-payload-dispatch.md`.
+fn build_emit_handlers(node: &LayoutNode, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     for prop in &node.props {
         let LayoutPropValue::EmitRef(emit_name) = &prop.value else {
@@ -4531,8 +4535,32 @@ fn build_emit_handlers(node: &LayoutNode) -> Result<String, PipelineEmitError> {
         let type_field = to_camel_case_first_lower(&lowered);
         validate_emit_name(&type_field)?;
 
+        let target = emits.iter().find(|e| &e.name == emit_name);
+        let params = target.map(|e| e.params.as_slice()).unwrap_or(&[]);
+
+        if params.is_empty() {
+            out.push_str(&format!(
+                " {attr_name}={{() => dispatch({{ type: \"{type_field}\" }})}}"
+            ));
+            continue;
+        }
+
+        let mut fields = String::new();
+        for param in params {
+            let Some(expr) = drag_value_expr(node, &param.name)? else {
+                return Err(PipelineEmitError::UnsafeSlotName(format!(
+                    "`{attr_name}: emit: {emit_name}` targets a payload-carrying emit \
+                     (param `{}`), but this node has no `{}:` prop to supply it — \
+                     add `{}: ( ... )` (literal, slot ref, or expression)",
+                    param.name, param.name, param.name
+                )));
+            };
+            let field_name = to_camel_case_first_lower(&param.name);
+            validate_payload_field_name(&field_name).map_err(PipelineEmitError::UnsafeSlotName)?;
+            fields.push_str(&format!(", {field_name}: {expr}"));
+        }
         out.push_str(&format!(
-            " {attr_name}={{() => dispatch({{ type: \"{type_field}\" }})}}"
+            " {attr_name}={{() => dispatch({{ type: \"{type_field}\"{fields} }})}}"
         ));
     }
     Ok(out)
@@ -4973,6 +5001,26 @@ fn validate_emit_name(s: &str) -> Result<(), PipelineEmitError> {
     }
     match s {
         "dispatch" | "children" | "key" => Err(PipelineEmitError::ReservedEmitName(s.to_string())),
+        _ => Ok(()),
+    }
+}
+
+/// Validate a UI37 payload field name — the JS object-literal key a
+/// payload-carrying emit's param becomes in `dispatch({ type: "...", <here>:
+/// expr })`. `validate_slot_or_field_name` alone is not enough here (unlike
+/// its other call sites): those only ever produce a JSX *attribute*, but this
+/// key sits in the SAME object literal as `type`, so a param named `type`
+/// would silently overwrite the dispatch discriminant with the payload
+/// value — an object literal permits a duplicate key with no compile error,
+/// so the union's exhaustive `switch (event.type)` in the host would
+/// silently dispatch as whatever the field happened to be, not what the
+/// author declared. `__proto__` is the same class of problem one level
+/// deeper: a non-computed `__proto__:` key sets the object's prototype
+/// instead of creating an own property.
+fn validate_payload_field_name(s: &str) -> Result<(), String> {
+    validate_slot_or_field_name(s)?;
+    match s {
+        "type" | "__proto__" | "constructor" | "prototype" => Err(s.to_string()),
         _ => Ok(()),
     }
 }
@@ -5577,6 +5625,175 @@ mod tests {
                 .contains("onClick={() => dispatch({ type: \"click\" })}"),
             "expected dispatch handler, got:\n{}",
             result.output
+        );
+    }
+
+    /// UI37 — a generic container (`Box`) whose `onClick` targets a
+    /// payload-carrying emit picks up the payload from named, author-supplied
+    /// props on the same node (literal / slot-ref / expression), the same
+    /// resolution `drag_value_expr` already does for UI35's `drag-key`. This
+    /// is what lets `mosaic-pkg-grid`'s `Cell` (a `Box`) actually deliver
+    /// `Grid`'s `onNavigate(row, col)` — previously always void regardless of
+    /// what the target emit declared.
+    #[test]
+    fn ui37_box_onclick_with_payload_reads_named_props() {
+        let m = component(
+            "Cell",
+            vec![],
+            vec![emit(
+                "onNavigate",
+                vec![
+                    param("row", EmitPayloadType::Number),
+                    param("col", EmitPayloadType::Number),
+                ],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "Cell".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "onClick".to_string(),
+                        value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                    },
+                    LayoutProp {
+                        name: "row".to_string(),
+                        value: LayoutPropValue::Expr("r".to_string()),
+                    },
+                    LayoutProp {
+                        name: "col".to_string(),
+                        value: LayoutPropValue::Expr("c".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("Cell")).unwrap();
+        assert!(
+            result
+                .output
+                .contains("onClick={() => dispatch({ type: \"navigate\", row: r, col: c })}"),
+            "expected the payload synthesized from the row/col props, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI37 — a payload-carrying target emit with no matching prop on the
+    /// node is a hard compile error, not a silent void dispatch. Accepted-
+    /// but-ignored is the exact failure mode UI36 rejected for size props,
+    /// for the same reason: it teaches the author a feature works when it
+    /// doesn't.
+    #[test]
+    fn ui37_box_onclick_missing_payload_prop_errors_loudly() {
+        let m = component(
+            "Cell",
+            vec![],
+            vec![emit("onNavigate", vec![param("row", EmitPayloadType::Number)])],
+        );
+        let l = LayoutDef {
+            component_name: "Cell".to_string(),
+            root: node_with_emit_ref("Box", "onClick", "onNavigate"),
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Cell")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(ref msg) if msg.contains("row")),
+            "expected an error naming the missing `row` prop, got: {err:?}"
+        );
+    }
+
+    /// UI37 — a void target emit (no declared params) is unaffected: the
+    /// pre-existing generic dispatch stays exactly as it was.
+    #[test]
+    fn ui37_box_onclick_void_emit_still_dispatches_bare() {
+        let m = component("X", vec![], vec![emit("onActivate", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: node_with_emit_ref("Box", "onClick", "onActivate"),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result
+                .output
+                .contains("onClick={() => dispatch({ type: \"activate\" })}"),
+            "a void emit must dispatch with no payload fields, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI37 — a payload param named `type` would silently overwrite the
+    /// dispatch discriminant (JS object literals allow a duplicate key with
+    /// no compile error), defeating the exhaustive `switch (event.type)` the
+    /// host relies on. Caught by security review; must be a hard error, not
+    /// a param that quietly wins.
+    #[test]
+    fn ui37_payload_param_named_type_is_rejected() {
+        let m = component(
+            "Cell",
+            vec![],
+            vec![emit("onNavigate", vec![param("type", EmitPayloadType::Text)])],
+        );
+        let l = LayoutDef {
+            component_name: "Cell".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "onClick".to_string(),
+                        value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                    },
+                    LayoutProp {
+                        name: "type".to_string(),
+                        value: LayoutPropValue::Expr("t".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Cell")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "expected a rejection of the reserved `type` payload field, got: {err:?}"
+        );
+    }
+
+    /// UI37 — same reasoning for `__proto__`: a non-computed `__proto__:` key
+    /// in an object literal sets the prototype rather than creating an own
+    /// property, silently dropping or corrupting the intended field.
+    #[test]
+    fn ui37_payload_param_named_proto_is_rejected() {
+        let m = component(
+            "Cell",
+            vec![],
+            vec![emit(
+                "onNavigate",
+                vec![param("__proto__", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "Cell".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "onClick".to_string(),
+                        value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                    },
+                    LayoutProp {
+                        name: "__proto__".to_string(),
+                        value: LayoutPropValue::Expr("p".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Cell")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "expected a rejection of the reserved `__proto__` payload field, got: {err:?}"
         );
     }
 
