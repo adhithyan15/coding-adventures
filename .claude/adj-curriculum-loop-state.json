@@ -17,9 +17,9 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": 9990,
+  "active_pr": null,
   "last_manifest_check": {
-    "objectives": 24,
+    "objectives": 44,
     "coverage_roots": 6,
     "valid": true,
     "checked_at": "2026-08-06"
@@ -48,9 +48,9 @@
       "title": "Manifest objectives for the 39 reference unit-conversion libraries",
       "status": "in_progress",
       "depends_on": [],
-      "branch": "feat/adj-wave0-backfill-reference-1",
-      "pr_number": 9990,
-      "notes": "39 .adj/.query.adj pairs under code/specs/data/adj-formula-stdlib/reference/, all `table` constructs (not `formula`), zero manifest objectives currently. Splitting into ~3 PRs by unit family. PR #9990 (opened 2026-08-06, auto-merge enabled) covers 13: length/area/mass (CCSS math) + mass-density/linear-mass-density/acceleration/density-of-heat/dynamic-viscosity/energy/force/heat-flux-density/kinematic-viscosity/moment-of-force (NGSS science). Remaining 26 (7 electrical: capacitance/charge/conductance/current/inductance/potential/resistance; 4 radiological: absorbed-dose/dose-equivalent/exposure/radioactivity; 15 misc: illuminance/luminance/magnetic-flux/magnetic-flux-density/power/pressure/si-prefixes/specific-energy/specific-heat-capacity/speed/temperature-interval/thermal-conductivity/time/volume/wave-number) queued for follow-up PRs once #9990 merges (maximum_active_prs: 1)."
+      "branch": "feat/adj-wave0-backfill-reference-2",
+      "pr_number": null,
+      "notes": "39 .adj/.query.adj pairs under code/specs/data/adj-formula-stdlib/reference/, all `table` constructs (not `formula`), zero manifest objectives currently. Splitting into 3 PRs by unit family. PR #9990 MERGED (13 done: length/area/mass CCSS math + mass-density/linear-mass-density/acceleration/density-of-heat/dynamic-viscosity/energy/force/heat-flux-density/kinematic-viscosity/moment-of-force NGSS science). Next PR (branch feat/adj-wave0-backfill-reference-2, in progress) covers the 7 electrical libraries (capacitance/charge/conductance/current/inductance/potential/resistance, NGSS 9-12 science; current/potential/resistance additionally prerequisite adj.science.physics.ohms_law). Remaining 19 (4 radiological: absorbed-dose/dose-equivalent/exposure/radioactivity; 15 misc: illuminance/luminance/magnetic-flux/magnetic-flux-density/power/pressure/si-prefixes/specific-energy/specific-heat-capacity/speed/temperature-interval/thermal-conductivity/time/volume/wave-number) queued for one final PR once this one merges (maximum_active_prs: 1)."
     },
     {
       "id": "wave2-k2-math-cardinality-comparison",
