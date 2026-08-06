@@ -751,6 +751,48 @@ style TaskApp {
     }
   }
 
+  // ── sheet: label composer ──────────────────────────────────────────────
+  part sheet-view-wrap {
+    gap : 14 ;
+  }
+  part label-composer {
+    gap : 8 ;
+    align : center-vertical ;
+    background : "#fffdfa" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#e6ded3" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)" ;
+  }
+  part label-name-input {
+    width : 220 ;
+    background : "transparent" ;
+    color : "#2b2723" ;
+    font-size : 14 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+  }
+  part label-add-btn {
+    background : "#e0942a" ;
+    color : "#ffffff" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#c67f1e" ;
+    }
+    state pressed {
+      background : "#a96816" ;
+    }
+  }
+
   part task-list {
     gap : 7 ;
   }

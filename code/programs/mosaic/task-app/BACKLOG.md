@@ -66,12 +66,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   UI to set `attached_task`); tags are generic and reusable in `mosaic-pkg-notes` but
   nothing drives them; `Note.body` is plain text, matching every other free-text field
   in the engine; no search box (mirrors Sheet's own v1 scope cut).
-- **Label management UI (create, colour-pick, assign to a task).** `upsertLabel`/
-  `setTaskLabels` exist on the engine; nothing in `main.tsx` calls either yet, and the
-  Sheet's column catalogue has no Labels column. The task-row labels chip shipped
-  (see Resolved below) and is fully wired — it just has no data to show until this
-  lands, the same "engine ready, no create UI yet" shape Notes' attachment picker is
-  in.
+- **Label colour picker + duplicate-name prevention + per-label removal.** Deferred
+  from the label-management ship (see Resolved below) — `Label.color` is set (always
+  `""` in v1) but nothing renders it; two labels can share a name (mirrors project
+  names, also undeduped); removing one label from a multi-label task means retyping
+  the whole comma-separated Sheet cell.
 - Recurring tasks / reminders UX.
 - Automation rules (Butler-style).
 - Resource-leveling UI (the engine's `constraint-*` leveling exists; no UI surfaces it).
@@ -81,16 +80,28 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Label management (create + assign).** Closes the gap the task-row-chips ship
+  below disclosed. A "+ Label" composer wraps the Sheet tab in `TaskApp.mll`
+  (deliberately TaskApp's own concern, not a `mosaic-pkg-sheet` slot — Sheet has no
+  business knowing about labels), calling the engine's existing `upsertLabel`. A new
+  Sheet "Labels" column accepts comma-separated *existing* label names, matched
+  case-insensitively, and **rejects the whole edit** on an unrecognised name rather
+  than creating a throwaway label or silently dropping it (the same discipline the
+  Priority column already uses). Verified live end-to-end: created a label named
+  "Urgent", assigned it by typing "urgent" (matched case-insensitively), confirmed
+  the chip renders on the List tab; confirmed an unknown name leaves the existing
+  assignment untouched rather than corrupting it. Both themes, zero console errors.
+  Colour picker, duplicate-name prevention, and per-label removal deferred — see the
+  Backlog item above.
 - **Task-row priority + labels chips.** Pure display wiring — `task-core` already had
   both fields shipped; `TASK_VIEW`'s `visibleFields` gained `priority`/`labels`,
   `taskRows()` appends them as trailing cells (`row[10]`/`row[11]`, not inserted, so no
   existing index shifts), `TaskApp.mil`/`.mll` gained `chip-priority`/`chip-labels`
   following the exact `chip-due`/`chip-sched`/`chip-over` pattern. Verified live: set a
   task's priority to "High" via the Sheet tab's already-editable Priority column,
-  confirmed the chip renders on the List tab in both themes. The labels chip uses the
-  identical mechanism but has no way to actually populate yet — no UI assigns a label
-  to a task anywhere in the app — tracked as its own item above (label management UI),
-  not silently glossed over.
+  confirmed the chip renders on the List tab in both themes. The labels chip shipped
+  with no way to populate it yet — closed immediately after by the label-management
+  item above, not left hanging.
 - **Phase 8 — Notes, both halves.** Engine: `task-core` gained `Note { id, title,
   body, attached_task }`, stored per-project (`ProjectState.notes`, serde-defaulted
   so already-persisted workspaces keep loading), `upsert_note`/`delete_note` ops,
