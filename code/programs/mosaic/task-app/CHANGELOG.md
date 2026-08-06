@@ -4,6 +4,54 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed - re-closed the design-fidelity gap (partial pass)
+
+A prior pass (`### Changed - the app now looks like the design`, below) brought the app
+up to `design/ui-prototype.html` once; it had drifted again. This pass closes the clear,
+unambiguous value mismatches — colors that didn't match a design token, spacing/padding
+that had collapsed to uniform values where the mock uses asymmetric ones, shadows that
+had drifted to ad hoc single-layer values instead of the shared two-layer `--shadow`
+token:
+
+- **Active-project highlight** no longer fills solid honey — it's a quiet raised card
+  (surface background + the shared shadow token), the same "on" treatment the segmented
+  switch already uses. This was the single most visible color mismatch in the app.
+- **Rail, topbar, and content padding** now match the mock's asymmetric values (e.g.
+  rail `20px 14px` not a uniform `20px`; topbar `20px 30px 14px`; content
+  `8px 30px 60px`) — mosstyle's per-property `padding-top`/`-right`/`-bottom`/`-left`
+  already supported this (confirmed via the react emitter's generic kebab→camelCase CSS
+  property translation), it just hadn't been used.
+- **Segmented-switch "on" buttons, pills, Add-task button** all gained their mock's
+  asymmetric padding and/or the shared shadow token instead of ad hoc single-layer
+  shadows with drifted alpha values.
+- **Task-row and task-detail padding** now match, including the mock's 47px left indent
+  on the detail panel (lines it up under the task name, past the checkbox).
+- **Checkbox border** and **project-off hover background** now use the mock's actual
+  design tokens (`--ink-faint`, `--line-soft`) instead of invented nearby colors.
+- **Font stack** gained the mock's `Helvetica Neue, Arial` fallbacks.
+
+Verified live in both themes: zero console errors, computed styles match the mock's
+values exactly (spot-checked via `getComputedStyle`).
+
+**Deliberately NOT done in this pass** — either because they're real feature work
+disguised as "drift" (the mock predates several now-shipped views) or because they need
+new markup/icon assets rather than a value fix, tracked in `BACKLOG.md`:
+
+- Calendar view (the mock has one; it's the existing Phase 7 roadmap item, not drift).
+- A richer Gantt (day-grid, weekend/today shading, milestones, dependency arrows,
+  legend) — the mock's timeline is considerably richer than the simple proportional-bar
+  view currently shipped.
+- Rich task-row data (critical/slack chips, labels, priority, dependency list, notes) —
+  `task-core` already has labels/priority as first-class fields; wiring them into the
+  row/detail layout is real feature work, not a style-file edit.
+- Everything needing a new icon/SVG asset: the brand mark's decorative glyph, segmented-
+  switch icons, the progress ring, a stroked moon icon (the theme toggle currently uses
+  a floating unicode-glyph button positioned outside the topbar's flow, not the mock's
+  inline icon button), the pill status dot, the group-count badge, the composer's "+"
+  icon box, and the "In review" board column (board is 3 columns; mock has 4, with a
+  colored top accent bar and card-count badge neither of which exist yet).
+- Board's critical-card treatment (colored left border in the mock vs. a text chip live).
+
 ### Added - sheet cell editing
 
 The sheet view's cells are editable now. The fast-follow the read-only ship below
