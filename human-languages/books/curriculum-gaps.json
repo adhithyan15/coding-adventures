@@ -22,9 +22,9 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 1,
-    "drivableLessons": 694,
-    "drivablePercent": 63,
-    "chaptersWithoutDrivablePrefix": 123,
+    "drivableLessons": 708,
+    "drivablePercent": 65,
+    "chaptersWithoutDrivablePrefix": 121,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -1611,8 +1611,8 @@
         "status": "mixed",
         "lessonCount": 22,
         "versions": {
-          "1": 16,
-          "2": 6
+          "1": 15,
+          "2": 7
         }
       },
       {
@@ -1647,10 +1647,10 @@
   "modality": {
     "maxLinearisableTableColumns": 0,
     "totalLessons": 1096,
-    "voice": 694,
-    "sight": 351,
+    "voice": 708,
+    "sight": 337,
     "pen": 51,
-    "drivablePercent": 63,
+    "drivablePercent": 65,
     "tracks": [
       {
         "language": "arabic",
@@ -5351,39 +5351,40 @@
       {
         "language": "russian",
         "lessonCount": 22,
-        "voice": 2,
-        "sight": 15,
+        "voice": 16,
+        "sight": 1,
         "pen": 5,
-        "drivablePercent": 9,
-        "drivablePrefixTotal": 0,
+        "drivablePercent": 73,
+        "drivablePrefixTotal": 15,
         "chapters": [
           {
             "language": "russian",
             "chapter": 1,
             "lessonCount": 12,
-            "voice": 2,
-            "sight": 5,
+            "voice": 7,
+            "sight": 0,
             "pen": 5,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "RU-C01-da"
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": "RU-W01-false-friends-v-r"
           },
           {
             "language": "russian",
             "chapter": 2,
             "lessonCount": 10,
-            "voice": 0,
-            "sight": 10,
+            "voice": 9,
+            "sight": 1,
             "pen": 0,
             "modalities": [
+              "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "RU-C02-ya"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": "RU-C02-practice-cases"
           }
         ]
       },

@@ -5,12 +5,12 @@ Human Languages curriculum gap report
 0 unknown prerequisites; 35 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 1 version-2 schema tracks
-694 drivable lessons (63% of the corpus)
+708 drivable lessons (65% of the corpus)
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  694 voice, 351 sight, 51 pen of 1096 lessons; 63% drivable
+  708 voice, 337 sight, 51 pen of 1096 lessons; 65% drivable
   tables of more than 0 column(s) count as sight
   arabic: 37 voice, 18 sight, 16 pen; 52% drivable; 27 chapters, 31 lessons reachable in chapter-prefix order
   bengali: 28 voice, 3 sight, 0 pen; 90% drivable; 6 chapters, 23 lessons reachable in chapter-prefix order
@@ -26,14 +26,14 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   persian: 18 voice, 2 sight, 0 pen; 90% drivable; 5 chapters, 15 lessons reachable in chapter-prefix order
   portuguese: 26 voice, 33 sight, 0 pen; 44% drivable; 17 chapters, 10 lessons reachable in chapter-prefix order
   punjabi: 29 voice, 4 sight, 0 pen; 88% drivable; 6 chapters, 28 lessons reachable in chapter-prefix order
-  russian: 2 voice, 15 sight, 5 pen; 9% drivable; 2 chapters, 0 lessons reachable in chapter-prefix order
+  russian: 16 voice, 1 sight, 5 pen; 73% drivable; 2 chapters, 15 lessons reachable in chapter-prefix order
   sanskrit: 29 voice, 4 sight, 0 pen; 88% drivable; 6 chapters, 24 lessons reachable in chapter-prefix order
   spanish: 56 voice, 67 sight, 5 pen; 44% drivable; 33 chapters, 29 lessons reachable in chapter-prefix order
   tamil: 55 voice, 20 sight, 8 pen; 66% drivable; 31 chapters, 46 lessons reachable in chapter-prefix order
   telugu: 47 voice, 13 sight, 0 pen; 78% drivable; 31 chapters, 45 lessons reachable in chapter-prefix order
   urdu: 16 voice, 4 sight, 0 pen; 80% drivable; 5 chapters, 7 lessons reachable in chapter-prefix order
 
-Chapters that cannot be started by ear (drivable prefix 0): 123
+Chapters that cannot be started by ear (drivable prefix 0): 121
   arabic ch3: 0 of 9 (first blocker AR-W07-hook-family-ha-kha)
   arabic ch4: 0 of 8 (first blocker AR-W10-ayn)
   arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis)
