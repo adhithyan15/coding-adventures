@@ -531,6 +531,12 @@ pub enum Statement {
         name: String,
         uses: Vec<String>,
         formulas: Vec<FormulaDef>,
+        /// `symbolic … for <var>` definitions (ADJ-FORMULA-LIBRARIES FL-10) —
+        /// a sibling of `formula` inside the SAME formulabook, sharing its
+        /// `use`/import/provenance scaffolding. Empty for every formulabook
+        /// shipped before this rung (additive; parsing/lowering an existing
+        /// formulabook with no `symbolic` clause is unchanged).
+        symbolics: Vec<SymbolicDef>,
     },
     /// `table <name> { columns … row(…)… }` — a first-class, importable,
     /// provenanced tabular relation (ADJ-TABLES RS-5). A sibling of
@@ -660,6 +666,53 @@ pub struct FormulaDef {
     /// corroborating `cites`), reusing the shared [`Annotation`] set every
     /// grounded clause carries. Lowered via `annotations_to_provenance`; a
     /// shipped formula must carry a non-empty `source`.
+    pub annotations: Vec<Annotation>,
+}
+
+/// A reusable, provenanced, PARAMETERIZED equation solved for one named
+/// unknown — ADJ-FORMULA-LIBRARIES FL-10, rung-0 of the CAS-wiring rung.
+/// `symbolic resistance_from_ohms_law(voltage, current) { voltage == current *
+/// resistance } for resistance` names `resistance` as the target — a free
+/// identifier in the body, NOT one of [`params`](Self::params) — and asks the
+/// engine to rearrange the cited equation and solve for it, given [`params`]
+/// bound to concrete numbers at apply time.
+///
+/// ## Rung-0's deliberate scope (see ADJ-FORMULA-LIBRARIES §3D for the "why")
+///
+/// Every parameter OTHER than [`solve_for`](Self::solve_for) must resolve to
+/// an observed value before the equation is solved (bind-then-solve) — a
+/// genuinely free non-target variable (leaving `current` symbolic while
+/// solving for `resistance`) is out of scope for this rung, because
+/// `cas-solve`'s public surface has no entry point for it. `lhs`/`rhs` are
+/// restricted to `+ - * /` (the plain arithmetic `ExprAst` subset) — no
+/// transcendental calls, no nested formula application.
+///
+/// ## Provenance, exactly like [`FormulaDef`]
+///
+/// The SAME shared [`Annotation`] envelope every grounded clause carries:
+/// citing the EQUATION as stated (e.g. "Ohm's law: V=IR"), not the specific
+/// rearrangement — the same way a `formula`'s citation grounds its
+/// definition, not each individual application of it.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SymbolicDef {
+    /// The construct's name — the functor a consumer applies (`?
+    /// resistance_from_ohms_law(voltage, current)`) and the name of the
+    /// derived value the application binds.
+    pub name: String,
+    /// The formal parameters, in declaration order — every variable in the
+    /// equation EXCEPT [`solve_for`](Self::solve_for). Bound at apply time,
+    /// exactly like [`FormulaDef::params`].
+    pub params: Vec<String>,
+    /// The equation's left-hand side (`voltage` in `voltage == current *
+    /// resistance`).
+    pub lhs: ExprAst,
+    /// The equation's right-hand side (`current * resistance`).
+    pub rhs: ExprAst,
+    /// The unknown to solve for — a free identifier in `lhs`/`rhs` that is
+    /// NOT one of [`params`](Self::params). Named after `for` in the surface
+    /// syntax.
+    pub solve_for: String,
+    /// The provenance envelope, identical in kind to [`FormulaDef::annotations`].
     pub annotations: Vec<Annotation>,
 }
 

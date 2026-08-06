@@ -35,7 +35,7 @@ use std::collections::{HashMap, HashSet};
 use crate::ast::{
     AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
     FormulaPrecondition, NamedFn, NumLit, OptDir, Program, RelOp, SmAction, SmGuard, Statement,
-    Term as AstTerm, TrustTierName,
+    SymbolicDef, Term as AstTerm, TrustTierName,
 };
 use crate::BindingOrigin;
 
@@ -478,6 +478,107 @@ pub enum LowerError {
         argument: String,
         element: String,
     },
+    /// Two `symbolic` clauses (ADJ-FORMULA-LIBRARIES FL-10) declared the same name.
+    /// Mirrors [`LowerError::DuplicateFormula`] — last-writer-wins would make which
+    /// equation actually runs depend on import order.
+    DuplicateSymbolic {
+        symbolic: String,
+    },
+    /// A `symbolic … for <var>` named a solve-for target that also appears in its
+    /// own parameter list. Rung-0 is bind-then-solve: every PARAMETER is a
+    /// caller-supplied known, and the target is the one unknown solved FROM them —
+    /// a name cannot be both.
+    SymbolicTargetIsParameter {
+        symbolic: String,
+        variable: String,
+    },
+    /// A `symbolic` clause's `{ lhs == rhs }` referenced a free identifier that is
+    /// neither one of its declared parameters nor its own solve-for target
+    /// (mirrors [`LowerError::FormulaFreeVariable`]).
+    SymbolicFreeVariable {
+        symbolic: String,
+        variable: String,
+    },
+    /// A `symbolic` clause's equation applied a `formula` (ADJ-FORMULA-LIBRARIES
+    /// rung-0 composition). Out of scope for the CAS-wiring rung-0 (see
+    /// ADJ-FORMULA-LIBRARIES §3D): the equation solver reasons over `+ − × ÷`
+    /// only, never over an unexpanded formula application.
+    SymbolicApplicationUnsupported {
+        symbolic: String,
+    },
+    /// A shipped `symbolic` carried no `source` (the provenance-required lint,
+    /// shared with `formula`/`table`/`statemachine`/`argument`).
+    SymbolicMissingProvenance {
+        symbolic: String,
+    },
+    /// A `? name(args)` applied a `symbolic` whose argument was neither a plain
+    /// identifier nor a number literal (mirrors [`LowerError::FormulaBadArgument`]).
+    SymbolicBadArgument {
+        symbolic: String,
+    },
+    /// A `symbolic` application supplied the wrong number of arguments for its
+    /// declared parameter list (mirrors [`LowerError::FormulaArity`]).
+    SymbolicArity {
+        symbolic: String,
+        expected: usize,
+        got: usize,
+    },
+    /// A bound (non-target) sub-expression of a `symbolic` equation did not
+    /// evaluate to an exact rational — e.g. it crossed a labeled-lossy `f64`
+    /// boundary (a transcendental call). Rung-0's linear extraction requires
+    /// every coefficient to be exact, since [`cas_solve::solve_linear`] solves
+    /// over ℚ, not over floating point.
+    SymbolicNotExact {
+        symbolic: String,
+    },
+    /// A `symbolic` clause's target appears in a position the rung-0 linear
+    /// extractor does not support: multiplied/divided by an expression that
+    /// itself contains the target (e.g. `resistance * resistance`), or inside an
+    /// unsupported operator (anything beyond `+ − × ÷` once the target is in
+    /// play). Carries the symbolic's name; rung-0 is deliberately linear-only —
+    /// see ADJ-FORMULA-LIBRARIES §3D for why quadratic+ solving is a later rung.
+    SymbolicNonLinear {
+        symbolic: String,
+    },
+    /// Exact-rational arithmetic while extracting a `symbolic` clause's linear
+    /// coefficients exceeded the engine's size guard
+    /// ([`logic_engine::ExactRational::add`]/`sub`/`mul`/`div` all return `None`
+    /// past it), or the final coefficient could not be narrowed to the `i64`
+    /// pair [`cas_solve::Frac`] requires. A DoS/overflow backstop, not expected
+    /// to trip on any real curriculum equation.
+    SymbolicCoefficientOverflow {
+        symbolic: String,
+    },
+    /// A `symbolic` clause's underlying [`cas_solve::solve_linear_system`] call
+    /// (reached via `symbolic_vm::VM::eval` dispatching to
+    /// `crate::symbolic_backend::RungZeroBackend`'s `Solve` handler) returned no
+    /// unique solution for the bound parameter values — a SINGULAR system,
+    /// which covers two distinct algebraic cases this API cannot tell apart:
+    /// no value of the target satisfies the equation (e.g. `0 == 5`), or EVERY
+    /// value does (the target cancelled out entirely, e.g. `x == x`). Either
+    /// way, rung-0 (which always reports exactly one answer) has nothing single
+    /// to bind — a clean abstention-shaped error, never a silently wrong
+    /// answer.
+    SymbolicUnsolvable {
+        symbolic: String,
+    },
+    /// A `symbolic` clause's underlying [`cas_solve::solve_linear_system`] call
+    /// produced a solution [`symbolic_ir::IRNode`] variant the rung-0 bridge does
+    /// not translate back to an ADJ literal (only `Integer`/`Rational` are — the
+    /// linear closed form never produces anything else, so this is defensive,
+    /// not reachable from any real equation).
+    SymbolicUnsupportedSolutionShape {
+        symbolic: String,
+    },
+    /// A `symbolic` clause's solve-for target is ALSO already bound (an
+    /// observed fact or an earlier derived value) at apply time. The target is
+    /// the one unknown the equation solves FOR — a program that both
+    /// `observe`s it and asks the clause to solve for it is contradictory
+    /// intent, not a case to silently pick a side on (§3D step 1).
+    SymbolicTargetAlreadyBound {
+        symbolic: String,
+        variable: String,
+    },
 }
 
 /// A formula application declined because a declared domain requirement failed
@@ -836,6 +937,29 @@ pub(crate) fn lower_with_binding_origins(
         }
     }
 
+    // ADJ-FORMULA-LIBRARIES FL-10 (§3D) rung-0 of the CAS-wiring rung: register
+    // every `symbolic … for <var>` the same way — order-independent, validated as
+    // it is registered. Unlike a `formula`, a `symbolic` clause is never itself
+    // COMPOSED into (its equation is solved, not substituted), so its map is
+    // consulted only from the `Statement::Query` arm below, never from
+    // `lower_expr`/`expand_applies_traced`.
+    let mut symbolics: HashMap<&str, &SymbolicDef> = HashMap::new();
+    for stmt in flat.iter().copied() {
+        if let Statement::Formulabook {
+            symbolics: defs, ..
+        } = stmt
+        {
+            for sd in defs {
+                validate_symbolic(sd)?;
+                if symbolics.insert(sd.name.as_str(), sd).is_some() {
+                    return Err(LowerError::DuplicateSymbolic {
+                        symbolic: sd.name.clone(),
+                    });
+                }
+            }
+        }
+    }
+
     // ADJ-TABLES RS-5c: register every `table`'s columns + rows into a name→table
     // map, up front (like the formula map — tables are order-independent, and a
     // `? lookup` may precede the table it reads, or read an imported one). A range
@@ -1150,6 +1274,26 @@ pub(crate) fn lower_with_binding_origins(
                         guards,
                         body: FormulaBodyTrace::Evaluated,
                     });
+                } else if let Some(sd) = symbolic_for_query(conclusion, &symbolics)? {
+                    // ADJ-FORMULA-LIBRARIES FL-10 (§3D) rung-0: a `symbolic … for
+                    // <var>` APPLICATION. Deliberately a separate, simpler path from
+                    // the `formula` arm above — no preconditions, no nested-application
+                    // expansion, no abstention machinery (rung-0 requires every
+                    // non-target parameter bound to a plain slot/number at the call
+                    // site, so there is nothing to abstain FROM). Bind the parameters,
+                    // solve the single linear equation for the target, and bind the
+                    // result the same way a plain `formula` application does — through
+                    // the SAME `compute` path, carrying the SAME provenance envelope.
+                    let solved = apply_symbolic(sd, conclusion, &kb, &formulas)?;
+                    let cexpr = lower_expr(&solved, &formulas)?;
+                    let derived = compute(sd.name.clone(), &cexpr, &kb).map_err(|e| {
+                        LowerError::ComputationFailed {
+                            name: sd.name.clone(),
+                            detail: format!("{e:?}"),
+                        }
+                    })?;
+                    let prov = annotations_to_provenance(&sd.annotations)?;
+                    kb.add_derived(derived.with_provenance(prov).as_query_answer());
                 } else {
                     // An ordinary query. Lower with a per-query variable scope so
                     // repeated `$Var`s in one goal share identity (Prolog clause-scope
@@ -1803,7 +1947,7 @@ pub(crate) fn lower_with_binding_origins(
                 .statements
                 .iter()
                 .filter(|s| !matches!(s, Statement::Rulebook { .. }));
-            enforce_vocabulary(top_clauses, defs, &formulas)?;
+            enforce_vocabulary(top_clauses, defs, &formulas, &symbolics)?;
         }
         // Each rulebook is its own scope (its `use`, else the top-level `use`).
         for s in &program.statements {
@@ -1812,12 +1956,12 @@ pub(crate) fn lower_with_binding_origins(
                     let defs = resolve(d)?;
                     let mut clauses: Vec<&Statement> = Vec::new();
                     flatten_clauses(statements, &mut clauses)?;
-                    enforce_vocabulary(clauses, defs, &formulas)?;
+                    enforce_vocabulary(clauses, defs, &formulas, &symbolics)?;
                 }
             }
         }
     } else if !dictionary.is_empty() {
-        enforce_vocabulary(flat.iter().copied(), &dictionary, &formulas)?;
+        enforce_vocabulary(flat.iter().copied(), &dictionary, &formulas, &symbolics)?;
     }
 
     if binding_origins.is_some_and(|origins| binding_cursor != origins.len()) {
@@ -1931,6 +2075,7 @@ fn enforce_vocabulary<'a>(
     statements: impl IntoIterator<Item = &'a Statement>,
     dictionary: &[Define],
     formulas: &HashMap<&str, &FormulaDef>,
+    symbolics: &HashMap<&str, &SymbolicDef>,
 ) -> Result<(), LowerError> {
     use std::collections::HashMap;
     let dict: HashMap<&str, &DefineKind> = dictionary
@@ -1981,8 +2126,9 @@ fn enforce_vocabulary<'a>(
         // registered formula, not a hypothesis or relation — accept it here so
         // the closed-vocabulary gate does not reject the very construct this
         // feature introduces. The formula's own parameter-scoping was checked at
-        // registration.
-        if formulas.contains_key(functor) {
+        // registration. A `symbolic … for <var>` APPLICATION (ADJ-FORMULA-LIBRARIES
+        // FL-10) is the same shape — accept it here too, for the same reason.
+        if formulas.contains_key(functor) || symbolics.contains_key(functor) {
             return Ok(());
         }
         match dict.get(functor) {
@@ -2643,6 +2789,51 @@ fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
     if prov.source.trim().is_empty() {
         return Err(LowerError::FormulaMissingProvenance {
             formula: fd.name.clone(),
+        });
+    }
+    Ok(())
+}
+
+/// Validate a `symbolic … for <var>` clause (ADJ-FORMULA-LIBRARIES FL-10 §3D),
+/// mirroring [`validate_formula`]'s shape but over the smaller rung-0 surface:
+/// no `requires`, no runtime-builtin-name collision (a `symbolic` is never
+/// looked up by the aggregation/built-in dispatch a `formula` name can shadow),
+/// and one extra check `formula` has no analogue for — the solve-for target
+/// must not double as a parameter.
+fn validate_symbolic(sd: &SymbolicDef) -> Result<(), LowerError> {
+    if sd.params.iter().any(|p| p == &sd.solve_for) {
+        return Err(LowerError::SymbolicTargetIsParameter {
+            symbolic: sd.name.clone(),
+            variable: sd.solve_for.clone(),
+        });
+    }
+    // Scope, for FREE-VARIABLE purposes only: every parameter, plus the target
+    // itself (the equation is precisely what DEFINES the target — it is the one
+    // identifier legally present that is not a caller-bound parameter).
+    let mut scope: HashSet<String> = sd.params.iter().cloned().collect();
+    scope.insert(sd.solve_for.clone());
+    for side in [&sd.lhs, &sd.rhs] {
+        validate_formula_expr_depth(side)?;
+        if contains_formula_application(side) {
+            return Err(LowerError::SymbolicApplicationUnsupported {
+                symbolic: sd.name.clone(),
+            });
+        }
+        let mut refs = Vec::new();
+        collect_refs(side, &mut refs);
+        for r in refs {
+            if !scope.contains(&r) {
+                return Err(LowerError::SymbolicFreeVariable {
+                    symbolic: sd.name.clone(),
+                    variable: r,
+                });
+            }
+        }
+    }
+    let prov = annotations_to_provenance(&sd.annotations)?;
+    if prov.source.trim().is_empty() {
+        return Err(LowerError::SymbolicMissingProvenance {
+            symbolic: sd.name.clone(),
         });
     }
     Ok(())
@@ -3494,6 +3685,252 @@ fn apply_formula(
     substitute_expr(&effective, &subst, &mut budget, 0)
 }
 
+/// The `symbolic` analogue of [`formula_for_query`]: is this query's goal an
+/// APPLICATION of a declared `symbolic … for <var>` clause? Note the arity
+/// check is against `sd.params` — the solve-for target is never itself an
+/// argument (rung-0 solves FOR it, the caller never supplies it).
+fn symbolic_for_query<'a>(
+    goal: &AstTerm,
+    symbolics: &HashMap<&str, &'a SymbolicDef>,
+) -> Result<Option<&'a SymbolicDef>, LowerError> {
+    if let AstTerm::Compound { functor, args } = goal {
+        if let Some(sd) = symbolics.get(functor.as_str()) {
+            if sd.params.len() != args.len() {
+                return Err(LowerError::SymbolicArity {
+                    symbolic: functor.clone(),
+                    expected: sd.params.len(),
+                    got: args.len(),
+                });
+            }
+            return Ok(Some(sd));
+        }
+    }
+    Ok(None)
+}
+
+/// APPLY-AND-SOLVE a `symbolic … for <var>` clause (ADJ-FORMULA-LIBRARIES FL-10
+/// §3D, rung-0 of the CAS-wiring rung): bind every declared parameter to its
+/// query argument exactly like [`apply_formula`] (same `Atom → Ref` / `Num →
+/// ExactLit` binding, no preconditions to enforce — rung-0 has none), then
+/// solve `lhs == rhs` for `solve_for` and hand back the answer as a bare
+/// numeric [`ExprAst`] leaf, ready for the SAME `lower_expr`/`compute` path a
+/// `formula` application uses.
+///
+/// The solve itself goes through the SAME `Backend`/`VM` seam every CAS
+/// dialect in this workspace uses (`crate::symbolic_backend::RungZeroBackend`,
+/// mirroring `macsyma-runtime`'s `MacsymaBackend`/`solve_handler` — the one
+/// existing example): the equation is translated to a `symbolic_ir::IRNode`,
+/// wrapped in `Solve(equation, target)`, and evaluated through
+/// `symbolic_vm::VM::eval`, which dispatches to a handler that calls
+/// `cas_solve::solve_linear_system`. Closes the gap the rest of `adj-lang` had
+/// left: `symbolic-vm`/`cas-solve` existed in the workspace but nothing in the
+/// surface language ever called into them.
+fn apply_symbolic(
+    sd: &SymbolicDef,
+    goal: &AstTerm,
+    kb: &KnowledgeBase,
+    formulas: &HashMap<&str, &FormulaDef>,
+) -> Result<ExprAst, LowerError> {
+    // §3D step 1: the target is the UNKNOWN this equation solves for — it may
+    // not also be independently bound, or "solve for R" and "R is already 4"
+    // could silently disagree with no error raised.
+    if kb.observed_value(&sd.solve_for).is_some() || kb.derived_for(&sd.solve_for).is_some() {
+        return Err(LowerError::SymbolicTargetAlreadyBound {
+            symbolic: sd.name.clone(),
+            variable: sd.solve_for.clone(),
+        });
+    }
+    let args: &[AstTerm] = match goal {
+        AstTerm::Compound { args, .. } => args,
+        _ => &[],
+    };
+    let mut subst: HashMap<String, ExprAst> = HashMap::new();
+    for (param, arg) in sd.params.iter().zip(args.iter()) {
+        let bound = match arg {
+            AstTerm::Atom(name) => ExprAst::Ref(name.clone()),
+            AstTerm::Num(x) => ExprAst::ExactLit(x.clone()),
+            _ => {
+                return Err(LowerError::SymbolicBadArgument {
+                    symbolic: sd.name.clone(),
+                })
+            }
+        };
+        subst.insert(param.clone(), bound);
+    }
+    let mut budget: usize = 0;
+    let lhs = substitute_expr(&sd.lhs, &subst, &mut budget, 0)?;
+    let rhs = substitute_expr(&sd.rhs, &subst, &mut budget, 0)?;
+    let lhs_ir = expr_to_irnode(&lhs, &sd.solve_for, kb, formulas, &sd.name)?;
+    let rhs_ir = expr_to_irnode(&rhs, &sd.solve_for, kb, formulas, &sd.name)?;
+    let equation_ir = symbolic_ir::apply(symbolic_ir::sym(symbolic_ir::EQUAL), vec![lhs_ir, rhs_ir]);
+    let solve_call = symbolic_ir::apply(
+        symbolic_ir::sym(cas_solve::SOLVE),
+        vec![equation_ir, symbolic_ir::sym(sd.solve_for.clone())],
+    );
+    let mut vm = symbolic_vm::VM::new(Box::new(crate::symbolic_backend::RungZeroBackend::new()));
+    match vm.eval(solve_call) {
+        // A successful solve returns `Rule(target, value)` (see
+        // `RungZeroBackend::solve_handler`); anything else (including the
+        // unevaluated `Solve(...)` fallback the handler returns on a singular
+        // or non-linear system) means the system had no unique solution.
+        symbolic_ir::IRNode::Apply(node)
+            if matches!(&node.head, symbolic_ir::IRNode::Symbol(s) if s == symbolic_ir::RULE)
+                && node.args.len() == 2 =>
+        {
+            match &node.args[1] {
+                symbolic_ir::IRNode::Integer(n) => Ok(ExprAst::ExactLit(NumLit::Int(*n))),
+                symbolic_ir::IRNode::Rational(n, d) => Ok(ExprAst::Bin(
+                    ArithOp::Div,
+                    Box::new(ExprAst::ExactLit(NumLit::Int(*n))),
+                    Box::new(ExprAst::ExactLit(NumLit::Int(*d))),
+                )),
+                _ => Err(LowerError::SymbolicUnsupportedSolutionShape {
+                    symbolic: sd.name.clone(),
+                }),
+            }
+        }
+        _ => Err(LowerError::SymbolicUnsolvable {
+            symbolic: sd.name.clone(),
+        }),
+    }
+}
+
+/// Narrow an [`ExactRational`] (arbitrary-precision) to a [`symbolic_ir::IRNode`]
+/// constant (`Integer` or `Rational`) — the boundary between adj-lang's own
+/// KB-scale exactness and the CAS IR. The established i64-extraction idiom
+/// (`adj-constraint-solver`'s numerator/denominator round-trip, via
+/// [`cas_solve::frac::Frac`]); `None` only on overflow, never silently
+/// truncated.
+fn exact_rational_to_irnode(value: &ExactRational) -> Option<symbolic_ir::IRNode> {
+    let numer: i64 = value.numerator().to_string().parse().ok()?;
+    let denom: i64 = value.denominator().to_string().parse().ok()?;
+    Some(cas_solve::frac::Frac::new(numer, denom).to_irnode())
+}
+
+/// Translate a `symbolic` equation side to a [`symbolic_ir::IRNode`] — a
+/// small, rung-0-scoped structural mirror, restricted to `+ − × ÷`, of what
+/// `cas-solve`'s own `solve_linear_system` accepts (`Add`/`Sub`/`Mul` over a
+/// `Symbol` target and numeric constants — see `linear_system.rs`'s
+/// `linear_eval`, which has no `Div` case).
+///
+/// Any sub-expression that does not mention `target` at all is short-circuited
+/// straight to [`eval_closed`], through the SAME `lower_expr`/`compute` path
+/// every other expression in `adj-lang` evaluates through — this is what lets
+/// a bound parameter reach the KB (`Ref("current")` resolves to its observed
+/// value) AND, as a side effect, lets a bound side use ANY expression
+/// `compute` supports (`floor`, `sqrt`, even a composed `formula`), not just
+/// `+ − × ÷` — only the TARGET-carrying side of the equation is restricted to
+/// linear shape. A target-carrying `Div` is legal too: since the divisor must
+/// be target-free (dividing by the unknown is nonlinear), it is folded to a
+/// constant and re-expressed as a `Mul` by its reciprocal, which
+/// `solve_linear_system` DOES understand.
+fn expr_to_irnode(
+    expr: &ExprAst,
+    target: &str,
+    kb: &KnowledgeBase,
+    formulas: &HashMap<&str, &FormulaDef>,
+    symbolic_name: &str,
+) -> Result<symbolic_ir::IRNode, LowerError> {
+    let overflow = || LowerError::SymbolicCoefficientOverflow {
+        symbolic: symbolic_name.to_string(),
+    };
+    let nonlinear = || LowerError::SymbolicNonLinear {
+        symbolic: symbolic_name.to_string(),
+    };
+    if !contains_ref(expr, target) {
+        let v = eval_closed(expr, kb, formulas, symbolic_name)?;
+        return exact_rational_to_irnode(&v).ok_or_else(overflow);
+    }
+    match expr {
+        ExprAst::Ref(name) if name == target => Ok(symbolic_ir::sym(target)),
+        ExprAst::Bin(op @ (ArithOp::Add | ArithOp::Sub), a, b) => {
+            let head = if *op == ArithOp::Add {
+                symbolic_ir::ADD
+            } else {
+                symbolic_ir::SUB
+            };
+            let a_ir = expr_to_irnode(a, target, kb, formulas, symbolic_name)?;
+            let b_ir = expr_to_irnode(b, target, kb, formulas, symbolic_name)?;
+            Ok(symbolic_ir::apply(symbolic_ir::sym(head), vec![a_ir, b_ir]))
+        }
+        ExprAst::Bin(ArithOp::Mul, a, b) => {
+            let a_has = contains_ref(a, target);
+            let b_has = contains_ref(b, target);
+            if a_has && b_has {
+                return Err(nonlinear());
+            }
+            let a_ir = expr_to_irnode(a, target, kb, formulas, symbolic_name)?;
+            let b_ir = expr_to_irnode(b, target, kb, formulas, symbolic_name)?;
+            Ok(symbolic_ir::apply(
+                symbolic_ir::sym(symbolic_ir::MUL),
+                vec![a_ir, b_ir],
+            ))
+        }
+        ExprAst::Bin(ArithOp::Div, a, b) => {
+            if contains_ref(b, target) {
+                return Err(nonlinear());
+            }
+            let divisor = eval_closed(b, kb, formulas, symbolic_name)?;
+            if divisor == ExactRational::from_i128(0) {
+                return Err(LowerError::ComputationFailed {
+                    name: symbolic_name.to_string(),
+                    detail: "division by zero while translating the equation to CAS IR"
+                        .to_string(),
+                });
+            }
+            // a / b  ⇒  a * (1/b) — `solve_linear_system`'s linear extraction
+            // has no `Div` case, only `Mul` by a constant factor.
+            let reciprocal_ir = symbolic_ir::rat(
+                divisor.denominator().to_string().parse().ok().ok_or_else(overflow)?,
+                divisor.numerator().to_string().parse().ok().ok_or_else(overflow)?,
+            );
+            let a_ir = expr_to_irnode(a, target, kb, formulas, symbolic_name)?;
+            Ok(symbolic_ir::apply(
+                symbolic_ir::sym(symbolic_ir::MUL),
+                vec![a_ir, reciprocal_ir],
+            ))
+        }
+        // Every other node shape (Pow/Mod, transcendental calls, Abs/Floor/…,
+        // Apply) is rejected the moment `target` participates in it — `contains_ref`
+        // already ruled out the "doesn't mention target, fold it closed" escape
+        // above, so reaching here means the target sits inside a shape rung-0's
+        // translator does not linearize.
+        _ => Err(nonlinear()),
+    }
+}
+
+/// `true` iff `expr` contains a [`ExprAst::Ref`] naming `target` anywhere in its
+/// tree. Used by [`linear_coeffs`] to decide whether a sub-expression can be
+/// folded to a plain number via [`eval_closed`] or must be linearized further.
+fn contains_ref(expr: &ExprAst, target: &str) -> bool {
+    let mut refs = Vec::new();
+    collect_refs(expr, &mut refs);
+    refs.iter().any(|r| r == target)
+}
+
+/// Evaluate a `target`-free sub-expression to a single [`ExactRational`],
+/// through the SAME `lower_expr`/`compute` path every other expression in
+/// `adj-lang` evaluates through — so a bound side of a `symbolic` equation can
+/// be anything `compute` supports (a KB slot, a `floor`, a nested `formula`
+/// application), not a hand-rolled arithmetic subset.
+fn eval_closed(
+    expr: &ExprAst,
+    kb: &KnowledgeBase,
+    formulas: &HashMap<&str, &FormulaDef>,
+    symbolic_name: &str,
+) -> Result<ExactRational, LowerError> {
+    let cexpr = lower_expr(expr, formulas)?;
+    let derived = compute("__symbolic_coefficient", &cexpr, kb).map_err(|e| {
+        LowerError::ComputationFailed {
+            name: symbolic_name.to_string(),
+            detail: format!("{e:?}"),
+        }
+    })?;
+    derived.exact.ok_or_else(|| LowerError::SymbolicNotExact {
+        symbolic: symbolic_name.to_string(),
+    })
+}
+
 /// Evaluate a formula's declared requirements against its bound arguments before
 /// materializing the body. A false or unresolved requirement is carried upward
 /// as structured abstention control flow; malformed requirements were already
@@ -4054,6 +4491,7 @@ mod tests {
             name,
             uses,
             formulas,
+            ..
         } = fb
         else {
             unreachable!()
@@ -4214,6 +4652,294 @@ mod tests {
         assert!(
             message.contains("DimensionMismatch"),
             "expected a DimensionMismatch, got {message}"
+        );
+    }
+
+    // ---- FL-10 (§3D): `symbolic … for <var>` — rung-0 of the CAS-wiring rung ----
+
+    #[test]
+    fn symbolic_solves_a_linear_equation_and_carries_its_cited_provenance() {
+        // Ohm's law, solved for resistance: V = I·R  ⇒  R = V / I. Confirms the
+        // whole rung-0 loop goes through the REAL CAS entry point
+        // (`cas_solve::solve_linear`), not a bespoke evaluator, and that the
+        // solved value carries the clause's own citation exactly like a plain
+        // `formula` application does.
+        let src = r#"
+            formulabook electricity_laws {
+                symbolic resistance_from_ohms_law(voltage, current) { voltage == current * resistance } for resistance
+                    source "For many conductors of electricity, the electric current which will flow through them is directly proportional to the voltage applied to them."
+                    locator "https://hyperphysics.gsu.edu/hbase/electric/ohmlaw.html"
+                    trust authoritative
+            }
+            observe voltage(12)
+            observe current(3)
+            ? resistance_from_ohms_law(voltage, current)
+        "#;
+        let lowered = compile(src).unwrap();
+        assert!(
+            lowered.queries.is_empty(),
+            "a symbolic application is not a hypothesis query"
+        );
+        let d = lowered
+            .kb
+            .derived_for("resistance_from_ohms_law")
+            .expect("the symbolic clause bound a derived value");
+        assert!(
+            (d.value - 4.0).abs() < 1e-9,
+            "12V / 3A = 4Ω, got {}",
+            d.value
+        );
+        let prov = d
+            .provenance
+            .as_ref()
+            .expect("derivation carries the symbolic clause's provenance");
+        assert!(!prov.source.is_empty());
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+        assert_eq!(
+            prov.locator.as_deref(),
+            Some("https://hyperphysics.gsu.edu/hbase/electric/ohmlaw.html")
+        );
+    }
+
+    #[test]
+    fn symbolic_solves_to_a_non_integer_rational_result() {
+        // Exercises the `IRNode::Rational` branch of the solved-answer bridge:
+        // `total == 2 * portion` solved for `portion` with `total = 7` yields
+        // the EXACT fraction 7/2, not a rounded 3 or 4.
+        let src = r#"
+            formulabook m {
+                symbolic half(total) { total == 2 * portion } for portion
+                    source "half of a total" trust authoritative
+            }
+            observe total(7)
+            ? half(total)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("half").unwrap();
+        assert!((d.value - 3.5).abs() < 1e-9, "7/2 = 3.5, got {}", d.value);
+    }
+
+    #[test]
+    fn symbolic_rebinds_to_differently_named_arguments() {
+        // Parameters are FORMAL, exactly like `formula`: applying with
+        // differently-named slots still binds correctly.
+        let src = r#"
+            formulabook m {
+                symbolic ohms(v, i) { v == i * r } for r
+                    source "Ohm's law" trust authoritative
+            }
+            observe potential(9)
+            observe amps(3)
+            ? ohms(potential, amps)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("ohms").unwrap();
+        assert!((d.value - 3.0).abs() < 1e-9, "9 / 3 = 3, got {}", d.value);
+    }
+
+    #[test]
+    fn symbolic_target_as_its_own_parameter_is_a_clean_error() {
+        // Rung-0 is bind-then-solve: a name cannot be both a caller-supplied
+        // known (a parameter) and the one unknown being solved for.
+        let src = r#"
+            formulabook m {
+                symbolic bad(resistance, current) { voltage == current * resistance } for resistance
+                    source "x" trust authoritative
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicTargetIsParameter { ref variable, .. })
+                    if variable == "resistance"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn symbolic_target_that_is_also_observed_is_a_clean_error() {
+        // The target is the UNKNOWN the equation solves FOR — a program that
+        // also `observe`s it is contradictory intent (§3D step 1), never
+        // silently resolved one way or the other.
+        let src = r#"
+            formulabook m {
+                symbolic ohms(v, i) { v == i * r } for r
+                    source "Ohm's law" trust authoritative
+            }
+            observe potential(9)
+            observe amps(3)
+            observe r(100)
+            ? ohms(potential, amps)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicTargetAlreadyBound { ref variable, .. })
+                    if variable == "r"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn symbolic_free_variable_is_a_clean_scoping_error() {
+        // `stray` is neither a declared parameter nor the solve-for target.
+        let src = r#"
+            formulabook m {
+                symbolic bad(a) { a == stray * target } for target
+                    source "x" trust authoritative
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicFreeVariable { ref variable, .. })
+                    if variable == "stray"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn shipped_symbolic_without_provenance_is_rejected() {
+        let src = r#"
+            formulabook m {
+                symbolic bad(a) { a == target } for target
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicMissingProvenance { ref symbolic })
+                    if symbolic == "bad"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn symbolic_target_multiplied_by_itself_is_rejected_as_nonlinear() {
+        // Rung-0 is linear-only (§3D): `target * target` is quadratic, out of
+        // scope until a later rung.
+        let src = r#"
+            formulabook m {
+                symbolic area(a) { a == target * target } for target
+                    source "x" trust authoritative
+            }
+            observe a(9)
+            ? area(a)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicNonLinear { ref symbolic })
+                    if symbolic == "area"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn symbolic_with_no_solution_for_the_bound_values_is_a_clean_error() {
+        // `x == x + k` with k bound to 1 reduces to `0 == -1`: no value of `x`
+        // satisfies it for this binding — a SINGULAR system. A clean
+        // abstention-shaped error, never a silently wrong answer.
+        let src = r#"
+            formulabook m {
+                symbolic never(k) { x == x + k } for x
+                    source "x" trust authoritative
+            }
+            observe k(1)
+            ? never(k)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicUnsolvable { ref symbolic })
+                    if symbolic == "never"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn symbolic_indeterminate_for_every_value_of_the_target_is_a_clean_error() {
+        // `x + k == x + k` reduces to `0 == 0`: EVERY value of `x` satisfies it
+        // — ALSO a singular system, per `solve_linear_system`'s contract
+        // (`SymbolicUnsolvable` covers both "no solution" and "every value
+        // works", since the underlying solver cannot tell them apart). Rung-0
+        // (which always answers with exactly one value) has nothing single to
+        // bind either way.
+        let src = r#"
+            formulabook m {
+                symbolic always(k) { x + k == x + k } for x
+                    source "x" trust authoritative
+            }
+            observe k(1)
+            ? always(k)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicUnsolvable { ref symbolic })
+                    if symbolic == "always"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn symbolic_body_applying_a_formula_is_rejected() {
+        // Rung-0 explicitly excludes formula composition inside a symbolic
+        // equation (§3D) — the equation solver reasons over `+ − × ÷` only.
+        let src = r#"
+            formulabook m {
+                formula doubled(x) = x * 2
+                    source "x" trust authoritative
+                symbolic bad(a) { a == doubled(target) } for target
+                    source "x" trust authoritative
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicApplicationUnsupported { ref symbolic })
+                    if symbolic == "bad"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn symbolic_wrong_arity_is_a_clean_error() {
+        let src = r#"
+            formulabook m {
+                symbolic ohms(v, i) { v == i * r } for r
+                    source "x" trust authoritative
+            }
+            observe potential(9)
+            ? ohms(potential)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::SymbolicArity {
+                    ref symbolic,
+                    expected: 2,
+                    got: 1,
+                }) if symbolic == "ohms"
+            ),
+            "{err:?}"
         );
     }
 

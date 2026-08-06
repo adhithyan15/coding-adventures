@@ -1,5 +1,60 @@
 # Changelog
 
+## [0.74.0] - 2026-08-06 - `symbolic … for <var>`: rung-0 of the CAS-wiring rung (FL-10)
+
+- New `symbolic <name>(<params>) { <lhs> == <rhs> } for <target>` construct, a sibling of
+  `formula` inside a `formulabook` (new `symbolic_decl` grammar rule; new `SymbolicDef` AST node;
+  new `symbolics: Vec<SymbolicDef>` field on `Statement::Formulabook`). Where a `formula` computes
+  ONE fixed output from its parameters, a `symbolic` clause solves its cited equation for
+  whichever variable the caller didn't already know: bind every declared parameter to a query
+  argument exactly like a `formula` application, then solve the resulting single-variable linear
+  equation for `target` through the SAME `Backend`/`VM` seam every CAS dialect in this workspace
+  uses — not a direct call into `cas-solve`'s solver functions. This closes the gap the rest of the
+  crate had left: `symbolic-vm`/`cas-solve`/`symbolic-ir` existed in the workspace with no adj-lang
+  caller; `adj-lang` now depends on all three.
+- New `crate::symbolic_backend::RungZeroBackend`, a minimal `symbolic_vm::Backend` mirroring
+  `macsyma-runtime`'s `MacsymaBackend`/`solve_handler` (the one existing example of this seam) but
+  scoped to rung-0's single capability: it registers exactly one handler, for the `Solve` head
+  (`cas_solve::SOLVE`), and holds no bindings or other state. The equation is translated to
+  `symbolic_ir::IRNode` (`lower.rs`'s new `expr_to_irnode`), wrapped `Solve(Equal(lhs, rhs),
+  target)`, and evaluated through `symbolic_vm::VM::eval`; the handler delegates the actual
+  linear-coefficient extraction and Gaussian elimination to `cas_solve::solve_linear_system`
+  (a 1×1 system is the fully-general degenerate case) and returns its `Rule(target, value)` node.
+- `expr_to_irnode` is a small, rung-0-scoped structural mirror of what `solve_linear_system`'s own
+  `linear_eval` accepts (`Add`/`Sub`/`Mul` over a `Symbol` target and numeric constants — it has no
+  `Div` case), restricted to `+ − × ÷` on the adj-lang side: a target-carrying `Div` is legal
+  because the divisor must be target-free (dividing by the unknown is nonlinear), so it is folded
+  to a constant and re-expressed as `Mul` by its reciprocal. A target-free sub-expression
+  short-circuits straight to `compute` (`eval_closed`, unchanged from the first cut of this rung),
+  so a bound side of the equation can be anything `compute` supports (a KB slot, `floor`, …) — only
+  the side actually carrying the target is restricted to linear shape.
+- Rung-0 is deliberately narrow and says so in `LowerError` variants: the target may not double as
+  a parameter (`SymbolicTargetIsParameter`); every identifier must resolve to a parameter or the
+  target (`SymbolicFreeVariable`); no nested `formula` application inside the equation
+  (`SymbolicApplicationUnsupported` — composition is explicitly future work); the
+  provenance-required lint (`SymbolicMissingProvenance`); bad/wrong-arity query arguments
+  (`SymbolicBadArgument`/`SymbolicArity`); a bound coefficient that didn't stay exact
+  (`SymbolicNotExact`); the target multiplied/divided by an expression that itself contains it, or
+  any node shape rung-0 doesn't linearize (`SymbolicNonLinear`); an `ExactRational`
+  arithmetic/`i64`-narrowing overflow guard (`SymbolicCoefficientOverflow`); the target already
+  independently bound at apply time (`SymbolicTargetAlreadyBound` — §3D step 1: the target is the
+  unknown being solved FOR, so a program that also `observe`s it is contradictory intent); and a
+  singular system — no solution, or every value satisfies it — which `solve_linear_system` cannot
+  tell apart (`SymbolicUnsolvable`, replacing the finer `SymbolicNoSolution`/`SymbolicIndeterminate`
+  split an earlier direct-`solve_linear` cut of this rung could distinguish but this API cannot).
+- The closed-vocabulary gate's `check_query` (`enforce_vocabulary`) only special-cased the
+  `formulas` map, so a `symbolic` application in any program using `use`/`dictionary` vocabulary
+  scoping was rejected as an `UndefinedTerm` — even though it had already lowered correctly — the
+  moment the later enforcement pass ran. `enforce_vocabulary` now also takes the `symbolics` map;
+  caught by the `electricity.adj` worked example (which only fails through the `use`-scoped path,
+  not a bare inline test), not by the initial in-crate unit tests.
+- `physics/electricity.adj`'s Ohm's law now carries both directions: the existing `formula
+  voltage(current, resistance)` alongside a new `symbolic resistance_from_ohms_law(voltage,
+  current) { voltage == current * resistance } for resistance` — the same cited law, solved for
+  the OTHER variable. `electricity.query.adj` solves for resistance BEFORE it is ever `observe`d
+  (the target may not already be bound), then round-trips the forward `formula` direction against
+  the resistance just recovered.
+
 ## [0.73.0] - 2026-08-06 - floor/mod on the plain-arithmetic surface (FL-9)
 
 - `floor(x)` and `mod(a, b)` join `RUNTIME_BUILTIN_FORMULAS` as recognized-by-name built-ins in

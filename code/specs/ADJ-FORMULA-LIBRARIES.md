@@ -276,6 +276,130 @@ rejected the same way declaring its own `round_to` already is.
 
 ---
 
+## 3D. FL-10 — rung-0 of the CAS-wiring rung: `symbolic … for <var>` (bind-then-solve)
+
+**Status: shipped, deliberately narrow.** §3A named "wire the existing engine, don't rebuild it" as
+the CAS-wiring goal — letting a curriculum question like "V = I·R, given V and I, find R" be
+answered by *rearranging* a cited equation, not just plugging into one. This section is rung-0 of
+that rung: the smallest slice that is genuinely useful and genuinely wires the existing
+`cas-solve` crate, deferring everything else to later rungs.
+
+**What rung-0 does NOT attempt, on purpose (research findings, not guesses):**
+
+- **No free (unbound) non-target variables.** The curriculum table's own headline example
+  ("rearrange `v = I·R` for *any* variable") implies leaving one input symbolically free — e.g.
+  solving for `R` while `I` stays an unbound symbol. `cas-solve`'s linear-system entry point,
+  `solve_linear_system(equations: &[IRNode], variables: &[IRNode]) -> Option<Vec<IRNode>>`, cannot
+  do this either: every `Symbol` node the equation contains that is NOT in `variables` is treated
+  as an unresolvable term by its coefficient extraction (`linear_eval` in
+  `cas-solve/src/linear_system.rs`), not as a free parameter to carry through symbolically — the
+  caller must have **already** reduced every non-target identifier to a numeric IR leaf before the
+  equation reaches the solver. So rung-0 is **bind-then-solve**: every variable except the one
+  named after `for` must already be `observe`d (bound to a concrete number) before `?`-querying the
+  `symbolic` construct. This is a real, smaller capability than the spec's own headline example —
+  documented here as an explicit, intentional gap, not a silent one.
+- **No new `DerivationNode`/audit-trail concept.** `ADJ-REASON-MATH.md` §E already reserves
+  `StepKind::FromRewrite` as the future home for "this value came from an algebraic rewrite, not a
+  plug-in" — that spec, and the `ReasoningTrace`/`adj-verify` tooling it belongs to, is Wave-1
+  territory owned by a separate concurrent agent (excluded from this loop's `delivery_scope`).
+  Rung-0 deliberately reuses the **exact same** `DerivationNode::Op` shape a `formula` application
+  already produces for its result — the audit trail does not yet distinguish "solved" from
+  "computed." That is an accepted rung-0 limitation, not a workaround for a bug: inventing a
+  second, parallel provenance shape here would be exactly the kind of encroachment on Wave-1's
+  reserved design space this loop must not do.
+
+**How the solve is wired.** `symbolic-vm::Backend`/`VM` is the seam every CAS dialect in this
+workspace uses to reach `cas-solve` — `macsyma-runtime`'s `MacsymaBackend`/`solve_handler` is the
+one existing example. Rung-0 goes through that same seam via a new, minimal
+`crate::symbolic_backend::RungZeroBackend`: it registers exactly one handler, for the `Solve` head,
+and holds no other state (no bindings, no other handlers, no rewrite rules) — rung-0 needs exactly
+one capability, so the backend is scoped to exactly one capability, not built out as a general CAS
+surface ahead of a second one (`simplify`, `differentiate`) actually needing rewrite-rule dispatch.
+A later rung can grow this backend (or introduce a different one) without disturbing this one.
+
+**What rung-0 DOES do — the actual wiring:**
+
+```adj
+formulabook electricity_laws {
+    use electricity_vocab
+
+    symbolic resistance_from_ohms_law(voltage, current) { voltage == current * resistance } for resistance
+        source "For many conductors of electricity, the electric current which will flow through
+                them is directly proportional to the voltage applied to them."
+        locator "https://hyperphysics.gsu.edu/hbase/electric/ohmlaw.html"
+        trust authoritative
+}
+```
+```adj
+import "electricity.adj"
+observe voltage(12)
+observe current(3)
+? resistance_from_ohms_law(voltage, current)   % engine → 4, same Ohm's-law citation, solved for R
+```
+
+A new top-level `symbolic <name>(<params>) { <lhs> == <rhs> } for <target>` construct — a sibling
+of `formula` inside a `formulabook` (not a new top-level `*book`; it reuses `formula`'s
+`use`/import/provenance scaffolding verbatim, minimizing new grammar surface). `<lhs>`/`<rhs>` are
+the **existing** `expr` grammar's arithmetic subset (`+ - * /`, refs, literals — no transcendental
+calls in rung-0); `<target>` names which formal parameter is the unknown. `==` reuses the same
+`relop` token `constrain`/FL-8's `Compare` already lex.
+
+**Lowering, concretely:**
+
+1. Every parameter *other than* `<target>` must resolve to an observed value at apply time — the
+   same "bind at apply time" contract a `formula`'s parameters already have. `<target>` itself must
+   **not** be independently observed (it's the unknown, not an input); a program that both
+   `observe`s it and asks the `symbolic` construct to solve for it is a clean compile error.
+2. Substitute every non-target parameter's bound value into `lhs`/`rhs` (identical substitution
+   machinery `formula` application already uses), leaving an expression that is linear in exactly
+   one remaining name: `<target>`.
+3. **IR translation (the actual new code):** walk the substituted `lhs`/`rhs` and translate each to
+   a `symbolic_ir::IRNode` (`lower.rs`'s `expr_to_irnode`) — `<target>` becomes `Symbol(<target>)`;
+   every OTHER identifier is already gone (step 2 substituted it to a bound value); a target-free
+   sub-expression is evaluated to a plain number through the SAME `compute` path a `let`/`formula`
+   uses, then narrowed to an `Integer`/`Rational` IR leaf; `Add`/`Sub`/`Mul` nodes translate
+   structurally. This is deliberately much smaller than a general expression-to-IR bridge — rung-0's
+   grammar only admits `+ - * /`, and `Div` by a target-free divisor is rewritten to `Mul` by its
+   reciprocal (`solve_linear_system`'s own linear extraction has no `Div` case — only `Mul` by a
+   constant factor — so this rewrite is what makes `x / 5 == y` reach the solver at all, not just
+   `5 * x == y`).
+4. **The solve (the actual wiring):** build `Equal(lhs_ir, rhs_ir)`, wrap it `Solve(equation,
+   Symbol(<target>))`, and evaluate through `symbolic_vm::VM::eval` — which dispatches, via
+   `RungZeroBackend`, to a handler that calls `cas_solve::solve_linear_system(&[equation],
+   &[target])` (a 1×1 system is the fully-general degenerate case) and returns its `Rule(<target>,
+   value)` node. **This is the actual wiring** — the moment where the answer is decided is
+   delegated to the existing, tested crate through the same seam every CAS dialect uses, not
+   reimplemented and not called as a bare free function.
+5. A `Rule(<target>, Integer(n))` or `Rule(<target>, Rational(n, d))` result → the ordinary derived
+   value, exact, carrying the `symbolic` construct's own `source`/`locator`/`trust` (grounding the
+   **equation as stated** — "Ohm's law is V=IR" — exactly the way a `formula`'s citation grounds its
+   definition; the fact that this particular application *solves* it rather than *evaluates* it
+   directly is not a separate claim needing separate citation, the same reasoning `percent_of.adj`
+   already relies on when it composes primitives under one citation). Anything else — including the
+   unevaluated `Solve(...)` fallback the handler returns for a SINGULAR system (no solution, or
+   every value satisfies it; `solve_linear_system`'s `None` cannot distinguish the two) — **abstains**
+   with a named reason, never a fabricated number.
+
+**Dependency:** `adj-lang`'s `Cargo.toml` gains `symbolic-vm = { path = "../symbolic-vm" }` (the
+`Backend`/`Handler`/`VM` seam), `cas-solve = { path = "../cas-solve" }` (`solve_linear_system`/
+`SOLVE`), and `symbolic-ir = { path = "../symbolic-ir" }` **directly** (not merely transitively) —
+both the equation IR and its solved-back `Rule`/`Integer`/`Rational` result need the type nameable
+in `adj-lang` itself; `cas-solve` does not re-export it. These are the first crates `adj-lang`
+depends on outside its existing `logic-engine`/parsing-frontend family.
+
+**One gap this rung's implementation surfaced that the design above did not anticipate:**
+`adj-lang`'s closed-vocabulary gate (`enforce_vocabulary`'s `check_query`, MYCIN-2026 M1/M2) special-
+cased the `formulas` registry so a `? bmi(...)`-shaped formula application isn't rejected as an
+undefined hypothesis/relation — but had no equivalent case for the new `symbolics` registry. A
+`symbolic` application query *lowered* correctly (the main per-statement pass runs first and
+already computed the right answer), but the vocabulary-enforcement pass runs afterward over the
+same program and rejected the query text retroactively wherever a program uses `use`/`dictionary`
+scoping — exactly the shape every shipped library (`electricity.adj` included) uses, so this only
+surfaced against real content, not the initial in-crate unit tests (which don't `use` a
+dictionary). Fixed by threading `symbolics` into `enforce_vocabulary` alongside `formulas`.
+
+---
+
 ## 4. The curriculum — kindergarten → medical school (a DAG of libraries)
 
 Each library = **grounded dictionary terms** (provenanced where the term itself is a claim) +

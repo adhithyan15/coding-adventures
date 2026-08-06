@@ -359,7 +359,7 @@ use_decl      = "use" IDENT ;
 
 formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE ;
 
-formulabook_item = use_decl | formula_decl ;
+formulabook_item = use_decl | formula_decl | symbolic_decl ;
 
 formula_decl     = "formula" IDENT LPAREN [ formula_params ] RPAREN formula_body [ formula_requires ] { annotation } ;
 
@@ -400,6 +400,22 @@ formula_step     = "let" IDENT EQUALS expr ;
 formula_requires = "requires" formula_precondition { COMMA formula_precondition } ;
 
 formula_precondition = IDENT LPAREN [ expr { COMMA expr } ] RPAREN ;
+
+# ADJ-FORMULA-LIBRARIES FL-10 — rung-0 of the CAS-wiring rung: solve a
+# single-variable linear equation for a NAMED target parameter, given every
+# OTHER parameter already bound to a number at apply time (bind-then-solve —
+# see FL-10 for why a fully free non-target variable is out of scope for
+# rung-0). A sibling of `formula` inside a `formulabook`: reuses
+# `formula_params` and the SAME `{ annotation }` provenance tail every
+# grounded clause carries, so it needs no new top-level `*book` construct.
+# `<lhs> == <rhs>` reuses `expr` (the plain arithmetic subset) and the
+# existing EQEQ token `relop`/FL-8 already lex. `symbolic`/`for` are
+# IDENT-matched literals — no lexer keywords, exactly like `formula`/`for`
+# (already reused by `prior_decl`/`uncertain_decl`/`solve_decl`).
+symbolic_decl = "symbolic" IDENT LPAREN [ formula_params ] RPAREN
+                LBRACE expr EQEQ expr RBRACE
+                "for" IDENT
+                { annotation } ;
 
 # ----------------------------------------------------------------
 # Table (ADJ-TABLES RS-5 — native tabular data as a first-class construct,
