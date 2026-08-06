@@ -141,6 +141,13 @@ jobs:
           npm ci
           npm run build
           npm run check:books
+          # The modality manifest (core/lesson-modality.json) is derived from the
+          # lessons and is what lets the complete book, the app, and the future
+          # dictation-friendly driving edition be filtered out of one source. A stale
+          # manifest is not cosmetic: a lesson that gained a paradigm table would still
+          # read `drivable: true`, and the driving edition would tell somebody at 70mph
+          # to look at a chart. Regenerate with `npm run generate:modality`.
+          npm run check:modality
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"
