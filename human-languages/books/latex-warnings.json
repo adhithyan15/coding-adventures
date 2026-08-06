@@ -1,0 +1,345 @@
+{
+  "tracks": [
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/arabic/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "arabic"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/bengali/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "bengali"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/french/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "french"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/german/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "german"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/gujarati/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "gujarati"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/hindi/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "hindi"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/italian/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "italian"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/kannada/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "kannada"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/latin/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "latin"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/malayalam/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "malayalam"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/marathi/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "marathi"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/persian/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "persian"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/portuguese/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "portuguese"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/punjabi/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "punjabi"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 1
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/russian/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "russian"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/sanskrit/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "sanskrit"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/spanish/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "spanish"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 2
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/tamil/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "tamil"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/telugu/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "telugu"
+    },
+    {
+      "baseline": null,
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/urdu/book/book.log",
+      "regressions": [],
+      "status": "unseeded",
+      "track": "urdu"
+    }
+  ],
+  "version": 1
+}
