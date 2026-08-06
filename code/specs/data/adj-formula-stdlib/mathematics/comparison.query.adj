@@ -1,0 +1,22 @@
+% ============================================================================
+% comparison.query.adj — worked example over the comparison library.
+% ============================================================================
+% The shape a consumer produces to answer "is A greater than B": it states no
+% comparison — it only `import`s the grounded library, `observe`s the two
+% counted quantities, and asks the engine to APPLY the cited `greater_than`
+% formula. `less_than(a, b)` is asked by swapping the arguments to
+% `greater_than(b, a)` (see the library header) rather than a second formula —
+% a single query per run, since `? greater_than(a, b)` and `? greater_than(b,
+% a)` derive the same named slot and the second would shadow the first in
+% this CLI's JSON view; the swap-and-rerun behavior is exercised by the
+% end-to-end tests, not duplicated here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli comparison.query.adj
+% ============================================================================
+
+import "comparison.adj"
+
+observe a(5)
+observe b(3)
+? greater_than(a, b)   % expect 1 (true) — 5 is greater than 3

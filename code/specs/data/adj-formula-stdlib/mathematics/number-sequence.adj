@@ -1,0 +1,64 @@
+% ============================================================================
+% number-sequence.adj — the K-2 counting sequence: what comes next / before.
+% ============================================================================
+% CCSS-M Kindergarten Counting & Cardinality opens with the counting SEQUENCE
+% itself (K.CC.A.1 "count to 100 by ones", K.CC.A.2 "count forward beginning
+% from a given number within the known sequence") before any arithmetic. This
+% is that sequence, expressed the same way every other formula-stdlib entry is:
+% not a memorized fact but a composed application of the already-cited
+% `sum`/`difference` primitives from `arithmetic.adj` — the next counting
+% number after `n` is `n + 1`; the one before it is `n - 1`.
+%
+%     import "number-sequence.adj"          % transitively imports arithmetic.adj
+%     observe n(5)                          % "…the fifth block…"  (span cited)
+%     ? next(n)                             % engine → 6
+%     ? previous(n)                         % engine → 4
+%
+% This is the same write-once-use-many composition `percent-of.adj` and
+% `ratio.adj` already demonstrate (RS-1): `next`/`previous` state NO bare
+% arithmetic of their own — they CALL the cited `sum`/`difference` primitives
+% and the engine composes both citations into one derivation. Zero math is
+% performed by the model.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitives `sum`/`difference`. The import is
+% RELATIVE to this file (same package, arithmetic/ sibling directory).
+% ----------------------------------------------------------------------------
+import "../arithmetic/arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `n` is the observed counting number; `next`/`previous` are the
+% derived neighbors in the sequence. Rung-0 types each observable slot as
+% `finding`; the `surface` synonyms let a decomposer map everyday phrasing
+% ("what comes after", "one more than", "the number before") onto the
+% canonical terms.
+% ----------------------------------------------------------------------------
+dictionary number_sequence_vocab {
+    define n        : finding  surface "number", "the number", "count", "n"
+    define next     : finding  surface "next number", "what comes after", "one more than", "successor"
+    define previous : finding  surface "previous number", "what comes before", "one less than", "predecessor"
+}
+
+% ----------------------------------------------------------------------------
+% The two composed formulas. `next(n) = sum(n, 1)` and `previous(n) =
+% difference(n, 1)` CALL the cited `sum`/`difference` primitives rather than
+% restating `+`/`-` bare — the citable claim here is specifically that a
+% counting number is followed immediately by the next one in the sequence
+% "1, 2, 3, 4, ...", which MathWorld's Counting Number page states directly.
+% ----------------------------------------------------------------------------
+formulabook number_sequence {
+    use number_sequence_vocab
+
+    % The next counting number in the sequence "1, 2, 3, 4, ...".
+    formula next(n) = sum(n, 1)
+        source "A positive integer: 1, 2, 3, 4, ... (OEIS A000027), also called a natural number."
+        locator "https://mathworld.wolfram.com/CountingNumber.html"
+        trust authoritative
+
+    % The previous counting number in the same sequence.
+    formula previous(n) = difference(n, 1)
+        source "A positive integer: 1, 2, 3, 4, ... (OEIS A000027), also called a natural number."
+        locator "https://mathworld.wolfram.com/CountingNumber.html"
+        trust authoritative
+}

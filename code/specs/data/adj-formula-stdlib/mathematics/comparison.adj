@@ -1,0 +1,53 @@
+% ============================================================================
+% comparison.adj — is A greater than / less than B? (CCSS-M K.CC.C.6-7).
+% ============================================================================
+% Kindergarten Counting & Cardinality's other founding skill, alongside the
+% sequence itself: "identify whether the number of objects in one group is
+% greater than, less than, or equal to the number of objects in another group"
+% (K.CC.C.6), "compare two numbers between 1 and 10 presented as written
+% numerals" (K.CC.C.7). Before ADJ-FORMULA-LIBRARIES FL-8, this had no citable
+% library form — a `formula` could only answer a number, and the language's
+% only comparison surface (`constrain`/`check`) carries no provenance and
+% isn't `?`-queryable. FL-8 makes it a formula like any other:
+%
+%     import "comparison.adj"
+%     observe a(5)                          % "…5 apples…"     (span cited)
+%     observe b(3)                          % "…3 oranges…"    (span cited)
+%     ? greater_than(a, b)                  % engine → 1 (true), MathWorld-cited
+%
+% The model states no comparison — it recalls the library and binds the two
+% counted quantities; the engine decides `a > b` on the CPU and cites the
+% definition. `less_than(a, b)` is deliberately NOT a second, duplicated
+% formula: it is definitionally `greater_than(b, a)` (swap the arguments), so
+% a consumer asking "is A less than B" queries `greater_than(b, a)` — the
+% same write-once-use-many discipline `percent`/`percent_of` already model as
+% algebraic inverses, applied to a comparison instead of an equation.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `a`/`b` are the two observed quantities being compared;
+% `greater_than` is the derived truth value (1 = true, 0 = false). Rung-0
+% types each observable slot as `finding`; the `surface` synonyms let a
+% decomposer map everyday phrasing ("more than", "bigger", "fewer") onto the
+% canonical terms.
+% ----------------------------------------------------------------------------
+dictionary comparison_vocab {
+    define a             : finding  surface "first number", "first amount", "a"
+    define b             : finding  surface "second number", "second amount", "b"
+    define greater_than  : finding  surface "greater than", "more than", "bigger than"
+}
+
+% ----------------------------------------------------------------------------
+% FL-8: a formula whose body is a comparison, not arithmetic. `a > b` lowers
+% to a dimensionless 1/0 (never approximated — exact whenever both operands
+% are), dimension-checked exactly like `a + b` would be (comparing a count to
+% a dollar amount is the same category error as adding them).
+% ----------------------------------------------------------------------------
+formulabook comparisons {
+    use comparison_vocab
+
+    formula greater_than(a, b) = a > b
+        source "A quantity a is said to be greater than b if a is larger than b, written a>b."
+        locator "https://mathworld.wolfram.com/Greater.html"
+        trust authoritative
+}

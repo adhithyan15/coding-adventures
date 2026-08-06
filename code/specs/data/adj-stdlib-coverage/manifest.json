@@ -1022,6 +1022,51 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.k2.number_sequence",
+      "title": "Count forward and backward from a given number within the known sequence",
+      "band": "K-2",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.math.arithmetic.primitives"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/mathematics/number-sequence.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.k2.comparison",
+      "title": "Compare two numbers as greater than or less than using FL-8 comparison formulas",
+      "band": "K-2",
+      "domain": "mathematics",
+      "competency": "classify",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.math.arithmetic.primitives"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/mathematics/comparison.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.k2.cardinality",
+      "title": "Find the cardinality of a group made by combining two counted groups",
+      "band": "K-2",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.math.arithmetic.primitives"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/mathematics/cardinality.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
