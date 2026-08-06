@@ -1,5 +1,6 @@
 import type { ParsedLesson } from "./parse.js";
 import type { BookCorpus, LanguageRegistry } from "./types.js";
+import { summarizeModality, type ModalityOptions, type ModalitySummary } from "./modality.js";
 
 export const DURATION_THRESHOLD_SECONDS = 300;
 
@@ -75,6 +76,13 @@ export interface CurriculumGapReport {
     legacySchemaTracks: number;
     mixedSchemaTracks: number;
     version2SchemaTracks: number;
+    /** HL08: lessons learnable by ear alone, and that share of the whole corpus. */
+    drivableLessons: number;
+    drivablePercent: number;
+    /** Chapters a commuter cannot even start — drivable prefix 0. */
+    chaptersWithoutDrivablePrefix: number;
+    /** Authored `modality:` overrides that contradict the derivation unexplained. */
+    unexplainedModalityOverrides: number;
   };
   duration: {
     violations: DurationEstimate[];
@@ -90,12 +98,22 @@ export interface CurriculumGapReport {
   schemas: {
     tracks: TrackSchemaCoverage[];
   };
+  /**
+   * HL08 — what can be learned by ear.
+   *
+   * Report only, per the HL-V01 precedent: the findings list is published so the
+   * debt is visible and burnable, and nothing here fails a build. Gates arrive
+   * per track once each track's debt clears.
+   */
+  modality: ModalitySummary;
 }
 
 export interface CurriculumGapReportInput {
   registry: LanguageRegistry;
   lessons: ParsedLesson[];
   books: BookCorpus;
+  /** HL08 tunables; defaults to no table being speakable until the lineariser lands. */
+  modality?: ModalityOptions;
 }
 
 const SPOKEN_WORDS_PER_MINUTE = 120;
@@ -372,6 +390,12 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
 
   const coverage = registry.languages.map((language) => bookCoverage(language.id, lessons, books));
   const schemas = registry.languages.map((language) => schemaCoverage(language.id, lessons));
+  const modality = summarizeModality(lessons, input.modality ?? {});
+  const chaptersWithoutDrivablePrefix = modality.tracks.reduce(
+    (sum, track) =>
+      sum + track.chapters.filter((chapter) => chapter.drivablePrefix === 0).length,
+    0,
+  );
 
   return {
     schemaVersion: 1,
@@ -397,11 +421,18 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       legacySchemaTracks: schemas.filter((track) => track.status === "legacy").length,
       mixedSchemaTracks: schemas.filter((track) => track.status === "mixed").length,
       version2SchemaTracks: schemas.filter((track) => track.status === "version-2").length,
+      drivableLessons: modality.voice,
+      drivablePercent: modality.drivablePercent,
+      chaptersWithoutDrivablePrefix,
+      unexplainedModalityOverrides: modality.findings.filter(
+        (finding) => finding.code === "modality-unexplained-override",
+      ).length,
     },
     duration: { violations: durationViolations },
     prerequisites: { unknown, roots, laterChapterWithoutPrerequisites },
     books: { tracks: coverage },
     schemas: { tracks: schemas },
+    modality,
   };
 }
 
@@ -416,6 +447,7 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
     `${summary.unknownPrerequisites} unknown prerequisites; ${summary.laterChapterLessonsWithoutPrerequisites} later-chapter lessons without prerequisites`,
     `${summary.tracksWithoutBooks} tracks without books; ${summary.lessonChaptersWithoutBooks} lesson chapters without book chapters`,
     `${summary.legacySchemaTracks} legacy, ${summary.mixedSchemaTracks} mixed, ${summary.version2SchemaTracks} version-2 schema tracks`,
+    `${summary.drivableLessons} drivable lessons (${summary.drivablePercent}% of the corpus)`,
     "",
     "Longest effective lessons:",
   ];
@@ -427,6 +459,49 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
         `(declared ${lesson.declaredSeconds}s, computed ${lesson.computedSeconds}s; ${lesson.reasons.join("+")})`,
     );
   }
+  lines.push("", ...renderModalitySection(report.modality));
   lines.push("");
   return `${lines.join("\n")}\n`;
+}
+
+/**
+ * The HL08 modality section: "how much of this can I do in the car?"
+ *
+ * Whole-corpus percentage first, then per-track counts, then the chapter numbers a
+ * commuter plans around. The full per-chapter prefix table lives in the JSON view —
+ * there are hundreds of chapters — so the text companion prints each track's totals
+ * and then names only the chapters whose prefix is 0, which are the ones that cannot
+ * be started in the car at all and therefore the ones worth remediating first.
+ */
+function renderModalitySection(modality: CurriculumGapReport["modality"]): string[] {
+  const lines = [
+    "Modality (HL08) — derived from lesson type and block structure, never from `skills`:",
+    `  ${modality.voice} voice, ${modality.sight} sight, ${modality.pen} pen ` +
+      `of ${modality.totalLessons} lessons; ${modality.drivablePercent}% drivable`,
+    `  tables of more than ${modality.maxLinearisableTableColumns} column(s) count as sight`,
+  ];
+  for (const track of modality.tracks) {
+    lines.push(
+      `  ${track.language}: ${track.voice} voice, ${track.sight} sight, ${track.pen} pen; ` +
+        `${track.drivablePercent}% drivable; ${track.chapters.length} chapters, ` +
+        `${track.drivablePrefixTotal} lessons reachable in chapter-prefix order`,
+    );
+  }
+
+  const blocked = modality.tracks.flatMap((track) =>
+    track.chapters.filter((chapter) => chapter.drivablePrefix === 0),
+  );
+  lines.push("", `Chapters that cannot be started by ear (drivable prefix 0): ${blocked.length}`);
+  for (const chapter of blocked.slice(0, 20)) {
+    lines.push(
+      `  ${chapter.language} ch${chapter.chapter}: 0 of ${chapter.lessonCount} ` +
+        `(first blocker ${chapter.firstNonVoiceLesson ?? "n/a"})`,
+    );
+  }
+
+  lines.push("", `Modality findings (report-only): ${modality.findings.length}`);
+  for (const finding of modality.findings.slice(0, 20)) {
+    lines.push(`  ${finding.code}: ${finding.message}`);
+  }
+  return lines;
 }

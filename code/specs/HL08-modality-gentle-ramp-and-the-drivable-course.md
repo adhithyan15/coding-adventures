@@ -110,6 +110,30 @@ the first one that is not. This is the number that matters to a commuting learne
 The book prints it at the chapter opening beside the capability from HL05. It is
 derived, never authored.
 
+Ordering note (from the implementation): only schema-v2 lessons carry an explicit
+`sequence`. Legacy lessons without one sort last, by id, rather than being given an
+invented position — the same comparator the book generator already uses, so the
+prefix counts lessons in the order the reader actually meets them.
+
+### As implemented — migration step 1
+
+`code/packages/typescript/human-language-data/src/modality.ts` implements the
+derivation, the monotone closure, and the drivable prefix; the gap report publishes
+them. Two things to record where the next reader will find them:
+
+- **The linearisable width starts at 0, not 2.** The narration exporter that turns a
+  two-column table into speech is migration step 3 below. Until it exists, calling a
+  table speakable would claim a capability nothing implements, and the failure mode
+  is the worst available — a learner told a lesson is drivable who then silently
+  misses what the table carried. Every table means eyes today; the width moves to 2
+  when the lineariser lands.
+- **The measured drivable count is 694, not 695.** Every structural count in the
+  tables above reproduces exactly (51 `pen`, 7 `script` blocks, 1,038 remaining, 322
+  with a table). The gap is entirely in the sight-cue list, whose exact contents this
+  spec never recorded: the implemented list matches 61 lessons where the original
+  measurement found 56. The detector was not tuned to close the difference, because a
+  cue list fitted to a target number measures the target, not the corpus.
+
 ## The narration export
 
 A fourth output view beside the book, the app, and the exercise bank — the one HL04's
