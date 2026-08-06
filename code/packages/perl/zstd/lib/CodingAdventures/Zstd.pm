@@ -3,7 +3,7 @@ package CodingAdventures::Zstd;
 use strict;
 use warnings;
 
-our $VERSION = '0.1.2';
+our $VERSION = '0.1.3';
 
 use Exporter 'import';
 our @EXPORT_OK = qw(compress decompress);
@@ -992,8 +992,19 @@ sub _compress_block {
 
 # _decompress_block decompresses one ZStd compressed block.
 # Appends decoded bytes to $out_ref (arrayref of bytes).
+#
+# $rep_ref is an arrayref [rep1, rep2, rep3] holding the three Repeated_Offset
+# registers (RFC 8878 §3.1.1.3.2.1.1) — IN/OUT, mutated in place. These are
+# FRAME-scoped, not block-scoped: the caller (decompress()) owns the array,
+# initialises it to [1, 4, 8] once per frame ("For the first block, the
+# starting offset history is populated with Repeated_Offset1=1,
+# Repeated_Offset2=4, Repeated_Offset3=8" — RFC 8878), and threads the same
+# arrayref through every Compressed block in the frame unmodified by Raw/RLE
+# blocks. See the Offset_Value -> offset comment below for why this decoder
+# needs them even though this port's own encoder never emits repeat-offset
+# codes.
 sub _decompress_block {
-    my ($data_ref, $out_ref) = @_;
+    my ($data_ref, $out_ref, $rep_ref) = @_;
     my @data = @$data_ref;
 
     # ── Literals section ─────────────────────────────────────────────────
@@ -1069,18 +1080,79 @@ sub _decompress_block {
         # and would cause a gigantic bit-read or integer overflow.
         die "zstd: of_code out of range ($of_code)\n" if $of_code > 28;
 
+        # ll_is_zero is needed for the repeat-offset interpretation below
+        # (RFC 8878's "when Literals_Length is 0, repeated offsets are
+        # shifted by 1" rule) and is knowable right now, from the PEEKED
+        # ll_code alone: LL code 0 is the only code with baseline 0 and 0
+        # extra bits (see @LL_CODES), so ll_code == 0 iff the eventual
+        # decoded $ll value is 0. No extra bits need to be read yet.
+        my $ll_is_zero = ($ll_code == 0) ? 1 : 0;
+
         # Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
         # §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
         # required to decode offset. It does the same for Match_Length and
         # then for Literals_Length.").
-        # Offset decode: of_raw = (1 << of_code) | read(of_code bits)
-        #   offset = of_raw - 3
+        # Offset decode: of_raw = (1 << of_code) | read(of_code bits). The
+        # NUMBER of bits read here is always exactly $of_code regardless of
+        # the repeat-offset interpretation below — only how the resulting
+        # value maps to an actual offset changes.
         my $of_raw = (1 << $of_code) | $br->read_bits($of_code);
         my $ml     = $ML_CODES[$ml_code][0] + $br->read_bits($ML_CODES[$ml_code][1]);
         my $ll     = $LL_CODES[$ll_code][0] + $br->read_bits($LL_CODES[$ll_code][1]);
 
-        die "decompress_block: offset underflow (of_raw=$of_raw)\n" if $of_raw < 3;
-        my $offset = $of_raw - 3;
+        # Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        # the Repeated_Offset (R1/R2/R3) mechanism. Real `zstd` encoders use
+        # repeat offsets constantly (one of their main entropy wins,
+        # especially for periodic/repetitive data) even though this port's
+        # OWN encoder never emits them (see _encode_sequences_section's
+        # comment: raw_offset = offset + 3 always, so of_code >= 2 always,
+        # i.e. our own compress()/decompress() round trip never exercises
+        # this path) — a decoder that only understands explicit offset codes
+        # will systematically fail to decode real-world .zst data. Algorithm
+        # cross-checked against both the RFC 8878 prose and the reference C
+        # source (`ZSTD_decodeSequence` in zstd_decompress_block.c), mirroring
+        # the fix in code/packages/c/zstd (lessons.md Lesson 98).
+        #
+        # of_code >= 2 guarantees of_raw = (1<<of_code)+extra >= 4, i.e.
+        # Offset_Value > 3: an ordinary explicit offset. of_code <= 1
+        # guarantees of_raw in {1, 2, 3}: a repeat-offset reference.
+        #
+        # The repeat case collapses to one selector in [0, 3]:
+        #     selector = ll_is_zero + of_raw - 1
+        #   0 -> reuse rep1 unchanged (no rotation)
+        #   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+        #   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+        #   3 -> use rep1-1 (full rotate, same shape as selector 2)
+        #
+        # Every path — explicit or repeat — ends by rotating the new offset
+        # into rep1, since the registers track the most recently used
+        # offsets regardless of how each one was derived.
+        my $offset;
+        if ($of_code >= 2) {
+            $offset = $of_raw - 3;
+            $rep_ref->[2] = $rep_ref->[1];
+            $rep_ref->[1] = $rep_ref->[0];
+            $rep_ref->[0] = $offset;
+        } else {
+            my $selector = $ll_is_zero + $of_raw - 1;
+            if ($selector == 0) {
+                $offset = $rep_ref->[0];
+            } elsif ($selector == 1) {
+                $offset = $rep_ref->[1];
+                $rep_ref->[1] = $rep_ref->[0];
+                $rep_ref->[0] = $offset;
+            } elsif ($selector == 2) {
+                $offset = $rep_ref->[2];
+                $rep_ref->[2] = $rep_ref->[1];
+                $rep_ref->[1] = $rep_ref->[0];
+                $rep_ref->[0] = $offset;
+            } else { # selector == 3
+                $offset = ($rep_ref->[0] > 0) ? ($rep_ref->[0] - 1) : 0;
+                $rep_ref->[2] = $rep_ref->[1];
+                $rep_ref->[1] = $rep_ref->[0];
+                $rep_ref->[0] = $offset;
+            }
+        }
 
         # Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
         # 8878 §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
@@ -1332,6 +1404,12 @@ sub decompress {
     # ── Blocks ───────────────────────────────────────────────────────────
     my @out;
 
+    # Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+    # default 1/4/8 "for the first block", then threaded unmodified through
+    # every Compressed block's sequences for the rest of the frame (Raw/RLE
+    # blocks don't touch them). See _decompress_block's doc comment.
+    my @rep = (1, 4, 8);
+
     while (1) {
         die "zstd: truncated block header at pos $pos\n"
             if $pos + 3 > scalar @bytes;
@@ -1365,7 +1443,7 @@ sub decompress {
                 if $pos + $bsize > scalar @bytes;
             my @block_data = @bytes[$pos .. $pos + $bsize - 1];
             $pos += $bsize;
-            _decompress_block(\@block_data, \@out);
+            _decompress_block(\@block_data, \@out, \@rep);
             die "zstd: decompressed size exceeds limit\n"
                 if @out > MAX_OUTPUT;
 
