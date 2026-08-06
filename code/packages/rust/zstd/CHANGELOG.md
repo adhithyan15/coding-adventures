@@ -4,6 +4,38 @@
 
 ### Fixed
 
+- **Decoder never implemented Repeated-Offset (R1/R2/R3) sequence decoding
+  (RFC 8878 §3.1.1.3.2.1.1)** — `decompress_block` computed
+  `offset = of_raw - 3` unconditionally for every sequence, treating offset
+  codes 1/2/3 as literal (tiny, usually invalid) offsets instead of
+  references into a 3-slot history of recently-used offsets. This crate's
+  own encoder never emits offset codes below 4 by design (an explicit
+  "no repeat-offset shortcuts" educational simplification —
+  `raw_off = offset + 3 >= 4` always, since the minimum LZ77 match offset is
+  1), so this crate's own `compress()`/`decompress()` round trip — and every
+  existing unit/interop test, including `tc9_cli_interop` and the
+  misleadingly-named `tc8_repeat_offset` (which only exercises OUR encoder's
+  explicit-offset path on repetitive input, never the repeat-offset decode
+  path) — never exercised this code at all. But real `zstd` encoders use
+  repeat offsets constantly, especially on periodic or constant data; a
+  decoder that only understands explicit offset codes fails on a large
+  fraction of real-world `.zst` files. Found and root-caused while building
+  the sibling `code/packages/c/zstd` port (PR #9941) via fuzzing against the
+  real CLI — see lessons.md Lesson 98. Fixed by threading a frame-scoped
+  `(rep1, rep2, rep3)` offset-history triple (default `1/4/8` at the start
+  of a frame, persisting across Raw/RLE blocks, updated after every
+  Compressed block's sequences — explicit-offset or repeat-offset alike)
+  through `decompress()`/`decompress_block()`, and interpreting offset codes
+  0/1 (`of_raw` in `{1, 2, 3}`) as a repeat-offset reference selected by
+  `ll_is_zero + of_raw - 1`, including the RFC's "when Literals_Length == 0,
+  the repeat-offset interpretation shifts by 1, and slot 3 means `rep1 - 1`"
+  special case. Algorithm cross-checked against both RFC 8878 prose and the
+  literal reference C source (`ZSTD_decodeSequence` in
+  `zstd_decompress_block.c`, fetched directly rather than recalled from
+  memory), matching the already-verified fix in `code/packages/c/zstd`. The
+  encoder is intentionally left unchanged (still never emits repeat-offset
+  codes — this is a decode-only fix, matching the educational subset's
+  documented scope).
 - **FSE sequences-section codec: three compounding RFC 8878 non-conformance
   bugs**, found via a repo-wide zstd conformance audit (companion fixes:
   java/zstd #9780, kotlin/zstd #9774) and confirmed with the minimal repro
@@ -58,6 +90,19 @@
 
 ### Added
 
+- **`tc11_repeat_offset_cli_interop_constant_byte` / `tc11_repeat_offset_cli_interop_periodic`**:
+  real `zstd` CLI interop tests targeting the Repeated-Offset decode gap
+  above. The constant-byte case reproduces the exact Lesson 98 repro (4713
+  bytes of a single repeated byte, which real `zstd` encodes as one
+  Compressed block with a single Offset_Value=1 sequence — "reuse
+  Repeated_Offset1") and fails with `decoded offset underflow: of_raw=1`
+  against the pre-fix decoder, proving the gap was real before it was fixed.
+  Verified beyond the committed suite via real `zstd`-CLI-produced files
+  covering prose, a numeric ramp, log-like text, and semi-random content
+  (several hit this crate's pre-existing, documented, out-of-scope
+  limitations — Huffman literals, non-Predefined FSE modes — unrelated to
+  this fix; every file that used only the supported feature subset decoded
+  byte-exact).
 - **Real `zstd` CLI interop test (`tc9_cli_interop`)**, per spec TC-9: shells
   out to the system `zstd` binary via `std::process::Command` to verify both
   directions — compress with this crate and decompress with `zstd -d`, and
