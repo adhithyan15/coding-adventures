@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "language": "french",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-23 are authored — they are the seven French chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17's payoff sits exactly at the 0.5 representativeness floor and Chapters 17-18 have no terminal practice lesson at all; both facts are recorded per chapter below rather than hidden by padding assesses.",
+  "chapters": [
+    {
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:fr-head-and-hand",
+      "canDo": "I can name the head and the hand in French with the right article, and point out the Latin manus hiding inside English manual, manufacture and maintain.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "FR-C17-main",
+        "kind": "production",
+        "summary": "Say la main with its nasal -ain, then run the manus family out loud — manual, manuscript, maintenir — and land on manufacture, 'made by hand', now the name for the opposite. Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence; it exercises the main half of the chapter but not the tête half.",
+        "assesses": [
+          "FR-LEX-MAIN-02",
+          "FR-SOUND-MAIN-03",
+          "FR-ETYMON-MAIN-04",
+          "FR-ETYMON-MAINTENIR-05"
+        ]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "Yes and No",
+      "label": "ch:fr-yes-and-no",
+      "canDo": "I can answer yes or no in French, send non through my nose as a nasal vowel, and recognise the ne … pas pair that carries negation inside a sentence.",
+      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "payoff": {
+        "lesson": "FR-C18-non",
+        "kind": "production",
+        "summary": "The oui / non pair said back to back, non's -on nasal placed against bon and bonjour, and the ne … pas frame named as the sentence-level negation to come. Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess oui.",
+        "assesses": [
+          "FR-LEX-OUI-02",
+          "FR-LEX-NON-02",
+          "FR-SOUND-NON-03",
+          "FR-GRAMMAR-NEGATION-04"
+        ]
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Please",
+      "label": "ch:fr-please",
+      "canDo": "I can say please in French and choose between s'il vous plaît and s'il te plaît depending on who I am speaking to.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "FR-C19-sil-vous-plait",
+        "kind": "production",
+        "summary": "Say s'il vous plaît with its silent final -t, take it apart into 'if it pleases you', then switch to s'il te plaît for a friend. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "FR-LEX-PLEASE-02",
+          "FR-ETYMON-PLAIRE-03",
+          "FR-GRAMMAR-PLEASE-REGISTER-04"
+        ]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Sorry",
+      "label": "ch:fr-sorry",
+      "canDo": "I can apologise in French and pick between je suis désolé(e), pardon and excusez-moi for the situation I am actually in.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "FR-C20-je-suis-desole",
+        "kind": "production",
+        "summary": "Say je suis désolé(e) knowing it literally means 'I am desolate', then place pardon as the quick reflex and excusez-moi as the attention-getter. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "FR-LEX-DESOLE-02",
+          "FR-ETYMON-DESOLE-03",
+          "FR-PRAGMATICS-SORRY-04"
+        ]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Weather",
+      "label": "ch:fr-weather",
+      "canDo": "I can talk about the weather in French — quel temps fait-il, il fait chaud, il fait froid, il pleut.",
+      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "payoff": {
+        "lesson": "FR-C21-le-temps",
+        "kind": "production",
+        "summary": "Use le temps in both its senses, build the weather with faire (il fait chaud / il fait froid), and say il pleut with the Latin pl- cluster French kept intact. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "FR-LEX-TEMPS-02",
+          "FR-GRAMMAR-IL-FAIT-03",
+          "FR-LEX-IL-PLEUT-04",
+          "FR-ETYMON-PLEUVOIR-05"
+        ]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Dog and Cat",
+      "label": "ch:fr-dog-and-cat",
+      "canDo": "I can name a dog and a cat in French and say why chien is the regular descendant of canis while chat is a word that travelled out of Egypt.",
+      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "payoff": {
+        "lesson": "FR-C22-chien-chat",
+        "kind": "production",
+        "summary": "Say chien and check its ca- → cha- shift against champ and chanter, then say chat and place it beside Spanish gato and Italian gatto as one inherited cattus. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "FR-LEX-CHIEN-02",
+          "FR-ETYMON-CHIEN-03",
+          "FR-LEX-CHAT-04",
+          "FR-ETYMON-CHAT-05"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Green and Yellow",
+      "label": "ch:fr-green-and-yellow",
+      "canDo": "I can name green and yellow in French, and say how solid the claimed link between jaune and German gelb actually is.",
+      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "payoff": {
+        "lesson": "FR-C23-vert-jaune",
+        "kind": "production",
+        "summary": "Say vert as the ordinary Romance inheritance from viridis, say jaune as galbinus 'yellow-green', and state the jaune / gelb cousinhood as probable rather than certain. The chapter's only lesson, so the payoff covers everything it introduces.",
+        "assesses": [
+          "FR-LEX-VERT-02",
+          "FR-ETYMON-VERT-03",
+          "FR-LEX-JAUNE-04",
+          "FR-ETYMON-JAUNE-05",
+          "FR-EVIDENCE-JAUNE-GELB-06"
+        ]
+      }
+    }
+  ]
+}
