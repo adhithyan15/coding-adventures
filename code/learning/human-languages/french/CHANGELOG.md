@@ -1,5 +1,27 @@
 # Changelog
 
+## Chapter capability ledger — Chapters 17–23 — 2026-08-06
+
+- Added [`chapters.json`](./chapters.json), the track's HL05 capability ledger:
+  a first-person `canDo`, the shared-spine nodes realised, and a validated
+  payoff for each of the **seven** chapters that carry schema-v2 lessons.
+- Deliberately authored **only Chapters 17–23**. Chapters 1–16 are still schema
+  v1 and declare no `practises.knowledge`, so every payoff written for them
+  would have to assess atoms that do not exist. They are omitted rather than
+  stubbed: an absent entry is honest debt the gap report can count, a
+  placeholder is destroyed signal.
+- Every `payoff.assesses` list is a strict subset of the payoff lesson's own
+  `practises.knowledge`; no atom is invented, and none is padded to clear a
+  threshold.
+- Chapters 19–23 are single-lesson chapters, so their payoff assesses
+  everything the chapter introduces (representativeness 1.00). Chapters 17 and
+  18 have **no terminal consolidation lesson**, so their payoff is the last
+  lesson by `sequence`: Chapter 18 still reaches 4/7 = 0.57 because *non*
+  reassesses *oui*, and Chapter 17 sits exactly on the 0.50 floor at 4/8. Both
+  facts are recorded in the ledger's per-chapter `summary`.
+- Titles and labels are copied verbatim from `core/book-generation.json`, so the
+  `chapter-title-drift` gate holds through the HL-C04 inversion.
+
 ## Warning-free 98-page book — 2026-08-03
 
 - Added natural page bottoms for intentionally short micro-lessons and concise

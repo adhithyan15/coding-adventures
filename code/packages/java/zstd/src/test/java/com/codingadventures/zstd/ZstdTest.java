@@ -271,6 +271,108 @@ class ZstdTest {
         }
     }
 
+    // ─── RT: Repeated-Offset (R1/R2/R3) sequence decoding ────────────────────
+    //
+    // See lessons.md Lesson 99. This port's own encoder (encodeSequencesSection)
+    // never emits an offset code < 2 (the minimum LZ77 match offset is 1, so
+    // raw_off = offset + 3 >= 4 always) — so the compress()/decompress() round
+    // trip above NEVER exercises the Repeated_Offset (R1/R2/R3) decode path
+    // (RFC 8878 §3.1.1.3.2.1.1). But the real `zstd` CLI's encoder uses repeat
+    // offsets constantly — they're one of its main entropy wins, especially
+    // for periodic/repetitive data — so a decoder that only understands
+    // explicit offset codes systematically fails on a meaningful fraction of
+    // real-world `.zst` data. These tests decode real-CLI-produced frames that
+    // are known (or, for the fuzz sweep, likely) to contain repeat-offset
+    // sequences — the one thing this port's own round trip can never catch.
+
+    /**
+     * Reproduces the exact failure that surfaced this gap (see lessons.md
+     * Lesson 99, and PR #9941's independent `c/zstd` discovery of the same
+     * gap): 4713 bytes of a single repeated byte.
+     *
+     * <p>Manually decoding the frame `zstd` (v1.5.7) produces for this input
+     * confirms it is a single Compressed block whose one sequence is exactly
+     * the shape that exposes the bug: 2 literal bytes ("ZZ", Literals_Length
+     * = 2, i.e. NOT the zero-literal-length special case) followed by one
+     * match with {@code Offset_Code = 1} and 1 extra bit of value 0, i.e.
+     * {@code Offset_Value = (1&lt;&lt;1)|0 = 1} — a repeat-offset reference to
+     * Repeated_Offset1, which starts at its RFC-mandated default of 1 for the
+     * first block of a frame. A decoder that (incorrectly) treats every
+     * offset code as an explicit offset computes {@code offset = 1 - 3 = -2},
+     * which underflows; the pre-fix code detected that as "decoded offset
+     * underflow" and threw, even though the frame is entirely valid — the
+     * frame uses a mechanism the decoder didn't understand, not malformed
+     * input.</p>
+     */
+    @Test
+    void rtCliInteropRepeatedOffset() throws IOException, InterruptedException {
+        assumeTrue(isZstdCliAvailable(), "zstd CLI not found on PATH — skipping interop test");
+
+        byte[] original = new byte[4713];
+        Arrays.fill(original, (byte) 'Z');
+
+        Path theirsInput = Files.createTempFile("zstd-java-rt-repeatoff-", ".txt");
+        Path theirsZst;
+        try {
+            Files.write(theirsInput, original);
+            theirsZst = runZstd(List.of("-q", "-c", theirsInput.toString()));
+            byte[] theirCompressed = Files.readAllBytes(theirsZst);
+            byte[] decodedByUs = decompress(theirCompressed);
+            assertArrayEquals(original, decodedByUs,
+                    "our decompress() failed to decode a real `zstd`-compressed "
+                            + "repeat-offset (Offset_Value=1, reuse Repeated_Offset1) "
+                            + "sequence — see lessons.md Lesson 99");
+        } finally {
+            Files.deleteIfExists(theirsInput);
+        }
+    }
+
+    /**
+     * Broader sweep of real-CLI-compressed inputs likely to exercise a wider
+     * variety of Repeated_Offset selectors than the single fixed case above
+     * — including {@code Literals_Length == 0} sequences (the "shifted by 1"
+     * special case in RFC 8878 §3.1.1.3.2.1.1) and reuse of Repeated_Offset2
+     * / Repeated_Offset3, which only arise once at least two distinct match
+     * distances have appeared earlier in the block. Periodic multi-byte
+     * cycles (as opposed to a single repeated byte) are far more likely than
+     * TC-9's fixed prose corpus to make the real encoder choose repeat
+     * offsets over explicit ones, since consecutive matches at exactly the
+     * same distance are exactly what a periodic signal produces.
+     */
+    @Test
+    void rtCliInteropRepeatOffsetFuzz() throws IOException, InterruptedException {
+        assumeTrue(isZstdCliAvailable(), "zstd CLI not found on PATH — skipping interop test");
+
+        List<byte[]> patterns = List.of(
+                "AB".getBytes(),
+                "ABC".getBytes(),
+                "ABCD".getBytes(),
+                "WXYZ12".getBytes(),
+                "the fox ".getBytes());
+        int[] sizes = {97, 512, 2000, 8000};
+
+        for (byte[] cycle : patterns) {
+            for (int size : sizes) {
+                byte[] original = new byte[size];
+                for (int i = 0; i < size; i++) original[i] = cycle[i % cycle.length];
+
+                Path theirsInput = Files.createTempFile("zstd-java-rt-repeatoff-fuzz-", ".txt");
+                try {
+                    Files.write(theirsInput, original);
+                    Path theirsZst = runZstd(List.of("-q", "-c", theirsInput.toString()));
+                    byte[] theirCompressed = Files.readAllBytes(theirsZst);
+                    byte[] decodedByUs = decompress(theirCompressed);
+                    assertArrayEquals(original, decodedByUs,
+                            "our decompress() failed on a real `zstd`-compressed "
+                                    + Arrays.toString(cycle) + "-cycle input of size "
+                                    + size + " bytes (likely a repeat-offset decode bug)");
+                } finally {
+                    Files.deleteIfExists(theirsInput);
+                }
+            }
+        }
+    }
+
     /**
      * Checks whether the {@code zstd} CLI binary is reachable on {@code PATH}.
      *

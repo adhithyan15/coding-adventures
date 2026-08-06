@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.7.0 — 2026-08-06
+
+- Added `chapters.json`, the HL05 chapter capability ledger, for Chapters 2–5:
+  each declares a first-person `canDo`, the spine nodes it realises, and the
+  payoff lesson that proves the claim.
+- Every `payoff.assesses` list is the payoff lesson's own
+  `practises.knowledge` set verbatim — nothing is claimed that the lesson does
+  not already practise, and nothing is padded to clear a threshold.
+- Chapter 1 is deliberately omitted. Its four lessons are still schema v1 and
+  declare no knowledge atoms, so any payoff written for it would be invented
+  rather than derived. The gap is left visible as debt.
+- Measured payoff representativeness (assessed ÷ chapter-introduced atoms)
+  against the 0.5 policy threshold: ch2 3/3 = 1.00, ch3 7/14 = 0.50,
+  ch4 6/16 = 0.375, ch5 4/11 = 0.364. Chapters 4 and 5 sit below threshold
+  because their word lessons introduce script and etymon atoms that the
+  consolidating dialogue does not re-exercise; that is a content gap for a
+  later revision, not something to paper over here.
+
 ## 0.6.0 — 2026-08-04
 
 - Added four schema-v2 Chapter 5 micro-lessons for **خدا**, **حافظ**, joined

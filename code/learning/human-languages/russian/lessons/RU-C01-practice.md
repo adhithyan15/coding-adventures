@@ -23,12 +23,10 @@ well enough to sound them all out. Let's prove it.
 
 These are the letters that look Latin and lie. Say each sound aloud:
 
-| looks like | actually says | in the word |
-|---|---|---|
-| **в** (Latin B) | **v** | при**в**ет |
-| **р** (Latin P) | **r** | п**р**ивет |
-| **с** (Latin C) | **s** | **с**пасибо |
-| **н** (Latin H) | **n** | **н**ет |
+- **в** wears the shape of a Latin B and says **v** — as in при**в**ет.
+- **р** wears the shape of a Latin P and says **r** — as in п**р**ивет.
+- **с** wears the shape of a Latin C and says **s** — as in **с**пасибо.
+- **н** wears the shape of a Latin H and says **n** — as in **н**ет.
 
 And the two easy vowel traps: **у** = "oo" (not y), **е** = "ye."
 
