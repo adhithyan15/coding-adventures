@@ -17,7 +17,7 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": 10001,
+  "active_pr": null,
   "last_manifest_check": {
     "objectives": 67,
     "coverage_roots": 6,
@@ -82,9 +82,9 @@
     {
       "id": "wave2-place-value-decompose",
       "title": "Wire floor/mod into the plain-arithmetic surface grammar to unblock place-value decomposition",
-      "status": "in_progress",
+      "status": "done",
       "depends_on": [],
-      "branch": "feat/adj-wave2-floor-mod",
+      "branch": null,
       "pr_number": 10001,
       "notes": "Confirmed the hypothesis: floor/mod needed NO grammar change, just two new recognized-by-name built-ins in lower.rs's expand_rec (RUNTIME_BUILTIN_FORMULAS), mapping directly onto the pre-existing ExprAst::Floor/ExprAst::Bin(ArithOp::Mod,..) nodes -- zero new exhaustive-match sites, much smaller than FL-8. Spec'd in ADJ-FORMULA-LIBRARIES.md 3C (FL-9). Extended mathematics/place-value.adj with tens_digit(n)=floor(n/10) and ones_digit(n)=mod(n,10), verified as algebraic inverses of the existing tens_and_ones_to_number (round-trip e2e test). No new manifest objective needed (same adj.math.k2.place_value objective/library file). Full test coverage (adj-lang unit/e2e including arity-error and reserved-name anti-drift tests, adj-lang-cli e2e), clippy clean. adj-lang bumped 0.72.0->0.73.0; adj-lang-cli NOT bumped (test-only addition, matching this repo's convention of only bumping on actual source changes)."
     },
