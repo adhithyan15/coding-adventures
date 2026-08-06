@@ -2,6 +2,51 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — the stroke-order filmstrip (HL-C08)
+
+- Add `src/ductusview.ts`: a pure SVG renderer that composes the authored pen
+  path from `strokes.ts` with the real glyph outline from `truetype.ts` into a
+  frame-by-frame build-up of how a letter is written. It returns a tree of plain
+  objects (`SvgNode`) plus a serialiser, and touches no DOM — the same posture
+  every other pure module in this app takes.
+- Apply exactly **one** shared `scale(1,-1)`: the glyph outline and the pen path
+  are both in font units (y-up) and SVG is y-down, so they are flipped together
+  in a single group and cannot end up disagreeing about which way is up. Only
+  the captions sit outside it, because flipped text reads backwards.
+- Render the finished glyph as a pale background behind each frame, earlier
+  strokes in a settled grey, the current stroke in ink up to that frame's
+  fraction, and a dot at the pen tip. Captions are word-wrapped into `<tspan>`
+  lines so a long instruction cannot run off the panel.
+- Show the stroke ORDER's citation and its variation caveat in the UI. The
+  path's *shape* is machine-checked against the font by `strokes.test.ts`; its
+  *order* can only be vouched for by a source, so the source is visible.
+- Wire it into the "Write it — stroke order" section of the Browse detail panel.
+  **Only Tamil ம has an authored pen path**, so every other letter keeps the
+  existing numbered prose list; the filmstrip is additive and never load-bearing.
+  If the font fails to load or the glyph is missing, the prose stays.
+- Fetch the Tamil font lazily, once, and only when a letter with authored ductus
+  is opened.
+- Build the SVG in `main.ts` through `createElementNS`/`setAttribute`/
+  `textContent` — no `innerHTML`. The string serialiser escapes every value that
+  reaches an attribute or a text node, so a label can only ever become text.
+- Reject illegal or `on*` attribute and tag NAMES in both the string serialiser
+  and the DOM builder. A name cannot be escaped — there is nowhere to put the
+  entity — so it is either a legal XML name or it is dropped, and `onload` is
+  refused by prefix rather than by a blocklist. Every name the module emits is
+  a literal today, but `SvgNode` is a public type and the serialiser is meant
+  to be reused by the book pipeline.
+- Add `tests/ductusview.test.ts` (42 tests): path emission straight from
+  `penPathD`, the y-flip and a control proving an unflipped box would fail,
+  progressive build-up fractions, shared viewBox across a letter's frames,
+  graceful `undefined` for letters with no ductus (including inherited
+  `Object` properties), a multi-stroke letter rendering without throwing, and
+  attribute-escaping against a hostile label. `ductusview.ts` reaches 100%
+  statement and line coverage; it is now listed in `vitest.config.ts`.
+
+This closes the gap HL06 §"the glyph monopoly" calls out: the pen-path model was
+built, font-validated to sub-2-font-unit join tolerance, and imported by nothing
+but its own test.
+
 ### Changed — Persian and Urdu Chapter 5 frontiers
 
 - Load eight new prerequisite-safe take-leave steps across Persian and Urdu,
