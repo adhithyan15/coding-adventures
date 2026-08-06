@@ -607,23 +607,41 @@ describe("corpus regression", () => {
   // whose prefix already ran to its end, so each extends by one. `fullyDrivableChapters`
   // holds at 199 for the same reason: appending a `voice` lesson cannot make a chapter
   // stop being fully drivable, nor make a blocked one start.
+  //
+  // HL-C18A then split the fifteen over-budget Spanish lessons into thirty-three
+  // prerequisite-ordered micro-lessons, a net +18 (two of them `writing`):
+  //
+  //   totalLessons  1100 -> 1118      voice   712 -> 719  (+7)
+  //   sight          337 ->  346      pen      51 ->  53  (+2, the two `writing` splits)
+  //   drivablePercent 65 ->   64      drivablePrefixTotal 555 -> 557
+  //   fullyDrivableChapters 199 -> 195
+  //
+  // TWO COUNTERS MOVE THE WRONG WAY, AND THAT IS THE HONEST RESULT, NOT A REGRESSION TO
+  // PAPER OVER. Splitting a table-bearing lesson does not delete its table — it copies the
+  // relevant rows into several of the micro-lessons, so one `sight` lesson becomes several.
+  // That is why `sight` takes +9 of the +18 while `voice` takes only +7, why the drivable
+  // share rounds down from 65% to 64%, and why four chapters that were fully drivable no
+  // longer are. The gentle-ramp goal (zero over-budget Spanish lessons) is met; the tables
+  // those splits inherited belong to HL-C17, which linearises or honestly reclassifies
+  // them. Tuning the splits to protect this percentage would mean writing steeper lessons
+  // to flatter a metric, which is the exact trade the ramp budget exists to refuse.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1100,
-      voice: 712,
-      sight: 337,
-      pen: 51,
-      drivableLessons: 712,
-      drivablePercent: 65,
+      totalLessons: 1118,
+      voice: 719,
+      sight: 346,
+      pen: 53,
+      drivableLessons: 719,
+      drivablePercent: 64,
       trackCount: 20,
       chapterCount: 375,
-      // Prerequisite order costs a commuter 157 of the 712 ear-only lessons: they sit
+      // Prerequisite order costs a commuter 162 of the 719 ear-only lessons: they sit
       // behind a blocker in their own chapter and are unreachable in the car until
       // HL-C17 linearises the tables or HL-C41 splits the pen segments out.
-      drivablePrefixTotal: 555,
-      fullyDrivableChapters: 199,
+      drivablePrefixTotal: 557,
+      fullyDrivableChapters: 195,
       unstartableChapters: 121,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,

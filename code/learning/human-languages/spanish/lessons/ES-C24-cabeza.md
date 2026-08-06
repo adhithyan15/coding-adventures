@@ -8,7 +8,7 @@ type: word
 headword: la cabeza
 gloss: the head — Spanish KEPT Latin's real word, unlike French, which replaced it with slang for "pot"
 concept_tag: ES-BODY-HEAD
-prerequisites: [ES-C23-hermano-hermana]
+prerequisites: [ES-C23-hermano-hermana, ES-C23-hermano-hache]
 sounds: [z-as-th-or-s, feminine-a-ending]
 roots: [latin-caput]
 etymology_hook: "cabeza IS Latin caput (via capitia) — English captain/capital/decapitate too — where French tête abandoned caput entirely for testa, slang for 'pot'"

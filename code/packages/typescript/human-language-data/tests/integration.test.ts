@@ -166,7 +166,8 @@ describe("real curriculum", () => {
         lesson.realization.chapter >= 1 &&
         lesson.realization.chapter <= 3,
     );
-    expect(pilot).toHaveLength(24);
+    // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
+    expect(pilot).toHaveLength(26);
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(

@@ -52,10 +52,19 @@ pair.
 |---|---|
 | me · llamar | first pronoun; cl-→ll- pattern |
 | me llamo | reflexive verbs |
-| tú / usted | informal vs formal "you"; roots (thou; *vuestra merced*) |
-| cómo · se llama | question words + accent; reflexive *se* |
+| tú / usted | the two words for "you"; *tú*'s lost twin *thou* |
+| tú *or* usted | **register**, and why *usted* takes he/she verb forms |
+| *vuestra merced* → usted | where the third-person pattern came from |
+| cómo | the word, eroded out of Latin *quo modo* |
+| ¿cómo? | the opening **¿** and the accent that marks a question |
+| the *qu-* family · se llama | the Latin question stem; reflexive *se* |
 | ¿cómo se llama usted? | assembling the question + answering |
 | mucho · gusto (mucho gusto) · practice | -lt-→-ch-; the full exchange |
+
+The *tú / usted* and *cómo* rows were each one lesson until HL-C18 split them:
+five and four new atoms respectively against a budget of three. The words come
+first; the social system and the orthography that surround them get their own
+sessions, so nothing arrives in a bundle.
 
 ## What comes next (recursive)
 

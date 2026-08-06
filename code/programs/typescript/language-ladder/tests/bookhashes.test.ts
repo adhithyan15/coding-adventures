@@ -4,12 +4,16 @@ import { loadLessons } from "../src/lessons.ts";
 
 describe("generated book source hashes", () => {
   it.each([
+    // Counts moved when HL-C18A split the fifteen over-budget Spanish lessons
+    // into thirty-three prerequisite-ordered micro-lessons: ch3 12->14,
+    // ch4 13->15, ch6 7->9. The generated-book manifest and the lesson files
+    // agree on these numbers; only this app-side pin was stale.
     [1, 7],
     [2, 5],
-    [3, 12],
-    [4, 13],
+    [3, 14],
+    [4, 15],
     [5, 7],
-    [6, 7],
+    [6, 9],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);
