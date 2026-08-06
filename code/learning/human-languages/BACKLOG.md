@@ -71,6 +71,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
 | HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
 | HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
+| HL-C26 | Complete in this PR | Give the hand-written early chapters a checkable title and label without making them generated. | The 105 chapters with a committed `.tex` but no `targets[]` entry are recorded in a new `handwritten[]` list in `core/book-generation.json`, transcribed from what each `\chapter{}`/`\label{}` actually declares. `generatedBookOutputs` never walks that list, so `check:books` still passes byte-for-byte and no authored chapter can be overwritten; `chapter-title-drift` no longer skips them. |
 
 The illustration licensing question HL06 raised is **settled**. The project owner
 decided on 2026-08-06 that the books stay CC BY-SA 4.0 and that generated
@@ -1862,6 +1863,44 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The audit found 117 authored links across the wider lesson corpus. The 62 not
   yet represented in generated targets remain canonical app content and will
   become live automatically when those chapters migrate to book generation.
+
+## Findings from HL-C26
+
+- The gap is larger than the ledger work suggested: **105** chapters have a committed
+  `book/chapters/ch*.tex` but no `targets[]` entry, across 19 tracks. They are not a
+  scattering of stragglers — they are a contiguous hand-written *prefix* of nearly every
+  book, ending where generation was switched on. French and German chapters 1–16, Spanish
+  7–18, and all of Russian were missing from the informal list this work started from.
+- **A `targets[]` entry is not a description; it is an instruction to generate.**
+  `generatedBookOutputs` renders every target and `runBookGeneration --write` writes the
+  result over the file at `output`. Minting targets for these chapters — the obvious
+  reading of the task — would have destroyed them. Confirmed empirically: adding a target
+  for `latin` ch1 made `check:books` report the committed file stale immediately, and the
+  output it wanted to write was a different 235-line document (banner, regenerated prose,
+  `\label{lesson:LA-C01-salve}` in place of `\label{lesson:salve}`) replacing 168 lines of
+  authored text.
+- The fix is therefore a separate `handwritten[]` list rather than a `generated: false`
+  flag on `targets[]`. The two fail in opposite directions: a flag leaves authored prose
+  one forgotten `if` away from being overwritten, whereas a second array cannot be
+  rendered at all, because `generatedBookOutputs` only ever walks `config.targets`. The
+  worst a mistake in `handwritten[]` can do is leave a chapter unchecked — today's
+  behaviour — instead of destroying it.
+- Every generated chapter opens with `% GENERATED FILE.` and no hand-authored chapter
+  does (270/270 and 0/105). That makes the banner a list-independent check on the
+  generator's claim, and it catches the one mistake the lists cannot see themselves: a
+  chapter *promoted* out of `handwritten[]` into `targets[]`, which leaves the
+  hand-written list and so escapes every check keyed on membership.
+- **Chapter labels follow three incompatible conventions, and they are left alone.** Most
+  hand-written chapters use a bare slug (`ch:greetings`), generated chapters use an
+  ISO-code prefix (`ch:fa-`, `ch:la-`, `ch:it-`, `ch:ar-`), and hand-written Persian,
+  Urdu, and Russian chapters use a language-*name* prefix (`ch:persian-name`,
+  `ch:urdu-name`, `ch:russian-greetings`). So Persian ch2 is `ch:persian-name` while its
+  generated ch3 sibling is `ch:fa-ask-and-answer-names`, in one book. Renormalising would
+  break every existing `\hyperref`, so `handwritten[]` records what each `.tex` declares.
+  No label collides with another inside the same track today. Worth a deliberate decision
+  before HL-C04 makes `chapters.json` canonical.
+- The bare-slug convention means `ch:greetings` is reused across 16 tracks. That is safe
+  only because each track compiles its own PDF; any future combined volume would collide.
 
 ## Completed foundations
 
