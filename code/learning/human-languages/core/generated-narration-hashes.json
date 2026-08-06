@@ -426,6 +426,51 @@
       "jsonHash": "fnv1a64:5d49b0d643c1a74b"
     },
     {
+      "language": "arabic",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:c7782c0d45492fde",
+      "lessonIds": [
+        "AR-C28-dhahaba",
+        "AR-C28-jaa"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch28.txt",
+      "json": "arabic/narration/ch28.json",
+      "textHash": "fnv1a64:e23945113da0309d",
+      "jsonHash": "fnv1a64:3120b315941544a0"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:3cd401a4e59d594a",
+      "lessonIds": [
+        "AR-C29-qala",
+        "AR-C29-raa"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch29.txt",
+      "json": "arabic/narration/ch29.json",
+      "textHash": "fnv1a64:7d987e7d54adfd9e",
+      "jsonHash": "fnv1a64:19bcdf8872c8ac0c"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:bd125585f402d92d",
+      "lessonIds": [
+        "AR-C30-arafa",
+        "AR-C30-akala"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch30.txt",
+      "json": "arabic/narration/ch30.json",
+      "textHash": "fnv1a64:8acde7c824bb8d9a",
+      "jsonHash": "fnv1a64:713202450160efc6"
+    },
+    {
       "language": "bengali",
       "chapter": 1,
       "sourceHash": "fnv1a64:c3d4e5c6853b3e4c",

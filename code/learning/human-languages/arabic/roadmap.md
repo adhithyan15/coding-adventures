@@ -98,11 +98,38 @@ word lessons — never as a gated reading course.
   track ends where it began, on the root **s–l–m**: greeting and farewell from one
   idea. The learner can now hand-write a conversation end to end.
 
+- **Ch. 28–30 — The first verbs**: **ذهب** (*dhahaba*, "he went") → **جاء**
+  (*jāʾa*, "he came") → **قال** (*qāla*, "he said") → **رأى** (*raʾā*, "he
+  saw") → **عرف** (*ʿarafa*, "he knew") → **أكل** (*akala*, "he ate"). One verb
+  per lesson, and the arc where the **root-and-pattern engine** becomes the
+  subject rather than a recurring remark: *dhahaba* opens on **ذ-ه-ب** giving
+  "he went," *dhahab* ("gold") and *madhhab* ("a school of law"), and pays the
+  *ma-* place shape off against the two words English already owns from it,
+  **mosque** (*masjid*) and the **Maghreb** (*maghrib*). A **Grammar Lens**
+  states the fact every later verb depends on — Arabic has **no infinitive**,
+  so the dictionary form is *dhahaba*, "he went," the **فَعَلَ** (*faʿala*)
+  shape. Then the three kinds of **weak root**, each regular in its own way:
+  middle-weak in *jāʾa* (**ج-ي-أ**, the *yāʾ* returning in *majīʾ*) and *qāla*
+  (**ق-و-ل**, the *wāw* returning in *qawl*), final-weak in *raʾā* (**ر-أ-ي**,
+  surfacing as the dotless **ى**). Pattern families carry the vocabulary:
+  *qāʾil*/*maqūl*/*maqāla* on the doer, done-to and place shapes already met in
+  *shukran*; *raʾy* ("opinion" — a *seeing*, the same metaphor as English "in
+  my view") and *mirʾāh* ("mirror") on the instrument shape; *maʿrifa*, *ʿurf*
+  and *al-ʿarīf* — the last of which Spanish borrowed as *alarife* and which is
+  usually read inside the name of the **Generalife** in Granada. *ʿarafa* is
+  also set against *ʿalima* ("to know a fact"), the split Spanish and French
+  make and English does not. *akala* closes the set needing **no new letters**,
+  and says plainly that it has **no English cousin** at all — only a Hebrew
+  twin, *akhal*. New letters, taught inline: **ذ** (*dhāl*), **ق** (*qāf*),
+  **ى** (*alif maqṣūra*) and **ف** (*fāʾ*), the last two a fourth dots-family.
+  **Authored.** These are the corpus's first canonical `VERB-*` realizations in
+  any track, and the first lessons anywhere to reach **A2**.
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 5+ | Numbers, the pattern system (verb forms I–X), family, food — always with the root engine and the Spanish-loanword thread |
+| 31+ | The rest of the core verb set, the present tense, negation, and the pattern system (verb forms I–X) — always with the root engine and the Spanish-loanword thread |
 
 Note: Arabic marks **gender on "you"** (*anta* to a man, *anti* to a woman) —
 a different axis from the Spanish/French/German formal-vs-informal split.
