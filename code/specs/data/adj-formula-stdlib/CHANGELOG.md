@@ -15,3 +15,8 @@ landed and why, not a semver-tracked API.
   (CCSS K.CC.C.6/C.7).
 - `mathematics/cardinality.adj` — `total_cardinality`, composing `arithmetic.adj`'s `sum` to
   find the count of a group made by combining two counted groups (CCSS K.CC.B.4/B.5).
+- `mathematics/place-value.adj` — `tens_and_ones_to_number`, composing `arithmetic.adj`'s
+  `product`/`sum` to compose a two-digit number from its tens and ones digits (CCSS 1.NBT.B.2).
+  Grounds the COMPOSE direction only; DECOMPOSE (a number's tens/ones) needs floor/modulo
+  division, not yet reachable from the plain-arithmetic surface grammar (only the `latex "…"`
+  frontend reaches `ComputeOp::Floor`/`Mod` today) — left for a follow-up.

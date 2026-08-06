@@ -1,0 +1,59 @@
+% ============================================================================
+% place-value.adj — a two-digit number FROM its tens and ones (CCSS-M 1.NBT.B.2).
+% ============================================================================
+% "Understand that the two digits of a two-digit number represent amounts of
+% tens and ones" is the named "base-ten procedures" gap in
+% ADJ-STDLIB-COVERAGE.md 5.1's elementary row — the skill right after the K-2
+% counting/comparison/cardinality trio (`number-sequence.adj`, `comparison.adj`,
+% `cardinality.adj`): a two-digit number IS a composed quantity, tens
+% multiplied by their place value plus the ones. This library grounds the
+% COMPOSE direction (given the two digits, find the number); DECOMPOSE (given
+% the number, find the two digits) needs integer floor/modulo division, which
+% is out of scope for this rung (the plain-arithmetic surface grammar has no
+% built-in floor/mod application yet — only the `latex "…"` frontend reaches
+% `ComputeOp::Floor`/`Mod` today) and is left for a follow-up.
+%
+%     import "place-value.adj"              % transitively imports arithmetic.adj
+%     observe tens(4)                       % "…4 tens…"   (span cited)
+%     observe ones(7)                       % "…7 ones…"   (span cited)
+%     ? tens_and_ones_to_number(tens, ones) % engine → 47, MathWorld-cited
+%
+% Like `number-sequence.adj`/`cardinality.adj`, this states no bare arithmetic
+% of its own — it CALLS the cited `product`/`sum` primitives (RS-1
+% write-once-use-many): the tens digit is multiplied by its place value (10,
+% the definitional claim this library grounds), then the ones digit is added.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitives `product`/`sum`. The import is
+% RELATIVE to this file (same package, arithmetic/ sibling directory).
+% ----------------------------------------------------------------------------
+import "../arithmetic/arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `tens`/`ones` are the two observed digit counts; the result is
+% the composed two-digit number. Rung-0 types each observable slot as
+% `finding`; the `surface` synonyms let a decomposer map everyday phrasing
+% ("tens place", "ones place", "units") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary place_value_vocab {
+    define tens                       : finding  surface "tens", "tens digit", "tens place"
+    define ones                       : finding  surface "ones", "ones digit", "ones place", "units"
+    define tens_and_ones_to_number    : finding  surface "the number", "two-digit number", "value"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formula. `tens_and_ones_to_number(tens, ones) = sum(product(
+% tens, 10), ones)` CALLS the cited `product`/`sum` primitives rather than
+% restating `*`/`+` bare — the citable claim is specifically that each
+% digit's value is that digit multiplied by its place value (10 for the tens
+% place, one position left of the ones place), and the number is their sum.
+% ----------------------------------------------------------------------------
+formulabook place_value {
+    use place_value_vocab
+
+    formula tens_and_ones_to_number(tens, ones) = sum(product(tens, 10), ones)
+        source "Where each digit in a number is multiplied by its place value, and the place value is larger by \"base\" times for each position going left."
+        locator "https://www.mathsisfun.com/definitions/positional-notation.html"
+        trust consensus
+}
