@@ -191,6 +191,12 @@ export {
   type LevelSummary,
   type TrackLevelCoverage,
 } from "./levels.js";
+export {
+  coreVerbConcepts,
+  verbCoverage,
+  type TrackVerbCoverage,
+  type VerbCoverageReport,
+} from "./verbs.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
