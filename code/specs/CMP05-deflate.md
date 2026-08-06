@@ -555,3 +555,4 @@ input.
 | Lua        | `coding_adventures_deflate`           | `busted .`              | CMP02 lzss, DT27        |
 | Perl       | `CodingAdventures::Deflate`           | `prove -l -v t/`        | CMP02 lzss, DT27        |
 | Swift      | `Deflate`                             | `swift test`            | CMP02 lzss, DT27        |
+| C++        | `ca::deflate` (header-only)           | `sh tools/run.sh`        | CMP02 lzss              |
