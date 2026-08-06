@@ -2155,6 +2155,15 @@
       "scriptCommand": "ur"
     },
     {
+      "language": "urdu",
+      "chapter": 6,
+      "title": "Five Verbs at the Core",
+      "label": "ch:ur-core-verbs",
+      "output": "urdu/book/chapters/ch06-core-verbs.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "title": "Nǐ Hǎo — Hello, Character by Character",

@@ -2758,6 +2758,19 @@
         "UR-C05-practice"
       ],
       "tex": "urdu/book/chapters/ch05-take-leave.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:a64f60f1bf438db1",
+      "lessonIds": [
+        "UR-C06-hona",
+        "UR-C06-jana",
+        "UR-C06-ana",
+        "UR-C06-bolna",
+        "UR-C06-janna"
+      ],
+      "tex": "urdu/book/chapters/ch06-core-verbs.tex"
     }
   ]
 }

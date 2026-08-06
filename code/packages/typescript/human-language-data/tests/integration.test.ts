@@ -103,7 +103,9 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "urdu")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3, 4, 5]);
+      // 5 -> 6: Chapter 6 is the Urdu track's first verb chapter (HL core verbs),
+      // so this is the first Urdu chapter whose spine node is A2 rather than A1.
+    ).toEqual([1, 2, 3, 4, 5, 6]);
     expect(
       books.books
         .find((book) => book.language === "russian")
