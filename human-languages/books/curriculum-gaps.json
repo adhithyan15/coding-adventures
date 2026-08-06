@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1133,
+    "totalLessons": 1134,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -25,7 +25,7 @@
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
     "chapterGateCleanTracks": 3,
-    "drivableLessons": 956,
+    "drivableLessons": 957,
     "drivablePercent": 84,
     "chaptersWithoutDrivablePrefix": 44,
     "unexplainedModalityOverrides": 0
@@ -1549,9 +1549,9 @@
       {
         "language": "hindi",
         "status": "mixed",
-        "lessonCount": 84,
+        "lessonCount": 85,
         "versions": {
-          "1": 33,
+          "1": 34,
           "2": 51
         }
       },
@@ -2651,11 +2651,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1133,
-    "voice": 956,
+    "totalLessons": 1134,
+    "voice": 957,
     "sight": 124,
     "pen": 53,
-    "coreVoice": 956,
+    "coreVoice": 957,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 84,
     "tracks": [
@@ -3966,13 +3966,13 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 84,
-        "voice": 70,
+        "lessonCount": 85,
+        "voice": 71,
         "sight": 3,
         "pen": 11,
-        "coreVoice": 70,
-        "drivablePercent": 83,
-        "drivablePrefixTotal": 54,
+        "coreVoice": 71,
+        "drivablePercent": 84,
+        "drivablePrefixTotal": 55,
         "chapters": [
           {
             "language": "hindi",
@@ -4038,16 +4038,16 @@
           {
             "language": "hindi",
             "chapter": 5,
-            "lessonCount": 5,
-            "voice": 4,
+            "lessonCount": 6,
+            "voice": 5,
             "sight": 1,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 5,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": "HI-C05-rahna"
           },
           {

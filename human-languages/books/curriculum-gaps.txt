@@ -1,26 +1,26 @@
 Human Languages curriculum gap report
 ====================================
-22 tracks, 1133 lessons, 22 books
+22 tracks, 1134 lessons, 22 books
 0 lessons at or above 300 effective seconds
 0 unknown prerequisites; 35 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 3 version-2 schema tracks
-956 drivable lessons (84% of the corpus)
+957 drivable lessons (84% of the corpus)
 98 of 377 book chapters without an HL05 capability; 24 payoffs below the 0.5 representativeness floor; 3 tracks already clean
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  956 voice, 124 sight, 53 pen of 1133 lessons; 84% drivable
+  957 voice, 124 sight, 53 pen of 1134 lessons; 84% drivable
   tables of more than 3 column(s) count as sight
-  956 lessons have a voice CORE; 0 carry a detachable writing segment (0 rescued for the hands-free view)
+  957 lessons have a voice CORE; 0 carry a detachable writing segment (0 rescued for the hands-free view)
   arabic: 50 voice, 5 sight, 16 pen; 70% drivable; 27 chapters, 42 lessons reachable in chapter-prefix order
   bengali: 29 voice, 2 sight, 0 pen; 94% drivable; 6 chapters, 24 lessons reachable in chapter-prefix order
   chinese: 5 voice, 2 sight, 0 pen; 71% drivable; 1 chapters, 1 lessons reachable in chapter-prefix order
   french: 58 voice, 12 sight, 3 pen; 79% drivable; 23 chapters, 42 lessons reachable in chapter-prefix order
   german: 65 voice, 8 sight, 3 pen; 86% drivable; 23 chapters, 60 lessons reachable in chapter-prefix order
   gujarati: 30 voice, 3 sight, 0 pen; 91% drivable; 6 chapters, 29 lessons reachable in chapter-prefix order
-  hindi: 70 voice, 3 sight, 11 pen; 83% drivable; 33 chapters, 54 lessons reachable in chapter-prefix order
+  hindi: 71 voice, 3 sight, 11 pen; 84% drivable; 33 chapters, 55 lessons reachable in chapter-prefix order
   italian: 45 voice, 13 sight, 0 pen; 78% drivable; 17 chapters, 38 lessons reachable in chapter-prefix order
   japanese: 1 voice, 7 sight, 0 pen; 13% drivable; 1 chapters, 0 lessons reachable in chapter-prefix order
   kannada: 53 voice, 7 sight, 0 pen; 88% drivable; 31 chapters, 48 lessons reachable in chapter-prefix order
