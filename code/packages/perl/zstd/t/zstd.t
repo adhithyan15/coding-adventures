@@ -234,6 +234,64 @@ subtest 'RT-11: CLI interop, high sequence count' => sub {
 };
 
 # ============================================================================
+# RT-12: CLI interop with Repeated-Offset (R1/R2/R3) sequences
+# ============================================================================
+# RFC 8878 §3.1.1.3.2.1.1 reserves Offset_Value 1..3 for "repeat offsets": a
+# reference to one of three tracked recent match offsets (default 1/4/8),
+# rather than a literal explicit offset. Real `zstd` encoders use this
+# constantly — it is one of their principal entropy wins, especially for
+# periodic/highly-repetitive data — but this port's OWN encoder never emits
+# repeat-offset codes (`_encode_sequences_section` always writes
+# raw_offset = offset + 3 >= 4, i.e. an explicit offset code), so the
+# compress()/decompress() round trip in every other test in this file never
+# exercises the decoder's repeat-offset path.
+#
+# This was a genuine decode-side gap (not caught by TC-9's one fixed prose
+# corpus, whose sequences all happened to land on explicit offsets): given
+# real `zstd`-compressed constant-byte data, the decoder died with
+# "offset underflow (of_raw=1)" instead of recognising Offset_Value=1 as
+# "reuse Repeated_Offset1". Found via the sibling `code/packages/c/zstd` port
+# (PR #9941) fuzzing against the real CLI, confirmed independently reproduced
+# here, and documented in lessons.md (Lesson 98, "Repeated-Offset (R1/R2/R3)
+# sequence decoding"). Fixed by implementing full RFC 8878 repeat-offset
+# decode support, cross-checked against both the RFC prose and the reference
+# C source (`ZSTD_decodeSequence`), mirroring the C-port fix exactly —
+# including the "Literals_Length == 0 shifts the repeat-offset interpretation
+# by one" special case and the frame-scoped (not block-scoped) offset
+# history.
+#
+# Two shapes are tested:
+#   1. 4713 bytes of a single repeated byte — the exact minimal repro found
+#      by the C port: real `zstd` picks a Compressed block (not RLE) with one
+#      sequence, Offset_Value=1 (reuse Repeated_Offset1, which starts at its
+#      default value of 1 — an unmistakable RLE-via-repeat-offset pattern).
+#   2. A short cyclic pattern repeated many times, which tends to produce
+#      several back-to-back sequences at the SAME distance — real `zstd`
+#      typically encodes the second and later occurrences via repeat-offset
+#      (Offset_Value <= 3) rather than re-emitting the same explicit offset,
+#      exercising the rep1/rep2/rep3 rotation across multiple sequences
+#      within one block.
+
+subtest 'RT-12: CLI interop, Repeated-Offset (R1/R2/R3) sequences' => sub {
+    skip_all('zstd CLI not found on PATH — skipping interop test')
+        unless _zstd_cli_available();
+
+    # ── Shape 1: constant-byte data (exact C-port repro) ───────────────────
+    my $const_input      = "Z" x 4713;
+    my $const_compressed = _run_zstd([], $const_input);
+    my $const_decoded    = decompress($const_compressed);
+    is($const_decoded, $const_input,
+       "our decompress() correctly decodes real zstd's repeat-offset output (constant-byte)");
+
+    # ── Shape 2: cyclic pattern, many repetitions at the same distance ─────
+    my $cyclic_input      = ("ABCDE" x 1200);
+    my $cyclic_compressed = _run_zstd([], $cyclic_input);
+    my $cyclic_decoded    = decompress($cyclic_compressed);
+    is($cyclic_decoded, $cyclic_input,
+       "our decompress() correctly decodes real zstd's repeat-offset output (cyclic pattern)");
+};
+
+# ============================================================================
 # ERR-1: Bad magic → exception
 # ============================================================================
 # A frame with the wrong magic number must die (not silently produce garbage).
