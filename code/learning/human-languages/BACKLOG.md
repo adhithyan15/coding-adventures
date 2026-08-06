@@ -70,7 +70,9 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C15 | Queued | Print modality signs and the drivable prefix at every chapter opening. | The book shows 🚗/👁/✍ beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
 | HL-C16 | Queued | Build the narration export (`narration-cli`) with `--write`/`--check`. | Plain-text and structured-JSON scripts emit from the canonical AST with `[PAUSE]`/`[REPEAT]`/`[YOU SAY]` preserved as directives and hash-gated against the lesson AST. This implements the audio-script output HL04 named and nothing ever built. |
 | HL-C17 | Queued | Linearise or reclassify the 322 table-bearing lessons. | Every table either reads correctly aloud or its lesson is honestly marked `sight`; the export never silently drops content. |
-| HL-C18 | Queued | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
+| HL-C18 | Queued — Spanish slice complete | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
+| HL-C18A | Complete | Split the fifteen over-budget Spanish lessons, including the corpus-worst `ES-C31-numeros-11-20` at seven. | Spanish measures zero over-budget lessons; the fifteen become thirty-three prerequisite-ordered micro-lessons and the corpus figure drops from 52 to 37. |
+| HL-C18B | Queued | Split the remaining 37 over-budget lessons across the other sixteen tracks. | Every track measures zero lessons above `maxNewAtomsPerLesson`; the corpus maximum drops from 6 to 3. |
 
 The illustration licensing question HL06 raised is **settled**. The project owner
 decided on 2026-08-06 that the books stay CC BY-SA 4.0 and that generated
@@ -1862,6 +1864,42 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The audit found 117 authored links across the wider lesson corpus. The 62 not
   yet represented in generated targets remain canonical app content and will
   become live automatically when those chapters migrate to book generation.
+
+## Findings from HL-C18A
+
+- Spanish had **fifteen** over-budget lessons, not the two the HL-C18 row named.
+  All fifteen are now split, into **thirty-three** prerequisite-ordered
+  micro-lessons; the corpus grows 1,096 → 1,114 and the over-budget count falls
+  52 → 37, with the maximum dropping from 7 to 6.
+- Splitting was the fix in every case. No lesson was waived, and no atom list
+  was trimmed while the body kept teaching the material — each atom the original
+  introduced is still introduced exactly once, by whichever half now owns it.
+- Every boundary landed on a seam the language already had, not on an atom
+  count. The clearest is `ES-C31-numeros-11-20`: Spanish 11–15 are **fused**
+  Latin compounds (*ūndecim* → *once*, with only a worn *-ce* left of the
+  "ten"), while 16–19 are **transparent** *dieci-* + digit. That is the
+  difference between vocabulary you remember and grammar you generate, so the
+  split falls after *quince* — and Latin's own subtractive *duodēvīgintī* /
+  *ūndēvīgintī*, which Spanish refused to inherit, earns a lesson of its own.
+- Five paired lessons were renamed to single-word ids (`ES-C22-rojo`,
+  `ES-C26-agua`, `ES-C31-once-quince`, `ES-C32-gato`, `ES-C33-verde`) so the
+  filename does not promise content the lesson no longer holds.
+- Seven chapter payoffs moved to the new terminal lesson (Chapters 20, 22, 23,
+  30, 31, 32, 33). `assesses` stays a subset of the payoff lesson's own
+  `practises.knowledge` in every case.
+- No lesson genuinely resisted splitting. The nearest thing to a hard case was
+  `ES-C23-hermano-hermana` at four, where three atoms form one etymological
+  story (*germen* → *germānus* → *hermano*) and the fourth is a sound-history
+  correction about the silent *h*; that becomes a 3 + 1 split, and a one-atom
+  lesson is well inside the corpus norm (median 2).
+- The eighteen new lessons compute between 157 and 275 effective seconds, so the
+  five-minute rule holds with room. Two of them are `writing` lessons, which
+  moves the pinned modality counts: `pen` 51 → 53, `sight` 351 → 360, `voice`
+  694 → 701, drivable share unchanged at 63%.
+- HL-C18B is the remainder: 37 lessons across sixteen tracks, led by German (8),
+  French (6), Sanskrit (3), Urdu (3) and Italian (3). Bengali, Punjabi and
+  Sanskrit each hold a six-atom lesson, all three of them number lessons with
+  the same shape as the Spanish one just split.
 
 ## Completed foundations
 

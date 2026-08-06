@@ -8,7 +8,7 @@ type: phrase
 headword: ¿cómo está usted?
 gloss: how are you? — assemble the formal question from cómo, estar, and usted
 concept_tag: STATE-HOW-ARE-YOU
-prerequisites: [ES-C04-estar, ES-C03-como, ES-C03-tu-usted]
+prerequisites: [ES-C04-estar, ES-C04-estar-estado, ES-C03-como, ES-C03-como-acento, ES-C03-tu-usted, ES-C03-tu-usted-register]
 sounds: [vowel-o, r-tap]
 roots: [quomodo-latin, stare-latin]
 etymology_hook: "cómo (← Latin quōmodo 'in what manner') + está (estar) — 'in what manner are you standing?'"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
 register: formal
 variety: general
-reviews_of: [ES-C04-estar, ES-C03-como, ES-C03-tu-usted]
+reviews_of: [ES-C04-estar-estado, ES-C03-como, ES-C03-tu-usted]
 ---
 
 # ¿cómo está usted? — "how are you?"

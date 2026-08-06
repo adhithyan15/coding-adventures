@@ -6,19 +6,19 @@ sequence: 160
 chapter: 3
 type: word
 headword: tú / usted
-gloss: you (informal / formal)
+gloss: the two words Spanish has for "you" — and the one English quietly retired
 concept_tag: PRONOUN-YOU
 prerequisites: [ES-C03-me-llamo]
 sounds: [vowel-u, accent-mark, d-soft]
 roots: [tu-latin]
 duration:
-  max_seconds: 240
+  max_seconds: 200
 requires:
   knowledge: [ES-LEX-ME, ES-LEX-ME-LLAMO]
 introduces:
-  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-TU-THOU]
+  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-TU-THOU]
 practises:
-  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON]
+  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-TU-THOU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -27,20 +27,20 @@ variety: general
 reviews_of: [ES-C03-me-llamo]
 ---
 
-# tú and usted — two words for "you," and why you must choose
+# tú and usted — two words for "you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] English has one word for "you." Spanish has two, and picking the
-wrong one can send the wrong social signal. This lesson gives you both and
-shows the everyday choice. The remarkable history of *usted* comes next.
+[PAUSE 2s] English has one word for "you." Spanish has two. Today you get
+both words and what each one is for. What the choice *means* socially — and
+the odd grammar *usted* drags along with it — comes in the next lesson.
 
 ## The two words
 <!-- hl-knowledge: introduces=[ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-TU-THOU]; assesses=[] -->
 
 **tú** — "you," **informal**. For friends, family, children, peers, anyone
-you're on easy terms with.
+you are on easy terms with.
 
 > Root: Latin **tū**. This is a **true cousin** of English **thou** — the
 > word English used to have for exactly this job, the intimate "you"
@@ -49,25 +49,14 @@ you're on easy terms with.
 > uses, every day, the pronoun English quietly retired.
 
 **usted** — "you," **formal**. For strangers, elders, officials, customers,
-anyone you're showing respect or keeping distance with.
+anyone you are showing respect or keeping distance with.
 
-## Grammar Lens: the choice English lost
-<!-- hl-knowledge: introduces=[ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON]; assesses=[] -->
-
-Both are **subject pronouns** — the "doer" word, like *yo* ("I"). But they
-carry a second layer English dropped when *thou* died: **social register**.
-Choosing *tú* vs. *usted* tells the listener how you see the relationship —
-close or respectful. English "you" is one-size-fits-all; a Spanish speaker
-must decide every time.
-
-One structural surprise, because it explains the next lessons: **usted takes
-*he/she* verb forms**, not the informal "you" forms. That's why "what's your name?" formally is
-*¿cómo **se llama** usted?* (the *se llama* you'd use for "he calls himself")
-and not *te llamas*. The next micro-lesson explains the history behind that
-third-person pattern.
+Both are **subject pronouns** — the "doer" word, like *yo* ("I"). Say them
+enough times that they come out without hunting: *tú*, one syllable with the
+accent; *usted*, stress on the second, with a very soft final *d*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-TU-THOU] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tú" — for a close friend]
@@ -75,8 +64,9 @@ third-person pattern.
 - [YOU SAY: "tú" then English "thou" — the retired twin]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-TU-THOU] -->
 
-[PAUSE 3s] Which is formal, *tú* or *usted*? (*usted*.) What English pronoun
-is the lost twin of *tú*? (*Thou*.) Which verb pattern does *usted* take?
-(The same form used with "he" or "she.")
+[PAUSE 3s] Which is formal, *tú* or *usted*? (*Usted*.) What English pronoun
+is the lost twin of *tú*, and what happened to it? (*Thou* — it faded out of
+English around 400 years ago.) Next: what picking one of them tells your
+listener.

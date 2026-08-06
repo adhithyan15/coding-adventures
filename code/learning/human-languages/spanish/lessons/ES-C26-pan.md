@@ -8,7 +8,7 @@ type: word
 headword: el pan
 gloss: bread — and the compañero who shares it with you
 concept_tag: ES-FOOD-BREAD
-prerequisites: [ES-C26-agua-vino]
+prerequisites: [ES-C26-agua, ES-C26-vino]
 sounds: [nasal-none, short-vowel]
 roots: [panis-latin]
 etymology_hook: "pan ← Latin panis 'bread' → compañero ('one you share bread with', com- + panis) — the very same word-story as English companion, and Spanish keeps BOTH the bread and the friendship"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C26-agua-vino]
+reviews_of: [ES-C26-agua, ES-C26-vino]
 ---
 
 # el pan — bread, and the friend who shares it

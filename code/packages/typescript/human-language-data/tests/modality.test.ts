@@ -519,25 +519,26 @@ describe("corpus regression", () => {
   // dangerously, a block field rename that makes every lesson look clean — moves it
   // and fails here instead of shipping a curriculum falsely advertised as drivable.
   //
-  // Reproduces the HL08 baseline: 51 `pen`, 7 script-block lessons, and 322
-  // table-bearing lessons among the remaining 1,038. HL08 records 695 drivable from
-  // 56 cue-bearing lessons; this implementation's published cue list matches 61 and
-  // therefore lands on 694. The spec's exact cue list was never recorded, and the
-  // detector is deliberately NOT tuned to close a one-lesson gap.
+  // Reproduces the HL08 baseline, moved forward by HL-C18: 53 `pen`, 7 script-block
+  // lessons, and 333 table-bearing lessons among the remaining 1,054. HL08 recorded
+  // 695 drivable from 56 cue-bearing lessons against a 1,096-lesson corpus; splitting
+  // the fifteen over-budget Spanish lessons into 33 micro-lessons added 18 lessons
+  // (two of them `writing`), so the pins move together while the drivable share holds
+  // at 63%. The detector is deliberately NOT tuned to chase these numbers.
   it("pins the corpus-wide drivable count", () => {
     const { lessons } = loadEverything();
     const summary = summarizeModality(lessons);
-    expect(summary.totalLessons).toBe(1096);
-    expect(summary.pen).toBe(51);
-    expect(summary.voice).toBe(694);
-    expect(summary.sight).toBe(351);
+    expect(summary.totalLessons).toBe(1114);
+    expect(summary.pen).toBe(53);
+    expect(summary.voice).toBe(701);
+    expect(summary.sight).toBe(360);
     expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
     expect(summary.drivablePercent).toBe(63);
   });
 
   it("pins the structural counts the derivation is built on", () => {
     const { lessons } = loadEverything();
-    expect(lessons.filter((entry) => entry.realization.type === "writing")).toHaveLength(51);
+    expect(lessons.filter((entry) => entry.realization.type === "writing")).toHaveLength(53);
     const nonWriting = lessons.filter((entry) => entry.realization.type !== "writing");
     expect(
       nonWriting.filter((entry) => entry.blocks.some((block) => block.type === "script")),
@@ -545,10 +546,10 @@ describe("corpus regression", () => {
     const remaining = nonWriting.filter(
       (entry) => !entry.blocks.some((block) => block.type === "script"),
     );
-    expect(remaining).toHaveLength(1038);
+    expect(remaining).toHaveLength(1054);
     expect(
       remaining.filter((entry) => widestTableColumns(lessonText(entry)) > 0),
-    ).toHaveLength(322);
+    ).toHaveLength(333);
   });
 
   it("keeps the corpus free of unexplained overrides", () => {

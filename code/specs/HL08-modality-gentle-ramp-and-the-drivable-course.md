@@ -66,14 +66,20 @@ Knowledge atoms introduced per schema-v2 lesson:
 | Mean | 2.31 |
 | Median | 2 |
 | p90 | 3 |
-| Max | **7** (`ES-C31-numeros-11-20`) |
+| Max | **7** (`ES-C31-numeros-11-20`, since split by HL-C18) |
 | Lessons introducing more than 3 | 52 |
 | Lessons introducing more than 5 | 5 |
 
 The curriculum is already gentle in aggregate. What it lacks is a floor: nothing stops
-the next lesson from introducing nine atoms, and the current worst case teaches ten
+the next lesson from introducing nine atoms, and the original worst case taught ten
 numbers at once — precisely the "drilling ten greetings" antipattern HL00 was written
 to reject.
+
+**Burn-down (HL-C18, Spanish slice).** The fifteen over-budget Spanish lessons became
+thirty-three prerequisite-ordered micro-lessons, dropping the corpus figure from 52 to
+37 and the corpus maximum from 7 to 6. `ES-C31-numeros-11-20` is now the four-lesson
+chain `ES-C31-once-quince` → `ES-C31-dieciseis-diecinueve` → `ES-C31-teens-latinos` →
+`ES-C31-veinte`. The remaining 37 belong to sixteen other tracks and are unchanged.
 
 ## Modality
 

@@ -166,9 +166,9 @@
       "canDo": "I can apologise in Spanish and choose between lo siento and perdón.",
       "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
       "payoff": {
-        "lesson": "ES-C20-lo-siento",
+        "lesson": "ES-C20-perdon",
         "kind": "task",
-        "summary": "Say lo siento for regret and perdón for fault or for catching someone's attention, hearing sentir — I feel it — inside the first.",
+        "summary": "Say lo siento for regret and perdón for fault or for catching someone's attention, hearing sentir — I feel it — inside the first and dōnāre — to give completely — inside the second.",
         "assesses": [
           "ES-LEX-POR-FAVOR",
           "ES-LEX-LO-SIENTO-01",
@@ -203,9 +203,9 @@
       "canDo": "I can name black, white, red and blue in Spanish and say which of them Spanish borrowed rather than inherited.",
       "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
       "payoff": {
-        "lesson": "ES-C22-rojo-azul",
+        "lesson": "ES-C22-azul",
         "kind": "task",
-        "summary": "Say negro, blanco, rojo and azul, then sort them by origin: two inherited from Latin, one traditionally linked to the Germanic Visigoths, and azul carried in from Arabic lāzaward.",
+        "summary": "Say negro, blanco, rojo and azul, then sort them by origin: negro inherited from Latin, blanco traditionally linked to the Germanic Visigoths, rojo a cousin of English red by a different Latin branch, and azul carried in from Arabic lāzaward.",
         "assesses": [
           "ES-ETYMON-NEGRO-02",
           "ES-ETYMON-BLANCO-04",
@@ -223,9 +223,9 @@
       "canDo": "I can name my parents and my siblings in Spanish and explain why hermano is not built on Latin's word for brother.",
       "spineNodes": ["SPINE-EXCHANGE-NAMES"],
       "payoff": {
-        "lesson": "ES-C23-hermano-hermana",
+        "lesson": "ES-C23-hermano-hache",
         "kind": "task",
-        "summary": "Give el padre, la madre, el hermano and la hermana, then trace hermano back through germānus to germen, the seed, rather than to frāter.",
+        "summary": "Give el padre, la madre, el hermano and la hermana, trace hermano back through germānus to germen, the seed, rather than to frāter, and separate its silent h from the once-spoken h of hijo and hacer.",
         "assesses": [
           "ES-LEX-SIBLINGS-01",
           "ES-ETYMON-GERMANUS-02",
@@ -344,7 +344,7 @@
       "canDo": "I can talk about the weather in Spanish and know why llueve refuses to join hace.",
       "spineNodes": ["SPINE-TIME-OF-DAY"],
       "payoff": {
-        "lesson": "ES-C30-el-tiempo",
+        "lesson": "ES-C30-llueve",
         "kind": "task",
         "summary": "Ask about el tiempo, answer hace calor, hace frío, hace sol, then switch to llueve — a verb of its own, whose ll- is the same sound change that gave llamar.",
         "assesses": [
@@ -365,9 +365,9 @@
       "canDo": "I can count from eleven to twenty in Spanish and say where the fused Latin teens stop and the ten-and-X ones begin.",
       "spineNodes": ["SPINE-COUNT-ONE-TO-FIVE"],
       "payoff": {
-        "lesson": "ES-C31-numeros-11-20",
+        "lesson": "ES-C31-veinte",
         "kind": "task",
-        "summary": "Run once to quince as fused Latin compounds, then dieciséis to diecinueve as transparent ten-and-X, closing on veinte.",
+        "summary": "Run once to quince as fused Latin compounds, then dieciséis to diecinueve as a ten-and-X template, say why Latin's own subtractive 18 and 19 did not survive, and close on veinte.",
         "assesses": [
           "ES-LEX-NUMBERS-11-15-01",
           "ES-ETYMON-NUMBERS-11-15-02",
@@ -386,7 +386,7 @@
       "canDo": "I can name a dog and a cat in Spanish and say which of the two words still has no agreed origin.",
       "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
       "payoff": {
-        "lesson": "ES-C32-perro-gato",
+        "lesson": "ES-C32-perro",
         "kind": "task",
         "summary": "Say gato and perro, trace cattus back toward Egypt, then admit that perro — which pushed out the older can — has no settled etymology at all.",
         "assesses": [
@@ -404,7 +404,7 @@
       "canDo": "I can name green and yellow in Spanish and explain why amarillo is built on the word for bitter.",
       "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
       "payoff": {
-        "lesson": "ES-C33-verde-amarillo",
+        "lesson": "ES-C33-amarillo",
         "kind": "task",
         "summary": "Say verde and amarillo, tie verde to virēre, to flourish, and amarillo to amarellus, a little bitter — the same root as everyday amargo.",
         "assesses": [

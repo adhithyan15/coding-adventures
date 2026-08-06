@@ -6,19 +6,19 @@ sequence: 180
 chapter: 3
 type: word
 headword: cómo
-gloss: how
+gloss: how — a whole Latin phrase, quo modo, worn smooth into one word
 concept_tag: QUESTION-HOW
 prerequisites: [ES-C02-practice]
-sounds: [accent-mark, soft-c, inverted-marks]
+sounds: [accent-mark, soft-c]
 roots: [quomodo]
 duration:
-  max_seconds: 240
+  max_seconds: 210
 requires:
   knowledge: [ES-SOUND-WRITTEN-ACCENT]
 introduces:
-  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT, ES-ETYMON-QUOMODO]
+  knowledge: [ES-LEX-COMO, ES-ETYMON-QUOMODO]
 practises:
-  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT]
+  knowledge: [ES-LEX-COMO, ES-ETYMON-QUOMODO]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,66 +33,45 @@ reviews_of: [ES-C01-dia]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] To ask someone's name or how they are, you need this word first.
-*cómo* — "how" — and it carries a little word for "manner" you already own in
-English.
-
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[ES-SCRIPT-INVERTED-QUESTION]; assesses=[] -->
-
-- `inverted-marks` — Spanish questions open with an upside-down **¿** so you
-  see the question coming: *¿cómo…?*
-- `accent-mark` — the accent on **ó** marks the stress *and* flags it as a
-  question word (see below): *CÓ-mo*.
+*Cómo* — "how" — and hiding inside it is a little Latin word for "manner"
+that you already own a dozen English versions of.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-COMO, ES-ETYMON-QUOMODO]; assesses=[] -->
 
-**cómo** — "how." Root: Latin **quomodo** — a fused little phrase, *quo modo*,
-"in what **manner**."
+**cómo** — "how." Root: Latin **quo modo** — not a word but a **two-word
+phrase**, "in what **manner**."
 
 **The two halves, and their English cousins:**
 
-- *modo* ("manner, measure") → English **mode**, **mod**al, **model**,
-  **mod**erate, **mod**ify, com**mod**ity.
-- *quo* ("in what") is the Latin question-stem **qu-** — the seed of almost
-  every Spanish question word (see the family below).
+- *modo* ("manner, measure") → English **mode**, **modal**, **model**,
+  **moderate**, **modify**, com**mod**ity.
+- *quo* ("in what") is the Latin question-stem **qu-**, the seed of nearly
+  every Spanish question word.
 
-**How *quomodo* became *cómo* — the wearing-down.** Spanish didn't borrow
-*cómo* ready-made; it *eroded* out of *quomodo* over centuries of everyday
-speech. The final *-do* fell off and the middle collapsed:
+**How the phrase became one word — the wearing-down.** Spanish did not
+borrow *cómo* ready-made; it **eroded** out of *quo modo* over centuries of
+everyday speech. The final *-do* fell off and the middle collapsed:
 
 > *quomodo* → *quomo* → **como**
 
-The *qu-* (a *kw* sound) flattened to a plain *k* (written *c* before *o*).
-What's left is *quomodo* worn smooth — the way a pebble loses its edges in a
-river. The same erosion gave Italian *come*, Portuguese *como*, French
-*comme*. The accent in *cómo* is the one late addition: Spanish stamps it on
-to mark the question (vs. accent-less *como*, "like / as").
-
-## Grammar Lens: the accent that marks a question
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-QUESTION-ACCENT]; assesses=[] -->
-
-Watch the accent mark do real work. **cómo** (with the accent) = "how?", the
-question word. **como** (no accent) = "like / as," or "I eat." Same letters,
-and the written accent is the *only* thing telling you it's a question:
-
-- *¿**Cómo** estás?* — "**How** are you?"
-- ***Como** tú.* — "Like you." / *Yo **como**.* — "I eat."
-
-English has no such marker — it relies on word order and context. Spanish
-puts a visible flag on the question word. Every question word you'll learn
-(*qué, dónde, cuándo, quién…*) carries this accent for the same reason.
+The *qu-* (a *kw* sound) flattened to a plain *k*, written *c* before *o*.
+What is left is a whole Latin phrase worn smooth — the way a pebble loses
+its edges in a river. The same erosion gave Italian *come*, Portuguese
+*como*, French *comme*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-ETYMON-QUOMODO] -->
 
 [PAUSE 1s]
-- [YOU SAY: "¿cómo?" — with question intonation]
+- [YOU SAY: "cómo" — *CÓ-mo*, stress on the first syllable]
 - [YOU SAY: "cómo" then English "mode", "model" — the *modo* root]
+- [YOU SAY: the erosion — "quo modo, quomo, como"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-ETYMON-QUOMODO] -->
 
-[PAUSE 3s] Walk the erosion: *quomodo* → ? → *cómo* (*quomo* → *como*, then
-the question-accent). What changes when the accent disappears? (*como* is no
-longer the question word "how.")
+[PAUSE 3s] What does *cómo* mean? ("How.") Walk the erosion: *quo modo* → ?
+→ *cómo*. (*Quomo* → *como*.) What did the two Latin halves mean? (*Quo*,
+"in what"; *modo*, "manner" — the root of English *mode* and *model*.) Next:
+the two marks Spanish puts on a question.
