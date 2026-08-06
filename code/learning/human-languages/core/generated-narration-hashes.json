@@ -5576,6 +5576,25 @@
       "jsonHash": "fnv1a64:5c5de448dada4d4e"
     },
     {
+      "language": "tamil",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:4dd37565979d56c1",
+      "lessonIds": [
+        "TA-C32-iru",
+        "TA-C32-po",
+        "TA-C32-vaa",
+        "TA-C32-saappidu",
+        "TA-C32-paar",
+        "TA-C32-teri"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "tamil/narration/ch32.txt",
+      "json": "tamil/narration/ch32.json",
+      "textHash": "fnv1a64:38557cf06f796458",
+      "jsonHash": "fnv1a64:abadf3ea1b02b4e9"
+    },
+    {
       "language": "telugu",
       "chapter": 1,
       "sourceHash": "fnv1a64:3459acb100727861",

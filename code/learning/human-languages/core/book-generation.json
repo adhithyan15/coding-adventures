@@ -1804,6 +1804,14 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:ta-core-verbs",
+      "output": "tamil/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "title": "Numbers One to Ten",

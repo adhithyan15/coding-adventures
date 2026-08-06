@@ -2483,6 +2483,20 @@
       "tex": "tamil/book/chapters/ch31-good-afternoon.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:4dd37565979d56c1",
+      "lessonIds": [
+        "TA-C32-iru",
+        "TA-C32-po",
+        "TA-C32-vaa",
+        "TA-C32-saappidu",
+        "TA-C32-paar",
+        "TA-C32-teri"
+      ],
+      "tex": "tamil/book/chapters/ch32-core-verbs.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:a0d2c6d28e4fa358",

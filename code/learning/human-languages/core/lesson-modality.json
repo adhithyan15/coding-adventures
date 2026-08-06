@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e1f5b54f9094e40b",
+  "sourceHash": "fnv1a64:db01ffef1ffd7074",
   "summary": {
-    "totalLessons": 1154,
-    "voice": 977,
+    "totalLessons": 1160,
+    "voice": 983,
     "sight": 124,
     "pen": 53,
-    "drivableLessons": 977,
+    "drivableLessons": 983,
     "drivablePercent": 85,
     "trackCount": 22,
-    "chapterCount": 382,
-    "drivablePrefixTotal": 845,
-    "fullyDrivableChapters": 289,
+    "chapterCount": 383,
+    "drivablePrefixTotal": 851,
+    "fullyDrivableChapters": 290,
     "unstartableChapters": 44,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -5805,12 +5805,12 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 83,
-      "voice": 67,
+      "lessonCount": 89,
+      "voice": 73,
       "sight": 8,
       "pen": 8,
-      "drivablePercent": 81,
-      "drivablePrefixTotal": 53,
+      "drivablePercent": 82,
+      "drivablePrefixTotal": 59,
       "modalities": [
         "voice",
         "sight",
@@ -6336,6 +6336,27 @@
           "drivableLessonIds": [
             "TA-C31-matiya-vanakkam",
             "TA-C31-afternoon-greeting-root"
+          ]
+        },
+        {
+          "chapter": 32,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C32-iru",
+            "TA-C32-po",
+            "TA-C32-vaa",
+            "TA-C32-saappidu",
+            "TA-C32-paar",
+            "TA-C32-teri"
           ]
         }
       ]
@@ -20980,6 +21001,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:0f94f0e85cdff5f4"
+    },
+    {
+      "id": "TA-C32-iru",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 610,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d66cfc3bade90237"
+    },
+    {
+      "id": "TA-C32-po",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19f2c25a59f0f982"
+    },
+    {
+      "id": "TA-C32-vaa",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d11abac17fa8c52"
+    },
+    {
+      "id": "TA-C32-saappidu",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb3c1c1696795fe0"
+    },
+    {
+      "id": "TA-C32-paar",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39ea79380f0de2f5"
+    },
+    {
+      "id": "TA-C32-teri",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43e3caa79eab7344"
     },
     {
       "id": "TE-C01-avunu",
