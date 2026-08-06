@@ -1,0 +1,3 @@
+_build/
+zstd_test_*.bin
+zstd_test_*.zst

@@ -578,4 +578,99 @@ final class ZstdTests: XCTestCase {
             try assertCliInterop(data, zstdPath: zstdPath, label: label)
         }
     }
+
+    // =========================================================================
+    // TC-16: Repeated-Offset (R1/R2/R3) decode — lessons.md Lesson 98
+    // =========================================================================
+    //
+    // RFC 8878 §3.1.1.3.2.1.1 defines a Repeated_Offset mechanism: when the
+    // decoded Offset_Value for a sequence is 1, 2, or 3, the actual match
+    // offset is NOT `Offset_Value - 3` (which would underflow) — it is looked
+    // up from a 3-entry offset HISTORY (Repeated_Offset1/2/3, seeded 1/4/8 at
+    // the start of a frame and updated after every sequence). Real `zstd`
+    // encoders reach for this constantly: reusing the previous match's
+    // distance is one of the format's principal entropy wins, especially for
+    // periodic or highly repetitive data.
+    //
+    // This package's own ENCODER intentionally never emits repeat-offset
+    // codes — `encodeSequencesSection`'s minimum possible LZ77 offset is 1,
+    // so `rawOff = offset + 3 >= 4` always, meaning `ofCode` is always >= 2.
+    // That is a deliberate educational simplification on the ENCODE side
+    // only (see `code/packages/c/zstd`'s `zstd.h` for the same documented
+    // choice). But a DECODER that only understands explicit offset codes
+    // will fail on a meaningful fraction of real-world `.zst` files, because
+    // it can never round-trip through this package's own encoder/decoder
+    // pair — no internal self-consistency test can catch the gap. It only
+    // shows up against an INDEPENDENT, spec-conformant encoder: the real
+    // `zstd` CLI. See lessons.md Lesson 98 (found while implementing
+    // `code/packages/c/zstd`, PR #9941) for the sibling bug in the C port,
+    // which this package inherited from the same design lineage (Lesson 96's
+    // FSE codec was fixed repo-wide, but repeat-offset decode was never
+    // implemented in any port to begin with).
+    //
+    // Lesson 98's own minimal repro (4713 bytes of a single repeated byte
+    // compressed by the real CLI) picks a single Compressed block containing
+    // one sequence with `Offset_Value = 1` — "reuse Repeated_Offset1", which
+    // starts at its default value of 1 — an unmistakable RLE-via-repeat-
+    // offset pattern that a naive `offset = Offset_Value - 3` decode
+    // corrupts into a huge bogus offset (correctly rejected by the
+    // offset-bounds guard, but for the wrong reason: the frame was valid).
+    //
+    // `runLengths` below repeats that repro at a size chosen so real `zstd`
+    // picks a Compressed block (not RLE, which sidesteps the sequences
+    // codec entirely), and `periodicOffsets` adds a case built from two
+    // interleaved periods so the encoder is likely to reuse more than one
+    // distance, exercising Repeated_Offset2/3 as well as Repeated_Offset1.
+
+    func testTC16RepeatedOffsetDecode() throws {
+        guard let zstdPath = findZstdCLI() else {
+            throw XCTSkip("real `zstd` CLI not found on PATH; skipping interop test")
+        }
+
+        var cases: [(String, [UInt8])] = []
+
+        // Lesson 98's exact repro shape: a long run of one repeated byte.
+        // Large enough, and with just enough entropy noise (a handful of
+        // distinct bytes) that the real CLI is not guaranteed to fold the
+        // whole thing into a single RLE block, while still being dominated
+        // by one back-reference distance reused sequence after sequence.
+        do {
+            var data = [UInt8](repeating: UInt8(ascii: "Z"), count: 4713)
+            // Sprinkle a few different bytes in so the block has more than
+            // one literal run, forcing multiple sequences (each reusing the
+            // same distance) rather than one giant match.
+            for i in stride(from: 100, to: data.count, by: 137) {
+                data[i] = UInt8(ascii: "Q")
+            }
+            cases.append(("lesson98-repeated-byte", data))
+        }
+
+        // Two interleaved back-to-back-match periods: forces the encoder to
+        // alternate between (at least) two distinct recent offsets, which
+        // real zstd encodes via Repeated_Offset1 AND Repeated_Offset2/3
+        // shortcuts once each distance has been used before.
+        do {
+            let a = Array("ABCDEFGHIJ".utf8)   // period-10 run
+            let b = Array("0123456789012".utf8) // period-13 run
+            var data: [UInt8] = []
+            for _ in 0..<300 {
+                data.append(contentsOf: a)
+                data.append(contentsOf: b)
+            }
+            cases.append(("interleaved-periods", data))
+        }
+
+        for (label, data) in cases {
+            // Compress with the REAL zstd CLI (an independent, spec-
+            // conformant encoder that uses repeat-offsets freely), decompress
+            // with OUR decoder. This is the direction Lesson 98 lives in.
+            let cliCompressed = try runZstdCLI(zstdPath, args: ["-c", "-19"], stdin: Data(data))
+            let decodedByOurs = try decompress([UInt8](cliCompressed))
+            XCTAssertEqual(
+                decodedByOurs, data,
+                "[\(label)] our decoder failed to correctly decode real `zstd` output " +
+                "using Repeated-Offset (R1/R2/R3) sequences — RFC 8878 §3.1.1.3.2.1.1 " +
+                "(lessons.md Lesson 98)")
+        }
+    }
 }
