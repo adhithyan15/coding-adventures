@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 1096,
+    "totalLessons": 1100,
     "authoredBooks": 20,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -22,7 +22,7 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 1,
-    "drivableLessons": 708,
+    "drivableLessons": 712,
     "drivablePercent": 65,
     "chaptersWithoutDrivablePrefix": 121,
     "unexplainedModalityOverrides": 0
@@ -1475,9 +1475,9 @@
       {
         "language": "latin",
         "status": "version-2",
-        "lessonCount": 53,
+        "lessonCount": 57,
         "versions": {
-          "2": 53
+          "2": 57
         }
       },
       {
@@ -1646,8 +1646,8 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 0,
-    "totalLessons": 1096,
-    "voice": 708,
+    "totalLessons": 1100,
+    "voice": 712,
     "sight": 337,
     "pen": 51,
     "drivablePercent": 65,
@@ -3950,12 +3950,12 @@
       },
       {
         "language": "latin",
-        "lessonCount": 53,
-        "voice": 43,
+        "lessonCount": 57,
+        "voice": 47,
         "sight": 10,
         "pen": 0,
-        "drivablePercent": 81,
-        "drivablePrefixTotal": 41,
+        "drivablePercent": 82,
+        "drivablePrefixTotal": 45,
         "chapters": [
           {
             "language": "latin",
@@ -4196,14 +4196,14 @@
           {
             "language": "latin",
             "chapter": 19,
-            "lessonCount": 2,
-            "voice": 2,
+            "lessonCount": 3,
+            "voice": 3,
             "sight": 0,
             "pen": 0,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 3,
             "firstNonVoiceLesson": null
           },
           {
@@ -4222,14 +4222,14 @@
           {
             "language": "latin",
             "chapter": 21,
-            "lessonCount": 2,
-            "voice": 2,
+            "lessonCount": 3,
+            "voice": 3,
             "sight": 0,
             "pen": 0,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 3,
             "firstNonVoiceLesson": null
           },
           {
@@ -4378,14 +4378,14 @@
           {
             "language": "latin",
             "chapter": 33,
-            "lessonCount": 2,
-            "voice": 2,
+            "lessonCount": 3,
+            "voice": 3,
             "sight": 0,
             "pen": 0,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 3,
             "firstNonVoiceLesson": null
           },
           {
@@ -4417,14 +4417,14 @@
           {
             "language": "latin",
             "chapter": 36,
-            "lessonCount": 2,
-            "voice": 2,
+            "lessonCount": 3,
+            "voice": 3,
             "sight": 0,
             "pen": 0,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 3,
             "firstNonVoiceLesson": null
           }
         ]

@@ -1,16 +1,16 @@
 Human Languages curriculum gap report
 ====================================
-20 tracks, 1096 lessons, 20 books
+20 tracks, 1100 lessons, 20 books
 0 lessons at or above 300 effective seconds
 0 unknown prerequisites; 35 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 1 version-2 schema tracks
-708 drivable lessons (65% of the corpus)
+712 drivable lessons (65% of the corpus)
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  708 voice, 337 sight, 51 pen of 1096 lessons; 65% drivable
+  712 voice, 337 sight, 51 pen of 1100 lessons; 65% drivable
   tables of more than 0 column(s) count as sight
   arabic: 37 voice, 18 sight, 16 pen; 52% drivable; 27 chapters, 31 lessons reachable in chapter-prefix order
   bengali: 28 voice, 3 sight, 0 pen; 90% drivable; 6 chapters, 23 lessons reachable in chapter-prefix order
@@ -20,7 +20,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   hindi: 62 voice, 11 sight, 11 pen; 74% drivable; 33 chapters, 41 lessons reachable in chapter-prefix order
   italian: 25 voice, 33 sight, 0 pen; 43% drivable; 17 chapters, 13 lessons reachable in chapter-prefix order
   kannada: 46 voice, 14 sight, 0 pen; 77% drivable; 31 chapters, 43 lessons reachable in chapter-prefix order
-  latin: 43 voice, 10 sight, 0 pen; 81% drivable; 36 chapters, 41 lessons reachable in chapter-prefix order
+  latin: 47 voice, 10 sight, 0 pen; 82% drivable; 36 chapters, 45 lessons reachable in chapter-prefix order
   malayalam: 51 voice, 13 sight, 0 pen; 80% drivable; 31 chapters, 49 lessons reachable in chapter-prefix order
   marathi: 28 voice, 7 sight, 0 pen; 80% drivable; 6 chapters, 20 lessons reachable in chapter-prefix order
   persian: 18 voice, 2 sight, 0 pen; 90% drivable; 5 chapters, 15 lessons reachable in chapter-prefix order
