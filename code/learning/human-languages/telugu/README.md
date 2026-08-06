@@ -2,10 +2,9 @@
 
 The eighth track of the [Human Languages](../README.md) curriculum, the third
 of the four Dravidian tracks (after [Tamil](../tamil/README.md) the anchor and
-[Kannada](../kannada/README.md)), on the same
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) framework:
-one word per lesson, slug ids, atom-first assembly, derivations shown, LaTeX
-book.
+[Kannada](../kannada/README.md)), built the same way as:
+one word per lesson, taken apart and traced to its root; the
+pieces taught before the whole; and a book you can read straight through.
 
 ## What's different about the Telugu track
 
@@ -36,21 +35,27 @@ book.
   **mī pēru ēmiṭi?** ("what's your name?"), santōṣam, practice. Every atom
   traced (*pēru* ← *\*pēr*, twin of Tamil *peyar*; *santōṣam* Sanskrit). In the
   book.
-- **Chapter 3 — How Are You** ([`lessons/TE-C03-*`](./lessons/)): elā, **mīru elā
-  unnāru?**, nēnu, bāgā, paravālēdu, practice. The verb *uṇḍu* ("to be"); Telugu's
-  own *lēdu* where its sisters use *illa*. In the book.
+- **Chapter 3 — How Are You** ([`lessons/TE-C03-*`](./lessons/)): elā, **mīru
+  elā unnāru?**, nēnu, bāgā, paravālēdu, practice. The verb *uṇḍu* ("to be");
+  Telugu's own *lēdu* where its sisters use *illa*. In the book.
 - **Chapter 4 — Farewells** ([`lessons/TE-C04-*`](./lessons/)): veḷḷu/vaccu,
   **veḷḷi vastānu** ("I'll go and come back"), rēpu kaluddām, maḷḷī kaluddām,
   practice. The Dravidian promise-of-return goodbye. In the book.
-- **Chapter 5 — First Verbs** ([`lessons/TE-C05-*`](./lessons/)): māṭlāḍu, **nēnu
-  telugu māṭlāḍatānu**, uṇḍu, pani cēyu, practice. Stem + tense + person; no
-  1st-person gender. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/TE-C05-*`](./lessons/)): māṭlāḍu,
+  **nēnu telugu māṭlāḍatānu**, uṇḍu, pani cēyu, practice. Stem + tense +
+  person; no 1st-person gender. In the book.
 - **Chapters 6–31 — Cases, numbers, courtesy, calendar, family, body, food,
   time, weather, animals, colours, and greetings**
   ([`lessons/TE-C{06..31}-*`](./lessons/)): thirty prerequisite-ordered
   micro-lessons continue the same inline script, grammar, and etymology method.
-  All are schema v2, stay below five minutes, and generate twenty-six book
-  chapters from the exact canonical sources consumed by Language Ladder.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities
 

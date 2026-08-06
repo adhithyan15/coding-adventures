@@ -1,9 +1,8 @@
 # Arabic
 
-The fourth track of the [Human Languages](../README.md) curriculum, on the
-same [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md)
-framework: one word per lesson, slug ids, atom-first assembly, derivations
-shown, LaTeX book.
+The fourth track of the [Human Languages](../README.md) curriculum, built the
+same way as: one word per lesson, taken apart and traced to its root; the
+pieces taught before the whole; and a book you can read straight through.
 
 ## What's different about the Arabic track
 
@@ -17,16 +16,15 @@ Two more things:
 
 - **The script is taught inside the word lessons — no reading course.** Written
   for someone who may not read a single Arabic letter, each word lesson has a
-  *"The letters in this word"* section introducing exactly the letters that word
-  needs, right to left (سلام brings ا ل م س and the long-ā; مرحبا adds ب ر ح). A
-  reader who already reads Arabic skims those notes. (Per `HL00`'s inline-letters
-  rule for non-Latin scripts.)
+  *"The letters in this word"* section introducing exactly the letters that
+  word needs, right to left (سلام brings ا ل م س and the long-ā; مرحبا adds ب ر
+  ح). A reader who already reads Arabic skims those notes.
 - **Grounded against English + Spanish.** Arabic's long shadow over Spanish is
   a recurring thread: the article **al-** smuggled into English *algebra*/
   *alcohol*, and the sun-letter assimilation you can still hear in Spanish
-  *azúcar* (← *as-sukkar*) — every form supplied so no prior Spanish is assumed.
-  The Al-Andalus loanwords the Spanish track traces *backward* are met here from
-  the source.
+  *azúcar* (← *as-sukkar*) — every form supplied so no prior Spanish is
+  assumed. The Al-Andalus loanwords the Spanish track traces *backward* are met
+  here from the source.
 
 ## Progress
 
@@ -44,33 +42,30 @@ Two more things:
   ([`lessons/AR-C0{3,4,5,6,7}-*`](./lessons/)): ask and answer how someone is,
   assemble **maʿa s-salāma**, respond yes or no, and add please and sorry. Six
   dependency-ordered writing companions introduce only the letters and joins
-  needed by the spoken lessons. In the book from canonical schema-v2 lessons.
+  needed by the spoken lessons. In the book.
 - **Chapters 8–18 — Calendar and everyday domains**
-  ([`lessons/AR-C{08..18}-*`](./lessons/)): days, colours, family, body, seasons,
-  food, months, dayparts, clock time, age, and weather, with Arabic's root and
-  pattern system kept visible. In the book from canonical schema-v2 lessons.
+  ([`lessons/AR-C{08..18}-*`](./lessons/)): days, colours, family, body,
+  seasons, food, months, dayparts, clock time, age, and weather, with Arabic's
+  root and pattern system kept visible. In the book.
 - **Chapters 19–27 — Counting, description, and leave-taking**
-  ([`lessons/AR-C{19..27}-*`](./lessons/)): numbers one through twenty, animals,
-  more colours, **ʿafwan**, and a gentle sequence from tomorrow and day/night
-  vocabulary to **tuṣbiḥ ʿalā khayr**. In the book from canonical schema-v2
-  lessons.
+  ([`lessons/AR-C{19..27}-*`](./lessons/)): numbers one through twenty,
+  animals, more colours, **ʿafwan**, and a gentle sequence from tomorrow and
+  day/night vocabulary to **tuṣbiḥ ʿalā khayr**. In the book.
 
 All forty-five lessons in Chapters 3–27 remain below five effective minutes.
-Their twenty-five generated chapters carry the same source hashes Language
-Ladder recomputes from the browser-loaded lesson AST, so app and book cannot
-drift silently.
 
 ## Book / fonts
 
-The book compiles with XeLaTeX using **vendored** Noto Naskh Arabic and Noto
-Sans Hebrew fonts (`../../_fonts/`), loaded by relative path — so Arabic script
-and Semitic comparisons build identically locally and in CI, with no system-font
-dependency. `latexmk -xelatex book.tex`.
+Open-right blank versos are intentionally retained for print and contain no
+running header or page number.
 
-The complete 104-page artifact builds with zero missing glyphs, layout,
-duplicate-destination, bookmark, LaTeX, or font-shape warnings. Open-right blank
-versos are intentionally retained for print and contain no running header or
-page number.
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities
 

@@ -59,14 +59,16 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   if (config.version !== 1 || config.targets.length === 0) {
     throw new Error("book-generation.json must declare version 1 and at least one target");
   }
-  let sourceBaseUrl: string;
+  // `sourceBaseUrl` names the canonical home of the lesson sources. It is still
+  // required, and still validated, because it is the config's statement of
+  // where this curriculum lives — but it no longer reaches the book renderer.
+  // A printed book is a standalone artefact: a reader holding the PDF cannot
+  // follow a link into a Git repository, so the book view resolves nothing
+  // against this URL (see `absoluteBookLink` in book.ts). Other consumers of
+  // the config keep the field.
   try {
     const parsed = new URL(config.sourceBaseUrl);
     if (parsed.protocol !== "https:" && parsed.protocol !== "http:") throw new Error();
-    parsed.search = "";
-    parsed.hash = "";
-    if (!parsed.pathname.endsWith("/")) parsed.pathname += "/";
-    sourceBaseUrl = parsed.href;
   } catch {
     throw new Error("book-generation.json must declare an HTTP(S) sourceBaseUrl");
   }
@@ -75,7 +77,7 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   const manifest: GeneratedBookHashManifest = { version: 1, algorithm: "fnv1a64", chapters: [] };
   for (const configuredTarget of config.targets) {
     const { scriptSet, ...plainTarget } = configuredTarget;
-    let target: BookGenerationTarget = { ...plainTarget, sourceBaseUrl };
+    let target: BookGenerationTarget = { ...plainTarget };
     if (scriptSet !== undefined) {
       if (
         target.inlineScripts !== undefined ||

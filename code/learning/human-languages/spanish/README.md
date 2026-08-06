@@ -2,13 +2,9 @@
 
 The pilot track for the [Human Languages](../README.md) curriculum. Goal:
 absolute-beginner to B1 ("can hold a normal day-to-day conversation") over a
-year, delivered two ways from the same underlying content — a **book**
-(`book/`, LaTeX, meant for free publication) and **practice units**
-(`units/`, ~5-minute pieces consumed during a daily car commute). Framework
-details (unit anatomy, spaced-repetition schedule, etymology/gender
-methodology) are in
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) — this
-README is "how to actually use this."
+year. It comes two ways from the same content: a **book** you can read straight
+through (`book/`, free to download), and **short practice pieces** (`units/`,
+about five minutes each, meant for a daily commute).
 
 ## What this track does deliberately
 
@@ -33,10 +29,8 @@ README is "how to actually use this."
 6. **Grammar from zero, contrasted with English.** Grammar concepts are
    introduced in context on the first word that needs them, explained with no
    assumed terminology.
-7. **An executable five-minute progression.** Chapters 1–6 and 19–33 use HL04
-   schema v2: each lesson has a stable local sequence, a shared-spine node,
-   declared knowledge inputs and outputs, typed body blocks, and an
-   independently checked duration below 300 seconds.
+7. **Short enough to actually do.** Every lesson is one word or one phrase and
+   fits in a few minutes, so a day with no time still has room for one.
 
 ## How to use this in the car
 
@@ -51,34 +45,15 @@ README is "how to actually use this."
 4. Next drive, start from the top of the next session. Don't skip ahead —
    the review schedule assumes you did the units in order.
 
-Units are plain Markdown, written in an audio-script style (`[PAUSE]`,
-`[REPEAT x2]`, `[YOU SAY: ...]`) so they can be read aloud by you, a
-passenger, or (eventually) a voice pipeline — that pipeline doesn't exist
-yet; see `HL00`'s "Explicitly Out of Scope" section.
+The practice pieces are written to be read out loud — by you, or by a passenger
+— so they are full of "say this now" prompts. Pause, answer aloud, then carry
+on.
 
 ## The book
 
-`book/` is a LaTeX book, compiled with XeLaTeX (`fontspec` + `polyglossia`
-— required later for Arabic/Devanagari/Dravidian scripts, so it's the
-standard from day one even though Spanish itself doesn't need it).
-Licensed CC BY-SA 4.0. To build it locally:
-
-```
-cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
-```
-
-Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
-TeX Live). The compiled PDF isn't committed — it's regenerated from source,
-same as build artifacts elsewhere in this repo.
-
-Chapters 1–6 and 19–33 are generated from the same 72 canonical lesson ASTs
-consumed by Language Ladder. Run `npm run build && npm run generate:books` from
-`code/packages/typescript/human-language-data` after editing those lessons; CI
-rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
-handwritten LaTeX during the staged one-source migration. `units/` is legacy
-source material, not a second canonical copy. The complete 214-page PDF builds
-without missing glyphs, layout-box warnings, bookmark warnings, duplicate
-destinations, LaTeX warnings, or font fallbacks.
+`book/` is the continuous read: all thirty-three chapters, free under CC BY-SA
+4.0. The book prints no audio prompts and no timing cues; the practice pieces
+keep them, because that is what they are for.
 
 ## Progress
 
@@ -104,7 +79,8 @@ exactly where a word needs it:
 - **Chapter 5 — Farewells**: adiós → hasta → hasta luego / mañana / pronto.
 - **Chapter 6 — The First Verbs**: por favor → hablar (the *-ar* template) →
   trabajar → estudiar → hablo español.
-- **Chapter 7 — The *-er* and *-ir* Verbs**: comer → vivir → beber → qué → dónde.
+- **Chapter 7 — The *-er* and *-ir* Verbs**: comer → vivir → beber → qué →
+  dónde.
 - **Chapter 8 — Numbers and Age**: números 1–5, 6–10 → tener → ¿cuántos años?
 - **Chapter 9 — *Ser* and *Estar***: ser → ser vs estar → soy de → está en.
 - **Chapter 10 — Going, and the Near Future**: ir → ir a + infinitive →
@@ -114,7 +90,8 @@ exactly where a word needs it:
 - **Chapter 12 — The *-go* Verb Club**: hacer → decir → the *yo-go* pattern.
 - **Chapter 13 — Completing the *-go* Club**: poner → salir → venir.
 - **Chapter 14 — The Preterite**: ser/ir preterite → hablar preterite.
-- **Chapter 15 — Completing the Preterite**: comer/vivir → the strong preterites.
+- **Chapter 15 — Completing the Preterite**: comer/vivir → the strong
+  preterites.
 - **Chapter 16 — The Imperfect**: imperfecto → the three irregulars → choosing
   between the two pasts.
 - **Chapter 17 — The Future and the Conditional**: futuro → condicional (one
@@ -130,21 +107,48 @@ exactly where a word needs it:
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
 to its root. **All 33 chapters are authored and in the book (214 pages);
-Chapters 1–6 and 19–33 are generated from canonical lessons.**
-Lessons are named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives
-in the book (which LaTeX auto-numbers) and in `session-map.md`, so inserting a
-lesson never renumbers anything.
-- **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
-  (look-up reference, not a chapter).
-- **Progression metadata**: [`roadmap.md`](./roadmap.md) and
-  [`session-map.md`](./session-map.md) still need reconciliation through
-  Chapter 33; this is tracked as HL-M09 in the shared backlog.
-- **`units/` (legacy)**: the pre-redesign coarse-grained content (old Part 0
-  + Part I). Kept as source material to be re-excavated into deep lessons;
-  **superseded**, not the current model. Being migrated `units/` → `lessons/`.
+Chapters 1–6 and 19–33 are generated from canonical lessons.** Lessons are
+named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives in the book
+(which LaTeX auto-numbers) and in `session-map.md`, so inserting a lesson never
+renumbers anything. - **Pronunciation**:
+[`pronunciation-reference.md`](./pronunciation-reference.md) (look-up
+reference, not a chapter). - **Progression metadata**:
+[`roadmap.md`](./roadmap.md) and [`session-map.md`](./session-map.md) still
+need reconciliation through Chapter 33; this is tracked as HL-M09 in the shared
+backlog. - **`units/` (legacy)**: the pre-redesign coarse-grained content (old
+Part 0 + Part I). Kept as source material to be re-excavated into deep lessons;
+**superseded**, not the current model. Being migrated `units/` → `lessons/`.
 
 See [`CHANGELOG.md`](./CHANGELOG.md) for the full history including the
 redesign.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
+
+### Building the book
+
+```
+cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
+```
+
+Needs a LaTeX distribution with `xelatex`/`latexmk` on PATH. The PDF is not
+committed; it is regenerated from source like any other build artefact.
+
+Chapters 1–6 and 19–33 are generated from the same canonical lesson ASTs
+consumed by Language Ladder. Run `npm run build && npm run generate:books` from
+`code/packages/typescript/human-language-data` after editing those lessons; CI
+rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
+handwritten LaTeX during the staged one-source migration. `units/` is legacy
+source material, not a second canonical copy.
+
+The book view strips the lessons' delivery cues (`[PAUSE Ns]`, `[YOU SAY: …]`,
+`[REPEAT xN]`) and prints book headings in their place; the canonical lesson
+files keep every cue, because the spoken view needs them.
 
 ## Chapter capabilities
 

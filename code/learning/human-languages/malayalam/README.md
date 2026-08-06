@@ -2,10 +2,9 @@
 
 The ninth track of the [Human Languages](../README.md) curriculum, the last of
 the four Dravidian tracks (after [Tamil](../tamil/README.md) the anchor,
-[Kannada](../kannada/README.md), and [Telugu](../telugu/README.md)), on the same
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) framework:
-one word per lesson, slug ids, atom-first assembly, derivations shown, LaTeX
-book.
+[Kannada](../kannada/README.md), and [Telugu](../telugu/README.md)), built the
+same way as: one word per lesson, taken apart and traced to its root; the
+pieces taught before the whole; and a book you can read straight through.
 
 ## What's different about the Malayalam track
 
@@ -37,8 +36,9 @@ book.
   practice. The Malayalam standout: it *has* a copula *āṇŭ*, unlike its
   zero-copula Dravidian sisters. In the book.
 - **Chapter 3 — How Are You** ([`lessons/ML-C03-*`](./lessons/)): eṅṅane,
-  **sukhamāṇō?** ("are you well?"), ñān, sukham, sāramilla, practice. The copula
-  *āṇŭ* + question *-ō*; Sanskrit *sukha*/*sāraṁ* on native grammar. In the book.
+  **sukhamāṇō?** ("are you well?"), ñān, sukham, sāramilla, practice. The
+  copula *āṇŭ* + question *-ō*; Sanskrit *sukha*/*sāraṁ* on native grammar. In
+  the book.
 - **Chapter 4 — Farewells** ([`lessons/ML-C04-*`](./lessons/)): pōkuka/varika,
   **pōyi varāṁ** ("I'll go and come back"), nāḷe kāṇāṁ, vīṇḍuṁ kāṇāṁ, practice.
   The Dravidian promise-of-return goodbye. In the book.
@@ -48,26 +48,26 @@ book.
 - **Chapters 6–9 — Case, counting, and courtesy**
   ([`lessons/ML-C0{6,7,8,9}-*`](./lessons/)): the dative **-ഇക്ക്/-ഇന്**, the
   dative-subject sentence **എനിക്ക് മലയാളം അറിയാം**, numbers one through ten,
-  **ദയവായി**, and **ക്ഷമിക്കണം**. In the book from canonical schema-v2 lessons.
+  **ദയവായി**, and **ക്ഷമിക്കണം**. In the book.
 - **Chapters 10–22 — Calendar and everyday domains**
-  ([`lessons/ML-C{10..22}-*`](./lessons/)): days, colours, family, body, seasons,
-  food, Malayalam's solar months, clock time, age, numbers 11–20, weather, and
-  animals. In the book from canonical schema-v2 lessons.
+  ([`lessons/ML-C{10..22}-*`](./lessons/)): days, colours, family, body,
+  seasons, food, Malayalam's solar months, clock time, age, numbers 11–20,
+  weather, and animals. In the book.
 - **Chapters 23–31 — Dayparts and greetings**
-  ([`lessons/ML-C{23..31}-*`](./lessons/)): native and Sanskrit day/night words,
-  morning, evening, afternoon, and their register-aware greetings. In the book
-  from canonical schema-v2 lessons.
+  ([`lessons/ML-C{23..31}-*`](./lessons/)): native and Sanskrit day/night
+  words, morning, evening, afternoon, and their register-aware greetings.
 
-All thirty-three later lessons remain below five effective minutes. Their
-twenty-six generated chapters carry the same source hashes Language Ladder
-recomputes from the browser-loaded lesson AST, so app and book cannot drift
-silently.
+All thirty-three later lessons remain below five effective minutes.
 
 ## Book / fonts
 
-The book compiles with XeLaTeX using the **vendored** Noto Sans Malayalam font
-(`../../_fonts/`), loaded by relative path — so it builds identically locally
-and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities
 

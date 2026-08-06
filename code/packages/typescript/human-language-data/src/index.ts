@@ -28,6 +28,8 @@ export {
 export {
   renderInlineMarkdown,
   renderBookChapter,
+  bookVoice,
+  bookBlockTitle,
   type BookGenerationTarget,
   type GeneratedBookChapter,
 } from "./book.js";

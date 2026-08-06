@@ -1864,6 +1864,53 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   yet represented in generated targets remain canonical app content and will
   become live automatically when those chapters migrate to book generation.
 
+## Findings from HL-C38
+
+- The book read like an export because it printed the lesson files' **audio
+  scaffolding**: 1,438 `[PAUSE Ns]`, 1,411 `[YOU SAY: …]`, 30 `[REPEAT x2]`, and
+  the internal block-type names `Warm-up` / `Guided Practice` / `Wrap-up recall`
+  as printed headings, across all 270 generated chapters. None of that is a
+  lesson-authoring bug: HL00 is right that lessons are audio scripts. The bug was
+  that the **book view** rendered the stage directions.
+- Fixed entirely in `src/book.ts`, in one documented "book voice" section. No
+  lesson Markdown, `chapters.json`, or hash-manifest entry was touched, and the
+  270 chapters regenerate to identical source hashes.
+- `[PAUSE Ns]` is deleted (a reader sets their own pace). `[REPEAT xN]` becomes
+  *Twice through:*. `[YOU <VERB>: …]` becomes a printed prompt — a single lead-in
+  above a uniform run of bullets (*Say these aloud:*), or a per-bullet italic
+  label (*Say it:*, *Write it:*) where a list mixes cue kinds. Twenty-eight cue
+  verbs are mapped in one table; writing and tracing prompts render as real
+  printed exercises and are never suppressed.
+- Printed headings now read `Your turn`, `Before you move on`, `What to know
+  first`; the warm-up loses its label entirely and stands as the section's
+  indented lead-in. `You'll want to know — <descriptive tail>` headings are left
+  alone: they are authorial prose, and rewriting them mechanically read worse.
+- The chapter blurb ("generated from the canonical micro-lessons used by Language
+  Ladder") is gone. A book does not describe its own build system.
+- **The book is now a standalone artefact.** The pronunciation/script section
+  moved from directly after `\mainmatter` to `\backmatter` in all 17 books that
+  front-loaded it — HL00 forbids a front-loaded sounds chapter, so the book had
+  been contradicting its own framework. Nothing was deleted; it is reference now,
+  not a gate.
+- `sourceBaseUrl` no longer feeds the book view, reversing that half of HL-G05.
+  A reader holding the PDF cannot follow a link into a Git repository. Relative
+  destinations (`./ES-C01-bien.md`, `../pronunciation-reference.md`) now print
+  their label unlinked; absolute scholarly citations (UT Austin, MSU, Wiktionary)
+  stay live `\href`s. The config field stays, validated, for other consumers.
+- All 20 prefaces rewritten, each keeping its own track's material: a welcome, a
+  "How to use this book" section, and the removal of the sentence that
+  rationalised the front-loaded pronunciation section. The Latin and Sanskrit
+  prefaces now say plainly that they are not learned for conversation; Tamil
+  addresses the heritage reader HL00 describes. The title-page pointer at
+  `code/learning/human-languages/<track>/lessons/` is gone from all 20.
+- The 20 track READMEs keep their engineering detail below a `## For
+  contributors` line; above it the spec-ID citations, `schema-v2`, source-hash,
+  and Language Ladder references are gone.
+- **"payoff" was checked case by case and kept.** All 10 uses in book prose are
+  ordinary English ("here is the payoff", "two payoffs land at once"), not the
+  HL05 field name. Only the README uses referring to `chapters.json` were moved
+  below the contributor line.
+
 ## Completed foundations
 
 - HL04 defines the 45-concept shared spine and migration contract.

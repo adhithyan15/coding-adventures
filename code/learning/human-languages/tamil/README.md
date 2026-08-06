@@ -2,9 +2,10 @@
 
 The sixth track of the [Human Languages](../README.md) curriculum, and the
 **anchor** of the four Dravidian tracks (Tamil, Kannada, Telugu, Malayalam), on
-the same [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md)
-framework: one word per lesson, slug ids, atom-first assembly, derivations
-shown, LaTeX book.
+the same
+framework: one word per lesson, taken apart and traced to its
+root; the pieces taught before the whole; and a book you can read straight
+through.
 
 ## What's different about the Tamil track
 
@@ -13,7 +14,7 @@ shown, LaTeX book.
   *"The letters in this word"* section introducing exactly the letters that
   word needs (வணக்கம் brings வ ண க ம, the puḷḷi that removes the inherent
   vowel, and the retroflex ண). A reader who already reads Tamil skims those
-  notes. (Per `HL00`'s inline-letters rule for non-Latin scripts.)
+  notes. 
 - **Tamil as the Dravidian root the others trace back to.** Tamil is the
   oldest-attested Dravidian language and the most protective of its native
   word-stock. The recurring thread is where Tamil kept a home-grown word
@@ -35,9 +36,10 @@ shown, LaTeX book.
   **uṅgaḷ peyar eṉṉa?** ("what's your name?"), magiḻcci, practice. Every atom
   native Dravidian and traced (*peyar* ≠ Indo-European *name*); the **zero
   copula** (no word for "is"). In the book.
-- **Chapter 3 — How Are You** ([`lessons/TA-C03-*`](./lessons/)): eppaḍi, **nīṅgaḷ
-  eppaḍi irukkiṟīrgaḷ?**, nāṉ, nalam, paravāyillai, practice. The verb *iru*
-  ("to be") — the copula returns for states; the *iru*/*illai* pair. In the book.
+- **Chapter 3 — How Are You** ([`lessons/TA-C03-*`](./lessons/)): eppaḍi,
+  **nīṅgaḷ eppaḍi irukkiṟīrgaḷ?**, nāṉ, nalam, paravāyillai, practice. The verb
+  *iru* ("to be") — the copula returns for states; the *iru*/*illai* pair. In
+  the book.
 - **Chapter 4 — Farewells** ([`lessons/TA-C04-*`](./lessons/)): pō/vā, **pōy
   varugiṟēṉ** ("I'll go and come back"), nāḷai pārkkalām, mīṇḍum sandippōm,
   practice. The Dravidian promise-of-return goodbye. In the book.
@@ -48,13 +50,17 @@ shown, LaTeX book.
   time, weather, animals, colours, and greetings**
   ([`lessons/TA-C{06..31}-*`](./lessons/)): forty-three prerequisite-ordered
   micro-lessons continue the same inline script, grammar, and etymology method.
-  All are schema v2, stay below five minutes, and generate twenty-six book
-  chapters from the exact canonical sources consumed by Language Ladder.
 - **Writing W01–W04** ([`lessons/TA-W*`](./lessons/)): eight gentle steps teach
-  curves, the abugida, retroflexion, the three Tamil n letters, the puḷḷi, vowel
-  signs, and whole-word writing for **வணக்கம்** and **நன்றி**. They are
-  dependency-ordered schema-v2 companions embedded inside Chapter 1 rather than
-  a gated alphabet course.
+  curves, the abugida, retroflexion, the three Tamil n letters, the puḷḷi,
+  vowel signs, and whole-word writing for **வணக்கம்** and **நன்றி**.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities
 

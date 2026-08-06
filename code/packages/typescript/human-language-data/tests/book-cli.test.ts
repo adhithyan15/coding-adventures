@@ -50,7 +50,8 @@ Say hello.
 
 ## Wrap-up Recall
 
-Read the [curriculum guide](../guide.md), then say hello again.
+Read the [curriculum guide](../guide.md) and the
+[Wiktionary entry](https://example.test/wiki/hello), then say hello again.
 `,
   );
   return root;
@@ -72,8 +73,13 @@ describe("canonical book generator filesystem shell", () => {
     const manifest = join(root, "core", "generated-book-hashes.json");
     expect(existsSync(chapter)).toBe(true);
     expect(readFileSync(manifest, "utf8")).toContain('"algorithm": "fnv1a64"');
-    expect(readFileSync(chapter, "utf8")).toContain(
-      "\\href{https://example.test/curriculum/test/guide.md}{curriculum guide}",
+    // sourceBaseUrl no longer feeds the book: a repository-relative link keeps
+    // its label and loses its destination, while a real citation stays a link.
+    const generated = readFileSync(chapter, "utf8");
+    expect(generated).not.toContain("example.test/curriculum");
+    expect(generated).toContain("Read the curriculum guide and the");
+    expect(generated).toContain(
+      "\\href{https://example.test/wiki/hello}{Wiktionary entry}",
     );
     expect(runBookGeneration(["--check"], root)).toBe(0);
 

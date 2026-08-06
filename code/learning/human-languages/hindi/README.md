@@ -1,9 +1,8 @@
 # Hindi
 
-The fifth track of the [Human Languages](../README.md) curriculum, on the
-same [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md)
-framework: one word per lesson, slug ids, atom-first assembly, derivations
-shown, LaTeX book.
+The fifth track of the [Human Languages](../README.md) curriculum, built the
+same way as: one word per lesson, taken apart and traced to its root; the
+pieces taught before the whole; and a book you can read straight through.
 
 ## What's different about the Hindi track
 
@@ -14,8 +13,7 @@ Two things shape this track.
   a *"The letters in this word"* section that introduces exactly the letters
   that word needs (नमस्ते brings न म स त and the *e*-mātrā and a conjunct), so
   you learn to read the word *and* what it means in the same few minutes. A
-  reader who already knows Devanagari simply skims those notes. (Per `HL00`'s
-  inline-letters rule for non-Latin scripts.)
+  reader who already knows Devanagari simply skims those notes. 
 - **Hindi's double inheritance is the recurring thread.** Its core vocabulary
   is **Sanskrit** (*namaste*, *dhanyavād* — roots *nam* "to bow," *dhanya*
   "worthy"), but centuries of Persian court rule layered on a second,
@@ -49,14 +47,20 @@ Two things shape this track.
   ([`lessons/HI-C06-*`](./lessons/)): forty prerequisite-ordered lessons add
   numbers, yes/no and polite repair, days and time, colours, family, body,
   seasons, food, months, age, weather, animals, and progressively finer
-  morning/evening/afternoon register. Every lesson stays below five minutes and
-  every chapter is generated into the book from the same canonical source used
-  by Language Ladder.
+  morning/evening/afternoon register.
 - **Writing companions W01–W05** ([`lessons/HI-W*`](./lessons/)): eleven short
   steps introduce the headline, letter bodies, inherent vowel, mātrās,
   preposed short **ि**, spineless letters, virama, conjuncts, and finally whole
   words. They remain inline in the opening chapters rather than becoming a
   prerequisite alphabet drill.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It is
+here for people working on the curriculum; nothing in it is needed to learn the
+language.
 
 ## Chapter capabilities (`chapters.json`)
 
