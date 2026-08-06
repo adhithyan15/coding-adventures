@@ -4,11 +4,15 @@ import { loadEverything } from "../src/loader.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "../src/report.js";
 import {
   DEFAULT_LINEARISABLE_TABLE_COLUMNS,
+  DETACHABLE_BLOCK_TYPES,
   MODALITIES,
   MODALITY_SIGNS,
   SIGHT_CUES,
+  deriveBlockModality,
   deriveLessonModality,
   drivablePrefix,
+  isDetachableBlock,
+  lessonCoreText,
   lessonModalities,
   lessonText,
   matchedSightCues,
@@ -16,9 +20,11 @@ import {
   modalityRank,
   orderChapterLessons,
   requiredChannels,
+  strongerModality,
   summarizeModality,
   tableRowColumns,
   unionModalities,
+  weakerModality,
   widestTableColumns,
 } from "../src/modality.js";
 
@@ -313,6 +319,254 @@ describe("the drivable prefix", () => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// Block-level modality — the interspersed writing pattern (HL08 amendment).
+//
+// The shape under test: an ordinary five-minute lesson, voice from end to end,
+// carrying ONE short section that teaches the hand how to form a letter met
+// earlier. The book prints that section like any other. A hands-free renderer
+// sets it aside and delivers the rest. So the lesson has two honest answers to
+// "what does this need?", and both are recorded.
+// ---------------------------------------------------------------------------
+
+/** A voice lesson with one interspersed writing segment in the middle. */
+const INTERSPERSED_BODY = [
+  "## Warm-up",
+  "",
+  "Say the greeting once more.",
+  "",
+  "## Writing: the letter you met on Monday",
+  "",
+  "Take a pen. Copy the letter three times, slowly.",
+  "",
+  "## Wrap-up Recall",
+  "",
+  "Say the greeting again.",
+].join("\n");
+
+describe("block-level modality", () => {
+  it("classifies a 'Writing:' heading as the writing block type", () => {
+    const entry = deriveLessonModality(lesson({ id: "TE-C01-x", body: INTERSPERSED_BODY }));
+    expect(entry.blocks.map((block) => block.type)).toEqual(["warmup", "writing", "recall"]);
+  });
+
+  it("a writing block needs a pen even when its prose is plain", () => {
+    const parsed = lesson({ id: "TE-C01-y", body: INTERSPERSED_BODY });
+    const block = deriveBlockModality(parsed.blocks[1]!, 1);
+    expect(block.modality).toBe("pen");
+    expect(block.reasons).toContain("writing-block");
+    expect(block.detachable).toBe(true);
+  });
+
+  it("an ordinary block with no visual dependency is voice", () => {
+    const parsed = lesson({ id: "TE-C01-z", body: INTERSPERSED_BODY });
+    const block = deriveBlockModality(parsed.blocks[0]!, 0);
+    expect(block.modality).toBe("voice");
+    expect(block.reasons).toEqual(["no-visual-dependency"]);
+    expect(block.detachable).toBe(false);
+  });
+
+  it("a block's own table and cues are scanned, title included", () => {
+    const parsed = lesson({
+      id: "ES-C01-tbl",
+      body: "## Warm-up\n\nSay it.\n\n## Grammar Lens — look at the chart\n\n| a | b |\n\n## Wrap-up Recall\n\nSay it.",
+    });
+    const block = deriveBlockModality(parsed.blocks[1]!, 1);
+    expect(block.modality).toBe("sight");
+    expect(block.reasons).toEqual(expect.arrayContaining(["sight-cue", "wide-table"]));
+  });
+
+  it("only the writing type is detachable — a script block is not", () => {
+    expect([...DETACHABLE_BLOCK_TYPES]).toEqual(["writing"]);
+    const parsed = lesson({
+      id: "HI-C01-s",
+      body: "## Warm-up\n\nSay it.\n\n## Script — क\n\nA vertical bar.\n\n## Wrap-up Recall\n\nSay it.",
+    });
+    expect(parsed.blocks.map(isDetachableBlock)).toEqual([false, false, false]);
+  });
+
+  it("the full modality is pen and the core is voice — one lesson, two answers", () => {
+    const entry = deriveLessonModality(lesson({ id: "TE-C01-both", body: INTERSPERSED_BODY }));
+    // What the BOOK signs: this lesson does contain handwriting.
+    expect(entry.derived).toBe("pen");
+    expect(entry.modality).toBe("pen");
+    expect(entry.reasons).toContain("writing-block");
+    // What a hands-free view can deliver: everything but the writing segment.
+    expect(entry.coreDerived).toBe("voice");
+    expect(entry.coreModality).toBe("voice");
+    expect(entry.coreReasons).toEqual(["no-visual-dependency"]);
+    expect(entry.writingSegments).toEqual(["Writing: the letter you met on Monday"]);
+  });
+
+  it("sight cues inside the writing segment do not follow it out of the core", () => {
+    const entry = deriveLessonModality(
+      lesson({
+        id: "TE-C01-cue",
+        body: [
+          "## Warm-up",
+          "",
+          "Say it.",
+          "",
+          "## Writing: the tick on top",
+          "",
+          "Look at the shape above, then copy it.",
+          "",
+          "## Wrap-up Recall",
+          "",
+          "Say it.",
+        ].join("\n"),
+      }),
+    );
+    expect(entry.sightCues).toContain("look at");
+    expect(entry.coreModality).toBe("voice");
+    expect(entry.coreReasons).toEqual(["no-visual-dependency"]);
+  });
+
+  it("a sight cue in the ORDINARY prose still reaches the core", () => {
+    const entry = deriveLessonModality(
+      lesson({
+        id: "TE-C01-cue2",
+        body: [
+          "## Warm-up",
+          "",
+          "Look at the table on the previous page.",
+          "",
+          "## Writing: the tick on top",
+          "",
+          "Copy it three times.",
+          "",
+          "## Wrap-up Recall",
+          "",
+          "Say it.",
+        ].join("\n"),
+      }),
+    );
+    expect(entry.coreModality).toBe("sight");
+    expect(entry.coreReasons).toContain("sight-cue");
+  });
+
+  it("a type: writing lesson has a pen core — there is nothing to set aside", () => {
+    const entry = deriveLessonModality(
+      lesson({ id: "TA-W01", type: "writing", body: INTERSPERSED_BODY }),
+    );
+    expect(entry.modality).toBe("pen");
+    expect(entry.coreModality).toBe("pen");
+    expect(entry.coreReasons).toContain("writing-type");
+  });
+
+  it("the core is never stronger than the full modality, even under an override", () => {
+    const entry = deriveLessonModality(
+      lesson({
+        id: "ES-C01-ov",
+        modality: "voice",
+        modalityReason: "the table is decorative",
+        body: "## Warm-up\n\n| yo | tú | él |\n\n## Wrap-up Recall\n\nSay it.",
+      }),
+    );
+    expect(entry.coreDerived).toBe("sight");
+    // The author took responsibility for `voice`; the core cannot sit above it.
+    expect(entry.modality).toBe("voice");
+    expect(entry.coreModality).toBe("voice");
+  });
+
+  it("lessonCoreText drops the writing segment and keeps everything else", () => {
+    const parsed = lesson({ id: "TE-C01-t", body: INTERSPERSED_BODY });
+    expect(lessonText(parsed)).toContain("Copy the letter three times");
+    expect(lessonCoreText(parsed)).not.toContain("Copy the letter three times");
+    expect(lessonCoreText(parsed)).toContain("Say the greeting once more");
+  });
+
+  it("reports a lesson that sprouts more than one writing segment", () => {
+    const entry = deriveLessonModality(
+      lesson({
+        id: "TE-C01-many",
+        body: [
+          "## Warm-up",
+          "",
+          "Say it.",
+          "",
+          "## Writing: the first letter",
+          "",
+          "Copy it.",
+          "",
+          "## Writing: the second letter",
+          "",
+          "Copy it too.",
+          "",
+          "## Wrap-up Recall",
+          "",
+          "Say it.",
+        ].join("\n"),
+      }),
+    );
+    const findings = modalityFindings(entry);
+    expect(findings).toHaveLength(1);
+    expect(findings[0]?.code).toBe("modality-writing-segment-not-separable");
+    expect(findings[0]?.message).toContain("may carry one");
+  });
+
+  it("a type: writing lesson may carry as many writing blocks as it likes", () => {
+    const entry = deriveLessonModality(
+      lesson({
+        id: "TA-W09",
+        type: "writing",
+        body: [
+          "## Warm-up",
+          "",
+          "Say it.",
+          "",
+          "## Writing: ம",
+          "",
+          "Copy it.",
+          "",
+          "## Writing: ண",
+          "",
+          "Copy it too.",
+          "",
+          "## Wrap-up Recall",
+          "",
+          "Say it.",
+        ].join("\n"),
+      }),
+    );
+    expect(modalityFindings(entry)).toEqual([]);
+  });
+
+  it("the drivable prefix runs through an interspersed lesson instead of stopping at it", () => {
+    const entries = lessonModalities([
+      lesson({ id: "TE-C01-a", sequence: 10 }),
+      lesson({ id: "TE-C01-b", sequence: 20, body: INTERSPERSED_BODY }),
+      lesson({ id: "TE-C01-c", sequence: 30 }),
+      lesson({ id: "TE-C01-d", sequence: 40, body: "## Warm-up\n\nLook at the chart." }),
+    ]);
+    // Under the pre-amendment rule the pen lesson at sequence 20 ended the run at 1.
+    expect(drivablePrefix(entries)).toBe(3);
+  });
+
+  it("the rollup keeps the book's counts and the hands-free count separate", () => {
+    const summary = summarizeModality([
+      lesson({ id: "TE-C01-a", chapter: 1, sequence: 10 }),
+      lesson({ id: "TE-C01-b", chapter: 1, sequence: 20, body: INTERSPERSED_BODY }),
+    ]);
+    const track = summary.tracks[0]!;
+    // The book prints one voice lesson and one pen lesson…
+    expect(track.voice).toBe(1);
+    expect(track.pen).toBe(1);
+    // …while both are reachable without a hand.
+    expect(track.coreVoice).toBe(2);
+    expect(track.drivablePercent).toBe(100);
+    expect(summary.lessonsWithWritingSegments).toBe(1);
+    expect(track.chapters[0]?.coreVoice).toBe(2);
+  });
+
+  it("strongerModality and weakerModality order by the MODALITIES rank", () => {
+    expect(strongerModality("voice", "pen")).toBe("pen");
+    expect(strongerModality("sight", "voice")).toBe("sight");
+    expect(weakerModality("pen", "sight")).toBe("sight");
+    expect(weakerModality("voice", "sight")).toBe("voice");
+  });
+});
+
 describe("chapter and track rollups", () => {
   it("reports each chapter's prefix, counts, modality union, and first blocker", () => {
     const summary = summarizeModality([
@@ -558,6 +812,25 @@ describe("corpus regression", () => {
     expect(
       remaining.filter((entry) => widestTableColumns(lessonText(entry)) > 0),
     ).toHaveLength(308);
+  });
+
+  // The block-level amendment is a no-op on the corpus AS IT STANDS, and that is
+  // the claim worth pinning: no track has yet authored an interspersed writing
+  // segment, so every lesson's core equals its full modality and the published
+  // drivable count is unmoved at 708/65%. When the first interspersed lesson lands,
+  // `lessonsWithWritingSegments` rises and `coreVoice` may exceed `voice` — update
+  // these numbers with a note saying which track did it, never by loosening them.
+  it("pins the amendment as a no-op until the first writing segment is authored", () => {
+    const { lessons } = loadEverything();
+    const summary = summarizeModality(lessons);
+    expect(summary.lessonsWithWritingSegments).toBe(0);
+    expect(summary.coreVoice).toBe(summary.voice);
+    expect(summary.coreVoice).toBe(708);
+    for (const entry of lessonModalities(lessons)) {
+      // The invariant a hands-free view relies on: the core never asks for more
+      // than the whole lesson does.
+      expect(modalityRank(entry.coreModality)).toBeLessThanOrEqual(modalityRank(entry.modality));
+    }
   });
 
   it("keeps the corpus free of unexplained overrides", () => {

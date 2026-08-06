@@ -71,6 +71,31 @@ chapter's last lesson by `sequence`. Chapter 31 is the one place where that rule
 picks a `culture` lesson rather than a word or phrase lesson — and correctly so,
 since that chapter's promise is judging when శుభ మధ్యాహ్నం fits the setting.
 
+## Handwriting — not taught yet, and why
+
+The track teaches you to **read** Telugu and not to **write** it. Every one of the
+455 entries in [`../data/scripts/telugu.json`](../data/scripts/telugu.json) carries
+an empty `strokeOrder`, and there are no `type: writing` lessons. That is a gap, and
+it is recorded rather than papered over.
+
+The blocker is not effort — it is provenance. A pen path's *shape* can be checked
+against the vendored font automatically, but no font records the *order* a hand
+travels it in, so the order has to trace to a published source. Nothing citable could
+be reached for a single Telugu letter (HL-C41; the search record is in
+[`../BACKLOG.md`](../BACKLOG.md)). Rather than invent a plausible order, none was
+authored.
+
+Two things are worth knowing when that source turns up:
+
+- **Only ~36 shapes need authoring, not 455.** Telugu's syllabary is compositional —
+  a base consonant plus a vowel sign — so handwriting is authored for the *parts* and
+  a syllable's figure is assembled from them.
+- **"Telugu is written without lifting the pen" is a simplification.** The roundness
+  does make many letters loop-continuous, but the published account of Telugu stroke
+  direction is that it is not uniform across letters, and the `talakattu` tick on top
+  of most consonants is its own mark. Until a path is authored and font-checked, no
+  entry carries a `penLifts` — and absent means *not verified*, never *none*.
+
 ## Book / fonts
 
 The book compiles with XeLaTeX using the **vendored** Noto Sans Telugu font

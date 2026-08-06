@@ -55,6 +55,54 @@ at a time on paper. `strokeOrder` is the common handwriting convention and is
 always flagged as such — freely-licensed authoritative stroke data does not exist
 for most of these scripts.
 
+## Handwriting: parts, not the grid
+
+The abugida files are large — Telugu, Kannada and Malayalam hold 455, 455 and 468
+syllables each — and it would be a category error to author handwriting for all of
+them. A syllable is not a shape the hand learns. It is an **assembly** of two shapes
+the hand already knows: a **base consonant** and a **vowel sign**. క is a shape; కి
+is క with the *i* sign on it.
+
+So handwriting data follows one rule:
+
+> Only **base consonants** and **vowel signs** are ever authored. A syllable's
+> figure is composed from its parts' figures, never authored separately.
+
+In a generated syllabary file the base consonants are the entries whose
+`components` list has a single line (`క  ka — base consonant (inherent "a")`); the
+vowel signs are the `marks`, where a file has them. Both inventories are small —
+about 36 consonants and a dozen signs per script — which is what makes authoring
+them by hand, from a cited source, tractable at all.
+
+### `penLifts` absent means NOT VERIFIED
+
+Two different things get confused here constantly, so they are named apart:
+
+| Field | What it records | Where it comes from |
+|---|---|---|
+| `strokeOrder` | the **parts** a reader can see in the finished letter, in the order they are taught | a cited teaching source; prose |
+| `penLifts` | how many times the hand **leaves the paper** | only a font-checked pen path with cited provenance |
+
+A prose step list says nothing about lifts. "Bar, loop, two arches, vertical" is
+four *parts*; it may be one unbroken motion or four separate ones, and the list
+cannot tell you which. So:
+
+- **`penLifts` absent means NOT VERIFIED.** It never means *none*.
+- **`penLifts` must never be inferred from `strokeOrder.length`.** That inference
+  reads a claim about parts as a claim about the hand, which is exactly the error
+  the two fields exist to keep apart.
+
+A letter earns a `penLifts` only when a pen path has been authored for it in
+`language-ladder`'s `strokes.ts` and has passed that module's three font
+invariants (every pen point on real glyph ink, consecutive segments meeting within
+2 font units, the path passing near all the letter's ink) **with a non-empty
+citation and URL**. Where no citable source for the order exists, the letter is
+simply not authored. Fewer letters, honestly, over more letters, invented.
+
+**Telugu, Kannada and Malayalam currently have zero authored letters** and
+therefore no `penLifts` anywhere. See [`BACKLOG.md`](../../BACKLOG.md) HL-C41 for
+the source-availability finding that keeps it that way.
+
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)
 
 Three data steps, **no code changes**:

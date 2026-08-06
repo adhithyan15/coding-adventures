@@ -279,12 +279,26 @@ export interface BookCorpus {
 
 // ---- Typed lesson body (HL04 schema v2) ----------------------------------
 
+/**
+ * The stable vocabulary of lesson-body sections.
+ *
+ * `writing` is the one member that is **detachable**: it teaches the hand and
+ * nothing later in the lesson depends on it, so an output view that cannot use a
+ * hand (the future dictation edition — see HL08) may skip exactly that section
+ * and still deliver the rest of the lesson. Every other block type is load-bearing
+ * prose. Detachability is why modality is derived per block and not only per
+ * lesson; see `modality.ts`.
+ *
+ * The book prints a `writing` block like any other section. Detachable means
+ * "a non-visual renderer may set this aside", never "this is optional content".
+ */
 export type LessonBlockType =
   | "warmup"
   | "input"
   | "notice"
   | "pronunciation"
   | "script"
+  | "writing"
   | "etymology"
   | "grammar"
   | "culture-pragmatics"
