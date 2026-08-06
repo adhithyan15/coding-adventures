@@ -35,6 +35,12 @@ Also from security review: a drop's `targetKey` is validated against the known c
 `HostDropTarget` is given a flex direction so its `gap` isn't inert — it lowers to a
 bare `<div>`, unlike `Column`, so cards were stacking flush.
 
+### Added - working backlog
+
+`BACKLOG.md` tracks the remaining super-app roadmap phases (sheet, calendar, notes,
+app-shell assembly) in priority order, plus lower-priority items the spec explicitly
+defers (native drag support, recurring/reminders, automation, resource leveling,
+portfolio dashboards). Kept current as phases ship and new gaps are discovered.
 
 ### Added - native pressed feedback through Mosaic
 
