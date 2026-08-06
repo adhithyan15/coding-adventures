@@ -39,6 +39,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Add `.gitattributes` `* text=auto eol=lf`** to force LF line endings everywhere. Otherwise Elixir heredoc tests, Python doctests, Ruby tests fail on Windows checkouts because `\r\n` ≠ `\n`.
 - **Use body files for `gh pr` text containing Markdown backticks.** Inline backticks in `--body "..."` get evaluated by zsh as command substitution. Write to a tempfile with single-quoted heredoc and pass via `--body-file`.
 - **`git worktree add` inherits HEAD unless you pin the base.** Always `git worktree add <path> -b <branch> origin/main`. Whenever the source checkout is shared or noisy, default to a fresh worktree from `origin/main` to avoid accidentally committing other agents' files or shared-manifest pollution.
+- **`git worktree add` on this repo can exceed a 2-minute Bash timeout** (tens of thousands of tracked files across 4800+ packages) and gets killed mid-checkout, leaving 60k+ files showing as deleted in `git status` and a stale `.git/worktrees/<name>/index.lock`. Fix: confirm no real git process is running (`ps aux | grep git`), `rm -f` the stale `index.lock`, then re-run the checkout with a long timeout: `git checkout HEAD -- .` (pass `timeout: 480000` or similar to the Bash tool). Better: pass a generous timeout to the original `git worktree add` call itself rather than letting it hit the default.
 
 ## Workspace & package metadata
 
