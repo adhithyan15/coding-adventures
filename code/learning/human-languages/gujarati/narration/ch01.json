@@ -4,22 +4,22 @@
   "chapter": 1,
   "title": "Chapter 1",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:85602192fd87c52f",
+  "sourceHash": "fnv1a64:08fb66dea407c28f",
   "lessons": [
     {
       "id": "GU-C01-aabhaar",
       "sequence": null,
       "title": "આભાર (ābhār) — \"thank you,\" an obligation gladly owed",
       "headword": "આભાર",
-      "romanization": "આભાર",
+      "romanization": "",
       "gloss": "thank you (ābhār)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:69ea2a54aec07b1c",
+      "sourceHash": "fnv1a64:6c81ef39a7506b6f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -134,15 +134,15 @@
       "sequence": null,
       "title": "આવજો (āvjo) — \"goodbye\" (come again)",
       "headword": "આવજો",
-      "romanization": "આવજો",
+      "romanization": "",
       "gloss": "goodbye (lit. \"[please] come [again]\")",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ce0ea8a630586fd1",
+      "sourceHash": "fnv1a64:876b08b9d022898c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -257,15 +257,15 @@
       "sequence": null,
       "title": "હા / ના (hā / nā) — \"yes\" and \"no\"",
       "headword": "હા / ના",
-      "romanization": "હા / ના",
+      "romanization": "",
       "gloss": "yes / no (hā / nā)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4560b58e96e7406",
+      "sourceHash": "fnv1a64:a2be660d94bf9647",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -371,16 +371,16 @@
       "sequence": null,
       "title": "નમસ્તે (namaste) — \"hello,\" and a script with no ceiling",
       "headword": "નમસ્તે",
-      "romanization": "નમસ્તે",
+      "romanization": "",
       "gloss": "hello / goodbye (namaste)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ea2d04a685deb837",
+      "sourceHash": "fnv1a64:90098ada701a7ec6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -496,15 +496,15 @@
       "sequence": null,
       "title": "Chapter 1 — The greetings",
       "headword": "(recap)",
-      "romanization": "(recap)",
+      "romanization": "",
       "gloss": "Chapter 1 recap — the greetings",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f16410c38f67b542",
+      "sourceHash": "fnv1a64:d43324531cc9bef5",
       "notice": null,
       "blocks": [
         {
@@ -666,16 +666,16 @@
       "sequence": null,
       "title": "સારું (sārũ) — \"good,\" \"okay\"",
       "headword": "સારું",
-      "romanization": "સારું",
+      "romanization": "",
       "gloss": "good, okay, fine (sārũ)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f4d2ea530bbfb36b",
+      "sourceHash": "fnv1a64:8e36192d74166b6c",
       "notice": {
         "modality": "sight",
         "needs": [

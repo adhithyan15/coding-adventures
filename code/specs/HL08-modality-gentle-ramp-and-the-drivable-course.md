@@ -369,6 +369,86 @@ A book of thousands of pages made of two-minute steps is a better outcome than a
 compact book that loses the reader in chapter three. No gate in this project may
 penalise page count, lesson count, or chapter count.
 
+## Amendment — the script ramp (HL-C18C)
+
+*Added 2026-08-07, on the project owner's direction that "the ramp should also include
+the script; sometimes you can't introduce more than one script at a time."*
+
+### Why the atom budget was not enough
+
+`maxNewAtomsPerLesson` counts **units of meaning**. It cannot see the other burden a
+lesson imposes, and the two come apart badly:
+
+> `HI-W01-shirorekha-na-ma` declares **one** atom and puts **twelve** new Devanagari
+> glyphs on the page. It passes the gentle-ramp budget comfortably.
+
+It is not an outlier. **61 lessons** exceed three new glyphs; **38 of them declare zero
+atoms**, so they read as maximally gentle while teaching up to a dozen new shapes.
+Before a learner can *mean* anything by नमस्ते they must decode it, and decoding is a
+separate skill on a separate curve. A curriculum that ramps meaning gently and script
+steeply is not gentle.
+
+### The two new budgets
+
+- `maxNewGlyphsPerLesson` — default **3**, at the corpus's own p90 for target-script
+  glyphs, the same rule that justified `maxNewAtomsPerLesson`. The median non-Latin
+  lesson introduces **zero** new glyphs, so this flags 61 genuine spikes rather than
+  taxing ordinary lessons. It is deliberately **not** set at the observed max of 12: a
+  budget placed at the worst case is not a budget.
+- `maxNewScriptSystemsPerLesson` — **1**, the owner's rule stated directly. Today it
+  flags five lessons, all Japanese Chapter 1, which opens kanji beside hiragana in its
+  very first lesson and adds katakana in its fifth.
+
+### Target script versus the cousin layer
+
+The measurement counts a lesson's **target-script** glyphs — the ones the learner is
+signing up to read. Glyphs from *other* scripts are counted, reported, and **never
+charged to the budget**.
+
+That distinction is what makes the number honest. A Kannada Chapter 1 lesson that shows
+the same word in Devanagari, Tamil, Telugu and Malayalam looks like a **34-glyph cliff**
+when the two are conflated. Its actual Kannada load is **7**. The sister-script material
+is *context* — it says "your word for thanks is Hindi's word too" to a reader who
+happens to know Hindi — and per the owner's rule that **English is the only requirement
+for each book**, it must be skippable by everyone else.
+
+So the cousin layer is not penalised. What its measured footprint justifies — 119
+lessons, up to 26 foreign glyphs in one — is keeping that layer **visually separable**,
+so a reader who knows no sister language can pass it by without passing by the lesson.
+
+### Counting rules, and why each one is deliberate
+
+- **In reading order, charged once.** A glyph taught in Chapter 1 is free in Chapter 30.
+  This is a ramp measurement, not a density measurement; charging revision would invert
+  the incentive the whole spec exists to create.
+- **Latin is not counted.** Romanization (`namaskāram`) rides alongside every non-Latin
+  headword. Counting `ā` as a glyph to learn would swamp the signal with the very thing
+  that exists to make the script approachable.
+- **Combining marks are counted.** A Devanagari mātrā is a shape the reader must decode;
+  dropping marks would undercount every abugida in the corpus.
+- **Script digits are counted.** ०१२ and ۱۲۳ are `\p{N}`, and also glyphs nobody born to
+  ASCII can already read. A numbers lesson genuinely does teach script.
+- **`Script_Extensions`, not `Script`.** Japanese's prolonged-sound mark ー is formally
+  `Script=Common` because hiragana and katakana share it. The narrow property undercounts
+  コーヒー by the mark that makes it a long vowel.
+- **Latin-script tracks carry no decoding burden** and are measured but never flagged.
+
+### Report-only, per the HL05 precedent
+
+The debt predates the measurement, so it is published and burnable rather than turned
+into a build failure on a corpus nobody regressed. Gates flip per track as debt clears.
+
+### A prerequisite this surfaced
+
+The ramp could not see Gujarati at all: `LANGUAGE_SCRIPT` never got a `gujarati` entry —
+Gujarati was the *worked example in its own doc comment* — so all 39 lessons resolved to
+`latin`. Glyph-coverage validation looked Gujarati headwords up in the Latin inventory,
+and `romanization` fell back to the Gujarati headword itself, handing the narration
+export **Gujarati script in the field a speech engine reads as Latin**. Chinese and
+Japanese were missing from the same map and were saved only by shipping a `track.json`.
+A track whose script is unknown reads as having no script to learn, so completing that
+map is part of this amendment, not a separate concern.
+
 ## Validation gates
 
 Added to `validateCurriculum()`, multi-pass, collecting every violation before

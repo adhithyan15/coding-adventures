@@ -261,6 +261,25 @@ export interface ChapterPolicy {
    * lineariser's own measured default.
    */
   maxLinearisableTableColumns?: number;
+  /**
+   * HL08: most NEW target-script glyphs one lesson may put in front of the reader.
+   *
+   * Separate from `maxNewAtomsPerLesson` because the two measure different burdens and
+   * a lesson can pass one while failing the other badly: `HI-W01-shirorekha-na-ma`
+   * declares ONE atom and shows TWELVE new Devanagari glyphs. Vocabulary is what a
+   * learner must mean; script is what they must decode before meaning starts.
+   *
+   * Optional so a policy file written before the script ramp existed still loads.
+   */
+  maxNewGlyphsPerLesson?: number;
+  /**
+   * HL08: most distinct WRITING SYSTEMS one lesson may open at once.
+   *
+   * One, by the project owner's rule: "sometimes you can't introduce more than one
+   * script at a time." This only bites where a track's script is genuinely plural —
+   * Japanese, whose hiragana/katakana/kanji share one `script` id today.
+   */
+  maxNewScriptSystemsPerLesson?: number;
 }
 
 /** One authored chapter from an existing LaTeX book. */

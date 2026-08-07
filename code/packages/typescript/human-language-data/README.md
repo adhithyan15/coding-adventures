@@ -105,6 +105,35 @@ modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLess
 deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
 ```
 
+### The two ramps (HL08)
+
+Gentleness has **two** curves, and until HL-C18C only one of them was counted.
+
+```ts
+import { measureRamp, loadChapterPolicy, loadEverything } from "@coding-adventures/human-language-data";
+
+const { lessons } = loadEverything();
+const ramp = measureRamp(lessons, loadChapterPolicy());
+
+ramp.summary.lessonViolations;          // 40 — lessons above 3 new ATOMS (meaning)
+ramp.script.summary.lessonViolations;   // 61 — lessons above 3 new GLYPHS (decoding)
+ramp.script.summary.steepestLesson;     // HI-W01-shirorekha-na-ma: 1 atom, 12 glyphs
+ramp.script.summary.systemViolations;   // 5 — lessons opening >1 writing system at once
+```
+
+The two come apart badly. `HI-W01-shirorekha-na-ma` declares **one** knowledge atom and
+puts **twelve** new Devanagari glyphs in front of the reader; it passes the atom budget
+comfortably. 38 of the 61 over-budget lessons declare *zero* atoms, so they read as
+maximally gentle while teaching up to a dozen new shapes.
+
+**Target script and cousin script are counted separately, and only the first is charged.**
+A Kannada Chapter 1 lesson that shows the same word in Devanagari, Tamil, Telugu and
+Malayalam looks like a 34-glyph cliff if you add them together — its actual Kannada load is
+7. Sister-script material is context for a reader who already knows a relative; English is
+the only requirement for any book, so that layer is reported and never penalised.
+
+Both are **report-only**: the debt predates the measurement.
+
 Three channels, each naming what the learner must have available:
 
 | Value | Sign | Meaning |

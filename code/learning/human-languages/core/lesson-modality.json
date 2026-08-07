@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:d1604dc4f84e4287",
+  "sourceHash": "fnv1a64:10bf9af0e3ac3dd0",
   "summary": {
     "totalLessons": 1225,
     "voice": 824,
@@ -10487,7 +10487,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:69ea2a54aec07b1c"
+      "sourceHash": "fnv1a64:6c81ef39a7506b6f"
     },
     {
       "id": "GU-C01-aavjo",
@@ -10500,7 +10500,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ce0ea8a630586fd1"
+      "sourceHash": "fnv1a64:876b08b9d022898c"
     },
     {
       "id": "GU-C01-haa-naa",
@@ -10513,7 +10513,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4560b58e96e7406"
+      "sourceHash": "fnv1a64:a2be660d94bf9647"
     },
     {
       "id": "GU-C01-namaste",
@@ -10527,7 +10527,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ea2d04a685deb837"
+      "sourceHash": "fnv1a64:90098ada701a7ec6"
     },
     {
       "id": "GU-C01-practice",
@@ -10540,7 +10540,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f16410c38f67b542"
+      "sourceHash": "fnv1a64:d43324531cc9bef5"
     },
     {
       "id": "GU-C01-saarun",
@@ -10554,7 +10554,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f4d2ea530bbfb36b"
+      "sourceHash": "fnv1a64:8e36192d74166b6c"
     },
     {
       "id": "GU-C02-anand",
@@ -10567,7 +10567,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d464ae8af941057d"
+      "sourceHash": "fnv1a64:0ec28b57e91bb066"
     },
     {
       "id": "GU-C02-chhe",
@@ -10580,7 +10580,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:602b01069582a487"
+      "sourceHash": "fnv1a64:9421ea8c1eed68ca"
     },
     {
       "id": "GU-C02-maarun",
@@ -10593,7 +10593,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d67b8ebaba84b5c4"
+      "sourceHash": "fnv1a64:69923e316ee556fb"
     },
     {
       "id": "GU-C02-maarun-naam-chhe",
@@ -10606,7 +10606,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30d99ef7cafd7f66"
+      "sourceHash": "fnv1a64:131deb18a89b3213"
     },
     {
       "id": "GU-C02-naam",
@@ -10619,7 +10619,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3af8f4bb9a8cc066"
+      "sourceHash": "fnv1a64:45c0fba6f08e5ec3"
     },
     {
       "id": "GU-C02-practice",
@@ -10632,7 +10632,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:246937fe74368dde"
+      "sourceHash": "fnv1a64:46d495762ef4f25d"
     },
     {
       "id": "GU-C02-shun",
@@ -10645,7 +10645,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f579e4f44a6b2af"
+      "sourceHash": "fnv1a64:7b05173babb06dca"
     },
     {
       "id": "GU-C02-tamarun-naam-shun-chhe",
@@ -10658,7 +10658,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6085acd1c0bd05de"
+      "sourceHash": "fnv1a64:05037cae388d1cb5"
     },
     {
       "id": "GU-C02-tu-tame",
@@ -10671,7 +10671,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:243b1dd19af26cfa"
+      "sourceHash": "fnv1a64:ddef50cd33aa95af"
     },
     {
       "id": "GU-C03-hun",
@@ -10684,7 +10684,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:806b44e166aa90b1"
+      "sourceHash": "fnv1a64:11e76b7f4b053d5c"
     },
     {
       "id": "GU-C03-kem",
@@ -10697,7 +10697,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6d24d1ed458a9ebc"
+      "sourceHash": "fnv1a64:bf5b7526a590d3e1"
     },
     {
       "id": "GU-C03-majaa",
@@ -10710,7 +10710,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:303cb39547727116"
+      "sourceHash": "fnv1a64:a8f4832b1584963f"
     },
     {
       "id": "GU-C03-practice",
@@ -10723,7 +10723,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59f00495c27cccb5"
+      "sourceHash": "fnv1a64:2cbc0c298d7b79c6"
     },
     {
       "id": "GU-C03-tame-kem-chho",
@@ -10736,7 +10736,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b3f6d4232bf928d"
+      "sourceHash": "fnv1a64:e015921a087205c8"
     },
     {
       "id": "GU-C03-vandho-nahi",
@@ -10749,7 +10749,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b56e87993b078b6e"
+      "sourceHash": "fnv1a64:4b281c51975b08c1"
     },
     {
       "id": "GU-C04-kaale",
@@ -10762,7 +10762,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f3ae78bb775a679b"
+      "sourceHash": "fnv1a64:1d688df2a4389d1a"
     },
     {
       "id": "GU-C04-malishun",
@@ -10775,7 +10775,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:29a3baacaa084aec"
+      "sourceHash": "fnv1a64:00667abc9913b227"
     },
     {
       "id": "GU-C04-pachha",
@@ -10788,7 +10788,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6f60f2bede52fd1e"
+      "sourceHash": "fnv1a64:ed7b37cea503d5c3"
     },
     {
       "id": "GU-C04-pachha-malishun",
@@ -10801,7 +10801,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f245151fd5538775"
+      "sourceHash": "fnv1a64:722ed898b16425d4"
     },
     {
       "id": "GU-C04-practice",
@@ -10814,7 +10814,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c080b0034a7e8c2"
+      "sourceHash": "fnv1a64:5f7441aa51718c15"
     },
     {
       "id": "GU-C05-bolvun",
@@ -10827,7 +10827,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a6494186f38b1670"
+      "sourceHash": "fnv1a64:a78b0a484e53552b"
     },
     {
       "id": "GU-C05-hun-gujarati-bolun-chhun",
@@ -10840,7 +10840,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:becb16ef892b890c"
+      "sourceHash": "fnv1a64:dc39a148e0c32c27"
     },
     {
       "id": "GU-C05-kaam-karvun",
@@ -10853,7 +10853,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c2bb56f4b0ce16c2"
+      "sourceHash": "fnv1a64:bc64f6af5ca4e7a5"
     },
     {
       "id": "GU-C05-practice",
@@ -10866,7 +10866,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:449b435eb5c743b6"
+      "sourceHash": "fnv1a64:930baab2a86c682d"
     },
     {
       "id": "GU-C05-rahevun",
@@ -10879,7 +10879,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:38ff136f2541f6f9"
+      "sourceHash": "fnv1a64:0776c98caaa4da8c"
     },
     {
       "id": "GU-C06-numbers-1-5",
@@ -10892,7 +10892,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce2aca277bb3c6ba"
+      "sourceHash": "fnv1a64:efa63868bdf27365"
     },
     {
       "id": "GU-C06-number-histories",
@@ -10905,7 +10905,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:775766c23caf743f"
+      "sourceHash": "fnv1a64:01b835a278e4ed28"
     },
     {
       "id": "GU-C07-hovun",
@@ -10918,7 +10918,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef298f0a3ff2dd7d"
+      "sourceHash": "fnv1a64:074c898a263805b4"
     },
     {
       "id": "GU-C07-javun",
@@ -10931,7 +10931,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:528b94932b45e54c"
+      "sourceHash": "fnv1a64:ac22a70b3f014c43"
     },
     {
       "id": "GU-C07-aavvun",
@@ -10944,7 +10944,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:295013173e636454"
+      "sourceHash": "fnv1a64:0a598e9332487ff5"
     },
     {
       "id": "GU-C07-khaavun",
@@ -10957,7 +10957,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc5f4ec3252f1232"
+      "sourceHash": "fnv1a64:b4e5c4ae025d4ddb"
     },
     {
       "id": "GU-C07-jovun",
@@ -10970,7 +10970,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9479b5c8be53f39"
+      "sourceHash": "fnv1a64:123451e5d601e80a"
     },
     {
       "id": "GU-C07-jaanvun",
@@ -10983,7 +10983,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:983268fd3190a48d"
+      "sourceHash": "fnv1a64:0a53c84fae291b0a"
     },
     {
       "id": "HI-W01-shirorekha-na-ma",

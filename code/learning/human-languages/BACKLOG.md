@@ -30,6 +30,35 @@ discarding deep content.
 3. Finish a small vertical slice before starting the same migration everywhere.
 4. Keep the application, book, and canonical lesson content aligned.
 
+## The owner's direction, 2026-08-07
+
+Recorded here because the repository, not an agent session, is the source of truth.
+These restate and sharpen the program; where they conflict with an older item, these win.
+
+1. **One core JSON is the source.** Book *and* app derive from it. It already records
+   voice-vs-read modality (`core/lesson-modality.json`) so a voice assistant can teach
+   while the learner drives — that stays first-class.
+2. **The spine is shared across languages.** The same gentle ramp, in the same order, in
+   every track, so a reader can pattern-match across languages.
+3. **pre-A1 → C2 for every language.** Where a language has no CEFR exam, derive an
+   equivalent ladder rather than leaving it unmapped. `core/spine.json` today has 16
+   nodes and **zero above A2**, which is the binding ceiling (HL-C10).
+4. **The ramp includes the script**, not just vocabulary. Sometimes you cannot introduce
+   more than one script at a time. → HL-C18C, HL-C18D.
+5. **Length is free.** Books may run to thousands of pages. Never trade gentleness for
+   brevity; split rather than compress. The five-minute contract is per *lesson*, not per
+   book, and no gate may penalise page, lesson, or chapter count.
+6. **Re-emphasise constantly.** Keep resurfacing earlier material to build confidence.
+7. **English is the only requirement for each book.** Same-family cousin material is an
+   *additional* layer for readers who know a relative — a bonus, never a prerequisite, and
+   never something that gates comprehension or inflates the script ramp. → HL-C48.
+8. **Every chapter opens with a short, well-written intro.** Not "you learnt this in
+   Hindi" cross-track name-drops, which dangle in a standalone single-language PDF.
+   288 of 393 chapters currently have no intro at all. → HL-C49.
+9. **The book is a standalone artifact.** No repo paths (98 chapters print
+   `lessons/XX-CNN-*.md` at the reader today), no app assumptions, no dangling cross-track
+   references, and the front/back matter a book is expected to have. → HL-C50.
+
 ## P0 — Step-by-Step capability program (HL05–HL08)
 
 Specified in [HL05](../../specs/HL05-chapter-capability-and-step-by-step-shape.md),
@@ -81,6 +110,11 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C18 | Queued — Spanish slice complete | Burn down the 52 lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; over-budget lessons are split into prerequisite-ordered micro-lessons, longest first, starting with `ES-C31-numeros-11-20` at seven. |
 | HL-C18A | Complete | Split the fifteen over-budget Spanish lessons, including the corpus-worst `ES-C31-numeros-11-20` at seven. | Spanish measures zero over-budget lessons; the fifteen become thirty-three prerequisite-ordered micro-lessons and the corpus figure drops from 52 to 37. |
 | HL-C18B | Queued | Split the remaining 37 over-budget lessons across the other sixteen tracks. | Every track measures zero lessons above `maxNewAtomsPerLesson`; the corpus maximum drops from 6 to 3. |
+| HL-C18C | Complete in this PR | Measure the **script** ramp, which no gate had ever counted. The atom budget measures units of meaning and is blind to decoding load: `HI-W01-shirorekha-na-ma` declares **one** atom and shows **twelve** new Devanagari glyphs, and passed cleanly for a whole release. | `measureScriptRamp` counts new target-script glyphs per lesson in reading order, charged once; `maxNewGlyphsPerLesson: 3` (the corpus's own p90, not its max of 12) and `maxNewScriptSystemsPerLesson: 1` land in `core/chapter-policy.json` with measured provenance. First published figures: **61** lessons over the glyph budget (38 of which declare zero atoms), **5** opening more than one writing system at once — all Japanese Chapter 1. Cousin-script glyphs are counted separately and never charged: conflating them made a Kannada Chapter-1 lesson read as a 34-glyph cliff when its real Kannada load is 7. Report-only, per the HL05 precedent. Also fixes `measureRamp` being called by nothing but its own test — the atom budgets now reach the gap report — and three tracks (**gujarati**, **chinese**, **japanese**) that silently resolved to `latin`. |
+| HL-C18D | Queued | Burn down the 61 lessons over the script budget, steepest first, and split the 5 Japanese lessons that open two writing systems at once. | No lesson introduces more than `maxNewGlyphsPerLesson` new glyphs or opens more than one writing system; the corpus maximum drops from 12 to 3. Starts with `HI-W01-shirorekha-na-ma`, `MR-C01-dhanyavad` and `RU-C01-da` at twelve each. Follows HL-C18C, which produced the list. |
+| HL-C48 | Queued | Generate the cousin/cognate layer from `concept_tag` instead of hand-typing it, and make it visually skippable. | The cross-language comparison table exists in **18 hand-typed instances across 4 Dravidian tracks** (4.6% of chapters) while four prefaces promise it per-lesson; `parse.ts` has no block type for it, so an author cannot write one into a canonical lesson. `concept_tag` (1,131 lessons) is the join key that would generate them, and the book renderer ignores it — as it ignores 708 `etymology_hook` fields (~25,400 words) that the app already displays cross-language. Per the owner's rule, the layer is a bonus for readers who know a relative: it must never gate comprehension, and its foreign glyphs must stay out of the target-script ramp. |
+| HL-C49 | Queued | Give every chapter a short, well-written intro, generated from `chapters.json`. | **288 of 393 chapters open with no intro at all** — title straight into the first lesson section. The 105 handwritten ones have prose, several of it cross-track name-drops ("the same wearing-down the Hindi track shows") that dangle in a single-language PDF. Every chapter opens with a few sentences that stand on their own in English. |
+| HL-C50 | Queued | Make the book a standalone artifact. | **98 chapters print a repo path** (`lessons/XX-CNN-*.md`) at a reader holding a PDF; six make cross-track references to books that do not exist beside them; no track has a glossary, an index, or an answer key, and 5 of 22 lack even a pronunciation appendix. `book-cli.ts` already states the principle — "a reader holding the PDF cannot follow a link into a Git repository" — and the handwritten shell does not honour it. |
 | HL-C19 | Queued | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
 | HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
 | HL-C24 | Complete in this PR | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |

@@ -86,9 +86,41 @@ export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters
  * quietly stops running is worse than one that fails loudly.
  */
 export function loadChapterPolicy(root = defaultCurriculumRoot()): ChapterPolicy {
-  return JSON.parse(
+  const policy = JSON.parse(
     readFileSync(join(root, "core", "chapter-policy.json"), "utf8"),
   ) as ChapterPolicy;
+
+  // Validate the budgets, because the alternative is a gate that reads zero and looks
+  // clean. `JSON.parse` turns `1e999` into `Infinity`, and `newTarget.size > Infinity`
+  // is false for every lesson in the corpus — so a single typo publishes "0 violations",
+  // which is indistinguishable in the report from "measured, found none". A string or an
+  // object budget fails the same way. That silent-disable is the exact failure this
+  // function's own docstring warns about, and it was unchecked.
+  //
+  // Required, not optional, for the atom budgets: `measureRamp` reads them with no
+  // default, so a policy file missing them yields `undefined` and the same silent zero.
+  const budgets: ReadonlyArray<readonly [keyof ChapterPolicy, boolean]> = [
+    ["maxNewAtomsPerLesson", true],
+    ["maxNewAtomsPerChapter", true],
+    ["maxLinearisableTableColumns", false],
+    ["maxNewGlyphsPerLesson", false],
+    ["maxNewScriptSystemsPerLesson", false],
+  ];
+  for (const [key, required] of budgets) {
+    const value = policy[key];
+    if (value === undefined) {
+      if (required) {
+        throw new Error(`chapter-policy.json: ${key} is required and missing`);
+      }
+      continue;
+    }
+    if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+      throw new Error(
+        `chapter-policy.json: ${key} must be a non-negative integer, got ${JSON.stringify(value)}`,
+      );
+    }
+  }
+  return policy;
 }
 
 /**

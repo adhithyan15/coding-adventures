@@ -199,10 +199,15 @@ export {
 } from "./verbs.js";
 export {
   measureRamp,
+  measureScriptRamp,
   type RampReport,
   type RampViolation,
   type ChapterRampViolation,
   type TrackRampCoverage,
+  type ScriptRampReport,
+  type ScriptRampViolation,
+  type ScriptSystemViolation,
+  type TrackScriptRamp,
 } from "./ramp.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
