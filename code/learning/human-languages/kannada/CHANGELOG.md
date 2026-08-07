@@ -1,5 +1,56 @@
 # Changelog
 
+## Chapter 32 — The Core Verbs (2026-08-06)
+
+- Added six lessons under the **canonical** `VERB-*` concept tags, the track's
+  first: `KA-C32-iru` (ಇರು, `VERB-BE`), `KA-C32-hoogu` (ಹೋಗು, `VERB-GO`),
+  `KA-C32-baa` (ಬಾ, `VERB-COME`), `KA-C32-tinnu` (ತಿನ್ನು, `VERB-EAT`),
+  `KA-C32-noodu` (ನೋಡು, `VERB-SEE`) and `KA-C32-gottu` (ಗೊತ್ತು, `VERB-KNOW`).
+  Sequences 610–660, schema v2, in a single prerequisite chain.
+- **Why they were needed.** The track already taught four verbs — *mātanāḍu*,
+  *iru*, *hōgu*, *kelasa māḍu* — but every one of them under a Kannada-only tag
+  (`KA-VERB-IRU`, `KA-VERB-HOOGU`, …). A namespaced tag joins nothing across
+  languages, so on the cross-language measurement Kannada covered **zero** of
+  the canonical forty core verbs. It now covers six.
+- **One idea per lesson, each on the word that needs it.** The three slots,
+  stem + tense + person, so *iruttēne* is literally be + present + I and the
+  last bead already means "I" (*iru*). The **p → h law** — Kannada alone among
+  the four literary Dravidian languages softened old word-initial \*p- to h-,
+  so Tamil *pōgu / pattu / pāl / peyar* answer Kannada *hōgu / hattu / hālu /
+  hesaru* while Telugu and Malayalam keep the p, with Old Kannada's surviving ಪ
+  spellings as the evidence (*hōgu*). The form you call a verb by against the
+  form the beads attach to, *bā* but *baru-*, which finally opens Chapter 4's
+  ಹೋಗಿ ಬರುತ್ತೇನೆ — plus Kannada's second initial-consonant habit, \*v- → b-
+  (*bā*). The tense bead, and the fact that everyday Kannada keeps **no**
+  separate future, leaving *-utt-* to cover both and a word like *nāḷe* to
+  settle it (*tinnu*). The person bead, gendered only in the third person, and
+  the genuine four-way split in the everyday see-word — *nōḍu*, *pār*, *cūḍu*,
+  *kāṇuka* (*nōḍu*). And the closing symmetry: ಗೊತ್ತು is not a verb at all, so
+  it has no person slot and the knower must ride outside it in the dative
+  (*gottu*).
+- **Dravidian discipline held.** No Indo-European cognates invented for native
+  Kannada words; every cousin cited is a Dravidian sister with its form
+  supplied (Tamil *iru / pōgu / vā / tiṉ / pār / teḷi / aṟi*, Telugu *uṇḍu /
+  pōvu / vaccu / tinu / cūḍu / teliyu / telusu*, Malayalam *irikkuka / pōkuka /
+  varuka / tinnuka / kāṇuka / aṟiyuka*), and unsettled reconstructions are
+  flagged rather than asserted — *nōḍu*'s kinship with Tamil *nōkku* is given
+  with the hedge it deserves.
+- **Drivability held deliberately.** All six derive `voice`. No script blocks,
+  no sight cues, and the two tables are three columns wide at most. The letters
+  each word needs are taught inline in its "Sounds you'll need" block, never as
+  a gated reading course.
+- Wiring: `curriculum.json` gains `KA-PATH-025` on `SPINE-SAY-WHAT-I-DO` — the
+  track's first content on that node — with the six lessons attached as the
+  required `KA-EXT-025-CORE-VERBS` extension, and that node's `omits` ledger
+  drops the six concepts now realised. `chapters.json` gains a Chapter 32 entry
+  whose payoff, `KA-C32-gottu`, assesses 7 of the chapter's 12 atoms (0.58,
+  above the 0.5 floor). `core/book-generation.json` gains the Chapter 32
+  target; the generated `ch32-core-verbs.tex` is `\input` from `book.tex`.
+- Verified: integration suite 16/16 green, `check:modality` / `check:books` /
+  `check:narration` all clean, and every lesson under the duration budget
+  (computed 271–291s against the 300s threshold). The book compiles under
+  XeLaTeX with zero "Missing character" reports; build artefacts removed.
+
 ## Chapter capability ledger — HL05 (2026-08-06)
 
 - Added [`chapters.json`](./chapters.json), the track's HL05 chapter capability

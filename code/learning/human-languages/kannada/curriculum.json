@@ -307,6 +307,23 @@
         "KA-EXT-024-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "KA-PATH-025",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "KA-C32-iru",
+        "KA-C32-hoogu",
+        "KA-C32-baa",
+        "KA-C32-tinnu",
+        "KA-C32-noodu",
+        "KA-C32-gottu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-025-CORE-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -427,20 +444,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "KA-PATH-025"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
-        "VERB-SEE",
         "VERB-HEAR",
-        "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",
@@ -452,7 +466,6 @@
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
-        "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",
@@ -699,6 +712,22 @@
       "prerequisites": [],
       "lessons": [
         "KA-C25-shubha-ratri"
+      ]
+    },
+    {
+      "id": "KA-EXT-025-CORE-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Kannada verbs, build each one as stem plus tense plus person, and name the one that carries no person at all.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C32-iru",
+        "KA-C32-hoogu",
+        "KA-C32-baa",
+        "KA-C32-tinnu",
+        "KA-C32-noodu",
+        "KA-C32-gottu"
       ]
     },
     {

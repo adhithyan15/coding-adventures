@@ -2735,6 +2735,25 @@
       "jsonHash": "fnv1a64:a5ede50a7e2ce64b"
     },
     {
+      "language": "kannada",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:2c308c4cc3cdd31a",
+      "lessonIds": [
+        "KA-C32-iru",
+        "KA-C32-hoogu",
+        "KA-C32-baa",
+        "KA-C32-tinnu",
+        "KA-C32-noodu",
+        "KA-C32-gottu"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "kannada/narration/ch32.txt",
+      "json": "kannada/narration/ch32.json",
+      "textHash": "fnv1a64:f50bf1cf674b2725",
+      "jsonHash": "fnv1a64:950214a506c25e67"
+    },
+    {
       "language": "latin",
       "chapter": 1,
       "sourceHash": "fnv1a64:c50a5183e8d9432d",
