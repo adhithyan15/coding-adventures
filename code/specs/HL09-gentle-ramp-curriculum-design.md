@@ -1,0 +1,465 @@
+# HL09 — The gentle-ramp curriculum, designed from zero
+
+**Status:** specification, 2026-08-07
+**Supersedes in scope:** the implicit sizing behind HL04's shared spine and HL07's
+spine expansion. It does not replace them; it says how big they have to be.
+**Pilot track:** Spanish. Every rule here is language-neutral and meant to be
+replicated across all 22 tracks.
+
+---
+
+## 1. Why this exists: the A2 claim was wrong
+
+The gap report says Spanish "reaches A2". The project owner, who has sat A2
+examinations, did not believe it. The owner was right, and the margin is not small.
+
+Measured on 2026-08-07 against the committed corpus:
+
+| | Spanish today | A2 actually requires | short by |
+|---|---|---|---|
+| distinct headwords taught | **178** | ~1,000–1,500 | **≈6.7×** |
+| lessons realizing any A2 node | **14** | — | — |
+| A2 spine nodes realized | **1 of 5** | 5 | 4 missing |
+| verb tenses taught | present only | preterite, imperfect, perfect, near future, imperative, subjunctive exposure | 5+ missing |
+
+The 14 lessons all realize a single node, `SPINE-SAY-WHAT-I-DO`, which declares
+**42 concepts**. Three of the other four A2 nodes declare **exactly one concept
+each** — `SPINE-TALK-ABOUT-PAST` is one concept, and it stands for the entire
+past tense of the language. Spanish realizes none of them.
+
+So "A2" rested on fourteen present-tense verb lessons pointing at a node holding
+forty-two concepts. That is the failure mode this spec exists to prevent:
+
+> **A level is not reached by declaring a node. It is reached by teaching the
+> language the level requires, one small step at a time.**
+
+The concept-count asymmetry is itself the bug. A node with 42 concepts and a node
+with 1 concept cannot both be one rung of a gentle ramp.
+
+---
+
+## 2. The governing rule
+
+**No lesson introduces more than three new atoms, and every atom is revisited.**
+
+The first half already exists as `maxNewAtomsPerLesson` (HL08). The second half
+does not exist anywhere, and its absence is measurable: **93 of Spanish's 182
+taught atoms (51%) are never practised again** after the lesson that introduces
+them. Median revisits per atom: **zero**.
+
+A course that teaches a word once and never returns to it is not a gentle ramp.
+It is a list.
+
+### 2.1 There are four ramps, not one
+
+Learning a language is not memorising a set of items. It is acquiring vocabulary,
+learning to *build* with it, and being able to *put pieces together you were never
+explicitly given*. Each of those is its own curve, and a course can be gentle on
+one while being brutal on another.
+
+| ramp | measures | status |
+|---|---|---|
+| **Vocabulary** | new atoms per lesson | `maxNewAtomsPerLesson` (HL08), now published |
+| **Script** | new target-script glyphs per lesson | `maxNewGlyphsPerLesson` (HL-C18C), shipped |
+| **Sentence** | how much structure an utterance carries | **missing — §5** |
+| **Synthesis** | whether the learner *produces* rather than recalls | **missing — §6** |
+
+The vocabulary ramp alone is what made Spanish look gentle while being unusable:
+178 words, every one of them at ≤3 per lesson, and almost no growth in what the
+learner can actually *say* with them.
+
+---
+
+## 3. The arithmetic, stated honestly
+
+Length is explicitly not a cost (HL08), and the project owner has confirmed the
+books may run to thousands of pages. That permission is what makes the following
+numbers acceptable rather than alarming.
+
+Taking a conservative **2 new atoms per lesson average** (the budget is 3; the
+average must sit below it so the ramp has slack for revision lessons):
+
+| level | cumulative vocabulary | new at this level | lessons at this level | cumulative |
+|---|---|---|---|---|
+| pre-A1 | ~300 | 300 | ~150 | ~150 |
+| A1 | ~600 | 300 | ~150 | ~300 |
+| A2 | ~1,200 | 600 | ~300 | ~600 |
+| B1 | ~2,500 | 1,300 | ~650 | ~1,250 |
+| B2 | ~4,000 | 1,500 | ~750 | ~2,000 |
+| C1 | ~8,000 | 4,000 | ~2,000 | ~4,000 |
+| C2 | ~16,000 | 8,000 | ~4,000 | ~8,000 |
+
+**A complete Spanish track is on the order of 8,000 lessons.** It has 146.
+
+Vocabulary counts are the conventional working figures for CEFR receptive
+vocabulary size; they are editorial planning targets, not claims about any
+awarding body's published syllabus, and are recorded as such (§10).
+
+These numbers are a **budget, not a promise**. What this spec fixes is the shape
+of the ramp; filling it is many tranches of work, replicated per track.
+
+### 3.1 What this means for "reaching a level"
+
+A track may claim a level only when it has:
+
+1. realized **every** spine node at that level and all levels below,
+2. taught at least the cumulative vocabulary for that level,
+3. zero lessons over the atom budget at or below that level, and
+4. every atom at or below that level revisited at least twice (§7).
+
+Anything less is reported as *in progress at level X*, never as *reached X*.
+
+---
+
+## 4. The lesson contract
+
+Every lesson is one small step. Concretely:
+
+- **≤3 new atoms**, and the running average per chapter must sit at or below 2.
+- **Useful immediately.** A lesson teaches something the learner can say, ask,
+  recognise, or answer by the end of it. No lesson exists only to set up a later
+  one; scaffolding rides inside a lesson that also pays off.
+- **Revisits at least one earlier atom**, explicitly, in `practises.knowledge`.
+  This is the mechanism §7 measures. A lesson that revisits nothing may only be
+  the first lesson of a track.
+- **Declares its order.** `sequence:` is mandatory. Today **56 of Spanish's 146
+  lessons have none**, so their reading order exists only inside hand-typed
+  LaTeX — and a ramp whose order is unknown cannot be verified at all. French is
+  worse: 64 of 73.
+- **Names its level implicitly**, never in frontmatter. Level stays derived from
+  the spine (HL-C10); 8,000 authored copies of a computed fact are 8,000 places
+  for it to go stale.
+
+### 4.1 No forward references — you may only use what you have taught
+
+**A lesson's examples, drills and payoffs may contain only material already taught.**
+
+This is the rule the corpus breaks most often, and it is invisible to every ramp
+budget because the offending vocabulary is not *introduced* — it is merely *used*.
+A close read of Spanish chapters 1–8 found:
+
+- `ES-C07-beber` rewards the learner with *"Como pan y bebo agua"*. **`pan` and
+  `agua` are taught in Chapter 26.**
+- `ES-C07-practice` drills *"Como una tapa y bebo un café. ¿Algo más?"* — `un`,
+  `una`, `tapa` and `¿Algo más?` are all untaught; `un/una` arrives in Chapter 8,
+  the **next** chapter.
+- `ES-C08-practice` drills *veintiuno* and *diecinueve* in a chapter that taught
+  1–10. **Both are Chapter 31.**
+- `ES-C08-tener` generalizes "all forms but *nosotros/vosotros*" — `vosotros`
+  appears exactly once in eight chapters, unexplained, never taught.
+
+The mechanism is diagnosed in §7.2: chapters starved of reviewable material reach
+sideways for whatever they need. A forward-reference check is therefore both a
+defect gate **and** an early warning that reinforcement has failed upstream.
+
+Two functional gaps of the same kind, found by reading rather than counting:
+
+- **The learner cannot say "no".** They are drilled on *¿Hablas español?* in
+  Chapter 6 and questioned throughout Chapter 7, but `sí`/`no` are Chapter 19.
+  `SPINE-NEGATE-AND-ASK` has `"segments": []` — negation is realized nowhere.
+- **The learner cannot say "I am".** `estoy` is used as a given in two Chapter 4
+  lessons and taught in none; `SPINE-EXCHANGE-NAMES` explicitly omits `PRONOUN-I`
+  and `WORD-IS`, so `yo` is absent from the whole path.
+
+A course where the learner can ask "how are you?" but cannot answer, and can be
+asked a question but cannot decline, has a hole no vocabulary count would show.
+
+### 4.2 Etymology is per lesson
+
+**Every lesson carries its own etymological connection.** The owner's rule, and
+the corpus already agrees with it: 708 lessons carry an `etymology_hook` and 788
+carry a `## The word, taken apart` section. HL00 calls that section "the heart of
+the lesson… the signature of this curriculum," and the chapter-1–8 review singled
+it out as the strongest thing in the course — `hasta` and eight centuries of
+al-Andalus, `de nada` ← *rēs nāta*, `trabajar` ← *tripālium* and its road to
+English *travel*, `adiós` traced across four Romance languages.
+
+So this is not new work; it is a rule protecting something that already exists and
+must not be diluted as the corpus grows to thousands of lessons.
+
+Two constraints follow:
+
+- **The etymology must land on a word the lesson actually teaches.** A hook
+  attached to a word introduced three lessons later is a forward reference (§4.1).
+- **Where a word has no honest etymology, say so briefly and move on.** `ES-C01-hola`
+  spends its entire "taken apart" section explaining that *hola*'s origin is
+  unsettled, that the resemblance to English *hello* is a false friend, and that
+  the learner's instinct is wrong. That is true, and it is a poor opening: the
+  course's signature move is not demonstrated until lesson 2. A word whose
+  etymology is a dead end should not be the first word taught.
+
+Chapters additionally carry a **thread** — the connections between their lessons'
+etymologies, so the reader sees a family rather than a list. That is a bonus on
+top of the per-lesson rule, never a substitute for it.
+
+This is also why a 42-concept node is wrong twice over: you cannot give 42
+concepts their own etymological treatment inside one unit of study, and the owner
+named exactly this — *"we cannot do that if you put in 50 concepts in a single
+lesson."*
+
+### 4.3 A note on the word "chapter"
+
+The project owner thinks of **one chapter as one lesson** — a single sitting, one
+small step. The repository's data model uses `chapter` for a *group* of lessons
+(Spanish chapter 4 holds fifteen).
+
+Throughout this spec, **"lesson" means the unit of study** — the ≤5-minute,
+≤3-atom step the owner calls a chapter — and **"chapter" means the repository's
+grouping**. Where a rule says "every lesson", it means every unit the learner
+sits down to, which is the thing the owner is asking about.
+
+---
+
+## 5. The sentence ramp
+
+Vocabulary without structure is a phrasebook. The learner must move from single
+words to complex utterances, and that movement is a separate curve that must ramp
+just as gently — **one new structural move at a time**.
+
+### 5.1 The rungs
+
+Each rung is a **sentence frame** the learner can fill with any vocabulary they
+already hold. A track declares which rung each lesson's target utterances sit at.
+
+| rung | frame | Spanish example |
+|---|---|---|
+| S0 | bare word / formula | *hola* · *gracias* |
+| S1 | two-part formula | *buenos días* · *¿qué tal?* |
+| S2 | subject + verb | *yo como* |
+| S3 | + object | *como pan* |
+| S4 | + modifier | *como pan blanco* |
+| S5 | + prepositional phrase | *como pan en casa* |
+| S6 | + time or manner | *como pan en casa por la mañana* |
+| S7 | two clauses coordinated | *como pan y bebo café* |
+| S8 | subordination (cause, time) | *como pan porque tengo hambre* |
+| S9 | relative clause | *el pan que como es fresco* |
+| S10 | reported speech | *dice que come pan* |
+| S11 | irrealis — conditional, subjunctive | *si tuviera pan, comería* |
+| S12 | multi-clause with discourse marking | *aunque no tenía hambre, comí, ya que…* |
+
+The rungs are cumulative and language-neutral in *shape*; the realization differs
+per language, and a track's ledger says how it realizes each rung. Rung order is
+not negotiable — S8 cannot precede S3 — but a track may take several chapters over
+one rung, and should.
+
+### 5.2 The budget
+
+- **One new rung per chapter, at most.** A chapter may consolidate a rung it has
+  already reached as often as it likes.
+- **A lesson's target utterances sit at the current rung or below.** A lesson may
+  not silently demonstrate S8 while claiming to teach S3 — this is the single most
+  common way a "gentle" course stops being gentle, because the example sentences
+  race ahead of the syllabus.
+- **A new rung is introduced with known vocabulary only.** Never a new structure
+  and new words in the same breath: the learner must have one of the two free.
+
+That last rule is the sentence-ramp analogue of the cousin-layer rule in HL-C18C —
+the learner should only ever be decoding one unfamiliar thing at a time.
+
+### 5.3 Why this is measurable
+
+The rung of an utterance is largely recoverable from the utterance itself — clause
+count, presence of a subordinator, verb count. The measurement does not need to be
+a parser; it needs to catch the case where a lesson at rung S3 shows a sentence
+with two finite verbs and a *porque*. Report-only first, per the HL05 precedent.
+
+---
+
+## 6. Synthesis: producing, not recalling
+
+The owner's word is *synthesizing*, and it is the difference between a learner who
+recognises a course's sentences and one who can speak.
+
+**Every chapter must contain at least one synthesis activity**: a prompt whose
+correct answer is an utterance the course has **never shown**, built only from
+atoms and rungs the learner already holds.
+
+- Not "repeat after me" — that is rung practice.
+- Not "translate this sentence you saw two lessons ago" — that is recall.
+- **Yes**: "You are hungry and it is morning. Say what you are going to eat." The
+  learner assembles *por la mañana* + *voy a comer* + a food word, none of which
+  were ever combined for them.
+
+The repo already has the mechanism: `guided-production` blocks and the
+`hl-activity` contract, which scores a spoken answer against a compiled activity
+rather than against a cue. What is missing is the **requirement** that every
+chapter carry one, and the measurement of which chapters do.
+
+### 6.1 Synthesis is what makes the ramp feel gentle
+
+A learner who has only ever recalled hits a wall the first time they must produce.
+A learner who has produced from chapter one experiences each new rung as a small
+extension of something they already do. The gentleness is not only in the step
+size; it is in never deferring the hard skill to later.
+
+---
+
+## 7. Reinforcement: the spaced-retrieval schedule
+
+New in this spec, and the answer to the 51% orphan rate.
+
+Every atom must be **revisited at expanding intervals** after the lesson that
+introduces it. Writing *n* for the position of the introducing lesson in track
+reading order, the atom must reappear in `practises.knowledge` of at least one
+lesson in each of these windows:
+
+| window | range | purpose |
+|---|---|---|
+| R1 | n+1 … n+3 | consolidate before it decays |
+| R2 | n+5 … n+15 | first real retrieval |
+| R3 | n+20 … n+60 | durable |
+| R4 | n+80 … n+250 | recognition at distance |
+
+An atom that misses a window is an **orphan at that depth** and is reported.
+Missing R1 is a defect; missing R4 in a track that is only 200 lessons long is
+not — the schedule is evaluated only where the track is long enough to contain
+the window.
+
+**Chapter payoff lessons and `practice-mix` lessons are the natural carriers.**
+This schedule is what those lesson types are *for*, and it gives a generator a
+concrete job: given the atom inventory and the introduction positions, emit the
+revision lessons that close every open window.
+
+### 7.1 The machinery was specified and never built
+
+This is not a case of a schedule being applied badly. HL00 already defines the
+interval (N+1, N+3, N+7, N+15), already defines `type: review` as a lesson that
+"resurfaces earlier words in a new combination", and already designates
+`session-map.md` as the artifact that verifies the schedule is satisfied.
+
+In the shipped corpus:
+
+- **There are zero `type: review` lessons.** Not few — none, in any of 22 tracks.
+- **`session-map.md` covers Spanish chapters 1, 2 and 3.** The schedule is
+  unverified for chapters 4 through 33.
+- The only re-emphasis vehicle that exists is the chapter-terminal `practice-mix`,
+  and every one is scoped to its own chapter.
+
+So the course reads as **eight self-contained mini-courses**. Chapter 2's four
+greetings never reappear. Chapter 5's three farewells never reappear — and when
+Chapter 7 finally builds a café scene where *hasta luego* belongs, it reaches for
+*adiós*, which Chapter 5 taught for a different situation.
+
+### 7.2 The failure is causal, not cosmetic
+
+The reviewer's summary is worth keeping verbatim as the design principle:
+
+> **A gentle ramp is not made of small steps; it's made of steps you can still
+> stand on.**
+
+Every other defect in this spec is downstream of the missing scheduler. With no
+mechanism forcing earlier atoms forward, later chapters have nothing to build with
+and reach sideways for whatever they need — which is exactly why Chapter 7 drills
+Chapter 26's vocabulary (§4.1). Fix the scheduler and the forward references lose
+their cause.
+
+### 7.3 Why this is measured, not trusted
+
+`reviews_of` exists on 144 of Spanish's 146 lessons, so the corpus *looks* like it
+reinforces. But `reviews_of` names **lesson ids** while atoms live in a different
+namespace, so it cannot close a window and never did. The measurement must run on
+`practises.knowledge` — atom to atom — or it measures nothing.
+
+---
+
+## 8. The chapter contract
+
+A chapter is the unit the reader experiences. Every chapter carries:
+
+1. **An intro that stands alone in English.** A few sentences saying what the
+   reader will be able to do by the end. Not "you learnt this in Hindi" — 288 of
+   393 chapters currently have no intro at all, and six of those that do make
+   cross-track references that dangle in a single-language PDF.
+2. **An etymological thread** tying its lessons' per-lesson etymologies together
+   (§4.2) — a bonus on top of the per-lesson rule, never a substitute for it.
+3. **A culture or region note.** Not decoration: for Spanish, `vos` appears
+   **0 times in 146 lessons**, in a language where voseo is the everyday second
+   person for roughly 100 million speakers. A course that never mentions it is
+   teaching a Spanish that does not exist anywhere in the Southern Cone.
+4. **A payoff lesson** built only from material already taught (HL05).
+5. **≤12 new atoms total** (`maxNewAtomsPerChapter`), so splitting a steep lesson
+   into two steep lessons cannot game the rule.
+
+### 8.1 Regional variation is a strand, not an appendix
+
+Spanish is the pilot precisely because it forces the question. The rule:
+
+- The **default taught form is marked**, never unmarked. A lesson says which
+  Spanish it is teaching.
+- Where usage splits (tú / usted / vos; *vosotros* / *ustedes*; *coche* / *carro*;
+  seseo), the split is taught **at the point the form is introduced**, not
+  deferred to a back-matter note.
+- A regional form the course does not teach actively is still taught
+  **receptively** — the learner must recognise `¿vos tenés?` even if they produce
+  `¿tú tienes?`.
+
+---
+
+## 9. Vocabulary selection
+
+Which 300 words come first is a design decision, and it must be reproducible
+rather than intuitive.
+
+**Selection rule, in priority order:**
+
+1. **Function first.** The word is required by a spine node the learner is on.
+2. **Frequency second.** Among candidates, prefer higher corpus frequency. Rank
+   is taken from a published frequency ordering for the language; the project
+   stores **the rank it used and the source**, never a copy of the list.
+3. **Cognate leverage third.** Among near-equal candidates, prefer the one whose
+   etymology connects to something the reader already has — the project's
+   signature move, and the reason `concept_tag` exists.
+4. **Concreteness fourth.** Prefer words that can be pictured or acted.
+
+Rule 2 is the one that stops a curriculum drifting into charming but useless
+vocabulary. Rule 3 is what makes the ramp feel gentle even when it is not: a
+reader meeting *comprender* for the first time is not meeting it cold.
+
+---
+
+## 10. Honesty requirements
+
+Carried over from `core/exam-levels.json`, which already records whether a level
+mapping is `published`, `research`, or `editorial`:
+
+- Vocabulary size targets (§3) are **editorial** planning figures.
+- CEFR can-do statements written for spine nodes are **this project's own
+  wording**, informed by the level definitions. CEFR descriptor text is not
+  reproduced.
+- A track's claimed level is **derived and gated** (§3.1), never authored.
+- Where a language has no CEFR examination, the ladder is editorial and says so —
+  as `exam-levels.json` already does for the twelve tracks mapped straight to CEFR.
+
+---
+
+## 11. What ships in what order
+
+This spec is the design. Implementation is a long series of small tranches:
+
+| # | Work | Signal |
+|---|---|---|
+| 1 | Measure order integrity, reinforcement windows, and forward references; publish all three in the gap report | Every track reports orphan atoms per window, lessons lacking `sequence`, and every use of untaught vocabulary |
+| 2 | Migrate Spanish chapters 7–8 to schema v2 and give all 56 sequence-less lessons a declared order | The ramp collapses exactly at the schema boundary: chapters 1–6 carry `sequence`/`spine_node`/atoms, chapters 7–8 carry none, so they are invisible to every tool that reads the knowledge graph. Chapter 7's order needs a **human decision** — `curriculum.json` says comer→beber→qué→vivir→dónde while the lesson prose and `reviews_of` say comer→vivir→beber→qué→dónde |
+| 3 | Build `type: review` lessons and extend `session-map.md` past chapter 3 | The lesson type HL00 defines and the corpus has **zero** of; the schedule is currently unverified for 30 of 33 chapters |
+| 4 | Close the functional holes: `sí`/`no`, `estoy`, `yo`, `un`/`una` | The learner can be asked a question and cannot decline; can ask "how are you?" and cannot answer |
+| 5 | Split `SPINE-SAY-WHAT-I-DO` (42 concepts) into rungs of ≤6 | No spine node holds more concepts than a chapter may introduce |
+| 6 | Close Spanish's R1 windows | Zero atoms miss the first revisit window |
+| 7 | Author pre-A1 to its real size (~150 lessons) | Vocabulary ≥300; every pre-A1 node realized; culture/region strand present in every chapter |
+| 8 | A1, then A2, at their real sizes | §3.1 satisfied per level before the next begins |
+| 9 | Spine B1…C2, then climb | — |
+
+Steps 1–3 are the unblockers: step 1 makes every later step checkable, step 2
+ends the schema split that causes the collapse, and step 3 builds the scheduler
+whose absence causes everything else (§7.2). **Nothing above step 7 may claim a
+level.**
+
+---
+
+## 12. Acceptance criteria for this spec
+
+- [ ] Reinforcement windows (§5) are measured and published per track.
+- [ ] `sequence` is required on every lesson, enforced.
+- [ ] No spine node declares more concepts than `maxNewAtomsPerChapter`.
+- [ ] Level claims are gated on §3.1 rather than on node realization alone.
+- [ ] Every chapter has an intro, an etymological thread, and a culture/region note.
+- [ ] The gap report distinguishes *in progress at level X* from *reached X*.
